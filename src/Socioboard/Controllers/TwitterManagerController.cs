@@ -82,100 +82,109 @@ namespace Socioboard.Controllers
         [HttpGet]
         public async Task<IActionResult> AddTwitterAccount(bool follow)
         {
-            var count = 0;
-            var profileCount = string.Empty;
-            var groups = new List<Domain.Socioboard.Models.Groups>();
-            var user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            var response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
-
-            if (response.IsSuccessStatusCode)
-            {
-                try
-                {
-                    groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-
-            var sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
-
-            if (!string.IsNullOrEmpty(sessionSelectedGroupId))
-            {
-                var groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
-                if (groupProfilesResponse.IsSuccessStatusCode)
-                {
-                    var groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
-                    profileCount = groupProfiles.Count.ToString();
-                }
-            }
-            else
-            {
-                var selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
-                HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
-                ViewBag.selectedGroupId = selectedGroupId;
-                var groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
-                if (groupProfilesResponse.IsSuccessStatusCode)
-                {
-                    var groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
-                    profileCount = groupProfiles.Count.ToString();
-                }
-            }
-
-            // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
             try
             {
-                count = Convert.ToInt32(profileCount);
+                var count = 0;
+                var profileCount = string.Empty;
+                var groups = new List<Domain.Socioboard.Models.Groups>();
+                var user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+                var response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+
+                var sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+
+                if (!string.IsNullOrEmpty(sessionSelectedGroupId))
+                {
+                    var groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                    if (groupProfilesResponse.IsSuccessStatusCode)
+                    {
+                        var groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                        profileCount = groupProfiles.Count.ToString();
+                    }
+                }
+                else
+                {
+                    var selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                    HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                    ViewBag.selectedGroupId = selectedGroupId;
+                    var groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                    if (groupProfilesResponse.IsSuccessStatusCode)
+                    {
+                        var groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                        profileCount = groupProfiles.Count.ToString();
+                    }
+                }
+
+                // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                try
+                {
+                    count = Convert.ToInt32(profileCount);
+                }
+                catch (Exception)
+                {
+                    TempData["Error"] = "Error while getting profile count.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+
+                if (count >= MaxCount)
+                {
+                    TempData["Error"] = "Max profile Count reached.";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                HttpContext.Session.SetObjectAsJson("Twitter", follow ? "Twitter_Account_Follow" : "Twitter_Account");
+
+                var credentials = new OAuthCredentials
+                {
+                    Type = OAuthType.RequestToken,
+                    SignatureMethod = OAuthSignatureMethod.HmacSha1,
+                    ParameterHandling = OAuthParameterHandling.HttpAuthorizationHeader,
+                    ConsumerKey = _appSettings.twitterConsumerKey,
+                    ConsumerSecret = _appSettings.twitterConsumerScreatKey,
+                    CallbackUrl = _appSettings.twitterRedirectionUrl
+                };
+
+                // Use Hammock to create a rest client
+                var client = new RestClient
+                {
+                    Authority = "https://api.twitter.com/oauth",
+                    Credentials = credentials,
+                };
+
+                // Use Hammock to create a request
+                var request = new RestRequest
+                {
+                    Path = "request_token"
+                };
+
+                // Get the response from the request
+                var _response = client.Request(request);
+                var collection = HttpUtility.ParseQueryString(_response.Content);
+
+                string rest = "https://api.twitter.com/oauth/authorize?oauth_token=" + collection[0];
+                HttpContext.Session.SetObjectAsJson("requestSecret", collection[1]);
+
+                return Redirect(rest);
             }
-            catch (Exception)
+
+            catch (Exception e)
             {
-                TempData["Error"] = "Error while getting profile count.";
-                return RedirectToAction("Index", "Home");
+                _logger.LogError(e.Message);
+                return Ok(e.Message);
             }
-
-            var MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
-
-            if (count >= MaxCount)
-            {
-                TempData["Error"] = "Max profile Count reached.";
-                return RedirectToAction("Index", "Home");
-            }
-
-            HttpContext.Session.SetObjectAsJson("Twitter", follow ? "Twitter_Account_Follow" : "Twitter_Account");
-
-            var credentials = new OAuthCredentials
-            {
-                Type = OAuthType.RequestToken,
-                SignatureMethod = OAuthSignatureMethod.HmacSha1,
-                ParameterHandling = OAuthParameterHandling.HttpAuthorizationHeader,
-                ConsumerKey = _appSettings.twitterConsumerKey,
-                ConsumerSecret = _appSettings.twitterConsumerScreatKey,
-                CallbackUrl = _appSettings.twitterRedirectionUrl
-            };
-
-            // Use Hammock to create a rest client
-            var client = new RestClient
-            {
-                Authority = "https://api.twitter.com/oauth",
-                Credentials = credentials,
-            };
-
-            // Use Hammock to create a request
-            var request = new RestRequest
-            {
-                Path = "request_token"
-            };
-
-            // Get the response from the request
-            var _response = client.Request(request);
-            var collection = HttpUtility.ParseQueryString(_response.Content);
-
-            string rest = "https://api.twitter.com/oauth/authorize?oauth_token=" + collection[0];
-            HttpContext.Session.SetObjectAsJson("requestSecret", collection[1]);
-
-            return Redirect(rest);
 
         }
 

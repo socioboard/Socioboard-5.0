@@ -49,7 +49,7 @@ namespace Api.Socioboard.Repositories
             {
             }
 
-            var groupProfilesCount = dbr.Find<Groupprofiles>(t => t.profileOwnerId == userId).GroupBy(t => t.profileId)
+            var groupProfilesCount = dbr.Find<Groupprofiles>(t => t.profileOwnerId == userId && t.profileType != SocialProfileType.GPlus).GroupBy(t => t.profileId)
                 .Select(x => x.First()).Count();
             _redisCache.Set(SocioboardConsts.CacheUserProfileCount + userId, groupProfilesCount.ToString());
             return groupProfilesCount;
@@ -122,7 +122,7 @@ namespace Api.Socioboard.Repositories
                 Console.WriteLine(ex.Message);
             }
 
-            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType != SocialProfileType.GPlus).ToList();
 
             redisCache.Set(SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
 
@@ -184,7 +184,7 @@ namespace Api.Socioboard.Repositories
         {
             var getTop3GroupProfiles = new List<profilesdetail>();
 
-            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType != SocialProfileType.GPlus).ToList();
 
             if (groupProfiles.Count == 0)
                 return getTop3GroupProfiles;
@@ -337,7 +337,7 @@ namespace Api.Socioboard.Repositories
                         return allGroupProfiles;
                 }
 
-                var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+                var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType != SocialProfileType.GPlus).ToList();
 
                 if (groupProfiles.Count == 0)
                     return allGroupProfiles;
@@ -541,16 +541,16 @@ namespace Api.Socioboard.Repositories
             {
                 var inMemGroupProfiles = redisCache.Get<List<Groupprofiles>>(SocioboardConsts.CacheGroupProfiles + groupId);
 
-                if (inMemGroupProfiles.Count == 0)
+                if (inMemGroupProfiles == null || inMemGroupProfiles.Count == 0)
                     inMemGroupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == needProfileType).ToList();
 
 
-               
+
                 if (inMemGroupProfiles.Count > 0)
                 {
                     var selectedProfileDetails = inMemGroupProfiles.Where(x => x.profileType == needProfileType).ToList();
                     var userDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == inMemGroupProfiles[0].profileOwnerId);
-                   
+
                     if (userDetails.AccountType == SBAccountType.Free)
                     {
                         var requiredGroup = selectedProfileDetails.FirstOrDefault();
@@ -569,8 +569,8 @@ namespace Api.Socioboard.Repositories
 
                             AddedProfileDetails(redisCache, dbr, finalResult, profileDetail);
                         }
-                      
-                    }                   
+
+                    }
                 }
                 return finalResult;
             }

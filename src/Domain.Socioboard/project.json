@@ -1,14 +1,15 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
     "MongoDB.Bson": "2.2.4",
     "NETStandard.Library": "1.6.0",
-    "Newtonsoft.Json": "9.0.1"
+    "Newtonsoft.Json": "9.0.1",
+    "Sendgrid": "9.11.0"
   },
 
   "frameworks": {
-    "net451": {
+    "net452": {
       "frameworkAssemblies": {
         "System.ComponentModel.DataAnnotations": "4.0.0.0",
         "System.Net": "4.0.0.0",

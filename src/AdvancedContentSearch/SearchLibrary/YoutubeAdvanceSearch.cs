@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using AdvancedContentSearch.Helper;
 using AdvancedContentSearch.Model;
 using Domain.Socioboard.Helpers;
 using Domain.Socioboard.Models;
@@ -33,7 +34,7 @@ namespace AdvancedContentSearch.SearchLibrary
             MongoRepository mongoreppo = new MongoRepository("AdvanceSerachData");
             try
             {
-                string youtubesearchurl = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&order=relevance&q=" + itemdis.SearchKeyword + "&key=AIzaSyBmQ1X1UBnKi3V78EkLuh7UHk5odrGfp5M";
+                string youtubesearchurl = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&order=relevance&q=" + itemdis.SearchKeyword + "&key=" + AppSetting.youtubeKey;
                 string response = WebRequst(youtubesearchurl);
                 var Jdata = Newtonsoft.Json.Linq.JObject.Parse(response);
 

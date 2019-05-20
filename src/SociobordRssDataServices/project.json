@@ -21,7 +21,7 @@
     "Socioboard.Google": "1.0.0-*"
   },
   "frameworks": {
-    "dnx451": {
+    "net452": {
       "dependencies": {
         "NHibernate": "4.0.4.4000"
       },

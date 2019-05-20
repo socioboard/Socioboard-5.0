@@ -301,14 +301,19 @@ namespace Api.Socioboard.Controllers
             var user = dbr.FindFirstMatch<User>(t => t.Id == Id);
             if (user != null)
             {
-                if (user.EmailValidateToken == "Google")
+                if (user.EmailValidateToken != "Google")
+                    return Ok(user);
+
+                var name = user.FirstName;
+                try
                 {
-                    string name = user.FirstName;
-                    var nam = name.Split(' ');
-                    string fname = nam[0];
-                    string lname = nam[1];
-                    user.FirstName = fname;
-                    user.LastName = lname;
+                    var nam = name.Split(' ');                   
+                    user.FirstName = nam[0];
+                    user.LastName = nam[1];
+                }
+                catch (Exception e)
+                {
+                    user.FirstName = name;
                 }
                 return Ok(user);
             }
@@ -2237,7 +2242,7 @@ namespace Api.Socioboard.Controllers
                 html = html.Replace("[FirstName]", user.FirstName);
                 html = html.Replace("[AccountType]", user.AccountType.ToString());
                 html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.EmailId);
-
+                html = html.Replace("\n\r", "").Replace("\r\n", "");
 
                 if (!string.IsNullOrEmpty(_appSettings.SendGridApiKey))
                 {

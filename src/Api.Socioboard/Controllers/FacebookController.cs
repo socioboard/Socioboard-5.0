@@ -289,14 +289,14 @@ namespace Api.Socioboard.Controllers
             else
             {
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
-                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
+                var builder = Builders<MongoFacebookFeed>.Sort;
                 var sort = builder.Descending(t => t.EntryDate);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var result = mongorepo.FindWithRange(t => t.ProfileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
-                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                IList<MongoFacebookFeed> lstFbFeeds = task.Result;
             }
             return Ok();
         }

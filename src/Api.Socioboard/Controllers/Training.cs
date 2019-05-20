@@ -22,7 +22,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+          
             _env = env;
         }
         private readonly ILogger _logger;

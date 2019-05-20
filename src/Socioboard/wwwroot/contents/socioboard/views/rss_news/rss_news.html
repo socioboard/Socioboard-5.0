@@ -58,29 +58,30 @@
                 <div class="card" ng-repeat="post in postedRssData | orderBy:'publishingDate':true">
                     <div class="card-content">
                         <span ng-click="deleteMsg(post.link)" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
-                        <div class="row"  charset="utf-8">
+                        <div class="row" charset="utf-8">
                             <div class="col l12">
                                 <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
                                 <div class="">
-                                    <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue" >{{post.link}}</a>
+                                    <!--<iframe src="{{post.link}}"></iframe>-->
+                                    <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue">{{post.link}}</a>
                                 </div>
                             </div>
-                         </div>
-                         <div class="row">
-                                    <div class="col l12">
-                                        <div style="display: block; margin: auto;">
-                                            <img src="{{post.image}}" class="rssPostImage">
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l12">
+                                <div style="display: block; margin: auto;">
+                                    <img src="{{post.image}}" class="rssPostImage">
                                 </div>
                             </div>
-                            <div class="card-action">
-                                <a ng-click="schedulePost(post)" class="waves-effect waves-grey btn">Schedule</a>
-                                <a ng-click="openComposeMessage(post)" class="btn right blue">1 click</a>
-                            </div>
-
                         </div>
                     </div>
+                    <div class="card-action">
+                        <a ng-click="schedulePost(post)" class="waves-effect waves-grey btn">Schedule</a>
+                        <a ng-click="openComposeMessage(post)" class="btn right blue">1 click</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
 
@@ -120,12 +121,12 @@
                                     <div class="col s12 m12 l12">
                                         <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                     </div>
-                                    <input type="hidden" id="imageUrl"  />
+                                    <input type="hidden" id="imageUrl" />
                                     <div class="col s12 m12 l12">
-                                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
+                                        <input type="file" id="composeImage" class="dropify1" after-render data-default-file="" />
                                     </div>
                                     <div class="col s12 m12 l12" ng-if="!contentMessage">
-                                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
+                                        <input type="file" id="composeImage" class="dropify1" after-render data-default-file="" />
                                     </div>
                                 </div>
                             </div>
@@ -142,14 +143,14 @@
                                                 <span style="float:left;">Check All</span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                        <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                             <label>
                                                 <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                 <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                                 <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                 <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                             </label>
-                                        </li>
+                                        </li>-->
                                         <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                             <label>
                                                 <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
@@ -199,10 +200,9 @@
         </div>
 
 
-        
-   
-    <!-- END CONTENT -->
 
+
+        <!-- END CONTENT -->
         <!-- Rss Settings Structure -->
         <div id="rssSettingModal" class="modal">
             <div class="modal-content">
@@ -211,11 +211,14 @@
                         <p>Add your keywords</p>
                     </div>
                     <div class="input-field col s12">
-                        <input name="tags" id="tags" multiple />
+
+                        <!--<input data-role="tagsinput" value="Amsterdam,Washington,Sydney,Beijing,Cairo"  />-->
+                        <!--<tags-input ng-model="tags"></tags-input>-->
+                        <input name="tags" class="rsstag" id="tags" multiple />
                     </div>
                 </div>
                 <div class="row center">
-                    <div ng-init="buildbtn= {{buildbtn}}"></div>
+
                     <div>
                         <!--<div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>contentfeedsdata-->
                         <div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>
@@ -258,6 +261,17 @@
     </div>
 
 
+    <div ng-if="addKeyword==true">
+        <div class="center">
+            <br /><br /><br /><br /><br /><br />
+            <i class="fa fa-info-circle fa-2x" aria-hidden="true" style="height: 25px;"></i>
+            <h6 style="color: gray; font-size: 18px; font-family: Calibri;">
+                Please add a keyword or click your feed keyword from <a href="#/dashboard">dashboard</a>.
+            </h6>
+        </div>
+    </div>
+
+
     <div class="center" ng-if="nofeeds==true">
         <br /><br /><br /><br /><br /><br />
         <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No RSS feeds posted to display<br /></h6>
@@ -266,14 +280,14 @@
 </div>
 
 <script>
-    $(function() {
-      // Initializes and creates emoji set from sprite sheet
-      window.emojiPicker = new EmojiPicker({
-        emojiable_selector: '[data-emojiable=true]',
-        assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
-        popupButtonClasses: 'fa fa-smile-o'
-      });
-      window.emojiPicker.discover();
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        window.emojiPicker.discover();
     });
 
     function check() {
@@ -283,7 +297,7 @@
         });
     }
 
-    
+
 
     function profile() {
         var count = 0;

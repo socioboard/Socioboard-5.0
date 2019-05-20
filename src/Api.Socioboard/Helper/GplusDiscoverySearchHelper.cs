@@ -15,7 +15,6 @@ namespace Api.Socioboard.Helper
     public static class GplusDiscoverySearchHelper
     {
       
-
         /// <summary>
         /// 
         /// </summary>

@@ -1,32 +1,50 @@
 <script>
 (function($) {
   $(document).ready(function() {
-      $('#schedulerssprofiles option').each(function (index) {
-          if (index == 1)
-          {
-              $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
-          }
+      $('#schedulerssprofiles option').each(function(index) {
+          //if (index == 0) {
+          //    $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
+          //}
           //if (index == 2 || index == 3)
           //{
           //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
           //}
-          if (index == 2) {
+          if (index == 1) {
               $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
           }
-           if (index == 3)
-          {
-               $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
+          if (index == 2) {
+              $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
           }
-           if (index == 4)
-          {
-               $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+          if (index == 3) {
+              $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
           }
-           if (index == 5)
-          {
-               $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+          if (index == 4) {
+              $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
           }
-      //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
-    })
+          //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
+      });
+      $('#schedulerssprofilesxml option').each(function (index) {
+          //if (index == 0) {
+          //    $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
+          //}
+          //if (index == 2 || index == 3)
+          //{
+          //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          //}
+          if (index == 1) {
+              $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          }
+          if (index == 2) {
+              $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
+          }
+          if (index == 3) {
+              $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+          }
+          if (index == 4) {
+              $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+          }
+          //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
+      })
   });
 })(jQuery);
 </script>
@@ -38,9 +56,9 @@
                         <li class="tab col s6">
                             <a class="active" href="#test1">AutoMate Rss Feeds</a>
                         </li>
-                        <li class="tab col s6">
+                        <!--<li class="tab col s6">
                             <a href="#test2">Xml Site Url</a>
-                        </li>
+                        </li>-->
                         <!--<div class="indicator"></div>-->
                     </ul>
                     <!--<h4>AutoMate Rss Feeds</h4>-->
@@ -61,9 +79,11 @@
                                         <div class="input-field col s12">
                                         <select multiple id="schedulerssprofiles">
                                             <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="fb_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                           
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                         </select>
                                         <label>Select Profiles</label>
                                       </div>
@@ -87,7 +107,7 @@
                             <a ng-show="!dispbtn" ng-click="AddRssUrl()" class="btn grey darken-4 waves-effect waves-light">wait</a>
                         </div>
                       </div>
-                        <div id="test2">
+                        <!--<div id="test2">
                             <div class="card-content">
                                 <div class="row">
                                     <form class="col m12">
@@ -95,9 +115,10 @@
                                             <div class="input-field col s12">
                                                 <select multiple id="schedulerssprofilesxml">
                                                     <option value="" disabled selected>Choose your option</option>
-                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}"  my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                                 </select>
                                                 <label>Select Profiles</label>
                                             </div>
@@ -120,7 +141,7 @@
                                 <a ng-show="dispbtn" ng-click="AddXMLUrl()" class="waves-effect waves-light btn grey darken-3">Schedule</a>
                                 <a ng-show="!dispbtn" ng-click="AddXMLUrl()" class="btn grey darken-4 waves-effect waves-light">wait</a>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </section>

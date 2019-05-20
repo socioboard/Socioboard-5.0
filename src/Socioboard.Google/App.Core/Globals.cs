@@ -43,10 +43,15 @@ namespace Socioboard.GoogleLib.App.Core
         #endregion
 
         #region Google Analytics
+
         public static string strgetGaAccounts = "https://www.googleapis.com/analytics/v3/management/accounts/";
         public static string strGetGaAnalytics = "https://www.googleapis.com/analytics/v3/data/ga?ids=ga:";
-        #endregion
+        public static string strGetGaRealAnalytics = "https://www.googleapis.com/analytics/v3/data/realtime?ids=ga:";
+        public static string gaAccountSummary =  "https://www.googleapis.com/analytics/v3/management/accountSummaries?access_token=";
+        public static string gaSessionViews = "https://www.googleapis.com/analytics/v3/data/ga?ids=ga:";
+     
 
+        #endregion
 
         #region Blogger
         public static string strUserInfoBlogger = "https://www.googleapis.com/oauth2/v3/userinfo?alt=json";

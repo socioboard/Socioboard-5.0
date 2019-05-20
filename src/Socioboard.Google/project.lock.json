@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.1": {
+    ".NETFramework,Version=v4.5.2": {
       "Microsoft.AspNet.WebApi.Client/5.2.3": {
         "type": "package",
         "dependencies": {
@@ -2543,7 +2543,7 @@
     "": [
       "NETStandard.Library >= 1.6.0"
     ],
-    ".NETFramework,Version=v4.5.1": [
+    ".NETFramework,Version=v4.5.2": [
       "Microsoft.AspNet.WebApi.Client >= 5.2.3",
       "System.Data >= 4.0.0",
       "System.Xml >= 4.0.0",

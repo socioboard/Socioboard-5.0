@@ -28,19 +28,25 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             }
 
             await mongorepo.Add<MongoBoardTwitterHashTag>(twitteracc).ConfigureAwait(false);
-            new Thread(delegate ()
-            {
-                AddBoardTwitterHashTagFeeds(hashTag, twitteracc.strId.ToString(), null, settings, _logger);
-                //UpdaeTwt(twitteracc.strId);
-            }).Start();
+
+            //AddBoardTwitterHashTagFeeds(hashTag, twitteracc.strId.ToString(), null, settings, _logger);
+            //UpdaeTwt(twitteracc.strId);
             return twitteracc.strId.ToString();
         }
 
 
-        public bool AddBoardTwitterHashTagFeeds(string HashTag, string BoardTagid, string LastTweetId, Helper.AppSettings settings, ILogger _logger)
+        /// <summary>
+        ///Will fetch hasttag feeds from twitter and add to mongo db...
+        /// </summary>
+        /// <param name="HashTag">Twitter Keyword</param>
+        /// <param name="BoardTagid">BoardId</param>
+        /// <param name="LastTweetId"></param>
+        /// <param name="settings"></param>
+        /// <param name="_logger"></param>
+        /// <returns></returns>
+        public static List<MongoBoardTwtFeeds> AddBoardTwitterHashTagFeeds(string HashTag, string BoardTagid, string LastTweetId, Helper.AppSettings settings, ILogger _logger)
         {
             MongoRepository mongorepo = new MongoRepository("MongoBoardTwtFeeds", settings);
-            bool output = false;
             List<MongoBoardTwtFeeds> twtFeedsList = new List<MongoBoardTwtFeeds>();
             string timeline = TwitterHashTag.TwitterBoardHashTagSearch(HashTag, LastTweetId);
             int i = 0;
@@ -190,17 +196,18 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                     }
                     twitterfeed.Isvisible = true;
                     twitterfeed.Twitterprofileid = BoardTagid;
-                    try
-                    {
-                        mongorepo.Add<MongoBoardTwtFeeds>(twitterfeed);
-
-                    }
-                    catch (Exception e) { }
-
-                    output = true;
+                    twtFeedsList.Add(twitterfeed);
+                }
+                try
+                {
+                    mongorepo.AddList<MongoBoardTwtFeeds>(twtFeedsList);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.StackTrace);
                 }
             }
-            return output;
+            return twtFeedsList;
         }
 
         public void UpdaeTwt(string twtId, Helper.AppSettings settings, ILogger _logger)

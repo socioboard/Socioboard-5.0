@@ -25,13 +25,13 @@ namespace Api.Socioboard.Repositories
             _Shareathon.Facebookusername = objfacebook.FbUserName;
             _Shareathon.Facebookpageid = FacebookPageId;
             _Shareathon.FacebookPageUrl = FacebookUrl;
-            _Shareathon.FacebookPageUrlId = pageid.TrimEnd(','); 
+            _Shareathon.FacebookPageUrlId = pageid.TrimEnd(',');
             foreach (var item in profileids)
             {
-                Domain.Socioboard.Models.Facebookaccounts objfacebookpage = Repositories.FacebookRepository.getFacebookAccount(item, _redisCache, dbr);
-                if (objfacebookpage!=null)
+                Domain.Socioboard.Models.Facebookaccounts objfacebookpage = FacebookRepository.getFacebookAccount(item, _redisCache, dbr);
+                if (objfacebookpage != null)
                 {
-                    facebookpagename = objfacebookpage.FbUserName + ',' + facebookpagename; 
+                    facebookpagename = objfacebookpage.FbUserName + ',' + facebookpagename;
                 }
             }
             _Shareathon.Facebookpagename = facebookpagename.TrimEnd(',');
@@ -39,22 +39,22 @@ namespace Api.Socioboard.Repositories
             _Shareathon.Timeintervalminutes = Timeintervalminutes;
             _Shareathon.Userid = userId;
             _Shareathon.Lastsharetimestamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-            MongoRepository _ShareathonRepository = new MongoRepository("Shareathon", _appSettings);
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Facebookpageid == FacebookPageId && t.Facebookaccountid == Facebookaccountid && t.FacebookPageUrl == FacebookUrl && t.Userid == userId && t.FacebookStatus == 1);
+            var shareathonRepository = new MongoRepository("Shareathon", _appSettings);
+            var ret = shareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Facebookpageid == FacebookPageId && t.Facebookaccountid == Facebookaccountid && t.FacebookPageUrl == FacebookUrl && t.Userid == userId);
+
             var task = Task.Run(async () =>
                   {
                       return await ret;
                   });
+
             int count = task.Result.Count;
+
             if (count > 0)
-            {
-                return "already added";
-            }
-            else
-            {
-                _ShareathonRepository.Add(_Shareathon);
-                return "added successfully";
-            }
+                return "Oops! Same page shareathon settings has been added already.";
+
+            shareathonRepository.Add(_Shareathon);
+            return "Page shareathon has been scheduled Successfully.";
+
         }
 
         public static string DeletePageShareathon(string PageShareathodId, Helper.AppSettings _appSettings)
@@ -73,7 +73,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string EditPageShareathon(string PageShareathodId, long userId,string FacebookUrl, string FacebookPageId, string Facebookaccountid, int Timeintervalminutes, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        public static string EditPageShareathon(string PageShareathodId, long userId, string FacebookUrl, string FacebookPageId, string Facebookaccountid, int Timeintervalminutes, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
             try
             {
@@ -83,9 +83,9 @@ namespace Api.Socioboard.Repositories
                 foreach (var item in profileids)
                 {
                     Domain.Socioboard.Models.Facebookaccounts objfacebookpage = Repositories.FacebookRepository.getFacebookAccount(item, _redisCache, dbr);
-                    if (objfacebookpage!=null)
+                    if (objfacebookpage != null)
                     {
-                        facebookpagename = objfacebookpage.FbUserName + ',' + facebookpagename; 
+                        facebookpagename = objfacebookpage.FbUserName + ',' + facebookpagename;
                     }
                 }
 
@@ -115,7 +115,7 @@ namespace Api.Socioboard.Repositories
             else
             {
                 MongoRepository _ShareathonRepository = new MongoRepository("Shareathon", _appSettings);
-                var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Userid == userId && t.FacebookStatus == 1);
+                var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Userid == userId);
                 var task = Task.Run(async () =>
                       {
                           return await ret;
@@ -209,36 +209,17 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.GroupShareathon> GroupShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
+        public static Task<IList<Domain.Socioboard.Models.Mongo.GroupShareathon>> GroupShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
         {
-            List<Domain.Socioboard.Models.Mongo.GroupShareathon> iMmemGroupShareathon = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.GroupShareathon>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupShareathonByUserId + userId);
-            if (iMmemGroupShareathon != null)
-            {
-                return iMmemGroupShareathon;
-            }
-            else
-            {
-                MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
-                var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => t.Userid == userId && t.FacebookStatus == 1);
-                var task = Task.Run(async () =>
-                {
-                    return await ret;
-                });
-                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupShareathonByUserId + userId, task.Result.ToList());
-                return task.Result.ToList();
-            }
+
+            var _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
+            return _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => t.Userid == userId && t.FacebookStatus == 1);
         }
-        public static List<Domain.Socioboard.Models.Mongo.LinkShareathon> LinkShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
+
+        public static Task<IList<Domain.Socioboard.Models.Mongo.LinkShareathon>> LinkShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
         {
-
-            MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.LinkShareathon>(t => t.Userid == userId && t.IsActive);
-            var task = Task.Run(async () =>
-            {
-                return await ret;
-            });
-            return task.Result.ToList();
-
+            var _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
+            return _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.LinkShareathon>(t => t.Userid == userId && t.IsActive);
         }
 
         public static string EditgroupShareathon(string GroupShareathodId, long userId, string FacebookUrl, string FacebookGroupId, string Facebookaccountid, int Timeintervalminutes, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
@@ -275,9 +256,9 @@ namespace Api.Socioboard.Repositories
 
         public static string AddFacebookFeedShareDetail(long userId, string socialProfile, string FacebookPageId, string socialmedia, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
-            
 
-            MongoRepository _fbFeedShareRepository = new MongoRepository("FacebookPageFeedShare", _appSettings);                      
+
+            MongoRepository _fbFeedShareRepository = new MongoRepository("FacebookPageFeedShare", _appSettings);
             Domain.Socioboard.Models.Mongo.FacebookPageFeedShare _facebookfeedsShare = new Domain.Socioboard.Models.Mongo.FacebookPageFeedShare();
             _facebookfeedsShare.Id = ObjectId.GenerateNewId();
             _facebookfeedsShare.strId = ObjectId.GenerateNewId().ToString();
@@ -295,8 +276,8 @@ namespace Api.Socioboard.Repositories
             if (count < 1)
             {
                 _fbFeedShareRepository.Add(_facebookfeedsShare);
-            }                                                                                     
-            
+            }
+
             return "added successfully";
         }
 

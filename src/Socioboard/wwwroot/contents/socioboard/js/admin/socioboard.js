@@ -5,7 +5,7 @@ var Socioboard = function () {
 
     var apiDomain = 'http://localhost:6361/';
     var Domain = 'http://localhost:9821/';
-
+    //$.getScript('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js');
 }();
 
 dashboard = function () {

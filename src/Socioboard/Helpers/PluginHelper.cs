@@ -1,15 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
-using System.Web;
 using HtmlAgilityPack;
 using System.Text;
-using System.Compat.Web;
 
 namespace Socioboard.Helper
 {
@@ -185,7 +180,7 @@ namespace Socioboard.Helper
             HtmlAttribute haTitle;
             HtmlAttribute haImage;
             HtmlAttribute haUrl;
-            string location = HttpUtility.UrlDecode(url);
+            string location = System.Web.HttpUtility.UrlDecode(url);
             Domain.Socioboard.Helpers.ThumbnailDetails _ThumbnailDetails = new Domain.Socioboard.Helpers.ThumbnailDetails();
             string html = string.Empty;
             string _html = string.Empty;

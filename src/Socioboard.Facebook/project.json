@@ -7,7 +7,7 @@
   },
 
   "frameworks": {
-    "net451": {
+    "net452": {
       "frameworkAssemblies": {
       },
       "dependencies": {

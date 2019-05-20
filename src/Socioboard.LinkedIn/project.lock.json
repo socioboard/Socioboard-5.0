@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.1": {
+    ".NETFramework,Version=v4.5.2": {
       "Hammock/1.2.3": {
         "type": "package",
         "compile": {
@@ -2663,7 +2663,7 @@
       "Newtonsoft.Json >= 9.0.1",
       "OAuth >= 1.0.3"
     ],
-    ".NETFramework,Version=v4.5.1": [
+    ".NETFramework,Version=v4.5.2": [
       "System.Web.Extensions >= 4.0.0",
       "System.Xml >= 4.0.0",
       "System.Xml.Linq >= 4.0.0"

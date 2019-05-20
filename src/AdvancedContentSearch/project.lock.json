@@ -53,21 +53,6 @@
           "lib/net40/Iesi.Collections.dll": {}
         }
       },
-      "Imgur.API/4.0.1": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "9.0.1"
-        },
-        "frameworkAssemblies": [
-          "System.Net.Http"
-        ],
-        "compile": {
-          "lib/net45/Imgur.API.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Imgur.API.dll": {}
-        }
-      },
       "iTextSharp/5.5.11": {
         "type": "package",
         "compile": {
@@ -1490,7 +1475,7 @@
           "lib/net40/OAuth.dll": {}
         }
       },
-      "Sendgrid/9.10.0": {
+      "Sendgrid/9.11.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
@@ -2061,7 +2046,7 @@
           "MongoDB.Bson": "2.2.4",
           "NETStandard.Library": "1.6.0",
           "Newtonsoft.Json": "9.0.1",
-          "Sendgrid": "9.10.0"
+          "Sendgrid": "9.11.0"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -2081,7 +2066,6 @@
         "dependencies": {
           "Hammock": "1.0.0",
           "HtmlAgilityPack": "1.4.9.5",
-          "Imgur.API": "4.0.1",
           "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
           "Microsoft.AspNet.WebApi.Client": "5.2.3",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
@@ -2109,6 +2093,9 @@
           "Socioboard.Pinterest": "1.0.0",
           "iTextSharp": "5.5.11"
         },
+        "frameworkAssemblies": [
+          "System.Web"
+        ],
         "compile": {
           "net452/Socioboard.dll": {}
         },
@@ -2375,19 +2362,6 @@
         "Iesi.Collections.nuspec",
         "lib/net40/Iesi.Collections.dll",
         "lib/net40/Iesi.Collections.xml"
-      ]
-    },
-    "Imgur.API/4.0.1": {
-      "sha512": "fgg9Y0FQVw0RXeztVkbhFyIuc4SbxEDu7uTRPmes58jNpti5p3HW3dD1H4OtYB67stZbmWbiTwyx2Qm1/m8e6w==",
-      "type": "package",
-      "path": "Imgur.API/4.0.1",
-      "files": [
-        "imgur.api.4.0.1.nupkg.sha512",
-        "imgur.api.nuspec",
-        "lib/net45/Imgur.API.dll",
-        "lib/net45/Imgur.API.xml",
-        "lib/netstandard1.1/Imgur.API.dll",
-        "lib/netstandard1.1/Imgur.API.xml"
       ]
     },
     "iTextSharp/5.5.11": {
@@ -3717,13 +3691,13 @@
         "lib/sl4-wp71/OAuth.WindowsPhone.Mango.pdb"
       ]
     },
-    "Sendgrid/9.10.0": {
-      "sha512": "i6208SyPFvZ5bJRUbOimhBF/axjhiS4xQX71+KWPhzWUJGHbGX+yfwPrUg5y0D3deQlQz94mHeWF6AGHSZ81jQ==",
+    "Sendgrid/9.11.0": {
+      "sha512": "kzsw6uocRa3YWpH9HXVCOeEtlM4ky3YfW0CuW20AWgXe+gzQW7TsKGGgD1Y//EMti0kufST4lZ+tnqNCkEPh2A==",
       "type": "package",
-      "path": "Sendgrid/9.10.0",
+      "path": "Sendgrid/9.11.0",
       "files": [
         ".signature.p7s",
-        "Sendgrid.9.10.0.nupkg.sha512",
+        "Sendgrid.9.11.0.nupkg.sha512",
         "Sendgrid.nuspec",
         "lib/net452/SendGrid.dll",
         "lib/net452/SendGrid.pdb",

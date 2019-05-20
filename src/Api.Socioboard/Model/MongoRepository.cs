@@ -231,9 +231,9 @@ namespace Api.Socioboard.Model
             }
         }
 
-        public System.Threading.Tasks.Task AddList<T>(IEnumerable<T> items) where T : class, new()
+        public Task AddList<T>(IEnumerable<T> items) where T : class, new()
         {
-            List<BsonDocument> lstbson = new List<BsonDocument>();
+            var lstbson = new List<BsonDocument>();
             foreach (var item in items)
             {
                 BsonDocument document = BsonDocument.Parse(JsonConvert.SerializeObject(item));
@@ -242,6 +242,11 @@ namespace Api.Socioboard.Model
             var collection = _db.GetCollection<BsonDocument>(collecionName);
             return collection.InsertManyAsync(lstbson);
 
+        }
+        public Task<T> FindFirstOrDefault<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
+            return collection.FirstOrDefaultAsync();
         }
         public void Dispose()
         {

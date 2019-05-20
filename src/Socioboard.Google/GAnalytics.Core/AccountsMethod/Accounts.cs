@@ -38,6 +38,30 @@ namespace Socioboard.GoogleLib.GAnalytics.Core.Accounts
             return data;
         }
 
+
+
+        /// <summary>
+        /// Get the Google Analytics Account
+        /// </summary>
+        /// <param name="accesstoken"></param>
+        /// <returns></returns>
+        public string getGaAccountsSummary(string accesstoken)
+        {
+            //DataSet dsAccount = new DataSet();
+
+            string accountUrl = Globals.gaAccountSummary + accesstoken;
+            string data = string.Empty;
+            try
+            {              
+                data = objToken.WebRequest(oAuthToken.Method.GET, accountUrl, "");
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+            return data;
+        }
+
         /// <summary>
         /// Get Profiles added in Google Analytics Account
         /// </summary>

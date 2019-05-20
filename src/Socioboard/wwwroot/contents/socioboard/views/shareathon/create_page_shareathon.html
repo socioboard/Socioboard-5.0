@@ -28,11 +28,11 @@
 									      <option value="" disabled selected>Choose your option</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}"  value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
 									    </select>
-									    <label>Select Pages Whose Post's You Want To Automate</label>
+									    <label>Select your added own pages where your posts being share.</label>
 									</div>		
                                     <div class="input-field col s12">
                                         <input id="postpage_url" type="url" class="validate">
-                                        <label for="postpage_url">You Can Also Enter Page Url Whose Post's You Want To Automate</label>
+                                        <label for="postpage_url">Please provide page url which posts get share.</label>
                                     </div>							
 							        <div class="input-field col s12">
 									    <select id="shraeathontimeinterval">

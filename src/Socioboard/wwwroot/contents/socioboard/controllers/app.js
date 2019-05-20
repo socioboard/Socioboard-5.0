@@ -25,7 +25,7 @@ var SocioboardApp = angular.module("SocioboardApp", [
 //    })
 //});
 
-//SocioboardApp.constant("apiDomain", "https://servapi1.socioboard.com");
+//SocioboardApp.constant("apiDomain", "https://api.socioboard.com");
 //SocioboardApp.constant("domain", "https://serv1.socioboard.com");
 
 SocioboardApp.constant("apiDomain", "http://localhost:6361");
@@ -216,7 +216,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
         else {
             $rootScope.profilePicExist = 1;
         }
-       //get group count
+        //get group count
         $scope.getGroupCount = function () {
             $http.get(apiDomain + '/api/Groups/GetUserGroupsCount?&userId=' + $rootScope.user.Id)
                            .then(function (response) {
@@ -239,27 +239,27 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
             //$rootScope.user.Id = '';
             //codes to logout from all session
             $http.get(domain + '/Logout/Logout')
-                          .then(function() {
-                            
+                          .then(function () {
+
                               window.location.href = '../Index/Index';
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-          
-            
+
+
             // window.location.reload();
             // end codes to logout from all session
         }
 
         function setCookie(cname, cvalue, exdays) {
             var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
-                   // cpwd = cvalue;
-                    cvalue = Base64.encode(cvalue);
-                    var d = new Date();
-                    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-                    var expires = "expires=" + d.toUTCString();
-                    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-                }
+            // cpwd = cvalue;
+            cvalue = Base64.encode(cvalue);
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
 
         $scope.removeCookies = function async() {
             var cookies = document.cookie.split(";");
@@ -283,7 +283,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                     document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
                 }
             }
-           // window.location.href = '../Index/Index';
+            // window.location.href = '../Index/Index';
             //window.location.reload();
         }
 
@@ -324,11 +324,11 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
         //}
 
         $scope.changepass = function () {
-            
+
             $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.lstChangePass = response.data;
-                                  
+
                                   var abc = $scope.lstChangePass;
                                   $scope.lstsinglepass = [];
                                   angular.forEach($scope.lstChangePass, function (value, key) {
@@ -377,7 +377,7 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
         $scope.AccountType = $rootScope.user.AccountType;
         $scope.UserEmail = $rootScope.user.EmailId;
         $scope.message = function () {
-           $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
+            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
             swal($scope.abcd);
         };
         $scope.fbProfileFilter = function (item) {
@@ -428,12 +428,12 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
 
 
         $scope.getadminDetails = function () {
-               $http.get(apiDomain + '/api/GroupMember/GetGroupAdmin?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
-                          .then(function (response) {
-                              $rootScope.groupdetails = response.data;
-                              }, function (reason) {
-                              $scope.error = reason.data;
-                          });
+            $http.get(apiDomain + '/api/GroupMember/GetGroupAdmin?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
+                       .then(function (response) {
+                           $rootScope.groupdetails = response.data;
+                       }, function (reason) {
+                           $scope.error = reason.data;
+                       });
             //}
 
         }
@@ -546,9 +546,10 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
-                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/controllers/twitteranalyticscontroller.js',
-                            '../contents/socioboard/services/grouptask.js'
+                            '../contents/socioboard/services/grouptask.js',
+                            '../contents/socioboard/js/admin/plugins.js'
                         ]
                     });
                 }]
@@ -570,10 +571,12 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/twitterinboxcontroller.js',
                             '../contents/socioboard/js/admin/moment.min.js',
-                            '../contents/socioboard/services/grouptask.js'
+                            '../contents/socioboard/services/grouptask.js',
+
                         ]
                     });
                 }]
@@ -594,10 +597,11 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/mytaskcontroller.js',
                              '../contents/socioboard/services/grouptask.js',
-                             '../contents/socioboard/services/utility.js'
+                             '../contents/socioboard/services/utility.js',
                         ]
                     });
                 }]
@@ -617,9 +621,11 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          name: 'SocioboardApp',
                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                          files: [
+                             '../contents/socioboard/css/admin/custom.css',
                              '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/js/admin/moment.min.js',
                              '../contents/socioboard/controllers/historycontroller.js'
+
                          ]
                      });
                  }]
@@ -640,8 +646,10 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/youtubeinboxcontroller.js'
+                            '../contents/socioboard/controllers/youtubeinboxcontroller.js',
+                           
                         ]
                     });
                 }]
@@ -662,8 +670,10 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/youtubeinboxcontroller.js'
+                            '../contents/socioboard/controllers/youtubeinboxcontroller.js',
+                            
                         ]
                     });
                 }]
@@ -684,8 +694,10 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/css/admin/custom.css',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/youtubegroupinvitecontroller.js'
+                            '../contents/socioboard/controllers/youtubegroupinvitecontroller.js',
+                          
                         ]
                     });
                 }]
@@ -922,11 +934,11 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         .state('trending_content', {
             url: "/trending_content.html",
             templateUrl: "../contents/socioboard/views/content_studio/trending_content.html",
-            data: {pageTitle: 'Trending Content', pageSubTitle: 'updated'},
+            data: { pageTitle: 'Trending Content', pageSubTitle: 'updated' },
             controller: "TrendingContentController",
-             
+
             resolve: {
-                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
@@ -934,8 +946,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                             '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/controllers/trendingcontentcontroller.js'
- 
-                        ] 
+
+                        ]
                     });
                 }]
             }
@@ -1632,7 +1644,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         // Rss News
 
         .state('rss_news', {
-            url: "/rss_news.html",
+            url: "/rss_news",
             templateUrl: "../contents/socioboard/views/rss_news/rss_news.html",
             data: { pageTitle: 'Rss News', pageSubTitle: 'updated' },
             controller: "RssNewsController",

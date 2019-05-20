@@ -6,7 +6,7 @@
   },
 
   "frameworks": {
-    "net451": {
+    "net452": {
       "frameworkAssemblies": {
         "System.Data": "4.0.0.0",
         "System.Xml": "4.0.0.0",

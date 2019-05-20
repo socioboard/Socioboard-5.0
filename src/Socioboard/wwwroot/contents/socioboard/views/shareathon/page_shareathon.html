@@ -1,71 +1,108 @@
-    <div data-ng-controller="PageShareathonController">
-            <!-- Page name -->
-            <div class="container">
-                <div class="col m12">
-                  <span class="right"><a href="#/create_page_shareathon.html" class="btn">Add A Shareathon</a></span>
-                  <h4>Page Shareathon - Auto Update your accounts from page posts</h4> 
-                </div>
-            </div>
+<div data-ng-controller="PageShareathonController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <span class="right"><a href="#/create_page_shareathon.html" class="btn">Add A Shareathon</a></span>
+            <h4>Page Shareathon - Auto Update your accounts from page posts</h4>
+        </div>
+    </div>
 
 
-            <!-- START CONTENT -->
-            <section id="content">
-                <!-- Compose Email Structure -->
-                <div class="row">
-                    <div class="col s12 m12">
-                      <div class="card" id="feeds">
-                        <div class="row">
-                          <span class="right"><a class="btn margin-top-5 modal-trigger" href="#PageShareathonModal">Click here for Demo</a></span>
-                          <h5 class="feeds_title blue darken-4 white-text"><i class="icon-share"></i>Page Shareathon List</h5>
-                        </div>                        
-                        <div class="collection">
-                          <table class="responsive-table striped" >
-                              <thead>
-                                  <tr>
-                                      <th>#</th>
-                                      <th>Facebook Account</th>
-                                      <th>Facebook Page's</th>
-                                      <th>Time Interval</th>
-                                      <th colspan="2" class="center">Actions</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
+    <!-- START CONTENT -->
+    <section id="content">
+        <!-- Compose Email Structure -->
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="card" id="feeds">
+                    <div class="row">
+                        <span class="right"><a class="btn margin-top-5 modal-trigger" href="#PageShareathonModal">Click here for Demo</a></span>
+                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-share"></i>Page Shareathon List</h5>
+                    </div>
+                    <div class="collection">
+                        <table class="responsive-table striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <!--<th>Facebook Account</th>-->
+                                    <th>Post Sources</th>
+                                    <th>Page Destinations</th>
+                                    <th>Time Interval</th>
+                                    <th colspan="3" class="center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <tr ng-repeat="pageshareathon in lstpageshareathon">
+
                                     <td>{{current + $index}}</td>
-                                    <td>{{pageshareathon.facebookusername}}</td>
-                                    <td ng-if="pageshareathon.facebookpagename!=''">{{pageshareathon.facebookpagename}},{{pageshareathon.facebookPageUrl}}</td>
-                                    <td ng-if="pageshareathon.facebookpagename==''">{{pageshareathon.facebookPageUrl}}</td>
+
+                                    <!--<td>{{pageshareathon.facebookusername}}</td>-->
+
+                                    <td>{{pageshareathon.facebookPageUrl}}</td>
+
+                                    <td>{{pageshareathon.facebookpagename}}</td>
+
                                     <td>{{pageshareathon.timeintervalminutes}}</td>
+
                                     <td>
                                         <a role="button" ng-click="editpageshareathon(pageshareathon)" class="btn green"><i class="fa fa-eye fa-fw"></i>Edit</a>
                                     </td>
-                                     <td>
+                                    <td>
+                                        <a role="button" ng-click="shareathonpagereport(pageshareathon.strId)" class="btn orange modal-trigger"> <i class="fa fa-id-card-o"></i>Report</a>
+                                    </td>
+                                    <td>
                                         <a role="button" class="btn red" ng-click="deletepageshareathon(pageshareathon.strId)"><i class="fa fa-times fa-fw"></i>Delete</a>
                                     </td>
-                                </tr>      
-                                                     
-                              </tbody>
-                          </table>   
-                        </div>                     
-                      </div>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-            <!-- END CONTENT -->
-
-
-          <!-- Modal Structure -->
-          <div id="PageShareathonModal" class="modal">
-            <div class="modal-content">
-              <a href="" class="modal-action modal-close right black-text"><i class="icon-close"></i></a>
-              <h5>Page Shareathon - Auto Update your accounts from page posts</h5>
-              <div class="row center">
-                <div class="video-container">
-                  <iframe width="853" height="480" src="https://www.youtube.com/embed/Af4eo468vaU" frameborder="0" allowfullscreen></iframe>
-                </div>  
-              </div>
             </div>
-          </div>
+        </div>
+    </section>
+    <!-- END CONTENT -->
+    <!-- Modal Structure -->
+    <div id="PageShareathonModal" class="modal">
+        <div class="modal-content">
+            <a href="" class="modal-action modal-close right black-text"><i class="icon-close"></i></a>
+            <h5>Page Shareathon - Auto Update your accounts from page posts</h5>
+            <div class="row center">
+                <div class="video-container">
+                    <iframe width="853" height="480" src="https://www.youtube.com/embed/Af4eo468vaU" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
-               
+    <div id="PageShareathonReportModal" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col s12 m12">
+                    <table id="PostedFeeds" class="display responsive-table striped" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Feeds Url</th>
+                                <th>Published Feeds</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="feed in PostedFeeds">
+                                <td>{{$index +1}}</td>
+                                <td>
+                                    <a href="{{feed.postUrl}}">{{feed.postUrl}}</a>
+                                </td>
+                                <td>
+                                    <a href="{{feed.publishedUrl}}">{{feed.publishedUrl}}</a>
+                                </td>
+                                <td>{{feed.status}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>

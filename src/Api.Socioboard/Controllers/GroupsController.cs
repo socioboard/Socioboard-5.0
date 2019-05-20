@@ -106,7 +106,8 @@ namespace Api.Socioboard.Controllers
             if (string.IsNullOrEmpty(groupId))
             {
                 var lstStr = lstgroup.Select(t => t.id).ToArray();
-                lstgrpProfiles = GroupProfilesRepository.GetAllGroupProfiles(lstStr[0], _redisCache, dbr);
+                if (lstStr.Any())
+                    lstgrpProfiles = GroupProfilesRepository.GetAllGroupProfiles(lstStr[0], _redisCache, dbr);                
             }
             else
             {

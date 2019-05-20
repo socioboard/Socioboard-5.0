@@ -174,7 +174,7 @@ SocioboardApp.controller('TwitterInboxController', function ($rootScope, $scope,
     });
 });
 
-SocioboardApp.filter('notificationbyprofilesfileter', function () {
+SocioboardApp.filter('notificationByTwitterProfiles', function () {
     return function (items, selectedProfiles) {
         var filtered = [];
         angular.forEach(items, function (item) {

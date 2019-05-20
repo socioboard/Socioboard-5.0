@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Api.Socioboard.Model;
+using Domain.Socioboard.Models.Mongo;
+using Domain.Socioboard.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,9 +39,9 @@ namespace Api.Socioboard.Controllers
         /// <param name="Timeintervalminutes">Time interval provided by the user for posting</param>
         /// <returns></returns>
         [HttpPost("AddPageShareathon")]
-        public IActionResult AddPageShareathon(long userId,string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult AddPageShareathon(long userId, string Facebookaccountid, int Timeintervalminutes)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger,_env);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string FacebookPageId = Request.Form["FacebookPageId"];
             string FacebookUrl = Request.Form["FacebookUrl"];
             if (string.IsNullOrEmpty(FacebookUrl))
@@ -51,16 +53,16 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("EditPageShareathon")]
-        public IActionResult EditPageShareathon(string PageShareathodId,long userId, string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult EditPageShareathon(string PageShareathodId, long userId, string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string FacebookPageId = Request.Form["FacebookPageId"];
             string FacebookUrl = Request.Form["FacebookUrl"];
-            if(string.IsNullOrEmpty(FacebookUrl))
+            if (string.IsNullOrEmpty(FacebookUrl))
             {
                 FacebookUrl = "";
             }
-            string pagedata = Repositories.ShareathonRepository.EditPageShareathon(PageShareathodId,userId, FacebookUrl, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
+            string pagedata = Repositories.ShareathonRepository.EditPageShareathon(PageShareathodId, userId, FacebookUrl, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
 
@@ -93,17 +95,35 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("UsergroupShareathon")]
-        public IActionResult UsergroupShareathon(long userId)
+        public async Task<IActionResult> UsergroupShareathon(long userId)
         {
-            List<Domain.Socioboard.Models.Mongo.GroupShareathon> lstPageShareathon = Repositories.ShareathonRepository.GroupShareathonByUserId(userId, _appSettings, _redisCache);
-            return Ok(lstPageShareathon);
+            try
+            {
+                IList<Domain.Socioboard.Models.Mongo.GroupShareathon> lstPageShareathon = await Repositories.ShareathonRepository.GroupShareathonByUserId(userId, _appSettings, _redisCache);
+                if (lstPageShareathon != null)
+                    return Ok(lstPageShareathon);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(new List<GroupShareathon>());
         }
 
         [HttpGet("UserLinkShareathon")]
-        public IActionResult UserLinkShareathon(long userId)
+        public async Task<IActionResult> UserLinkShareathon(long userId)
         {
-            List<Domain.Socioboard.Models.Mongo.LinkShareathon> lstPageShareathon = Repositories.ShareathonRepository.LinkShareathonByUserId(userId, _appSettings, _redisCache);
-            return Ok(lstPageShareathon);
+            try
+            {
+                IList<LinkShareathon> lstPageShareathon = await Repositories.ShareathonRepository.LinkShareathonByUserId(userId, _appSettings, _redisCache);
+                if (lstPageShareathon != null)
+                    return Ok(lstPageShareathon);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok(new List<LinkShareathon>());
         }
 
 
@@ -117,7 +137,7 @@ namespace Api.Socioboard.Controllers
         /// <param name="FacebookGroupId">FacebookGroup id of user facebook profile</param>
         /// <returns></returns>
         [HttpPost("AddGroupShareathon")]
-        public IActionResult AddGroupShareathon(long userId,string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult AddGroupShareathon(long userId, string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string FacebookGroupId = Request.Form["FacebookGroupId"];
@@ -128,7 +148,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("EditGroupShareathon")]
-        public IActionResult EditGroupShareathon(string GroupShareathodId, long userId,string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult EditGroupShareathon(string GroupShareathodId, long userId, string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string FacebookGroupId = Request.Form["FacebookGroupId"];
@@ -187,5 +207,26 @@ namespace Api.Socioboard.Controllers
 
             return Ok("Added Sucessfully");
         }
+
+        [HttpGet("GetPublishedFeeds")]
+        public async Task<IActionResult> GetPublishedFeeds(string ShareathonId)
+        {
+            MongoRepository _ShareathonRepository = new MongoRepository("SharethonGroupPost", _appSettings);
+            IList<SharethonGroupPost> Feeds = await _ShareathonRepository.Find<SharethonGroupPost>(t => t.ShareathonId.Equals(ShareathonId));
+            if (Feeds != null)
+                return Ok(Feeds);
+            return Ok(new List<SharethonGroupPost>());
+        }
+
+        [HttpGet("GetPublishedPageFeeds")]
+        public async Task<IActionResult> GetPublishedPageFeeds(string ShareathonId)
+        {
+            MongoRepository _ShareathonRepository = new MongoRepository("SharethonPagePost", _appSettings);
+            IList<SharethonPagePost> Feeds = await _ShareathonRepository.Find<SharethonPagePost>(t => t.ShareathonId.Equals(ShareathonId));
+            if (Feeds != null)
+                return Ok(Feeds);
+            return Ok(new List<SharethonGroupPost>());
+        }
+
     }
 }

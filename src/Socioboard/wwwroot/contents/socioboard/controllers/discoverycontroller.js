@@ -142,18 +142,18 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             // end codes to load twitter discovery
 
         }
-        $scope.DiscoverySearchGplus = function () {
-            //codes to load gplus discovery start
-            $http.post(apiDomain + '/api/Discovery/DiscoverySearchGplus?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&keyword=' + $scope.searchText)
-                          .then(function (response) {
-                              $scope.dispbtn = true;
-                              $scope.SearchGplusdate(response.data);
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                          });
-            // end codes to load gplus discovery
+        //$scope.DiscoverySearchGplus = function () {
+        //    //codes to load gplus discovery start
+        //    $http.post(apiDomain + '/api/Discovery/DiscoverySearchGplus?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&keyword=' + $scope.searchText)
+        //                  .then(function (response) {
+        //                      $scope.dispbtn = true;
+        //                      $scope.SearchGplusdate(response.data);
+        //                  }, function (reason) {
+        //                      $scope.error = reason.data;
+        //                  });
+        //    // end codes to load gplus discovery
 
-        }
+        //}
          $scope.DiscoveryHistory= function()
         {
             //codes to load discovery historys start
@@ -196,9 +196,9 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             if ($scope.searchText != '') {
                 
                 $scope.dispbtn = false;
-                $scope.DiscoverySearchGplus();
+                //$scope.DiscoverySearchGplus();
                 $scope.DiscoverySearchTwitter();
-                 $scope.DiscoverySearchinstagram();
+                 //$scope.DiscoverySearchinstagram();
                  //$('#discoverytext').val('');
                  $scope.DiscoveryHistory();
                  

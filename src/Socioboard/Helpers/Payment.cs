@@ -17,11 +17,6 @@ namespace Socioboard.Helpers
             try
             {
 
-
-                //Mention URL to redirect content to paypal site
-                //redirecturl += "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
-                //                      paypalemail;
-
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" + paypalemail;
 
                 //redirecturl += "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +

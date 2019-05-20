@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.1": {
+    ".NETFramework,Version=v4.5.2": {
       "Facebook/7.0.10-beta": {
         "type": "package",
         "compile": {
@@ -1655,6 +1655,19 @@
           "lib/net45/NuGet.Versioning.dll": {}
         }
       },
+      "Sendgrid/9.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Net.Http": "4.3.3"
+        },
+        "compile": {
+          "lib/net452/SendGrid.dll": {}
+        },
+        "runtime": {
+          "lib/net452/SendGrid.dll": {}
+        }
+      },
       "Serilog/2.1.0": {
         "type": "package",
         "compile": {
@@ -1907,7 +1920,7 @@
           "lib/net45/_._": {}
         }
       },
-      "System.Net.Http/4.1.0": {
+      "System.Net.Http/4.3.3": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Net.Http"
@@ -2208,11 +2221,12 @@
       },
       "Domain.Socioboard/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "MongoDB.Bson": "2.2.4",
           "NETStandard.Library": "1.6.0",
-          "Newtonsoft.Json": "9.0.1"
+          "Newtonsoft.Json": "9.0.1",
+          "Sendgrid": "9.11.0"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -2220,15 +2234,15 @@
           "System.Security"
         ],
         "compile": {
-          "net451/Domain.Socioboard.dll": {}
+          "net452/Domain.Socioboard.dll": {}
         },
         "runtime": {
-          "net451/Domain.Socioboard.dll": {}
+          "net452/Domain.Socioboard.dll": {}
         }
       },
       "Socioboard.Facebook/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Domain.Socioboard": "1.0.0",
           "Facebook": "7.0.10-beta",
@@ -2236,15 +2250,15 @@
           "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
-          "net451/Socioboard.Facebook.dll": {}
+          "net452/Socioboard.Facebook.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Facebook.dll": {}
+          "net452/Socioboard.Facebook.dll": {}
         }
       },
       "Socioboard.Pinterest/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
           "Newtonsoft.Json": "9.0.1"
@@ -2254,10 +2268,10 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.Pinterest.dll": {}
+          "net452/Socioboard.Pinterest.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Pinterest.dll": {}
+          "net452/Socioboard.Pinterest.dll": {}
         }
       }
     }
@@ -2396,7 +2410,7 @@
       ]
     },
     "HtmlAgilityPack/1.4.9.5": {
-      "sha512": "i5di/J7GO4y2kx/hhVzctPrBI8G2cefWZDMDU/FdOUD3iVkiidN1q1NDZ0FvqrhB28LSaYaM4Z0hs86Tnp0IzA==",
+      "sha512": "zk7zsIaPkyBvYoVDsnx52SbKtvcmo2bcgNBshhSG++RnHMYoh0dqxRuQSznY+w6luiqR35OiHTk1L73SUAGKLw==",
       "type": "package",
       "path": "HtmlAgilityPack/1.4.9.5",
       "files": [
@@ -2805,7 +2819,7 @@
       ]
     },
     "Microsoft.AspNetCore.JsonPatch/1.0.0": {
-      "sha512": "WVaSVS+dDlWCR/qerHnBxU9tIeJ9GMA3M5tg4cxH7/cJYZZLnr2zvaFHGB+cRRNCKKTJ0pFRxT7ES8knhgAAaA==",
+      "sha512": "TFhm3NMZTvm8JmZ3yTwSlbVBaLBcSFqVlJn8WxC6voGcTb12TOVKWAHL0K5eHoYKEvUhKUvrP1ugeFua39Xueg==",
       "type": "package",
       "path": "Microsoft.AspNetCore.JsonPatch/1.0.0",
       "files": [
@@ -3575,16 +3589,16 @@
       ]
     },
     "Microsoft.Extensions.PlatformAbstractions/1.0.0": {
-      "sha512": "zyjUzrOmuevOAJpIo3Mt5GmpALVYCVdLZ99keMbmCxxgQH7oxzU58kGHzE6hAgYEiWsdfMJLjVR7r+vSmaJmtg==",
+      "sha512": "+SMcyAqMVmGIP/nOLyVLOhnYVJNawYSm5ZogbZ+kA34eDuPdlunds4bLvT5wiiHm+El+aZr8OSGE6u4d245u+w==",
       "type": "package",
       "path": "Microsoft.Extensions.PlatformAbstractions/1.0.0",
       "files": [
-        "Microsoft.Extensions.PlatformAbstractions.1.0.0.nupkg.sha512",
-        "Microsoft.Extensions.PlatformAbstractions.nuspec",
         "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll",
         "lib/net451/Microsoft.Extensions.PlatformAbstractions.xml",
         "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.dll",
-        "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.xml"
+        "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.xml",
+        "microsoft.extensions.platformabstractions.1.0.0.nupkg.sha512",
+        "microsoft.extensions.platformabstractions.nuspec"
       ]
     },
     "Microsoft.Extensions.Primitives/1.0.0": {
@@ -3875,6 +3889,25 @@
         "lib/net45/NuGet.Versioning.xml",
         "lib/netstandard1.0/NuGet.Versioning.dll",
         "lib/netstandard1.0/NuGet.Versioning.xml"
+      ]
+    },
+    "Sendgrid/9.11.0": {
+      "sha512": "kzsw6uocRa3YWpH9HXVCOeEtlM4ky3YfW0CuW20AWgXe+gzQW7TsKGGgD1Y//EMti0kufST4lZ+tnqNCkEPh2A==",
+      "type": "package",
+      "path": "Sendgrid/9.11.0",
+      "files": [
+        ".signature.p7s",
+        "Sendgrid.9.11.0.nupkg.sha512",
+        "Sendgrid.nuspec",
+        "lib/net452/SendGrid.dll",
+        "lib/net452/SendGrid.pdb",
+        "lib/net452/SendGrid.xml",
+        "lib/netstandard1.3/SendGrid.dll",
+        "lib/netstandard1.3/SendGrid.pdb",
+        "lib/netstandard1.3/SendGrid.xml",
+        "lib/netstandard2.0/SendGrid.dll",
+        "lib/netstandard2.0/SendGrid.pdb",
+        "lib/netstandard2.0/SendGrid.xml"
       ]
     },
     "Serilog/2.1.0": {
@@ -4899,13 +4932,11 @@
         "runtimes/aot/lib/netcore50/System.Linq.Expressions.dll"
       ]
     },
-    "System.Net.Http/4.1.0": {
-      "sha512": "ULq9g3SOPVuupt+Y3U+A37coXzdNisB1neFCSKzBwo182u0RDddKJF8I5+HfyXqK6OhJPgeoAwWXrbiUXuRDsg==",
+    "System.Net.Http/4.3.3": {
+      "sha512": "7rCqIbkC/P2+A00NoDH5gnvFhADmX7Dc4INvsOajbU1MVhktE9vZNrjPtF82N6Uo7obK+yzlrPUv/M+snnN/9w==",
       "type": "package",
-      "path": "System.Net.Http/4.1.0",
+      "path": "System.Net.Http/4.3.3",
       "files": [
-        "System.Net.Http.4.1.0.nupkg.sha512",
-        "System.Net.Http.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/Xamarinmac20/_._",
@@ -4924,49 +4955,9 @@
         "ref/monotouch10/_._",
         "ref/net45/_._",
         "ref/net46/System.Net.Http.dll",
-        "ref/net46/System.Net.Http.xml",
-        "ref/net46/de/System.Net.Http.xml",
-        "ref/net46/es/System.Net.Http.xml",
-        "ref/net46/fr/System.Net.Http.xml",
-        "ref/net46/it/System.Net.Http.xml",
-        "ref/net46/ja/System.Net.Http.xml",
-        "ref/net46/ko/System.Net.Http.xml",
-        "ref/net46/ru/System.Net.Http.xml",
-        "ref/net46/zh-hans/System.Net.Http.xml",
-        "ref/net46/zh-hant/System.Net.Http.xml",
         "ref/netcore50/System.Net.Http.dll",
-        "ref/netcore50/System.Net.Http.xml",
-        "ref/netcore50/de/System.Net.Http.xml",
-        "ref/netcore50/es/System.Net.Http.xml",
-        "ref/netcore50/fr/System.Net.Http.xml",
-        "ref/netcore50/it/System.Net.Http.xml",
-        "ref/netcore50/ja/System.Net.Http.xml",
-        "ref/netcore50/ko/System.Net.Http.xml",
-        "ref/netcore50/ru/System.Net.Http.xml",
-        "ref/netcore50/zh-hans/System.Net.Http.xml",
-        "ref/netcore50/zh-hant/System.Net.Http.xml",
         "ref/netstandard1.1/System.Net.Http.dll",
-        "ref/netstandard1.1/System.Net.Http.xml",
-        "ref/netstandard1.1/de/System.Net.Http.xml",
-        "ref/netstandard1.1/es/System.Net.Http.xml",
-        "ref/netstandard1.1/fr/System.Net.Http.xml",
-        "ref/netstandard1.1/it/System.Net.Http.xml",
-        "ref/netstandard1.1/ja/System.Net.Http.xml",
-        "ref/netstandard1.1/ko/System.Net.Http.xml",
-        "ref/netstandard1.1/ru/System.Net.Http.xml",
-        "ref/netstandard1.1/zh-hans/System.Net.Http.xml",
-        "ref/netstandard1.1/zh-hant/System.Net.Http.xml",
         "ref/netstandard1.3/System.Net.Http.dll",
-        "ref/netstandard1.3/System.Net.Http.xml",
-        "ref/netstandard1.3/de/System.Net.Http.xml",
-        "ref/netstandard1.3/es/System.Net.Http.xml",
-        "ref/netstandard1.3/fr/System.Net.Http.xml",
-        "ref/netstandard1.3/it/System.Net.Http.xml",
-        "ref/netstandard1.3/ja/System.Net.Http.xml",
-        "ref/netstandard1.3/ko/System.Net.Http.xml",
-        "ref/netstandard1.3/ru/System.Net.Http.xml",
-        "ref/netstandard1.3/zh-hans/System.Net.Http.xml",
-        "ref/netstandard1.3/zh-hant/System.Net.Http.xml",
         "ref/portable-net45+win8+wpa81/_._",
         "ref/win8/_._",
         "ref/wpa81/_._",
@@ -4976,7 +4967,9 @@
         "runtimes/unix/lib/netstandard1.6/System.Net.Http.dll",
         "runtimes/win/lib/net46/System.Net.Http.dll",
         "runtimes/win/lib/netcore50/System.Net.Http.dll",
-        "runtimes/win/lib/netstandard1.3/System.Net.Http.dll"
+        "runtimes/win/lib/netstandard1.3/System.Net.Http.dll",
+        "system.net.http.4.3.3.nupkg.sha512",
+        "system.net.http.nuspec"
       ]
     },
     "System.Net.Primitives/4.0.11": {
@@ -6475,7 +6468,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "Hammock >= 1.2.3",
+      "Hammock >= 1.0.0",
       "HtmlAgilityPack >= 1.4.9.5",
       "Microsoft.ApplicationInsights.AspNetCore >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.Cookies >= 1.0.0",
@@ -6504,8 +6497,9 @@
       "Socioboard.Pinterest >= 1.0.0-*",
       "iTextSharp >= 5.5.11"
     ],
-    ".NETFramework,Version=v4.5.1": [
-      "Microsoft.AspNet.WebApi.Client >= 5.2.3"
+    ".NETFramework,Version=v4.5.2": [
+      "Microsoft.AspNet.WebApi.Client >= 5.2.3",
+      "System.Web >= 4.0.0"
     ]
   },
   "tools": {

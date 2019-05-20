@@ -19,7 +19,10 @@ namespace Domain.Socioboard.Models.Mongo
         public virtual string Facebookaccountid { get; set; }
         public virtual double PostedTime { get; set; }
         public virtual string PostId { get; set; }
-
         public virtual string Facebookpagename { get; set; }
+        public virtual string PostUrl { get; set; }
+        public virtual string PublishedUrl { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string ShareathonId { get; set; }
     }
 }

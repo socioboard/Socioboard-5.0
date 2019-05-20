@@ -24,10 +24,11 @@ namespace Domain.Socioboard.Models.Mongo
         public string Title { get; set; }
         public string Link { get; set; }
         public bool Status { get; set; }
-        public string ProfileName { get;set; }
+        public string ProfileName { get; set; }
         public string ProfileImageUrl { get; set; }
         public string PublishingDate { get; set; }
         public string Image { get; set; }
 
+        public string ReportMessage { get; set; }
     }
 }

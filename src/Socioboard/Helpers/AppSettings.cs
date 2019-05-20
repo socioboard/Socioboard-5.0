@@ -25,7 +25,7 @@ namespace Socioboard.Helpers
         //Twitter App Creds Start
         public string twitterConsumerKey { get; set; }
         public string twitterConsumerScreatKey { get; set; }
-        public string twitterRedirectionUrl { get;  set; }
+        public string twitterRedirectionUrl { get; set; }
         //End Twitter App Creds 
 
         //Instgram App Creds Start
@@ -80,5 +80,13 @@ namespace Socioboard.Helpers
         public string moneyconvertion { get; set; }
         public string payurl { get; set; }
         public string AuthorizationKey { get; set; }
+
+        public string StripeSecretKey { get; set; }
+        public string StripePublishableKey { get; set; }
+
+        public int StripeEnterpriseLite { get; set; }
+        public int StripeEnterprisePro { get; set; }
     }
+
+
 }

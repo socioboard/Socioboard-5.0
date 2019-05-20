@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    "DNX,Version=v4.5.1": {
+    ".NETFramework,Version=v4.5.2": {
       "EntityFramework/6.0.0": {
         "type": "package",
         "frameworkAssemblies": [
@@ -42,6 +42,15 @@
         },
         "runtime": {
           "lib/net40/Hammock.dll": {}
+        }
+      },
+      "HtmlAgilityPack/1.11.4": {
+        "type": "package",
+        "compile": {
+          "lib/Net45/HtmlAgilityPack.dll": {}
+        },
+        "runtime": {
+          "lib/Net45/HtmlAgilityPack.dll": {}
         }
       },
       "Iesi.Collections/4.0.0.4000": {
@@ -211,6 +220,19 @@
           "lib/net40/OAuth.dll": {}
         }
       },
+      "Sendgrid/9.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Net.Http": "4.3.3"
+        },
+        "compile": {
+          "lib/net452/SendGrid.dll": {}
+        },
+        "runtime": {
+          "lib/net452/SendGrid.dll": {}
+        }
+      },
       "StackExchange.Redis/1.1.603": {
         "type": "package",
         "compile": {
@@ -335,7 +357,7 @@
           "lib/net45/_._": {}
         }
       },
-      "System.Net.Http/4.1.0": {
+      "System.Net.Http/4.3.3": {
         "type": "package",
         "frameworkAssemblies": [
           "System.Net.Http"
@@ -567,11 +589,12 @@
       },
       "Domain.Socioboard/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "MongoDB.Bson": "2.2.4",
           "NETStandard.Library": "1.6.0",
-          "Newtonsoft.Json": "9.0.1"
+          "Newtonsoft.Json": "9.0.1",
+          "Sendgrid": "9.11.0"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -579,15 +602,15 @@
           "System.Security"
         ],
         "compile": {
-          "net451/Domain.Socioboard.dll": {}
+          "net452/Domain.Socioboard.dll": {}
         },
         "runtime": {
-          "net451/Domain.Socioboard.dll": {}
+          "net452/Domain.Socioboard.dll": {}
         }
       },
       "Socioboard.Facebook/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Domain.Socioboard": "1.0.0",
           "Facebook": "7.0.10-beta",
@@ -595,15 +618,15 @@
           "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
-          "net451/Socioboard.Facebook.dll": {}
+          "net452/Socioboard.Facebook.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Facebook.dll": {}
+          "net452/Socioboard.Facebook.dll": {}
         }
       },
       "Socioboard.Google/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Microsoft.AspNet.WebApi.Client": "5.2.3",
           "NETStandard.Library": "1.6.0"
@@ -614,15 +637,15 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.Google.dll": {}
+          "net452/Socioboard.Google.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Google.dll": {}
+          "net452/Socioboard.Google.dll": {}
         }
       },
       "Socioboard.Instagram/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Hammock": "1.2.3",
           "NETStandard.Library": "1.6.0",
@@ -634,15 +657,15 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.Instagram.dll": {}
+          "net452/Socioboard.Instagram.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Instagram.dll": {}
+          "net452/Socioboard.Instagram.dll": {}
         }
       },
       "Socioboard.LinkedIn/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Hammock": "1.2.3",
           "NETStandard.Library": "1.6.0",
@@ -655,15 +678,15 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.LinkedIn.dll": {}
+          "net452/Socioboard.LinkedIn.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.LinkedIn.dll": {}
+          "net452/Socioboard.LinkedIn.dll": {}
         }
       },
       "Socioboard.Pinterest/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "NETStandard.Library": "1.6.0",
           "Newtonsoft.Json": "9.0.1"
@@ -673,15 +696,15 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.Pinterest.dll": {}
+          "net452/Socioboard.Pinterest.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Pinterest.dll": {}
+          "net452/Socioboard.Pinterest.dll": {}
         }
       },
       "Socioboard.Twitter/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5.1",
+        "framework": ".NETFramework,Version=v4.5.2",
         "dependencies": {
           "Hammock": "1.2.3",
           "NETStandard.Library": "1.6.0",
@@ -693,10 +716,10 @@
           "System.Xml.Linq"
         ],
         "compile": {
-          "net451/Socioboard.Twitter.dll": {}
+          "net452/Socioboard.Twitter.dll": {}
         },
         "runtime": {
-          "net451/Socioboard.Twitter.dll": {}
+          "net452/Socioboard.Twitter.dll": {}
         }
       }
     }
@@ -874,6 +897,56 @@
         "lib/sl4/zh-Hant/System.Xml.Linq.resources.dll",
         "mono/Hammock.Mono.dll",
         "mono/Hammock.Mono.pdb"
+      ]
+    },
+    "HtmlAgilityPack/1.11.4": {
+      "sha512": "OGEi48/KQCbHnM2fTj1oW2eQIwXcYnI9Zy39fEJPQLYHXN19iwDdVpKYdBDyZNVSvhl/Bi0kXXotYbqipnTTMA==",
+      "type": "package",
+      "path": "HtmlAgilityPack/1.11.4",
+      "files": [
+        ".signature.p7s",
+        "HtmlAgilityPack.1.11.4.nupkg.sha512",
+        "HtmlAgilityPack.nuspec",
+        "lib/Net20/HtmlAgilityPack.dll",
+        "lib/Net20/HtmlAgilityPack.pdb",
+        "lib/Net20/HtmlAgilityPack.xml",
+        "lib/Net35/HtmlAgilityPack.dll",
+        "lib/Net35/HtmlAgilityPack.pdb",
+        "lib/Net35/HtmlAgilityPack.xml",
+        "lib/Net40-client/HtmlAgilityPack.dll",
+        "lib/Net40-client/HtmlAgilityPack.pdb",
+        "lib/Net40-client/HtmlAgilityPack.xml",
+        "lib/Net40/HtmlAgilityPack.XML",
+        "lib/Net40/HtmlAgilityPack.dll",
+        "lib/Net40/HtmlAgilityPack.pdb",
+        "lib/Net45/HtmlAgilityPack.XML",
+        "lib/Net45/HtmlAgilityPack.dll",
+        "lib/Net45/HtmlAgilityPack.pdb",
+        "lib/NetCore45/HtmlAgilityPack.XML",
+        "lib/NetCore45/HtmlAgilityPack.dll",
+        "lib/NetCore45/HtmlAgilityPack.pdb",
+        "lib/netstandard1.3/HtmlAgilityPack.deps.json",
+        "lib/netstandard1.3/HtmlAgilityPack.dll",
+        "lib/netstandard1.3/HtmlAgilityPack.pdb",
+        "lib/netstandard1.3/HtmlAgilityPack.xml",
+        "lib/netstandard1.6/HtmlAgilityPack.deps.json",
+        "lib/netstandard1.6/HtmlAgilityPack.dll",
+        "lib/netstandard1.6/HtmlAgilityPack.pdb",
+        "lib/netstandard1.6/HtmlAgilityPack.xml",
+        "lib/netstandard2.0/HtmlAgilityPack.deps.json",
+        "lib/netstandard2.0/HtmlAgilityPack.dll",
+        "lib/netstandard2.0/HtmlAgilityPack.pdb",
+        "lib/netstandard2.0/HtmlAgilityPack.xml",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/uap10.0/HtmlAgilityPack.XML",
+        "lib/uap10.0/HtmlAgilityPack.dll",
+        "lib/uap10.0/HtmlAgilityPack.pdb",
+        "lib/uap10.0/HtmlAgilityPack.pri"
       ]
     },
     "Iesi.Collections/4.0.0.4000": {
@@ -1073,6 +1146,25 @@
         "lib/sl4-wp71/OAuth.WindowsPhone.Mango.XML",
         "lib/sl4-wp71/OAuth.WindowsPhone.Mango.dll",
         "lib/sl4-wp71/OAuth.WindowsPhone.Mango.pdb"
+      ]
+    },
+    "Sendgrid/9.11.0": {
+      "sha512": "kzsw6uocRa3YWpH9HXVCOeEtlM4ky3YfW0CuW20AWgXe+gzQW7TsKGGgD1Y//EMti0kufST4lZ+tnqNCkEPh2A==",
+      "type": "package",
+      "path": "Sendgrid/9.11.0",
+      "files": [
+        ".signature.p7s",
+        "Sendgrid.9.11.0.nupkg.sha512",
+        "Sendgrid.nuspec",
+        "lib/net452/SendGrid.dll",
+        "lib/net452/SendGrid.pdb",
+        "lib/net452/SendGrid.xml",
+        "lib/netstandard1.3/SendGrid.dll",
+        "lib/netstandard1.3/SendGrid.pdb",
+        "lib/netstandard1.3/SendGrid.xml",
+        "lib/netstandard2.0/SendGrid.dll",
+        "lib/netstandard2.0/SendGrid.pdb",
+        "lib/netstandard2.0/SendGrid.xml"
       ]
     },
     "StackExchange.Redis/1.1.603": {
@@ -1802,13 +1894,11 @@
         "runtimes/aot/lib/netcore50/System.Linq.Expressions.dll"
       ]
     },
-    "System.Net.Http/4.1.0": {
-      "sha512": "ULq9g3SOPVuupt+Y3U+A37coXzdNisB1neFCSKzBwo182u0RDddKJF8I5+HfyXqK6OhJPgeoAwWXrbiUXuRDsg==",
+    "System.Net.Http/4.3.3": {
+      "sha512": "7rCqIbkC/P2+A00NoDH5gnvFhADmX7Dc4INvsOajbU1MVhktE9vZNrjPtF82N6Uo7obK+yzlrPUv/M+snnN/9w==",
       "type": "package",
-      "path": "System.Net.Http/4.1.0",
+      "path": "System.Net.Http/4.3.3",
       "files": [
-        "System.Net.Http.4.1.0.nupkg.sha512",
-        "System.Net.Http.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/Xamarinmac20/_._",
@@ -1827,49 +1917,9 @@
         "ref/monotouch10/_._",
         "ref/net45/_._",
         "ref/net46/System.Net.Http.dll",
-        "ref/net46/System.Net.Http.xml",
-        "ref/net46/de/System.Net.Http.xml",
-        "ref/net46/es/System.Net.Http.xml",
-        "ref/net46/fr/System.Net.Http.xml",
-        "ref/net46/it/System.Net.Http.xml",
-        "ref/net46/ja/System.Net.Http.xml",
-        "ref/net46/ko/System.Net.Http.xml",
-        "ref/net46/ru/System.Net.Http.xml",
-        "ref/net46/zh-hans/System.Net.Http.xml",
-        "ref/net46/zh-hant/System.Net.Http.xml",
         "ref/netcore50/System.Net.Http.dll",
-        "ref/netcore50/System.Net.Http.xml",
-        "ref/netcore50/de/System.Net.Http.xml",
-        "ref/netcore50/es/System.Net.Http.xml",
-        "ref/netcore50/fr/System.Net.Http.xml",
-        "ref/netcore50/it/System.Net.Http.xml",
-        "ref/netcore50/ja/System.Net.Http.xml",
-        "ref/netcore50/ko/System.Net.Http.xml",
-        "ref/netcore50/ru/System.Net.Http.xml",
-        "ref/netcore50/zh-hans/System.Net.Http.xml",
-        "ref/netcore50/zh-hant/System.Net.Http.xml",
         "ref/netstandard1.1/System.Net.Http.dll",
-        "ref/netstandard1.1/System.Net.Http.xml",
-        "ref/netstandard1.1/de/System.Net.Http.xml",
-        "ref/netstandard1.1/es/System.Net.Http.xml",
-        "ref/netstandard1.1/fr/System.Net.Http.xml",
-        "ref/netstandard1.1/it/System.Net.Http.xml",
-        "ref/netstandard1.1/ja/System.Net.Http.xml",
-        "ref/netstandard1.1/ko/System.Net.Http.xml",
-        "ref/netstandard1.1/ru/System.Net.Http.xml",
-        "ref/netstandard1.1/zh-hans/System.Net.Http.xml",
-        "ref/netstandard1.1/zh-hant/System.Net.Http.xml",
         "ref/netstandard1.3/System.Net.Http.dll",
-        "ref/netstandard1.3/System.Net.Http.xml",
-        "ref/netstandard1.3/de/System.Net.Http.xml",
-        "ref/netstandard1.3/es/System.Net.Http.xml",
-        "ref/netstandard1.3/fr/System.Net.Http.xml",
-        "ref/netstandard1.3/it/System.Net.Http.xml",
-        "ref/netstandard1.3/ja/System.Net.Http.xml",
-        "ref/netstandard1.3/ko/System.Net.Http.xml",
-        "ref/netstandard1.3/ru/System.Net.Http.xml",
-        "ref/netstandard1.3/zh-hans/System.Net.Http.xml",
-        "ref/netstandard1.3/zh-hant/System.Net.Http.xml",
         "ref/portable-net45+win8+wpa81/_._",
         "ref/win8/_._",
         "ref/wpa81/_._",
@@ -1879,7 +1929,9 @@
         "runtimes/unix/lib/netstandard1.6/System.Net.Http.dll",
         "runtimes/win/lib/net46/System.Net.Http.dll",
         "runtimes/win/lib/netcore50/System.Net.Http.dll",
-        "runtimes/win/lib/netstandard1.3/System.Net.Http.dll"
+        "runtimes/win/lib/netstandard1.3/System.Net.Http.dll",
+        "system.net.http.4.3.3.nupkg.sha512",
+        "system.net.http.nuspec"
       ]
     },
     "System.Net.Primitives/4.0.11": {
@@ -3192,6 +3244,7 @@
     "": [
       "Domain.Socioboard >= 1.0.0-*",
       "FluentScheduler >= 5.3.0",
+      "HtmlAgilityPack >= 1.11.4",
       "MongoDB.Bson >= 2.2.4",
       "MongoDB.Driver >= 2.2.4",
       "MySql.Data >= 6.9.8",
@@ -3206,7 +3259,7 @@
       "Socioboard.Twitter >= 1.0.0-*",
       "StackExchange.Redis >= 1.1.603"
     ],
-    "DNX,Version=v4.5.1": [
+    ".NETFramework,Version=v4.5.2": [
       "NHibernate >= 4.0.4.4000",
       "System.Xml >= 4.0.0"
     ]

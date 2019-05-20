@@ -130,57 +130,10 @@
                                         <img ng-src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
                                     </div>
 
-                                    <!--<div class="col m12">
-                                        <ul class="collapsible" data-collapsible="accordion">
-                                            <li>
-                                                <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed._facebookFeed.commentcount}} </span></div>
-                                                <div class="collapsible-body">
-                                                    <ul class="collection facebookfeeds">
-                                                        <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
-                                                            <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
-                                                            <span class="email-title">{{fbcomments.fromName}}</span>
-                                                            <div class="row dashboard_feeds z-depth-1 hoverable">
-                                                                <div class="col m8">
-                                                                    <p class="break_word ultra-small">{{fbcomments.comment}}</p>
-                                                                </div>
-                                                                <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
-
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="collection-item" ng-if="user.TrailStatus!=2">
-                                                            <div class="row">
-                                                                <form class="col s10">
-                                                                    <div class="row">
-                                                                        <div class="input-field col s12">
-                                                                            <i class="icon-pencil prefix"></i>
-                                                                            <textarea type="text" id="postcomment_{{fbfeed._facebookFeed.feedId}}" class="materialize-textarea" />
-                                                                            <label for="icon_prefix2">Type your comment here...</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                                <span class="col s12 center">
-                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed._facebookFeed.feedId,fbfeed._facebookFeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
-                                                                </span>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>-->
+                     
                                 </div>
                                 <div class="row">
-                                    <!--<div class="col l6 s8 left">
-                                        <a class="center">
-                                            <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
-                                        </a>
-                                    </div>-->
-                                    <!--<div class="col l2 s1 center">
-                                        <div class="center">
-                                            <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
-                                        </div>
-                                    </div>-->
+                                  
                                     <div class="col l2 s1 center">
                                         <div class="center">
                                             <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>

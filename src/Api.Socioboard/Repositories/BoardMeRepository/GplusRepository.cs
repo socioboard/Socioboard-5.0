@@ -33,10 +33,8 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 return objgplusPagelist.First().strId.ToString();
             }
             await boardrepo.Add<MongoBoardGplusHashTag>(bgpacc).ConfigureAwait(false);
-            new Thread(delegate ()
-            {
-                AddBoardGplusTagFeeds(hashTag, bgpacc.strId.ToString(),_redisCache,settings, _logger);
-            }).Start();
+
+            //AddBoardGplusTagFeeds(hashTag, bgpacc.strId.ToString(),_redisCache,settings, _logger);
             return bgpacc.strId.ToString();
         }
 
@@ -49,13 +47,13 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
         /// <param name="settings"></param>
         /// <param name="_logger"></param>
         /// <returns></returns>
-        public bool AddBoardGplusTagFeeds(string GplusTagId, string BoardId, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public static List<MongoBoardGplusFeeds> AddBoardGplusTagFeeds(string GplusTagId, string BoardId, Helper.AppSettings settings, ILogger _logger)
         {
             MongoRepository boardrepo = new MongoRepository("MongoBoardGplusFeeds", settings);
-            bool output = false;
+            List<MongoBoardGplusFeeds> GplusFeeds = new List<MongoBoardGplusFeeds>();
             try
             {
-                JObject RecentActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(GplusTagId));
+                JObject RecentActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(GplusTagId, settings.GoogleApiKey));
                 foreach (JObject obj in RecentActivities["items"])
                 {
                     MongoBoardGplusFeeds bgpfeed = new MongoBoardGplusFeeds();
@@ -108,28 +106,18 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                         bgpfeed.FromPicUrl = obj["actor"]["image"]["url"].ToString();
                     }
                     catch { }
-
-                    try
-                    {
-                        boardrepo.Add<MongoBoardGplusFeeds>(bgpfeed);
-                    }
-                    catch { }
-
-
-
-                    //if (!boardrepo.checkgPlusFeedExists(bgpfeed.Feedid, BoardId))
-                    //{
-                    //    boardrepo.addBoardGPlusFeed(bgpfeed);
-                    //}
+                    GplusFeeds.Add(bgpfeed);
                 }
+                try
+                {
+                    boardrepo.AddList<MongoBoardGplusFeeds>(GplusFeeds);
+                }
+                catch { }
             }
             catch { }
-
-
-
-            return output;
+            return GplusFeeds;
         }
-        public async Task<string> AddGplusHashTagFBPlugin(string hashTag, string boardId, Helper.Cache _redisCache ,Helper.AppSettings _appSettings, ILogger _logger)
+        public async Task<string> AddGplusHashTagFBPlugin(string hashTag, string boardId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
         {
             MongoBoardGplusHashTag bgpacc = new MongoBoardGplusHashTag { Id = ObjectId.GenerateNewId(), strId = ObjectId.GenerateNewId().ToString(), Aboutme = string.Empty, Boardid = boardId, Circledbycount = string.Empty, Coverphotourl = string.Empty, Displayname = hashTag.ToLower(), Entrydate = DateTime.UtcNow.ToString(), Nickname = hashTag, Pageid = "tag", Pageurl = string.Empty, Plusonecount = string.Empty, Profileimageurl = string.Empty, Tagline = string.Empty };
             MongoRepository boardrepo = new MongoRepository("MongoBoardGplusHashTag", _appSettings);
@@ -168,7 +156,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             bool output = false;
             try
             {
-                JObject RecentActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(GplusTagId));
+                JObject RecentActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(GplusTagId, _appSettings.GoogleApiKey));
                 foreach (JObject obj in RecentActivities["items"])
                 {
                     MongoBoardGplusFeeds bgpfeed = new MongoBoardGplusFeeds();

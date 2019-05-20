@@ -6,14 +6,13 @@
 <!--Import jQuery before materialize.js-->
 @*<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>*@
 @*
-    <script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>*@
+<script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>*@
 @*<script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>*@
 
 
 <div class="container">
     <div class="row center-align">
         submitlogin
-
         <div class="margin-top-50">
             <div class="col-md-12" id="fb-gp-login" style="display:none;">
                 <div class="alert">
@@ -67,7 +66,6 @@
 </div>
 
 <script>
-
         function Login() {
             $('#logLoading').show();
             $('input[type="submit"]').attr('disabled', true);
@@ -75,7 +73,6 @@
             $("#fb-gp-login").css("display", "block");
             var userName = $('#logUserName').val();
             var password = $('#logPassword').val();
-
 
             $.ajax({
 
@@ -154,7 +151,8 @@
                 },
                 error: function (msg) {
                     $("#fb-gp-login").css("display", "none");
-                    alertify.error("It seems like your connectivity to the internet is impaired");
+                   // alertify.error("It seems like your connectivity to the internet is impaired");
+                    alertify.error(msg);
                     $('#logLoading').hide();
                     $('#submitButton').show();
                     return false;
@@ -214,7 +212,10 @@
 
             }
 
-            return clist[0].replace("logininfo", "");
+            if (clist[0]) {
+                return clist[0].replace("logininfo", "");
+            } else
+                return '';
 
         }
 
@@ -284,8 +285,9 @@
 
             var currentcookie = GetAllCookies().split('=');
             var email = currentcookie[0].trim();
-            var pass = currentcookie[1].trim();
+           
             if (email != "") {
+                var pass = currentcookie[1].trim();
                 $("#RememberMe").attr('checked', 'checked');
                 document.getElementById("logUserName").value = email;
                 document.getElementById("logPassword").value = pass;

@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Socioboard.Helper;
 using System.Linq;
 using System.Net;
-using Domain.Socioboard.Enum;
+
 
 
 namespace Socioboard.Controllers
@@ -26,10 +26,12 @@ namespace Socioboard.Controllers
         private AppSettings _appSettings;
         private readonly ILogger _logger;
 
+
         public IndexController(Microsoft.Extensions.Options.IOptions<AppSettings> settings, ILogger<IndexController> logger) : base(settings)
         {
             _appSettings = settings.Value;
             _logger = logger;
+
         }
 
         #region Login Services
@@ -96,6 +98,7 @@ namespace Socioboard.Controllers
                 ViewBag.ApiDomain = _appSettings.ApiDomain;
                 ViewBag.Domain = _appSettings.Domain;
 
+
                 if (user == null)
                     return View();
 
@@ -119,60 +122,72 @@ namespace Socioboard.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel userViewModel)
         {
-            var output = string.Empty;
+            try
+            {
+                var output = string.Empty;
 
-            var parameters = new List<KeyValuePair<string, string>>
+                var parameters = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("UserName", userViewModel.UserName),
                 new KeyValuePair<string, string>("Password", userViewModel.Password)
             };
 
-            var response = await WebApiReq.PostReq("/api/User/Login", parameters, "", "", _appSettings.ApiDomain);
+                var response = await WebApiReq.PostReq("/api/User/Login", parameters, "", "", _appSettings.ApiDomain);
 
-            if (!response.IsSuccessStatusCode)
-                return Content(output);
+                if (!response.IsSuccessStatusCode)
+                    return Content(output);
 
-            try
-            {
-                var user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                HttpContext.Session.SetObjectAsJson("User", user);
+                try
+                {
+                    var user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                    HttpContext.Session.SetObjectAsJson("User", user);
 
-                if (user.UserType == "SuperAdmin")
-                    return Content("SuperAdmin");
+                    if (user.UserType == "SuperAdmin")
+                        return Content("SuperAdmin");
 
-                if (user.ExpiryDate >= DateTime.UtcNow)
-                    return Content(user.TwostepEnable ? "TwoStepLogin" : "Success");
+                    if (user.ExpiryDate >= DateTime.UtcNow)
+                        return Content(user.TwostepEnable ? "TwoStepLogin" : "Success");
 
-                var param = new List<KeyValuePair<string, string>>
+                    var param = new List<KeyValuePair<string, string>>
                 {
                     new KeyValuePair<string, string>("Id", user.Id.ToString())
                 };
 
-                HttpContext.Session.Remove("User");
+                    HttpContext.Session.Remove("User");
 
-                var trialStatus = await WebApiReq.PostReq("/api/User/UpdateTrialStatus", param, "", "", _appSettings.ApiDomain);
+                    var trialStatus = await WebApiReq.PostReq("/api/User/UpdateTrialStatus", param, "", "", _appSettings.ApiDomain);
 
-                if (!trialStatus.IsSuccessStatusCode)
-                    return Content("Payment not Confirmed");
+                    if (!trialStatus.IsSuccessStatusCode)
+                        return Content("Payment not Confirmed");
 
-                var userDetails = await trialStatus.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                HttpContext.Session.SetObjectAsJson("User", userDetails);
-                return Content("Trail Expire");
+                    var userDetails = await trialStatus.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                    HttpContext.Session.SetObjectAsJson("User", userDetails);
+                    return Content("Trail Expire");
+
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        output = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        return Content("Payment not Confirmed");
+                    }
+                    return Content(output);
+                }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                try
-                {
-                    output = await response.Content.ReadAsStringAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                    return Content("Payment not Confirmed");
-                }
-                return Content(output);
+                _logger.LogError(e.StackTrace);
+                return Content(e.StackTrace);
             }
+
+
+
 
 
         }
@@ -257,9 +272,8 @@ namespace Socioboard.Controllers
             //Post back to either sandbox or live
             var paypalUrl = $"{_appSettings.PaypalURL}/cgi-bin/webscr";
 
-            var successResult = VerifyPdt(authToken, "99X63908G1498834B", paypalUrl);
 
-            // var successResult = VerifyPdt(authToken, txToken, paypalUrl);
+            var successResult = VerifyPdt(authToken, txToken, paypalUrl);
 
             if (successResult.Count > 0)
             {
@@ -859,11 +873,11 @@ namespace Socioboard.Controllers
             {
                 if (imageUrl.Equals(url))
                 {
-                    if (type == "timeline-image")                    
+                    if (type == "timeline-image")
                         pluginData.url = string.Empty;
-                    
-                    if (profileType == "image")                    
-                        pluginData.url = string.Empty;                    
+
+                    if (profileType == "image")
+                        pluginData.url = string.Empty;
                 }
             }
 
@@ -1064,6 +1078,11 @@ namespace Socioboard.Controllers
         public IActionResult Enterprise()
         {
             ViewBag.ApiDomain = _appSettings.ApiDomain;
+            return View();
+        }
+
+        public IActionResult EnterprisePaymentError()
+        {
             return View();
         }
 

@@ -23,10 +23,8 @@ namespace Api.Socioboard.Controllers
     {
         public WebhookUserController(ILogger<WebhookUserController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv)
         {
-
             _logger = logger;
-            _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _appSettings = settings.Value;       
             _appEnv = appEnv;
         }
         private readonly ILogger _logger;

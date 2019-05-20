@@ -21,59 +21,61 @@ namespace Api.Socioboard.Helper
 
             try
             {
-                oAuthTokenGa objToken = new oAuthTokenGa(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+                var objToken = new oAuthTokenGa(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
 
 
-                string accessToken = objToken.GetRefreshToken(code);
-                JObject JData = JObject.Parse(accessToken);
+                var accessToken = objToken.GetRefreshToken(code);
+                var jData = JObject.Parse(accessToken);
 
                 try
                 {
-                    refresh_token = JData["refresh_token"].ToString();
+                    refresh_token = jData["refresh_token"].ToString();
                 }
                 catch (Exception ex)
                 {
-                    access_token = JData["access_token"].ToString();
+                    access_token = jData["access_token"].ToString();
                     objToken.RevokeToken(access_token);
                     return null;
                 }
 
-                access_token = JData["access_token"].ToString();
+                access_token = jData["access_token"].ToString();
 
-                string accountsdata = _Accounts.getGaAccounts(access_token);
+                var accountsSummary = _Accounts.getGaAccountsSummary(access_token);
 
-                JObject JAccountdata = JObject.Parse(accountsdata);
-                string EmailId = JAccountdata["username"].ToString();
+                JObject jAccountdata = JObject.Parse(accountsSummary);
+                var emailId = jAccountdata["username"].ToString();
 
-                foreach (var item in JAccountdata["items"])
+                foreach (var item in jAccountdata["items"])
                 {
                     try
                     {
-                        string accountId = item["id"].ToString();
-                        string accountName = item["name"].ToString();
-                        string profileData = _Accounts.getGaProfiles(access_token, accountId);
-                        JObject JProfileData = JObject.Parse(profileData);
-                        foreach (var item_profile in JProfileData["items"])
-                        {
-                            try
-                            {
-                                _GoogleAnalyticsProfiles = new Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles();
-                                _GoogleAnalyticsProfiles.AccessToken = access_token;
-                                _GoogleAnalyticsProfiles.RefreshToken = refresh_token;
-                                _GoogleAnalyticsProfiles.AccountId = accountId;
-                                _GoogleAnalyticsProfiles.AccountName = accountName;
-                                _GoogleAnalyticsProfiles.EmailId = EmailId;
-                                _GoogleAnalyticsProfiles.ProfileId = item_profile["id"].ToString();
-                                _GoogleAnalyticsProfiles.ProfileName = item_profile["name"].ToString();
-                                _GoogleAnalyticsProfiles.WebPropertyId = item_profile["webPropertyId"].ToString();
-                                _GoogleAnalyticsProfiles.WebsiteUrl = item_profile["websiteUrl"].ToString();
-                                _GoogleAnalyticsProfiles.internalWebPropertyId = item_profile["internalWebPropertyId"].ToString();
-                                lstGoogleAnalyticsProfiles.Add(_GoogleAnalyticsProfiles);
-                            }
-                            catch (Exception ex)
-                            {
+                        var googleAccountId = item["id"].ToString();
+                        var googleAccountName = item["name"].ToString();
 
-                            }
+                        foreach (var webProfiles in item["webProperties"])
+                        {
+
+                            var accountName = webProfiles["name"].ToString();
+                            var accountId = webProfiles["id"].ToString();
+                            var profileId = webProfiles["profiles"].First["id"].ToString();
+
+                            var website = webProfiles["websiteUrl"].ToString(); ;
+                            var internalWebPropertyId = webProfiles["internalWebPropertyId"].ToString();
+
+                            _GoogleAnalyticsProfiles = new Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles
+                            {
+                                AccessToken = access_token,
+                                RefreshToken = refresh_token,
+                                AccountId = googleAccountId,
+                                AccountName = googleAccountName,
+                                EmailId = emailId,
+                                ProfileId = accountId,
+                                ProfileName = accountName,
+                                WebPropertyId = profileId,
+                                WebsiteUrl = website,
+                                internalWebPropertyId = internalWebPropertyId
+                            };
+                            lstGoogleAnalyticsProfiles.Add(_GoogleAnalyticsProfiles);
                         }
                     }
                     catch (Exception e)

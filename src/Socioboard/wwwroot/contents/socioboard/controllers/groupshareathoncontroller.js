@@ -1,6 +1,5 @@
 'use strict';
-
-SocioboardApp.controller('GroupShareathonController', function ($rootScope, $scope, $http, $timeout,apiDomain) {
+SocioboardApp.controller('GroupShareathonController', function ($rootScope, $scope, $http, $timeout, $modal, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
@@ -43,7 +42,7 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
         }
 
         $scope.loadgroupshareathon();
-
+        $scope.current = 1;
         //$scope.deletegrouphareathon = function (GroupShareathodId) {
         //    //codes to delete  page shreathon
         //    $http.post(apiDomain + '/api/Shareathon/DeleteGroupShareathon?GroupShareathodId=' + GroupShareathodId)
@@ -72,6 +71,17 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
             //    window.location.href = "#/edit_group_shareathon.html";
             //}
         }
+        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js');
+        $scope.shareathonreport = function (ShareathonId) {
+            $http.get(apiDomain + "/api/Shareathon/GetPublishedFeeds?ShareathonId=" + ShareathonId)
+                .then(function (response) {
+                    if (response.data != "") {
+                        $scope.PostedFeeds = response.data;
+                        $('#GroupShareathonReportModal').openModal({ dismissible: true });
+                    } else {
+                        swal("There is no report!");
+                    }
+                });                      
+        }
   });
-
 });

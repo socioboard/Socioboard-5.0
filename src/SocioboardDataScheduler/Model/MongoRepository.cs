@@ -27,10 +27,6 @@ namespace SocioboardDataServices.Model
 
             _db = client.GetDatabase(AppSettings.LiveMongoDbName);
 
-            //MongoClient client = new MongoClient(AppSettings.ServMongoDbConnectionString);
-
-            //_db = client.GetDatabase(AppSettings.ServMongoDbName);
-
             this.collecionName = CollectionName;
             
            // _logger = logger;
@@ -177,7 +173,13 @@ namespace SocioboardDataServices.Model
 
         }
 
-      
+        public Task<T> FindFirstOrDefault<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
+            return collection.FirstOrDefaultAsync();
+        }
+
+
 
 
         public void Dispose()

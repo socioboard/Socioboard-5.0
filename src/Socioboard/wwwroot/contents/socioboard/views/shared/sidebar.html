@@ -220,19 +220,19 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="bold">
+                                    <!--<li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan" title="You can see your Google Plus account live feeds and the Number of comment, like and share. You can also perform Reconnect, filter, and Re-socio">
                                             <i class="fa fa-google-plus"></i> Google Plus
                                         </a>
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:5}">
-                                                    <!--<a style="cursor:context-menu;" ng-click="$state.go('googleplusfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>-->
+                                                    <a style="cursor:context-menu;" ng-click="$state.go('googleplusfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                     <a href="#/googleplusfeeds/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                  </li>
                                             </ul>
                                         </div>
-                                    </li>
+                                    </li>-->
                                     <!--<li class="bold">
                                         <a class="collapsible-header waves-effect waves-orange" title="You can see the Profile and Profile details">
                                             <i class="fa fa-pinterest-square" aria-hidden="true"></i> Pinterest
@@ -514,7 +514,7 @@
                     <div class="collapsible-body">
                         <ul>
                             <li class="bold">
-                                <a href="#/rss_news.html" title="In this module, we have all the latest topics and trending keywords based on which we can schedule or compose in the content feed">Content Feeds</a> 
+                                <a href="#/rss_news" title="In this module, we have all the latest topics and trending keywords based on which we can schedule or compose in the content feed">Content Feeds</a> 
                             </li>
                             <li class="truncate">
                                 <a href="#/automate_rss_feeds.html" title="In this module, you can Automate the RSS feeds with respective profiles. Here you need to select profile's, add RSS Feeds URL based on what you want to automate next. Click on schedule and it will post respective data in chosen profiles">Automate Rss Feeds</a>
@@ -538,7 +538,7 @@
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
                     </a>
                 </li>
-                <!--Sharethon for paid user-->
+                <!--<!--Sharethon for paid user-->
                 <li class="bold" ng-if="user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header  waves-effect waves-orange" title="This is the feature which allows users to Automate FB Page Posts, FB Groups, Pages, and Timeline of our FB profiles Connected with Socioboard">
                         <i class="icon-share"></i> Shareathon
@@ -546,18 +546,17 @@
                     <div class="collapsible-body">
                         <ul>
                             <li class="truncate">
-                                <a href="#/group_shareathon.html" title="It automates Feeds from Selected FB pages to FB Groups which we are admin of">Group Shareathon</a>
+                                <a href="#/page_shareathon.html" title="It automates feeds from Selected page to the FB Account Timeline that is Connected with Socioboard">Page Shareathon</a>
                             </li>
-                            <li class="truncate">
-                                <a href="#/page_shareathon.html" title="It Automates feeds from Selected page to the FB Account Timeline that is Connected with Socioboard">Page Shareathon</a>
-                            </li>
-                            <li class="truncate">
+                            <!--<li class="truncate">
+                                <a href="#/group_shareathon.html" title="It automates Feeds from Selected FB pages to FB Groups.">Group Shareathon</a>
+                            </li>-->
+                            <!--<li class="truncate">
                                 <a href="#/link_shareathon.html" title="It automates feeds from Selected Fan pages to user admin Pages">Link Shareathon</a>
-                            </li>
+                            </li>-->
                             <!--<li class="truncate">
                                 <a href="#/fbtw_feedsharing.html" title="It share feeds from Selected fb pages to other socail media profile">Share Feeds</a>
                             </li>-->
-
                         </ul>
                     </div>
                 </li>

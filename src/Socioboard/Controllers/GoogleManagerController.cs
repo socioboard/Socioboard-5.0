@@ -31,7 +31,7 @@ namespace Socioboard.Controllers
             var googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
             var plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
 
-            if (googleSocial == "Youtube_Account" || googleSocial == "Ganalytics_Account")
+            if (googleSocial == "Youtube_Account" || googleSocial == "ReconGplusAccount" || googleSocial == "Gplus_Account" || googleSocial == "Ganalytics_Account" || googleSocial == "ReconnectYTAcc" || googleSocial == "ReConnectGoogleAnalytics")
                 googleLogin = null;
 
        
@@ -126,6 +126,13 @@ namespace Socioboard.Controllers
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("AddYoutubeAcc", "GoogleManager", new { code = code });
             }
+
+            if (googleSocial.Equals("ReConnectGoogleAnalytics"))
+            {
+                HttpContext.Session.SetObjectAsJson("Google", null);
+                return RedirectToAction("ReconnectGoogleAnalyticsAcc", "GoogleManager", new { code = code });
+            }
+
             return View();
         }
 
@@ -206,7 +213,7 @@ namespace Socioboard.Controllers
                     return Redirect(googleurl);
                 }
                 else if (Op == "page")
-                {
+                {                                                                                                                                                                                                                                                                                                         //https://www.googleapis.com/auth/analytics                                                https://www.googleapis.com/auth/analytics.readonly
                     HttpContext.Session.SetObjectAsJson("Google", "Ganalytics_Account");
                     string googleurl = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force&access_type=offline&client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/analytics+https://www.googleapis.com/auth/analytics.edit+https://www.googleapis.com/auth/analytics.readonly&response_type=code";
                     return Redirect(googleurl);
@@ -280,6 +287,29 @@ namespace Socioboard.Controllers
         }
 
 
+        public async Task<ActionResult> ReconnectGoogleAnalyticsAcc(string code)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+         
+            var Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("code", code));
+           
+            Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+
+            var response = await WebApiReq.PostReq("/api/Google/ReconnectGoogleAnalyticsAccount", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = await response.Content.ReadAsStringAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["Error"] = "Error while hitting api.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+
         [HttpGet]
         public async Task<ActionResult> AddYoutubeAcc(string code)
         {
@@ -338,13 +368,21 @@ namespace Socioboard.Controllers
                 // string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read+https://www.googleapis.com/auth/plus.circles.write&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
                 return Content(googleurl);
             }
-
+            else if (option == "GoogleAnalytics")
+            {
+                HttpContext.Session.SetObjectAsJson("Google", "ReConnectGoogleAnalytics");
+                string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/analytics+https://www.googleapis.com/auth/analytics.edit+https://www.googleapis.com/auth/analytics.readonly&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
+                
+                // string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read+https://www.googleapis.com/auth/plus.circles.write&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
+                return Content(googleurl);
+            }
             else
             {
                 HttpContext.Session.SetObjectAsJson("Google", "ReconnectYTAcc");
                 string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/youtube.force-ssl&response_type=code&access_type=offline&approval_prompt=force";
                 return Content(googleurl);
             }
+
         }
 
         public async Task<ActionResult> ReconnectGplusAcc(string code)

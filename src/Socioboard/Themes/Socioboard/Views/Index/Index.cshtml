@@ -351,7 +351,7 @@
                                 <label for="req_skype">skype</label>
                             </div>
                         </div>
-                        <button id="submitButton" type="submit" class="waves-effect waves-light btn cyan "><i class="material-icons left">navigation</i>Submit</button>
+                        <button id="demoSubmitButton" type="submit" class="waves-effect waves-light btn cyan "><i class="material-icons left">navigation</i>Submit</button>
                         @*<a onclick="CreateDemoReq()" class="waves-effect waves-light btn cyan "><i class="material-icons left">navigation</i>Submit</a>*@
                     </form>
                 </div>
@@ -427,7 +427,7 @@
                     alertify.set({ delay: 5000 });
                     alertify.error(msg.responseText);
                     $('#ImgLoading').hide();
-                    $('#submitButton').show();
+                    $('#demoSubmitButton').show();
                     return false;
                 }
 

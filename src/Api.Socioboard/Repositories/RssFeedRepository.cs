@@ -17,53 +17,49 @@ namespace Api.Socioboard.Repositories
     public class RssFeedRepository
     {
 
-        public static string AddRssUrl(string profileId ,string Url, Model.DatabaseRepository dbr)
+        public static string AddRssUrl(string profileId, string Url, DatabaseRepository dbr)
         {
-            string[] profilesList = null;
-            if (profileId != null)
-            {
-                profilesList = profileId.Split(',');
-                profileId = profilesList[0];
-            }
-           
-            foreach (var item in profilesList)
-            {
-                string prid = null;
-                if (item.Contains("page_"))
-                {
-                    prid = item.Substring(5, item.Length - 5);
-                }
-                else if(item.Contains("tw_"))
-                {
-                    prid = item.Substring(3, item.Length - 3);
-                }
-                else
-                {
-                     prid = item.Substring(3, item.Length - 3);
-                }
-                
-                Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords == null && t.ProfileId == prid);
 
-                if (_RssFeedUrl != null)
+                string[] profilesList = null;
+                if (profileId != null)
                 {
-                    //return "null";
+                    profilesList = profileId.Split(',');
+                    profileId = profilesList[0];
                 }
-                else
+
+                foreach (var item in profilesList)
                 {
-                    _RssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl();
-                    _RssFeedUrl.rssurl = Url;
-                    _RssFeedUrl.ProfileId = prid;
-                    _RssFeedUrl.LastUpdate = DateTime.UtcNow;
-                    dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
-                    _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords == null);
-                   
+                    string prid = null;
+
+                    if (item.StartsWith("page"))
+                        prid = item.Substring(5, item.Length - 5);
+
+                    else if (item.Contains("tw_") || item.Contains("fb"))
+                        prid = item.Substring(3, item.Length - 3);
+
+                    else if (item.StartsWith("lin"))
+                        prid = item.Substring(4);
+
+                    else if (item.StartsWith("Cmpylinpage"))
+                        prid = item.Substring(12);
+
+                    var rssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords == null && t.ProfileId == prid);
+
+                    if (rssFeedUrl == null)
+                    {
+                        rssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl
+                        {
+                            rssurl = Url,
+                            ProfileId = prid,
+                            LastUpdate = DateTime.UtcNow
+                        };
+                        dbr.Add(rssFeedUrl);
+                    }
                 }
-               
-            }
-            return "success";
+                return "success";
         }
 
-        public static string AddRssFeed(string TextUrl, long Userid, string profileId, Domain.Socioboard.Enum.SocialProfileType ProfileType, string profileimageurl, string profilename, string xmldata,Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        public static string AddRssFeed(string TextUrl, long Userid, string profileId, Domain.Socioboard.Enum.SocialProfileType ProfileType, string profileimageurl, string profilename, string xmldata, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
         {
             int UrlAdded = 0;
             string RetMsg = string.Empty;
@@ -105,7 +101,7 @@ namespace Api.Socioboard.Repositories
                     _Rss.rssFeedUrl = rssobj;
                     _Rss.CreatedOn = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                     _RssRepository.Add(_Rss);
-                     UrlAdded++;
+                    UrlAdded++;
                 }
                 else
                 {
@@ -134,7 +130,6 @@ namespace Api.Socioboard.Repositories
 
         public static string ParseFeedUrl(string TextUrl, Domain.Socioboard.Enum.SocialProfileType profiletype, string profileid, long userId, string profileName, string profileImageUrl, Helper.AppSettings _appSettings)
         {
-
             MongoRepository _RssFeedRepository = new MongoRepository("RssFeed", _appSettings);
             try
             {
@@ -142,7 +137,7 @@ namespace Api.Socioboard.Repositories
                 XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
                 xmlDoc.Load(TextUrl);
                 var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
-                
+
                 foreach (XmlElement item in abc)
                 {
                     Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
@@ -170,7 +165,7 @@ namespace Api.Socioboard.Repositories
                                     objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
                                     objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                 }
-                                else if(item.ChildNodes[2].InnerText.Contains("http"))
+                                else if (item.ChildNodes[2].InnerText.Contains("http"))
                                 {
                                     objRssFeeds.Message = item.ChildNodes[1].InnerText;
                                     objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
@@ -194,7 +189,7 @@ namespace Api.Socioboard.Repositories
 
                         try
                         {
-                            if(item.ChildNodes[3].Name== "pubDate")
+                            if (item.ChildNodes[3].Name == "pubDate")
                             {
                                 objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                             }
@@ -202,12 +197,12 @@ namespace Api.Socioboard.Repositories
                             {
                                 objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                             }
-                            
+
                         }
                         catch (Exception ex)
                         {
                             objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[5].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
-                            
+
                         }
 
                         objRssFeeds.Title = item.ChildNodes[0].InnerText;
@@ -217,8 +212,8 @@ namespace Api.Socioboard.Repositories
                             try
                             {
                                 //objRssFeeds.Image = item.ChildNodes[1].InnerText;
-                               // objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
-                               if(item.ChildNodes[2].Name=="link")
+                                // objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
+                                if (item.ChildNodes[2].Name == "link")
                                 {
                                     objRssFeeds.Link = item.ChildNodes[2].InnerText;
                                 }
@@ -227,13 +222,13 @@ namespace Api.Socioboard.Repositories
                                     objRssFeeds.Link = item.ChildNodes[1].InnerText;
                                     objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                                 }
-                               
-                               
-                                if(objRssFeeds.Link=="")
+
+
+                                if (objRssFeeds.Link == "")
                                 {
                                     objRssFeeds.Link = item.ChildNodes[1].InnerText;
                                 }
-                                
+
                             }
                             catch (Exception ex)
                             {
@@ -241,7 +236,7 @@ namespace Api.Socioboard.Repositories
                                 objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                             }
                         }
-                        else if(item.ChildNodes[3].InnerText.Contains("www")|| item.ChildNodes[3].InnerText.Contains("https"))
+                        else if (item.ChildNodes[3].InnerText.Contains("www") || item.ChildNodes[3].InnerText.Contains("https"))
                         {
                             try
                             {
@@ -261,7 +256,7 @@ namespace Api.Socioboard.Repositories
                                 objRssFeeds.Link = "";
                             }
                         }
-                        else if(item.ChildNodes[2].InnerText.Contains("https"))
+                        else if (item.ChildNodes[2].InnerText.Contains("https"))
                         {
                             try
                             {
@@ -273,7 +268,7 @@ namespace Api.Socioboard.Repositories
                             }
                             try
                             {
-                                if(item.ChildNodes[7].Name == "description")
+                                if (item.ChildNodes[7].Name == "description")
                                 {
                                     objRssFeeds.Message = item.ChildNodes[7].InnerText;
                                 }
@@ -282,9 +277,9 @@ namespace Api.Socioboard.Repositories
                                     objRssFeeds.Message = item.ChildNodes[6].InnerText;
                                     //objRssFeeds.Message = getBetween(objRssFeeds.Message, "<a href=\"", "\">");
                                 }
-                              
+
                             }
-                            catch(Exception ex)
+                            catch (Exception ex)
                             {
                                 objRssFeeds.Message = "";
                             }
@@ -298,7 +293,7 @@ namespace Api.Socioboard.Repositories
                             }
                             try
                             {
-                                if(item.ChildNodes[8].Name != "media")
+                                if (item.ChildNodes[8].Name != "media")
                                 {
                                     objRssFeeds.Image = item.ChildNodes[8].InnerText;
                                 }
@@ -306,7 +301,7 @@ namespace Api.Socioboard.Repositories
                                 {
                                     objRssFeeds.Image = "";
                                 }
-                               
+
                             }
                             catch (Exception ex)
                             {
@@ -349,12 +344,11 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string ParseXMLFeedUrl(string TextUrl, Domain.Socioboard.Enum.SocialProfileType profiletype, string profileid, long userId, string profileName, string profileImageUrl, Domain.Socioboard.Models.RssFeedUrl rssobj , Helper.AppSettings _appSettings)
+        public static string ParseXMLFeedUrl(string TextUrl, Domain.Socioboard.Enum.SocialProfileType profiletype, string profileid, long userId, string profileName, string profileImageUrl, Domain.Socioboard.Models.RssFeedUrl rssobj, Helper.AppSettings _appSettings)
         {
-           
             MongoRepository _RssFeedRepository = new MongoRepository("RssFeed", _appSettings);
-
             MongoRepository _RssRepository = new MongoRepository("Rss", _appSettings);
+
             var rets = _RssRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl.Equals(TextUrl) && t.ProfileId.Contains(profileid) && t.ProfileType == profiletype && t.UserId.Equals(userId));
             var tasks = Task.Run(async () =>
             {
@@ -398,9 +392,9 @@ namespace Api.Socioboard.Repositories
                 var abc = xmlDoc.DocumentElement.GetElementsByTagName("sitemap");
                 var urls = xmlDoc.DocumentElement.GetElementsByTagName("url");
 
-                if (abc.Count!=0)
+                if (abc.Count != 0)
                 {
-                   
+
                     try
                     {
                         foreach (XmlElement siteval in abc)
@@ -446,13 +440,13 @@ namespace Api.Socioboard.Repositories
                                     try
                                     {
                                         objRssFeeds.Link = item.ChildNodes[0].InnerText;
-                                       // objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                        // objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                                     }
-                                    catch(Exception ex)
+                                    catch (Exception ex)
                                     {
                                         objRssFeeds.Link = "";
                                     }
-                                   
+
 
                                     objRssFeeds.PublishingDate = item.ChildNodes[1].InnerText;
 
@@ -477,64 +471,54 @@ namespace Api.Socioboard.Repositories
                 }
                 else
                 {
-                    
-
-                    //DateTime todate = DateTime.Now;
-                    //DateTime fromDate = DateTime.Now;
-                    //fromDate = fromDate.AddYears(-1);
-                    //fromDate = fromDate.AddMonths(5);
-                    //DateTime dt = Convert.ToDateTime(datevalue);
-
-                    //if (dt > fromDate && dt < todate)
-                    //{
                     xmlDoc.Load(TextUrl);
-                        var sitedatalist = xmlDoc.DocumentElement.GetElementsByTagName("url");
-                        try
+                    var sitedatalist = xmlDoc.DocumentElement.GetElementsByTagName("url");
+                    try
+                    {
+                        foreach (XmlElement item in sitedatalist)
                         {
-                            foreach (XmlElement item in sitedatalist)
+                            Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+
+                            objRssFeeds.Id = ObjectId.GenerateNewId();
+                            objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
+                            objRssFeeds.ProfileName = profileName;
+                            objRssFeeds.ProfileImageUrl = profileImageUrl;
+                            objRssFeeds.RssFeedUrl = TextUrl;
+                            objRssFeeds.ProfileId = profileid;
+                            objRssFeeds.ProfileType = profiletype;
+                            objRssFeeds.Status = false;
+                            try
                             {
-                                Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+                                objRssFeeds.Link = item.ChildNodes[0].InnerText;
+                                objRssFeeds.Link = objRssFeeds.Link.Replace("\r", "").Replace("\n", "");
+                            }
+                            catch (Exception ex)
+                            {
 
-                                objRssFeeds.Id = ObjectId.GenerateNewId();
-                                objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
-                                objRssFeeds.ProfileName = profileName;
-                                objRssFeeds.ProfileImageUrl = profileImageUrl;
-                                objRssFeeds.RssFeedUrl = TextUrl;
-                                objRssFeeds.ProfileId = profileid;
-                                objRssFeeds.ProfileType = profiletype;
-                                objRssFeeds.Status = false;
-                                try
-                                {
-                                    objRssFeeds.Link = item.ChildNodes[0].InnerText;
-                                objRssFeeds.Link= objRssFeeds.Link.Replace("\r", "").Replace("\n","");
-                                }
-                                catch(Exception ex)
-                                {
+                            }
+                            try
+                            {
+                                objRssFeeds.PublishingDate = item.ChildNodes[1].InnerText;
+                            }
+                            catch (Exception ex) { }
 
-                                }
-                                try
-                                {
-                                    objRssFeeds.PublishingDate = item.ChildNodes[1].InnerText;
-                                }
-                                catch(Exception ex) { }
-                                
 
-                                var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
-                                var task = Task.Run(async () =>
-                                {
-                                    return await ret;
-                                });
-                                int count = task.Result.Count;
-                                if (count < 1)
-                                {
-                                    _RssFeedRepository.Add(objRssFeeds);
-                                }
+                            var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
+                            var task = Task.Run(async () =>
+                            {
+                                return await ret;
+                            });
+                            int count = task.Result.Count;
+                            if (count < 1)
+                            {
+                                _RssFeedRepository.Add(objRssFeeds);
                             }
                         }
-                        catch(Exception ex)
-                        {
+                    }
+                    catch (Exception ex)
+                    {
 
-                        }
+                    }
                 }
                 return "ok";
             }
@@ -587,9 +571,28 @@ namespace Api.Socioboard.Repositories
             {
                 return await ret;
             });
-             lstRss = task.Result.ToList();
+            lstRss = task.Result.ToList();
             lstRss.OrderByDescending(t => t.PublishingDate);
-                return lstRss.ToList();
+            return lstRss.ToList();
+
+        }
+
+
+        public static List<Domain.Socioboard.Models.Mongo.RssFeed> GetPostedRssDataByUser(long userId, long groupId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, int skip, int count)
+        {
+            string[] profileids = null;
+            MongoRepository _RssRepository = new MongoRepository("RssFeed", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.RssFeed> lstRss = new List<Domain.Socioboard.Models.Mongo.RssFeed>();
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+            var ret = _RssRepository.FindWithRange<Domain.Socioboard.Models.Mongo.RssFeed>(t => !string.IsNullOrEmpty(t.Message) && profileids.Contains(t.ProfileId) && t.Status && t.ProfileType != 0, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            lstRss = task.Result.ToList();
+            lstRss.OrderByDescending(t => t.PublishingDate);
+            return lstRss.ToList();
 
         }
 
@@ -602,7 +605,7 @@ namespace Api.Socioboard.Repositories
                 lstProfileIds = profileId.Split(',');
                 profileId = lstProfileIds[0];
             }
-          
+
             foreach (var itemPrf in lstProfileIds)
             {
                 string prId = itemPrf.Substring(5, itemPrf.Length - 5);
@@ -680,7 +683,7 @@ namespace Api.Socioboard.Repositories
         {
 
             Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl();
-            _RssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t=>t.rssurl.Contains(OldFeedUrl)).FirstOrDefault();
+            _RssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(OldFeedUrl)).FirstOrDefault();
             _RssFeedUrl.rssurl = NewFeedUrl;
             dbr.Update<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
             _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(NewFeedUrl));
@@ -699,9 +702,9 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string DeleteFeedUrl(string RssId,Model.DatabaseRepository dbr,Helper.AppSettings _appSettings)
+        public static string DeleteFeedUrl(string RssId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
         {
-           
+
             try
             {
                 MongoRepository _RssRepository = new MongoRepository("Rss", _appSettings);
@@ -713,19 +716,19 @@ namespace Api.Socioboard.Repositories
                 });
                 lstRss = task.Result.ToList();
 
-                Domain.Socioboard.Models.RssFeedUrl feedurl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Equals(lstRss.First().RssFeedUrl) && t.ProfileId == lstRss.First().ProfileId );
+                Domain.Socioboard.Models.RssFeedUrl feedurl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Equals(lstRss.First().RssFeedUrl) && t.ProfileId == lstRss.First().ProfileId);
                 if (feedurl != null)
                 {
                     dbr.Delete<Domain.Socioboard.Models.RssFeedUrl>(feedurl);
-                    
+
                 }
 
                 var builders = Builders<Domain.Socioboard.Models.Mongo.Rss>.Filter;
                 FilterDefinition<Domain.Socioboard.Models.Mongo.Rss> filter = builders.Eq("strId", RssId);
-                
+
                 _RssRepository.Delete<Domain.Socioboard.Models.Mongo.Rss>(filter);
 
-               
+
                 return "success";
             }
             catch (Exception ex)

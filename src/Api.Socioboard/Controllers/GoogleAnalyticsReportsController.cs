@@ -40,6 +40,23 @@ namespace Api.Socioboard.Controllers
         {
             return Ok(Repositories.GoogleAnalyticsReportRepository.getGoogleAnalyticsReportData(profileId, daysCount, _redisCache, _appSettings));
         }
+
+
+        /// <summary>
+        /// To get the account details
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
+        [HttpGet("GetGoogleAnalyticsAccountDetails")]
+        public IActionResult GetGoogleAnalyticsAccountDetails(string profileId)
+        {
+            var dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            var googleAnalyticsAccount = dbr.FindFirstMatch<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaWebPropertyId.Equals(profileId));
+            return Ok(googleAnalyticsAccount);
+        }
+
+
         [HttpGet("GetTwitterMentionReports")]
         public IActionResult GetTwitterMentionReports(string profileId, int daysCount)
         {
@@ -57,7 +74,7 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetArticlesAndBlogsReports")]
         public IActionResult GetArticlesAndBlogsReports(string profileId, int daysCount)
         {
-            
+
             Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGAAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId)).ToList();
             if (lstGAAcc != null && lstGAAcc.Count() > 0)
@@ -67,6 +84,10 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
+
+
+
+
     }
 
 }

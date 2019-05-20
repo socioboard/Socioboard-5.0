@@ -2,7 +2,7 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5.1": {
+    ".NETFramework,Version=v4.5.2": {
       "Microsoft.NETCore.Platforms/1.0.1": {
         "type": "package",
         "compile": {
@@ -2516,7 +2516,7 @@
       "NETStandard.Library >= 1.6.0",
       "Newtonsoft.Json >= 9.0.1"
     ],
-    ".NETFramework,Version=v4.5.1": [
+    ".NETFramework,Version=v4.5.2": [
       "System.Xml >= 4.0.0",
       "System.Xml.Linq >= 4.0.0"
     ]

@@ -25,6 +25,7 @@ using Microsoft.Net.Http.Headers;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.Authentication;
+using Socioboard.GoogleLib.GAnalytics.Core.AnalyticsMethod;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -79,7 +80,7 @@ namespace Api.Socioboard.Controllers
                 {
                     refreshToken = objAccessToken["refresh_token"].ToString();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex.StackTrace);
                 }
@@ -160,9 +161,9 @@ namespace Api.Socioboard.Controllers
                 TrailStatus = UserTrailStatus.active
             };
 
-            if (googleUser.AccountType == SBAccountType.Free)            
+            if (googleUser.AccountType == SBAccountType.Free)
                 googleUser.ExpiryDate = DateTime.UtcNow.AddDays(15);
-            
+
             try
             {
                 googleUser.FirstName = Convert.ToString(userInfo["name"]);
@@ -549,10 +550,8 @@ namespace Api.Socioboard.Controllers
             var access_token = string.Empty;
             var dbr = new DatabaseRepository(_logger, _appEnv);
 
-            var ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey,
-                _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
-            var objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret,
-                _appSettings.GoogleRedirectUri);
+            var ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            var objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
             var userinfo = new JObject();
             try
             {
@@ -598,6 +597,59 @@ namespace Api.Socioboard.Controllers
                 return Ok("Gplus Account Reconnect Successfully");
             return BadRequest("Issues while adding account");
         }
+
+
+        [HttpPost("ReconnectGoogleAnalyticsAccount")]
+        public IActionResult ReconnectGoogleAnalyticsAccount(string code, long userId)
+        {
+            var ret = string.Empty;
+            var objRefresh = string.Empty;
+            var refreshToken = string.Empty;
+            var access_token = string.Empty;
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            var objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            var userinfo = new JObject();
+            try
+            {
+                objRefresh = ObjoAuthTokenGPlus.GetRefreshToken(code);
+                var objaccesstoken = JObject.Parse(objRefresh);
+                _logger.LogInformation(objaccesstoken.ToString());
+                try
+                {
+                    refreshToken = objaccesstoken["refresh_token"].ToString();
+                }
+                catch
+                {
+                }
+
+                access_token = objaccesstoken["access_token"].ToString();
+                var user = objToken.GetUserInfo("self", access_token);
+                //_logger.LogInformation(user);
+                userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+                var people = objToken.GetPeopleInfo("self", access_token, Convert.ToString(userinfo["id"]));
+                userinfo = JObject.Parse(JArray.Parse(people)[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                //access_token = objaccesstoken["access_token"].ToString();
+                //ObjoAuthTokenGPlus.RevokeToken(access_token);
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                ret = "Access Token Not Found";
+                return Ok(ret);
+            }
+
+            // Adding GPlus Profile
+            var x = GplusRepository.ReconnectGoogleAnalyticsAccount(userinfo, dbr, userId, access_token, refreshToken, _redisCache, _appSettings, _logger);
+
+            if (x == 1)
+                return Ok("Google Analytics Account Successfully Reconnected");
+
+            return BadRequest("Issues while adding account");
+        }
+
 
         [HttpGet("GetGplusFeeds")]
         public IActionResult GetGplusFeeds(string profileId, long userId, int skip, int count)
@@ -677,6 +729,7 @@ namespace Api.Socioboard.Controllers
                 var dbr = new DatabaseRepository(_logger, _appEnv);
                 var lstGrpProfiles = GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == SocialProfileType.GoogleAnalytics).ToList();
+
                 var lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)
                     lstGoogleAnalyticsProfiles.Where(t => lstStr.Contains(t.ProfileId)).Select(s =>
@@ -684,6 +737,7 @@ namespace Api.Socioboard.Controllers
                         s.connected = 1;
                         return s;
                     }).ToList();
+
                 return Ok(lstGoogleAnalyticsProfiles);
             }
             catch (Exception ex)
@@ -772,6 +826,92 @@ namespace Api.Socioboard.Controllers
 
             return Ok(lstGoogleAnalyticsAccount);
         }
+
+
+        /// <summary>
+        /// To provide the report on website traffic.
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>       
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
+        [HttpGet("GetActiveUser")]
+        public IActionResult GetActiveUser(string profileId)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var googleAnalyticsAccount = GplusRepository.getGAAccount(profileId, _redisCache, dbr);
+                var analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+
+                var activeUser = analytics.GetRealTimeUsers(profileId, googleAnalyticsAccount.AccessToken);
+                return Ok(activeUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+            }
+            return Ok("0");
+        }
+
+
+        /// <summary>
+        /// To provide the report on website traffic.
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>
+        /// <param name="days"></param>
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
+        [HttpGet("GetViewsAndSession")]
+        public IActionResult GetViewsAndSession(string profileId, long days)
+        {
+            try
+            {
+
+                var day = int.Parse(days.ToString());
+
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var googleAnalyticsAccount = GplusRepository.getGAAccount(profileId, _redisCache, dbr);
+                var analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+
+                var activeUser = analytics.GetSessionViewOfUser(profileId, googleAnalyticsAccount.AccessToken, day);
+                return Ok(activeUser);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+            }
+            return Ok("0");
+        }
+
+
+        /// <summary>
+        /// To provide the report on website traffic.
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>       
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
+        [HttpGet("GetProfileDetails")]
+        public IActionResult GetProfileDetails(string profileId)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var googleAnalyticsAccount = GplusRepository.getGAAccount(profileId, _redisCache, dbr);
+
+
+
+                return Ok("");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+            }
+            return Ok("0");
+        }
+
 
         [HttpPost("GetYoutubeAccount")]
         public IActionResult GetYoutubeAccount(string code, long groupId, long userId)

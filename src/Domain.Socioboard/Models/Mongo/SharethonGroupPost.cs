@@ -21,6 +21,9 @@ namespace Domain.Socioboard.Models.Mongo
         public virtual double PostedTime { get; set; }
         public virtual string PostId { get; set; }
         public virtual string Facebookgroupname { get; set; }
-
+        public virtual string FacebookPagePostUrl { get; set; }
+        public virtual string FacebookGroupPostUrl { get; set; }
+        public virtual string PublishedStatus { get; set; }
+        public virtual string ShareathonId { get; set; }
     }
 }

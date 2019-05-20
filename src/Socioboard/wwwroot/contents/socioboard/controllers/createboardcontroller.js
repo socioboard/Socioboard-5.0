@@ -24,29 +24,36 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
             }
 
             $scope.dispbtn = false;
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/BoardMe/createBoard?boardName=' + board.name + '&fbHashTag=' + board.facebookHashTag + '&twitterHashTag=' + board.twitterHashTag + '&instagramHashTag=' + board.instagramHashTag + '&gplusHashTag=' + board.gpluHashTag + '&userId=' + $rootScope.user.Id,
-               // data: { boardName: $scope.board.name, fbHashTag: $scope.board.facebookHashTag, twitterHashTag: $scope.board.twitterHashTag, instagramHashTag: $scope.board.instagramHashTag, gplusHashTag: $scope.board.gpluHashTag, userId: $rootScope.user.Id }
-            }).then(function (response) {
-                if (response.data == 'board Exist') {
-                    $scope.dispbtn = true;
-                    alertify.set({ delay: 5000 });
-                    alertify.error(response.data);
-                }
-                else if (response.data == 'You cannot create board with special characters') {
-                    $scope.dispbtn = true;
-                    alertify.set({ delay: 5000 });
-                    alertify.error(response.data);
-                }
-                else if (response.data == 'successfulyy added.') {
-                    $scope.dispbtn = true;
-                    $state.go('boardlist');
-                }
-              
-            }, function (reason) {
-              
-            });
+
+            if ((board.twitterHashTag === "") || (!board.twitterHashTag)) {
+                $scope.dispbtn = true;
+                alertify.error("Please enter the keyword");
+            } else {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/BoardMe/createBoard?boardName=' + board.name + '&fbHashTag=' + board.facebookHashTag + '&twitterHashTag=' + board.twitterHashTag + '&instagramHashTag=' + board.instagramHashTag + '&gplusHashTag=' + board.gpluHashTag + '&userId=' + $rootScope.user.Id,
+                    // data: { boardName: $scope.board.name, fbHashTag: $scope.board.facebookHashTag, twitterHashTag: $scope.board.twitterHashTag, instagramHashTag: $scope.board.instagramHashTag, gplusHashTag: $scope.board.gpluHashTag, userId: $rootScope.user.Id }
+                }).then(function (response) {
+                    if (response.data == 'board Exist') {
+                        $scope.dispbtn = true;
+                        alertify.set({ delay: 5000 });
+                        alertify.error(response.data);
+                    }
+                    else if (response.data == 'You cannot create board with special characters') {
+                        $scope.dispbtn = true;
+                        alertify.set({ delay: 5000 });
+                        alertify.error(response.data);
+                    }
+                    else if (response.data == 'successfulyy added.') {
+                        $scope.dispbtn = true;
+                        $state.go('boardlist');
+                    }
+
+                }, function (reason) {
+
+                });
+            }
+           
         }
     
         createboard();

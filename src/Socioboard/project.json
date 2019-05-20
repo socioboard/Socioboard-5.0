@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -40,8 +40,9 @@
   },
 
   "frameworks": {
-    "net451": {
+    "net452": {
       "frameworkAssemblies": {
+        "System.Web": "4.0.0.0"
       },
       "dependencies": {
         "Microsoft.AspNet.WebApi.Client": "5.2.3"

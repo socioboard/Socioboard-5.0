@@ -26,7 +26,7 @@ namespace Api.Socioboard.Controllers
     [Route("api/[controller]")]
     public class BoardMeController : Controller
     {
-        public BoardMeController(ILogger<DiscoveryController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment env)
+        public BoardMeController(ILogger<BoardMeController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment env)
         {
             _logger = logger;
             _appSettings = settings.Value;
@@ -53,7 +53,7 @@ namespace Api.Socioboard.Controllers
         {
             Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-           // AddTOSiteMap(boardName);
+            // AddTOSiteMap(boardName);
             return Ok(await brRepository.CreateBoard(boardName, twitterHashTag, instagramHashTag, gplusHashTag, userId, _redisCache, _appSettings, _logger, dbr));
         }
 
@@ -130,7 +130,7 @@ namespace Api.Socioboard.Controllers
             try
             {
                 List<Domain.Socioboard.Models.MongoBoards> boardslist = boardrepo.Find<Domain.Socioboard.Models.MongoBoards>(t => t.userId == userId && t.isActive == Domain.Socioboard.Enum.boardStatus.active).ToList();
-                boardslist= boardslist.Select(s => { s.boardName = s.boardName.Replace("/","SB"); return s; }).ToList();
+                boardslist = boardslist.Select(s => { s.boardName = s.boardName.Replace("/", "SB"); return s; }).ToList();
                 return Ok(boardslist);
             }
             catch (Exception ex)
@@ -193,7 +193,7 @@ namespace Api.Socioboard.Controllers
                     }
                     return Ok();
                 }
-                else if(lstboard.Count ==1)
+                else if (lstboard.Count == 1)
                 {
                     return Ok(BoardMeRepository.getBoardByName(lstboard.First().boardName, _redisCache, _appSettings, _logger, dbr));
                 }
@@ -202,7 +202,7 @@ namespace Api.Socioboard.Controllers
                     return Ok();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 return BadRequest("Something Went Wrong");
@@ -262,7 +262,7 @@ namespace Api.Socioboard.Controllers
                 ganalytics.TotalPageViews = x1.Rows[0][2];
                 ganalytics.TotalSessions = x1.Rows[0][1];
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ganalytics.TotalPageViews = "0";
             }
@@ -309,38 +309,30 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("getTwitterFeeds")]
-        public IActionResult getTwitterFeeds(long boardId, int skip, int count)
+        public async Task<IActionResult> getTwitterFeeds(long boardId, int skip, int count)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
-            MongoRepository boardrepo = new MongoRepository("MongoBoardTwtFeeds", _appSettings);
             try
             {
-                var builder = Builders<MongoBoardTwtFeeds>.Sort;
-                var sort = builder.Descending(t => t.Publishedtime);
-                //var result = boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag),sort,skip,count).ConfigureAwait(false); ;
-                // var result = boardrepo.BoardFind<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag)).ConfigureAwait(false);
-                //var task = Task.Run(async () =>
-                //{
-                //    return await result;
-                //});
-                //IList<MongoBoardTwtFeeds> objTwitterPagelist = task.Result;
-                //List<MongoBoardTwtFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                var result = boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag) && t.Feedurl!=null, sort, skip, count);
-                var task = Task.Run(async () =>
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
+                MongoRepository mongorepo = new MongoRepository("MongoBoardTwitterHashTag", _appSettings);
+                MongoBoardTwitterHashTag twitterhashtag = await mongorepo.FindFirstOrDefault<MongoBoardTwitterHashTag>(x => x.Boardid.Equals(board.boardId)).ConfigureAwait(false);
+                List<MongoBoardTwtFeeds> twtFeedsList = TwitterRepository.AddBoardTwitterHashTagFeeds(twitterhashtag.Screenname, board.twitterHashTag, null, _appSettings, _logger);
+                if (twtFeedsList.Count == 0)
                 {
-                    return await result;
-                });
-                IList<MongoBoardTwtFeeds> objTwitterPagelist = task.Result;
-                //return Ok(objBoardGplusPagefeeds);
-                return Ok(objTwitterPagelist);
-
+                    MongoRepository boardrepo = new MongoRepository("MongoBoardTwtFeeds", _appSettings);
+                    var builder = Builders<MongoBoardTwtFeeds>.Sort;
+                    var sort = builder.Descending(t => t.Publishedtime);
+                    IList<MongoBoardTwtFeeds> objTwitterPagelist = await boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag) && t.Feedurl != null, sort, skip, count);
+                    return Ok(objTwitterPagelist);
+                }
+                return Ok(twtFeedsList);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                return Ok("Something Went Wrong");
             }
+            return Ok("Something Went Wrong");
         }
 
 
@@ -364,7 +356,7 @@ namespace Api.Socioboard.Controllers
                 //});
                 //IList<MongoBoardInstagramFeeds> objTwitterPagelist = task.Result;
                 //List<MongoBoardInstagramFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                var result = boardrepo.FindWithRange<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag) && t.Link!=null, sort, skip, count);
+                var result = boardrepo.FindWithRange<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag) && t.Link != null, sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -384,49 +376,38 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("getGplusfeeds")]
-        public IActionResult getGplusfeeds(long boardId, int skip, int count)
+        public async Task<IActionResult> getGplusfeeds(long boardId, int skip, int count)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
-            MongoRepository boardrepo = new MongoRepository("MongoBoardGplusFeeds", _appSettings);
             try
             {
-                //List<MongoBoardGplusFeeds> objBoardGplusPagefeeds = boardrepo.getBoardGplusfeedsbyrange(Guid.Parse(BoardGplusprofileId), Convert.ToInt32(_noOfDataToSkip), Convert.ToInt32(_noOfResultsFromTop));
-                var builder = Builders<MongoBoardGplusFeeds>.Sort;
-                var sort = builder.Descending(t => t.Publishedtime);
-                //var result = boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag),sort,Convert.ToInt32(skip),Convert.ToInt32(count)).ConfigureAwait(false);
-                //var result = boardrepo.BoardFind<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag)).ConfigureAwait(false);
-                //var task = Task.Run(async () =>
-                //{
-                //    return await result;
-                //});
-                //IList<MongoBoardGplusFeeds> objTwitterPagelist = task.Result;
-                //List<MongoBoardGplusFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                var result = boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag) && t.Feedlink!=null, sort, skip, count);
-                var task = Task.Run(async () =>
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
+                MongoRepository mongorepo = new MongoRepository("MongoBoardGplusHashTag", _appSettings);
+                MongoBoardGplusHashTag gplushashtag = await mongorepo.FindFirstOrDefault<MongoBoardGplusHashTag>(x => x.Boardid.Equals(board.boardId)).ConfigureAwait(false);
+                List<MongoBoardGplusFeeds> GplusFeedsList = GplusRepository.AddBoardGplusTagFeeds(gplushashtag.Displayname, board.gplusHashTag, _appSettings, _logger);
+                if (GplusFeedsList.Count == 0)
                 {
-                    return await result;
-                });
-                IList<MongoBoardGplusFeeds> objTwitterPagelist = task.Result;
-
-                List<MongoBoardGplusFeeds> lstBGFeeds = objTwitterPagelist.ToList();
-                foreach (var items_lstBGFeed in lstBGFeeds)
-                {
-                    if (items_lstBGFeed.FromName.Any(c => char.IsSymbol(c)) || items_lstBGFeed.Title.Contains("¾"))
+                    MongoRepository boardrepo = new MongoRepository("MongoBoardGplusFeeds", _appSettings);
+                    var builder = Builders<MongoBoardGplusFeeds>.Sort;
+                    var sort = builder.Descending(t => t.Publishedtime);
+                    IList<MongoBoardGplusFeeds> objTwitterPagelist = await boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag) && t.Feedlink != null, sort, skip, count);
+                    List<MongoBoardGplusFeeds> lstBGFeeds = objTwitterPagelist.ToList();
+                    foreach (var items_lstBGFeed in lstBGFeeds)
                     {
-                        objTwitterPagelist.Remove(items_lstBGFeed);
+                        if (items_lstBGFeed.FromName.Any(c => char.IsSymbol(c)) || items_lstBGFeed.Title.Contains("¾"))
+                        {
+                            objTwitterPagelist.Remove(items_lstBGFeed);
+                        }
                     }
+                    return Ok(objTwitterPagelist);
                 }
-
-                return Ok(objTwitterPagelist);
-                //return Ok(objBoardGplusPagefeeds);
+                return Ok(GplusFeedsList);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
                 return Ok("Something Went Wrong");
             }
-
         }
 
 
@@ -531,21 +512,21 @@ namespace Api.Socioboard.Controllers
             try
             {
                 string appendNode = "<url><loc>https://boards.socioboard.com/" + boardName + "</loc><lastmod>" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "</lastmod><changefreq>Hourly</changefreq><priority>0.6</priority></url>";
-               XmlDocument doc = new XmlDocument();
+                XmlDocument doc = new XmlDocument();
                 doc.Load(_appSettings.sitemapPath);
                 var abc = doc.DocumentElement.GetElementsByTagName("url");
-                if (abc.Count >=500)
+                if (abc.Count >= 500)
                 {
                     DirectoryInfo d = new DirectoryInfo(_appSettings.sitefilePath);//Assuming Test is your Folder
                     FileInfo[] Files = d.GetFiles("*.xml");
 
-                    if (Files.Count()>0)
+                    if (Files.Count() > 0)
                     {
                         XmlTextWriter writer = new XmlTextWriter(_appSettings.sitemapPath.Replace("sitemap", "sitemap" + Files.Count().ToString()), System.Text.Encoding.UTF8);
                         writer.Close();
                         XmlTextWriter writer1 = new XmlTextWriter(_appSettings.sitemapPath, System.Text.Encoding.UTF8);
                         writer1.WriteStartDocument();
-                        writer1.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+                        writer1.WriteStartElement("urlset", "https://www.sitemaps.org/schemas/sitemap/0.9");
                         writer1.WriteStartElement("url");
                         writer1.WriteElementString("loc", "https://boards.socioboard.com/" + boardName);
                         writer1.WriteElementString("priority", "0.6");
@@ -558,7 +539,7 @@ namespace Api.Socioboard.Controllers
 
                         int length1 = d.GetFiles("*.xml").Length;
                         int filelength = length1 - 1;
-                        string location = "https://boards.socioboard.com/contents/socioboard/boardSitemap/sitemap" + filelength+".xml";
+                        string location = "https://boards.socioboard.com/contents/socioboard/boardSitemap/sitemap" + filelength + ".xml";
                         string lastmode = DateTime.UtcNow.ToString("yyyy-MM-dd");
                         string priority = "0.6";
 
@@ -593,7 +574,7 @@ namespace Api.Socioboard.Controllers
                     {
                         XmlTextWriter writer = new XmlTextWriter(_appSettings.sitemapPath, System.Text.Encoding.UTF8);
                         writer.WriteStartDocument();
-                        writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+                        writer.WriteStartElement("urlset", "https://www.sitemaps.org/schemas/sitemap/0.9");
                         int i = 0;
                         writer.WriteStartElement("url");
                         writer.WriteElementString("loc", "https://boards.socioboard.com/" + boardName);
@@ -604,7 +585,7 @@ namespace Api.Socioboard.Controllers
                         writer.WriteEndDocument();
                         writer.Close();
                     }
-                  
+
                     result = true;
                 }
                 else
@@ -630,7 +611,7 @@ namespace Api.Socioboard.Controllers
 
                     result = true;
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -658,7 +639,7 @@ namespace Api.Socioboard.Controllers
 
         [HttpPost("BoardFBPlugin")]
         //public async Task<IActionResult> BoardFBPlugin(string FromPicUrl, string FromName, string Text, string Title, string Isvisible, string PostImageurl, string publishedtime, string posturl, string boardName)
-        public async Task<IActionResult> BoardFBPlugin(string [] jsonObj)
+        public async Task<IActionResult> BoardFBPlugin(string[] jsonObj)
         {
             long userId = 0;
             Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();

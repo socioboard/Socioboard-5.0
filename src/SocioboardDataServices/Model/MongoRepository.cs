@@ -199,6 +199,13 @@ namespace SocioboardDataServices.Model
             return collection.InsertManyAsync(lstbson);
 
         }
+
+        public Task<T> FindFirstOrDefault<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
+            return collection.FirstOrDefaultAsync();
+        }
+
         public void Dispose()
         {
             // _db.Dispose();

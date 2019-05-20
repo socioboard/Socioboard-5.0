@@ -11,11 +11,13 @@ namespace Socioboard.Controllers
     public class SocioboardController : Controller
     {
         private readonly AppSettings _appSettings;
-
+       
         public SocioboardController(Microsoft.Extensions.Options.IOptions<AppSettings> settings)
         {
             _appSettings = settings.Value;
         }
+
+       
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {

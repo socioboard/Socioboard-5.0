@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using AdvancedContentSearch.Helper;
 using AdvancedContentSearch.Model;
 using Domain.Socioboard.Helpers;
 using MongoDB.Bson;
@@ -65,7 +66,7 @@ namespace AdvancedContentSearch.SearchLibrary
             imgurRequest.AllowWriteStreamBuffering = true;
             imgurRequest.ServicePoint.Expect100Continue = false;
             imgurRequest.PreAuthenticate = false;
-            imgurRequest.Headers.Add("Authorization", "Client-ID 5f1ad42ec5988b7");
+            imgurRequest.Headers.Add("Authorization", AppSetting.imgurApi);
             try
             {
                 using (var response = imgurRequest.GetResponse())

@@ -1775,7 +1775,7 @@ namespace Api.Socioboard.Repositories
             return lstFbPOstComment;
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> GetTopFeeds(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        public static List<MongoFacebookFeed> GetTopFeeds(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookRecent100Feeds + profileId);
             // User inMemUser = (User)_memoryCache.Get(user.UserName);
@@ -1788,12 +1788,12 @@ namespace Api.Socioboard.Repositories
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
                 var builder = Builders<MongoFacebookFeed>.Sort;
                 var sort = builder.Descending(t => t.FeedDate);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, 0, 100);
+                var result = mongorepo.FindWithRange(t => t.ProfileId.Equals(profileId), sort, 0, 100);
                 var task = Task.Run(async () =>
                     {
                         return await result;
                     });
-                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                IList<MongoFacebookFeed> lstFbFeeds = task.Result;
 
                 if (lstFbFeeds != null)
                 {

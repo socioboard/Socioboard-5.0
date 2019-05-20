@@ -1,4 +1,5 @@
-<script>    
+<script>
+
     (function ($) {
         $(document).ready(function () {
             $('#composeProfiles option').each(function (index) {
@@ -31,14 +32,15 @@
             }
         });
     })(jQuery);
-    
-    
+
+
 </script>
 <!--<script src="https://gateway.bluesnap.com/js/cse/v1.0.3/bluesnap.js"></script>-->
 <style>
-    #profile-card{
-        min-height:330px;
+    #profile-card {
+        min-height: 330px;
     }
+
     ul.shinh li label {
         font-size: 15px;
         color: #333;
@@ -59,11 +61,16 @@
         width: 20px;
         background: transparent !important;
     }
-    .iconprofile{
-    position: absolute;
-    top: 36px;
-    z-index: 1;
-    left: 44px;
+
+    .iconprofile {
+        position: absolute;
+        top: 36px;
+        z-index: 1;
+        left: 44px;
+    }
+
+    .rss_close:hover {
+        color: #333 !important;
     }
 </style>
 <div data-ng-controller="DashboardController">
@@ -208,7 +215,7 @@
                             </div>
                             <div ng-repeat="data in lstAccountProfiles">
                                 <!--facebook profile binding start-->
-                               
+
                                 <div class="col s12 m6 l4">
                                     <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] == 0 && data['fbaccount'] !=null && data['fbaccount'] !=''">
                                         <div class="card-image waves-effect waves-block waves-light">
@@ -280,7 +287,7 @@
                                             <p>{{data['twtaccount']['description']}}</p>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i><span class="cyan-text text-darken-2"> Name:</span> <span title="{{data['twtaccount']['twitterName']}}">{{data['twtaccount']['twitterName']}}</span></p>
                                             <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i><span class="cyan-text text-darken-2"> Descriptions:</span> <span title="{{data['twtaccount']['description']}}">{{data['twtaccount']['description']}}</span></p>
-                                            <p><i class=icon-user-following cyan-text text-darken-2 activator" title="Following"></i><span class="cyan-text text-darken-2"> Following:</span> {{data['twtaccount']['followingCount']}}</p>
+                                            <p><i class="icon-user-following cyan-text text-darken-2 activator" title="Following"></i><span class="cyan-text text-darken-2"> Following:</span> {{data['twtaccount']['followingCount']}}</p>
                                             <p><i class="icon-user-follow cyan-text text-darken-2 activator" title="followers"></i><span class="cyan-text text-darken-2"> Followers:</span> {{data['twtaccount']['followersCount']}}</p>
                                         </div>
                                     </div>
@@ -315,7 +322,7 @@
                                 </div>
                                 <!--instagram profiles bind end-->
                                 <!--gplus profiles binding start-->
-                                <div class="col s12 m6 l4">
+                                <!--<div class="col s12 m6 l4">
                                     <div id="profile-card" class="card" ng-if="data['gplusaccount'] != null && data['gplusaccount'] !=''">
                                         <div class="card-image waves-effect waves-block waves-light">
                                             <img class="activator" ng-src="{{data['gplusaccount']['coverPic']}}">
@@ -333,15 +340,15 @@
                                         <div class="card-reveal">
                                             <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{data['gplusaccount']['gpUserName']}}<i class="mdi-navigation-close right"></i></span>
 
-                                            <!--<p>{{gplusProfile.description}}</p>-->
+                                            <p>{{gplusProfile.description}}</p>
                                             <p><i class="icon-user-following cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Following:</span> {{data['gplusaccount']['inYourCircles']}}</p>
                                             <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span>{{data['gplusaccount']['haveYouInCircles']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> <span class="cyan-text text-darken-2"> Email Id:</span><span title="{{data['gplusaccount']['emailId']}}">{{data['gplusaccount']['emailId']}}</span></p>
-                                            <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
+                                           <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>
                                             <p><i class="icon-pointer cyan-text text-darken-2" title="Location"></i> <span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['gplusaccount']['location']}}">{{data['gplusaccount']['location']}}</span></p>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <!--gplus profiles binding end-->
                                 <!--gA profiles binding start-->
                                 <div class="col s12 m6 l4">
@@ -504,7 +511,7 @@
                                 <!--Pinterest Account profiles bind end-->
                             </div>
 
-                            
+
                         </div>
                         <div class="row">
                             <div class="col l12 m12 s12">
@@ -765,7 +772,6 @@
                         </div>
                     </div>-->
                     <!--work collections end-->
-
                     <!--rss cons-->
                     <div>
                         <ul id="issues-collection" class="collection">
@@ -774,10 +780,16 @@
                                 <span class="collection-header">Automate Rss Feeds</span>
                                 <p>Build Your Contents</p>
                             </li>
-                            <li class="collection-item" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7" >
+                            <li class="collection-item" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                                 <div class="row">
                                     <div class="col l12 s12">
-                                        <a ng-click="contentFeeds('Analytics')" class="chip red darken-1 white-text">Analytics</a>
+                                        <!--<div class="chip red darken-1 white-text"><span ng-repeat="keyword in listofkeywords" ng-click="contentFeeds(keyword)">{{keyword}}</span> <i class="icon-close" ng-click=""></i></div>-->
+                                        <div class="chip red darken-1 white-text" ng-repeat="keyword in listofkeywords" style="cursor: pointer;">
+                                            <span ng-click="contentFeeds(keyword)">{{keyword}}</span>
+                                            <i class="close material-icons icon-close grey-text text-lighten-3 rss_close" ng-click="DeleteFeedsKeyword(keyword)"></i>
+                                        </div>
+                                        <!--<a ng-repeat="keyword in listofkeywords" ng-click="contentFeeds(keyword)" class="chip red darken-1 white-text">{{keyword}} <i class="icon-close" ng-click=""></i></a>-->
+                                        <!--<a ng-click="contentFeeds('Analytics')" class="chip red darken-1 white-text">Analytics</a>
                                         <a ng-click="contentFeeds('Beauty')" class="chip red darken-1 white-text">Beauty</a>
                                         <a ng-click="contentFeeds('Business & Finance')" class="chip red darken-1 white-text">Business &amp; Finance</a>
                                         <a ng-click="contentFeeds('Content Marketing')" class="chip red darken-1 white-text">Content Marketing</a>
@@ -806,12 +818,12 @@
                                         <a ng-click="contentFeeds('Sports')" class="chip red darken-1 white-text">Sports</a>
                                         <a ng-click="contentFeeds('Technology')" class="chip red darken-1 white-text">Technology</a>
                                         <a ng-click="contentFeeds('Travel')" class="chip red darken-1 white-text">Travel</a>
-                                        <a ng-click="contentFeeds('Web Design')" class="chip red darken-1 white-text">Web Design</a>
+                                        <a ng-click="contentFeeds('Web Design')" class="chip red darken-1 white-text">Web Design</a>-->
                                     </div>
                                 </div>
                             </li>
 
-                            <li class="collection-item" ng-if="user.AccountType==0 || user.AccountType==1">
+                            <!--<li class="collection-item" ng-if="user.AccountType==0 || user.AccountType==1">
                                 <div class="row">
                                     <div class="col l12 s12">
                                         <a  ng-click="message()" disable class="chip red darken-1 white-text">Analytics</a>
@@ -846,7 +858,7 @@
                                         <a  ng-click="message()" disable class="chip red darken-1 white-text">Web Design</a>
                                     </div>
                                 </div>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                     <!--endrss conts-->
@@ -935,7 +947,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li>
+                                <!--<li>
                                     <div class="collapsible-header red-text text-darken-3"><i class="fa fa-google-plus fa-fw"></i>G-plus</div>
                                     <div class="collapsible-body">
                                         <ul>
@@ -956,7 +968,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li>-->
 
                                 <li>
                                     <div class="collapsible-header indigo-text text-darken-4"><i class="fa fa-linkedin fa-fw"></i>Linkedin C Page</div>
@@ -989,7 +1001,7 @@
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
                                                 <div class="row card" ng-if="profile.profileType==3">
-                                                    <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
+                                                    <a href="https://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3" ng-if="profile.profilePic!=null">
                                                             <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
@@ -1171,7 +1183,7 @@
     <!-- Compose Email Structure -->
     <div id="ComposePostModal" class="modal">
         <div class="modal-content">
-            <nav class="red"  style="height: 50px; line-height: 50px;">
+            <nav class="red" style="height: 50px; line-height: 50px;">
                 <div class="nav-wrapper" style="height: 50px; line-height: 50px;">
                     <div class="left col s12">
                         <ul>
@@ -1184,7 +1196,7 @@
                     <!--<div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
-                               
+
                             </li>
                         </ul>
                     </div>-->
@@ -1226,99 +1238,97 @@
                                 </div>
                                 <!--<div ng-repeat="profile in lstProfiles |filter:query" >-->
                                 <ul class="col s12 shinh" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
-                                <li style="padding:5px 0;">
-                                    <label>
-                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
-                                        <span style="float:left;">Check All</span>
-                                    </label>
-                                </li>
-                                <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
-                                    <label>
-                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
-                                    </label>
-                                </li>-->
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label>
-                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
-                                    <label>
-                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label>
-                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
-                                    <label>
-                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
-                                    </label>
-                                </li>
-                            </ul>
+                                    <li style="padding:5px 0;">
+                                        <label>
+                                            <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                            <span style="float:left;">Check All</span>
+                                        </label>
+                                    </li>
+                                    <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                        <label>
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
+                                        </label>
+                                    </li>-->
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <label>
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <!--<div class="row no-space">
-                    <div class="col s12 m12 l12">
-                        <p>Add your hashtag</p>
-                    </div>
-                    <div class="input-field col s12">
-                        <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                    </div>
-                </div>-->
-                    <!--<div class="row">
-                    <div class="input-field col s12">
-                        <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                        <label for="compose">Message</label>
-                    </div>
-                </div>-->
-                    <!-- <div id="selection" class="row">
-                   <div class="input-field col s12">
-
-                        <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
-                            <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
-                            <option value="selectall">Select all</option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                        </select>
+                        <div class="col s12 m12 l12">
+                            <p>Add your hashtag</p>
+                        </div>
+                        <div class="input-field col s12">
+                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
                         </div>
                     </div>-->
+                    <!--<div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                            <label for="compose">Message</label>
+                        </div>
+                    </div>-->
+                    <!-- <div id="selection" class="row">
+                    <div class="input-field col s12">
 
-            
-            <!--</div>-->
+                         <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
+                             <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
+                             <option value="selectall">Select all</option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                         </select>
+                         </div>
+                     </div>-->
+                    <!--</div>-->
 
 
-            <div class="row no-space">
-                <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()" style="width:90px;">Save as Draft</a>
-                <div class="right btn btn_style blue_btn_style">
-                    <div ng-show="dispbtn" ng-click="ComposeMessage()" style="width:90px;">send</div>
-                    <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
-                </div>
+                    <div class="row no-space">
+                        <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()" style="width:90px;">Save as Draft</a>
+                        <div class="right btn btn_style blue_btn_style">
+                            <div ng-show="dispbtn" ng-click="ComposeMessage()" style="width:90px;">send</div>
+                            <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            </form>
-        </div>
         </div>
     </div>
     <!-- END CONTENT -->
@@ -1331,7 +1341,7 @@
                     <ul class="tabs tab-demo z-depth-1">
                         <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
-                        <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
+                        <!--<li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>-->
                         <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
                         <!--<li class="tab col s1"><a href="#pinterest"><i class="fa fa-pinterest fa-fw fa-2x"></i></a></li>-->
@@ -1360,7 +1370,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Twtcounts==1 ">
                         <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
-                        <a  ng-click="profileaddmessage()" disable id="TwitterAddButton" class="waves-effect grey waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                        <a ng-click="profileaddmessage()" disable id="TwitterAddButton" class="waves-effect grey waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                         <p>
                             <!-- ng-change="followChange()" -->
                             <input type="checkbox" ng-click="followChange()" checked="checked" id="TwitterFollow" />
@@ -1373,19 +1383,19 @@
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                     </div>
+                    </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==0">
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                   </div>
-                   <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==1 ">
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==1 ">
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                  </div>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                    </div>
                 </div>
-                <div id="google" class="col s12">
+                <!--<div id="google" class="col s12">
                     <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
                         <a href="../GoogleManager/AddGoogleAccount" class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
@@ -1396,9 +1406,9 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Gpluscounts==1 ">
                         <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
                     </div>
-                </div>
+                </div>-->
                 <div id="linkedin" class="col s12">
                     <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Grant access to your profile to share updates and view your feed.</p>
@@ -1412,8 +1422,8 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && LinkedIncounts==1 ">
                         <p>Grant access to your profile to share updates and view your feed.</p>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
                     </div>
                 </div>
                 <div id="instagram" class="col s12">
@@ -1427,7 +1437,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Instacounts==1 ">
                         <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
                 </div>
                 <!--<div id="pinterest" class="col s12">
@@ -1447,7 +1457,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 ">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
-                        <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
+                        <a ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
                     </div>
                 </div>
                 <div id="ganalytics" class="col s12">
@@ -1463,7 +1473,7 @@
             </div>
         </div>
     </div>
-   
+
     <div class="modal" id="FbFanpage_Modal">
         <div class="modal-content">
             <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
@@ -1496,7 +1506,7 @@
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
             <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
-         
+
         </div>
     </div>
 
@@ -1542,7 +1552,8 @@
             <h4>CHOOSE LINKEDIN PAGES TO CONNECT</h4>
             <ul class="collection">
 
-                <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0"><!--ng-if="linpages.connected==0"-->
+                <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
+                    <!--ng-if="linpages.connected==0"-->
                     <div class="left">
                         <img class="circle" alt="" ng-src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                         <span class="title">{{linpages.PageName}}</span>
@@ -1568,7 +1579,7 @@
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
             <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
-       
+
         </div>
     </div>
 
@@ -1959,7 +1970,7 @@
     </div>
 </div>
 
-    <!-- Active Group Modal  -->
+<!-- Active Group Modal  -->
 <!--<div id="ActiveGroupModal" class="modal" style="max-height:initial">
     <div class="modal-content">
         <h4>SELECT YOUR GROUPS</h4>
@@ -1985,14 +1996,14 @@
         </div>
     </div>
     <div class="modal-footer">
-      
+
         <a href="#!" ng-click="AddSelectedGroups()" class="modal-action waves-effect waves-green btn-flat">Retain Groups</a>
     </div>
 </div>-->
-</div>
+
 
 <script>
-               
+
     function closeModel() {
         jQuery('input:checkbox').removeAttr('checked');
     }

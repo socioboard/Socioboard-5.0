@@ -44,7 +44,7 @@
           "lib/net40/Hammock.dll": {}
         }
       },
-      "HtmlAgilityPack/1.8.11": {
+      "HtmlAgilityPack/1.11.4": {
         "type": "package",
         "compile": {
           "lib/Net45/HtmlAgilityPack.dll": {}
@@ -625,7 +625,7 @@
           "MongoDB.Bson": "2.2.4",
           "NETStandard.Library": "1.6.0",
           "Newtonsoft.Json": "9.0.1",
-          "Sendgrid": "9.10.0"
+          "Sendgrid": "9.11.0"
         },
         "frameworkAssemblies": [
           "System.ComponentModel.DataAnnotations",
@@ -759,7 +759,7 @@
         "dependencies": {
           "Domain.Socioboard": "1.0.0",
           "FluentScheduler": "5.3.0",
-          "HtmlAgilityPack": "1.8.11",
+          "HtmlAgilityPack": "1.11.4",
           "MongoDB.Bson": "2.2.4",
           "MongoDB.Driver": "2.2.4",
           "MySql.Data": "6.9.8",
@@ -962,17 +962,20 @@
         "mono/Hammock.Mono.pdb"
       ]
     },
-    "HtmlAgilityPack/1.8.11": {
-      "sha512": "NQWVLLxNk5yWjehhd/q/7OVOXr2udo/wnmfAkgCWML8kGmqhfeAHJ6v5wR0i879hVwQ+Lj4i4Dwarb+yxpWNaw==",
+    "HtmlAgilityPack/1.11.4": {
+      "sha512": "OGEi48/KQCbHnM2fTj1oW2eQIwXcYnI9Zy39fEJPQLYHXN19iwDdVpKYdBDyZNVSvhl/Bi0kXXotYbqipnTTMA==",
       "type": "package",
-      "path": "HtmlAgilityPack/1.8.11",
+      "path": "HtmlAgilityPack/1.11.4",
       "files": [
         ".signature.p7s",
-        "HtmlAgilityPack.1.8.11.nupkg.sha512",
+        "HtmlAgilityPack.1.11.4.nupkg.sha512",
         "HtmlAgilityPack.nuspec",
         "lib/Net20/HtmlAgilityPack.dll",
         "lib/Net20/HtmlAgilityPack.pdb",
         "lib/Net20/HtmlAgilityPack.xml",
+        "lib/Net35/HtmlAgilityPack.dll",
+        "lib/Net35/HtmlAgilityPack.pdb",
+        "lib/Net35/HtmlAgilityPack.xml",
         "lib/Net40-client/HtmlAgilityPack.dll",
         "lib/Net40-client/HtmlAgilityPack.pdb",
         "lib/Net40-client/HtmlAgilityPack.xml",

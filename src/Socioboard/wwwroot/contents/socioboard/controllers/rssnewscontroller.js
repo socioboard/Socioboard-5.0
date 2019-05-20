@@ -11,18 +11,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $rootScope.contentMessage = {};
         $rootScope.schedulemessage = {};
         $scope.buildbtn = true;
-        $scope.activateModules = 'CalledThroughDashBoard';
-        $scope.skip = 0;
-        $scope.count = 5;
-        var onScrollLoad = true;
+
         var x = $rootScope.keyword;
-
-        if ($rootScope.keyword == undefined || $rootScope.keyword == null || $rootScope.keyword == '') {
-            $rootScope.keyword = 'Analytics';
-        }
-
-        var initialLoad = false;
-        $scope.processCompleted = false;
 
         rssnews();
 
@@ -48,6 +38,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
         }
 
+
         $scope.deleteMsg = function (profileId) {
 
             swal({
@@ -59,9 +50,9 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             },
-            function () {
+	        function () {
 
-                $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
+	            $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
                            .then(function (response) {
                                if (response.data == "success") {
                                    swal("Deleted!", "content feed has been deleted.", "success");
@@ -71,214 +62,137 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                            }, function (reason) {
                                $scope.error = reason.data;
                            });
-                //todo: code to delete profile
-                // swal("Deleted!", "Your profile has been deleted.", "success");
-            });
+	            //todo: code to delete profile
+	            // swal("Deleted!", "Your profile has been deleted.", "success");
+	        });
         }
 
-        $('#tags').tagsInput();
 
-        $scope.loadRssNewsFeed = function (skip, count) {
-          
-            $scope.activateModules = 'CalledThroughDashBoard';
 
-            onScrollLoad = false;
-            //if()
+
+        $('.rsstag').tagsInput();
+
+
+        $scope.loadRssNewsFeed = function () {
+
+            //$rootScope.keyword = 'media';
             if ($rootScope.keyword == null || $rootScope.keyword == undefined) {
-
-                $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsPost?userId=' + $rootScope.user.Id + '&skip=' + skip + '&count=' + count)
-            .then(function (response) {
-                if (response.data != "") {
-
-                    if ($scope.postedRssData == undefined) {
-                        $scope.postedRssData = response.data;
-                    } else {
-                        $scope.postedRssData = $scope.postedRssData.concat(response.data);
-                    }
-
-                    $scope.fetchdatacomplete = true;
-                    var keywords = $('#tags').val('');
-                    //if ($rootScope.keyword != null) {
-                    //    $scope.rssContentsData();
-                    //}
-
-                }
-                else {
-
-                    if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
-                        $scope.processCompleted = true;
-                    } else {
-                        $scope.nofeeds = true;
-                        $scope.fetchdatacomplete = true;
-                        $scope.processCompleted = true;
-                    }
-                }
-                onScrollLoad = true;
-            }, function () {
-                $scope.error = reason.data;
-            });
+                $scope.addKeyword = true;
+                $scope.fetchdatacomplete = true;
+                $scope.nofeeds = false;
             }
 
             else {
-
-                if ($('#tags').val() != null && $('#tags').val() != "") {
-                    var keywords = $('#tags').val();
-                }
-                else {
-                    var keywords = $rootScope.keyword;
-                }
-
-
+                var keywords = $rootScope.keyword;
                 $scope.buildbtn = false;
+                if (keywords != null) {
 
-
-
-                if (keywords != null && keywords != undefined) {
-
-                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrlPagination?userId=' + $rootScope.user.Id + '&keyword=' + keywords + '&skip=' + skip + '&count=' + count)
+                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
                     .then(function (response) {
-                        if (response.data != "") {
+                        if (response.data !== "") {
+                            $scope.postedRssData = response.data;
+                            if ($scope.postedRssData !== "Data already added") {
 
-                            if ($scope.postedRssData == undefined) {
-                                $scope.postedRssData = response.data;
-                            } else {
-                                $scope.postedRssData = $scope.postedRssData.concat(response.data);
-                            }
-
-                            if ($scope.postedRssData != "Data already added") {
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 $scope.fetchdatacomplete = true;
-                                //$scope.rssNewsFeed(keywords);
-                                $('#tags').val('');
+                                $('.rsstag').val('');
                             }
                             else {
-
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 swal("Data already added");
-                                $('#tags').val('');
+                                $('.rsstag').val('');
                             }
-
                         }
                         else {
-
-
-                            if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
-                                $scope.processCompleted = true;
-                            } else {
-                                $scope.nofeeds = true;
-                                $scope.buildbtn = true;
-                                $('#rssSettingModal').closeModal();
-                                $scope.fetchdatacomplete = true;
-                                $scope.processCompleted = true;
-                            }
+                            $scope.nofeeds = true;
+                            $scope.buildbtn = true;
+                            $('#rssSettingModal').closeModal();
+                            $scope.fetchdatacomplete = true;
                         }
-                        onScrollLoad = true;
                     }, function () {
+                        $scope.fetchdatacomplete = true;
+                        alertify.error("Oops! Something went wrong");
                         $scope.error = reason.data;
-
                     });
                 }
             }
-
-
-
         }
 
-        $scope.rssContentsData = function (skip, count) {
+        $scope.loadRssNewsFeed();
 
-            if (skip == undefined || count == undefined) {
-                skip = 0;
-                count = 0;
-            }
+        $scope.rssContentsData = function () {
 
-            $scope.activateModules = 'AddedThroughKeyword';
-            var title = $('#tags').val();
+            var title = $('.rsstag').val();
+
             if (/\S/.test(title)) {
-                if ($('#tags').val() != null) {
-                    var keywords = $('#tags').val();
+                if ($('.rsstag').val() != null) {
+                    var keywords = $('.rsstag').val();
                 }
                 else {
-                    var keywords = $rootScope.keyword;
+                    $scope.addKeyword = true;
+                    $scope.fetchdatacomplete = true;
+                    $scope.nofeeds = false;
                 }
 
                 $scope.buildbtn = false;
-
                 if (keywords != null && keywords != undefined) {
 
-                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrlPagination?userId=' + $rootScope.user.Id + '&keyword=' + keywords + '&skip=' + skip + '&count=' + count)
+                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
                     .then(function (response) {
+                        $scope.addKeyword = false;
                         if (response.data != "") {
-
-                            if ($scope.postedRssData == undefined) {
-                                $scope.postedRssData = response.data;
-                            } else {
-                                $scope.postedRssData = $scope.postedRssData.concat(response.data);
-                            }
-
+                            $scope.postedRssData = response.data;
                             if ($scope.postedRssData != "Data already added") {
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 $scope.fetchdatacomplete = true;
-                                //$scope.rssNewsFeed(keywords);
-                                $('#tags').val('');
+                                $('.rsstag').val('');
+                                $scope.nofeeds = false;
                             }
                             else {
-
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 swal("Data already added");
-                                $('#tags').val('');
+                                $('.rsstag').val('');
                             }
-
                         }
                         else {
-
-
-                            if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
-                                $scope.processCompleted = true;
-                            } else {
-                                $scope.nofeeds = true;
-                                $scope.buildbtn = true;
-                                $('#rssSettingModal').closeModal();
-                                $scope.fetchdatacomplete = true;
-                                $scope.processCompleted = true;
-                            }
+                            $scope.nofeeds = true;
+                            $scope.buildbtn = true;
+                            $('#rssSettingModal').closeModal();
+                            $scope.fetchdatacomplete = true;
+                            alertify.error("Oops! Something went wrong");
                         }
-                        onScrollLoad = true;
                     }, function () {
+                        $scope.buildbtn = true;
+                        alertify.error("Oops! Something went wrong");
                         $scope.error = reason.data;
-
                     });
                 }
-
             }
             else {
-                swal("Please enter tag first")
+                swal("Please enter tag first");
             }
-
-
         }
 
         $scope.contentfeedsdata = function () {
 
-
-
-
-            if ($('#tags').val() != null) {
-                var keywords = $('#tags').val();
+            if ($('.rsstag').val() != null) {
+                var keywords = $('.rsstag').val();
             }
             else {
-                var keywords = $rootScope.keyword;
+                $scope.addKeyword = true;
+                $scope.fetchdatacomplete = true;
+                $scope.nofeeds = false;
             }
 
             $scope.buildbtn = false;
-            // var keywords = $('#tags').val();
+            // var keywords = $('.rsstag').val();
 
 
             if (keywords != null && keywords != undefined) {
-
                 $http.get(apiDomain + '/api/RssFeed/ContentFeeds?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
                 .then(function (response) {
                     if (response.data != "") {
@@ -291,14 +205,14 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                             $('#rssSettingModal').closeModal();
                             $scope.fetchdatacomplete = true;
                             //$scope.rssNewsFeed(keywords);
-                            $('#tags').val('');
+                            $('.rsstag').val('');
                         }
                         else {
 
                             $scope.buildbtn = true;
                             $('#rssSettingModal').closeModal();
                             swal("Data already added");
-                            $('#tags').val('');
+                            $('.rsstag').val('');
                         }
 
                     }
@@ -310,54 +224,9 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     }
                 }, function () {
                     $scope.error = reason.data;
-
                 });
             }
         }
-
-        //content feeds search from twitter start--------date : 12/05/2017
-        //$scope.contentfeedsdata = function ()
-        //{
-        //    var keywords = $('#tags').val();
-        //    $http.get(apiDomain + '/api/RssFeed/ContentFeeds?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
-        //    .then(function (response) {
-        //        if (response.data != null) {
-        //            $scope.confeeds = response.data;
-        //            console.log("contentfeeds");
-        //            console.log($scope.confeeds);
-        //        }
-
-        //    }, function () {
-        //        $scope.error = reason.data;
-        //        console.log("kjsdkjs");
-        //        console.log($scope.error);
-
-        //    });
-        //}
-
-
-        //content feeds search from twitter end----------date : 12/05/2017
-
-        //$scope.rssNewsFeed = function (keywords) {
-
-        //    $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsContents?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
-        //    .then(function (response) {
-        //        if (response.data != "") {
-        //            $scope.postedRssData = response.data;
-        //            console.log($scope.postedRssData);
-        //            $scope.fetchdatacomplete = true;
-        //        }
-        //        else {
-        //            $scope.nofeeds = true;
-        //            $scope.fetchdatacomplete = true;
-        //        }
-        //    }, function () {
-        //        $scope.error = reason.data;
-        //    });
-        //}
-
-        //$('#rssSettingModal').openModal();
-
 
         $scope.schedulePost = function (schedulemessage) {
 
@@ -561,42 +430,6 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
         }
 
-
-     
-
-        $(window).scroll(function () {
-            if (($(window).scrollTop() >= ($(document).height() - $(window).height()) * 0.9)) {
-
-                if ($scope.processCompleted) {
-                    return;
-                }
-
-                if ($scope.activateModules === 'CalledThroughDashBoard') {
-                    if (onScrollLoad) {
-                        if (!initialLoad) {
-                            initialLoad = true;
-                            $scope.skip = 0;
-                            $scope.loadRssNewsFeed($scope.skip, $scope.count);
-                        } else {
-                            $scope.skip += 5;
-                            $scope.loadRssNewsFeed($scope.skip, $scope.count);
-                        }
-
-                    }
-                }
-                else if ($scope.activateModules === 'AddedThroughKeyword') {
-
-                    if (onScrollLoad) {
-                        $scope.skip += 5;
-                        $scope.rssContentsData($scope.skip, $scope.count);
-                    }
-
-                }
-
-
-            }
-        });
-        $scope.loadRssNewsFeed(0,5);
     });
 
 });
@@ -605,7 +438,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 SocioboardApp.directive('afterRender', function ($timeout) {
     return function (scope, element, attrs) {
         $timeout(function () {
-            $('.dropify').dropify();
+            $('.dropify1').dropify();
         });
     };
 })

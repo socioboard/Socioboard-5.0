@@ -8,7 +8,7 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Twitter Inbox</h5>
                     <ul class="collection inboxmessage_slider" ng-if="nodata==false">
-                        <li class="collection-item avatar" ng-repeat="message in lstMessages | notificationbyprofilesfileter  : selectedProfiles">
+                        <li class="collection-item avatar" ng-repeat="message in lstMessages | notificationByTwitterProfiles  : selectedProfiles">
                             <img src="{{message.senderProfileUrl}}" alt="{{message.senderScreenName}}" class="circle">
                             <span class="email-title">{{message.senderScreenName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">

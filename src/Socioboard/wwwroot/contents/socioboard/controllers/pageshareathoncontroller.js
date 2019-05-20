@@ -2,19 +2,20 @@
 
 SocioboardApp.controller('PageShareathonController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {   
-    
+    $scope.$on('$viewContentLoaded', function () {
+
         pageshareathon();
-        $scope.deletepageshareathon = function(profileId){
-        	swal({   
-	        title: "Are you sure?",   
-	        text: "You will not be able to send any message via this account!",
-	        type: "warning",   
-	        showCancelButton: true,   
-	        confirmButtonColor: "#DD6B55",   
-	        confirmButtonText: "Yes, delete it!",   
-	        closeOnConfirm: false }, 
-	        function(){   
+        $scope.deletepageshareathon = function (profileId) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send any message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+	        function () {
 	            //todo: code to delete profile
 	            $http.post(apiDomain + '/api/Shareathon/DeletePageShareathon?PageShareathodId=' + profileId)
                             .then(function (response) {
@@ -24,22 +25,22 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
                                 }
                             }, function (reason) {
                                 $scope.error = reason.data;
-                             });
-	            });
+                            });
+	        });
         }
 
         $scope.loadpageshareathon = function () {
-           
-                //codes to get  page shreathon
+
+            //codes to get  page shreathon
             $http.get(apiDomain + '/api/Shareathon/UserpageShareathon?userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.lstpageshareathon = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to get page shreathon
+            // end codes to get page shreathon
         }
-
+        $scope.current = 1;
         $scope.loadpageshareathon();
 
         //$scope.deletepageshareathon = function (PageShareathodId)
@@ -58,10 +59,27 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
 
         $scope.editpageshareathon = function (pageshareathon) {
             $rootScope.pageshareathondata = pageshareathon;
-           // console.log($rootScope.pageshareathondata);
+            // console.log($rootScope.pageshareathondata);
             window.location.href = "#/edit_page_shareathon.html";
         }
+        $scope.shareathonpagereport = function (pageshareathonid) {
 
-  });
+            $http.get(apiDomain + "/api/Shareathon/GetPublishedPageFeeds?ShareathonId=" + pageshareathonid)
+           .then(function (response) {
+               if (response.data != "") {
+                   $scope.PostedFeeds = response.data;
+                   $scope.fetchdatacomplete = true;
+                   $('#PageShareathonReportModal').openModal({ dismissible: true });
+               }
+               else {
+                   $scope.nofeeds = false;
+                   swal("Oops! Not yet shared any posts.");
+               }
+           }),
+           function (reason) {
+               $scope.nofeeds = true;
+           }
+        }
+    });
 
 });

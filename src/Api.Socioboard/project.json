@@ -41,7 +41,8 @@
     "TweetinviAPI": "1.3.0",
     "RestApiSDK": "0.11.0",
     "PayPalCoreSDK": "1.7.1",
-    "PayPalMerchantSDK": "2.16.204"
+    "PayPalMerchantSDK": "2.16.204",
+    "NewsAPI": "0.5.0"
   },
 
   "tools": {
@@ -49,7 +50,7 @@
   },
 
   "frameworks": {
-    "net451": {
+    "net452": {
       "frameworkAssemblies": {
         "System.Xml": "4.0.0.0"
       },

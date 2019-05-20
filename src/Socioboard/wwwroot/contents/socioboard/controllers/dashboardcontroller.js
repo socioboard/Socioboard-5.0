@@ -18,12 +18,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             swal($scope.prfilemsg);
         };
 
-       
+
         debugger;
 
         var objappVersion = navigator.appVersion;
         var objAgent = navigator.userAgent;
-        var objbrowserName = navigator.appName; 
+        var objbrowserName = navigator.appName;
         var objfullVersion = '' + parseFloat(navigator.appVersion);
         var objBrMajorVersion = parseInt(navigator.appVersion, 10);
         var objOffsetName, objOffsetVersion, ix;
@@ -194,10 +194,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 0) || ($rootScope.user.AccountType == 0 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1 || $scope.Pincounts >= 1))) {
             $('#ActiveProfileModalForBasicPlan').openModal({ dismissible: false });
         }
-        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 1) || ($rootScope.user.AccountType == 1 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1 || $scope.Pincounts>=1))) {
+        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 1) || ($rootScope.user.AccountType == 1 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1 || $scope.Pincounts >= 1))) {
             $('#ActiveProfileModalForStandardPlan').openModal({ dismissible: false });
         }
-        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 2) || ($rootScope.user.AccountType == 2 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >=1))) {
+        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 2) || ($rootScope.user.AccountType == 2 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1))) {
             $('#ActiveProfileModalForPremiumPlan').openModal({ dismissible: false });
         }
         //if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
@@ -215,7 +215,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         }
 
-      
+
 
         //codes fetch all profiles start
         $scope.fetchalllProfiles = function () {
@@ -367,19 +367,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.draftMsg = function () {
             $scope.draftbtn = false;
             var message = $('#composeMessage').val();
-            if (/\S/.test(message)){
-            var updatedmessage = "";
-            var postdata = message.split("\n");
-            for (var i = 0; i < postdata.length; i++) {
-                updatedmessage = updatedmessage + "<br>" + postdata[i];
-            }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
-            updatedmessage = updatedmessage.replace("+", 'ppp');
-            updatedmessage = updatedmessage.replace("-+", 'jjj');
-            message = updatedmessage;
-            $scope.findExtension();
-           // if (message != "" && message != undefined) {
+            if (/\S/.test(message)) {
+                var updatedmessage = "";
+                var postdata = message.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                updatedmessage = updatedmessage.replace("+", 'ppp');
+                updatedmessage = updatedmessage.replace("-+", 'jjj');
+                message = updatedmessage;
+                $scope.findExtension();
+                // if (message != "" && message != undefined) {
                 $scope.checkfile();
                 if ($scope.check == true) {
                     var formData = new FormData();
@@ -454,7 +454,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         //$scope.fetchYTChannels();
 
         //$scope.deleteProfile = function (profileId) {
-          
+
         //    swal({
         //        title: "Are you sure?",
         //        text: "You will not be able to send any message via this account!",
@@ -468,7 +468,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         //    function () {
         //        $scope.chk(profileId);
         //        if ($scope.isprimacc == false) {
-                    
+
         //            $http({
         //                method: 'POST',
         //                url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
@@ -513,7 +513,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                      debugger;
                      swal("Deleted!", "Primary Account can't be delete", "error");
                  });
-               
+
             });
 
         }
@@ -549,7 +549,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         //}
 
 
-       
+
 
         $scope.deleteGpProfile = function (profileId) {
 
@@ -593,7 +593,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             },
             function () {
 
-
+                debugger;
                 $http({
                     method: 'POST',
                     url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
@@ -627,12 +627,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                 }).then(function (response) {
                     if (response.data == "Deleted") {
-                        
+
                         swal("Deleted!", "Account is deleted", "success");
                     }
                     window.location.reload();
                 });
-              
+
             });
         }
 
@@ -659,7 +659,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }
                     window.location.reload();
                 });
-               
+
             });
         }
 
@@ -711,8 +711,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         window.location.reload();
                         swal(response.data);
                     }
-                    else
-                    {
+                    else {
                         var listStatus = response.data;
                         swal(listStatus.notadded + " pages added by other users");
                     }
@@ -796,24 +795,24 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         //end codes to add facebook pages
 
         //reconnect facebook page start           
-            $scope.ReconnFacebookPages = function () {
-                console.log("access token");
-                console.log($scope.selectedFbPageProfiles);
-                $http.post(apiDomain + '/api/Facebook/ReconnFacebookPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId +'&accessToken=' +$scope.selectedFbPageProfiles)
-             .then(function (response) {
-              
-                 if (response.status == 200) {
-                     //  window.location.reload();
-                     $('#ReconnFanpage_Modal').closeModal();
-                    
-                     swal(response.data);
-                     window.location.reload();
-                 }
-             }, function (reason) {
-                 swal("Error!");
-             });               
-            
-            }
+        $scope.ReconnFacebookPages = function () {
+            console.log("access token");
+            console.log($scope.selectedFbPageProfiles);
+            $http.post(apiDomain + '/api/Facebook/ReconnFacebookPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&accessToken=' + $scope.selectedFbPageProfiles)
+         .then(function (response) {
+
+             if (response.status == 200) {
+                 //  window.location.reload();
+                 $('#ReconnFanpage_Modal').closeModal();
+
+                 swal(response.data);
+                 window.location.reload();
+             }
+         }, function (reason) {
+             swal("Error!");
+         });
+
+        }
         //reconnect facebook page end
 
 
@@ -937,12 +936,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }
                 }, function (reason) {
 
-                    if (reason.data == "Youtube channel is already added by someone else")
-                    {
+                    if (reason.data == "Youtube channel is already added by someone else") {
                         alertify.error("Youtube channel is already added by someone else");
                     }
-                    else
-                    {
+                    else {
                         swal("Error");
                     }
 
@@ -1058,7 +1055,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         ////End
         ////Add selected Groups
         //$scope.AddSelectedGroups = function () {
-          
+
         //    if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
         //        var formData = new FormData();
         //        formData.append('selectedGroups', $scope.selectedGroups);
@@ -1157,6 +1154,28 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             });
         }
 
+        function GetRssKeyword() {
+
+            $http.get(apiDomain + '/api/RssFeed/GetKeywordList?UserId=' + $rootScope.user.Id)
+                .then(function (response) {
+                    if (response.data !== "") {
+                        $scope.listofkeywords = response.data;
+                    }
+                });
+        }
+
+        GetRssKeyword();
+
+        $scope.DeleteFeedsKeyword = function (keyword) {
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/RssFeed/DeleteFeedKeyword?UserId=' + $rootScope.user.Id + '&Keyword=' + keyword,
+            })
+                .then(function (response) {
+                    if (response.data == "deleted successfully")
+                        alertify.success(`Rss keyword : ${keyword} deleted!`);
+                });
+        }
     });
 });
 

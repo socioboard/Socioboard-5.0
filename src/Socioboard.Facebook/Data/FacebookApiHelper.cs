@@ -501,6 +501,19 @@ namespace Socioboard.Facebook.Data
                 return "Invalid Access Token";
             }
         }
-   
+
+        public static dynamic GetOwnPagePosts(string userAccessToken, string pageId)
+        {
+            var fb = new FacebookClient { AccessToken = userAccessToken };
+            try
+            {
+                return fb.Get($"{FbConstants.FacebookApiVersion}/" + $"{pageId}" + "/feed?fields=link,message,created_time,description,type&limits=20").ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "Invalid Access Token";
+            }
+        }
     }
 }

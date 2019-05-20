@@ -50,7 +50,7 @@ namespace Api.Socioboard.Repositories
         {
             try
             {
-                Domain.Socioboard.Models.GoogleAnalyticsAccount inMemGAAcc = _redisCache.Get<Domain.Socioboard.Models.GoogleAnalyticsAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + GaAccountId);
+                var inMemGAAcc = _redisCache.Get<Domain.Socioboard.Models.GoogleAnalyticsAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + GaAccountId);
                 if (inMemGAAcc != null)
                 {
                     return inMemGAAcc;
@@ -58,20 +58,16 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGAAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(GaAccountId)).ToList();
-            if (lstGAAcc != null && lstGAAcc.Count() > 0)
+            var lstGAAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaWebPropertyId.Equals(GaAccountId)).ToList();
+
+            if (lstGAAcc != null && lstGAAcc.Count > 0)
             {
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + GaAccountId, lstGAAcc.First());
                 return lstGAAcc.First();
             }
-            else
-            {
-                return null;
-            }
-
-
-
+            return null;
         }
+
         public static int AddGplusAccount(JObject profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accessToken, string refreshToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             int isSaved = 0;
@@ -498,6 +494,39 @@ namespace Api.Socioboard.Repositories
         }
 
 
+        public static List<Domain.Socioboard.Models.GoogleAnalyticsAccount> getGAAccountAll(string email, DatabaseRepository dbr)
+        {
+            var lstGAAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.EmailId.Equals(email)).ToList();
+
+            return lstGAAcc.Count > 0 ? lstGAAcc : null;
+        }
+
+
+
+        public static int ReconnectGoogleAnalyticsAccount(JObject profile, DatabaseRepository dbr, Int64 userId, string accessToken, string refreshToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        {
+
+            var email = Convert.ToString(profile["emails"][0]["value"]);
+
+            var gplusAcc = getGAAccountAll(email, dbr);
+
+            if (gplusAcc == null)
+                return 0;
+
+            gplusAcc.ForEach(account =>
+            {
+                account.IsActive = true;
+                account.UserId = userId;
+                account.AccessToken = accessToken;
+                account.RefreshToken = refreshToken;
+                account.EntryDate = DateTime.UtcNow;
+            });
+
+            dbr.UpdateAll<Domain.Socioboard.Models.GoogleAnalyticsAccount>(gplusAcc);
+
+            return gplusAcc.Count <= 0 ? 0 : 1;
+        }
+
         public static void GetUserActivities(string ProfileId, string AcessToken, Helper.AppSettings settings, ILogger _logger)
         {
             oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
@@ -651,9 +680,12 @@ namespace Api.Socioboard.Repositories
         {
             int isSaved = 0;
             Analytics _Analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+
             Domain.Socioboard.Models.GoogleAnalyticsAccount _GoogleAnalyticsAccount;
+
             string[] GAdata = Regex.Split(profiledata, "<:>");
-            _GoogleAnalyticsAccount = Repositories.GplusRepository.getGAAccount(GAdata[5], _redisCache, dbr);
+
+            _GoogleAnalyticsAccount = getGAAccount(GAdata[7], _redisCache, dbr);
 
             if (_GoogleAnalyticsAccount != null && _GoogleAnalyticsAccount.IsActive == false)
             {
@@ -675,10 +707,12 @@ namespace Api.Socioboard.Repositories
                     string pageviews = string.Empty;
                     try
                     {
-                        string analytics = _Analytics.getAnalyticsData(GAdata[5], "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), GAdata[0]);
+                        string analytics = _Analytics.getAnalyticsData(_GoogleAnalyticsAccount.GaWebPropertyId, "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), _GoogleAnalyticsAccount.AccessToken);
                         JObject JData = JObject.Parse(analytics);
-                        visits = JData["totalsForAllResults"]["ga:visits"].ToString();
+                        //visits = JData["totalsForAllResults"]["ga:visits"].ToString();
                         pageviews = JData["totalsForAllResults"]["ga:pageviews"].ToString();
+
+                        visits = _Analytics.GetRealTimeUser(_GoogleAnalyticsAccount.GaWebPropertyId, _GoogleAnalyticsAccount.AccessToken);
                     }
                     catch (Exception ex)
                     {
@@ -689,14 +723,12 @@ namespace Api.Socioboard.Repositories
                     _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
                     _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Contents/Socioboard/images/analytics_img.png";
                     _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
-
-
                 }
                 catch (Exception ex)
                 {
 
                 }
-                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
+                dbr.Update(_GoogleAnalyticsAccount);
             }
             else if (_GoogleAnalyticsAccount == null)
             {
@@ -719,10 +751,12 @@ namespace Api.Socioboard.Repositories
                     string pageviews = string.Empty;
                     try
                     {
-                        string analytics = _Analytics.getAnalyticsData(GAdata[5], "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), GAdata[0]);
+                        string analytics = _Analytics.getAnalyticsData(_GoogleAnalyticsAccount.GaWebPropertyId, "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), _GoogleAnalyticsAccount.AccessToken);
                         JObject JData = JObject.Parse(analytics);
-                        visits = JData["totalsForAllResults"]["ga:visits"].ToString();
+                        //  visits = JData["totalsForAllResults"]["ga:visits"].ToString();
                         pageviews = JData["totalsForAllResults"]["ga:pageviews"].ToString();
+
+                        visits = _Analytics.GetRealTimeUser(_GoogleAnalyticsAccount.GaWebPropertyId, _GoogleAnalyticsAccount.AccessToken);
                     }
                     catch (Exception ex)
                     {
@@ -733,14 +767,12 @@ namespace Api.Socioboard.Repositories
                     _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
                     _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png";
                     _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
-
-
                 }
                 catch (Exception ex)
                 {
 
                 }
-                isSaved = dbr.Add<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
+                isSaved = dbr.Add(_GoogleAnalyticsAccount);
             }
 
             else if (_GoogleAnalyticsAccount != null && _GoogleAnalyticsAccount.IsActive == true)
@@ -751,20 +783,16 @@ namespace Api.Socioboard.Repositories
                 }
             }
 
-
             if (isSaved == 1)
             {
                 List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstgaAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(_GoogleAnalyticsAccount.GaProfileId)).ToList();
                 if (lstgaAcc != null && lstgaAcc.Count() > 0)
                 {
-                    isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstgaAcc.First().GaProfileId, lstgaAcc.First().GaProfileName, userId, lstgaAcc.First().ProfilePicUrl, Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics, dbr);
+                    isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstgaAcc.First().GaWebPropertyId, lstgaAcc.First().GaProfileName, userId, lstgaAcc.First().ProfilePicUrl, Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics, dbr);
                     //codes to delete cache
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-
-
                 }
-
             }
 
 
@@ -862,7 +890,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaWebPropertyId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Google").FirstOrDefault();
             if (user != null)
             {
@@ -960,7 +988,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteGAProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaWebPropertyId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;

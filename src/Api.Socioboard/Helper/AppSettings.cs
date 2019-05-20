@@ -118,6 +118,8 @@ namespace Api.Socioboard.Helper
         public string bluesnapPassword { get; set; }
         public string bluesnapBase64 { get; set; }
 
+        public string NewsApiKey { get; set; }
+
 
     }
 }

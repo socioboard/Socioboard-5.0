@@ -34,6 +34,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SociobordRssDataServices", 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Socioboard.Pinterest", "src\Socioboard.Pinterest\Socioboard.Pinterest.xproj", "{6BC81427-68C6-4909-B07E-BDECC55D3FD7}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AdvancedContentSearch", "src\AdvancedContentSearch\AdvancedContentSearch.xproj", "{35004A68-AB7F-4C8D-9B84-326FD1240985}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SocioBoardMailSenderServices", "src\SocioBoardMailSenderServices\SocioBoardMailSenderServices.xproj", "{A175F365-5D84-47D2-82C2-6A37D245DEEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +92,14 @@ Global
 		{6BC81427-68C6-4909-B07E-BDECC55D3FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BC81427-68C6-4909-B07E-BDECC55D3FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BC81427-68C6-4909-B07E-BDECC55D3FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35004A68-AB7F-4C8D-9B84-326FD1240985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35004A68-AB7F-4C8D-9B84-326FD1240985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35004A68-AB7F-4C8D-9B84-326FD1240985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35004A68-AB7F-4C8D-9B84-326FD1240985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A175F365-5D84-47D2-82C2-6A37D245DEEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A175F365-5D84-47D2-82C2-6A37D245DEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A175F365-5D84-47D2-82C2-6A37D245DEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A175F365-5D84-47D2-82C2-6A37D245DEEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +117,7 @@ Global
 		{5FC6D7FB-CA38-4A7A-8BE0-3BC12DB0C065} = {1A66A2B3-C9AD-443C-9F4B-5B5A9FB18BE6}
 		{6E7ED109-FAB2-4931-A184-607B7F94AD5D} = {1A66A2B3-C9AD-443C-9F4B-5B5A9FB18BE6}
 		{6BC81427-68C6-4909-B07E-BDECC55D3FD7} = {1A66A2B3-C9AD-443C-9F4B-5B5A9FB18BE6}
+		{35004A68-AB7F-4C8D-9B84-326FD1240985} = {1A66A2B3-C9AD-443C-9F4B-5B5A9FB18BE6}
+		{A175F365-5D84-47D2-82C2-6A37D245DEEF} = {1A66A2B3-C9AD-443C-9F4B-5B5A9FB18BE6}
 	EndGlobalSection
 EndGlobal

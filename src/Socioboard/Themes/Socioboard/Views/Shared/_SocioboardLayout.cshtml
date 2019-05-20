@@ -169,7 +169,7 @@
         <div class="footer-copyright">
             <div class="container center">
                 <!-- Made by with ♥ <a class="brown-text text-lighten-3" href="https://www.behance.net/chanchalsantra">Chanchal Santra</a> -->
-                Copyright © 2014 - 2018 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
+                Copyright © 2014 - 2019 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
                 &nbsp; <a href="../privacypolicy" target="_blank" class="grey-text text-darken-4">Privacy Policy</a>
                 &nbsp; <a href="../Index/Refund_Policy" target="_blank" class="grey-text text-darken-4">Refund Policy</a>
                 &nbsp; <a href="../TermsConditions" target="_blank" class="grey-text text-darken-4">Terms Conditions</a>
@@ -283,57 +283,7 @@
 
 
     <!-- SignInModal Structure -->
-    <div id="SignInModal" class="modal">
-        <div class="modal-content">
-            <h4 class="center-align Righteous_font">Sign In</h4>
-            <div class="col-md-12" id="fb-gp-login" style="display:none;">
-                <div class="alert">
-                    <strong style="font-weight:600">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Please wait for your login</strong>
-                    <img src="~/contents/socioboard/images/login_loader.gif" style="height:20px" />
-                </div>
-            </div>
-            <hr>
-            <div class="row center-align">
-                <form onsubmit="Login(); return false;" class="col m6 s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="logUserName" name="logUserName" type="email" class="validate" required onblur="retpwd();">
-                            <label for="logUserName">Email</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="logPassword" name="logPassword" type="password" data-rule-minlength="6" required class="validate">
-                            <label for="logPassword">Password</label>
-                        </div>
-                    </div>
-                    <p>
-                        <input type="checkbox" id="RememberMe" />
-                        <label for="RememberMe">Remember me</label>
-                    </p>
-                    <p>Forgot password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal" onclick="chng_btn_val_rev()">Click here to restore</a></p>
-
-                    @*<img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>*@
-
-                    <div id="btnlogin">
-                        <button type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
-                    </div>
-                </form>
-                <form class="col s12 m6">
-                    <p>You can also register with your social account</p>
-                    <div class="input-group">
-                        <a id="fb_account" href="#" onclick="googleLogin();">
-                            <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
-                        </a><br>
-                        <a id="fb_account" href="#" onclick="facebookLogin();">
-                            <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
-                        </a>
-                        <p>Not yet registered? &nbsp; <a class="modal-action modal-close modal-trigger" href="#SignUpModal">Register now</a></p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+   
 
 
     <div id="ForgotPasswdModal" class="modal">
@@ -377,7 +327,7 @@
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
     <script src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
     <script type="text/javascript">
         $("#bizzbar").effect("bounce", 100);
@@ -419,17 +369,14 @@
         var sc_security = "3850c63d";
         var scJsHost = (("https:" == document.location.protocol) ?
         "https://secure." : "http://www.");
-        document.write("<sc" + "ript type='text/javascript' src='" +
-        scJsHost +
-        "statcounter.com/counter/counter.js'></" + "script>");
+        document.write("<script type='text/javascript' src='https://statcounter.com/counter/counter.js'></" + "script>");
     </script>
     <noscript>
         <div class="statcounter">
-            <a title="shopify site
-analytics" href="http://statcounter.com/shopify/"
+            <a title="shopify site analytics" href="https://statcounter.com/shopify/"
                target="_blank">
                 <img class="statcounter"
-                     src="http://c.statcounter.com/9930597/0/3850c63d/1/"
+                     src="https://c.statcounter.com/9930597/0/3850c63d/1/"
                      alt="shopify site analytics" />
             </a>
         </div>
@@ -708,7 +655,7 @@ analytics" href="http://statcounter.com/shopify/"
                     }
                     else if (msg === "Payment not Confirmed") {
 
-                        debugger;
+                      
                         alertify.error("Payment details is not submitted.Please submit paypal detail.");
 
 
@@ -718,11 +665,11 @@ analytics" href="http://statcounter.com/shopify/"
                             data: { "emailId": userName },
                             dataType: "html",
                             success: function (response) {
-                                debugger;
+                                
                                 window.top.location = response;
                             },
                             error: function (error) {
-                                debugger;
+                                
                                 return false;
                             }
                         });
@@ -878,8 +825,11 @@ analytics" href="http://statcounter.com/shopify/"
                 }
 
             }
-
-            return clist[0].replace("logininfo", "");
+            if (clist[0]) {
+                return clist[0].replace("logininfo", "");
+            } else
+                return '';
+          
 
         }
 
@@ -1002,7 +952,7 @@ analytics" href="http://statcounter.com/shopify/"
                 dataType: "html",
 
                 success: function (msg) {
-                    debugger;
+                    
                     window.location = msg;
 
                 }
@@ -1041,7 +991,7 @@ analytics" href="http://statcounter.com/shopify/"
                 url: "../Home/IsSessionExist",
                 dataType: "html",
                 success: function (msg) {
-                    debugger;
+                    
                     if (msg == "true") {
                         window.top.location = '/home';
                     } else {
@@ -1051,7 +1001,7 @@ analytics" href="http://statcounter.com/shopify/"
                             dataType: "html",
                             async: true,
                             success: function (msg) {
-                                debugger;
+                                
                                 if (msg == "true") {
                                     window.top.location = '/home';
                                 }
@@ -1418,8 +1368,6 @@ Bizz Bar
                 countrycode = countrycode.toUpperCase();
                 var counCode = countryCodeList[countrycode];
                 $("#countryCode").val(counCode);
-
-
             }
             else {
                 return false;

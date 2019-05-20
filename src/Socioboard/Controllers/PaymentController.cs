@@ -442,6 +442,7 @@ namespace Socioboard.Controllers
                     new KeyValuePair<string, string>("information", passingData)
                 };
 
+           
                 await WebApiReq.PostReq("/api/PaymentTransaction/UpdatePaypalTransactions", param, "", "", _appSettings.ApiDomain);
 
                 // check that Payment_status=Completed

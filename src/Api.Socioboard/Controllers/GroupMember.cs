@@ -18,7 +18,7 @@ namespace Api.Socioboard.Controllers
             _emailSender = emailSender;
             _appEnv = appEnv;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+        
         }
         private readonly ILogger _logger;
         private readonly IEmailSender _emailSender;

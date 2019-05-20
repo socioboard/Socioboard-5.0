@@ -64,18 +64,18 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                            $scope.lstFbFeeds = response.data;
                            $scope.comments = response.data._facebookComment;
                            $rootScope.firstFeedDate = $scope.lstFbFeeds[0]._facebookFeed.entryDate;
-                           //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
-                           //$scope.reloadFeeds();
-                           //$scope.LoadLatestFeeds();
                            $scope.preloadmore = true;
                            setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+
                            if (response.data == null) {
                                reachLast = true;
                            }
+
                            $scope.dropCalled = true;
                            setTimeout(function () {
                                $scope.callDropmenu();
                            }, 1000);
+
                        }, function (reason) {
                            $scope.error = reason.data;
                        });

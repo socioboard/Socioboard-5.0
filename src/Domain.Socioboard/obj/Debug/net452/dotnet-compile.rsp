@@ -1,0 +1,283 @@
+--temp-output:E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\obj\Debug\net452\
+--out:E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net452\Domain.Socioboard.dll
+--define:DEBUG
+--define:TRACE
+--define:NET452
+--suppress-warning:CS1701
+--suppress-warning:CS1702
+--suppress-warning:CS1705
+--optimize:False
+--output-name:Domain.Socioboard
+--file-version:1.0.0.0
+--version:1.0.0.0
+--informational-version:1.0.0
+--target-framework:.NETFramework,Version=v4.5.2
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\MongoDB.Bson\2.2.4\lib\net45\MongoDB.Bson.dll
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\Sendgrid\9.11.0\lib\net452\SendGrid.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.Concurrent.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Debug.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tools.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tracing.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Globalization.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.IO.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.IO.Compression.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.Expressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Net.Http.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ObjectModel.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Resources.ResourceManager.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.InteropServices.dll
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Numerics.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.RegularExpressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Tasks.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Timer.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.ReaderWriter.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.XDocument.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.ComponentModel.DataAnnotations.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Net.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Security.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Core.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Microsoft.CSharp.dll
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AdsOffers.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AdsOffers.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Affiliates.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Affiliates.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AgencyUser.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AgencyUser.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AssestLibrary.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AssestLibrary.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Coupons.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Coupons.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DaywiseSchedule.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DaywiseSchedule.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DemoRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DemoRequest.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DropboxAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DropboxAccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Ewallet.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Ewallet.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\EwalletWithdrawRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.EwalletWithdrawRequest.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Facebookaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Facebookaccounts.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\FeedBack.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.FeedBack.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\GoogleAnalyticsAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.GoogleAnalyticsAccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Googleplusaccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Googleplusaccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Group.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Group.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Groupmembers.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupmembers.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Groupprofiles.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupprofiles.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\ImgLibrary.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.ImgLibrary.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Instagramaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Instagramaccounts.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinAccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinCompanyPage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinCompanyPage.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\MongoBoards.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.MongoBoards.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\NewsLetter.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.NewsLetter.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Notifications.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Notifications.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Package.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Package.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PaymentTransaction.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PaymentTransaction.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PinterestAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PinterestAccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\RssFeedUrl.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.RssFeedUrl.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\ScheduledMessage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.ScheduledMessage.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\SessionHistory.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.SessionHistory.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Training.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Training.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterAccount.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterNameTable.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterNameTable.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\User.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.User.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\YoutubeChannel.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.YoutubeChannel.hbm.xml
+--resource:"E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\YoutubeGroupInvite.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.YoutubeGroupInvite.hbm.xml
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Consatants\SocioboardConsts.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdsOfferAccountStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdsStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdvanceSearchpostType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ArticlesAndBlogsTypes.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\DemoPlantype.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\EwalletStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FacebookPagePromotion.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FbPageSubscription.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FbProfileType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FeedTableType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GPlusProfileType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GroupMemberStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\MediaType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\MessageType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\NetworkType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PaymentType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PayPalAccountStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\RealTimeShareFeedStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBAccountType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBGroupUserStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBPaymentStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBRegistrationType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBUserActivationStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ScheduledStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ScheduledStatusFeedsManager.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ScheduleStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SessionHistoryStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SocialProfileStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SocialProfileType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TaskStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TrendingType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TwitterMessageType.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\UrlShortener.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\UserTrailStatus.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\CustomTaskFactory.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\DateTimeHelper.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ObjectIdConverter.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\PluginData.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\PluginProfile.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\SBHelper.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ThumbnailDetails.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\UrlRSSfeedsNews.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\ISocialProfile.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\IUser.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\IDatabaseRepository.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\IMongoRepository.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\ISocialProfilesRepository.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\IUserRepository.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Services\IEmailSender.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Services\ISmsSender.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AdsOffers.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Affiliates.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AgencyUser.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AssestLibrary.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Coupons.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DaywiseSchedule.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DemoRequest.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Draft.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DropboxAccount.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Ewallet.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\EwalletWithdrawRequest.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Facebookaccounts.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Facebookpage.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\FeedBack.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\GoogleAnalyticsAccount.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Googleplusaccounts.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groupmembers.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groupprofiles.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groups.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\ImgLibrary.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Instagramaccounts.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\InstagramDiscoveryFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedinAccount.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedinCompanyPage.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedInData.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\MongoBoards.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\NewsLetter.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Notifications.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Package.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PaymentTransaction.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PinterestAccount.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\RssFeedUrl.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\ScheduledMessage.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\SessionHistory.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Training.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterAccount.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterContactSearch.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterFriendRelation.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterMentionSugg.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterMutualFans.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterNameTable.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterRecentFollower.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\User.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\YoutubeChannel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\YoutubeGroupInvite.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\YoutubeSearch.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupHashtagDetails.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPostComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedGroupPost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedInCompanyPagePost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\AdvanceSearchYoutubeContentStdData.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\AdvanceSerachData.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ArticlesAndBlogs.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentFeedsShareathon.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentShareDataId.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentStudioShareathonIdData.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ElasticmailReport.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPageFeedShare.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePromotionDetails.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPasswordChangeUserDetail.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Fbpublicpagedailyreports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FbPublicPagePost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\GoogleAnalyticsReport.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\GroupdailyReports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\GroupPostKeyWords.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\GroupShareathon.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramComment.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramDailyReport.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramPostComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramPostLikes.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramSelfFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\InstagramUserDetails.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\LinkedinCompanyPagePosts.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\LinkShareathon.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardFacebookHashTag.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardFbTrendingFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardGplusFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardGplusHashTag.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardInstagramFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardInstagramHashTag.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoards.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwitterHashTag.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwtFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwtTrendingFeeds .cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoDirectMessages.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoFacebookFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoFacebookPageReports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoFbPostComment.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoGoogleplusComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoGplusFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoMessageModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoPinterestBoard.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoPinterestUserFollowers.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoPinterestUserFollowings.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoPinterestUserLikes.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoPinterestUserPins.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoTwitterDailyReports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoTwitterDirectMessages.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoTwitterFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoTwitterMessage.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoYoutubeComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoYoutubeFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\PageShareathon.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Rss.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssFeed.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssNewsContents.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssNewsContentsFeeds.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SavedFeedsComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SavedFeedsManagement.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SharethonGroupPost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SharethonPagePost.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TaskComments.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Tasks.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Trendingkeyword.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterFeedsEmailMessage.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterRecentDetails.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterUrlMentions.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeReports.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeSearch.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeVideoDetailsList.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Properties\AssemblyInfo.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\Services\AuthMessageSender.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\AnalyticsGraphViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\CommentViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\DiscoveryViewModal.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\FacebookFanAddsViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\FacebookPublicReportViewModal.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\GoogleAnalyticsCityPageViews.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\GoogleAnalyticsProfiles.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\GoogleAnalyticsViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\TaskCommentsViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\TasksViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\TwitterTopFansViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\UserLoginViewModel.cs
+E:\Github\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\YoutubeProfiles.cs

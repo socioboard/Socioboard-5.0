@@ -1,0 +1,81 @@
+--temp-output:E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\obj\Debug\net452\
+--out:E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net452\Socioboard.Google.dll
+--define:DEBUG
+--define:TRACE
+--define:NET452
+--suppress-warning:CS1701
+--suppress-warning:CS1702
+--suppress-warning:CS1705
+--optimize:False
+--output-name:Socioboard.Google
+--file-version:1.0.0.0
+--version:1.0.0.0
+--informational-version:1.0.0
+--target-framework:.NETFramework,Version=v4.5.2
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\Microsoft.AspNet.WebApi.Client\5.2.3\lib\net45\System.Net.Http.Formatting.dll
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\Newtonsoft.Json\6.0.4\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.Concurrent.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Debug.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tools.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tracing.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Globalization.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.IO.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.IO.Compression.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.Expressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Net.Http.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ObjectModel.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Resources.ResourceManager.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.InteropServices.dll
+--reference:C:\Users\GLB-BAN-403\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Numerics.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.RegularExpressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Tasks.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Timer.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.ReaderWriter.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.XDocument.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Data.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Core.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Microsoft.CSharp.dll
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\AccountsController.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\ActivitiesController.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\CommentsController.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\Globals.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\MomentsController.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\PeopleController.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthToken.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenBlogger.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGa.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGPlus.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenYoutube.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Blogger.Core\BloggerPost.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Custom\GplusTagSearch.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AccountsMethod\Accounts.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AnalyticsMethod\Analytics.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\ActivitiesMethod\Activities.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\CommentsMethod\Comments.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\MomentsMethod\Moments.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\PeopleMethod\People.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Properties\AssemblyInfo.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Activities.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Channels.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\PlaylistItems.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Playlists.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Search.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Subscriptions.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Video.cs
+E:\Github\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\YAnalytics.cs

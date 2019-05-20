@@ -146,7 +146,7 @@
                                 <li><a ng-click="sortBy('mostshare','Most share')">Most Shared</a></li>
                                 <li><a ng-click="sortBy('fbshare','Facebook Shared')">Facebook Shared</a></li>
                                 <li><a ng-click="sortBy('twtshare','Twitter Shared')">Twitter Shared</a></li>
-                                <li><a ng-click="sortBy('gplus','Gplus Shared')">Gplus Shared</a></li>
+                                <!--<li><a ng-click="sortBy('gplus','Gplus Shared')">Gplus Shared</a></li>-->
                                 <li><a ng-click="sortBy('Pininterest','Pinterest Shared')">Pinterest Shared</a></li>
                                 <li><a ng-click="sortBy('LinkedIn','LinkedIn Shared')">LinkedIn Shared</a></li>
                                 <li><a ng-click="sortBy('redit','Redit Shared')">Redit Shared</a></li>
@@ -413,14 +413,14 @@
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
-                                </li>
+                                </li>-->
                                 <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
@@ -488,14 +488,14 @@
                                     <span style="float:left;">Check All</span>
                                 </label>
                             </li>
-                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                            <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                 <label>
                                     <input onclick="otherprofile();" name="selector[]" class="subcheckbox" id="{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
-                            </li>
+                            </li>-->
                             <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="otherprofile();" name="selector[]" class="subcheckbox" id="{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />

@@ -9,7 +9,7 @@ namespace Domain.Socioboard.Interfaces.Repositories
     public interface IMongoRepository
     {
         void Delete<T>(Expression<Func<T, bool>> expression) where T : class, new();
-     //   void Delete<T>(T item) where T : class, new();
+        //   void Delete<T>(T item) where T : class, new();
         void DeleteAll<T>() where T : class, new();
         T Single<T>(Expression<Func<T, bool>> expression) where T : class, new();
         System.Linq.IQueryable<T> All<T>() where T : class, new();
@@ -19,5 +19,7 @@ namespace Domain.Socioboard.Interfaces.Repositories
         Task<IList<T>> Find<T>(Expression<Func<T, bool>> query) where T : class, new();
         Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new();
         int Counts<T>(Expression<Func<T, bool>> query) where T : class, new();
+
+        Task<T> FindFirstOrDefault<T>(Expression<Func<T, bool>> query) where T : class, new();
     }
 }
