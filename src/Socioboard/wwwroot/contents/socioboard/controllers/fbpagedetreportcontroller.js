@@ -700,89 +700,52 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.totalfbLikes = function (days) {
          
             $scope.generateChartforlikes(days);
-          
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("rate_activity", am4charts.XYChart);
+            chart.data = $scope.chartlikes;
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Set input format for the dates
+            chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
 
-            //var chart = AmCharts.makeChart("rate_activity", {
-            //    "theme": "light",
-            //    "color": "#cccc00",
-            //    "type": "serial",
-            //    "startDuration": 2,
-            //    "legend": {
-            //        "useGraphSettings": true
-            //    },
-            //    "dataProvider": $scope.chartlikes,
-            //    "valueAxes": [{
-            //        "inside": true,
-            //        "axisAlpha": 0,
-            //        "color": "#8533ff"
-            //    }],
-            //    "graphs": [{
-            //        "balloonText": "[[category]]: <b>[[value]]</b>",
-            //        "fillColorsField": "color",
-            //        "fillAlphas": 1,
-            //        "lineAlpha": 0.1,
-            //        "type": "column",
-            //        "valueField": "totalLikes",
-            //        "color": "#FF9E01"
-            //    }],
-            //    "depth3D": 20,
-            //    "angle": 30,
-            //    "chartCursor": {
-            //        "categoryBalloonEnabled": false,
-            //        "cursorAlpha": 0,
-            //        "zoomable": true,
-            //        "color": "#FF9E01"
-            //    },
-            //    "categoryField": "date",
-            //    "categoryAxis": {
-            //        "gridPosition": "start",
-            //        "labelRotation": 90,
-            //        "color": "#ff3377",
-            //        "parseDates": true,
-            //    },
-            //    "export": {
-            //        "enabled": true
-            //    }
+            // Create axes
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-            //});
-            var chart = AmCharts.makeChart("rate_activity", {
-                "theme": "light",
-                "type": "serial",
-                "startDuration": 2,
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartlikes,
-                "valueAxes": [{
-                    "inside": true,
-                    "axisAlpha": 0
-                }],
-                "graphs": [{
-                    "balloonText": "[[category]]: <b>[[value]]</b>",
-                    "fillColorsField": "color",
-                    "fillAlphas": 1,
-                    "lineAlpha": 0.1,
-                    "type": "column",
-                    "valueField": "totalLikes"
-                }],
-                "depth3D": 20,
-                "angle": 30,
-                "chartCursor": {
-                    "categoryBalloonEnabled": false,
-                    "cursorAlpha": 0,
-                    "zoomable": true
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "labelRotation": 90,
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true
-                }
+            // Create series
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.valueY = "totalLikes";
+            series.dataFields.dateX = "date";
+            series.tooltipText = "{value}"
+            series.strokeWidth = 2;
+            series.minBulletDistance = 15;
 
-            });
+            // Drop-shaped tooltips
+            series.tooltip.background.cornerRadius = 20;
+            series.tooltip.background.strokeOpacity = 0;
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.label.minWidth = 40;
+            series.tooltip.label.minHeight = 40;
+            series.tooltip.label.textAlign = "middle";
+            series.tooltip.label.textValign = "middle";
+            series.tooltipText = "{dateX}: [bold]{valueY}";
+
+            var bullet = series.bullets.push(new am4charts.CircleBullet());
+            bullet.circle.strokeWidth = 2;
+            bullet.circle.radius = 4;
+            bullet.circle.fill = am4core.color("#fff");
+
+            var bullethover = bullet.states.create("hover");
+            bullethover.properties.scale = 1.3;
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "panXY";
+            chart.cursor.xAxis = dateAxis;
+            chart.cursor.snapToSeries = series;
+            chart.scrollbarY = new am4core.Scrollbar();
+            chart.scrollbarY.parent = chart.leftAxesContainer;
+            chart.scrollbarY.toBack();
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
         }
 
         $scope.generateChartforlikes = function (days) {
@@ -816,48 +779,35 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
          
             $scope.generateChartTotalFan(days);
             // 3d graph  start
-            var chart = AmCharts.makeChart("FBTotalFans", {
-                "theme": "light",
-                "type": "serial",
-                "startDuration": 2,
-                "dataProvider": $scope.rep,
-                "valueAxes": [{
-                    "position": "left",
-                    "axisAlpha": 0,
-                    "gridAlpha": 0
-                }],
-                "graphs": [{
-                    "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
-                    "bulletOffset": 10,
-                    "bulletSize": 52,
-                    "colorField": "colors",
-                    "cornerRadiusTop": 8,
-                    "customBulletField": "profilepic",
-                    "fillAlphas": 0.8,
-                    "lineAlpha": 0,
-                    "type": "column",
-                    "valueField": "totalfans"
-                }],
-                "depth3D": 40,
-                "angle": 30,
-                "chartCursor": {
-                    "categoryBalloonEnabled": false,
-                    "cursorAlpha": 0,
-                    "zoomable": false
-                },
-                "categoryField": "facebookPagename",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "gridAlpha": 0,
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("FBTotalFans", am4charts.XYChart);
+            chart.data = $scope.rep;
+            chart.exporting.menu = new am4core.ExportMenu();
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "facebookPagename";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
 
-                },
-                "export": {
-                    "enabled": true,
-                    //  "position": "bottom-right"
+            categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
+                if (target.dataItem && target.dataItem.index & 2 == 2) {
+                    return dy + 25;
                 }
+                return dy;
+            });
 
-            }, 0);
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "totalfans";
+            series.dataFields.categoryX = "facebookPagename";
+            series.name = "Visits";
+            series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+            series.columns.template.fillOpacity = .8;
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.strokeWidth = 2;
+            columnTemplate.strokeOpacity = 1;
             //3d graph end
         }
 

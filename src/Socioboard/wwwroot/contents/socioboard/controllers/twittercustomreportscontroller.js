@@ -60,78 +60,74 @@ SocioboardApp.controller('TwittercustomreportsController', function ($rootScope,
         $scope.generateGraph = function (days) {
             $scope.generateChartData(days);
 
-            var chart = AmCharts.makeChart("DAILYENGAGEMENT", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartData,
-                "synchronizeGrid": true,
-                "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
-                }, {
-                    "id": "v3",
-                    "axisColor": "#B0DE09",
-                    "axisThickness": 2,
-                    "gridAlpha": 0,
-                    "offset": 50,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }],
-                "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
-                    "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "mentions",
-                    "valueField": "mentions",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v2",
-                    "lineColor": "#FCD202",
-                    "bullet": "square",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "retweets",
-                    "valueField": "retweets",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v3",
-                    "lineColor": "#B0DE09",
-                    "bullet": "triangleUp",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "followers",
-                    "valueField": "followers",
-                    "fillAlphas": 0
-                }],
-                "chartScrollbar": {},
-                "chartCursor": {
-                    "cursorPosition": "mouse"
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("DAILYENGAGEMENT", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chartData;
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
+
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("mentions", "mentions", false, "circle");
+            createAxisAndSeries("retweets", "retweets", false, "circle");
+            createAxisAndSeries("followers", "followers", false, "circle");
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
         }
 
 
@@ -185,9 +181,7 @@ SocioboardApp.controller('TwittercustomreportsController', function ($rootScope,
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to load fb profiles
-            $scope.loadTopFans(profileId, days);
-            $scope.loadtwitterRecentDetails(profileId);
+            // end codes to load fb profiles           
         }
 
         
@@ -198,6 +192,8 @@ SocioboardApp.controller('TwittercustomreportsController', function ($rootScope,
             angular.forEach($rootScope.lstProfiles, function (value, key) {
                 if (canContinue && value.profileType == 2) {
                     $scope.getReports(value.profileId, 90)
+                    $scope.loadTopFans(profileId, days);
+                    $scope.loadtwitterRecentDetails(profileId);
                     $scope.selectedProfile = value.profileId;
                     canContinue = false;
                 }

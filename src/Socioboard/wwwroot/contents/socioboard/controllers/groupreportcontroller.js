@@ -13,7 +13,6 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $http.get(apiDomain + '/api/GroupReport/getgroupReportData?groupId=' + $rootScope.groupId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
-                              console.log($scope.dailyReportsList); 
                               $scope.getData(days);
                               $scope.fetchdatacomplete = true;
                           }, function (reason) {
@@ -181,14 +180,15 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.impressionsByAgeFemaleFollower = impressionsByAgeFemaleFollower;
             $scope.sharingByAgeMaleFollower = sharingByAgeMaleFollower;
             $scope.sharingByAgeFemaleFollower = sharingByAgeFemaleFollower;
-            $scope.generateIMPRESSIONS1Graph(days);
-            $scope.generateIMPRESSIONS2Graph(days);
-            $scope.generateIMPRESSIONSmalefemaleGraph(days);
-            $scope.generateStoryGraph(days);
-            $scope.generatesharetypeGraph(days);
-            $scope.generatesharebygenderGraph(days);
+            try { $scope.generatePageLikeUnlikeGraph(days); } catch (err) { }
+            try { $scope.generateIMPRESSIONS1Graph(days); } catch (err) { }
+            try { $scope.generateIMPRESSIONS2Graph(days); } catch (err) { }
+            try { $scope.generateIMPRESSIONSmalefemaleGraph(days); } catch (err) { }
+            try { $scope.generateStoryGraph(days); } catch (err) { }
+            try { $scope.generatesharetypeGraph(days); } catch (err) { }
+            try { $scope.generatesharebygenderGraph(days); } catch (err) { }
             $scope.generatePAGEIMPRESSIONSGraph(days);
-            $scope.generatePageLikeUnlikeGraph(days);
+            
             //$scope.GetFacebookPagePostData(profileId, days);
 
         }
@@ -211,78 +211,74 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
         $scope.generateGraph = function (days) {
             $scope.generateChartData(days);
-            var chart = AmCharts.makeChart("DAILYENGAGEMENT", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartData,
-                "synchronizeGrid": true,
-                "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
-                }, {
-                    "id": "v3",
-                    "axisColor": "#B0DE09",
-                    "axisThickness": 2,
-                    "gridAlpha": 0,
-                    "offset": 50,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }],
-                "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
-                    "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "mentions",
-                    "valueField": "mentions",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v2",
-                    "lineColor": "#FCD202",
-                    "bullet": "square",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "retweets",
-                    "valueField": "retweets",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v3",
-                    "lineColor": "#B0DE09",
-                    "bullet": "triangleUp",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "followers",
-                    "valueField": "followers",
-                    "fillAlphas": 0
-                }],
-                "chartScrollbar": {},
-                "chartCursor": {
-                    "cursorPosition": "mouse"
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("DAILYENGAGEMENT", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chartData;
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
+
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("mentions", "mentions", false, "circle");
+            createAxisAndSeries("retweets", "retweets", false, "circle");
+            createAxisAndSeries("followers", "followers", false, "circle");
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
         }
 
         $scope.generateChartData = function (days) {
@@ -309,98 +305,83 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
         $scope.generateIMPRESSIONS1Graph = function (days) {
             $scope.generateChart1Data(days);
+        
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("BREAKDOWN_1", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chart1Data;
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
 
-           
+            // Create series
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
 
-            var chart = AmCharts.makeChart("BREAKDOWN_1", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chart1Data,
-                "valueAxes": [{
-                    "integersOnly": true,
-                    "maximum": 6,
-                    "minimum": 1,
-                    "reversed": false,
-                    "axisAlpha": 0,
-                    "dashLength": 5,
-                    "gridCount": 10,
-                    "position": "left"
-                }],
-                "startDuration": 0.5,
-                "graphs": [{
-                    "balloonText": "Events : [[value]]",
-                    "bullet": "round",
-                    "hidden": true,
-                    "title": "Event",
-                    "valueField": "Event",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "checkins : [[value]]",
-                    "bullet": "round",
-                    "title": "checkin",
-                    "valueField": "checkin",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "fans : [[value]]",
-                    "bullet": "round",
-                    "title": "fans",
-                    "valueField": "fans",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "mention : [[value]]",
-                    "bullet": "round",
-                    "title": "mention",
-                    "valueField": "mention",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "other : [[value]]",
-                    "bullet": "round",
-                    "title": "other",
-                    "valueField": "other",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "pagePost : [[value]]",
-                    "bullet": "round",
-                    "title": "pagePost",
-                    "valueField": "pagePost",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "question : [[value]]",
-                    "bullet": "round",
-                    "title": "question",
-                    "valueField": "question",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "userPost : [[value]]",
-                    "bullet": "round",
-                    "title": "userPost",
-                    "valueField": "userPost",
-                    "fillAlphas": 0
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-                ],
-                "chartCursor": {
-                    "cursorAlpha": 0,
-                    "zoomable": false
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "fillAlpha": 0.05,
-                    "fillColor": "#000000",
-                    "gridAlpha": 0,
-                    "position": "bottom",
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
-                }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("Event", "Event", false, "triangle");
+            createAxisAndSeries("checkin", "checkin", false, "rectangle");
+            createAxisAndSeries("fans", "fans", false, "triangle");
+            createAxisAndSeries("mention", "mention", false, "rectangle");
+            createAxisAndSeries("other", "other", false, "circle");
+            createAxisAndSeries("pagePost", "pagePost", false, "triangle");
+            createAxisAndSeries("question", "question", false, "rectangle");
+            createAxisAndSeries("userPost", "userPost", false, "circle");
+
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
         }
 
         $scope.generateChart1Data = function (days) {
@@ -447,67 +428,78 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         }
 
         $scope.generateIMPRESSIONS2Graph = function (days) {
-            $scope.generateChart2Data(days);
+            $scope.generateChart2Data(days);           
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("BREAKDOWN_2", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chart2Data;
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
 
-           
+            // Create series
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-            var chart = AmCharts.makeChart("BREAKDOWN_2", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chart2Data,
-                "valueAxes": [{
-                    "integersOnly": true,
-                    "maximum": 6,
-                    "minimum": 1,
-                    "reversed": false,
-                    "axisAlpha": 0,
-                    "dashLength": 5,
-                    "gridCount": 10,
-                    "position": "left"
-                }],
-                "startDuration": 0.5,
-                "graphs": [{
-                    "balloonText": "organic : [[value]]",
-                    "bullet": "round",
-                    "hidden": true,
-                    "title": "organic",
-                    "valueField": "organic",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "paid : [[value]]",
-                    "bullet": "round",
-                    "title": "paid",
-                    "valueField": "paid",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "viral : [[value]]",
-                    "bullet": "round",
-                    "title": "viral",
-                    "valueField": "viral",
-                    "fillAlphas": 0
-                }],
-                "chartCursor": {
-                    "cursorAlpha": 0,
-                    "zoomable": false
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "fillAlpha": 0.05,
-                    "fillColor": "#000000",
-                    "gridAlpha": 0,
-                    "position": "bottom",
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
+
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("organic", "organic", false, "circle");
+            createAxisAndSeries("paid", "paid", false, "circle");
+            createAxisAndSeries("viral", "viral", false, "circle");
+
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
         }
 
         $scope.chart2Data = [];
@@ -665,42 +657,53 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
         $scope.generatePAGEIMPRESSIONSGraph = function (days) {
             $scope.generatepageimressionChartData(days);
-            var chart = AmCharts.makeChart("PAGEIMPRESSIONS", {
-                "type": "serial",
-                "theme": "light",
-                // "pathToImages": Metronic.getGlobalPluginsPath() + "amcharts/amcharts/images/",
-                "autoMargins": false,
-                "marginLeft": 30,
-                "marginRight": 8,
-                "marginTop": 10,
-                "marginBottom": 26,
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("PAGEIMPRESSIONS", am4charts.XYChart);
+            chart.data = $scope.chartimpressionData;
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Set input format for the dates
+            chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
 
-                "fontFamily": 'Open Sans',
-                "color": '#888',
+            // Create axes
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-                "dataProvider": $scope.chartimpressionData,
-                "valueAxes": [{
-                    "axisAlpha": 0,
-                    "position": "left"
-                }],
-                "startDuration": 1,
-                "graphs": [{
-                    "alphaField": "alpha",
-                    "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b> [[additional]]</span>",
-                    "dashLengthField": "dashLengthColumn",
-                    "fillAlphas": 1,
-                    "title": "impression",
-                    "type": "column",
-                    "valueField": "impression"
-                }],
-                "categoryField": "date",
-                "categoryAxis": {
-                    "parseDates": true,
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "tickLength": 0
-                }
-            });
+            // Create series
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.valueY = "impression";
+            series.dataFields.dateX = "date";
+            series.tooltipText = "{value}"
+            series.strokeWidth = 2;
+            series.minBulletDistance = 15;
+
+            // Drop-shaped tooltips
+            series.tooltip.background.cornerRadius = 20;
+            series.tooltip.background.strokeOpacity = 0;
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.label.minWidth = 40;
+            series.tooltip.label.minHeight = 40;
+            series.tooltip.label.textAlign = "middle";
+            series.tooltip.label.textValign = "middle";
+            series.tooltipText = "{dateX}: [bold]{valueY}";
+
+            // Make bullets grow on hover
+            var bullet = series.bullets.push(new am4charts.CircleBullet());
+            bullet.circle.strokeWidth = 2;
+            bullet.circle.radius = 4;
+            bullet.circle.fill = am4core.color("#fff");
+
+            var bullethover = bullet.states.create("hover");
+            bullethover.properties.scale = 1.3;
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "panXY";
+            chart.cursor.xAxis = dateAxis;
+            chart.cursor.snapToSeries = series;
+            chart.scrollbarY = new am4core.Scrollbar();
+            chart.scrollbarY.parent = chart.leftAxesContainer;
+            chart.scrollbarY.toBack();
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
 
         }
         $scope.generatepageimressionChartData = function (days) {
@@ -719,61 +722,74 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         $scope.generatePageLikeUnlikeGraph = function (days) {
             $scope.generatefacebookpageLikeUnlikeGraph(days);
 
-            var chart = AmCharts.makeChart("MyFacebookPages", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartlikeunlikeData,
-                "synchronizeGrid": true,
-                "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
-                }],
-                "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
-                    "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "like",
-                    "valueField": "like",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v2",
-                    "lineColor": "#FCD202",
-                    "bullet": "square",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "unlike",
-                    "valueField": "unlike",
-                    "fillAlphas": 0
-                }],
-                "chartScrollbar": {},
-                "chartCursor": {
-                    "cursorPosition": "mouse"
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
+            am4core.useTheme(am4themes_animated);
+            var chart = am4core.create("MyFacebookPages", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chartlikeunlikeData;
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
+
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("like", "like", false, "circle");
+            createAxisAndSeries("unlike", "unlike", false, "circle");
+
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
 
 
         }
@@ -800,47 +816,58 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.generatestoryGraph(days);
 
 
-            var chart = AmCharts.makeChart("FacebookStories", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartstoryData,
-                "synchronizeGrid": true,
-                "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }],
-                "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
-                    "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "story",
-                    "valueField": "story",
-                    "fillAlphas": 0
-                }],
-                "chartScrollbar": {},
-                "chartCursor": {
-                    "cursorPosition": "mouse"
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
-                }
-            });
+            var chart = am4core.create("FacebookStories", am4charts.XYChart);
 
+            // Add data
+            chart.data = $scope.chartstoryData;
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Set input format for the dates
+            chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+            // Create axes
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.valueY = "story";
+            series.dataFields.dateX = "date";
+            series.tooltipText = "{value}"
+            series.strokeWidth = 2;
+            series.minBulletDistance = 15;
+
+            // Drop-shaped tooltips
+            series.tooltip.background.cornerRadius = 20;
+            series.tooltip.background.strokeOpacity = 0;
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.label.minWidth = 40;
+            series.tooltip.label.minHeight = 40;
+            series.tooltip.label.textAlign = "middle";
+            series.tooltip.label.textValign = "middle";
+            series.tooltipText = "{dateX}: [bold]{valueY}";
+
+            // Make bullets grow on hover
+            var bullet = series.bullets.push(new am4charts.CircleBullet());
+            bullet.circle.strokeWidth = 2;
+            bullet.circle.radius = 4;
+            bullet.circle.fill = am4core.color("#fff");
+
+            var bullethover = bullet.states.create("hover");
+            bullethover.properties.scale = 1.3;
+
+            // Make a panning cursor
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "panXY";
+            chart.cursor.xAxis = dateAxis;
+            chart.cursor.snapToSeries = series;
+            chart.scrollbarY = new am4core.Scrollbar();
+            chart.scrollbarY.parent = chart.leftAxesContainer;
+            chart.scrollbarY.toBack();
+
+            // Create a horizontal scrollbar with previe and place it underneath the date axis
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
         }
         $scope.generatestoryGraph = function (days) {
             $scope.chartstoryData = [];
@@ -855,100 +882,80 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
 
         }
-        // SHARE TYPE
         $scope.generatesharetypeGraph = function (days) {
-            $scope.generatesharechart(days);
+            $scope.generatesharechart(days);         
+            var chart = am4core.create("ShareType", am4charts.XYChart);
+            chart.colors.step = 2;
+            chart.data = $scope.chartshareData
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            dateAxis.renderer.minGridDistance = 50;
+            function createAxisAndSeries(field, name, opposite, bullet) {
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-           
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = field;
+                series.dataFields.dateX = "date";
+                series.strokeWidth = 2;
+                series.yAxis = valueAxis;
+                series.name = name;
+                series.tooltipText = "{name}: [bold]{valueY}[/]";
+                series.tensionX = 0.8;
 
-            var chart = AmCharts.makeChart("ShareType", {
-                "type": "serial",
-                "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.chartshareData,
-                "valueAxes": [{
-                    "integersOnly": true,
-                    "maximum": 6,
-                    "minimum": 1,
-                    "reversed": false,
-                    "axisAlpha": 0,
-                    "dashLength": 5,
-                    "gridCount": 10,
-                    "position": "left"
-                }],
-                "startDuration": 0.5,
-                "graphs": [{
-                    "balloonText": "checkin : [[value]]",
-                    "bullet": "round",
-                    "hidden": true,
-                    "title": "checkin",
-                    "valueField": "sharecheckin",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "event : [[value]]",
-                    "bullet": "round",
-                    "title": "event",
-                    "valueField": "shareevent",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "fans : [[value]]",
-                    "bullet": "round",
-                    "title": "fans",
-                    "valueField": "sharefan",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "mention : [[value]]",
-                    "bullet": "round",
-                    "title": "mention",
-                    "valueField": "sharementions",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "other : [[value]]",
-                    "bullet": "round",
-                    "title": "other",
-                    "valueField": "shareother",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "pagePost : [[value]]",
-                    "bullet": "round",
-                    "title": "page post",
-                    "valueField": "sharepagePost",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "question : [[value]]",
-                    "bullet": "round",
-                    "title": "question",
-                    "valueField": "sharequestion",
-                    "fillAlphas": 0
-                }, {
-                    "balloonText": "user post : [[value]]",
-                    "bullet": "round",
-                    "title": "user post",
-                    "valueField": "shareuserPost",
-                    "fillAlphas": 0
+                var interfaceColors = new am4core.InterfaceColorSet();
+
+                switch (bullet) {
+                    case "triangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 12;
+                        bullet.height = 12;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var triangle = bullet.createChild(am4core.Triangle);
+                        triangle.stroke = interfaceColors.getFor("background");
+                        triangle.strokeWidth = 2;
+                        triangle.direction = "top";
+                        triangle.width = 12;
+                        triangle.height = 12;
+                        break;
+                    case "rectangle":
+                        var bullet = series.bullets.push(new am4charts.Bullet());
+                        bullet.width = 10;
+                        bullet.height = 10;
+                        bullet.horizontalCenter = "middle";
+                        bullet.verticalCenter = "middle";
+
+                        var rectangle = bullet.createChild(am4core.Rectangle);
+                        rectangle.stroke = interfaceColors.getFor("background");
+                        rectangle.strokeWidth = 2;
+                        rectangle.width = 10;
+                        rectangle.height = 10;
+                        break;
+                    default:
+                        var bullet = series.bullets.push(new am4charts.CircleBullet());
+                        bullet.circle.stroke = interfaceColors.getFor("background");
+                        bullet.circle.strokeWidth = 2;
+                        break;
                 }
-                ],
-                "chartCursor": {
-                    "cursorAlpha": 0,
-                    "zoomable": false
-                },
-                "categoryField": "date",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "fillAlpha": 0.05,
-                    "fillColor": "#000000",
-                    "gridAlpha": 0,
-                    "position": "bottom",
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
-                }
-            });
+
+                valueAxis.renderer.line.strokeOpacity = 1;
+                valueAxis.renderer.line.strokeWidth = 2;
+                valueAxis.renderer.line.stroke = series.stroke;
+                valueAxis.renderer.labels.template.fill = series.stroke;
+                valueAxis.renderer.opposite = opposite;
+                valueAxis.renderer.grid.template.disabled = true;
+            }
+
+            createAxisAndSeries("sharefan", "fan", false, "circle");
+            createAxisAndSeries("sharepagepost", "page post", false, "circle");
+            createAxisAndSeries("shareuserpost", "user post", false, "circle");
+            createAxisAndSeries("shareother", "other", false, "circle");
+            createAxisAndSeries("sharementions", "mention", false, "circle");
+            createAxisAndSeries("sharequestion", "question", false, "circle");
+            createAxisAndSeries("sharecheckin", "checkin", false, "circle");
+
+            chart.legend = new am4charts.Legend();
+            chart.cursor = new am4charts.XYCursor();
         }
     
 

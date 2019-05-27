@@ -16,24 +16,19 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         var fetchdatacomplete = false;
         
         $scope.GettwtfollowfollowingGraph = function (profileOwnerId) {
-            //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/TwitterReports/GettwtfollowfollowingGraph?groupId=' + $rootScope.groupId)
                           .then(function (response) {
-                            $scope.GettwtfollowfollowingGraph = response.data;
+                              $scope.GettwtfollowfollowingGraph = response.data;
                               $scope.generatefollowfollowingGraphs();
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to load instgarm profiles
 
         }
 
         $scope.getprofiledata = function () {
-            //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/TwitterReports/GetTwitterProfilesData?groupId=' + $rootScope.groupId)
-                          .then(function (response) {
-                              $scope.getfollowerfollowingcount();
-                              $scope.getfeedsdata();
+                          .then(function (response) {                            
                               $scope.getprofiledatawithdate = [];
                               $scope.getprofilelist = response.data;
                               angular.forEach($scope.getprofilelist, function (value, key) {
@@ -51,12 +46,13 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
                                   });
                               });
+                              $scope.generatementionGraphs();
+                              $scope.generateGraphs();
                              
                               $scope.getData(90);
                               //$scope.getfollowerfollowing(profileOwnerId);
                               
                               //$scope.getfeedsdata(profileOwnerId);
-                              $scope.generateGraphs();
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -78,7 +74,6 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         }
 
         $scope.getfeedsdata = function () {
-            //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/TwitterReports/GetTwitterFeedsdata?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                               $scope.getfeedsdata = response.data;
@@ -86,99 +81,85 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to load instgarm profiles
-
         }
 
         $scope.generatefollowfollowingGraphs = function () {
+            am4core.useTheme(am4themes_animated);
+            // Themes end
 
-           //Start follower graph 
-            var chart = AmCharts.makeChart("followerchart",
-              {
-                  "type": "serial",
-                  "theme": "light",
-                  "dataProvider": $scope.GettwtfollowfollowingGraph,
-                  "valueAxes": [{
-                      //"maximum": 80000,
-                      //"minimum": 0,
-                      "axisAlpha": 0,
-                      "dashLength": 4,
-                      "position": "left"
-                  }],
-                  "startDuration": 1,
-                  "graphs": [{
-                      "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
-                      "bulletOffset": 10,
-                      "bulletSize": 52,
-                      "colorField": "colors",
-                      "cornerRadiusTop": 8,
-                      "customBulletField": "profilepic",
-                      "fillAlphas": 0.8,
-                      "lineAlpha": 0,
-                      "type": "column",
-                      "valueField": "twtFollowerCounts"
-                  }],
-                  "marginTop": 0,
-                  "marginRight": 0,
-                  "marginLeft": 0,
-                  "marginBottom": 0,
-                  "autoMargins": false,
-                  "categoryField": "twtName",
-                  "categoryAxis": {
-                      "axisAlpha": 0,
-                      "gridAlpha": 0,
-                      "inside": true,
-                      "tickLength": 0
-                  },
-                  "export": {
-                      "enabled": true
-                  }
-              });
+            // Create chart instance
+            var chart = am4core.create("followerchart", am4charts.XYChart);
+
+            // Add data
+            chart.data = $scope.GettwtfollowfollowingGraph;
+            // Create axes
+            chart.exporting.menu = new am4core.ExportMenu();
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "twtName";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
+
+            categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
+                if (target.dataItem && target.dataItem.index & 2 == 2) {
+                    return dy + 25;
+                }
+                return dy;
+            });
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "twtFollowerCounts";
+            series.dataFields.categoryX = "twtName";
+            series.name = "Visits";
+            series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+            series.columns.template.fillOpacity = .8;
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.strokeWidth = 2;
+            columnTemplate.strokeOpacity = 1;
+
+
 
             //end follower graph
 
             //Start following graph 
-            var chart = AmCharts.makeChart("followingchart1",
-              {
-                  "type": "serial",
-                  "theme": "light",
-                  "dataProvider": $scope.GettwtfollowfollowingGraph,
-                  "valueAxes": [{
-                      //"maximum": 80000,
-                      //"minimum": 0,
-                      "axisAlpha": 0,
-                      "dashLength": 4,
-                      "position": "left"
-                  }],
-                  "startDuration": 1,
-                  "graphs": [{
-                      "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
-                      "bulletOffset": 10,
-                      "bulletSize": 52,
-                      "colorField": "colors",
-                      "cornerRadiusTop": 8,
-                      "customBulletField": "profilepic",
-                      "fillAlphas": 0.8,
-                      "lineAlpha": 0,
-                      "type": "column",
-                      "valueField": "twtFollowingCounts"
-                  }],
-                  "marginTop": 0,
-                  "marginRight": 0,
-                  "marginLeft": 0,
-                  "marginBottom": 0,
-                  "autoMargins": false,
-                  "categoryField": "twtName",
-                  "categoryAxis": {
-                      "axisAlpha": 0,
-                      "gridAlpha": 0,
-                      "inside": true,
-                      "tickLength": 0
-                  },
-                  "export": {
-                      "enabled": true
-                  }
-              });
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("followingchart1", am4charts.XYChart);
+
+            // Add data
+            chart.data = $scope.GettwtfollowfollowingGraph;
+            // Create axes
+            chart.exporting.menu = new am4core.ExportMenu();
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "twtName";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
+
+            categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
+                if (target.dataItem && target.dataItem.index & 2 == 2) {
+                    return dy + 25;
+                }
+                return dy;
+            });
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "twtFollowingCounts";
+            series.dataFields.categoryX = "twtName";
+            series.name = "Visits";
+            series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+            series.columns.template.fillOpacity = .8;
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.strokeWidth = 2;
+            columnTemplate.strokeOpacity = 1;
 
             //end following graph
 
@@ -189,185 +170,127 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
             $scope.fetchdatacomplete = true;
 
-           //Start Retweet
-            var chart = AmCharts.makeChart("RetweetGraph", {
-                "theme": "light",
-                "color": "#cccc00",
-                "type": "serial",
-                "startDuration": 2,
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.getprofiledatawithdate,
-                "valueAxes": [{
-                    "inside": true,
-                    "axisAlpha": 0,
-                    "color": "#8533ff"
-                }],
-                "graphs": [{
-                    "balloonText": "[[category]]: <b>[[value]]</b>",
-                    "fillColorsField": "color",
-                    "fillAlphas": 1,
-                    "lineAlpha": 0.1,
-                    "type": "column",
-                    "valueField": "retweets",
-                    "color": "#FF9E01"
-                }],
-                "depth3D": 20,
-                "angle": 30,
-                "chartCursor": {
-                    "categoryBalloonEnabled": false,
-                    "cursorAlpha": 0,
-                    "zoomable": true,
-                    "color": "#FF9E01"
-                },
-                "categoryField": "timeStamp",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "labelRotation": 90,
-                    "color": "#ff3377",
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true
-                }
+            //Start Retweet
+            am4core.useTheme(am4themes_animated);
+            // Themes end
 
-            });
+            // Create chart instance
+            var chart = am4core.create("RetweetGraph", am4charts.XYChart);
+
+            // Add data
+            chart.data = $scope.getprofiledatawithdate;
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Set input format for the dates
+            chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+            // Create axes
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.valueY = "retweets";
+            series.dataFields.dateX = "timeStamp";
+            series.tooltipText = "{value}"
+            series.strokeWidth = 2;
+            series.minBulletDistance = 15;
+
+            // Drop-shaped tooltips
+            series.tooltip.background.cornerRadius = 20;
+            series.tooltip.background.strokeOpacity = 0;
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.label.minWidth = 40;
+            series.tooltip.label.minHeight = 40;
+            series.tooltip.label.textAlign = "middle";
+            series.tooltip.label.textValign = "middle";
+            series.tooltipText = "{dateX}: [bold]{valueY}";
+
+            // Make bullets grow on hover
+            var bullet = series.bullets.push(new am4charts.CircleBullet());
+            bullet.circle.strokeWidth = 2;
+            bullet.circle.radius = 4;
+            bullet.circle.fill = am4core.color("#fff");
+
+            var bullethover = bullet.states.create("hover");
+            bullethover.properties.scale = 1.3;
+
+            // Make a panning cursor
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "panXY";
+            chart.cursor.xAxis = dateAxis;
+            chart.cursor.snapToSeries = series;
+
+            // Create vertical scrollbar and place it before the value axis
+            chart.scrollbarY = new am4core.Scrollbar();
+            chart.scrollbarY.parent = chart.leftAxesContainer;
+            chart.scrollbarY.toBack();
+
+            // Create a horizontal scrollbar with previe and place it underneath the date axis
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
             // End Retweet
-
-
+        }
+        $scope.generatementionGraphs = function () {
             //  Start postlikes
-            var chart = AmCharts.makeChart("MentionsGraph", {
-                "theme": "light",
-                "type": "serial",
-                "startDuration": 2,
-                "legend": {
-                    "useGraphSettings": true
-                },
-                "dataProvider": $scope.getprofiledatawithdate,
-                "valueAxes": [{
-                    "inside": true,
-                    "axisAlpha": 0
-                }],
-                "graphs": [{
-                    "balloonText": "[[category]]: <b>[[value]]</b>",
-                    "fillColorsField": "color",
-                    "fillAlphas": 1,
-                    "lineAlpha": 0.1,
-                    "type": "column",
-                    "valueField": "mentions"
-                }],
-                "depth3D": 20,
-                "angle": 30,
-                "chartCursor": {
-                    "categoryBalloonEnabled": false,
-                    "cursorAlpha": 0,
-                    "zoomable": true
-                },
-                "categoryField": "timeStamp",
-                "categoryAxis": {
-                    "gridPosition": "start",
-                    "labelRotation": 90,
-                    "parseDates": true,
-                },
-                "export": {
-                    "enabled": true
-                }
+            am4core.useTheme(am4themes_animated);
+            // Themes end
 
-            });
-            //  End postlikes
+            // Create chart instance
+            var chart = am4core.create("MentionsGraph", am4charts.XYChart);
 
-            ////Start follower graph 
-            //var chart = AmCharts.makeChart("followerchart",
-            //  {
-            //      "type": "serial",
-            //      "theme": "light",
-            //      "dataProvider": $scope.GettwtfollowfollowingGraph,
-            //      "valueAxes": [{
-            //          //"maximum": 80000,
-            //          //"minimum": 0,
-            //          "axisAlpha": 0,
-            //          "dashLength": 4,
-            //          "position": "left"
-            //      }],
-            //      "startDuration": 1,
-            //      "graphs": [{
-            //          "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
-            //          "bulletOffset": 10,
-            //          "bulletSize": 52,
-            //          "colorField": "colors",
-            //          "cornerRadiusTop": 8,
-            //          //"customBulletField": "profilepic",
-            //          "fillAlphas": 0.8,
-            //          "lineAlpha": 0,
-            //          "type": "column",
-            //          "valueField": "twtFollowerCounts"
-            //      }],
-            //      "marginTop": 0,
-            //      "marginRight": 0,
-            //      "marginLeft": 0,
-            //      "marginBottom": 0,
-            //      "autoMargins": false,
-            //      "categoryField": "twtName",
-            //      "categoryAxis": {
-            //          "axisAlpha": 0,
-            //          "gridAlpha": 0,
-            //          "inside": true,
-            //          "tickLength": 0
-            //      },
-            //      "export": {
-            //          "enabled": true
-            //      }
-            //  });
+            // Add data
+            chart.data = $scope.getprofiledatawithdate;
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Set input format for the dates
+            chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
 
-            ////end follower graph
+            // Create axes
+            var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-            ////Start following graph 
-            //var chart = AmCharts.makeChart("followingchart",
-            //  {
-            //      "type": "serial",
-            //      "theme": "light",
-            //      "dataProvider": $scope.GettwtfollowfollowingGraph,
-            //      "valueAxes": [{
-            //          //"maximum": 80000,
-            //          //"minimum": 0,
-            //          "axisAlpha": 0,
-            //          "dashLength": 4,
-            //          "position": "left"
-            //      }],
-            //      "startDuration": 1,
-            //      "graphs": [{
-            //          "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
-            //          "bulletOffset": 10,
-            //          "bulletSize": 52,
-            //          "colorField": "colors",
-            //          "cornerRadiusTop": 8,
-            //          //"customBulletField": "profilepic",
-            //          "fillAlphas": 0.8,
-            //          "lineAlpha": 0,
-            //          "type": "column",
-            //          "valueField": "twtFollowingCounts"
-            //      }],
-            //      "marginTop": 0,
-            //      "marginRight": 0,
-            //      "marginLeft": 0,
-            //      "marginBottom": 0,
-            //      "autoMargins": false,
-            //      "categoryField": "twtName",
-            //      "categoryAxis": {
-            //          "axisAlpha": 0,
-            //          "gridAlpha": 0,
-            //          "inside": true,
-            //          "tickLength": 0
-            //      },
-            //      "export": {
-            //          "enabled": true
-            //      }
-            //  });
+            // Create series
+            var series = chart.series.push(new am4charts.LineSeries());
+            series.dataFields.valueY = "mentions";
+            series.dataFields.dateX = "timeStamp";
+            series.tooltipText = "{value}"
+            series.strokeWidth = 2;
+            series.minBulletDistance = 15;
 
-            ////end following graph
-           
+            // Drop-shaped tooltips
+            series.tooltip.background.cornerRadius = 20;
+            series.tooltip.background.strokeOpacity = 0;
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.label.minWidth = 40;
+            series.tooltip.label.minHeight = 40;
+            series.tooltip.label.textAlign = "middle";
+            series.tooltip.label.textValign = "middle";
+            series.tooltipText = "{dateX}: [bold]{valueY}";
 
+            // Make bullets grow on hover
+            var bullet = series.bullets.push(new am4charts.CircleBullet());
+            bullet.circle.strokeWidth = 2;
+            bullet.circle.radius = 4;
+            bullet.circle.fill = am4core.color("#fff");
+
+            var bullethover = bullet.states.create("hover");
+            bullethover.properties.scale = 1.3;
+
+            // Make a panning cursor
+            chart.cursor = new am4charts.XYCursor();
+            chart.cursor.behavior = "panXY";
+            chart.cursor.xAxis = dateAxis;
+            chart.cursor.snapToSeries = series;
+
+            // Create vertical scrollbar and place it before the value axis
+            chart.scrollbarY = new am4core.Scrollbar();
+            chart.scrollbarY.parent = chart.leftAxesContainer;
+            chart.scrollbarY.toBack();
+
+            // Create a horizontal scrollbar with previe and place it underneath the date axis
+            chart.scrollbarX = new am4charts.XYChartScrollbar();
+            chart.scrollbarX.series.push(series);
+            chart.scrollbarX.parent = chart.bottomAxesContainer;
         }
 
         $scope.getData = function (days) {
@@ -415,6 +338,8 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             var count = 0;
             $scope.GettwtfollowfollowingGraph();
             $scope.getprofiledata();
+            $scope.getfollowerfollowingcount();
+            $scope.getfeedsdata();
             //angular.forEach($rootScope.lstProfiles, function (value, key) {
             //   if (count == 0) {
             //        $scope.GettwtfollowfollowingGraph(value.profileOwnerId);
@@ -434,8 +359,6 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                 $('select').material_select();
-
-
             });
         }
     };
