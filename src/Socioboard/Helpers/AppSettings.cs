@@ -67,6 +67,19 @@ namespace Socioboard.Helpers
 
         public string PaypalPdtToken { get; set; }
 
+
+        public string PaypalApiUsername { get; set; }
+
+        public string PaypalApiPassword { get; set; }
+
+        public string PaypalApiSignature { get; set; }
+
+        public string PaypalSuccessUrl { get; set; }
+
+        public string PaypalExpressUrl { get; set; }
+
+        public string PaypalRedirectUrl { get; set; }
+
         public string AgencycallBackUrl { get; set; }
 
         public string TrainingcallBackUrl { get; set; }

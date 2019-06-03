@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Socioboard.Helper;
 using System.Linq;
 using System.Net;
-
+using Domain.Socioboard.Enum;
 
 
 namespace Socioboard.Controllers
@@ -449,25 +449,23 @@ namespace Socioboard.Controllers
                 {
                     var package = await response.Content.ReadAsAsync<Domain.Socioboard.Models.Package>();
                     HttpContext.Session.SetObjectAsJson("Package", package);
-
+                    var payment = new Payment(_appSettings);
                     if (user.CreateDate.AddDays(29) > DateTime.UtcNow)
                     {
-                        return user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal
-                            ? (IActionResult)Content(Payment.PaypalRecurringPayment(package.amount,
-                                package.packagename,
-                                user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD",
-                                _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,
-                                _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "",
-                                _appSettings.PaypalURL, user.Id))
-                            : RedirectToAction("paymentWithPayUMoney", "Index");
+
+                        if (user.PaymentType == PaymentType.paypal)
+                        {
+                            var redirect = await payment.PaypalExpressPayment(package.amount, "USD", package.packagename, user.EmailId, user.Id, Guid.NewGuid().ToString());
+                            return (IActionResult)Content(redirect);
+                        }
+                        return RedirectToAction("paymentWithPayUMoney", "Index");
                     }
 
-
                     if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
-                        return Content(Payment.PaypalRecurringPayment(package.amount, package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL, user.Id));
-
-                    return RedirectToAction("paymentWithPayUMoney", "Index");
-
+                    {
+                        var redirect = await payment.PaypalExpressPayment(package.amount, "USD", package.packagename, user.EmailId, user.Id, Guid.NewGuid().ToString());
+                        return (IActionResult)Content(redirect);
+                    }
                 }
                 catch (Exception ex)
                 {

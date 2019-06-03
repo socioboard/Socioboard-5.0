@@ -80,6 +80,20 @@ namespace Api.Socioboard.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("GetUserPaymentProfiles")]
+        public IActionResult GetUserPaymentProfiles(Int64 id)
+        {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var payments = dbr.Find<PaymentTransaction>(t => t.userid == id);
+            var filterPayment = payments.ToList().OrderByDescending(x => x.paymentdate).FirstOrDefault();
+            return Ok(filterPayment);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="userId"></param>
         /// <param name="amount"></param>
         /// <param name="UserName"></param>

@@ -5,12 +5,22 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
+using Domain.Socioboard.Models;
 
 namespace Socioboard.Helpers
 {
     public class Payment
     {
+
+        private readonly AppSettings _appSettings;
+
+        public Payment(AppSettings settings)
+        {
+            _appSettings = settings;
+        }
+
         public static string RecurringPaymentWithPayPal(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom, string PaypalURL)
         {
             string redirecturl = "";
@@ -533,6 +543,268 @@ namespace Socioboard.Helpers
         }
 
 
+        public async Task<string> PaypalExpressPayment(string amount, string currency, string description, string email, long userId, string invoiceNumber)
+        {
+            var redirectUrl = string.Empty;
+
+
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("METHOD", "SetExpressCheckout"),
+                new KeyValuePair<string, string>("VERSION", "204.0"),
+                new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                new KeyValuePair<string, string>("PAYMENTREQUEST_0_AMT", amount),
+                new KeyValuePair<string, string>("L_BILLINGTYPE0","RecurringPayments"),
+                new KeyValuePair<string, string>("L_BILLINGAGREEMENTDESCRIPTION0","SocioboardMembership"),
+                new KeyValuePair<string, string>("returnUrl", _appSettings.PaypalSuccessUrl),
+                new KeyValuePair<string, string>("cancelUrl", _appSettings.failUrl),
+            };
+
+                var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        var data = await response.Content.ReadAsStringAsync();
+                        var token = Uri.UnescapeDataString(Utils.GetBetween(data, "TOKEN=", "&"));
+
+                        redirectUrl = $"{_appSettings.PaypalRedirectUrl}?cmd=_express-checkout&token={token}";
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return redirectUrl;
+        }
+
+        public async Task<string> GetPayPalPayerId(string token)
+        {
+            var payerId = string.Empty;
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                    new KeyValuePair<string, string>("METHOD", "GetExpressCheckoutDetails"),
+                    new KeyValuePair<string, string>("VERSION", "204.0"),
+                    new KeyValuePair<string, string>("TOKEN",  HttpUtility.UrlEncode(token)),
+                    new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                    new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                    new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                };
+
+                var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        var data = await response.Content.ReadAsStringAsync();
+                        payerId = Uri.UnescapeDataString(Utils.GetBetween(data, "PAYERID=", "&"));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return payerId;
+        }
+
+        public async Task<string> PaypalInitialPayment(string token, string payerId, string description, string amount)
+        {
+            var responseData = string.Empty;
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("METHOD", "DoExpressCheckoutPayment"),
+                new KeyValuePair<string, string>("VERSION", "204.0"),
+                new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                new KeyValuePair<string, string>("TOKEN",token),
+                new KeyValuePair<string, string>("PAYERID",payerId),
+                new KeyValuePair<string, string>("PAYMENTREQUEST_0_PAYMENTACTION", "Sale"),
+                new KeyValuePair<string, string>("PAYMENTREQUEST_0_AMT", amount),
+                new KeyValuePair<string, string>("PAYMENTREQUEST_0_CURRENCYCODE", "USD"),
+                new KeyValuePair<string, string>("PAYMENTREQUEST_0_DESC", "Initial Payment")
+            };
+                var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        responseData = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return responseData;
+        }
+
+        public async Task<string> PaypalRecurringCreation(string token, string payerId, string description, string amount)
+        {
+            var recurringResponse = string.Empty;
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("METHOD", "CreateRecurringPaymentsProfile"),
+                new KeyValuePair<string, string>("VERSION", "204.0"),
+                new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                new KeyValuePair<string, string>("TOKEN",token),
+                new KeyValuePair<string, string>("PAYERID",payerId),
+                new KeyValuePair<string, string>("PROFILESTARTDATE", $"{DateTime.UtcNow.AddMonths(1):yyyy-MM-ddTHH:mm:ss.FFFZ}"),
+                new KeyValuePair<string, string>("DESC", "SocioboardMembership"),
+                new KeyValuePair<string, string>("BILLINGPERIOD", "Month"),
+                new KeyValuePair<string, string>("BILLINGFREQUENCY","1"),
+                new KeyValuePair<string, string>("AMT", amount),
+                new KeyValuePair<string, string>("CURRENCYCODE", "USD"),
+                new KeyValuePair<string, string>("COUNTRYCODE","US"),
+                new KeyValuePair<string, string>("MAXFAILEDPAYMENTS","3")
+            };
+                var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        recurringResponse = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return recurringResponse;
+        }
+
+        public async Task<string> GetRecurringProfileDetails(string profileId)
+        {
+            var responseData = string.Empty;
+
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                    new KeyValuePair<string, string>("METHOD", "GetRecurringPaymentsProfileDetails"),
+                    new KeyValuePair<string, string>("VERSION", "204.0"),
+                    new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                    new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                    new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                    new KeyValuePair<string, string>("PROFILEID", profileId),
+                };
+                var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        responseData = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return responseData;
+        }
+
+        public async Task<string> CancelRecurring(string userId = null, string profileId = null)
+        {
+            var responseData = string.Empty;
+
+            try
+            {
+                var parameters = new List<KeyValuePair<string, string>>{
+                    new KeyValuePair<string, string>("METHOD", "ManageRecurringPaymentsProfileStatus"),
+                    new KeyValuePair<string, string>("VERSION", "204.0"),
+                    new KeyValuePair<string, string>("USER", _appSettings.PaypalApiUsername),
+                    new KeyValuePair<string, string>("PWD", _appSettings.PaypalApiPassword),
+                    new KeyValuePair<string, string>("SIGNATURE", _appSettings.PaypalApiSignature),
+                    new KeyValuePair<string, string>("ACTION","Cancel")
+                };
+
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var paymentResponse = await WebApiReq.GetReq($"/api/PaymentTransaction/GetUserPaymentProfiles?id={userId}", "", "", _appSettings.ApiDomain);
+                    if (paymentResponse.IsSuccessStatusCode)
+                    {
+                        var payments = await paymentResponse.Content.ReadAsAsync<PaymentTransaction>();
+                        profileId = payments.paymentId;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(profileId))
+                {
+                    parameters.Add(new KeyValuePair<string, string>("PROFILEID", profileId));
+
+                    var response = await WebApiReq.PostReq("", parameters, "", "", _appSettings.PaypalExpressUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        try
+                        {
+                            responseData = await response.Content.ReadAsStringAsync();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return responseData;
+
+        }
 
     }
 }

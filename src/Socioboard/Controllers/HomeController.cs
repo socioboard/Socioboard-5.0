@@ -917,11 +917,13 @@ namespace Socioboard.Controllers
                     HttpContext.Session.SetObjectAsJson("paymentsession", true);
 
                     if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
-                        return Redirect(Payment.PaypalRecurringPayment(sessionPackage.amount,
-                            sessionPackage.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber,
-                            user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl,
-                            _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl,
-                            _appSettings.notifyUrl, "", _appSettings.PaypalURL, user.Id));
+                    {
+
+                        var payment = new Payment(_appSettings);
+                        var redirect = await payment.PaypalExpressPayment(sessionPackage.amount, "USD", sessionPackage.packagename, user.EmailId, user.Id, Guid.NewGuid().ToString());
+                        return Redirect(redirect);
+                    }
+                       
 
                     return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
 
@@ -1228,8 +1230,13 @@ namespace Socioboard.Controllers
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                             {
                                 HttpContext.Session.SetObjectAsJson("paymentsession", true);
-                                string paypalUrl = Helpers.Payment.PaypalRecurringPayment(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL, user.Id);
-                                return Content(paypalUrl);
+
+                                var payment = new Payment(_appSettings);
+
+                                var paypalUrl = await payment.PaypalExpressPayment(_Package.amount, "USD", _Package.packagename, user.EmailId, user.Id,
+                                    Guid.NewGuid().ToString());
+
+                                return Content(paypalUrl);                             
                             }
                             else
                             {
@@ -1242,7 +1249,10 @@ namespace Socioboard.Controllers
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                             {
                                 HttpContext.Session.SetObjectAsJson("paymentsession", true);
-                                return Redirect(Helpers.Payment.PaypalRecurringPayment(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL, user.Id));
+                                var payment = new Payment(_appSettings);
+                                var paypalUrl = await payment.PaypalExpressPayment(_Package.amount, "USD", _Package.packagename, user.EmailId, user.Id,
+                                    Guid.NewGuid().ToString());
+                                return Redirect(paypalUrl);
                             }
                             else
                             {

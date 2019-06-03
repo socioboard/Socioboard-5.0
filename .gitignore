@@ -9,3 +9,6 @@
 /bin
 /obj
 *.xml
+src/Api.Socioboard/obj/
+src/Api.Socioboard/bin/
+*.rsp

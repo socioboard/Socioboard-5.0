@@ -69,12 +69,12 @@ namespace Socioboard.Controllers
                     HttpContext.Session.SetObjectAsJson("paymentsession", true);
 
                     if (user.PaymentType == PaymentType.paypal)
-                        return Content(Payment.PaypalRecurringPayment(sessionPackage.amount,
-                            sessionPackage.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber,
-                            user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl,
-                            _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl,
-                            _appSettings.notifyUrl, "", _appSettings.PaypalURL, user.Id));
-
+                    {
+                        var payment = new Payment(_appSettings);
+                        var paypalUrl = await payment.PaypalExpressPayment(sessionPackage.amount, "USD", sessionPackage.packagename, user.EmailId, user.Id,
+                            Guid.NewGuid().ToString());
+                        return Content(paypalUrl);
+                    }                       
                     if (user.PaymentType == PaymentType.bluesnap)
                     {
                         return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
@@ -249,6 +249,129 @@ namespace Socioboard.Controllers
 
             return Content(output);
         }
+
+
+        public async Task<IActionResult> PaypalExpressSuccess()
+        {
+
+            var payment = new Payment(_appSettings);
+
+            var token = Utils.GetBetween(Request.QueryString + "&", "token=", "&");
+            var user = HttpContext.Session.GetObjectFromJson<User>("User");
+            var packageDetails = HttpContext.Session.GetObjectFromJson<Package>("Package");
+
+            try
+            {
+                await payment.CancelRecurring(user.Id.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            var payerId = await payment.GetPayPalPayerId(token);
+
+            var paymentResponse = await payment.PaypalInitialPayment(token, payerId, packageDetails.packagename, packageDetails.amount);
+
+            var status = Utils.GetBetween(paymentResponse, "ACK=", "&");
+
+            if (status != "Success")
+                return RedirectToAction("Index", "Home");
+
+            var transactionId = Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_TRANSACTIONID=", "&");
+            var paidAmount = Uri.UnescapeDataString(Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_AMT=", "&"));
+            var paymentDate = Uri.UnescapeDataString(Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_ORDERTIME=", "&"));
+            var payerEmail = Uri.UnescapeDataString(Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_SELLERPAYPALACCOUNTID=", "&"));
+            var paymentStatus = Uri.UnescapeDataString(Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_PAYMENTSTATUS=", "&"));
+            var itemName = $"Socioboard_{packageDetails.packagename}";
+
+            var charset = Uri.UnescapeDataString(Utils.GetBetween(paymentResponse, "PAYMENTINFO_0_SECUREMERCHANTACCOUNTID=", "&"));
+            var details = await payment.PaypalRecurringCreation(token, payerId, packageDetails.packagename, packageDetails.amount);
+            var profileId = Uri.UnescapeDataString(Utils.GetBetween(details, "PROFILEID=", "&"));
+            var profileDetails = await payment.GetRecurringProfileDetails(profileId);
+            var payerName = Uri.UnescapeDataString(Utils.GetBetween(profileDetails, "SUBSCRIBERNAME=", "&"));
+
+            var parameters = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("userId", user.Id.ToString()),
+                new KeyValuePair<string, string>("UserName", user.FirstName + " " + user.LastName),
+                new KeyValuePair<string, string>("email", user.EmailId),
+                new KeyValuePair<string, string>("amount", paidAmount),
+                new KeyValuePair<string, string>("PaymentType", user.PaymentType.ToString()),
+                new KeyValuePair<string, string>("trasactionId", transactionId),
+                new KeyValuePair<string, string>("paymentId", profileId),
+                new KeyValuePair<string, string>("accType", packageDetails.packagename),
+                new KeyValuePair<string, string>("subscr_date", paymentDate.ToString(CultureInfo.InvariantCulture)),
+                new KeyValuePair<string, string>("payer_email", payerEmail),
+                new KeyValuePair<string, string>("Payername", payerName),
+                new KeyValuePair<string, string>("payment_status", paymentStatus),
+                new KeyValuePair<string, string>("item_name", itemName),
+                new KeyValuePair<string, string>("media", charset)
+            };
+
+            var paymentTransaction = new PaymentTransaction
+            {
+                amount = paidAmount,
+                email = user.EmailId,
+                paymentdate = DateTime.Parse(paymentDate),
+                userid = user.Id,
+                PaymentType = PaymentType.paypal,
+                trasactionId = transactionId,
+                paymentId = profileId,
+                payeremail = payerEmail,
+                Payername = payerName,
+                paymentstatus = paymentStatus,
+                itemname = itemName,
+                media = charset,
+                subscrdate = DateTime.Parse(paymentDate)
+            };
+
+            var passingData = Newtonsoft.Json.JsonConvert.SerializeObject(paymentTransaction);
+
+            var param = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("information", passingData)
+            };
+
+            var response = await WebApiReq.PostReq("/api/PaymentTransaction/UpdatePaypalTransactions", param, "", "", _appSettings.ApiDomain);
+
+            if (response.IsSuccessStatusCode)
+                try
+                {
+                    var data = await response.Content.ReadAsStringAsync();
+
+                    if (data == "Completed")
+                    {
+                        var responseMessage = await WebApiReq.GetReq("/api/User/GetUser?Id=" + user.Id, "", "",
+                            _appSettings.ApiDomain);
+
+                        if (response.IsSuccessStatusCode)
+                            try
+                            {
+                                var userCurrentDetails = await responseMessage.Content.ReadAsAsync<User>();
+
+                                if (user.ReferralStatus == "InActive" && user.ReferdBy != null)
+                                    await WebApiReq.PostReq("/api/User/UpdateRefrralStatus", parameters, "", "", _appSettings.ApiDomain);
+
+                                HttpContext.Session.SetObjectAsJson("User", userCurrentDetails);
+                                HttpContext.Session.SetObjectAsJson("paymentsession", false);
+                                return RedirectToAction("Index", "Home");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.StackTrace);
+                            }
+                    }
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Index");
+                }
+
+            var output = "false";
+            return Content(output);
+        }
+
 
         public IActionResult PaypalFailed()
         {
@@ -637,23 +760,30 @@ namespace Socioboard.Controllers
                     HttpContext.Session.SetObjectAsJson("Package", package);
 
                     if (user.CreateDate.AddDays(29) > DateTime.UtcNow)
-                        return user.PaymentType == PaymentType.paypal
-                            ? (IActionResult)Content(Payment.PaypalRecurringPayment(package.amount,
-                                package.packagename,
-                                user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD",
-                                _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,
-                                _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "",
-                                _appSettings.PaypalURL, user.Id))
-                            : RedirectToAction("paymentWithPayUMoney", "Index");
+                    {
+                        if (user.PaymentType == PaymentType.paypal)
+                        {
+                            var payment = new Payment(_appSettings);
+                            var paypalUrl = await payment.PaypalExpressPayment(package.amount, "USD", package.packagename, user.EmailId, user.Id,
+                                Guid.NewGuid().ToString());
 
+                            return Content(paypalUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("paymentWithPayUMoney", "Index");
+                        }
+                    }
 
                     if (user.PaymentType == PaymentType.paypal)
-                        return Content(Payment.PaypalRecurringPayment(package.amount, package.packagename,
-                            user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD",
-                            _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,
-                            _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "",
-                            _appSettings.PaypalURL, user.Id));
+                    {
+                        var payment = new Payment(_appSettings);
+                        var paypalUrl = await payment.PaypalExpressPayment(package.amount, "USD", package.packagename, user.EmailId, user.Id,
+                            Guid.NewGuid().ToString());
 
+                        return Content(paypalUrl);
+                    }
+                        
                     return RedirectToAction("paymentWithPayUMoney", "Index");
                 }
                 catch (Exception ex)
