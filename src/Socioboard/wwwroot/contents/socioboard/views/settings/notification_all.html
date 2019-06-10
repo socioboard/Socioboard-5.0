@@ -1,17 +1,19 @@
 <style>
-    .noti_feeds_img{
-        height:200px !important;
+    .noti_feeds_img {
+        height: 200px !important;
     }
-     .load_more{
-            text-align: center;
-    border: 1px solid #fff;
-    border-radius: 13px;
-    margin-bottom: 7px;
-    background: palevioletred;
+
+    .load_more {
+        text-align: center;
+        border: 1px solid #fff;
+        border-radius: 13px;
+        margin-bottom: 7px;
+        background: palevioletred;
     }
-    .load_more a{
-        color:#fff !important
-    }
+
+        .load_more a {
+            color: #fff !important;
+        }
 </style>
 <div data-ng-controller="NotificationAllController">
     <!-- START CONTENT -->
@@ -22,54 +24,79 @@
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
-                    <ul class="collection facebookfeeds">
-                        <li class="card" ng-repeat="profile in lstsinglepass" >
-                            <a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
-                                <div class="col s9 recent-activity-list-text margin-top-10">              
-                                    <strong>'{{profile}}'</strong> <span style="color:black!important;">facebook account password has change ,please reconnect respective account or page from 'My feeds' module !!</span>
-                                </div>
-                            </a>                           
-                            <!--<div  class="load_more" style="height:auto;">
-                                <a ng-click="reconnect()" class="center">Reconnect</a>
-                            </div>-->                           
-                        </li>
-                        <!--<li class="collection-item avatar" ng-repeat="notify in lstnotifications">
-                            <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
-                            <span class="email-title">{{notify.socialprofileName}}</span>
-                            <div class="row notify_post z-depth-1 hoverable">
-                                <div class="col m8">
-                                    <p class="break_word ultra-small">{{notify.shareMessage}}</p>
-                                    <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
-                                    <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
-                                </div>
-                                <div class="col m4 center">
-                                    <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
-                                </div>
-                            </div>
-                            <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
-                        </li>-->                        
-                    </ul>
-                    <!--<ul class="collection facebookfeeds">
-                        <li class="collection-item avatar" ng-repeat="notify in loadlstnotifications">
-                            <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
-                            <span class="email-title">{{notify.socialprofileName}}</span>
-                            <div class="row notify_post z-depth-1 hoverable">
-                                <div class="col m8">
-                                    <p class="break_word ultra-small">{{notify.shareMessage}}</p>
-                                    <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
-                                    <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
-                                </div>
-                                <div class="col m4 center">
-                                    <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
-                                </div>
-                            </div>
-                            <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
-                        </li>
-                    </ul>-->
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="tabs">
+                                <li class="tab col s3"><a class="active" href="#ScheduleNotification">Schedule</a></li>
+                                <li class="tab col s3"><a href="#InvitationsNotification">Invitations</a></li>
+                            </ul>
+                        </div>
+                        <div id="ScheduleNotification" class="col s12">
+                            <ul class="collection">
+                                <!-- <li class="card" ng-repeat="profile in lstsinglepass" >-->
+                                <!--<a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
+                                    <div class="col s9 recent-activity-list-text margin-top-10">
+                                        <strong>'{{profile}}'</strong> <span style="color:black!important;">facebook account password has change ,please reconnect respective account or page from 'My feeds' module !!</span>
+                                    </div>
+                                </a>-->
+                                <!--<div  class="load_more" style="height:auto;">
+                                    <a ng-click="reconnect()" class="center">Reconnect</a>
+                                </div>-->
+                                <!--</li>-->
+                                <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
+                                    <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
+                                    <span class="email-title">{{notify.socialprofileName}}</span>
+                                    <div class="row notify_post z-depth-1 hoverable">
+                                        <div class="col m8">
+                                            <p class="break_word ultra-small">{{notify.shareMessage}}</p>
+                                            <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
+                                            <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
+                                        </div>
+                                        <div class="col m4 center">
+                                            <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
+                                        </div>
+                                    </div>
+                                    <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
+                                </li>
+                            </ul>
+                            <!--<ul class="collection facebookfeeds">
+                                <li class="collection-item avatar" ng-repeat="notify in loadlstnotifications">
+                                    <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
+                                    <span class="email-title">{{notify.socialprofileName}}</span>
+                                    <div class="row notify_post z-depth-1 hoverable">
+                                        <div class="col m8">
+                                            <p class="break_word ultra-small">{{notify.shareMessage}}</p>
+                                            <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
+                                            <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
+                                        </div>
+                                        <div class="col m4 center">
+                                            <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
+                                        </div>
+                                    </div>
+                                    <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
+                                </li>
+                            </ul>-->
+                            <!--<div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">-->
+                            <!--<a class="center" ng-click="loadmore()">Load More</a>-->
+                            <!--</div>-->
+                        </div>
+                        <div id="InvitationsNotification" class="col s12">
+                            <ul class="collection">
+                                <li class="collection-item avatar" ng-repeat="notify in lstinvitationnotifications">
+                                    <span class="title">Team Name: {{notify.message}}</span>
+                                    <p>Team invites you to join!! </p>
+                                    <span class="secondary-content">
+                                        <a class="waves-effect waves-light btn btn-small btn-primary" ng-click="acceptInviations(notify.emailId,notify.memberCode,notify.notifyId)">Accept</a>
+                                        <a class="waves-effect waves-light btn btn-small btn-danger" ng-click="declineInviations(notify.emailId,notify.memberCode,notify.notifyId)">Decline</a>
+                                    </span>
+                                </li>
+                            </ul>
 
-                    <!--<div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">-->
-                        <!--<a class="center" ng-click="loadmore()">Load More</a>-->
-                    <!--</div>-->
+
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

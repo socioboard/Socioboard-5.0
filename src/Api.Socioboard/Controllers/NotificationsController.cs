@@ -47,7 +47,7 @@ namespace Api.Socioboard.Controllers
                 {
                     foreach (Notifications notify in lstnotifications)
                     {
-                        ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId==userId);
+                        ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId == userId);
                         if (schedulemsg != null)
                         {
                             lstschedulemsg.Add(schedulemsg);
@@ -72,7 +72,7 @@ namespace Api.Socioboard.Controllers
             {
                 return NotFound();
             }
-           
+
 
         }
 
@@ -83,15 +83,15 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<ScheduledMessage> lstschedulemsg = new List<ScheduledMessage>();
-                List<Notifications> lstnotifications = dbr.FindWithRangeDesct<Notifications>(t => t.UserId == userId, skip, count, t=>t.Id).ToList();
+                List<Notifications> lstnotifications = dbr.FindWithRangeDesct<Notifications>(t => t.UserId == userId && t.MsgStatus != "Invited", skip, count, t => t.Id).ToList();
                 foreach (Notifications notify in lstnotifications)
                 {
-                    ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId==userId);
-                    if(schedulemsg !=null)
+                    ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId == userId);
+                    if (schedulemsg != null)
                     {
                         lstschedulemsg.Add(schedulemsg);
                     }
-                   
+
                 }
                 if (lstschedulemsg != null)
                 {
@@ -102,13 +102,59 @@ namespace Api.Socioboard.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound();
             }
-         
+
 
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="skip"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        [HttpGet("FindAllInvitationNotifications")]
+        public IActionResult FindAllInvitationNotifications(long userId, int skip, int count)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _env);
+                var lstInvitations = new List<InvitationDetails>();
+                var notifications = dbr.FindWithRangeDesct<Notifications>(t => t.UserId == userId && t.MsgStatus == "Invited", skip, count, t => t.Id).ToList();
+                foreach (var notify in notifications)
+                {
+                    var groupMember = dbr.Single<Groupmembers>(t => t.id == notify.MsgId && t.userId == userId);
+                    if (groupMember == null)
+                        continue;
+                    var invitation = new InvitationDetails
+                    {
+                        GroupId = groupMember.groupid,
+                        Message = notify.NotificationType,
+                        EmailId = groupMember.email,
+                        MemberCode = groupMember.memberCode,
+                        UserId = groupMember.userId,
+                        NotifyId = notify.Id
+                    };
+                    lstInvitations.Add(invitation);
+
+                }
+                return Ok(lstInvitations);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+
+        }
+
+
 
         [HttpGet("UpdateNotifications")]
         public IActionResult UpdateNotifications(long userId)
@@ -132,12 +178,30 @@ namespace Api.Socioboard.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound();
             }
-            
 
+
+        }
+
+
+
+        [HttpGet("DeleteNotifications")]
+        public IActionResult DeleteNotifications(long notifyId)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _env);
+                var notifyObject = dbr.FindFirstMatch<Notifications>(t => t.Id == notifyId);
+                dbr.Delete(notifyObject);
+                return Ok("deleted");
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
 
 
@@ -145,12 +209,12 @@ namespace Api.Socioboard.Controllers
         public IActionResult ChangePasswordDetail(long userId)
         {
             try
-            {              
+            {
                 MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
-              //  Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
-                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
+                //  Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
+                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status == false);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -158,7 +222,7 @@ namespace Api.Socioboard.Controllers
                 int count = task.Result.Count;
                 IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
                 List<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfab = new List<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>();
-                foreach(var lstfb in lstfbpasschange)
+                foreach (var lstfb in lstfbpasschange)
                 {
                     if (lstfb.message.Contains("password"))
                     {
@@ -171,11 +235,11 @@ namespace Api.Socioboard.Controllers
                         {
 
                         }
-                        
+
                     }
-                    
+
                 }
-                if (count>0)
+                if (count > 0)
                 {
                     return Ok(lstfab);
                 }
@@ -199,7 +263,7 @@ namespace Api.Socioboard.Controllers
                 //  DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 // List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
                 //  Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
-               // Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail lstchanges = new Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail();
+                // Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail lstchanges = new Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail();
                 var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == profileId && t.status == false);
                 var task = Task.Run(async () =>
                 {
@@ -208,7 +272,7 @@ namespace Api.Socioboard.Controllers
                 int count = task.Result.Count;
                 if (count > 0)
                 {
-                   
+
                     var builders = Builders<BsonDocument>.Filter;
                     FilterDefinition<BsonDocument> filter = builders.Eq("profileId", profileId);
                     var update = Builders<BsonDocument>.Update.Set("status", true);
@@ -229,14 +293,14 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
             Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
-            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status == false);
             var task = Task.Run(async () =>
             {
                 return await result;
             });
             int count = task.Result.Count;
             IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
-            if (count>0)
+            if (count > 0)
             {
                 return Ok(lstfbpasschange);
             }

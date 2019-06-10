@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace Api.Socioboard.Controllers
         /// <param name="members"></param>
         /// <returns></returns>
         [HttpPost("InviteGroupMembers")]
-        public IActionResult InviteGroupMembers(long groupId,  string members)
+        public IActionResult InviteGroupMembers(long groupId, string members)
         {
             List<Groupmembers> lstGrpMembers = new List<Groupmembers>();
             if (string.IsNullOrEmpty(members))
@@ -53,7 +54,7 @@ namespace Api.Socioboard.Controllers
             else
             {
                 string[] lstmem = members.Split(';');
-                foreach(var item in lstmem)
+                foreach (var item in lstmem)
                 {
                     if (!string.IsNullOrEmpty(item))
                     {
@@ -100,6 +101,26 @@ namespace Api.Socioboard.Controllers
                 if (temp == null)
                 {
                     dbr.Add<Groupmembers>(member);
+
+                    var savedMembers = dbr.Find<Groupmembers>(t => t.groupid == groupId && t.email == member.email).FirstOrDefault();
+
+                    var lstnotifications = dbr.Single<Notifications>(t => t.MsgId == savedMembers.id);
+
+                    if (lstnotifications == null && savedMembers != null)
+                    {
+                        var notify = new Notifications
+                        {
+                            MsgId = savedMembers.id,
+                            MsgStatus = "Invited",
+                            notificationtime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
+                            NotificationType = grp.groupName,
+                            ReadOrUnread = "Unread",
+                            UserId = member.userId
+                        };
+                        dbr.Add<Notifications>(notify);
+                    }
+
+
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + groupId);
                     string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\groupinvitation.html";
                     string html = System.IO.File.ReadAllText(path);
@@ -121,7 +142,7 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupMembersRepository.getGroupMembers(groupId, _redisCache, dbr));
         }
 
-        [HttpGet ("GetGroupAdmin")]
+        [HttpGet("GetGroupAdmin")]
         public IActionResult GetGroupAdmin(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -146,10 +167,10 @@ namespace Api.Socioboard.Controllers
         public IActionResult ActivateGroupMember(string code, string email)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Domain.Socioboard.Models.Groupmembers grpMember = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.email.Equals(email)&&t.memberCode.Equals(code)).FirstOrDefault();
-            if(grpMember != null)
+            Domain.Socioboard.Models.Groupmembers grpMember = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.email.Equals(email) && t.memberCode.Equals(code)).FirstOrDefault();
+            if (grpMember != null)
             {
-                if(grpMember.userId == 0)
+                if (grpMember.userId == 0)
                 {
                     User inMemUser = _redisCache.Get<User>(email.Trim());
                     if (inMemUser == null)
@@ -167,6 +188,25 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("wrong code or email");
             }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost("DeclineGroupMember")]
+        public IActionResult DeclineGroupMember(string code, string email)
+        {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var grpMember = dbr.Find<Groupmembers>(t => t.email.Equals(email) && t.memberCode.Equals(code)).FirstOrDefault();
+            if (grpMember == null)
+                return Ok("Error!");
+
+            dbr.Delete(grpMember);
+            return Ok("deleted");
         }
 
         [HttpPost("DeleteGroupMembers")]
