@@ -1,0 +1,30 @@
+{
+  "name": "dropify",
+  "title": "Dropify",
+  "description": "Override your input files with style",
+  "keywords": [
+    "upload",
+    "preview",
+    "file",
+    "drag",
+    "drop",
+    "jquery"
+  ],
+  "homepage": "http://jeremyfagis.github.io/dropify/",
+  "author": {
+    "name": "Jeremy Fagis",
+    "url": "http://www.fagis.fr/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/JeremyFagis/dropify.git"
+  },
+  "bugs": "https://github.com/JeremyFagis/dropify/issues",
+  "dependencies": {
+    "jquery": ">=1.8"
+  },
+  "main": [
+    "dist/js/dropify.js",
+    "dist/css/dropify.css"
+  ]
+}

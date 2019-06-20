@@ -1,0 +1,73 @@
+{
+    "notification_socioboard": {
+        "host_url": "http://localhost:3003",
+        "port": "3003",
+        "host": "localhost:3003"
+    },
+    "user_socioboard": {
+        "host_url": "http://localhost:3000"
+    },
+    "mysql": {
+        "host": "localhost",
+        "username": "",
+        "database": "",
+        "password": ""
+    },
+    "mongo": {
+        "username": "",
+        "password": "",
+        "host": "localhost",
+        "db_name": ""
+    },
+    "profile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
+    "facebook_api": {
+        "app_id": "",
+        "secret_key": "",
+        "account_kit_version": "v1.1",
+        "account_kit_app_secret": "",
+        "redirect_url": "https://localhost:3000/v1/auth/facebook/callback",
+        "fbprofile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
+        "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
+        "user_subscription_fields": "feed",
+        "page_subscription_fields": "feed",
+        "version": "4.0.0"
+    },
+    "google_api": {
+        "client_id": "",
+        "client_secrets": "",
+        "redirect_url": "http://localhost:3000/v1/auth/google/callback",
+        "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+        "api_key": "",
+        "dynamic_link": "",
+        "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
+    },
+    "twitter_api": {
+        "api_key": "",
+        "secret_key": "",
+        "redirect_url": "http://localhost:3000/v1/twitter/callback",
+        "app_name": "",
+        "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+        "webhook_environment": "development",
+        "version": "4.0.0"
+    },
+    "linkedIn_api": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "http://localhost:3000/v1/linkedin/callback"
+    },
+    "instagram": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+    },
+    "pinterest": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+    },
+    "tumblr": {
+        "api_key": "",
+        "secret_key": "",
+        "redirect_url": "http://localhost:3000/v1/auth/tumblr/callback"
+    }  
+}

@@ -1,0 +1,21 @@
+{
+  "name": "emojionearea",
+  "version": "2.1.2",
+  "homepage": "https://github.com/mervick/emojionearea",
+  "authors": [
+    "Andrey Izman <izmanw@gmail.com>"
+  ],
+  "description": "Simple jQuery WYSIWYG-like plugin with emojione smiles for use in replies and comments",
+  "keywords": [
+    "emoji",
+    "emojione",
+    "area"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "tests"
+  ]
+}

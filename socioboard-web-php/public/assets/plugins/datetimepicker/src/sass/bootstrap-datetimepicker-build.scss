@@ -1,0 +1,49 @@
+// Import bootstrap variables including default color palette and fonts
+//@import "../../node_modules/bootstrap/less/variables.less";
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+$blue:    #007bff !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default;
+$orange:  #fd7e14 !default;
+$yellow:  #ffc107 !default;
+$green:   #28a745 !default;
+$teal:    #20c997 !default;
+$cyan:    #17a2b8 !default;
+
+// stylelint-disable
+$white:    #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #868e96 !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:    #000 !default;
+
+$btn-primary-bg:      $gray-300;
+$btn-primary-color:   $blue;
+$border-radius-base:  .25rem !default;
+$gray-lighter:        $gray-100;
+$gray-light:          #dee2e6 !default;
+$screen-sm-min:       576px;
+$screen-md-min:       768px;
+$screen-lg-min:       992px;
+
+// Import datepicker component
+@import "_bootstrap-datetimepicker";

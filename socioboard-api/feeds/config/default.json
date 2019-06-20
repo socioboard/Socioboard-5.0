@@ -1,0 +1,86 @@
+{
+    "title": "Socioboard Api",
+    "version": "4.0.0",
+    "description": "To describe a RESTful API for socioboard",
+    "applicationName": "Socioboard",
+    "teamDescription": "Socioboard team has been created automatically by the application.",
+    "perPageLimit": 12,
+    "feed_socioboard": {
+        "title": "Socioboard - FeedServices",
+        "version": "1.0.0",
+        "description": "To describe a RESTful API of feed services such as network feeds, rss feeds and latest trendings from giphy, newsapi, pixabay, imgur, flickr and dailymotion",
+        "applicationName": "Socioboard"
+    },
+    "authorize": {
+        "secret": "",
+        "token_secret": "",
+        "algorithm": "aes-256-cbc",
+        "encoding_typeOne": "utf8",
+        "encoding_typeTwo": "hex"
+    },
+    "analytics": {
+        "tracking_id": "",
+        "view_id": "",
+        "ganalytics_service_email": "",
+        "ganalytics_private_key": ""
+    },
+    "mailService": {
+        "defaultMailOption": "gmail",
+        "sendgrid": {
+            "username": "",
+            "password": "",
+            "frommail": "",
+            "ccmail": "",
+            "apiKey": ""
+        },
+        "gmailServices": {
+            "email": "",
+            "password": ""
+        }
+    },
+    "content_studio": {
+        "basePath": "../../media",
+        "daily_motion": {
+            "api_key": "",
+            "secret_key": "",
+            "version": "4.0.0",
+            "count": 100
+        },
+        "giphy": {
+            "api_key": "",
+            "count": 25,
+            "version": "4.0.0",
+            "path": "../../media/giphy"
+        },
+        "newsapi": {
+            "api_key": "",
+            "version": "4.0.0",
+            "count": 25
+        },
+        "pixabay": {
+            "api_key": "",
+            "version": "4.0.0",
+            "count": 25,
+            "path": "../../media/pixabay"
+        },
+        "flickr": {
+            "api_key": "",
+            "api_secret": "",
+            "version": "4.0.0",
+            "count": 25,
+            "path": "../../media/flickr"
+        },
+        "imgur": {
+            "client_id": "",
+            "client_secret": "",
+            "version": "4.0.0",
+            "count": 25,
+            "path": "../../media/imgur"
+        },
+        "youtube": {
+            "api_key": "",
+            "count": 15,
+            "version": "4.0.0"
+        }
+    }
+}

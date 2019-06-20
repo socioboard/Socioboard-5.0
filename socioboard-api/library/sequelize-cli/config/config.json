@@ -1,0 +1,158 @@
+{
+  "apidevelopment": {
+    "username": "root",
+    "password": null,
+    "database": "testsocioboard",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false,
+    "seederStorage": "sequelize"
+  },
+  "apistaging": {
+    "username": "",
+    "password": "",
+    "database": "nodeSocio",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false
+  },
+  "development": {
+    "username": "root",
+    "password": null,
+    "database": "testsocioboard",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "staging": {
+    "username": "",
+    "password": "",
+    "database": "nodeSocio",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false
+  },
+  "phpdev": {
+    "username": "",
+    "password": "",
+    "database": "nodeSocio",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false,
+    "seederStorage": "sequelize"
+  }
+}

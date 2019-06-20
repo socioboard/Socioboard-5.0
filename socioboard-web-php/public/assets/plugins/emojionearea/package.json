@@ -1,0 +1,36 @@
+{
+  "name": "emojionearea",
+  "version": "2.1.4",
+  "description": "Simple jQuery WYSIWYG-like plugin with emojione smiles for use in replies and comments",
+  "main": "js/emojionearea.js",
+  "scripts": {
+    "build": "npm install && grunt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mervick/emojionearea.git"
+  },
+  "keywords": [
+    "emoji",
+    "emojione",
+    "area",
+    "emojionearea"
+  ],
+  "author": "Andrey Izman <izmanw@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mervick/emojionearea/issues"
+  },
+  "homepage": "https://github.com/mervick/emojionearea#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "requirejs": "^2.1.22"
+  }
+}

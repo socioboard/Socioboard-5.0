@@ -1,0 +1,46 @@
+{
+    "title": "Socioboard Api",
+    "version": "1.0.0",
+    "description": "To describe a RESTful API for socioboard",
+    "applicationName": "Socioboard",
+    "perPageLimit": 12,
+    "maximumTrialPeriod": 3,
+    "notification_socioboard": {
+        "title": "Socioboard - NotificationServices",
+        "version": "1.0.0",
+        "description": "To describe a RESTful API of notification services such as mail, socket",
+        "applicationName": "Socioboard"
+    },
+    "authorize": {
+        "secret": "",
+        "token_secret": "",
+        "algorithm": "aes-256-cbc",
+        "encoding_typeOne": "utf8",
+        "encoding_typeTwo": "hex"
+    },
+    "analytics": {
+        "tracking_id": "",
+        "view_id": "",
+        "ganalytics_service_email": "",
+        "ganalytics_private_key": ""
+    },
+    "mailTitles": {
+        "activation_link": "Socioboard activation link",
+        "forgot_password_request": "Socioboard reset password",
+        "payment_invoice": "Socioboard payment invoice"
+    },
+    "mailService": {
+        "defaultMailOption": "gmail",
+        "sendgrid": {
+            "username": "",
+            "password": "",
+            "frommail": "",
+            "ccmail": "",
+            "apiKey": ""
+        },
+        "gmailServices": {
+            "email": "",
+            "password": ""
+        }
+    }
+}

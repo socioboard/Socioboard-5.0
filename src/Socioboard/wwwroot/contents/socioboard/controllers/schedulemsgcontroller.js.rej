@@ -1,9 +1,0 @@
-diff a/src/Socioboard/wwwroot/contents/socioboard/controllers/schedulemsgcontroller.js b/src/Socioboard/wwwroot/contents/socioboard/controllers/schedulemsgcontroller.js	(rejected hunks)
-@@ -24,6 +24,7 @@
-             var profiles = $('#scheduleprofiles').val();
-             var message = $('#ScheduleMsg').val();
-             var scheduletime = $('#ScheduleTime').val();
-+            debugger;
-             if (profiles.length > 0)
-             {
-                 if (scheduletime != "") {

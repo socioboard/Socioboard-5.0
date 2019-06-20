@@ -1,0 +1,95 @@
+{
+    "user_socioboard": {
+        "host_url": "http://localhost:3000",
+        "port": "3000",
+        "host": "localhost:3000"
+    },
+    "notification_socioboard":{
+        "host_url": "http://localhost:3003"
+    },
+    "mysql": {
+        "host": "localhost",
+        "username": "root",
+        "database": "socioboardnode",
+        "password": ""
+    },
+    "mongo": {
+        "username": "",
+        "password": "",
+        "host": "localhost",
+        "db_name": "SocioboardNode"
+    },
+    "profile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
+    "facebook_api": {
+        "app_id": "",
+        "secret_key": "",
+        "account_kit_version": "v1.1",
+        "account_kit_app_secret": "",
+        "redirect_url": "https://localhost:3000/v1/auth/facebook/callback",
+        "fbprofile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
+        "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
+        "user_subscription_fields": "feed",
+        "page_subscription_fields": "feed",
+        "version": "4.0.0"
+    },
+    "google_api": {
+        "client_id": "",
+        "client_secrets": "",
+        "redirect_url": "http://localhost:3000/v1/auth/google/callback",
+        "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+        "api_key": "",
+        "dynamic_link": "https://socionode.page.link",
+        "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
+    },
+    "twitter_api": {
+        "api_key": "",
+        "secret_key": "",
+        "redirect_url": "http://localhost:3000/v1/twitter/callback",
+        "app_name": "SocialNodeApi",
+        "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+        "webhook_environment": "development",
+        "version": "4.0.0"
+    },
+    "linkedIn_api": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "http://localhost:3000/v1/linkedin/callback"
+    },
+    "instagram": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+    },
+    "pinterest": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+    },
+    "tumblr": {
+        "api_key": "",
+        "secret_key": "",
+        "redirect_url": "http://localhost:3000/v1/auth/tumblr/callback"
+    },
+    "payment": {
+        "paypal": {
+            "paypal_url": "https://www.sandbox.paypal.com",
+            "payment_email": "",
+            "pdt_token": "",
+            "api_username": "",
+            "api_password": "",
+            "api_signature": "",
+            "success_url": "http://localhost:3000/v1/payment/paypalSuccess",
+            "cancel_url": "http://localhost:3000/v1/payment/paypalCancel",
+            "currency": "USD"
+        },
+        "payumoney": {
+            "key": "",
+            "salt": "",
+            "header": "",
+            "mode": "test",
+            "success_url": "http://localhost:3000/v1/payuMoneySuccess",
+            "cancel_url": "http://localhost:3000/v1/payuMoneyCancel",
+            "currency_layer_api": ""
+        }
+    }
+}

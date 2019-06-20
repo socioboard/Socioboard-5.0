@@ -1,0 +1,38 @@
+{
+    "title": "Socioboard Api",
+    "version": "1.0.0",
+    "description": "To describe a RESTful API for socioboard",
+    "applicationName": "Socioboard",
+    "teamDescription": "Socioboard team has been created automatically by the application.",
+    "perPageLimit": 12,
+    "authorize": {
+        "secret": "",
+        "token_secret": "",
+        "algorithm": "aes-256-cbc",
+        "encoding_typeOne": "utf8",
+        "encoding_typeTwo": "hex"
+    },
+    "analytics": {
+        "tracking_id": "",
+        "view_id": "",
+        "ganalytics_service_email": "",
+        "ganalytics_private_key": ""
+    },
+    "mailService": {
+        "defaultMailOption": "gmail",
+        "sendgrid": {
+            "username": "",
+            "password": "",
+            "frommail": "",
+            "ccmail": "",
+            "apiKey": ""
+        },
+        "gmailServices": {
+            "email": "",
+            "password": ""
+        }
+    },
+    "jest": {
+        "access_token": ""
+    }
+}

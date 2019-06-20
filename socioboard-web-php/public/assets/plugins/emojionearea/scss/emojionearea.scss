@@ -1,0 +1,382 @@
+@import "compass/css3";
+@import "variables";
+
+.emojionearea {
+    &, &.form-control {
+        display: block;
+        position: relative !important;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        font-size: $font-size;
+        border: 0;
+        background-color: $bg-color;
+        border: 1px solid $border-color;
+        @include border-radius($border-radius);
+        @include box-shadow($box-shadow-inset);
+        @include transition(border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s);
+        @include box-sizing(border-box);
+    }
+
+    &.focused {
+        border-color: $border-color-focused;
+        outline: 0;
+        @include box-shadow($box-shadow-inset, $box-shadow-focused);
+    }
+
+    .emojionearea-editor {
+        display: block;
+        @include box-sizing(border-box);
+        height: auto;
+        min-height: 8em;
+        max-height: 15em;
+        overflow: auto;
+        padding: 6px 12px;
+        line-height: 1.42857143;
+        font-size: inherit;
+        color: $text-color;
+        background-color: transparent;
+        border: 0;
+        cursor: text;
+        margin-right: 1px;
+        @include border-radius(0);
+        @include box-shadow(none);
+        @include box-sizing(border-box);
+
+        &:empty:before {
+            content: attr(placeholder);
+            display: block;
+        }
+
+        &:focus {
+            outline: 0;
+            @include box-shadow(none);
+        }
+
+        [class*=emojione-], .emojione {
+            font-size: inherit;
+            height: 2ex;
+            width: 2.1ex;
+            min-height: 20px;
+            min-width: 20px;
+            display: inline-block;
+            margin: -.2ex .15em .2ex;
+            line-height: normal;
+            vertical-align: middle;
+            max-width: 100%;
+            top: 0;
+        }
+    }
+
+    .emojionearea-filters {
+        @include box-sizing(border-box);
+        background: $filters-bg;
+        width: 100%;
+        height: 46px;
+        position: relative;
+        overflow: hidden;
+
+        .emojionearea-filter {
+            @include box-sizing(content-box);
+            top: 0 !important;
+            margin: 0;
+            width: 32px;
+            height: 32px;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            background-color: $filters-bg;
+            border: 9px solid $filters-bg;
+            border-left-width: 14px;
+            border-right-width: 14px;
+            @include opacity(0.7);
+
+            i, img {
+                display: block;
+                width: 28px;
+                height: 28px;
+                top: 0;
+                margin: 0;
+            }
+
+            &:hover {
+                background-color: $filters-bg-hover;
+                border-color: $filters-bg-hover;
+                @include opacity(0.9);
+            }
+
+            &.active {
+                background-color: $filters-bg-active;
+                border-color: $filters-bg-active;
+                @include opacity(1);
+            }
+        }
+
+        .emojionearea-filters-scroll {
+            height: 46px;
+            overflow: hidden;
+            width: 10000%;
+            display: block;
+            left: 0;
+            margin: 0;
+            position: absolute;
+            background: $filters-bg;
+            @include transition(left ease-in-out .25s);
+            @at-root .focused#{&} {
+                z-index: $z-index + 1;
+            }
+        }
+
+        .emojionearea-filter-arrow-left,
+        .emojionearea-filter-arrow-right {
+            display: block;
+            width: 22px;
+            height: 46px;
+            position: absolute;
+            top: 0;
+            @include box-shadow(0px 0px 2px rgba(0,0,0,0.2));
+            background: $filters-bg;
+            z-index: 1;
+
+            @at-root .focused#{&} {
+                z-index: $z-index + 2;
+            }
+
+            &:hover {
+                background: $filters-bg-hover;
+            }
+
+            &:after {
+                content: "";
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 5px 0;
+                border-color: transparent;
+                position: absolute;
+                top: 18px;
+            }
+
+            &.disabled {
+                @include box-shadow(none);
+            }
+        }
+
+        .emojionearea-filter-arrow-left {
+            @include transition(left ease-in-out .15s);
+            left: -30px;
+            border-right: 1px solid #c9c9c9;
+            &:after {
+                left: 6px;
+                border-right: 8px solid #333;
+            }
+            &.disabled:after {
+                border-right-color: #aaa;
+            }
+            @at-root .focused#{&}.active {
+                left: 0;
+            }
+        }
+
+        .emojionearea-filter-arrow-right {
+            @include transition(right ease-in-out .15s);
+            right: -30px;
+            border-left: 1px solid #c9c9c9;
+            &:after {
+                right: 6px;
+                border-left: 8px solid #333;
+            }
+            &.disabled:after {
+                border-left-color: #aaa;
+            }
+            @at-root .focused#{&}.active {
+                right: 0;
+            }
+        }
+    }
+
+    .emojionearea-tabs {
+        position: absolute;
+        left: -1px;
+        right: -1px;
+        border: 1px solid $border-color;
+        border-top: 0!important;
+        padding: 1px 0 2px;
+        margin-top: -1px;
+        background: $tabs-bg;
+        height: $tabs-height + ceil($border-radius / 2);
+        z-index: $z-index;
+        @include border-bottom-left-radius($border-radius);
+        @include border-bottom-right-radius($border-radius);
+        @include box-sizing(border-box);
+
+        @at-root .focused#{&} {
+            border-color: inherit;
+            @include box-shadow(inherit);
+        }
+
+        [class*=emojione-] {
+            @include box-sizing(content-box);
+            margin: 0;
+            width: 24px;
+            height: 24px;
+            top: 0;
+        }
+
+        .emojionearea-tab {
+            @include box-sizing(border-box);
+            position: absolute;
+            padding: 4px 4px 4px 10px;
+            height: $tabs-height;
+            overflow: auto;
+
+            .emojibtn {
+                @include box-sizing(content-box);
+                width: 24px;
+                height: 24px;
+                float: left;
+                display: block;
+                margin: 1px;
+                padding: 3px;
+
+                &:hover {
+                    @include border-radius(4px);
+                    background-color: #e4e4e4;
+                    cursor: pointer;
+                }
+
+                i, img {
+                    float: left;
+                    display: block;
+                    width: 24px;
+                    height: 24px;
+                }
+            }
+        }
+    }
+
+    .emojionearea-filters,
+    .emojionearea-tabs {
+        overflow: hidden;
+        @include opacity(1);
+
+        &.ea-hidden {
+            height: 0;
+            @include opacity(0);
+        }
+    }
+
+    .emojionearea-tab {
+        @include opacity(1);
+        @include transition(all 250ms ease);
+        //@include transition(all 500ms cubic-bezier(0.17, 0.04, 0.03, 0.94));
+
+        &.ea-hidden {
+            //@include transform(scale(2));
+            @include opacity(0);
+            z-index: -1;
+        }
+    }
+
+    .emojionearea-filters,
+    .emojionearea-tabs,
+    .emojionearea-editor {
+        @include transition(all 250ms ease);
+    }
+
+    .emojionearea-editor + .emojionearea-filters,
+    .emojionearea-editor + .emojionearea-tabs,
+    .emojionearea-filters + .emojionearea-editor,
+    .emojionearea-tabs + .emojionearea-editor {
+        border-top: 1px solid #cfcfcf;
+    }
+
+    &.has-button {
+        border:0;
+        background:transparent;
+        box-shadow:none;
+        display:inline-block;
+        width:auto;
+        .emojionearea-filters,
+        .emojionearea-tabs {
+            width:306px;
+            transition:none;
+        }
+        .emojionearea-filters {
+            border:1px solid $border-color;
+            border-top-left-radius:3px;
+            border-top-right-radius:3px;
+            position:absolute;
+            top:44px;
+            left:0;
+            z-index:90;
+        }
+        .emojionearea-tabs {
+            top:90px;
+            left:0;
+            right:0;
+        }
+        .emojionearea-filter-arrow-left.active {
+            left:0;
+        }
+        .emojionearea-filter-arrow-right.active {
+            right:0;
+        }
+    }
+    .emojionearea-button {
+        margin-bottom:10px;
+        background-color:#e5e5e5;
+        cursor:pointer;
+        width:auto;
+        display:inline-block;
+        border:1px solid $border-color;
+        border-radius:4px;
+        user-select:none;
+        -webkit-user-select:none;
+        position:relative;
+        padding:6px 55px 6px 10px;
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAOVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC8dlA9AAAAEnRSTlMABREVGC51gIiKra69zNHW1+vNhZpxAAAAhUlEQVR4Ae3RywpCMQyE4R7rpfXuvP/DCtNNkIBhVgrz778hkPbjOeecOxxb0jZ71b8wEn/BY1/1wEg8uFDzYSH42sIVq9OnZ7N9bXfDaiT+vDVhIfHVBc3HBc3HBc3HBcGzfsfqqflwg+i5IPpkgV5foNcXdM8F1Ydv6p71Se+cc+5PegM/oA+TVIN/2wAAAABJRU5ErkJggg==);
+        background-size:32px auto;
+        background-repeat:no-repeat;
+        background-position:88% center;
+        &:hover {
+            background-color:#f2f2f2;
+        }
+        &::after {
+            content:"";
+            position:absolute;
+            top:4px;
+            left:50%;
+            bottom:4px;
+            border-left:1px solid $border-color;
+            border-right:1px solid #f0f0f0;
+        }
+        &.placeholder {
+            &::before {
+                content:"";
+                position:absolute;
+                z-index:1;
+                top:2px;
+                left:27px;
+                display:block;
+                width:14px;
+                height:14px;
+                background-size:100% auto;
+                background-repeat:no-repeat;
+                background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA2CAMAAAC/bkrSAAAARVBMVEUAAAC/v7+fn5+ZmZmenp6Xl5ebm5uampqYmJibm5uampqYmJiYmJiYmJiYmJiXl5eYmJiYmJiXl5eYmJiZmZmampqbm5sJERIjAAAAEnRSTlMABAgPFSAzNUNFVnl8hvX4+fpxC8StAAAAbklEQVR42u3WuRKAIAxF0bhvuBHl/z9VZmzgpUBpLMxtk1OGgUSbhWpKt+Sh0wUpUvRT1EPDimjElZKsCJCs8YgxF8bYjdy7WJGiT9GBRachph7l3ZOZ4syOaMaNSt89RYoeIw5Lovw/bNtBBWEX3ut8mHtBARQAAAAASUVORK5CYII=);
+            }
+            img {
+                opacity:0.5;
+            }
+            &:hover img {
+                opacity: 0.7;
+            }
+        }
+        img {
+            display:block;
+            width:25px;
+            height:auto;
+            top:0;
+        }
+    }
+}

@@ -1,0 +1,104 @@
+{
+    "user_socioboard": {
+        "host_url": "http://localhost:3000"
+    },
+    "notification_socioboard":{
+        "host_url": "http://localhost:3003"
+    },
+    "publisher_socioboard": {
+        "host_url": "http://localhost:3001",
+        "port": "3001",
+        "integration_test_port": "5001",
+        "host": "localhost:3001",
+        "title": "Socioboard - PublisherServices",
+        "version": "1.0.0",
+        "description": "To describe a RESTful API of publisher services such as scheduler, publish now and upload media.",
+        "applicationName": "Socioboard"
+    },
+    "uploadService": {
+        "image_path": "../../media/images",
+        "video_path": "../../media/videos",
+        "thumbnail_path": "../../media/thumbnails",
+        "library_path": "public/library",
+        "assert" : "public/asserts/play.png",
+        "max_size": 20951670,
+        "basePath":"../../media"
+    },
+    "mysql": {
+        "host": "localhost",
+        "username": "root",
+        "database": "socioboardnode",
+        "password": ""
+    },
+    "mongo": {
+        "username": "",
+        "password": "",
+        "host": "localhost",
+        "db_name": "SocioboardNode"
+    },
+    "profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+    "facebook_api": {
+        "app_id": "",
+        "secret_key": "",
+        "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages",
+        "account_kit_version": "v1.1",
+        "account_kit_app_secret": "",
+        "user_subscription_fields": "feed",
+        "page_subscription_fields": "feed",
+        "version": "4.0.0",
+        "redirect_url": "http://localhost:3000/v1/auth/facebook/callback",
+        "fbprofile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+        "maximum_post_per_day": 25
+    },
+    "google_api": {
+        "client_id": "",
+        "client_secrets": "",
+        "redirect_url": "http://localhost:3000/v1/auth/google/callback",
+        "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+        "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+        "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+        "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+        "ganalytics_activeuser_metrics": "rt:activeUsers",
+        "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
+        "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
+        "youtube_webhook_url": "https://localhost:3002/v1/webhooks/youtube",
+        "version": "4.0.0"
+    },
+    "twitter_api": {
+        "api_key": "",
+        "secret_key": "",
+        "redirect_url": "http://localhost:3000/v1/twitter/callback",
+        "maximum_post_per_day": 730
+    },
+    "linkedIn_api": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "http://localhost:3000/v1/linkedin/callback",
+        "maximum_post_per_day": 100
+    },
+    "instagram": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "http://localhost:3000/v1/auth/instagram/callback",
+        "maximum_post_per_day": 100
+    },
+    "pinterest": {
+        "client_id": "",
+        "client_secret": "",
+        "redirect_url": "http://localhost:3000/v1/auth/pinterest/callback",
+        "maximum_post_per_day": 100
+    },
+    "payment": {
+        "paypal": {
+            "paypal_url": "https://www.sandbox.paypal.com",
+            "payment_email": "",
+            "currency": "USD",
+            "callback_url": "http://localhost:3000/v1/payment/paypalSuccess",
+            "cancell_url": "http://localhost:3000/v1/payment/paypalCancel",
+            "notify_url": "http://localhost:3000/v1/payment/notify"
+        }
+    },
+    "schedule_slots": {
+        "schedule_every_x_hours": 3
+    }
+}

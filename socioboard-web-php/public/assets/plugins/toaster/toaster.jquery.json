@@ -1,0 +1,41 @@
+{
+    "name"         : "toaster",
+    "version"      : "1.0.0",
+    "title"        : "jQuery Toaster",
+    "author"       :
+    {
+        "name"  : "Scott Offen",
+        "email" : "developer@scottoffen.com",
+        "url"   : "http://www.scottoffen.com"
+    },
+    "licenses"     :
+    [
+        {
+            "type" : "Apache-2.0",
+            "url"  : "https://raw.githubusercontent.com/scottoffen/jquery.toaster/master/LICENSE"
+        }
+    ],
+    "dependencies" :
+    {
+        "jquery": ">=1.11.1",
+        "bootstrap" : ">=3.0"
+    },
+    "description"  : "jQuery plugin for displaying customizable toast notifications via Bootstrap alerts",
+    "keywords"     :
+    [
+        "toast",
+        "toaster",
+        "growl"
+    ],
+    "maintainers"  :
+    [
+        {
+            "name"  : "Scott Offen",
+            "email" : "developer@scottoffen.com",
+            "url"   : "http://www.scottoffen.com"
+        }
+    ],
+    "homepage"     : "https://github.com/scottoffen/jquery.toaster",
+    "bugs"         : "https://github.com/scottoffen/jquery.toaster/issues",
+    "docs"         : "https://github.com/scottoffen/jquery.toaster/wiki"
+}
