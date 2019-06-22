@@ -7,24 +7,18 @@
     "notification_socioboard":{
         "host_url": "http://localhost:3003"
     },
-    "mysql": {
-        "host": "localhost",
-        "username": "root",
-        "database": "socioboardnode",
-        "password": ""
-    },
     "mongo": {
-        "username": "",
-        "password": "",
+        "username": "<<Mongo User name>>",
+        "password": "<<Mongo Password>>",
         "host": "localhost",
-        "db_name": "SocioboardNode"
+        "db_name": "<<db name>>"
     },
     "profile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
     "facebook_api": {
-        "app_id": "",
-        "secret_key": "",
+        "app_id": "<<specify the facebook app id>>",
+        "secret_key": "<<specify the app secret key>>",
         "account_kit_version": "v1.1",
-        "account_kit_app_secret": "",
+        "account_kit_app_secret": "<<specify the account tool kit secret>>",
         "redirect_url": "https://localhost:3000/v1/auth/facebook/callback",
         "fbprofile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
         "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
@@ -33,17 +27,17 @@
         "version": "4.0.0"
     },
     "google_api": {
-        "client_id": "",
-        "client_secrets": "",
+        "client_id": "<<specify the google client id>>",
+        "client_secrets": "<<specify the google client secret>>",
         "redirect_url": "http://localhost:3000/v1/auth/google/callback",
         "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
-        "api_key": "",
+        "api_key": "<<specify the google api key>>",
         "dynamic_link": "https://socionode.page.link",
         "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
     },
     "twitter_api": {
-        "api_key": "",
-        "secret_key": "",
+        "api_key": "<<specify the twitter api key>>",
+        "secret_key": "<<specify the twitter secret key>>",
         "redirect_url": "http://localhost:3000/v1/twitter/callback",
         "app_name": "SocialNodeApi",
         "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
@@ -51,45 +45,45 @@
         "version": "4.0.0"
     },
     "linkedIn_api": {
-        "client_id": "",
-        "client_secret": "",
+        "client_id": "<<specify the linkedin client id>>",
+        "client_secret": "<<specify the twitter client secret>>",
         "redirect_url": "http://localhost:3000/v1/linkedin/callback"
     },
     "instagram": {
-        "client_id": "",
-        "client_secret": "",
+        "client_id": "<<specify the instagram client id>>",
+        "client_secret": "<<specify the instagram client secret>>",
         "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
     },
     "pinterest": {
-        "client_id": "",
-        "client_secret": "",
-        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+        "client_id": "<<specify the pinterest client id>>",
+        "client_secret": "<<specify the pinterest client secret>>",
+        "redirect_url": "https://localhost:3000/v1/team/addSocialProfile" 
     },
     "tumblr": {
-        "api_key": "",
-        "secret_key": "",
+        "api_key": "<<specify the tumblr app key>>",
+        "secret_key": "<<specify the tumblr secret key>>",
         "redirect_url": "http://localhost:3000/v1/auth/tumblr/callback"
     },
     "payment": {
         "paypal": {
             "paypal_url": "https://www.sandbox.paypal.com",
-            "payment_email": "",
-            "pdt_token": "",
-            "api_username": "",
-            "api_password": "",
-            "api_signature": "",
+            "payment_email": "<<specify the paypal email>>",
+            "pdt_token": "<<PDT Token>>",
+            "api_username": "<<Api Username>>",
+            "api_password": "<<Api Password>>",
+            "api_signature": "<<Api Signature>>",
             "success_url": "http://localhost:3000/v1/payment/paypalSuccess",
             "cancel_url": "http://localhost:3000/v1/payment/paypalCancel",
             "currency": "USD"
         },
         "payumoney": {
-            "key": "",
-            "salt": "",
-            "header": "",
+            "key": "<<Pay U Money Key>>",
+            "salt": "<<Pay U Money Salt>>",
+            "header": "<<Pay U Money Header>>",
             "mode": "test",
             "success_url": "http://localhost:3000/v1/payuMoneySuccess",
             "cancel_url": "http://localhost:3000/v1/payuMoneyCancel",
-            "currency_layer_api": ""
+            "currency_layer_api": "<<Currency Converter API>>"
         }
     }
 }

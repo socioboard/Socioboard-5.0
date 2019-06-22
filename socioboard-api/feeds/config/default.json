@@ -12,73 +12,73 @@
         "applicationName": "Socioboard"
     },
     "authorize": {
-        "secret": "",
-        "token_secret": "",
+        "secret": "<<Any random secret key, used in encrypting the access token>>",
+        "token_secret": "<<Any token secret key, used in encrypting the access token>>",
         "algorithm": "aes-256-cbc",
         "encoding_typeOne": "utf8",
         "encoding_typeTwo": "hex"
     },
     "analytics": {
-        "tracking_id": "",
-        "view_id": "",
-        "ganalytics_service_email": "",
-        "ganalytics_private_key": ""
+        "tracking_id": "<<Google Analytics tracking Id>>",
+        "view_id": "<<Google Analytics View Id>>",
+        "ganalytics_service_email": "<<Google Service Email Id, This email should have the permission on above track id.>>",
+        "ganalytics_private_key": "<<Google Service Email's Private Key>>"
     },
     "mailService": {
-        "defaultMailOption": "gmail",
+        "defaultMailOption": "<<Give the default mail services should take place (any one from => gmail,sendgridapi)>>",
         "sendgrid": {
-            "username": "",
-            "password": "",
-            "frommail": "",
-            "ccmail": "",
-            "apiKey": ""
+            "username": "<<sendgrid username>>",
+            "password": "<<sendgrid password>>",
+            "frommail": "<<sendgrid frommail>>",
+            "ccmail": "<<sendgrid ccmail>>",
+            "apiKey": "<<sendgrid apiKey>>"
         },
         "gmailServices": {
-            "email": "",
-            "password": ""
+            "email": "<<gmail email>>",
+            "password": "<<password>>"
         }
     },
     "content_studio": {
         "basePath": "../../media",
         "daily_motion": {
-            "api_key": "",
-            "secret_key": "",
+            "api_key": "<<Daily Motion Api key>>",
+            "secret_key": "<<Daily Motion Secret Key>>",
             "version": "4.0.0",
             "count": 100
         },
         "giphy": {
-            "api_key": "",
+            "api_key": "<<Giphy Api key>>",
             "count": 25,
             "version": "4.0.0",
             "path": "../../media/giphy"
         },
         "newsapi": {
-            "api_key": "",
+            "api_key": "<<News Api Key>>",
             "version": "4.0.0",
             "count": 25
         },
         "pixabay": {
-            "api_key": "",
+            "api_key": "<<Pixabay Api Key>>",
             "version": "4.0.0",
             "count": 25,
             "path": "../../media/pixabay"
         },
         "flickr": {
-            "api_key": "",
-            "api_secret": "",
+            "api_key": "<<Flickr Api Key>>",
+            "api_secret": "<<Flickr Api Secret>>",
             "version": "4.0.0",
             "count": 25,
             "path": "../../media/flickr"
         },
         "imgur": {
-            "client_id": "",
-            "client_secret": "",
+            "client_id": "<<Imgur client id>>",
+            "client_secret": "<<Imgur client secret>>",
             "version": "4.0.0",
             "count": 25,
             "path": "../../media/imgur"
         },
         "youtube": {
-            "api_key": "",
+            "api_key": "<<Youtube API Key>>",
             "count": 15,
             "version": "4.0.0"
         }

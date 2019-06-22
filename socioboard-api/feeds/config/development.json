@@ -9,38 +9,32 @@
     },
     "notification_socioboard":{
         "host_url": "http://localhost:3003"
-    },
-    "mysql": {
-        "host": "localhost",
-        "username": "",
-        "database": "",
-        "password": ""
-    },
+    },    
     "mongo": {
-        "username": "",
-        "password": "",
+        "username": "<<Mongo User name>>",
+        "password": "<<Mongo Password>>",
         "host": "localhost",
-        "db_name": ""
+        "db_name": "<<db name>>"
     },
     "profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
     "facebook_api": {
-        "app_id": "",
-        "secret_key": "",
+        "app_id": "<<specify the facebook app id>>",
+        "secret_key": "<<specify the app secret key>>",
         "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups",
         "account_kit_version": "v1.1",
-        "account_kit_app_secret": "",
+        "account_kit_app_secret": "<<specify the account tool kit secret>>",
         "user_subscription_fields": "feed",
         "page_subscription_fields": "feed",
         "version": "4.0.0",
         "redirect_url": "http://localhost:3000/v1/auth/facebook/callback",
         "fbprofile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
-        "webhook_token": "",
+        "webhook_token": "<<Specify the Web hooks tokens>>",
         "update_time_frequency_value": 20,
         "update_time_frequency_factor": "minutes"
     },
     "google_api": {
-        "client_id": "",
-        "client_secrets": "",
+        "client_id": "<<specify the google client id>>",
+        "client_secrets": "<<specify the google client secret>>",
         "redirect_url": "http://localhost:3000/v1/auth/google/callback",
         "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
         "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
@@ -54,8 +48,8 @@
         "version": "4.0.0"
     },
     "twitter_api": {
-        "api_key": "",
-        "secret_key": "",
+        "api_key": "<<specify the twitter api key>>",
+        "secret_key": "<<specify the twitter secret key>>",
         "access_token": "",
         "access_token_secret": "",
         "redirect_url": "http://localhost:3000/v1/twitter/callback",
@@ -67,25 +61,25 @@
         "update_time_frequency_factor": "minutes"
     },
     "linkedIn_api": {
-        "client_id": "",
-        "client_secret": "",
+        "client_id": "<<specify the linkedin client id>>",
+        "client_secret": "<<specify the twitter client secret>>",
         "redirect_url": "http://localhost:3000/v1/linkedin/callback",
-        "app_name": "",
+        "app_name": "<<specify the app name>>",
         "update_time_frequency_value": 20,
         "update_time_frequency_factor": "minutes"
     },
     "instagram": {
-        "client_id": "",
-        "client_secret": "",
+        "client_id": "<<specify the instagram client id>>",
+        "client_secret": "<<specify the instagram client secret>>",
         "redirect_url": "http://localhost:3000/v1/auth/instagram/callback",
-        "webhook_token": "",
+        "webhook_token": "<<specify the webhook tokens>>",
         "business_subscription_fields": "story_insights",
         "update_time_frequency_value": 20,
         "update_time_frequency_factor": "minutes"    
     },
     "pinterest": {
-        "client_id": "",
-        "client_secret": "",
+        "client_id": "<<specify the pinterest client id>>",
+        "client_secret": "<<specify the pinterest client secret>>",
         "redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
         "scopes": "read_relationships+write_relationships+read_public+write_public",
         "update_time_frequency_value": 20,
