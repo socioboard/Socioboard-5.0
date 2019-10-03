@@ -35,16 +35,18 @@ socioboard-api/library\sequelize-cli\config>start config.json
 ```
 
 ***Step 3: Execute the Seqeulize-cli to initialize the Mysql***
+
+*Please make sure that you have installed sequelize-cli globally, or just isntall it `npm install -g sequelize-cli`*
 ```shell
 
 # Set the node_env as development
 socioboard-api/library/sequelize-cli> set node_env=development
 
 # Lets migrate all neccessary tables
-socioboard-api/library/sequelize-cli> ../node_modules/.bin/sequelize db:migrate
+socioboard-api/library/sequelize-cli> sequelize db:migrate
 
 # Lets seeds the initial configuration for the application
-socioboard-api/library/sequelize-cli> ../node_modules/.bin/sequelize db:seed —seed 20190213051930-initialize_application_info.js
+socioboard-api/library/sequelize-cli> sequelize db:seed —seed 20190213051930-initialize_application_info.js
 ```
 
 ***Step 4: Add the social network API Keys in config for each services***
