@@ -3,10 +3,14 @@ var TwtAPi = require('twitter');
 const moment = require('moment');
 const path = require('path');
 const requestPromise = require('request-promise');
+const logger = require('../utils/logger');
 
 
+// twitter_api is the config data of twitter from the route
 function Twitter(twitter_api) {
+    // Assiging twitter_api (twitter config) to this.twitter_api
     this.twitter_api = twitter_api;
+    // Making a twitter object with config to hit twitter api
     this.twitterObj = new twitterApi({
         consumerKey: twitter_api.api_key,
         consumerSecret: twitter_api.secret_key,
@@ -15,6 +19,7 @@ function Twitter(twitter_api) {
 }
 
 Twitter.prototype.getTwitterClient = function (accessToken, accessTokenSecret) {
+    // Making an interface with data to hit the twitter api
     var twitterClient = new TwtAPi({
         consumer_key: this.twitter_api.api_key,
         consumer_secret: this.twitter_api.secret_key,
@@ -27,6 +32,7 @@ Twitter.prototype.getTwitterClient = function (accessToken, accessTokenSecret) {
 Twitter.prototype.addTwitterProfile = function (network, teamId, requestToken, requestSecret, verifier) {
     var twitterAccessToken = null;
     return new Promise((resolve, reject) => {
+        // Checking whether the input verifier is having value or not
         if (!verifier) {
             reject("Can't get verification code from twitter!");
         } else {
@@ -36,6 +42,7 @@ Twitter.prototype.addTwitterProfile = function (network, teamId, requestToken, r
                     return this.verifyCredentials(response.accessToken, response.accessSecret);
                 })
                 .then((userDetails) => {
+                    // Formating the response
                     var user = {
                         UserName: userDetails.screen_name,
                         FirstName: userDetails.name,
@@ -52,6 +59,7 @@ Twitter.prototype.addTwitterProfile = function (network, teamId, requestToken, r
                         TeamId: teamId,
                         Network: network,
                     };
+                    // Sending response
                     resolve(user);
                 })
                 .catch((error) => {
@@ -64,6 +72,7 @@ Twitter.prototype.addTwitterProfile = function (network, teamId, requestToken, r
 Twitter.prototype.requestToken = function () {
     return new Promise((resolve, reject) => {
         this.twitterObj.getRequestToken(function (error, requestToken, requestSecret) {
+            // Checking whether it sent error in callback or not
             if (error)
                 reject(error);
             else {
@@ -71,6 +80,7 @@ Twitter.prototype.requestToken = function () {
                     requestToken: requestToken,
                     requestSecret: requestSecret
                 };
+                // Sending response
                 resolve(response);
             }
         });
@@ -81,6 +91,7 @@ Twitter.prototype.requestToken = function () {
 Twitter.prototype.accessToken = function (token, secret, verifier) {
     return new Promise((resolve, reject) => {
         this.twitterObj.getAccessToken(token, secret, verifier, function (error, accessToken, accessSecret) {
+            // Checking whether it sent error in callback or not
             if (error)
                 reject(error);
             else {
@@ -88,6 +99,7 @@ Twitter.prototype.accessToken = function (token, secret, verifier) {
                     accessToken: accessToken,
                     accessSecret: accessSecret
                 };
+                // Sending response
                 resolve(response);
             }
         });
@@ -97,9 +109,11 @@ Twitter.prototype.accessToken = function (token, secret, verifier) {
 Twitter.prototype.verifyCredentials = function (accessToken, accessSecret) {
     return new Promise((resolve, reject) => {
         this.twitterObj.verifyCredentials(accessToken, accessSecret, function (error, user) {
+            // Checking whether it sent error in callback or not
             if (error)
                 reject(error);
             else
+                // Sending response
                 resolve(user);
         });
     });
@@ -107,6 +121,7 @@ Twitter.prototype.verifyCredentials = function (accessToken, accessSecret) {
 
 Twitter.prototype.parseTweetDetails = function (timelineTweets, socialId, appName, version) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!timelineTweets || !socialId || !appName || !version) {
             reject(new Error('Invalid Inputs'));
         } else {
@@ -117,6 +132,7 @@ Twitter.prototype.parseTweetDetails = function (timelineTweets, socialId, appNam
                     tweets: [],
                     batchId: batchId
                 };
+                // Formating the response
                 timelineTweets.forEach(tweet => {
                     var source = tweet.source.includes(appName) ? true : false;
                     var mediaUrls = [];
@@ -181,6 +197,7 @@ Twitter.prototype.parseTweetDetails = function (timelineTweets, socialId, appNam
                             });
                         }
                     }
+                    // Formating the result into an object
                     var tweetDetails = {
                         tweetId: tweet.id_str,
                         publishedDate: tweet.created_at,
@@ -203,6 +220,7 @@ Twitter.prototype.parseTweetDetails = function (timelineTweets, socialId, appNam
                     postDetails.tweets.push(tweetDetails);
                 });
                 postDetails.count = postDetails.tweets.length;
+                // Sending response
                 resolve(postDetails);
             } catch (error) {
                 reject(error);
@@ -211,14 +229,17 @@ Twitter.prototype.parseTweetDetails = function (timelineTweets, socialId, appNam
     });
 };
 
-
+// For getting user tweets
 Twitter.prototype.getUserTweets = function (socialId, accessToken, refreshToken, userName) {
     return new Promise((resolve, reject) => {
+        // Fetching timeline tweets from twitter
         return this.getTimeLineTweets(accessToken, refreshToken, userName)
             .then((timelineTweets) => {
+                // Formating the response of timeline tweets
                 return this.parseTweetDetails(timelineTweets, socialId, this.twitter_api.app_name, this.twitter_api.version);
             })
             .then((tweets) => {
+                // Sending response
                 resolve(tweets);
             })
             .catch(error => {
@@ -227,8 +248,10 @@ Twitter.prototype.getUserTweets = function (socialId, accessToken, refreshToken,
     });
 };
 
+// For getting twitter timeline tweets
 Twitter.prototype.getTimeLineTweets = function (accessToken, accessTokenSecret, screenName, lastTweetId) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret || !screenName) {
             reject(new Error('Invalid Inputs'));
         } else {
@@ -239,6 +262,7 @@ Twitter.prototype.getTimeLineTweets = function (accessToken, accessTokenSecret, 
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             return twitterClient.get('statuses/user_timeline', parameters)
                 .then(function (repsonse) {
+                    // Sending response
                     resolve(repsonse);
                 })
                 .catch(function (error) {
@@ -248,14 +272,17 @@ Twitter.prototype.getTimeLineTweets = function (accessToken, accessTokenSecret, 
     });
 };
 
+// For getting twitter home timeline tweets
 Twitter.prototype.getHomeTimeLineTweets = function (accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             twitterClient.get('statuses/home_timeline', {})
                 .then(function (repsonse) {
+                    // Sending response
                     resolve(repsonse);
                 })
                 .catch(function (error) {
@@ -265,14 +292,17 @@ Twitter.prototype.getHomeTimeLineTweets = function (accessToken, accessTokenSecr
     });
 };
 
+// For getting twitter mentioned tweets (user tagged tweets)
 Twitter.prototype.getMentionTimeLineTweets = function (accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             twitterClient.get('statuses/mentions_timeline', {})
                 .then(function (repsonse) {
+                    // Sending response
                     resolve(repsonse);
                 })
                 .catch(function (error) {
@@ -282,6 +312,7 @@ Twitter.prototype.getMentionTimeLineTweets = function (accessToken, accessTokenS
     });
 };
 
+// For formating the user details response into a proper syntax
 function userProfileParser(userDetails) {
     return new Promise((resolve, reject) => {
         try {
@@ -290,6 +321,7 @@ function userProfileParser(userDetails) {
                 previousCursor: userDetails.previous_cursor
             };
             var profileDetails = [];
+            // Formating the userDetails
             userDetails.users.forEach(user => {
                 var profile = {
                     id: user.id_str,
@@ -304,6 +336,7 @@ function userProfileParser(userDetails) {
                 profileDetails.push(profile);
             });
             profiles.users = profileDetails;
+            // Sending response
             resolve(profiles);
         } catch (error) {
             reject(error);
@@ -311,6 +344,7 @@ function userProfileParser(userDetails) {
     });
 }
 
+// For formating the user profile details without cursor values
 function userProfileParserWithoutCursor(userDetails) {
     return new Promise((resolve, reject) => {
         try {
@@ -328,6 +362,7 @@ function userProfileParserWithoutCursor(userDetails) {
                 };
                 profileDetails.push(profile);
             });
+            // Sending response
             resolve(profileDetails);
         } catch (error) {
             reject(error);
@@ -335,8 +370,10 @@ function userProfileParserWithoutCursor(userDetails) {
     });
 }
 
+// To get the twitter follower count
 Twitter.prototype.getFollowersList = function (accessToken, accessTokenSecret, cursorValue) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -350,6 +387,7 @@ Twitter.prototype.getFollowersList = function (accessToken, accessTokenSecret, c
                     return userProfileParser(response);
                 })
                 .then((result) => {
+                    // Sending response
                     resolve(result);
                 })
                 .catch(function (error) {
@@ -359,8 +397,10 @@ Twitter.prototype.getFollowersList = function (accessToken, accessTokenSecret, c
     });
 };
 
+// For Fetching the twitter following list
 Twitter.prototype.getFollowingsList = function (accessToken, accessTokenSecret, cursorValue) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -376,6 +416,7 @@ Twitter.prototype.getFollowingsList = function (accessToken, accessTokenSecret, 
                     return userProfileParser(repsonse);
                 })
                 .then((result) => {
+                    // Sending response
                     resolve(result);
                 })
                 .catch(function (error) {
@@ -385,8 +426,10 @@ Twitter.prototype.getFollowingsList = function (accessToken, accessTokenSecret, 
     });
 };
 
+// For, fetching the stats of an twitter account
 Twitter.prototype.getLookupList = function (accessToken, accessTokenSecret, screenName) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -400,12 +443,13 @@ Twitter.prototype.getLookupList = function (accessToken, accessTokenSecret, scre
                         following_count: response[0].friends_count,
                         total_like_count: response[0].favourites_count,
                         total_post_count: response[0].statuses_count,
-                        profile_picture: response[0].profile_image_url_https,                      
+                        profile_picture: response[0].profile_image_url_https,
                         bio_text: response[0].description,
                         user_mentions: response[0].status.entities.user_mentions.length,
                         retweet_count: response[0].status.retweet_count,
                         favorite_count: response[0].favourites_count
                     };
+                    // Sending response
                     resolve(updateDetails);
                 })
                 .catch(function (error) {
@@ -415,15 +459,18 @@ Twitter.prototype.getLookupList = function (accessToken, accessTokenSecret, scre
     });
 };
 
+// For fetching tweets by keyword
 Twitter.prototype.getTweetsByKeyword = function (accessToken, accessTokenSecret, keyword) {
 
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !accessTokenSecret || !keyword) {
             reject(new Error("Invalid Inputs"));
         } else {
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             twitterClient.get('search/tweets', { q: keyword })
                 .then(function (repsonse) {
+                    // Sending response
                     resolve(repsonse);
                 })
                 .catch(function (error) {
@@ -433,8 +480,10 @@ Twitter.prototype.getTweetsByKeyword = function (accessToken, accessTokenSecret,
     });
 };
 
+// For fetching the tweets with keyword by an twitter account
 Twitter.prototype.searchUser = function (keyword, pageId, accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!keyword || !pageId || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -460,8 +509,10 @@ Twitter.prototype.searchUser = function (keyword, pageId, accessToken, accessTok
                 })
                 .then((result) => {
                     if (result)
+                        // Sending response
                         resolve(result);
                     else
+                        // Sending response
                         resolve([]);
                 })
                 .catch(function (error) {
@@ -474,6 +525,7 @@ Twitter.prototype.searchUser = function (keyword, pageId, accessToken, accessTok
 Twitter.prototype.directMessage = function (messageDetails, accessToken, accessTokenSecret) {
 
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!messageDetails || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -497,6 +549,7 @@ Twitter.prototype.directMessage = function (messageDetails, accessToken, accessT
                 request_options.body = JSON.stringify(message);
                 return requestPromise.post(request_options)
                     .then(function (response) {
+                        // Sending response
                         resolve({ code: 200, status: "success", response: "Message has been sent." });
                     }).catch(function (error) {
                         reject(error);
@@ -524,6 +577,7 @@ Twitter.prototype.directMessage = function (messageDetails, accessToken, accessT
                         request_options.body = JSON.stringify(message);
                         return requestPromise.post(request_options)
                             .then(function (response) {
+                                // Sending response
                                 resolve({ code: 200, status: "success", response: "Message has been sent." });
                             }).catch(function (error) {
                                 reject(error);
@@ -555,6 +609,7 @@ Twitter.prototype.directMessage = function (messageDetails, accessToken, accessT
                         request_options.body = JSON.stringify(message);
                         return requestPromise.post(request_options)
                             .then(function (response) {
+                                // Sending response
                                 resolve({ code: 200, status: "success", response: "Message has been sent." });
                             }).catch(function (error) {
                                 reject(error);
@@ -566,14 +621,12 @@ Twitter.prototype.directMessage = function (messageDetails, accessToken, accessT
             }
         }
     });
-
-
-
 };
 
 Twitter.prototype.publishTweets = function (postDetails, accessToken, accessTokenSecret) {
     var basePath = path.resolve(__dirname, '../../..');
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!postDetails || !accessToken || !accessTokenSecret) {
             reject({ code: 400, status: "failed", message: "Invalid Inputs" });
         } else {
@@ -581,9 +634,11 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
 
             if (postDetails.postType == 'Text') {
                 twitterClient.post('statuses/update', { status: postDetails.message }, function (error, tweet, response) {
+                    // Checking whether it sent error in callback or not
                     if (error) {
                         reject({ code: 400, status: "failed", message: error });
                     } else {
+                        // Sending response
                         resolve({ code: 200, status: "success", message: tweet });
                     }
                 });
@@ -601,9 +656,11 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
                             media_ids: mediaId
                         };
                         twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                            // Checking whether it sent error in callback or not
                             if (error) {
                                 reject({ code: 400, status: "failed", message: error });
                             } else {
+                                // Sending response
                                 resolve({ code: 200, status: "success", message: tweet });
                             }
                         });
@@ -635,9 +692,11 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
                             media_ids: mediaIds
                         };
                         return twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                            // Checking whether it sent error in callback or not
                             if (error) {
                                 reject({ code: 400, status: "failed", message: error });
                             } else {
+                                // Sending response
                                 resolve({ code: 200, status: "success", message: tweet, failedMediaPath: erroredImages });
                             }
                         });
@@ -648,12 +707,14 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
             }
             else if (postDetails.postType == 'Link') {
                 var status = {
-                    status: postDetails.link,
+                    status: `${postDetails.message} - \r\n ${postDetails.link}`,
                 };
                 twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                    // Checking whether it sent error in callback or not
                     if (error) {
                         reject({ code: 400, status: "failed", message: error });
                     } else {
+                        // Sending response
                         resolve({ code: 200, status: "success", message: tweet });
                     }
                 });
@@ -674,9 +735,11 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
                             media_ids: mediaId
                         };
                         twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                            // Checking whether it sent error in callback or not
                             if (error) {
                                 reject({ code: 400, status: "failed", message: error });
                             } else {
+                                // Sending response
                                 resolve({ code: 200, status: "success", message: tweet });
                             }
                         });
@@ -695,6 +758,7 @@ Twitter.prototype.publishPost = function (postDetails, accessToken, accessTokenS
     var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
     if (postDetails.postType == 'Text') {
         twitterClient.post('statuses/update', { status: postDetails.message }, function (error, tweet, response) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -718,6 +782,7 @@ Twitter.prototype.publishPost = function (postDetails, accessToken, accessTokenS
                     media_ids: mediaId
                 };
                 twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                    // Checking whether it sent error in callback or not
                     if (error) {
                         callback({ code: 400, status: "failed", message: error });
                     } else {
@@ -752,6 +817,7 @@ Twitter.prototype.publishPost = function (postDetails, accessToken, accessTokenS
                     media_ids: mediaIds
                 };
                 return twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                    // Checking whether it sent error in callback or not
                     if (error) {
                         callback({ code: 400, status: "failed", message: error });
                     } else {
@@ -768,6 +834,7 @@ Twitter.prototype.publishPost = function (postDetails, accessToken, accessTokenS
             status: postDetails.link,
         };
         twitterClient.post('statuses/update', status, function (error, tweet, response) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -791,6 +858,7 @@ Twitter.prototype.publishPost = function (postDetails, accessToken, accessTokenS
                     media_ids: mediaId
                 };
                 twitterClient.post('statuses/update', status, function (error, tweet, response) {
+                    // Checking whether it sent error in callback or not
                     if (error) {
                         callback({ code: 400, status: "failed", message: error });
                     } else {
@@ -815,6 +883,7 @@ function uploadMediaPromise(twitterClient, mediaPath, mediaType) {
             .then(appendUpload) // Send the data for the media
             .then(finalizeUpload) // Declare that you are done uploading chunks
             .then(mediaId => {
+                // Sending response
                 resolve(mediaId);
             })
             .catch(error => {
@@ -823,21 +892,21 @@ function uploadMediaPromise(twitterClient, mediaPath, mediaType) {
     });
 
     function initUpload() {
-        console.log(`\n Init Upload... \n `);
+        logger.info(`\n Init Upload... \n `);
         return makePost('media/upload', {
             command: 'INIT',
             total_bytes: mediaSize,
             media_type: mediaType,
         }).then(data => data.media_id_string)
             .catch(() => {
-                console.lod("init error");
+                logger.info("init error");
             });
 
     }
 
     function appendUpload(mediaId) {
-        console.log(`\n Append Upload... \n `);
-        console.log(`\n Media Id ${mediaId} \n `);
+        logger.info(`\n Append Upload... \n `);
+        logger.info(`\n Media Id ${mediaId} \n `);
         return makePost('media/upload', {
             command: 'APPEND',
             media_id: mediaId,
@@ -845,19 +914,19 @@ function uploadMediaPromise(twitterClient, mediaPath, mediaType) {
             segment_index: 0
         }).then(data => mediaId)
             .catch(() => {
-                console.lod("append error");
+                logger.info("append error");
             });
     }
 
     function finalizeUpload(mediaId) {
-        console.log(`\n Finalize Upload... \n `);
-        console.log(`\n Media Id ${mediaId} \n `);
+        logger.info(`\n Finalize Upload... \n `);
+        logger.info(`\n Media Id ${mediaId} \n `);
         return makePost('media/upload', {
             command: 'FINALIZE',
             media_id: mediaId
         }).then(data => mediaId)
             .catch(() => {
-                console.log('finalize error');
+                logger.info('finalize error');
             });
     }
 
@@ -865,13 +934,14 @@ function uploadMediaPromise(twitterClient, mediaPath, mediaType) {
         return new Promise((resolve, reject) => {
             twitterClient.post(endpoint, params, (error, data, response) => {
                 if (error) {
-                    console.log(` Error on Make Post : ${error}`);
-                    console.log(` Response on Make Post : ${JSON.stringify(response)}`);
+                    logger.info(` Error on Make Post : ${error}`);
+                    logger.info(` Response on Make Post : ${JSON.stringify(response)}`);
                     reject(error);
                 } else {
-                    console.log(`\n`, "done uploading!", `\n`);
+                    logger.info(`\n`, "done uploading!", `\n`);
+                    // Sending response
                     resolve(data);
-                    console.log(data);
+                    logger.info(data);
                 }
             });
         });
@@ -903,7 +973,7 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
      */
     function initUpload() {
 
-        console.log(`\n Init Upload... \n `);
+        logger.info(`\n Init Upload... \n `);
         return makePost('media/upload', {
             command: 'INIT',
             total_bytes: mediaSize,
@@ -918,8 +988,8 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
      * @return Promise resolving to String mediaId (for chaining)
      */
     function appendUpload(mediaId) {
-        console.log(`\n Append Upload... \n `);
-        console.log(`\n Media Id ${mediaId} \n `);
+        logger.info(`\n Append Upload... \n `);
+        logger.info(`\n Media Id ${mediaId} \n `);
         return makePost('media/upload', {
             command: 'APPEND',
             media_id: mediaId,
@@ -935,8 +1005,8 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
      * @return Promise resolving to mediaId (for chaining)
      */
     function finalizeUpload(mediaId) {
-        console.log(`\n Finalize Upload... \n `);
-        console.log(`\n Media Id ${mediaId} \n `);
+        logger.info(`\n Finalize Upload... \n `);
+        logger.info(`\n Media Id ${mediaId} \n `);
         return makePost('media/upload', {
             command: 'FINALIZE',
             media_id: mediaId
@@ -954,10 +1024,11 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
         return new Promise((resolve, reject) => {
             twitterClient.post(endpoint, params, (error, data, response) => {
                 if (error) {
-                    console.log(` Error on Make Post : ${error}`);
-                    console.log(` Response on Make Post : ${JSON.stringify(response)}`);
+                    logger.info(` Error on Make Post : ${error}`);
+                    logger.info(` Response on Make Post : ${JSON.stringify(response)}`);
                     reject(error);
                 } else {
+                    // Sending response
                     resolve(data);
                 }
             });
@@ -965,11 +1036,13 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
     }
 }
 
+// For retweeting a tweet to a particular tweet
 Twitter.prototype.retweetPost = function (tweetId, accessToken, accessTokenSecret, callback) {
 
     var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
 
     twitterClient.post('statuses/retweet/' + tweetId, {}, function (error, tweet, response) {
+        // Checking whether it sent error in callback or not
         if (error) {
             callback({ code: 400, status: "failed", message: error });
         } else {
@@ -983,6 +1056,7 @@ Twitter.prototype.getGeoLocationDetails = function (keyword, location, accessTok
     var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
 
     twitterClient.get('search/tweets', { q: keyword, geocode: location }, function (error, location, response) {
+        // Checking whether it sent error in callback or not
         if (error) {
             callback({ code: 400, status: "failed", message: error });
         } else {
@@ -991,16 +1065,20 @@ Twitter.prototype.getGeoLocationDetails = function (keyword, location, accessTok
     });
 };
 
+// For making like to a specified post
 Twitter.prototype.likeTwitterPost = function (tweetId, accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!tweetId || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             twitterClient.post('favorites/create', { id: tweetId }, function (error, tweet, response) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error[0]);
                 } else {
+                    // Sending response
                     resolve(response);
                 }
             });
@@ -1008,16 +1086,20 @@ Twitter.prototype.likeTwitterPost = function (tweetId, accessToken, accessTokenS
     });
 };
 
+// For unLike specified twitter post
 Twitter.prototype.unlikeTwitterPost = function (tweetId, accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!tweetId || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
             var twitterClient = this.getTwitterClient(accessToken, accessTokenSecret);
             twitterClient.post('favorites/destroy', { id: tweetId }, function (error, tweet, response) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Sending response
                     resolve(response);
                 }
             });
@@ -1025,8 +1107,10 @@ Twitter.prototype.unlikeTwitterPost = function (tweetId, accessToken, accessToke
     });
 };
 
+// For commenting on a specified twitter post
 Twitter.prototype.commentTwitterPost = function (tweetId, comment, accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!tweetId || !comment || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -1035,9 +1119,11 @@ Twitter.prototype.commentTwitterPost = function (tweetId, comment, accessToken, 
                 status: comment,
                 in_reply_to_status_id: tweetId
             }, function (error, tweet, response) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Sending response
                     resolve(response);
                 }
             });
@@ -1045,8 +1131,10 @@ Twitter.prototype.commentTwitterPost = function (tweetId, comment, accessToken, 
     });
 };
 
+// For deleting a specified twitter post
 Twitter.prototype.deleteTwitterPostOrComment = function (tweetId, accessToken, accessTokenSecret) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!tweetId || !accessToken || !accessTokenSecret) {
             reject(new Error("Invalid Inputs"));
         } else {
@@ -1054,9 +1142,11 @@ Twitter.prototype.deleteTwitterPostOrComment = function (tweetId, accessToken, a
             twitterClient.post('statuses/destroy/', {
                 id: tweetId
             }, function (error, tweet, response) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Sending response
                     resolve(response);
                 }
             });
@@ -1064,6 +1154,7 @@ Twitter.prototype.deleteTwitterPostOrComment = function (tweetId, accessToken, a
     });
 };
 
+// For creating or deleting the twitter subscriptions 
 Twitter.prototype.updateSubscriptions = function (accessToken, accessTokenSecret, isSubscribe) {
     return new Promise((resolve, reject) => {
         var twitterOauth = {
@@ -1078,24 +1169,30 @@ Twitter.prototype.updateSubscriptions = function (accessToken, accessTokenSecret
             resolveWithFullResponse: true
         };
         if (isSubscribe) {
+            // If account is adding then, we are requesting for twitter subscription
             requestPromise.post(request_options)
                 .then(function (response) {
                     if (response.statusCode == 204) {
+                        // Sending response
                         resolve('Subscription added.');
                     }
                     else {
+                        // Sending response
                         resolve('Not Subscription.');
                     }
                 }).catch(function (response) {
                     reject(response.error);
                 });
         } else {
+            // If account is deleting then, we are deleting the subscription
             requestPromise.delete(request_options)
                 .then(function (response) {
                     if (response.statusCode == 204) {
+                        // Sending response
                         resolve('Subscription deleted.');
                     }
                     else {
+                        // Sending response
                         resolve('Not able to delete Subscription.');
                     }
                 })

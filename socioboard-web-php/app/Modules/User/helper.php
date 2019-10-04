@@ -31,6 +31,7 @@ class Helper
 
         $this->API_URL_PUBLISH = env('API_URL_PUBLISH') . env('VERSION_PUBLISH') . '/';
         $this->API_URL_FEEDS = env('API_URL_FEEDS') . env('VERSION_FEEDS') . '/';
+        $this->API_URL_NOTIFY = env('API_URL_NOTIFY').env('VERSION_NOTIFY') . '/';
 
 
 //        $this->API_URL_PUBLISH=env('API_URL_PUBLISH') . env('VERSION_PUBLISH') . '/';
@@ -112,7 +113,6 @@ class Helper
     public function apiCallPostUpdate($data, $route, $is_multipart = false, $query = false)
     {
         $api_url = $this->API_URL . $route;
-
         $result = [];
         $response = null;
         try {
@@ -239,9 +239,6 @@ class Helper
             return $result;
         }
     }
-
-
-
     public function apiCallPostPublish($data, $route, $is_multipart = false)
     {
         $api_url = $this->API_URL_PUBLISH . $route;
@@ -263,9 +260,8 @@ class Helper
                     'headers' => ['x-access-token' => $this->token],
                 ]);
             } else {
-//return $data;
-                $response = $this->client->post($api_url, [RequestOptions::JSON => $data,
 
+                $response = $this->client->post($api_url, [RequestOptions::JSON => $data,
                     'headers' => ['x-access-token' => $this->token],
                 ]);
             }
@@ -291,7 +287,6 @@ class Helper
         }
 
     }
-
     public function apiCallPostFeeds($data, $route, $is_multipart = false, $method = 'POST')
     {
         $api_url = $this->API_URL_FEEDS . $route;
@@ -346,7 +341,6 @@ class Helper
         }
 
     }
-
     public function apiCallFeedsPut($data, $route, $is_multipart = false, $query = false)
     {
         $api_url = $this->API_URL_FEEDS . $route;
@@ -386,7 +380,26 @@ class Helper
     public function apiCallGetFeeds($route)
     {
         $api_url = $this->API_URL_FEEDS . $route;
+//        dd($api_url);
+        $result = [];
+        $response = null;
+        try {
+            $response = $this->client->get($api_url, [
 
+                'headers' => ['x-access-token' => $this->token],
+            ]);
+            $responseBody = json_decode($response->getBody()->getContents());
+            return $responseBody;
+
+
+        } catch (\Exception $e) {
+            Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function apiCallGetNotification($route){
+        $api_url = $this->API_URL_NOTIFY . $route;
         $result = [];
         $response = null;
         try {
@@ -480,10 +493,31 @@ class Helper
 
     public function apiDelete($route)
     {
-        $api_url = $api_url = $this->API_URL . $route;
+        $api_url = $this->API_URL . $route;
         $response = null;
         try {
             $response = $this->client->delete($api_url, [
+
+                'headers' => ['x-access-token' => $this->token],
+            ]);
+            $responseBody = json_decode($response->getBody()->getContents());
+//            dd($responseBody);
+            return $responseBody;
+
+
+        } catch (\Exception $e) {
+            Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
+
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function apiPostLeave($route)
+    {
+        $api_url = $this->API_URL . $route;
+        $response = null;
+        try {
+            $response = $this->client->post($api_url, [
 
                 'headers' => ['x-access-token' => $this->token],
             ]);
@@ -511,6 +545,65 @@ class Helper
             $responseBody = json_decode($response->getBody()->getContents());
             return $responseBody;
 
+
+        } catch (\Exception $e) {
+            Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
+
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function apiDeleteFeeds($route)
+    {
+        $api_url = $this->API_URL_FEEDS . $route;
+        $response = null;
+        try {
+            $response = $this->client->delete($api_url, [
+
+                'headers' => ['x-access-token' => $this->token],
+            ]);
+            $responseBody = json_decode($response->getBody()->getContents());
+            return $responseBody;
+
+
+        } catch (\Exception $e) {
+            Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
+
+            throw new \Exception($e->getMessage());
+        }
+    }
+//
+//    public function apiUpdateFeeds($route){
+//        $api_url = $this->API_URL_FEEDS . $route;
+//        $response = null;
+//        try {
+//            $response = $this->client->update($api_url, [
+//                'headers' => ['x-access-token' => $this->token],
+//            ]);
+//            $responseBody = json_decode($response->getBody()->getContents());
+//            return $responseBody;
+//
+//
+//        } catch (\Exception $e) {
+//            Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
+//
+//            throw new \Exception($e->getMessage());
+//        }
+//
+//    }
+    public function apiGetInvoice($route)
+    {
+        $api_url = $this->API_URL . $route;
+        $result = [];
+        $response = null;
+        try {
+            $response = $this->client->get($api_url, [
+                'headers' => ['x-access-token' => $this->token],
+            ]);
+//            dd($response);
+            $responseBody = json_decode($response->getBody()->getContents());
+//            dd($responseBody);
+            return $responseBody;
 
         } catch (\Exception $e) {
             Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());

@@ -16,16 +16,16 @@ const feedController = require('./controllers/feedControllers');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -54,16 +54,16 @@ routes.get("/getFacebookFeeds", feedController.getFacebookFeeds);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -93,15 +93,15 @@ routes.get("/getRecentFbFeeds", feedController.getRecentFbFeeds);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string 
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer 
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -130,15 +130,15 @@ routes.get("/getTweets", feedController.getTweets);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -168,11 +168,11 @@ routes.get("/getRecentTweets", feedController.getRecentTweets);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string 
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer 
  *     responses:
@@ -200,11 +200,11 @@ routes.get("/getHomeTimeLineTweets", feedController.getHomeTimeLineTweets);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -228,20 +228,20 @@ routes.get("/getMentionTimeLineTweets", feedController.getMentionTimeLineTweets)
  *     - AccessToken: []
  *     tags:
  *       - Feeds
- *     description: To fetch the tweets with respect with keyword
+ *     description: To fetch the tweets with respect to keyword
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Keyword
+ *         description: Provide keyword
  *         name: keyword
  *         type: string  
  *     responses:
@@ -270,12 +270,12 @@ routes.get("/getTweetsByKeyword", feedController.getTweetsByKeyword);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: linkedIn Company accountId
+ *         description: Provide linkedIn Company accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -305,15 +305,15 @@ routes.get("/getlinkedInCompanyFeeds", feedController.getCompanyUpdates);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Board Id
+ *         description: Provide board id
  *         name: boardId
  *         type: string
  *     responses:
@@ -341,15 +341,15 @@ routes.get("/getPinterestPins", feedController.getPinterestPins);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *     responses:
@@ -378,15 +378,15 @@ routes.get("/getYoutubeFeeds", feedController.getYoutubeFeeds);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -415,15 +415,15 @@ routes.get("/getInstagramFeeds", feedController.getInstagramFeeds);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -452,16 +452,16 @@ routes.get("/getRecentInstagramFeeds", feedController.getRecentInstagramFeeds);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Instagram Business accountId
+ *         description: Provide instagram Business accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true

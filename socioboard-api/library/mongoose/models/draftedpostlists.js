@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on draftPosts collection of mongo DB
 const draftPosts = new Schema({
     ownerId: { type: Number, index: true },
     teamId: { type: Number },
@@ -14,6 +16,7 @@ const draftPosts = new Schema({
 });
 
 draftPosts.methods.getDraftedPost = function (ownerId, teamId, skip, limit) {
+    // Fetching drafted posts of a team belongs to an user with sorting of created date
     var query = {
         ownerId: ownerId,
         teamId: teamId
@@ -27,11 +30,12 @@ draftPosts.methods.getDraftedPost = function (ownerId, teamId, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 draftPosts.methods.getPostsById = function (postIds) {
+    // Fetching the pecified post details
     var query = { _id: { $in: postIds } };
     return this.model('DraftPost')
         .find(query)
@@ -40,7 +44,7 @@ draftPosts.methods.getPostsById = function (postIds) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 

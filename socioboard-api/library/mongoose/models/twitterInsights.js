@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on twitterinsights collection of mongo DB
 const twitterInsights = new Schema({
     accountId: { type: String, index: true },
     insights: {
@@ -19,6 +20,7 @@ const twitterInsights = new Schema({
 });
 
 twitterInsights.methods.insertInsights = function (data) {
+    // Inserting multiple insights into the collection (new)
     return this.model('TwitterInsights')
         .insertMany(data)
         .then((result) => {
@@ -29,6 +31,7 @@ twitterInsights.methods.insertInsights = function (data) {
 };
 
 twitterInsights.methods.addInsights = function (accountId, insightData) {
+    // Adding insights to the existing account (for existing)
     var query = {
         accountId: new RegExp(accountId, 'i')
     };
@@ -44,6 +47,7 @@ twitterInsights.methods.addInsights = function (accountId, insightData) {
 };
 
 twitterInsights.methods.getInsights = function (accountId, since, untill) {
+    // Fetching insights for a specified account
     var query = {
         accountId: new RegExp(String(accountId), 'i'),
     };
@@ -54,14 +58,14 @@ twitterInsights.methods.getInsights = function (accountId, since, untill) {
             if (result && result[0] && result[0].insights.length > 0) {
                 var filteredInsights = result[0].insights.filter(element => {
                     return element.date >= since && element.date <= untill;
-                });              
+                });
                 return filteredInsights;
             }
             else
                 return [];
         })
         .catch(function (error) {
-           throw error;
+            throw error;
         });
 };
 

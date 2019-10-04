@@ -3,6 +3,7 @@
     var result=[];
 
     $(document).ready(function(){
+        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
         $(document).on('click','.resocio', function(){
             $('.clearimag').remove();
             $('.post-thumb').remove();
@@ -12,8 +13,7 @@
 
             var image = $(this).closest('.card').find('img').attr('src');
             val = $(this).closest('.card').find('input').val();
-            result = val.split(',')
-            console.log("hdjshd=> ",result)
+            result = val.split(',');
             $.each(result, function(key,value) {
 
                 appenddata += "<li class='clearimag' id='" +key +"'><iframe class='embed-responsive-item' src='" + value + "' title='image' id='" +key +"' ></iframe> " +
@@ -29,7 +29,6 @@
 
             $('#postModal').modal('show');
 
-//                    console.log('image===>',image);
         });
 
         $('body').on('click', '.remove-pic', function () {
@@ -40,7 +39,6 @@
                 names.splice(yet, 1);
             }
             // return array of file name
-            console.log(names);
         });
         $('#hint_brand').on('hide', function (e) {
             names = [];
@@ -77,12 +75,10 @@
                 $('#testText').html('Uploading');
             },
             success: function (response) {
-                console.log(response);
 
                 $('#test').hide();
                 $('#testText').html('Post');
 
-                console.log(response);
 //                document.getElementById("publishForm").reset();
 
                 $("#hint_brand").css("display","none");

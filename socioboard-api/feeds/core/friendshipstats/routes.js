@@ -16,12 +16,12 @@ const feedController = require('./controllers/friendshipstatscontroller');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -49,12 +49,12 @@ routes.get("/getFbProfileStats", feedController.getFbProfileStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -82,12 +82,12 @@ routes.get("/getFbPageStats", feedController.getFbPageStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter accountId
+ *         description: Provide twitter accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -115,12 +115,12 @@ routes.get("/getTwtProfileStats", feedController.getTwtProfileStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Instagram accountId
+ *         description: Provide instagram accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -148,12 +148,12 @@ routes.get("/getInstaProfileStats", feedController.getInstaProfileStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: LinkedIn accountId
+ *         description: Provide linkedIn accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -181,12 +181,12 @@ routes.get("/getLinkedInProfileStats", feedController.getLinkedInProfileStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Youtube accountId
+ *         description: Provide youtube accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -214,12 +214,12 @@ routes.get("/getYoutubeProfileStats", feedController.getYoutubeProfileStats);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Pinterest accountId
+ *         description: Provide pinterest accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:
@@ -247,12 +247,12 @@ routes.get("/getPinterestProfileStats", feedController.getPinterestProfileStats)
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: InstaBusiness accountId
+ *         description: Provide instaBusiness accountId
  *         name: accountId
  *         type: integer
  *         required: true
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *     responses:

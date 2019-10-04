@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on giphyposts collection of mongo DB
 const imgurPost = new Schema({
     imgurId: { type: String, index: true, unique: true },
     title: { type: String },
     description: { type: String },
+    category: { type: String },
     publisherName: { type: String },
     publishedDate: { type: Date, default: Date.now },
     mediaUrl: { type: [String] },
@@ -19,6 +22,7 @@ const imgurPost = new Schema({
 });
 
 imgurPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into imgurposts collection
     return this.model('ImgurPosts')
         .insertMany(posts)
         .then((postdetails) => {
@@ -30,6 +34,7 @@ imgurPost.methods.insertManyPosts = function (posts) {
 };
 
 imgurPost.methods.getBatchPost = function (batchId) {
+    // Fetching a specified posts from the collection
     var query = {
         batchId: new RegExp(batchId, 'i')
     };
@@ -39,15 +44,18 @@ imgurPost.methods.getBatchPost = function (batchId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 imgurPost.methods.getPreviousPost = function (keyword, skip, limit) {
+    // Fetching posts from collection with having keyword containing description
     var query = {
-        $or: [
-            { description: new RegExp(keyword, 'i') },
-            { title: new RegExp(keyword, 'i') }]
+        $and: [{
+            $or: [
+                { description: new RegExp(keyword, 'i') },
+                { title: new RegExp(keyword, 'i') }]
+        }, { category: new RegExp(sort, "i") }]
     };
     return this.model('ImgurPosts')
         .find(query)
@@ -58,7 +66,7 @@ imgurPost.methods.getPreviousPost = function (keyword, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 

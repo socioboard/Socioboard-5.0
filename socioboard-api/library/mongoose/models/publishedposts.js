@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on publishedposts collection of mongo DB
 const publishedPost = new Schema({
     publishedDate: { type: Date, default: Date.now },
     accountId: { type: Number, index: true, },
@@ -20,6 +21,7 @@ const publishedPost = new Schema({
 
 
 publishedPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('PublishedPosts')
         .insertMany(posts)
         .then((postdetails) => {
@@ -31,6 +33,7 @@ publishedPost.methods.insertManyPosts = function (posts) {
 };
 
 publishedPost.methods.getTodayPostsCount = function (accountId) {
+    // Fetching how many posts user has published in today
     var query = {
         publishedDate: {
             $gte: moment().startOf('day'),
@@ -49,6 +52,7 @@ publishedPost.methods.getTodayPostsCount = function (accountId) {
 };
 
 publishedPost.methods.getXdaysPostsCount = function (accountId, dayCount) {
+    // Fetching how many posts user has published in X number of days
     var startDate = moment().add(-1 * dayCount, 'days').startOf('day');
     var query = {
         publishedDate: {
@@ -68,6 +72,7 @@ publishedPost.methods.getXdaysPostsCount = function (accountId, dayCount) {
 };
 
 publishedPost.methods.getAccountPublishCount = function (accountId) {
+    // Fetching total posts counts published in an account
     var query = {
         accountId: Number(accountId)
     };
@@ -83,6 +88,7 @@ publishedPost.methods.getAccountPublishCount = function (accountId) {
 
 publishedPost.methods.getSchedulePublishedReport = function (mongoId, skip, limit) {
 
+    // Fetching publish details of a specified content id
     var query = {
         fullPublishContentId: mongoId,
     };
@@ -100,6 +106,7 @@ publishedPost.methods.getSchedulePublishedReport = function (mongoId, skip, limi
 };
 
 publishedPost.methods.getAccountPublishedReport = function (accountId, teamId, skip, limit) {
+    // Fetching the details of post published by an account
     var query = {
         accountId: accountId
     };
@@ -120,6 +127,7 @@ publishedPost.methods.getAccountPublishedReport = function (accountId, teamId, s
 };
 
 publishedPost.methods.removeTeamsPublishedReport = function (teamId) {
+    // Removing published details of a particular team
     var query = {
         TeamId: teamId
     };
@@ -134,6 +142,7 @@ publishedPost.methods.removeTeamsPublishedReport = function (teamId) {
 };
 
 publishedPost.methods.removeAccountsPublishedReport = function (accountId) {
+    // Removing published details of a particular account
     var query = {
         accountId: accountId
     };

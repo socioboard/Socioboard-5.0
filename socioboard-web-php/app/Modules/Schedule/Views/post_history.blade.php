@@ -73,6 +73,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link tab" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
                                 </li>
+                                {{--<li class="nav-item">--}}
+                                    {{--<a class="nav-link tab" id="post-history-tab" data-toggle="tab" href="#postHistory" role="tab" aria-controls="postHistory" aria-selected="false">Post now draft</a>--}}
+                                {{--</li>--}}
                             </ul>
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="socioqueue" role="tabpanel" aria-labelledby="socioqueue-tab">
@@ -93,9 +96,10 @@
 
 
                                         </tbody>
-                                        <div class="float-right btn-group btn-group-sm">
-                                            <button id="prev" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
-                                            <button id="next"  class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
+                                        {{--changing--}}
+                                        <div class="float-right btn-group btn-group-sm ">
+                                            <button id="prev" class="btn btn-primary btn-sm prevSocio" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
+                                            <button  id="next" class="btn btn-primary btn-sm nextSocio" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
                                         </div>
                                     </table>
 
@@ -117,8 +121,8 @@
 
                                         </tbody>
                                         <div class="float-right btn-group btn-group-sm">
-                                            <button id="prevd" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
-                                            <button id="nextd"  class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
+                                            <button class="btn btn-primary btn-sm prevDaywise" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
+                                            <button  class="btn btn-primary btn-sm nextDaywise" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
                                         </div>
                                     </table>
                                 </div>
@@ -137,8 +141,8 @@
 
                                         </tbody>
                                         <div class="float-right btn-group btn-group-sm">
-                                            <button id="prevdr" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
-                                            <button id="nextdr"  class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
+                                            <button  class="btn btn-primary btn-sm prevDraft" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
+                                            <button   class="btn btn-primary btn-sm nextDraft" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
                                         </div>
                                     </table>
                                 </div>
@@ -157,12 +161,33 @@
 
                                         </tbody>
                                         <div class="float-right btn-group btn-group-sm">
-                                            <button id="prevh" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
-                                            <button id="nexth"  class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
+                                            <button class="btn btn-primary btn-sm prevHistory" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
+                                            <button class="btn btn-primary btn-sm nextHistory" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
+                                        </div>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="postHistory" role="tabpanel" aria-labelledby="history-tab">
+                                    <table id="history_table1" class="display table" cellspacing="0" width="100%">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">Sent From</th>
+                                            <th scope="col">Message</th>
+                                            <th scope="col">Network</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                        <div class="float-right btn-group btn-group-sm">
+                                            <button class="btn btn-primary btn-sm prevpostHistory" data-toggle="tooltip" data-placement="top" title="Previous"><i class="fas fa-angle-left" ></i></button>
+                                            <button class="btn btn-primary btn-sm nextpostHistory" data-toggle="tooltip" data-placement="top" title="Next"><i class="fas fa-angle-right"></i></button>
                                         </div>
                                     </table>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -176,6 +201,11 @@
 
 @section('script')
     <script>
+
+        //for GA
+        var eventCategory = 'Schedule';
+        var eventAction = 'Schedule-Post-History';
+
         // socioqueue table
         let checkbox_table = $('#socioqueue_table, #daywise_table, #draft_table, #history_table').DataTable({
 //            columnDefs: [{
@@ -190,7 +220,7 @@
 //            order: [
 //                [1, 'asc']
 //            ],
-            "bPaginate": false,
+        "bPaginate": false,
         "bFilter": false
         });
         checkbox_table.on("click", "th.select-checkbox", function() {
@@ -222,101 +252,116 @@
         var prev ="prev";
         var countonload = 0;
         var table ="";
+
+        $(document).on('click','#next',function(){
+
+            pageID++;
+            getScheduledPostHistory(1,category,pageID,method)
+        });
+        $(document).on('click' ,"#prev",function(){
+            pageID--;
+            document.getElementById("next").disabled = false;
+            getScheduledPostHistory(1,category,pageID,method)
+        });
+
+
         $(document).ready(function(){
            getScheduledPostHistory(1,category,pageID,method);
 
-            $("#next").click(function(){
-                next ="next"
-                prev ="prev"
-                pageID++;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#prev").click(function(){
-                next ="next"
-                prev ="prev"
-                pageID--;
-                document.getElementById("next").disabled = false;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
 
-            $("#nextd").click(function(){
-                 next ="nextd"
-                prev ="prevd"
-                pageID++;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#prevd").click(function(){
-                 next ="nextd"
-                prev ="prevd"
-                pageID--;
-                document.getElementById("nextd").disabled = false;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#nextdr").click(function(){
-                 next ="nextdr"
-                prev ="prevdr"
-                pageID++;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#prevdr").click(function(){
-                 next ="nextdr"
-                prev ="prevdr"
-                pageID--;
-                document.getElementById("nextdr").disabled = false;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#nexth").click(function(){
-                 next ="nexth"
-                prev ="prevh"
-                pageID++;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
-            $("#prevh").click(function(){
-                 next ="nexth";
-                prev ="prevh";
-                pageID--;
-                document.getElementById("nexth").disabled = false;
-                getScheduledPostHistory(1,category,pageID,method)
-            });
+//            $("#nextd").click(function(){
+//                 next ="nextd"
+//                prev ="prevd"
+//                pageID++;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
+//            $("#prevd").click(function(){
+//                 next ="nextd"
+//                prev ="prevd"
+//                pageID--;
+//                document.getElementById("nextd").disabled = false;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
+//            $("#nextdr").click(function(){
+//                 next ="nextdr"
+//                prev ="prevdr"
+//                pageID++;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
+//            $("#prevdr").click(function(){
+//                 next ="nextdr"
+//                prev ="prevdr"
+//                pageID--;
+//                document.getElementById("nextdr").disabled = false;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
+//            $("#nexth").click(function(){
+//                 next ="nexth"
+//                prev ="prevh"
+//                pageID++;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
+//            $("#prevh").click(function(){
+//                 next ="nexth";
+//                prev ="prevh";
+//                pageID--;
+//                document.getElementById("nexth").disabled = false;
+//                getScheduledPostHistory(1,category,pageID,method)
+//            });
 
-            $('.tab').click(function(){
-                        tabDivId=$(this).attr('href');
-                    tableID = '#'+($(tabDivId).find('table').attr('id'));
-                        pageID=1;
-                        if(tabDivId == '#daywise'){
+            $('.tab').click(
+                    function () {
+                        $("#next").removeAttr("id");
+                        $("#prev").removeAttr("id");
+                        pageID = 1;
+                        tabDivId = $(this).attr('href');
+                        tableID = '#' + ($(tabDivId).find('table').attr('id'));
+                        if (tabDivId == '#daywise') {
                             category = 1;
                             method = 'daywise';
-                            getScheduledPostHistory(1,category,pageID,method)
-                        }else if(tabDivId == '#socioqueue'){
+                            $('.nextDaywise').attr("id", "next");
+                            $('.prevDaywise').attr("id", "prev");
+                            getScheduledPostHistory(1, category, pageID, method)
+                        } else if (tabDivId == '#socioqueue') {
                             category = 0;
                             method = 'socio';
-                            getScheduledPostHistory(1,category,pageID,method)
-                        }else if(tabDivId == '#draft'){
+                            $('.nextSocio').attr("id", "next");
+                            $('.prevSocio').attr("id", "prev");
+                            getScheduledPostHistory(1, category, pageID, method)
+                        } else if (tabDivId == '#draft') {
                             method = 'draft';
-                            getScheduledPostHistory(1,category,pageID,method)
-                        }else if(tabDivId == "#history"){
+                            $('.nextDraft').attr("id", "next");
+                            $('.prevDraft').attr("id", "prev");
+                            getScheduledPostHistory(1, category, pageID, method)
+                        } else if (tabDivId == "#history") {
                             method = 'history';
-                            getScheduledPostHistory(1,category,pageID,method)
+                            $('.nextHistory').attr("id", "next");
+                            $('.prevHistory').attr("id", "prev");
+                            getScheduledPostHistory(1, category, pageID, method)
                         }
-                    }
-            )
-
-        });
+                        else if(tabDivId == '#postHistory'){
+                             method = 'postHistory';
+                            $('.nextHistory').attr("id", "next");
+                            $('.prevHistory').attr("id", "prev");
+                            getDraftHistory(1, category, pageID, method);
+                        }
+                    })
+            });
         function getScheduledPostHistory(scheuleStatus, scheduleCategory, pageId,method){
+
+            var appendData ="";
             if(countonload == 0){
                 document.getElementById("prev").disabled = true;
-                document.getElementById("prevd").disabled = true;
-                document.getElementById("prevdr").disabled = true;
-                document.getElementById("prevh").disabled = true;
+
+//                document.getElementById("prevd").disabled = true;
+//                document.getElementById("prevdr").disabled = true;
+//                document.getElementById("prevh").disabled = true;
             }
             if(pageId == 1){
                 document.getElementById(prev).disabled = true; // disabling prev
             }else{
                 document.getElementById(prev).disabled = false;
             }
-            console.log("scheuleStatus  "+scheuleStatus);
-            console.log("scheduleCategory  "+scheduleCategory);
-            console.log("pageId  "+pageId);
             $.ajax({
                 type: "POST",
                 url: "get-post-history",
@@ -332,10 +377,8 @@
                 },
                 cache: false,
                 success: function(data){
-                    console.log(tableID);
 
 //                        document.getElementById("Button").disabled = true;
-                    console.log(data);
                     if(data.code == 200){
                         if(data.content.length == 0){
                             document.getElementById(next).disabled = true;
@@ -351,10 +394,15 @@
                             );
                         }
                         for(var i=0; i < data.content.length ;i++ ){
-
-
-                            var appendData = '<tr> <td>'+data.content[i].schedulername+'</td> <td>'+ data.content[i].message +'</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
-                                    '</td> {{--<td>@mdo</td>--}} </tr>';
+                            if(data.content[i].message === "" ){
+                                appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
+                                        '<td>'+ data.content[i].message +'</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '</td>  </tr>';
+                            }else{
+                                appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
+                                        '<td>No message</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '</td>  </tr>';
+                            }
 //<a data-toggle="tooltip" title="Edit schedule" onclick="deleteSchedule('+ data.content[i].scheduleId+')"> <i class="fas fa-pen-square"></i></a>
                             $(tableID).DataTable().destroy();
                             $(appendData).appendTo($(tabDivId+' .table > tbody'));
@@ -366,34 +414,119 @@
                             );
                         }
                     }else{
+                        document.getElementById(next).disabled = true;
                         swal(data.message);
                     }
 
+                },
+                error: function(error){
+                    console.log(error)
+                    document.getElementById(next).disabled = true;
+                    document.getElementById(prev).disabled = true;
+                }
+            })
+        }
+
+        //for post-now-draft
+        function getDraftHistory(scheduleStatus, scheduleCategory, pageId,method){
+
+            var appendData ="";
+            if(countonload == 0){
+                document.getElementById("prev").disabled = true;
+
+//                document.getElementById("prevd").disabled = true;
+//                document.getElementById("prevdr").disabled = true;
+//                document.getElementById("prevh").disabled = true;
+            }
+            if(pageId == 1){
+                document.getElementById(prev).disabled = true; // disabling prev
+            }else{
+                document.getElementById(prev).disabled = false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "get-draft-history",
+                data:{
+                    scheduleStatus: scheduleStatus,
+                    scheduleCategory: scheduleCategory,
+                    pageId: pageId,
+                    methods: method
+                },
+                beforeSend: function(){
+                    $(tableID).DataTable().destroy();
+                    $(tableID+' tbody').empty();
+                },
+                cache: false,
+                success: function(data){
+                    if(data.code == 200){
+                        if(data.content.length == 0){
+                            document.getElementById(next).disabled = true;
+                            $(tableID).DataTable().destroy();
+                            $(tableID+' tbody').empty();
+
+//                            $(appendData).appendTo($('#socioqueue .table > tbody'));
+                            $(tableID).DataTable(
+                                    {
+                                        "bPaginate": false,
+                                        "bFilter": false
+                                    }
+                            );
+                        }
+                        for(var i=0; i < data.content.length ;i++ ){
+                            if(data.content[i].message === "" ){
+                                appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
+                                        '<td>'+ data.content[i].message +'</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '</td>  </tr>';
+                            }else{
+                                appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
+                                        '<td>No message</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '</td>  </tr>';
+                            }
+//<a data-toggle="tooltip" title="Edit schedule" onclick="deleteSchedule('+ data.content[i].scheduleId+')"> <i class="fas fa-pen-square"></i></a>
+                            $(tableID).DataTable().destroy();
+                            $(appendData).appendTo($(tabDivId+' .table > tbody'));
+                            table=    $(tableID).DataTable(
+                                    {
+                                        "bPaginate": false,
+                                        "bFilter": false
+                                    }
+                            );
+                        }
+                    }else{
+                        document.getElementById(next).disabled = true;
+                        swal(data.message);
+                    }
+
+                },
+                error: function(error){
+                    console.log(error)
+                    document.getElementById(next).disabled = true;
+                    document.getElementById(prev).disabled = true;
+                }
+            })
+        }
+
+        function deleteSchedule(scheduleId, deleteAction) {
+            $.ajax({
+                type: "POST",
+                url: "schedule-action",
+                data: {
+                    scheduleId: scheduleId,
+                    deleteAction: deleteAction
+                },
+                beforeSend: function () {
+
+                },
+                cache: false,
+                success: function (response) {
+                    swal(response.message)
+                    getScheduledPostHistory(1, category, pageID, method);
+
+                },
+                error: function (error) {
+                    console.log("internal server error");
                 }
             });
         }
-function deleteSchedule(scheduleId, deleteAction){
-    $.ajax({
-        type: "POST",
-        url: "schedule-action",
-        data:{
-            scheduleId: scheduleId,
-            deleteAction: deleteAction
-        },
-        beforeSend: function(){
-
-        },
-        cache: false,
-        success: function(response){
-            console.log(response);
-                swal(response.message)
-            getScheduledPostHistory(1,category,pageID,method);
-
-        },
-        error: function(error){
-            console.log("internal server error");
-        }
-    });
-}
     </script>
     @endsection

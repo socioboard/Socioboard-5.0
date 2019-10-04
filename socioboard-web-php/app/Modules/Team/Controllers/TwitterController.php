@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 //use Illuminate\Support\Facades\Validator;
 use App\Modules\Team\Controllers\TeamController;
+use PhpParser\Node\Stmt\Throw_;
 
 class TwitterController extends Controller
 {
@@ -30,7 +31,6 @@ class TwitterController extends Controller
 
     public function viewPage($account_id, $page_id)
     {
-
         $team_id = Session::get('currentTeam')['team_id'];
 
         try {
@@ -38,39 +38,27 @@ class TwitterController extends Controller
             $params = [
                 'pageId' => 1,
                 'accountId' => $account_id,
-                'teamId' => $team_id,
-                'socioboard_accounts' => TeamController::getAllSocialAccounts(),
+                'teamId' => $team_id
             ];
 
-            try {
-                $response = $help->apiCallPostFeeds(null, "feeds/getRecentTweets?" . http_build_query($params), null, "GET"); //changed by aishwarya for getting recent tweets
+            $response = $help->apiCallPostFeeds(null, "feeds/getRecentTweets?".http_build_query($params), null, "GET");
+//            $socioboard_accounts = TeamController::getAllSocialAccounts();
+//            $socialAccount = Session::get('currentTeam')['SocialAccount'];
+            return view('Team::Twitter.index',
 
-            } catch (\Exception $e) {
-                dd($e->getMessage());
-                return view('Team::Twitter.inc_posts', ['status' => 0, 'feed' => []]);
-            }
+                [
+                    'feeds' => $response->data->data->posts,
+                    'userProfile' => TeamController::getProfileInfo($account_id, 14),
+                    'socioboard_accounts' => TeamController::getAllSocialAccounts(),
+                    'account_id' => $account_id,
+                    "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+                    "pinterestBoards"=> Session::get('pinterestBoards'),
 
-            if ($response->statusCode == 200 && $response->data->code == 200 && $response->data->status == "success") {
+                ]);
 
-                return view('Team::TwitterFeeds',
-                    [
-                        'feeds' => $response->data->data->posts,
-                        'userProfile' => $this->getProfileInfo($account_id),
-                        'socioboard_accounts' => TeamController::getAllSocialAccounts(),
-                        //'team_id' => Session::get('currentTeam')['team_id'],
-                        'account_id' => $account_id,
-                    ]);
 
-            } else if ($response->code == 400 && $response->status == "failed") {
-                //return redirect('dashboard/' . $teamid)->with('FBError', "Access denied. You can not add account to this team");
-            }
-
-            //return redirect('dashboard/' . $teamid)->with('FBError', "Currently not able to add your account");
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            Log::error('Exception' . $e->getCode() . " @=> " . $e->getLine() . " message=> " . $e->getMessage());
-            return redirect('dashboard/' . $team_id)->with('FBError', "Currently not able to add your account");
-
+            TeamController::showErrorPage($e /*, ['link' => '/', 'message' => '/'] */);
         }
     }
 
@@ -78,7 +66,6 @@ class TwitterController extends Controller
     public function viewPosts(Request $request, $account_id, $page_id)
     {
         $team_id = Session::get('currentTeam')['team_id'];
-
         try {
             $help = Helper::getInstance();
             $params = [
@@ -87,34 +74,29 @@ class TwitterController extends Controller
                 'teamId' => $team_id,
             ];
 
-            try {
-                $response = $help->apiCallPostFeeds(null, "feeds/getRecentTweets?" . http_build_query($params), null, "GET"); //changed by aishwarya for getting recent tweets
-            } catch (\Exception $e) {
-                dd($e->getMessage());
-                return view('Team::FacebookFeeds', ['status' => 0, 'feed' => []]);
-            }
+
+            $response = $help->apiCallPostFeeds(null, "feeds/getTweets?" . http_build_query($params), null, "GET");
 
 
             if ($response->statusCode == 200) {
                 if ($response->data->code == 200 && $response->data->status == "success") {
-
-                    //echo '<pre>' . print_r($response->data->posts) . '</pre>';
-
                     return view('Team::Twitter.inc_posts',
                         [
-                            'feeds' => $response->data->data->posts, //changed by aishwarya for getting recent tweets
-                            'userProfile' => $this->getProfileInfo($account_id),
+                            'feeds' => $response->data->posts, //Changed $response->data->posts to $response->data->data->posts for getting recent posts (Aishwarya)
+                            'userProfile' => TeamController:: getProfileInfo($account_id, 14),
                             'socioboard_accounts' => TeamController::getAllSocialAccounts(),
                         ]);
 
-                } else if ($response->code == 400 && $response->status == "failed") {
-                    //return redirect('dashboard/' . $teamid)->with('FBError', "Access denied. You can not add account to this team");
+                } else {
+                    throw new \Exception($response->message);
                 }
-            }
+            } else {
+                throw new \Exception('Unknown error');
+            };
+
             //return redirect('dashboard/' . $teamid)->with('FBError', "Currently not able to add your account");
         } catch (\Exception $e) {
-            Log::error('Exception' . $e->getCode() . " @=> " . $e->getLine() . " message=> " . $e->getMessage());
-            //return redirect('dashboard/' . $teamid)->with('FBError', "Currently not able to add your account");
+            return TeamController::showErrorPage($e /*, ['link' => '/', 'message' => '/'] */);
         }
     }
 
@@ -128,6 +110,8 @@ class TwitterController extends Controller
         // included function to get stats
         function getAccAdditionalInfo($statsArr)
         {
+            $out = array();
+
             if (sizeof($statsArr) > 0) {
                 foreach ($statsArr as $row) {
                     $out = null;
@@ -137,7 +121,7 @@ class TwitterController extends Controller
                 }
             }
             return (array)$out;
-        };
+        }
 
         function accMainInfo($account_id, $response)
         {
@@ -157,18 +141,16 @@ class TwitterController extends Controller
 
         try {
             $response = $help->apiCallGet("team/getTeamDetails?TeamId=" . $team_id);
-//            dd($response);
             if ($response->code == 200 && $response->status == "success") {
                 $profileData = accMainInfo($account_id, $response)[0];
                 $profileData['items'] = accMainInfo($account_id, $response);
             }
         } catch (\Exception $e) {
 
-            dd($e->getMessage());
             Log::error('Exception' . $e->getCode() . " @=> " . $e->getLine() . " message=> " . $e->getMessage());
             return Redirect::back()->withErrors(['Not able to add tour account']);
+
         }
-        return (object)$profileData;
     }
 
 
@@ -202,13 +184,12 @@ class TwitterController extends Controller
             }
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return json_encode(['status' => 'error', 'message' => 'code: ' . $apiResponse->statusCode . ', error: ' . $e->getMessage()]);
         }
 
     }
 
-    // send Comment
+// send Comment
     public function sendComment(Request $request)
     {
         $help = Helper::getInstance();
@@ -229,7 +210,6 @@ class TwitterController extends Controller
                         case 200:
                             return json_encode(['status' => $apiResponse->data->status, 'message' => $apiResponse->data->message]);
                             break;
-
                         default:
                             return json_encode(['status' => $apiResponse->data->status, 'message' => $apiResponse->data->error]);
                             break;
@@ -239,57 +219,10 @@ class TwitterController extends Controller
                 }
 
             } catch (\Exception $e) {
-                dd($e->getMessage());
                 return json_encode(['status' => 'Sytem error', 'message' => $e->getMessage()]);
             }
         }
     }
-
-    // re-share
-    public function publishPost($request)
-    {
-        $help = Helper::getInstance();
-        $result = null;
-
-
-        $params = [
-            'accountId' => $request->input('accountId'),
-            'teamId' => (integer)Session::get('currentTeam')['team_id'],
-            "postType" => "Text",
-            "message" => @$request->input('message'),
-            //"message" =>  (method_exists($request, 'message')) ? $request->input('message') : null,
-            "mediaPaths" => $request->input('mediaPaths'),
-            "link" => $request->input('link'),
-            "accountIds" => array_unique(array_merge( (array)$request->input('accountIds'), array((integer)$request->input('accountId')))),
-            "postStatus" => 1,
-
-        ];
-
-        $url = "publish/publishPosts?teamId=" . (integer)Session::get('currentTeam')['team_id'];
-
-        try {
-            //Get all social acc
-            $apiResponse = (object)$help->apiCallPostPublish($params, $url, false, 'POST');
-            //
-
-            //print_r($apiResponse);
-            //die;
-
-            if ($apiResponse->statusCode == 200) {
-                $data = (object)$apiResponse->data;
-                if ($data->code == 200 && $data->status == "success") {
-                    // try this row with data!
-                    return json_encode(['status' => $data->status, 'message' => $data->message]);
-                } else { // error
-                    return json_encode(['status' => $data->status, 'message' => $data->error]);
-                }
-            }
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return null;
-        }
-    }
-
 
     public function viewProfiles()
     {
@@ -324,7 +257,6 @@ class TwitterController extends Controller
                 return null;
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return null;
         }
     }
@@ -359,7 +291,6 @@ class TwitterController extends Controller
 
         $state = Session::get('twitterState')['state'];
         $code = $request['oauth_verifier'];
-//        dd($state." ".$code);
         $team = Session::get('currentTeam')['team_id'];
         try {
             $help = Helper::getInstance();
@@ -382,7 +313,6 @@ class TwitterController extends Controller
             }
             return redirect('dashboard/' . $team)->withErrors([$response->error]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             Log::error('Exception' . $e->getCode() . " @=> " . $e->getLine() . " message=> " . $e->getMessage());
             return Redirect::back()->withErrors(['Not able to add tour account']);
         }

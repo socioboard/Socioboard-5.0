@@ -33,6 +33,15 @@ const accountController = require('./controllers/publishController');
  *         items:
  *              type: array     
  *              $ref: '#/definitions/boardsDefinition'
+ *     example:
+ *       postType: "Text"
+ *       message: "#newPost"
+ *       mediaPaths: [ "" ]   
+ *       link: ""
+ *       accountIds: [ "3" ]
+ *       postStatus: 1
+ *       pinBoards: [ {  "accountId": 0,  "boardId": [   ""  ] } ]
+ * 
  * /v1/publish/publishPosts:
  *   post:
  *     operationId: secured_publish_publishPosts
@@ -46,15 +55,16 @@ const accountController = require('./controllers/publishController');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - name: postDetails
- *         description: Post type should be Text,Image,Link,Video
+ *         description: Specify Post type should be Text,Image,Link or Video
  *         in: body
  *         required: true
  *         schema:
  *            $ref: "#/definitions/PublishModel"
+ * 
  *     responses:
  *       200:
  *         description: Return success!
@@ -80,11 +90,11 @@ routes.post("/publishPosts", accountController.publishPost);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - name: pageId
- *         description: pagination id
+ *         description: Provide pagination id
  *         in: query
  *         type: integer
  *     responses:
@@ -114,11 +124,11 @@ routes.get("/getDraftedPosts", accountController.getDraftedPosts);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - name: pageId
- *         description: pagination id
+ *         description: Provide pagination id
  *         in: query
  *         type: integer
  *     responses:

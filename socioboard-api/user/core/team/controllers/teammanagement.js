@@ -13,7 +13,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_all_team.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.fetch_all_team.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', teamSocialAccountDetails: result.teamSocialAccountDetails, teamMembers: result.teamMembers, memberProfileDetails: result.memberProfileDetails, socialAccounts: result.socialAccounts });
             })
@@ -21,7 +21,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_all_team_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.fetch_all_team_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 404, status: "failed", error: error.message });
             });
@@ -34,7 +34,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.fetch_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', teamSocialAccountDetails: result.teamSocialAccountDetails, SocialAccountStats: result.SocialAccountStats, teamMembers: result.teamMembers, memberProfileDetails: result.memberProfileDetails, pinterestBoards: result.pinterestBoards });
             })
@@ -45,7 +45,7 @@ class TeamController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.user_service_events.event_action.Teams,
-                        label: configruation.user_service_events.team_event_label.fetch_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                        label: configruation.user_service_events.team_event_label.fetch_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     });
                     res.status(200).json({ code: 404, status: "failed", error: error.message });
                 }
@@ -60,7 +60,7 @@ class TeamController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.user_service_events.event_action.Teams,
-                        label: configruation.user_service_events.team_event_label.fetch_profiles.replace('{{user}}', req.body.userScopeName),
+                        label: configruation.user_service_events.team_event_label.fetch_profiles.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     });
                     throw new Error("You don't have any accounts!");
                 }
@@ -68,7 +68,7 @@ class TeamController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.user_service_events.event_action.Teams,
-                        label: configruation.user_service_events.team_event_label.fetch_profiles.replace('{{user}}', req.body.userScopeName),
+                        label: configruation.user_service_events.team_event_label.fetch_profiles_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     });
                     res.status(200).json({ code: 200, status: 'success', profiles: accounts });
                 }
@@ -77,7 +77,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_profiles_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_profiles_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -90,7 +90,7 @@ class TeamController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.user_service_events.event_action.Teams,
-                        label: configruation.user_service_events.team_event_label.fetch_profiles.replace('{{user}}', req.body.userScopeName),
+                        label: configruation.user_service_events.team_event_label.fetch_profiles_byId.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId),
                     });
                     throw new Error("Sorry, Specified account was not found!");
                 }
@@ -98,7 +98,7 @@ class TeamController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.user_service_events.event_action.Teams,
-                        label: configruation.user_service_events.team_event_label.fetch_profiles.replace('{{user}}', req.body.userScopeName),
+                        label: configruation.user_service_events.team_event_label.fetch_profiles_byId_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId),
                     });
                     res.status(200).json({ code: 200, status: 'success', profile: account });
                 }
@@ -107,7 +107,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_profiles_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_profiles_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -120,7 +120,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.create_team.replace("{{teamId}}", teamDetails.team_id).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.create_team.replace("{{teamId}}", teamDetails.team_id).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: teamDetails });
             })
@@ -128,7 +128,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.create_team_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.create_team_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -140,7 +140,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.edit_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.edit_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: teamDetails });
             })
@@ -148,7 +148,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.edit_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.edit_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -161,7 +161,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.delete_team.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: teamDetails });
             })
@@ -169,7 +169,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.team_event_label.delete_team_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -182,7 +182,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.invite_team.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.Email).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.invite_team.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.Email).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Invitation sent!" });
             })
@@ -190,7 +190,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.invite_team_failed.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.Email).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.invite_team_failed.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.Email).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -203,7 +203,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_team_invitation.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_team_invitation.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: response });
             })
@@ -211,7 +211,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_team_invitation_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_team_invitation_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 404, status: "failed", error: error.message });
             });
@@ -224,7 +224,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.accept_team_invitation.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.accept_team_invitation.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', message: acceptResponse });
             })
@@ -232,7 +232,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.accept_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.accept_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -245,7 +245,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.decline_team_invitation.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.decline_team_invitation.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', message: deleteInfo });
             })
@@ -253,7 +253,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.decline_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.decline_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -266,7 +266,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.withdraw_team_invitation.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.EmailId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.withdraw_team_invitation.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.EmailId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 200, status: 'success' });
@@ -275,7 +275,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.withdraw_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.EmailId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.withdraw_team_invitation_failed.replace("{{teamId}}", req.query.TeamId).replace("{{email}}", req.query.EmailId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -284,12 +284,12 @@ class TeamController {
 
     removeTeamMember(req, res) {
 
-        return teamLibs.removeTeamMember(req.body.userScopeId, req.query.TeamId, req.query.memberId)
+        return teamLibs.removeTeamMember(req.body.userScopeId, req.query.userScopeName, req.query.TeamId, req.query.memberId)
             .then((response) => {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.remove_team_member.replace("{{teamId}}", req.query.TeamId).replace("{{memberId}}", req.query.memberId).replace("{{user}}", req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.remove_team_member.replace("{{teamId}}", req.query.TeamId).replace("{{memberId}}", req.query.memberId).replace("{{user}}", req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', response: response });
             })
@@ -297,7 +297,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.remove_team_member_failed.replace("{{teamId}}", req.query.TeamId).replace("{{memberId}}", req.query.memberId).replace("{{user}}", req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.remove_team_member_failed.replace("{{teamId}}", req.query.TeamId).replace("{{memberId}}", req.query.memberId).replace("{{user}}", req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -310,7 +310,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_invited_list.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_invited_list.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: response });
             })
@@ -318,7 +318,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.fetch_invited_list_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.fetch_invited_list_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 404, status: "failed", error: error.message });
             });
@@ -331,7 +331,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.profile_redirect_url.replace("{{url}}", req.query.network).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.profile_redirect_url.replace("{{url}}", req.query.network).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json(result);
             })
@@ -339,7 +339,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.profile_redirect_url_failed.replace("{{url}}", req.query.network).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.profile_redirect_url_failed.replace("{{url}}", req.query.network).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 403, status: "failed", error: error.message });
             });
@@ -353,7 +353,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.add_social_profile.replace("{{profileId}}", req.body.userScopeId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.add_social_profile.replace("{{profileId}}", req.body.userScopeId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json(result);
             })
@@ -361,7 +361,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.add_social_profile_failed.replace("{{profileId}}", req.body.userScopeId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.add_social_profile_failed.replace("{{profileId}}", req.body.userScopeId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 403, status: "failed", message: error.message });
             });
@@ -375,7 +375,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.bulk_add_social_profile.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.bulk_add_social_profile.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
 
                 });
                 res.status(200).json({ code: 200, status: 'success', teamDetails: response.teamDetails, profileDetails: response.profileDetails, errorProfileId: response.errorProfileId });
@@ -384,7 +384,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.bulk_add_social_profile_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.bulk_add_social_profile_failed.replace("{{teamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -397,7 +397,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_social_profile.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.delete_social_profile.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.AccountId
                 });
                 res.status(200).json({ code: 200, status: "success", message: "Account has been deleted." });
@@ -406,7 +406,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_social_profile_failed.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.delete_social_profile_failed.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.AccountId
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -421,7 +421,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.add_other_team_social_profile.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.add_other_team_social_profile.replace("{{profileId}}", req.query.AccountId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Added to the team." });
             })
@@ -429,7 +429,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.add_other_team_social_profile_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.add_other_team_social_profile_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -442,7 +442,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_current_team_social_profile.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.delete_current_team_social_profile.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Removed the account from the team." });
@@ -451,7 +451,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.delete_current_team_social_profile_failed.replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.delete_current_team_social_profile_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -465,7 +465,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.leave_team.replace("{{TeamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.leave_team.replace("{{TeamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Successfully left from the team." });
@@ -474,7 +474,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.leave_team_failed.replace("{{TeamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.leave_team_failed.replace("{{TeamId}}", req.query.TeamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -489,7 +489,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.edit_permission.replace("{{user1}}", req.query.MemberId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.edit_permission.replace("{{user1}}", req.query.MemberId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Updated Permission!" });
@@ -498,7 +498,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.edit_permission_failed.replace("{{user1}}", req.query.MemberId).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.edit_permission_failed.replace("{{user1}}", req.query.MemberId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.TeamId
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -513,7 +513,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.lock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.lock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Accounts are locked successfully.", updatedProfiles: response.updatedProfiles, errorProfiles: response.errorProfiles });
@@ -522,7 +522,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.lock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.lock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -530,12 +530,12 @@ class TeamController {
     }
 
     unlockProfiles(req, res) {
-        return teamLibs.unlockProfiles(req.body.userScopeId, req.body)
+        return teamLibs.unlockProfiles(req.body.userScopeId, req.body, req.body.userScopeMaxAccountCount)
             .then((response) => {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.unlock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.unlock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Accounts are unlocked successfully.", updatedProfiles: response.updatedProfiles, errorProfiles: response.errorProfiles });
@@ -544,7 +544,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.unlock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.unlock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
@@ -557,7 +557,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.unlock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.unlock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 200, status: 'success', message: "Accounts are unlocked successfully.", updatedProfiles: response.updatedProfiles, errorProfiles: response.errorProfiles });
@@ -566,7 +566,7 @@ class TeamController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Teams,
-                    label: configruation.user_service_events.team_event_label.unlock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName),
+                    label: configruation.user_service_events.team_event_label.unlock_profiles_failed.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });

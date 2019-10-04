@@ -1,10 +1,58 @@
 @extends('User::master')
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
 
 @section('title')
     <title>SocioBoard | Signin</title>
+    <script>
+
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', '{{env('GA_TRACK_ID')}}', 'auto', {
+                'name': 'login',
+                'sessionControl': 'start',
+                'alwaysSendReferrer': true
+            });
+            ga('login.send', 'pageview');
+            ga('login.send', 'event', {
+                'eventCategory': 'Open',
+                'eventAction': 'Login'
+            });
+            ga(function(){
+
+            });
+
+
+    </script>
+    <!-- End Google Analytics -->
 @endsection
 
 @section('login')
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content"><br/>
+                <div class="error" style="color: red; text-align: center">{{session('restPwdMsgError')}}</div>
+                <form id="resetPassword" action="/resetPassword" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="reset_password">Reset Password</label>
+                            <input type="email" class="form-control" id="reset_email_id" aria-describedby="resetemailHelp" required name="reset_email" readonly="readonly" value="{{session('resetPassword')}}"></br>
+                            <input type="password" class="form-control" id="reset_password" aria-describedby="resetpasswordHelp" placeholder="Enter new password" required name="reset_password">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
     <section class="container">
         <div class="row justify-content-md-center margin-bottom-50 margin-top-50">
             <div class="col col-md-6">
@@ -50,7 +98,23 @@
                                 {{session('email_act')}}
                             </div>
                         @endif
-
+                        @if(session('resetPassword'))
+                                <script>
+                                $(function() {
+                                    $('#resetPasswordModal').modal('show');
+                                });
+                            </script>
+                        @endif
+                        @if(session('restPwdMsg'))
+                            <div style="color: green;text-align: center;">{{session('restPwdMsg')}}</div>
+                        @endif
+                        @if(session('restPwdMsgError'))
+                            <script>
+                                $(function() {
+                                    $('#resetPasswordModal').modal('show');
+                                });
+                            </script>
+                        @endif
                         <form class="margin-top-30 needs-validation" novalidate action="login" method="POST">
                             <div class="form-group">
                                 <label for="email_id">Your e-mail adress<span class="text-orange-dark">*</span></label>
@@ -135,12 +199,14 @@
         </div>
     </div>
 
+
     @endsection
 
 
 @section('script')
     <script>
         $(document).ready(function(){
+
             $(document).on('submit','#forgotPassword',function(e){
                 e.preventDefault();
                 var form = document.getElementById('forgotPassword');
@@ -159,10 +225,8 @@
                     $('#fp_email_id').val();
                 },
                 success: function (response) {
-                     console.log(response);
                     document.getElementById("forgotPassword").reset();
                     if(response.code === 200){
-                        console.log(response.message);
                         $('#mailFound').text(response.message);
                         $('#passwdRecoveryModal').modal('toggle');
                     }else if(response.code === 404){

@@ -87,30 +87,60 @@ const schedulerController = require('./controllers/schedulerControllers');
  *         type: array
  *         items:
  *          $ref: "#/definitions/daywiseTimingDefinition"
+ *     example:
+ *       postType: "Text"
+ *       description: "Hey there!"
+ *       mediaUrl: [ "/images/1563348724.jpg" ]
+ *       mediaSelectionType: 0
+ *       shareLink: "string"
+ *       postingSocialIds: [ { "accountType": 4,  "accountId": 12 } ]
+ *       pinBoards: [ { "accountId": 0, "boardId": [  "string" ] } ]
+ *       scheduleCategory: 0
+ *       teamId: 0
+ *       moduleName: "string"
+ *       moduleValues: ["string" ]
+ *       scheduleStatus: 1
+ *       normalScheduleDate: "2019-09-17T07:42:53.890Z"
+ *       "daywiseScheduleTimer": [  {  "dayId": 0,  "timings": [  "2019-07-17T07:42:53.890Z" ] } ]
+ *        
  * 
  *   rssScheduler:
  *     properties:
  *       name:
  *          type: string
- *          description: "To Specify the Rss feeds title name"
+ *          description: "To specify the Rss feeds title name"
  *       rss_feed_url:
  *          type: string
- *          description: "To Specify the Rss feed urls"
- *       custom_minutes:
- *          type: string
- *          description: "To Specify the publishing intervals in minutes"
+ *          description: "To specify the Rss feed urls"
+ *       custom_interval:
+ *          type: integer
+ *          description: "To specify the publishing intervals in minutes"
  *       start_date:
  *          type: string
- *          description: "To Specify the publishing start date"
+ *          description: "To specify the publishing start date"
  *          format: date-time
  *       end_date:
  *          type: string
- *          description: "To Specify the publishing end date"
+ *          description: "To specify the publishing end date"
  *          format: date-time     
  *       account_ids:
  *         type: array
  *         items:
  *              $ref: "#/definitions/socialIdDefinition"
+ * 
+ *   editrssScheduler:
+ *     properties:
+ *       custom_interval:
+ *          type: integer
+ *          description: "To specify the publishing intervals in minutes"
+ *       start_date:
+ *          type: string
+ *          description: "To specify the publishing start date"
+ *          format: date-time
+ *       end_date:
+ *          type: string
+ *          description: "To specify the publishing end date"
+ *          format: date-time     
  *        
  *   editScheduler:
  *     properties:
@@ -156,7 +186,20 @@ const schedulerController = require('./controllers/schedulerControllers');
  *         type: array
  *         items:
  *          $ref: "#/definitions/daywiseTimingDefinition"
- * 
+ *     example:
+ *       postType: "Text"
+ *       description: "Hey there!"
+ *       mediaUrl: [ "/images/1563348724.jpg" ]
+ *       mediaSelectionType: 0
+ *       shareLink: "string"
+ *       postingSocialIds: [ { "accountType": 4,  "accountId": 12 } ]
+ *       pinBoards: [ { "accountId": 0, "boardId": [  "string" ] } ]
+ *       scheduleCategory: 0
+ *       moduleName: "string"
+ *       moduleValues: ["string" ]
+ *       normalScheduleDate: "2019-09-17T07:42:53.890Z"
+ *       "daywiseScheduleTimer": [  {  "dayId": 0,  "timings": [  "2019-07-17T07:42:53.890Z" ] } ]
+ *        
  * 
  * 
  * 
@@ -203,7 +246,7 @@ routes.post("/create", schedulerController.create);
  *     description: To get the schedule details of the user
  *     parameters:
  *       - in: query
- *         description: PaginationId
+ *         description: Provide paginationId
  *         name: fetchPageId
  *         type: integer
  *     produces:
@@ -221,6 +264,34 @@ routes.get('/getScheduleDetails', schedulerController.getScheduleDetails);
 
 /**
  * @swagger
+ * /v1/schedule/getParticularScheduleDetails:
+ *   get:
+ *     operationId: secured_schedule_getParticularScheduleDetails
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Scheduler
+ *     description: To get the schedule details of a particular schedule
+ *     parameters:
+ *       - in: query
+ *         description: Provide scheduleId
+ *         name: scId
+ *         type: integer
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.get('/getParticularScheduleDetails', schedulerController.getParticularScheduleDetails);
+
+/**
+ * @swagger
  * /v1/schedule/getFilteredScheduleDetails:
  *   get:
  *     operationId: secured_schedule_getFilteredScheduleDetails
@@ -229,14 +300,14 @@ routes.get('/getScheduleDetails', schedulerController.getScheduleDetails);
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To get the schedule details of the user
+ *     description: To get the schedule details of the user using schedule status filter
  *     parameters:
  *       - in: query
- *         description: schedule status
+ *         description: Provide schedule status
  *         name: scheduleStatus
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: fetchPageId
  *         type: integer
  *     produces:
@@ -263,18 +334,18 @@ routes.get('/getFilteredScheduleDetails', schedulerController.getFilteredSchedul
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To get the schedule details of the user
+ *     description: To get the schedule details of the user by category
  *     parameters:
  *       - in: query
- *         description: schedule status
+ *         description: Provide schedule status
  *         name: scheduleStatus
  *         type: integer
  *       - in: query
- *         description: schedule category 0-Normal, 1-daywise
+ *         description: Specify schedule category either 0-Normal or 1-daywise
  *         name: scheduleCategory
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: fetchPageId
  *         type: integer
  *     produces:
@@ -300,14 +371,14 @@ routes.get('/getScheduleDetailsByCategories', schedulerController.getScheduleDet
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To get the schedule details of the user
+ *     description: To change the scheduled status
  *     parameters:
  *       - in: query
- *         description: schedule id
+ *         description: Provide schedule id
  *         name: scheduleId
  *         type: integer
  *       - in: query
- *         description: schedule status
+ *         description: Specify schedule status(1-6) to update
  *         name: scheduleStatus
  *         type: integer
  *     produces:
@@ -334,12 +405,12 @@ routes.put('/changeScheduleStatus', schedulerController.changeScheduleStatus);
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To cancel a scheduled post jobs   
+ *     description: To cancel a scheduled post job   
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: schedule id 
+ *         description: Provide schedule id 
  *         name: scheduleId
  *         type: integer
  *     responses:
@@ -362,12 +433,12 @@ routes.put('/cancel', schedulerController.cancel);
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To delete a scheduled post jobs   
+ *     description: To delete a scheduled post job   
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: schedule id 
+ *         description: Provide schedule id 
  *         name: scheduleId
  *         type: integer
  *     responses:
@@ -393,16 +464,16 @@ routes.delete('/delete', schedulerController.delete);
  *     - AccessToken: []
  *     tags:
  *       - Scheduler
- *     description: To edit the schedule the post details  
+ *     description: To edit the scheduled post details 
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: schedule id 
+ *         description: Provide schedule id 
  *         name: scheduleId
  *         type: integer
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - in: body
@@ -425,7 +496,7 @@ routes.put('/edit', schedulerController.edit);
 /**
  * @swagger
  * /v1/schedule/createAutomatedRss:
- *   put:
+ *   post:
  *     operationId: secured_schedule_createAutomatedRss
  *     summary: Secured
  *     security:
@@ -437,7 +508,7 @@ routes.put('/edit', schedulerController.edit);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - in: body
@@ -455,6 +526,107 @@ routes.put('/edit', schedulerController.edit);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.put('/createAutomatedRss', schedulerController.createAutomatedRss);
+routes.post('/createAutomatedRss', schedulerController.createRssSchedule);
+
+/**
+ * @swagger
+ * /v1/schedule/getAutomatedRss:
+ *   get:
+ *     operationId: secured_schedule_getAutomatedRss
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Scheduler
+ *     description: To get automated rss feeds of a team
+ *     deprecated : true
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Provide pageId
+ *         name: pageId
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.get('/getAutomatedRss', schedulerController.getAutomatedRss);
+
+/**
+ * @swagger
+ * /v1/schedule/updateAutomatedRss:
+ *   put:
+ *     operationId: secured_schedule_updateAutomatedRss
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Scheduler
+ *     description: To update a automated rss feeds of particular team
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Provide team id 
+ *         name: teamId
+ *         type: integer
+ *       - in: query
+ *         description: Provide schedule id
+ *         name: scheduleId
+ *         type: integer
+ *       - in: body
+ *         name: rssDetails
+ *         schema:
+ *            type: object
+ *            properties:
+ *              postInfo:
+ *                $ref: "#/definitions/editrssScheduler"
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.put('/updateAutomatedRss', schedulerController.updateAutomatedRss);
+
+/**
+ * @swagger
+ * /v1/schedule/deleteAutomatedRss:
+ *   delete:
+ *     operationId: secured_schedule_deleteAutomatedRss
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Scheduler
+ *     description: To create a automated rss feeds
+ *     deprecated : true
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Provide team id 
+ *         name: teamId
+ *         type: integer
+ *       - in: query
+ *         description: Provide rss mongo id 
+ *         name: rssId
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.delete('/deleteAutomatedRss', schedulerController.deleteAutomatedRss);
 
 module.exports = routes;

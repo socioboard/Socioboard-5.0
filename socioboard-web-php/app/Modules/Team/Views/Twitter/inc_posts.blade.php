@@ -1,35 +1,16 @@
-
-
-    <!-- twt fedds -->
-
-    <!--
-      [mediaUrls] => Array
-        (
-            [0] => https://pbs.twimg.com/media/D6_8p29XsAALe9V.jpg
-        )
-    [_id] => 5ce3b02a5c5d49f71cd96730
-    [tweetId] => 1130399921344061440
-    [accountId] => 1130397883050541000
-    [batchId] => 1558425642
-    [descritpion] => Bottles in bodega Antonio Mendelez, Spain https://t.co/44JXcWjhpi
-    [favoriteCount] => 0
-    [isApplicationPost] =>
-    [postedAccountId] => 1130397883050541056
-    [postedAccountScreenName] => AIakovliev
-    [publishedDate] => 2019-05-20T09:08:37.000Z
-    [retweetCount] => 0
-    [tweetUrl] => https://twitter.com/AIakovliev/status/1130399921344061440
-    [version] => 4.0.0
-    [createdDate] => 2019-06-03T07:04:16.626Z
-    -->
-
-
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     @foreach($feeds as $post)
-
     <div class="card mb-3">
+        <p style="display: none" class="tweet-description">{{$post->descritpion}}</p>
+        <?php
+        $urls=implode(',', $post->mediaUrls)?>
 
+        <p style="display: none" class="tweet-mediaUrl"  id={{$urls}}></p>
+        {{--@foreach($post->mediaUrls as $url)--}}
+            {{--<p style="display: none" class="tweet-mediaUrl">--}}
+                {{--{{$url}}</p>--}}
+        {{--@endforeach--}}
         <blockquote class="twitter-tweet">
             <div id="container"></div>
            {{$post->descritpion}}
@@ -45,8 +26,8 @@
                 <a href="javascript:void(0);" class="text-dark post_cmt_btn" data-id="{{ $post->tweetId }}"><i class="far fa-comment-alt"></i> Comments </a>
             </div>
             <div class="col-md-4">
-                <a href="javascript:void(0);" class="text-dark" data-toggle="modal" data-target="#postModal">
-                          <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content.">
+                <a href="javascript:void(0);" class="text-dark" data-toggle="modal" data-target="#incpostModal">
+                          <span class="resocio_btn" data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content.">
                             <i class="fas fa-retweet text-primary"></i> re-socio
                           </span>
                 </a>

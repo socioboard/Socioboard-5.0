@@ -4,6 +4,7 @@ const config = require('config');
 const facebookHelper = require('../../../library/network/facebook')(config.get('facebook_api'));
 
 const db = require('../../../library/sequelize-cli/models/index');
+const logger = require('../../utils/logger');
 const Operator = db.Sequelize.Op;
 const socialAccount = db.social_accounts;
 
@@ -11,7 +12,7 @@ var helper = {};
 
 // Available Verbs in fb - add, block, edit, edited, delete, follow, hide, mute, remove, unblock, unhide, update
 helper.webhookEvents = function (webhookObject) {
-    console.log("Process started for instagram..", JSON.stringify(webhookObject));
+    logger.info(`Process started for instagram.. ${JSON.stringify(webhookObject)}`);
 
     if (webhookObject.object == 'instagram') {
         webhookObject.entry.forEach(entry => {
@@ -49,20 +50,20 @@ helper.webhookEvents = function (webhookObject) {
                                         var instagramStoryInsightModelObject = new InstagramStoryInsightModel(mediaDetails);
                                         return instagramStoryInsightModelObject.save()
                                             .then((object) => {
-                                                console.log(`Story Details : ${JSON.stringify(object)}`);
+                                                logger.info(`Story Details : ${JSON.stringify(object)}`);
                                             })
                                             .catch((error) => {
-                                                console.log(`Story Details not saved : ${error.message}`);
+                                                logger.info(`Story Details not saved : ${error.message}`);
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log(`Story Details not saved : ${error.message}`);
+                                        logger.info(`Story Details not saved : ${error.message}`);
                                     });
                             }
                         });
                 }
                 else {
-                    console.log("Not Supported field entry");
+                    logger.info("Not Supported field entry");
                 }
             });
         });

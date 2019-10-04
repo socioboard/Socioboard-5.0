@@ -2003,7 +2003,6 @@
                     }
                     picReader.readAsDataURL(file);
                 }
-                console.log(names);
             } else if (getAttr == "type2") {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
@@ -2048,7 +2047,6 @@
                     picReader.readAsDataURL(file);
                 }
                 // return array of file name
-                console.log(names);
             }
         });
 
@@ -2064,7 +2062,6 @@
                 names.splice(yet, 1);
             }
             // return array of file name
-            console.log(names);
         });
         $("#hint_brand").on("hide", function(e) {
             names = [];

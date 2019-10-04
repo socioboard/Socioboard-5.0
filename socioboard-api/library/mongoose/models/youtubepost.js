@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on twitterposts collection of mongo DB
 const youtubePost = new Schema({
     videoId: { type: String, index: true, unique: true },
     title: { type: String },
     description: { type: String },
+    category: { type: String },
     channelId: { type: String },
     channelTitle: { type: String },
     publishedDate: { type: Date, default: Date.now },
@@ -27,18 +29,19 @@ const youtubePost = new Schema({
 });
 
 youtubePost.methods.insertMultiPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('YoutubePosts')
         .insertMany(posts)
         .then((postdetails) => {
             return postdetails.length;
         })
         .catch((error) => {
-            console.log(error.message);
             return 0;
         });
 };
 
 youtubePost.methods.insertManyPosts = function (posts) {
+    // inserting or creating multiple posts
     return this.model('YoutubePosts')
         .bulkWrite(posts.map((post) => {
             return {
@@ -50,32 +53,34 @@ youtubePost.methods.insertManyPosts = function (posts) {
             };
         }))
         .catch((error) => {
-            console.log(error.message);
             return 0;
         });
 };
 
 
 youtubePost.methods.FindInsertOrUpdate = function (post) {
+    // Creating/Updating post to the collection
     var query = { videoId: new RegExp(post.videoId, 'i') };
     var options = { upsert: true, new: true, setDefaultsOnInsert: true };
     return this.model('YoutubePosts')
         .findOneAndUpdate(query, post, options)
         .then(function (result) {
-            console.log(`Inserted Properly ${JSON.stringify(result)}`);
             return result;
         })
         .catch(function (error) {
-            console.log(error.message);
+            throw error;
         });
 };
 
-youtubePost.methods.getPreviousPost = function (keyword, skip, limit) {
+youtubePost.methods.getPreviousPost = function (keyword, sort, skip, limit) {
+    // Fetching the posts of apecified keyword avaliable posts with recent published
     var query = {
-        $or: [
-            { description: new RegExp(keyword, 'i') },
-            { title: new RegExp(keyword, 'i') }
-        ]
+        $and: [{
+            $or: [
+                { description: new RegExp(keyword, 'i') },
+                { title: new RegExp(keyword, 'i') }
+            ]
+        }, { category: new RegExp(sort, "i") }]
     };
     return this.model('YoutubePosts')
         .find(query)
@@ -86,11 +91,12 @@ youtubePost.methods.getPreviousPost = function (keyword, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 youtubePost.methods.getSocialAccountPosts = function (channelId, skip, limit) {
+    // Fetching posts of a particular account/channel
     var query = { channelId: new RegExp(channelId, 'i') };
     return this.model('YoutubePosts')
         .find(query)
@@ -101,11 +107,12 @@ youtubePost.methods.getSocialAccountPosts = function (channelId, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 youtubePost.methods.deleteAccountPosts = function (accountId) {
+    // Deleting posts of a particular account/channel
     var query = {
         channelId: new RegExp(accountId, 'i')
     };
@@ -115,12 +122,13 @@ youtubePost.methods.deleteAccountPosts = function (accountId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 
 youtubePost.methods.updateIsLike = function (data) {
+    // Updating like to particular video
     var query = { videoId: new RegExp(data.videoId, 'i') };
     var update = { $set: { isLiked: data.rating } };
     return this.model('YoutubePosts')
@@ -129,7 +137,7 @@ youtubePost.methods.updateIsLike = function (data) {
             return result;
         })
         .catch(function (error) {
-            return error;
+            throw error;
         });
 };
 

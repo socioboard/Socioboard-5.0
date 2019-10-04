@@ -138,7 +138,7 @@
 <script type="text/javascript" src="../../assets/plugins/daterangepicker/daterangepicker.js"></script>
 
 <script type="text/javascript" src="../../assets/js/main.js"></script>
-<script src="../assets/js/sweetalert.min.js"></script>
+<script src="../../assets/js/sweetalert.min.js"></script>
 
 
 <script>

@@ -11,18 +11,18 @@ const likeController = require('./controllers/likecommentcontrollers');
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for making like to a post   
+ *     description: To request for making like to a facebook post   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
@@ -50,26 +50,26 @@ routes.post('/fblike', likeController.facebookLike);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for posting commment to a post    
+ *     description: To request for posting commment to a facebook post    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter Your postId 
+ *         description: Enter your postId 
  *         name: postId
  *         type: string
  *       - in: query
- *         description: Enter Your Comment To Post
+ *         description: Enter your Comment to Post
  *         name: comment
  *         type: string
  *     responses:
@@ -93,22 +93,22 @@ routes.post('/fbcomment', likeController.facebookComment);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for making like to a post   
+ *     description: To request for making like to a twitter post   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Twitter accountId
+ *         description: Provide twitter accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter TweetId 
+ *         description: Enter tweetId 
  *         name: tweetId
  *         type: string
  *     responses:
@@ -132,22 +132,22 @@ routes.post('/twtlike', likeController.twitterLike);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for making unlike to a post   
+ *     description: To request for making unlike to a twitter post   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Twitter accountId
+ *         description: Provide twitter accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter TweetId 
+ *         description: Enter tweetId 
  *         name: tweetId
  *         type: string
  *     responses:
@@ -178,19 +178,19 @@ routes.post('/twtdislike', likeController.twitterDislike);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Twitter accountId
+ *         description: Provide twitter accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter TweetId 
+ *         description: Enter tweetId 
  *         name: tweetId
  *         type: string
  *       - in: query
- *         description: Comment 
+ *         description: Provide comment 
  *         name: comment
  *         type: string
  *     responses:
@@ -221,15 +221,15 @@ routes.post('/twtcomment', likeController.twitterComment);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Twitter accountId
+ *         description: Provide twitter accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter TweetId 
+ *         description: Enter tweetId 
  *         name: tweetId
  *         type: string
  *     responses:
@@ -253,26 +253,26 @@ routes.delete('/twtcomment', likeController.twitterDeleteComment);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for making like, to a post   
+ *     description: To request for making like to a youtube post   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Youtube accountId
+ *         description: Provide youtube accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Enter Youtube VideoId 
+ *         description: Enter youtube videoId 
  *         name: videoId
  *         type: string
  *       - in: query
- *         description: Enter Rating  [like, dislike]
+ *         description: Specify Rating either like or dislike
  *         name: rating
  *         type: string
  *     responses:
@@ -295,26 +295,26 @@ routes.post('/ytlike', likeController.youtubeLike);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for posting commment for a tweet in twitter    
+ *     description: To request for posting commment for a post in youtube
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Youtube accountId
+ *         description: Provide youtube accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Youtube videoId
+ *         description: Provide youtube videoId
  *         name: videoId
  *         type: string
  *       - in: query
- *         description: Comment 
+ *         description: Provide comment 
  *         name: comment
  *         type: string
  *     responses:
@@ -338,26 +338,26 @@ routes.post('/ytcomment', likeController.youtubeComment);
  *     - AccessToken: []
  *     tags:
  *       - LikeComment
- *     description: To request for posting commment for a tweet in twitter    
+ *     description: To request for posting commment for a comment in youtube   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Youtube accountId
+ *         description: Provide youtube accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Youtube Comment Id
+ *         description: Provide youtube comment id
  *         name: commentId
  *         type: string
  *       - in: query
- *         description: Comment 
+ *         description: Provide comment 
  *         name: comment
  *         type: string
  *     responses:
@@ -387,15 +387,15 @@ routes.post('/ytreplycomment', likeController.youtubeReplyComment);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: instagram business accountId
+ *         description: Provide instagram business accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Media Id
+ *         description: Provide media id
  *         name: mediaId
  *         type: string
  *     responses:

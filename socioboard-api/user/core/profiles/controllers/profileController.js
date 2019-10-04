@@ -4,10 +4,6 @@ const AnalyticsServices = require('../../../../library/utility/analyticsServices
 const analyticsServices = new AnalyticsServices(config.get('analytics'));
 const configruation = require('../../../config/configuration');
 
-const GoogleHelper = require('../../../../library/network/google');
-const googleHelper = new GoogleHelper(config.get('google_api'));
-const LinkedInHelper = require('../../../../library/network/linkedin');
-const linkedInHelper = new LinkedInHelper(config.get('linkedIn_api'));
 const profileLibs = new ProfileLibs();
 
 class ProfileController {
@@ -18,7 +14,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_page_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_page_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", pages: response.pages, availablePages: response.availablePages });
             })
@@ -26,7 +22,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_page_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_page_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -38,7 +34,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_group_details.replace("{{profileId}}", req.query.accountId).replace("{{teamId}}", req.query.teamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_group_details.replace("{{profileId}}", req.query.accountId).replace("{{teamId}}", req.query.teamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", group: groups });
             })
@@ -46,7 +42,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_group_details_failed.replace("{{profileId}}", req.query.accountId).replace("{{teamId}}", req.query.teamId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_group_details_failed.replace("{{profileId}}", req.query.accountId).replace("{{teamId}}", req.query.teamId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -58,7 +54,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_own_group_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_own_group_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", groups: response.groups, availableGroups: response.availableGroups });
             })
@@ -66,7 +62,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.facebook_own_group_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.facebook_own_group_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -78,7 +74,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.instagram_business_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.instagram_business_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", pages: response.pages, availablePages: response.availablePages });
             })
@@ -86,7 +82,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.instagram_business_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.instagram_business_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -98,7 +94,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.linkedIn_company_page_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.linkedIn_company_page_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", company: response.company, availablePages: response.availablePages });
             })
@@ -106,7 +102,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.linkedIn_company_page_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.linkedIn_company_page_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -118,7 +114,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.youtube_channel_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.youtube_channel_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", channels: response.channels, availableChannels: response.availableChannels });
             })
@@ -126,7 +122,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.youtube_channel_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.youtube_channel_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -138,7 +134,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.google_analytics_details.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.google_analytics_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", AnalyticAccounts: response.AnalyticAccounts, availableAccounts: response.availableAccounts });
             })
@@ -146,42 +142,12 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.google_analytics_details_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.google_analytics_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
     }
 
-    getShortenUrl(req, res) {
-        if (!req.query.longurl) {
-            analyticsServices.registerEvents({
-                category: req.body.userScopeEmail,
-                action: configruation.user_service_events.event_action.Profiles,
-                label: configruation.user_service_events.profile_event_label.short_url_failed.replace("{{url}}", "Empty").replace('{{user}}', req.body.userScopeName)
-            });
-            res.status(200).json({ code: 400, status: "failed", error: "Invalid Inputs" });
-        } else {
-            googleHelper.firebaseShortUrls(config.get('google_api.dynamic_link'),
-                config.get('google_api.api_key'),
-                req.query.longurl)
-                .then((response) => {
-                    analyticsServices.registerEvents({
-                        category: req.body.userScopeEmail,
-                        action: configruation.user_service_events.event_action.Profiles,
-                        label: configruation.user_service_events.profile_event_label.short_url.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName)
-                    });
-                    res.status(200).json({ code: 200, status: "success", message: response });
-                })
-                .catch((error) => {
-                    analyticsServices.registerEvents({
-                        category: req.body.userScopeEmail,
-                        action: configruation.user_service_events.event_action.Profiles,
-                        label: configruation.user_service_events.profile_event_label.short_url_failed.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName)
-                    });
-                    res.status(200).json({ code: 400, status: "failed", error: error.message });
-                });
-        }
-    }
 
     fetchNewPinterestBoards(req, res) {    
         return profileLibs.getSocialAccountInfo(req.query.accountId)
@@ -195,7 +161,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.fetch_pinterest_board.replace('{{profileId}}', req.query.accountId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.fetch_pinterest_board.replace('{{profileId}}', req.query.accountId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json(message);
             })
@@ -203,7 +169,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.fetch_pinterest_board_failed.replace('{{profileId}}', req.query.accountId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.fetch_pinterest_board_failed.replace('{{profileId}}', req.query.accountId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -215,7 +181,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.create_pinterest_board.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.create_pinterest_board.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', message: response });
             })
@@ -223,7 +189,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.create_pinterest_board_failed.replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.create_pinterest_board_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -235,7 +201,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.delete_pinterest_board.replace('{{board}}', req.query.boardId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.delete_pinterest_board.replace('{{board}}', req.query.boardId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', message: response });
             })
@@ -243,7 +209,7 @@ class ProfileController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Profiles,
-                    label: configruation.user_service_events.profile_event_label.delete_pinterest_board_failed.replace('{{board}}', req.query.boardId).replace('{{user}}', req.body.userScopeName)
+                    label: configruation.user_service_events.profile_event_label.delete_pinterest_board_failed.replace('{{board}}', req.query.boardId).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });

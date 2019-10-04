@@ -22,6 +22,7 @@ class TrendLibs {
 
                 switch (moduleName) {
                     case "giphy":
+                        // Allowing to download Giphy media's
                         MediaServiceObject.DownloadGiphy()
                             .then(() => {
                                 logger.info("Giphy media's are downloaded successfully!");
@@ -31,6 +32,7 @@ class TrendLibs {
                             });
                         break;
                     case "imgur":
+                        // Allowing to download Imgur media's
                         MediaServiceObject.DownloadImgur()
                             .then(() => {
                                 logger.info("Imgur media's are downloaded successfully!");
@@ -40,6 +42,7 @@ class TrendLibs {
                             });
                         break;
                     case "pixabay":
+                        // Allowing to download Pixabay media's
                         MediaServiceObject.DownloadPixabay()
                             .then(() => {
                                 logger.info("Pixabay media's are downloaded successfully!");
@@ -49,6 +52,7 @@ class TrendLibs {
                             });
                         break;
                     case "flickr":
+                        // Allowing to download Flicker media's
                         MediaServiceObject.DownloadFlickr()
                             .then(() => {
                                 logger.info("Flickr media's are downloaded successfully!");
@@ -65,18 +69,20 @@ class TrendLibs {
         });
     }
 
-    getGiphy(keyword, pageId) {
+    getGiphy(keyword, pageId, filter) {
         return new Promise((resolve, reject) => {
-            if (!keyword || !pageId) {
+            if (!keyword || !pageId || !filter) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchGiphy(config.get('content_studio.giphy'), keyword, pageId)
+                // Fetching posts from giphy for a specified keyword
+                this.trendsServices.fetchGiphy(config.get('content_studio.giphy'), keyword, pageId, filter)
                     .then((response) => {
                         if (response.batchId) {
                             if (!fs.existsSync(config.get('content_studio.giphy.path'))) {
                                 fs.mkdirSync(config.get('content_studio.giphy.path'));
                             }
                             logger.info(`Giphy Response : ${response.giphyDetails}`);
+                            // Downloading the fetched posts
                             return this.makeDownloadSchedule("giphy", response.batchId)
                                 .then(() => {
                                     resolve(response.giphyDetails);
@@ -91,12 +97,13 @@ class TrendLibs {
         });
     }
 
-    getNewsApi(keyword, pageId) {
+    getNewsApi(keyword, pageId, sort) {
         return new Promise((resolve, reject) => {
-            if (!keyword || !pageId) {
+            if (!keyword || !pageId || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchNewsApi(config.get('content_studio.newsapi'), keyword, pageId)
+                // Fetching posts from newsApi for a specified keyword
+                this.trendsServices.fetchNewsApi(config.get('content_studio.newsapi'), keyword, pageId, sort)
                     .then((response) => {
                         resolve(response);
                     }).catch((error) => {
@@ -106,18 +113,20 @@ class TrendLibs {
         });
     }
 
-    getPixabay(keyword, pageId) {
+    getPixabay(keyword, pageId, filter, sort) {
         return new Promise((resolve, reject) => {
-            if (!keyword || !pageId) {
+            if (!keyword || !pageId || !filter || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchPixabay(config.get('content_studio.pixabay'), keyword, pageId)
+                // Fetching posts from pixabay for a specified keyword
+                this.trendsServices.fetchPixabay(config.get('content_studio.pixabay'), keyword, pageId, filter, sort)
                     .then((response) => {
                         if (response.batchId) {
                             if (!fs.existsSync(config.get('content_studio.pixabay.path'))) {
                                 fs.mkdirSync(config.get('content_studio.pixabay.path'));
                             }
                             logger.info(`Pixabay Response : ${response.pixabayDetails}`);
+                            // Downloading the fetched posts
                             return this.makeDownloadSchedule("pixabay", response.batchId)
                                 .then(() => {
                                     resolve(response.pixabayDetails);
@@ -132,18 +141,20 @@ class TrendLibs {
         });
     }
 
-    getFlickr(keyword, pageId) {
+    getFlickr(keyword, pageId, sort) {
         return new Promise((resolve, reject) => {
-            if (!keyword || !pageId) {
+            if (!keyword || !pageId || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchFlickr(config.get('content_studio.flickr'), keyword, pageId)
+                // Fetching posts from flickr for a specified keyword
+                this.trendsServices.fetchFlickr(config.get('content_studio.flickr'), keyword, pageId, sort)
                     .then((response) => {
                         if (response.batchId) {
                             if (!fs.existsSync(config.get('content_studio.flickr.path'))) {
                                 fs.mkdirSync(config.get('content_studio.flickr.path'));
                             }
                             logger.info(`flickr Response : ${response.flickrDetails}`);
+                            // Downloading the fetched posts
                             return this.makeDownloadSchedule("flickr", response.batchId)
                                 .then(() => {
                                     resolve(response.flickrDetails);
@@ -158,12 +169,13 @@ class TrendLibs {
         });
     }
 
-    getDailyMotion(pageId) {
+    getDailyMotion(pageId, filter, sort) {
         return new Promise((resolve, reject) => {
-            if (!pageId) {
+            if (!pageId || !filter || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                return this.trendsServices.fetchDailyMotion(config.get('content_studio.daily_motion'), pageId)
+                // Fetching posts from dailymotion of newest
+                return this.trendsServices.fetchDailyMotion(config.get('content_studio.daily_motion'), pageId, filter, sort)
                     .then((response) => resolve(response))
                     .catch(error => reject(error));
             }
@@ -171,18 +183,20 @@ class TrendLibs {
     }
 
 
-    getImgur(keyword, pageId) {
+    getImgur(keyword, pageId, filter, sort) {
         return new Promise((resolve, reject) => {
-            if (!keyword || !pageId) {
+            if (!keyword || !pageId || !filter || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchImgur(config.get('content_studio.imgur'), keyword, pageId)
+                // Fetching posts from imgur for a specified keyword
+                this.trendsServices.fetchImgur(config.get('content_studio.imgur'), keyword, pageId, filter, sort)
                     .then((response) => {
                         if (response.batchId) {
                             if (!fs.existsSync(config.get('content_studio.imgur.path'))) {
                                 fs.mkdirSync(config.get('content_studio.imgur.path'));
                             }
                             logger.info(`imgur Response : ${response.imgurDetails}`);
+                            // Downloading the fetched posts
                             return this.makeDownloadSchedule("imgur", response.batchId)
                                 .then(() => {
                                     resolve(response.imgurDetails);
@@ -203,6 +217,7 @@ class TrendLibs {
             if (!rssUrl) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching posts from RSS for a specified url
                 this.trendsServices.fetchRssFeeds(rssUrl)
                     .then((response) => resolve(response))
                     .catch(error => reject(error));
@@ -211,12 +226,13 @@ class TrendLibs {
     }
 
 
-    getYoutube(pageId, keyword) {
+    getYoutube(pageId, keyword, sort) {
         return new Promise((resolve, reject) => {
-            if (!pageId || !keyword) {
+            if (!pageId || !keyword || !sort) {
                 reject(new Error("Invalid Inputs"));
             } else {
-                this.trendsServices.fetchYoutube(config.get('content_studio.youtube'), pageId, keyword)
+                // Fetching posts from youtube for a specified keyword
+                this.trendsServices.fetchYoutube(config.get('content_studio.youtube'), pageId, keyword, sort)
                     .then((response) => resolve(response))
                     .catch(error => reject(error));
             }
@@ -230,6 +246,7 @@ class TrendLibs {
             if (!keyword) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching posts from twitter for a specified keyword
                 this.trendsServices.fetchTwitter(keyword)
                     .then((response) => resolve(response))
                     .catch(error => reject(error));
@@ -243,6 +260,7 @@ class TrendLibs {
             if (!countryCode) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching current trends from twitter for a specified country
                 this.trendsServices.fetchTrendingKeywords(countryCode)
                     .then((response) => resolve(response))
                     .catch(error => reject(error));

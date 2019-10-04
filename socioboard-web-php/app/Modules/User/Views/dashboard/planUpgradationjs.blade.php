@@ -4,7 +4,6 @@
     var planMode=0;
     $(document).on('click','.plan',function(){
         newPlan =this.id;
-        console.log(newPlan);
         if(newPlan < currentPlan){
             paymentUpgrade()
 
@@ -18,7 +17,6 @@
 //                        "newPlan":newPlan
 //                    },
 //                    success:function(response){
-//                        console.log(response)
 //
 //                        /*
 //                         * 200 success 202 success => redirect url
@@ -56,7 +54,6 @@
 //        //                        }
 //                    },
 //                    error:function(error){
-//                        console.log(error)
 //                    }
 //                })
 
@@ -65,7 +62,6 @@
 
     $(document).on('click','.payment',function(){
         planMode = this.id;
-        console.log(planMode);
         paymentUpgrade();
 
 
@@ -81,7 +77,6 @@
                 "paymentMode":planMode
             },
             success:function(response){
-                console.log(response)
 
                 /*
                  * 200 success 202 success => redirect url

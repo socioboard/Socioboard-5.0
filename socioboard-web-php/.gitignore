@@ -3,7 +3,8 @@
 /public/storage
 /storage/*.key
 /vendor
-/.idea
+../.idea
+c:/xampp/htdocs/socioboard-upwork/.idea/workspace.xml
 /.vscode
 /nbproject
 /.vagrant

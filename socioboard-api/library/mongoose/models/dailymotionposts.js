@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
@@ -9,6 +10,7 @@ const dailyMotionPost = new Schema({
     sourceUrl: { type: String, },
     title: { type: String },
     description: { type: String },
+    category: { type: String },
     publisherName: { type: String },
     publishedDate: { type: Date, default: Date.now },
     mediaUrl: { type: [String] },
@@ -20,6 +22,7 @@ const dailyMotionPost = new Schema({
 });
 
 dailyMotionPost.methods.insertManyPosts = function (posts) {
+    // Inserting dailymotion post data into dailyMotionPosts collection
     return this.model('DailyMotionPosts')
         .insertMany(posts)
         .then((postdetails) => {
@@ -32,8 +35,11 @@ dailyMotionPost.methods.insertManyPosts = function (posts) {
 
 dailyMotionPost.methods.getPreviousPost = function (skip, limit) {
 
+    // Fetching posts from dailyMotionPosts collection by published date order
     return this.model('DailyMotionPosts')
-        .find({})
+        .find({
+            category: new RegExp(sort, "i")
+        })
         .sort({ publishedDate: -1 })
         .skip(skip)
         .limit(limit)
@@ -41,7 +47,7 @@ dailyMotionPost.methods.getPreviousPost = function (skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 

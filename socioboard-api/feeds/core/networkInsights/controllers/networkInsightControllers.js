@@ -15,7 +15,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.networkInsights_event_label.fb_page_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.fb_page_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: response });
             })
@@ -23,7 +23,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.networkInsights_event_label.fb_page_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.fb_page_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -36,7 +36,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.networkInsights_event_label.youtube_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.youtube_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: response });
             })
@@ -44,7 +44,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.networkInsights_event_label.youtube_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.youtube_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -57,7 +57,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.LinkedIn,
-                    label: configruation.feeds_service_events.networkInsights_event_label.linkedIn_company_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.linkedIn_company_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: response });
             })
@@ -65,7 +65,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.LinkedIn,
-                    label: configruation.feeds_service_events.networkInsights_event_label.linkedIn_company_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.linkedIn_company_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -78,7 +78,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.networkInsights_event_label.instagram_business_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.instagram_business_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: response });
             })
@@ -86,7 +86,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.networkInsights_event_label.instagram_business_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.instagram_business_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -99,7 +99,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.networkInsights_event_label.twitter_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.twitter_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: response });
             })
@@ -107,7 +107,7 @@ class NetworkInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.networkInsights_event_label.twitter_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.networkInsights_event_label.twitter_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });

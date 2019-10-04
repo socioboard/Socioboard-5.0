@@ -8,7 +8,6 @@ const analyticsServices = new AnalyticsServices(config.get('analytics'));
 
 
 publishServices.publishPost = function (req, res) {
-    console.log('start publish');
     var publishLibs = new PublisherLibs();
 
     // Add to publish queue
@@ -17,7 +16,7 @@ publishServices.publishPost = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.post_publish_success.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', JSON.stringify(req.body.accountIds)).replace('{{type}}', req.body.postType)
+                label: configruation.publiser_service_events.publish_event_label.post_publish_success.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', JSON.stringify(req.body.accountIds)).replace('{{type}}', req.body.postType).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -25,7 +24,7 @@ publishServices.publishPost = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.post_publish_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', JSON.stringify(req.body.accountIds)).replace('{{type}}', req.body.postType)
+                label: configruation.publiser_service_events.publish_event_label.post_publish_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', JSON.stringify(req.body.accountIds)).replace('{{type}}', req.body.postType).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -38,7 +37,7 @@ publishServices.getDraftedPosts = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.get_drafted_posts.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                label: configruation.publiser_service_events.publish_event_label.get_drafted_posts.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: 'success', data: response });
         })
@@ -46,7 +45,7 @@ publishServices.getDraftedPosts = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.get_drafted_posts_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                label: configruation.publiser_service_events.publish_event_label.get_drafted_posts_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -59,7 +58,7 @@ publishServices.getApprovalPostStatus = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.get_approval_post_status.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                label: configruation.publiser_service_events.publish_event_label.get_approval_post_status.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: 'success', data: response });
         })
@@ -67,7 +66,7 @@ publishServices.getApprovalPostStatus = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Publish,
-                label: configruation.publiser_service_events.publish_event_label.get_approval_post_status_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                label: configruation.publiser_service_events.publish_event_label.get_approval_post_status_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });

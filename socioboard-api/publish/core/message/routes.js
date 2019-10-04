@@ -21,6 +21,14 @@ const messageController = require('./controllers/messageController');
 *       senderAccountId:
 *         type: string
 *         description: "To Specify the sender account Id."
+*
+*     example:
+*       messageType: "Text"
+*       media: ""
+*       recipientId: 23
+*       text: "Hello!"
+*       senderAccountId: 1
+*
 * /v1/message/twitter:
 *   post:
 *     operationId: secured_message_twitter
@@ -29,7 +37,7 @@ const messageController = require('./controllers/messageController');
 *     - AccessToken: []
 *     tags:
 *       - Message
-*     description: To publish the posts on social networks
+*     description: To send a twitter message to a particular twitter user
 *     produces:
 *       - application/json
 *     parameters:

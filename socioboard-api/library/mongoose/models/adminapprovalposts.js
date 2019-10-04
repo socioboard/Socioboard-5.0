@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
@@ -25,6 +26,7 @@ const adminApprovalPosts = new Schema({
 });
 
 adminApprovalPosts.methods.getAdminApprovalPost = function (ownerId, teamId, skip, limit) {
+    // Fetching post of admin approval required for a Owner of particular Team
     var query = {
         ownerId: ownerId,
         teamId: teamId
@@ -38,11 +40,12 @@ adminApprovalPosts.methods.getAdminApprovalPost = function (ownerId, teamId, ski
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 adminApprovalPosts.methods.getPostsById = function (postIds) {
+    // Fetching specified posts
     var query = { _id: { $in: postIds } };
     return this.model('AdminApprovalPost')
         .find(query)
@@ -51,11 +54,12 @@ adminApprovalPosts.methods.getPostsById = function (postIds) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 adminApprovalPosts.methods.getUnpublishedPostById = function (postId) {
+    // Fetching un-published post Details
     var query = { _id: { $eq: postId }, isPublished: false };
     return this.model('AdminApprovalPost')
         .find(query)
@@ -69,11 +73,12 @@ adminApprovalPosts.methods.getUnpublishedPostById = function (postId) {
             }
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 adminApprovalPosts.methods.getFirstPostById = function (postId) {
+    // Fetching recent post from the list 
     var query = { _id: { $eq: postId } };
     return this.model('AdminApprovalPost')
         .find(query)
@@ -87,11 +92,12 @@ adminApprovalPosts.methods.getFirstPostById = function (postId) {
             }
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 adminApprovalPosts.methods.updateAdminResponse = function (taskId, adminResponse) {
+    // Updating approval status of a particular task
     return this.model('AdminApprovalPost')
         .findOneAndUpdate(
             { _id: String(taskId) },
@@ -106,6 +112,7 @@ adminApprovalPosts.methods.updateAdminResponse = function (taskId, adminResponse
 };
 
 adminApprovalPosts.methods.updatePublishStatus = function (taskId) {
+    // Updating publish status of a particular task
     return this.model('AdminApprovalPost')
         .findOneAndUpdate(
             { _id: String(taskId) },

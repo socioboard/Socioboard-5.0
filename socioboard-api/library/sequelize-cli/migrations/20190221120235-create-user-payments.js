@@ -32,13 +32,15 @@ module.exports = {
         // 0-Paypal, 1-PayUMoney
         type: Sequelize.INTEGER(3),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: "0-Paypal, 1-PayUMoney"
       },
       payment_status: {
         //  0-Failed, 1- Success
         type: Sequelize.INTEGER(3),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: "0-Failed, 1- Success"
       },
       payment_initiated_date: {
         type: Sequelize.DATE,

@@ -13,7 +13,7 @@ helper.twitterDirectMessage = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Message,
-                label: configruation.publiser_service_events.message_event_lable.twitter_message_sending.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.message_event_label.twitter_message_sending.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -21,7 +21,7 @@ helper.twitterDirectMessage = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Message,
-                label: configruation.publiser_service_events.message_event_lable.twitter_message_sending_failed.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.message_event_label.twitter_message_sending_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });

@@ -92,7 +92,6 @@
 
         var count =0;
         var fbId = document.getElementById('accountidFetch').value ;
-        console.log(fbId);
         var firstDate = new Date();
         var chartData = [];
         var filterPeriod = 1;
@@ -120,7 +119,6 @@
                 },
                 cache: false,
                 success: function(response){
-                    console.log(response);
 
                     // Add data
                     if(response.code == 200){
@@ -141,7 +139,6 @@
 
 
 
-                        console.log(chartData)
 
                     }else if(response.code == 400){
                    $('#accountInactive').text(response.message).css('display','block');
@@ -247,17 +244,16 @@
         }
         $(function () {
 
-            var start = moment().subtract(29, 'days');
+//            var start = moment().subtract(29, 'days');
+            var start = moment();
             var end = moment();
 
             function cb(start, end) {
-//                console.log(document.getElementsByTagName("li")[0].getAttribute("data-range-key"));
 
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 if(count>0){
                     setTimeout(function(){ $('#reportrange').click()
                         var filterTpe = $($('.ranges>ul').find('.active')).attr('data-range-key');
-                        console.log("DT picker ");
                         switch(filterTpe){
                             case "Today":
                                 filterPeriod=1;
@@ -284,8 +280,8 @@
                                 filterPeriod=1;
                                 break;
                         }
-                        console.log(filterTpe)
                         getFacebookInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
+                        $('.daterangepicker').css('display','none');
                     }, 100);
 
 //                    if()
@@ -313,7 +309,6 @@
 
 
             cb(start, end);
-            //         console.log("jjdksj " + aa);
 
 
 

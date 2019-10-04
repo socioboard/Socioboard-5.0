@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on instagramposts collection of mongo DB
 const instagramPost = new Schema({
 
     postId: { type: String, index: true, unique: true },
@@ -27,6 +28,7 @@ const instagramPost = new Schema({
 });
 
 instagramPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple data into the collection
     if (!posts) {
         reject(new Error('Invalid Inputs'));
     } else {
@@ -50,6 +52,7 @@ instagramPost.methods.insertManyPosts = function (posts) {
 };
 
 instagramPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching the posts from collection related to an account
     return this.model('InstagramPosts')
         .aggregate([
             { $match: { socialId: accountId } },
@@ -69,6 +72,7 @@ instagramPost.methods.getSocialAccountPosts = function (accountId, skip, limit) 
 };
 
 instagramPost.methods.deleteAccountPosts = function (accountId) {
+    // Deleting all posts related to a specified account
     var query = {
         socialAccountId: new RegExp(accountId, 'i')
     };
@@ -84,6 +88,7 @@ instagramPost.methods.deleteAccountPosts = function (accountId) {
 
 
 instagramPost.methods.findLastRecentInstaId = function () {
+    // Fetching the last post with sort of published date
     return this.model('InstagramPosts')
         .find().limit(1).sort({ publishedDate: -1 })
         .then(function (result) {

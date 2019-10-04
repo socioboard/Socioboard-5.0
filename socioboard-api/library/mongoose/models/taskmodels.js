@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on taskmodels collection of mongo DB
 var taskModel = new Schema({
     teamId: { type: String },
     ownerId: { type: Number },
@@ -46,6 +47,7 @@ var taskModel = new Schema({
 });
 
 taskModel.methods.insertMany = function (posts) {
+    // Inserting multiple tasks into the collection
     return this.model('TaskModels')
         .insertMany(posts)
         .then((postdetails) => {
@@ -57,6 +59,7 @@ taskModel.methods.insertMany = function (posts) {
 };
 
 taskModel.methods.getPublishTaskLists = function (taskId) {
+    // Fetching the details of publish task with task Id of recent updated
     return this.model('TaskModels')
         .findOne({ _id: String(taskId), type: { $in: [2, 3] } })
         .sort({ updatedDate: -1 })
@@ -71,6 +74,7 @@ taskModel.methods.getPublishTaskLists = function (taskId) {
 };
 
 taskModel.methods.getTeamPublishTaskLists = function (assignedTo, teamId, skip, limit) {
+    // Fetching team posts of an Team to an team member
     var query = {
         $and: [
             { "assignedUser.assignedTo": { $eq: assignedTo } },
@@ -92,6 +96,7 @@ taskModel.methods.getTeamPublishTaskLists = function (assignedTo, teamId, skip, 
 };
 
 taskModel.methods.getSchedulePublishTaskLists = function (assignedTo, teamId, skip, limit) {
+    // Fetching schedule posts of an Team to an team member
     var query = {
         $and: [
             { "assignedUser.assignedTo": { $eq: assignedTo } },
@@ -113,6 +118,7 @@ taskModel.methods.getSchedulePublishTaskLists = function (assignedTo, teamId, sk
 };
 
 taskModel.methods.getNormalPublishTaskLists = function (assignedTo, teamId, skip, limit) {
+    // Fetching normal posts of an Team to an team member
     var query = {
         $and: [
             { "assignedUser.assignedTo": { $eq: assignedTo } },
@@ -134,6 +140,7 @@ taskModel.methods.getNormalPublishTaskLists = function (assignedTo, teamId, skip
 };
 
 taskModel.methods.assignTask = function (assignedBy, taskId, assignId, teamId) {
+    // Fetching assigned tasks details
     return this.model('TaskModels')
         .findOneAndUpdate(
             { _id: String(taskId), teamId: Number(teamId), ownerId: { $ne: assignId }, status: { $nin: ["Solved", "Rejected"] } },
@@ -148,6 +155,7 @@ taskModel.methods.assignTask = function (assignedBy, taskId, assignId, teamId) {
 };
 
 taskModel.methods.updatePublishTaskStatus = function (assignedTo, taskId, teamId, status) {
+    // Updating a task by an approval persion
     return this.model('TaskModels')
         .findOneAndUpdate(
             { _id: String(taskId), teamId: Number(teamId), status: { $ne: String(status) }, "assignedUser.assignedTo": { $eq: assignedTo }, type: { $in: [2, 3] } },
@@ -163,6 +171,7 @@ taskModel.methods.updatePublishTaskStatus = function (assignedTo, taskId, teamId
 
 taskModel.methods.deletePublishTask = function (ownerId, taskType, elementId) {
 
+    // Deleting a task detail by the Owner of that taskS
     var query = { type: { $in: [2, 3] }, ownerId: ownerId };
     switch (Number(taskType)) {
         case 2:

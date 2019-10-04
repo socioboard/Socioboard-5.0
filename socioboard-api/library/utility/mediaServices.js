@@ -1,6 +1,7 @@
 const download = require('download');
 const fs = require('fs');
 const mediaBasePath = "../../media/";
+const logger = require('../utils/logger');
 
 function MediaServices() {
     let moduleName = '';
@@ -76,7 +77,7 @@ MediaServices.prototype.DownloadGiphy = function () {
                                     mediaUrls.push(path);
                                 })
                                 .catch((error) => {
-                                    console.log(error);
+                                    logger.info(error);
                                 });
                         }
                         return;
@@ -130,7 +131,7 @@ MediaServices.prototype.DownloadImgur = function () {
                                     mediaUrls.push(path);
                                 })
                                 .catch((error) => {
-                                    console.log(error);
+                                    logger.info(error);
                                 });
                         }
                         return;
@@ -184,7 +185,7 @@ MediaServices.prototype.DownloadFlickr = function () {
                                     mediaUrls.push(path);
                                 })
                                 .catch((error) => {
-                                    console.log(error);
+                                    logger.info(error);
                                 });
                         }
                         return;
@@ -203,7 +204,6 @@ MediaServices.prototype.DownloadFlickr = function () {
             })
             .then(() => {
                 var updates = postDetails.map(function (item) {
-                    console.log(`Id: ${item.flickrId} and mediaUrl : ${JSON.stringify(item.serverMediaUrl)}`);
                     return FlickrMongoModel.findOneAndUpdate({ flickrId: item.flickrId }, { $push: { serverMediaUrl: { $each: item.serverMediaUrl } } });
                 });
                 return Promise.all(updates)
@@ -239,7 +239,7 @@ MediaServices.prototype.DownloadPixabay = function () {
                                     mediaUrls.push(path);
                                 })
                                 .catch((error) => {
-                                    console.log(error);
+                                    logger.info(error);
                                 });
                         }
                         return;
@@ -258,7 +258,6 @@ MediaServices.prototype.DownloadPixabay = function () {
             })
             .then(() => {
                 var updates = postDetails.map(function (item) {
-                    console.log(`Id: ${item.pixaBayId} and mediaUrl : ${JSON.stringify(item.serverMediaUrl)}`);
                     return PixaBayMongoModel.findOneAndUpdate({ pixaBayId: item.pixaBayId }, { $push: { serverMediaUrl: { $each: item.serverMediaUrl } } });
                 });
                 return Promise.all(updates)

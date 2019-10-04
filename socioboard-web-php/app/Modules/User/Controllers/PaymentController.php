@@ -16,7 +16,6 @@ use Mockery\CountValidator\Exception;
 
 class PaymentController extends Controller
 {
-
     /*
      * Author: Aishwarya_M <aishwarya@globussoft.in>
      * Desc: unauthorized users authorization: signup, login, forgotpassword, account activation
@@ -60,10 +59,8 @@ class PaymentController extends Controller
                     return redirect('/loader');
                 }
             }
-            dd($response);
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
         }
 
 

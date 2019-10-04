@@ -17,7 +17,7 @@ const profileController = require('./controllers/profileController');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook ResponseCode
+ *         description: Provide Facebook responseCode
  *         name: code
  *         type: string
  *         required: true
@@ -42,12 +42,12 @@ routes.get("/getOwnFacebookPages", profileController.getFacebookPages);
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To fetch the facebook groups
+ *     description: To fetch the Facebook groups
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook ResponseCode
+ *         description: Provide facebook responseCode
  *         name: code
  *         type: string
  *         required: true
@@ -71,16 +71,16 @@ routes.get("/getOwnFacebookGroups", profileController.getOwnFacebookGroups);
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To fetch the facebook groups
+ *     description: To fetch the Facebook joined groups
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook accountId
+ *         description: Provide facebook accountId
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: teamId
+ *         description: Provide teamId
  *         name: teamId
  *         type: integer
  *     responses:
@@ -105,12 +105,12 @@ routes.get("/getFacebookJoinedGroups", profileController.getFacebookGroups);
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To fetch the instagram profiles
+ *     description: To fetch the instagram business profiles
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Instagram responseCode from facebook
+ *         description: Provide Instagram responseCode from Facebook
  *         name: code
  *         type: string
  *         required: true
@@ -139,7 +139,7 @@ routes.get("/getInstaBusinessAccount", profileController.getInstaBusinessAccount
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: LinkedIn Response Code
+ *         description: Provide LinkedIn response Code
  *         name: code
  *         type: string
  *         required: true
@@ -169,7 +169,7 @@ routes.get("/getLinkedInCompanyProfiles", profileController.getcompanyProfileDet
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Google ResponseCode
+ *         description: Provide Google responseCode
  *         name: code
  *         type: string
  *         required: true
@@ -198,7 +198,7 @@ routes.get("/getYoutubeChannels", profileController.getYoutubeChannels);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Google ResponseCode
+ *         description: Provide Google responseCode
  *         name: code
  *         type: string
  *         required: true
@@ -212,36 +212,6 @@ routes.get("/getYoutubeChannels", profileController.getYoutubeChannels);
  */
 routes.get("/getGoogleAnalyticAccounts", profileController.getGoogleAnalyticAccounts);
 
-
-/**
- * @swagger
- * /v1/profile/getShortenUrl:
- *   get:
- *     operationId: secured_profile_getShortenUrl
- *     summary: Secured
- *     security:
- *     - AccessToken: []
- *     tags:
- *       - Profile
- *     description: To fetch the shorten urls
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: query
- *         description: long Urls
- *         name: longurl
- *         type: string
- *     responses:
- *       200:
- *         description: Return success!
- *       404: 
- *         description: Return Not Found or ErrorMessage
- *       401:
- *         $ref: "#/responses/unauthorizedError"
- */
-routes.get('/getShortenUrl', profileController.getShortenUrl);
-
-
 /**
  * @swagger
  * /v1/profile/createPinterestBoards:
@@ -252,20 +222,20 @@ routes.get('/getShortenUrl', profileController.getShortenUrl);
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To create a boards
+ *     description: To create a board
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Board Name
+ *         description: Provide board name
  *         name: boardName
  *         type: string
  *       - in: query
- *         description: Board Description
+ *         description: Provide board description
  *         name: boardDescription
  *         type: string
  *     responses:
@@ -289,12 +259,12 @@ routes.get("/createPinterestBoards", profileController.createPinterestBoards);
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To fetch the facebook pages
+ *     description: To fetch the Pinterest Boards
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *     responses:
@@ -318,16 +288,16 @@ routes.get("/fetchNewPinterestBoards", profileController.fetchNewPinterestBoards
  *     - AccessToken: []
  *     tags:
  *       - Profile
- *     description: To fetch the board Ids
+ *     description: To delete the particular pinterest board from Pinterest account
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: AccountId
+ *         description: Provide accountId
  *         name: accountId
  *         type: string
  *       - in: query
- *         description: Board Id
+ *         description: Provide board id
  *         name: boardId
  *         type: string
  *     responses:

@@ -1,4 +1,5 @@
 <div class="mb-3 bg-white fb-card rounded">
+
     <div class="card-body">
                 <span class="card_social_ribbon">
                   <i class="fab fa-facebook-f"></i>
@@ -38,7 +39,7 @@
         <span class="col-12 p-0 text-dark font-weight-bold">SocioBoard Facebook accounts</span>
 
         @foreach($socioboard_accounts->facebook as $account)
-            <a href="{{route('viewFBFeeds', ['account_id' =>  $account->account_id])}}"
+            <a href="{{route('socialNetworkDashboard', ['socialNetwork' => 'facebook', 'account_id' => $account->account_id])}}"
                class="col-6 col-md-4 col-sm-6 col-xs-6 p-0">
                 <div class="card-body bg-white p-1">
                     <img src="{{$account->profile_pic_url}}" style="max-width: 70px;" />

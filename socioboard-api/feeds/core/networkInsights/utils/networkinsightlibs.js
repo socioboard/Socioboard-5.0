@@ -22,6 +22,7 @@ class NetworkInsightLibs {
             if (!accountId || !filterPeriod) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating whether that account is belongs to Facebook page or not
                 return this.getSocialAccount(2, accountId, userId, teamId)
                     .then((socialAccount) => {
                         var dataPreset = null;
@@ -59,10 +60,13 @@ class NetworkInsightLibs {
                             default:
                                 throw new Error("please choose valid filter type");
                         }
+                        // Fetching insights from Facebook 
                         return this.facebookHelper.fbPageInsights(socialAccount.access_token, socialAccount.social_id, since, untill, dataPreset)
                             .then((response) => {
-                                if (response.data.length < 1)
+                                if (response && response.data && response.data.length < 1)
                                     resolve("Sorry, Account isn't active for specified time span");
+                                else if (response.error)
+                                    reject(response.error)
                                 else
                                     resolve(response);
                             })
@@ -84,6 +88,7 @@ class NetworkInsightLibs {
             if (!accountId || !filterPeriod) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating whether that account is belongs to youtube or not
                 return this.getSocialAccount(9, accountId, userId, teamId)
                     .then((socialAccount) => {
                         switch (Number(filterPeriod)) {
@@ -119,6 +124,7 @@ class NetworkInsightLibs {
                             throw new Error("Currently youtube didnt support today's and yesterday's insights, please choose some other");
                         }
                         else if (since <= untill) {
+                            // Fetching insights from youtube/google
                             return this.googleHelper.youtubeInsights(socialAccount.refresh_token, encodeURIComponent(socialAccount.social_id), since, untill)
                                 .then((response) => {
                                     resolve(response);
@@ -142,6 +148,7 @@ class NetworkInsightLibs {
             if (!accountId || !filterPeriod) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating whether that account is belongs to linkedin company or not
                 return this.getSocialAccount(7, accountId, userId, teamId)
                     .then((socialAccount) => {
                         switch (Number(filterPeriod)) {
@@ -182,6 +189,7 @@ class NetworkInsightLibs {
                                 throw new Error("please choose valid filter type");
                         }
                         if (since <= untill) {
+                            // Fetching insights from linkedin
                             return this.linkedInHelper.getCompanyInsights(socialAccount.access_token, socialAccount.social_id, since, untill)
                                 .then((response) => {
                                     resolve(response);
@@ -205,6 +213,7 @@ class NetworkInsightLibs {
             if (!accountId || !filterPeriod) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating whether that account is belongs to Instagram business or not
                 return this.getSocialAccount(12, accountId, userId, teamId)
                     .then((socialAccount) => {
                         switch (Number(filterPeriod)) {
@@ -256,10 +265,13 @@ class NetworkInsightLibs {
                             // In this case, some month we will get 31 days then subtract 1 day from that.
                             if (untill - since > (24 * 60 * 60 * 30))
                                 untill -= (24 * 60 * 60);
+                            // Fetching insights from Facebook/Instagram
                             return this.facebookHelper.instagramBusinessInsights(socialAccount.access_token, socialAccount.social_id, since, untill)
                                 .then((response) => {
-                                    if (response.data.length < 1)
+                                    if (response && response.data && response.data.length < 1)
                                         resolve("Sorry, Account isn't active for specified time span");
+                                    else if (response.error)
+                                        reject(response.error);
                                     else
                                         resolve(response);
                                 })
@@ -282,6 +294,7 @@ class NetworkInsightLibs {
             if (!accountId || !filterPeriod) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating whether that account is belongs to Twitter or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then(() => {
                         switch (Number(filterPeriod)) {
@@ -323,6 +336,7 @@ class NetworkInsightLibs {
                         }
                         if (since <= untill) {
                             var twitterInsightMongoModelObject = new TwitterInsightMongoModel();
+                            // Fetching insights from Twitter insight model of mongo DB
                             return twitterInsightMongoModelObject.getInsights(accountId, since, untill)
                                 .then((response) => {
                                     resolve(response);

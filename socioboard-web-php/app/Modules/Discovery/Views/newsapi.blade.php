@@ -43,11 +43,34 @@
         <div class="col-md-12">
             <div class="card bg-light border-0 shadow">
                 <div class="card-body">
-                    <form class="form-inline mb-2" id="newsForm">
-                        <label class="sr-only" for="newsapi_search">Keyword</label>
-                        <input type="text" class="form-control col-9 border-0 rounded-pill" id="newsapi_search"
-                               placeholder="keyword">
-                        <div class="text-center col-3">
+                    <form class="form-inline mb-2" id="newapiForm">
+                        <div class="form-group col-4">
+                            <label for="imgur_search">Keyword</label>
+                            <input type="text" class="form-control col-12 border-0 rounded-pill" id="newsapi_search" name="keyword"
+                                   placeholder="keyword" value="nature">
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="filter">Filter</label>
+                            <select class="form-control col-12" id="filter">
+                                <option value="business">business     </option>
+                                <option value="techcrunch">techcrunch</option>
+                                <option value="entertainment">entertainment</option>
+                                <option value="general">general</option>
+                                <option value="health">health</option>
+                                <option value="science">science</option>
+                                <option value="sports">sports</option>
+                                <option value="technology">technology</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="sort_by">Sort by</label>
+                            <select class="form-control col-12" id="sort_by">
+                                <option value="publishedAt">publishedAt</option>
+                                <option value="popularity">popularity</option>
+                                <option value="relevancy">relevancy</option>
+                            </select>
+                        </div>
+                        <div class="text-center col-2">
                             <button type="submit" class="btn btn-primary col-12 rounded-pill">Submit</button>
                         </div>
                     </form>
@@ -73,11 +96,15 @@
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'News API';
         var val=[];
         var result=[];
 
         $(document).ready(function(){
             $(document).on('click','.resocio', function(){
+                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -86,7 +113,6 @@
                 var image = $(this).closest('.card').find('img').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 result = val.split(',')
-                console.log("hdjshd=> ",result)
                 $.each(result, function(key,value) {
                     if(value.indexOf(".jpg") >= 1){
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
@@ -108,13 +134,12 @@
 
                 $('#postModal').modal('show');
 
-//                    console.log('image===>',image);
             });
             $(document).on('click','.resociovideo', function(){
+                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 var video = $(this).closest('.card').find('source').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 $('#postModal').modal('show');
-//                    console.log('video===>',video);
             });
 
 
@@ -126,7 +151,6 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
             });
             $('#hint_brand').on('hide', function (e) {
                 names = [];
@@ -164,12 +188,10 @@
                     $('#testText').html('Uploading');
                 },
                 success: function (response) {
-                    console.log(response);
 
                     $('#test').hide();
                     $('#testText').html('Post');
 
-                    console.log(response);
 //                document.getElementById("publishForm").reset();
                     $('#publishForm').trigger("reset");
                     $(".emojionearea-editor").text("");
@@ -208,13 +230,15 @@
 
     </script>
     <script>
-        var data = "a";
+        var data = 'nature';
         var pageId1 = 1;
+        var filterBy ="business";
+        var sortBy = "publishedAt";
         var action = "inactive";
         if(action=='inactive')
         {
             action ="active";
-            getNews(data, pageId1,0);
+            getNews(data,filterBy,sortBy,pageId1,0);
         }
         // normal post emoji
         $("#normal_post_area").emojioneArea({
@@ -239,16 +263,17 @@
         //            function resocio(){
         ////                debugger;
         ////              var i = $(this).closest('.card').find('img').attr('src');
-        ////                console.log('image===>',i);
         //            }
 
-        function getNews(keyword,pageId,search){
+        function getNews(keyword,filter,sort,pageId,search){
             var newData = "";
             $.ajax({
                 url: "/getNews",
                 type: 'POST',
                 data: {
                     keyword:keyword,
+                    filter: filter,
+                    sort: sort,
                     pageId: pageId
                 },
                 beforeSend:function(){
@@ -262,7 +287,6 @@
 
                     if(response.code == 200){
                         pageId1 += 1;
-                        console.log("inc after succ ================"+pageId1);
                         if(response.newsApiDetails.length == 0){
                             action = "active";
                         }else{
@@ -305,12 +329,18 @@
 
         $(document).ready(function(){
 
-            $(document).on('submit','#newsForm',function(e){
+            $(document).on('submit','#newapiForm',function(e){
                 e.preventDefault();
 
                 var data = $('#newsapi_search').val();
-                pageId1 = 1;
-                getNews(data, pageId1,1);
+                filterBy = document.getElementById("filter").value;
+                sortBy= document.getElementById("sort_by").value;
+                if(data == ""){
+                    swal("Please enter valid input");
+                }else{
+                    pageId1 = 1;
+                    getNews(data,filterBy,sortBy, pageId1,1);
+                }
             });
 
         });
@@ -320,9 +350,9 @@
             if ($(window).scrollTop() + $(window).height() >= $("#news").height() && action == 'inactive') {
 //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-
+                console.log(data,filterBy,sortBy);
                 setTimeout(function () {
-                    getNews(data, pageId1,0);
+                    getNews(data,filterBy,sortBy, pageId1,0);
                 }, 1000);
             }
         });
@@ -330,5 +360,4 @@
 
 
     </script>
-
 @endsection

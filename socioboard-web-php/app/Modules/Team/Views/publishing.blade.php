@@ -496,7 +496,6 @@
 
                 },
                 success: function (response) {
-                    console.log(response);
 
                     return 1;
 
@@ -618,7 +617,6 @@
                         }
                         picReader.readAsDataURL(file);
                     }
-                    console.log(names);
                 } else if (getAttr == 'type2') {
 //                    debugger;
 
@@ -660,7 +658,6 @@
                         picReader.readAsDataURL(file);
                     }
                     // return array of file name
-                    console.log(names);
                 }
 
             });
@@ -673,7 +670,6 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
 
 
             });

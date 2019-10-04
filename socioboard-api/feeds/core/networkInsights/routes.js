@@ -17,24 +17,24 @@ const networkSightController = require('./controllers/networkInsightControllers'
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Facebook Page Account Id
+ *         description: Provide facebook page account id
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Filter Period 1- Today, 2-Yesterday, 3-Last 7 days, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         description: Specify filter period 1- Today, 2-Yesterday, 3-Last 7 days, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
  *         name: filterPeriod
  *         type: integer
  *         enum: [1,2,3,4,5,6,7]         
  *       - in: query
- *         description: Custom since range in unix timestamp only if filterPeriod is 6 otherwise give -1
+ *         description: Specify custom since range in unix timestamp only if filterPeriod is 7 otherwise give -1
  *         name: since
  *         type: string 
  *       - in: query
- *         description: Custom untill range in unix timestamp only if filterPeriod is 6 otherwise give -1
+ *         description: Specify custom untill range in unix timestamp only if filterPeriod is 7 otherwise give -1
  *         name: untill
  *         type: string 
  *     responses:
@@ -63,24 +63,24 @@ routes.get('/getFacebookPageInsights', networkSightController.facebookPageInsigh
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Youtube Account Id
+ *         description: Provide youtube account id
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         description: Specify filter period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
  *         name: filterPeriod
  *         type: integer
  *         enum: [1,2,3,4,5,6,7]         
  *       - in: query
- *         description: Custom since range in YYYY-MM-DD format
+ *         description: Specify custom since range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: since
  *         type: string 
  *       - in: query
- *         description: Custom untill range in YYYY-MM-DD format
+ *         description: Specify custom untill range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: untill
  *         type: string 
  *     responses:
@@ -111,24 +111,24 @@ routes.get('/getYoutubeInsights', networkSightController.getYoutubeInsights);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: LinkedIn Company Account Id
+ *         description: Provide linkedIn company account id
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         description: Specify filter period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
  *         name: filterPeriod
  *         type: integer
  *         enum: [1,2,3,4,5,6,7]         
  *       - in: query
- *         description: Custom since range in YYYY-MM-DD format
+ *         description: Specify custom since range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: since
  *         type: string 
  *       - in: query
- *         description: Custom untill range in YYYY-MM-DD format
+ *         description: Specify custom untill range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: untill
  *         type: string 
  *     responses:
@@ -158,24 +158,24 @@ routes.get('/getLinkedInCompanyInsights', networkSightController.getLinkedInComp
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Instagram business account id
+ *         description: Provide instagram business account id
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         description: Specify filter period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
  *         name: filterPeriod
  *         type: integer
  *         enum: [1,2,3,4,5,6,7]         
  *       - in: query
- *         description: Custom since range in YYYY-MM-DD format
+ *         description: Specify custom since range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: since
  *         type: string 
  *       - in: query
- *         description: Custom untill range in YYYY-MM-DD format
+ *         description: Specify custom untill range in YYYY-MM-DD format (if filterPeriod is 7)
  *         name: untill
  *         type: string 
  *     responses:
@@ -204,24 +204,24 @@ routes.get('/getInstagramBusinessInsights', networkSightController.getInstagramB
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: Team Id
+ *         description: Provide team Id
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         description: Specify filter period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
  *         name: filterPeriod
  *         type: integer
  *         enum: [1,2,3,4,5,6,7]         
  *       - in: query
- *         description: Custom since range in YYYY-MM-DD format
+ *         description: Specify custom since range in YYYY-MM-DD format
  *         name: since
  *         type: string 
  *       - in: query
- *         description: Custom untill range in YYYY-MM-DD format
+ *         description: Specify custom untill range in YYYY-MM-DD format
  *         name: untill
  *         type: string 
  *     responses:

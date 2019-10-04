@@ -2,40 +2,7 @@
 @section('title')
     <title>SocioBoard | Profile Settings</title>
 @endsection
-@section('nav')
-    <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="teamNavbarDropdown" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-chalkboard-teacher text-primary" data-toggle="tooltip" data-placement="bottom" title="Teams"></i>
-            </a>
-            @if(session()->has('team'))
-                {{--                {{session()->get('team')['teamSocialAccountDetails'][0][0]->team_id}}--}}
-                <div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">
-                    @for ($i = 0; $i < count(session()->get('team')['teamSocialAccountDetails']); $i++)
-                        @if($i == 0)
-                            <a class="dropdown-item active"  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][0][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>
 
-                            @else
-                        <a class="dropdown-item "  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>
-                        @endif
-                    @endfor
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{env('APP_URL')}}view-team/{{session()->get('currentTeam')['team_id']}}" id="">View Team</a>
-                    <a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>
-
-                </div>
-            @else
-                <div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">
-                    <a class="dropdown-item active" href="#">SocioBoard</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{env('APP_URL')}}view-team?id=">View Team</a>
-                    <a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>
-                </div>
-            @endif
-        </li>
-    </ul>
-@endsection
 
 @section('account')
     <div class="border-0" style="padding: 50px 0;">
@@ -50,9 +17,10 @@
                            role="tab" aria-controls="v-pills-password" aria-selected="false"> Change Password</a>
                         {{--<a class="nav-link rounded-0" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-email"--}}
                            {{--role="tab" aria-controls="v-pills-email" aria-selected="false">Email And SMS</a>--}}
-                        <a class="nav-link rounded-0" id="v-pills-privacy-security-tab" data-toggle="pill" href="#v-pills-privacy-security"
-                           role="tab" aria-controls="v-pills-privacy-security" aria-selected="false">Privacy
-                            and Security</a>
+                        {{--removed temporarily--}}
+                        {{--<a class="nav-link rounded-0" id="v-pills-privacy-security-tab" data-toggle="pill" href="#v-pills-privacy-security"--}}
+                           {{--role="tab" aria-controls="v-pills-privacy-security" aria-selected="false">Privacy--}}
+                            {{--and Security</a>--}}
                         <a class="nav-link rounded-0" id="v-pills-billing-tab" data-toggle="pill" href="#v-pills-billing"
                            role="tab" aria-controls="v-pills-billing" aria-selected="false">Billing and Plans</a>
                     </div>
@@ -66,12 +34,13 @@
                                 <h1 style="color: green" id="profileSuccess"></h1>
                                 <form id="profileUpdate">
                                     <div class="form-group row">
-                                        <label for="fname" class="col-sm-2 col-form-label"><b class="float-right">Name</b></label>
+                                        <label for="fname" class="col-sm-2 col-form-label"><b class="float-right">First Name</b></label>
                                         <div class="col-sm-4">
                                             <input type="text" name="firstName" class="form-control border border-light" id="fname"
-                                                   placeholder="First Name">
+                                                   placeholder="First Name" value=" {{session('user')['userDetails']->first_name}}">
                                             <p id="firstNameErr"  style="color: red;"></p>
                                         </div>
+                                        <label for="fname" class="col-sm-2 col-form-label"><b class="float-right">Last Name</b></label>
 
                                         <div class="col-sm-4">
                                             <input type="text" name="lastName" class="form-control border border-light" id="lname"
@@ -83,7 +52,7 @@
                                     <div class="form-group row">
                                         <label for="phone" class="col-sm-2 col-form-label"><b class="float-right">Phone</b></label>
                                         <div class="col-sm-2">
-                                            <input type="number" name="code" class="form-control border border-light" id="countrycode"
+                                            <input type="text" name="code" class="form-control border border-light" id="countrycode"
                                                    placeholder="+xx">
                                         </div><div class="col-sm-4">
                                             <input type="number" name="phone" class="form-control border border-light" id="phone"
@@ -306,8 +275,10 @@
                                     <h6>You're currently paying <b>{{session()->get('user')['userDetails']->userPlanDetails->plan_price}}</b> per month on your plan. </h6>
                                     <a href="{{env('APP_URL')}}updatePlan" class="btn btn-sm btn-primary">Switch To
                                         Business Plan</a>
-                                    <a href="javascript:void(0);" class="btn btn-sm btn-secondary">Download
+                                    <a href=JavaScript:void(0); class="btn btn-sm btn-secondary" download="invoice.pdf"   onclick="getInvoice()" >Download
                                         Invoice</a>
+                                    {{--<a href="javascript:void(0);" class="btn btn-sm btn-secondary">Download--}}
+                                        {{--Invoice</a>--}}
                                     <a href="#" class="btn btn-sm btn-danger plan" id="0">Cancel Plan</a>
                                 </div>
                             </div>
@@ -523,6 +494,66 @@
 @endsection
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'User';
+        var eventAction = 'Settings';
+        //for Invoice
+        getUserInfo();
+        function getInvoice(){
+            $.ajax({
+                url: "/get-invoice",
+                cache: false,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function (response) {
+                    if(response.code == 200){
+//                        window.open(response.file);
+                        var file = response.file;
+                        window.open(file,'_blank');
+                    }
+                },
+                error:function(error){
+//                        document.getElementById("change_pw").reset();
+                }
+            })
+
+
+
+
+        }
+        function getUserInfo(){
+            $.ajax({
+                type: 'get',
+                url: "/get-user-info",
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if(response['code'] == "200"){
+                        document.getElementById("phone").value = response['details']['phone_no'];
+                        document.getElementById("lname").value = response['details']['last_name'];
+                        document.getElementById("dob").value = response['details']['date_of_birth'];
+                        document.getElementById("countrycode").value = response['details']['phone_code'];
+                        document.getElementById("bio").value = response['details']['about_me'];
+                    }
+                    else{
+                        swal(response['message']);
+                    }
+
+                },
+                error:function(error){
+                    console.log(error)
+                }
+            })
+
+
+
+
+        }
+
+
+
         $(document).ready(function(){
             $(document).on('submit','#change_pw',function(e){
                 e.preventDefault();
@@ -548,7 +579,6 @@
                             $('#current_pw_err').text(response.errors);
 
                         }else if(response.code == 202){
-//                            console.log(response.errors)
 //                            if(response.code)
                             if(response.errors.confirm_password != null) {
                                 $('#conf_passwd_err').text(response.errors.confirm_password[0]);
@@ -560,14 +590,11 @@
                                 $('#old_passwd_err').text(response.errors.old_password);
                             }
                         }else if(response.code == 200){
-                            console.log(response.message)
                             $('#current_pw_suc').text(response.message);
 
                         }
-//                        console.log(response.success);
 //                        document.getElementById("change_pw").reset();
 //                        if(response.code === 200){
-//                            console.log(response.message);
 //                        }else if(response.code === 404){
 //
 //                        }else{
@@ -602,7 +629,6 @@
                          * 201=>Profile Updation failed;(
                          * 200: Profile Updated Successfully!
                          * 500: Something went wrong*/
-                        console.log(response)
                         if(response.code == 202){
                             if(response.errors.firstName != null){
                                 $('#firstNameErr').text(response.errors.firstName);
@@ -662,7 +688,6 @@
 //                        "newPlan":newPlan
 //                    },
 //                    success:function(response){
-//                        console.log(response)
 //
 //                        /*
 //                        * 200 success 202 success => redirect url
@@ -680,7 +705,6 @@
 //                            });
 //                            location.reload();
 //                        }else if(response.code == 400){
-//                            console.log(1111)
 //                            swal({
 //                                text: response.message,
 //                                type:"warning",
@@ -701,7 +725,6 @@
 ////                        }
 //                    },
 //                    error:function(error){
-//                        console.log(error)
 //                    }
 //                })
 //
@@ -717,8 +740,6 @@
         });
 
     </script>
-
-
     @include('User::dashboard.planUpgradationjs')
         @endsection
 

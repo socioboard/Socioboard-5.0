@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Modules\Team\Controllers\TeamController;
+
 
 Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\Modules\Team\Controllers'], function () {
 
@@ -15,8 +17,11 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('/edit-team', 'TeamController@editteam');
         Route::get('accept-invitation', 'TeamController@acceptInvitation');
         Route::post('accept-invitation', 'TeamController@acceptInvitation'); // accept inv
-        Route::post('decline-invitation', 'TeamController@declineInvitation'); // accept inv
-        Route::post('withdraw-invitation', 'TeamController@withdrawInvitation'); // accept inv
+        Route::post('decline-invitation', 'TeamController@declineInvitation'); // decline inv
+        Route::post('withdraw-invitation', 'TeamController@withdrawInvitation'); // withdraw inv
+        Route::post('/remove-member', 'TeamController@removeMember');//remove member
+        Route::post('/leave-team', 'TeamController@leaveTeam');//leave team
+
 
         //facebook
         Route::get('/facebook-add/{network}/{team}', 'FacebookController@FacebookAdd');
@@ -30,24 +35,9 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('deleteSocialAccount', 'FacebookController@deleteSocialAccount');
         //    Route::get('view-facebook-feeds/{accountid}','FacebookController@viewFacebookFeeds');
 
-        Route::get('view-facebook-feeds/{accountid}', function ($account_id) {
-            $FBController = new \App\Modules\Team\Controllers\FacebookController();
-            return $FBController->viewPage($account_id);
-        })->name('viewFBFeeds');
-
-        /*
-        Route::any('view-facebook-feeds/{accountid}/{pageId}', function (Request $request, $accountId, $pageId) {
-            $controller = new \App\Modules\Team\Controllers\FacebookController();
-            return $controller->viewPosts($request, $accountId, $pageId);
-        })
-            ->where('pageId', '[0-9]+')
-            ->name('facebookPageContent');
-            */
-
         // postFiles
         Route::post('view-facebook-feeds/{accountid}/postFiles', function (Request $request) {
-            $FBController = new \App\Modules\Team\Controllers\FacebookController();
-            return $FBController->uploadMedia($request);
+            return TeamController::uploadMedia($request);
         });
 
         Route::get('deleteFacebookPageSes', 'FacebookController@deleteFacebookPageSes');
@@ -59,89 +49,60 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
 
         // ------------------- TWITTER --------------------------
 
-        Route::get('view-twitter-feeds/{accountid}', function ($account_id, Request $request) {
+        /*
+                Route::get('view-twitter-feeds/{accountid}', function ($account_id, Request $request) {
 
-            $controller = new \App\Modules\Team\Controllers\TwitterController();
-            return $controller->viewPage($account_id, $request);
-        })->name('viewTwitterFeeds');
-
+                    $controller = new \App\Modules\Team\Controllers\TwitterController();
+                    return $controller->viewPage($account_id, $request);
+                })->name('viewTwitterFeeds');
+        */
 
         // -------------------- Common routes ------------------
+        Route::group(['prefix' => '/view-{socialNetwork}-feeds'], function () {
 
-        // pages
-        Route::any('view-{socialNetwork}-feeds/{accountid}/{pageId}', function (Request $request, $socialNetwork, $accountId, $pageId) {
-            switch ($socialNetwork) {
-                case 'facebook':
-                    $controller = new \App\Modules\Team\Controllers\FacebookController();
-                    break;
-                case 'twitter':
-                    $controller = new \App\Modules\Team\Controllers\TwitterController();
-                    break;
-                default:
-                    return json_encode(['error'=>'no social network selected']);
-            }
+            $c = new \App\Modules\Team\Controllers\TeamController();
 
-            return $controller->viewPosts($request,$accountId, $pageId);
+            Route::get('aaa', function ($socialNetwork) use ($c) {
+                print_r($c);
+                dd($socialNetwork);
+            });
+        });
+
+        // dashboard
+        Route::get('view-{socialNetwork}-feeds/{accountid}', function (Request $request, $socialNetwork, $account_id) {
+            return TeamController::getControllerInstance($socialNetwork)->viewPage($account_id, $request);
+        })->name('socialNetworkDashboard');
+
+        // page
+
+        // for Pinterest only
+        Route::any('view-pinterest-feeds/{accountId}/{pageId}', function ($accountId, $pageId) {
+            $pc = new \App\Modules\Team\Controllers\PinterestController();
+            return $pc->viewPage($accountId, $pageId);
         })
             ->where('pageId', '[0-9]+')
-            ->name('facebookPageContent');
+            ->name('socialNetworkPinterestPageContent');
 
-
+        // for all the Networks
+        Route::any('view-{socialNetwork}-feeds/{accountid}/{pageId}', function (Request $request, $socialNetwork, $accountId, $pageId) {
+            return TeamController::getControllerInstance($socialNetwork)->viewPosts($request, $accountId, $pageId);
+        })
+            ->where('pageId', '[0-9]+')
+            ->name('socialNetworkPageContent');
 
         // send Like
         Route::any('view-{socialNetwork}-feeds/{accountId}/sendLike', function (Request $request, $socialNetwork, $accountId) {
-            switch ($socialNetwork) {
-                case 'facebook':
-                    $controller = new \App\Modules\Team\Controllers\FacebookController();
-                    break;
-                case 'twitter':
-                    $controller = new \App\Modules\Team\Controllers\TwitterController();
-                    break;
-                default:
-                    return json_encode(['error'=>'no social network selected']);
-            }
-
-            return $controller->sendLike($request->input('postId'), $accountId);
+            return TeamController::getControllerInstance($socialNetwork)->sendLike($request->input('postId'), $accountId);
         });
-
 
         // send Comment
         Route::post('view-{socialNetwork}-feeds/{accountid}/sendComment', function (Request $request, $socialNetwork) {
-
-            switch ($socialNetwork) {
-                case 'facebook':
-                    $controller = new \App\Modules\Team\Controllers\FacebookController();
-                    break;
-                case 'twitter':
-                    $controller = new \App\Modules\Team\Controllers\TwitterController();
-                    break;
-                default:
-                    return json_encode(['error'=>'no social network selected']);
-            }
-
-            return $controller->sendComment($request);
+            return TeamController::getControllerInstance($socialNetwork)->sendComment($request);
         });
-
 
         // re-share
         Route::post('view-{socialNetwork}-feeds/{accountid}/reShare', function (Request $request, $socialNetwork) {
-
-            /*
-            switch ($socialNetwork) {
-                case 'facebook':
-                    $controller = new \App\Modules\Team\Controllers\FacebookController();
-                    break;
-                case 'twitter':
-            */
-                    $controller = new \App\Modules\Team\Controllers\TwitterController();
-              /*
-                    break;
-            }
-              */
-
-
-
-            return $controller->publishPost($request);
+            return TeamController::publishPost($request);
         });
 
         // ------------------------------------------------------
@@ -175,6 +136,7 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('get-facebook-insight', 'ReportController@getFacebookFanInsight');
         Route::post('get-youtube-insight', 'ReportController@getYoutubeInsight');
         Route::post('get-insta-insight', 'ReportController@getInstaInsight');
+        Route::post('get-twitter-insight', 'ReportController@getTwitterInsight');
 
 
         //youtube Feeds

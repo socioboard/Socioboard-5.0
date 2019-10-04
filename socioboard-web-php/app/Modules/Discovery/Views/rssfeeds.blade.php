@@ -1,6 +1,6 @@
 @extends('User::dashboard.master')
 @section('title')
-    <title>SocioBoard | Discovery Flickr</title>
+    <title>SocioBoard | Discovery RSS</title>
 @endsection
 
 @section('style')
@@ -72,7 +72,9 @@
 @section('script')
 @include("Discovery::incLinkPostJs")
     <script>
-
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'RSS-Feeds';
 
         var data = "http://feeds.bbci.co.uk/news/rss.xml";
         var pageId1 = 1;
@@ -105,7 +107,6 @@
         //            function resocio(){
         ////                debugger;
         ////              var i = $(this).closest('.card').find('img').attr('src');
-        ////                console.log('image===>',i);
         //            }
 
         function getRss(keyword,pageId,search){
@@ -129,7 +130,6 @@
                     if(response.code == 200){
 
                         pageId1 += 1;
-                        console.log("inc after succ ================"+pageId1);
                         $("#bootLoader").css("display","none");
                         if(response.rssDetails.length == 0){
                             action = "active";
@@ -176,9 +176,14 @@
 
             $(document).on('submit','#rssForm',function(e){
                 e.preventDefault();
-                pageId1 =1
-                 data = $('#rss_search').val();
-                getRss(data, pageId1,1);
+
+                data = $('#rss_search').val();
+                if(data == ""){
+                    swal("Please enter valid input");
+                }else {
+                    pageId1 =1
+                    getRss(data, pageId1,1);
+                }
             });
         });
 
@@ -197,5 +202,4 @@
 
 
     </script>
-
 @endsection

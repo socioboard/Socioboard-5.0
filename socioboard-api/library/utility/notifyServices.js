@@ -1,5 +1,6 @@
 const requestPromise = require('request-promise');
 const NotifyModel = require('../mongoose/models/notifications');
+const logger = require('../utils/logger');
 
 function Notification(host_url) {
 
@@ -77,33 +78,10 @@ function Notification(host_url) {
         }
     });
 
-    let targetUserId = '';
-    Object.defineProperty(this, 'targetUserId', {
-        set: function (targetUsers) {
-            if (typeof targetUsers == 'array') {
-                targetUserId = targetUsers;
-            }
-        },
-        get: function () {
-            return targetUserId;
-        }
-    });
-
-    let targetTeamId = '';
-    Object.defineProperty(this, 'targetTeamId', {
-        set: function (teamIds) {
-            if (typeof teamIds == 'array') {
-                targetTeamId = teamIds;
-            }
-        },
-        get: function () {
-            return targetTeamId;
-        }
-    });
 }
 
 
-Notification.prototype.saveNotifications = function saveNotifications() {
+Notification.prototype.saveNotifications = function () {
     var mongoDetails = {
         notificationMessage: this.notificationMessage,
         teamName: this.teamName,
@@ -111,30 +89,29 @@ Notification.prototype.saveNotifications = function saveNotifications() {
         initiatorName: this.initiatorName,
         profileType: this.profileType,
         status: this.status,
-        targetUserIds: this.targetUserIds,
-        targetTeamIds: this.targetTeamIds
-    }
+        targetUserIds: this.targetUserId,
+        targetTeamIds: this.targetTeamsId
+    };
     var notifyMongo = new NotifyModel(mongoDetails);
     return notifyMongo.save();
 };
 
 
-Notification.prototype.sendTeamNotification = function sendTeamNotification(teamId, Message) {
-    console.log(`Message : \n ${Message}`);
+Notification.prototype.sendTeamNotification = function (teamId, Message) {
     return requestPromise(`${this.host_url}/v1/notify/sendTeamNotification?teamId=${teamId}&notificationDetails=${Message}`)
         .then(() => {
-            console.log("Send Notifications");
+            logger.info("Send Notifications");
             return;
         })
         .catch((error) => {
-            return;
+            throw error;
         });
 };
 
-Notification.prototype.sendUserNotification = function sendUserNotification(userId, Message) {
+Notification.prototype.sendUserNotification = function (userId, Message) {
     return requestPromise(`${this.host_url}/v1/notify/sendUserNotification?userId=${userId}&notificationDetails=${Message}`)
         .then(() => {
-            console.log("Send Notifications");
+            logger.info("Send Notifications");
             return;
         })
         .catch((error) => {

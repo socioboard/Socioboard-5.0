@@ -45,7 +45,6 @@ class PublishController extends Controller
                         $boards = $response->pinterestBoards;
                     }
                 }
-//dd($boards);
             }catch (\Exception $e){
                 Log::info('Schedule post page '.$e->getFile()." => @ ".$e->getLine()."=> ".$e->getMessage());
             }
@@ -54,7 +53,6 @@ class PublishController extends Controller
                 'boards'=>$boards
             ]);
         }else if($request->isMethod('POST')){
-            dd(11);
         }
     }
 
@@ -62,26 +60,67 @@ class PublishController extends Controller
 
             $helper =Helper::getInstance();
             $accountType=[];
+            $boardsData=[];
             $publishData=[];
             $publishData=[];
             $publishVideos=[];
+            $pinboardata =[];
+            $privacy = env('POST_PRIVACY'); // default public
+            $link=$request->link;
             $postType="Text";
             $postStatus = $request->postStatus;
-            if($request->message == ""){
+            if($request->message == "" && $request->link == "" ){
                 $result['code']=404;
                 $result['status']="failure";
-                $result['message']="Message field is required";
+//                $result['message']="Message field or outgoing link is required";
+                $result['message']="Message field or link is required";
                 return ($result);
-
             }
-            $accountType =  explode(",",$request["checked"]);
-            $publishImages =[];
-//for checking if profiles selected are not
-            if(count($accountType) == 1 && $accountType[0] == "" ){
+        $acc = explode(",",$request["checked"]);
+            if($acc[0] != "") $accountType = explode(",",$request["checked"]);
+
+        $publishImages =[];
+            //for checking if profiles selected are not
+            if(count($accountType) == 1 && $accountType[0] == "" &&  $request->selectedBoards == ""){
                 $result['code']=400;
                 $result['status']="failure";
                 $result['message']="Please select atleast 1 account.";
                 return ($result);
+            }
+            if($request->selectedBoards != ""){
+                if($request->imageName == "" || $request->message ==""){
+                    $result['code']=400;
+                    $result['status']="failure";
+                    $result['message']="For posting on boards image, message and link are necessary";
+                    return ($result);
+                }
+                $postType ="Image";
+
+                $k=0;
+                $baordsAcc = explode(',',$request->selectedBoards);
+                $j=0;
+                for($i=0;$i<count($baordsAcc);$i++){
+                    if (isset($boardsData[$j-1]['accountId']) && $boardsData[$j-1]['accountId'] == explode('_',$baordsAcc[$i])[0]){
+                        $boardsData[$j-1]['boardId'][$k] = explode('_',$baordsAcc[$i])[1];
+                        $k++;
+                        unset($baordsAcc[$i]);
+                        $baordsAcc = array_values($baordsAcc);
+                        $i--;;
+                        print_r($i);
+                        echo "</br>";
+                    }else{
+                        $k=0;
+                        $boardsData[$j]['accountId'] = (int)explode('_',$baordsAcc[$i])[0];
+                        $boardsData[$j]['boardId'][$k] = explode('_',$baordsAcc[$i])[1];
+                        array_push($accountType,explode('_',$baordsAcc[$i])[0]);
+                        $k++;
+                        $j++;
+
+                    }
+                }
+                for($m=0;$m<count($boardsData);$m++){
+                    array_push($pinboardata,$boardsData[$m]);
+                }
             }
             try{
                 $team = Session::get('currentTeam')['team_id'];
@@ -106,7 +145,7 @@ class PublishController extends Controller
                             file_put_contents($path, file_get_contents($image->path()));
                             $filedata = array("name"=>"media",
                                 "file"=>$path);
-                            $response = $helper->apiCallPostPublish($filedata,"upload/media?teamId=".$team."&privacy=0",true);
+                            $response = $helper->apiCallPostPublish($filedata,"upload/media?title=publish&teamId=".$team."&privacy=".$privacy,true);
                             if($response['statusCode'] == 200){
 
                                 //getting filename for
@@ -150,218 +189,26 @@ class PublishController extends Controller
                     }
                 }
 
-                $pin = array("accountId"=>0,
-                    "boardId"=>['string']);
-                $pinD = json_encode($pin );
-                //Publish videos
-//                if($publishVideos != null){
-                    $publishData=array(
-                        "postType"=>$postType,
-                        "postStatus"=>$postStatus,
-                        "message"=>$request->message,
-                        "link"=>"",
-                        "mediaPaths"=>$publishImages,
-                        "accountIds"=>$accountType,
-                        "pinBoards"=> [
-                            $pinD
-                        ]
-                    );
-//                }
-
-//dd($publishData);
-
-//                //publish images
-//                if($publishImages != null){
-//                    $publishData=array(
-//                        "postType"=>$postType,
-//                        "postStatus"=>$postStatus,
-//                        "message"=>$request->message,
-//                        "link"=>"",
-//                        "mediaPaths"=>$publishImages,
-//                        "accountIds"=>$accountType,
-//                        "pinBoards"=> [
-//                            $pinD
-//                        ]
-//                    );
-
-
-//                }
-
-//                //publish texts
-//                $publishData=array(
-//                    "postType"=>$postType,
-//                    "postStatus"=>$postStatus,
-//                    "message"=>$request->message,
-//                    "link"=>"",
-//                    "mediaPaths"=>$publishImages,
-//                    "accountIds"=>$accountType,
-//                    "pinBoards"=> [
-//                        $pinD
-//                    ]
-//                );
-
-
-
-
-                $publishresponse = $helper->apiCallPostPublish($publishData,"publish/publishPosts?teamId=".$team);
-
-                if($publishresponse['statusCode'] == 200 && $publishresponse['data']['code']==200 && $publishresponse['data']['status']=="success"){
-                    $result['code']=200;
-                    $result['message']=$publishresponse['data']['message'];
-                    $result['status']="success";
-                    return $result;
-                }else if( $publishresponse['data']['code']==400 && $publishresponse['data']['status']=="failed" ){
-                    $result['code']=500;
-                    $result['status']="failure";
-                    $result['message']=$publishresponse['data']['error'];
-                    return ($result);
-                }
-
-            }catch (\Exception $e){
-//           echo $e->getMessage();
-                Log::info(" Exception on post ".$e->getFile()."  =>line=>  ".$e->getLine()."  =>  ".$e->getMessage());
-                $result['code']=500;
-                $result['status']="failure";
-                $result['message']=$e->getMessage();
-                return ($result);
-            }
-
-        }
-
-
-
-
-
-
-
-        public function publishDataold(Request $request){
-            $helper =Helper::getInstance();
-            $accountType=[];
-            $publishData=[];
-            $publishData=[];
-            $publishVideos=[];
-            $postType="Text";
-
-            if($request->message == ""){
-                $result['code']=404;
-                $result['status']="failure";
-                $result['message']="Message field is required";
-                return ($result);
-
-            }
-            $accountType =  explode(",",$request["checked"]);
-            $publishImages =[];
-//for checking if profiles selected are not
-            if(count($accountType) == 1 && $accountType[0] == "" ){
-                $result['code']=400;
-                $result['status']="failure";
-                $result['message']="Please select atleast 1 account.";
-                return ($result);
-            }
-            try{
-                if($request->hasFile('imageName')){
-                    if($request->hasFile('videoupload')){
-                        $result['code']=400;
-                        $result['status']="failure";
-                        $result['message']="Please select only images or videos. Not both at a time";
-                        return ($result);
+                if($request->link != ""){
+                    if($request->selectedBoards == ""){
+                        $postType ="Link";
                     }
-
-                    //TODO image validation has to be done
-                    foreach($request->imageName as $image){
-                        if(substr($image->getMimeType(), 0, 5) == 'image') {
-                            $postType = "Image";
-                            $pathToStorage = storage_path("uploadimages");
-                            if (!file_exists($pathToStorage))
-                                mkdir($pathToStorage, 0777, true);
-                            $publishimage = $image->getClientOriginalName();
-                            $path = $pathToStorage."/".$publishimage ;
-                            Log::info("Publish file Path:".$path);
-                            file_put_contents($path, file_get_contents($image->path()));
-                            $filedata = array("name"=>"media",
-                                "file"=>$path);
-                            $response = $helper->apiCallPostPublish($filedata,"upload/images",true);
-                            if($response['statusCode'] == 200){
-                                //getting filename for
-                                $publishImages[]=$response['data'][0]['filename'];
-                                File::Delete($filedata['file']);
-                                Log::info("Deleted a file -> ".$filedata['file']." after sending file to api. Dated-> ".date('y/m/d'));
-                            }
-                        }else{
-                            $result['code']=400;
-                            $result['status']="failure";
-                            $result['message']="Select only images or videos";
-                            return ($result);
+                    if((int)Session::get('user')['userDetails']->Activations->shortenStatus == 1){
+                        $shortenLinkResponse = $helper->apiCallGet("user/getShortenUrl?longurl=".$request->link);
+                        if($shortenLinkResponse->code == 200){
+                            $link = $shortenLinkResponse->message->shortLink;
                         }
                     }
-                }
-                if(isset($request->videoupload)){
-                    //TODO video validation has to be done
-                    foreach($request->videoupload as $video){
-
-                        $postType = "Video";
-                        $pathToStorage = storage_path("uploadvideos");
-                        if (!file_exists($pathToStorage))
-                            mkdir($pathToStorage, 0777, true);
-                        $publishimage = $video->getClientOriginalName();
-                        $path = $pathToStorage."/".$publishimage ;
-                        Log::info("Publish file Path:".$path);
-                        file_put_contents($path, file_get_contents($video->path()));
-                        $videodata = array("name"=>"video",
-                            "file"=>$path);
-                        $response = $helper->apiCallPostPublish($videodata,"upload/videos",true);
-                        if($response['statusCode'] == 200){
-                            //getting filename for
-                            $publishVideos[]=$response['data'][0]['filename'];
-                            File::Delete($videodata['file']);
-                            Log::info("Deleted a file -> ".$videodata['file']." after sending file to api. Dated-> ".date('y/m/d'));
-                        }
-
-                    }
-                }
-                if($publishVideos != null){
-                    $publishData=array(
-                        "postType"=>$postType,
-                        "message"=>$request->message,
-                        "link"=>"",
-                        "mediaPaths"=>$publishVideos,
-                        "accountIds"=>$accountType
-                    );
-                }
-
-
-                $pin = array("accountId"=>0,
-                    "boardId"=>['2222']);
-                $pinD = json_encode($pin );
-                if($publishImages != null){
-                    $publishData=array(
-                        "postType"=>$postType,
-                        "message"=>$request->message,
-                        "link"=>"",
-                        "mediaPaths"=>$publishImages,
-                        "accountIds"=>$accountType,
-                        "pinBoards"=> [
-                            $pinD
-                        ]
-                    );
-
-
-                }
-
+                }else $link = '';
                 $publishData=array(
                     "postType"=>$postType,
+                    "postStatus"=>$postStatus,
                     "message"=>$request->message,
-                    "link"=>"",
+                    "link"=>$link,
                     "mediaPaths"=>$publishImages,
                     "accountIds"=>$accountType,
-                    "pinBoards"=> [
-                        $pinD
-                    ]
+                    "pinBoards"=>$pinboardata
                 );
-//return json_encode($publishData);
-
-
-                $team = Session::get('currentTeam')['team_id'];
 
                 $publishresponse = $helper->apiCallPostPublish($publishData,"publish/publishPosts?teamId=".$team);
 
@@ -376,88 +223,13 @@ class PublishController extends Controller
                     $result['message']=$publishresponse['data']['error'];
                     return ($result);
                 }
-
             }catch (\Exception $e){
-//           echo $e->getMessage();
                 Log::info(" Exception on post ".$e->getFile()."  =>line=>  ".$e->getLine()."  =>  ".$e->getMessage());
                 $result['code']=500;
                 $result['status']="failure";
                 $result['message']=$e->getMessage();
                 return ($result);
             }
-
         }
-
-
-    //schedule post
-
-    public function schedulePost(Request $request){
-        return json_encode($request->all());
-    }
-
-
-
-
-    public function publishData1(Request $request){
-return $request->videoupload;
-        $accountType=[];
-        if($request->message == ""){
-            return 404;
-        }
-        $accountType =  explode(",",$request["checked"]);
-//for checking if profiles selected are not
-        if(count($accountType) == 1 && $accountType[0] == "" ){
-            return 55;
-        }
-
-
-        try{
-            $helper =Helper::getInstance();
-            if(isset($request->picupload)){
-                if(isset($request->videoupload)){
-                    return 400;
-                }
-
-                if(substr($request->picupload->getMimeType(), 0, 5) == 'image') {
-                    $data = array("file"=>$request->picupload,
-                        "name"=>'imageName');
-                    $response = $helper->apiCallPost($data,"upload/images",true);
-                    return $response;
-                }
-            }
-
-            for($i=0;$i<count($accountType);$i++){
-
-
-
-                if(explode('+',$accountType[$i])[1] == 1 || explode('+',$accountType[$i])[1] == 2 || explode('+',$accountType[$i])[1] == 3){ // facebook
-                    //for fb or fbpage or fbgroup
-
-                } if(explode('+',$accountType[$i])[1]  == 4){
-                    //for twitter
-
-                } if(explode('+',$accountType[$i])[1]  == 5 ){
-                    // instagram
-
-                } if(explode('+',$accountType[$i])[1]  == 6 || explode('+',$accountType[$i])[1]  == 7){
-                    //linked in or linked in business
-
-                } if(explode('+',$accountType[$i])[1]  == 8 ||explode('+',$accountType[$i])[1]  == 10 ){
-                    // google plus or google analytics
-                } if(explode('+',$accountType[$i])[1]  == 9){
-                    //youtube
-                }
-//            else if()
-            }
-
-        }catch (\Exception $e){
-
-//            echo $e->getMessage();
-            return json_encode($e->getMessage());
-        }
-
-    }
-
-
 
 }

@@ -20,8 +20,10 @@ class FriendLibs {
             if (!accountId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user is having that Twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching the follower list to that account
                         return this.twitterConnect.getFollowersList(socialAcc.access_token, socialAcc.refresh_token, cursorValue);
                     })
                     .then((response) => {
@@ -39,8 +41,10 @@ class FriendLibs {
             if (!accountId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user is having that Twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching the following list to that account
                         return this.twitterConnect.getFollowingsList(socialAcc.access_token, socialAcc.refresh_token, cursorValue);
                     })
                     .then((response) => resolve(response))
@@ -56,8 +60,10 @@ class FriendLibs {
             if (!accountId || !keyword || pageId == null || pageId == undefined || !pageId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user is having that Twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching the searched users from twitter
                         return this.twitterConnect.searchUser(keyword, pageId, socialAcc.access_token, socialAcc.refresh_token);
                     })
                     .then((response) => resolve(response))

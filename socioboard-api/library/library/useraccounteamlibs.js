@@ -130,8 +130,6 @@ class UserAccountTeamLibs {
     getSocialAccount(accountType, accountId, userId, teamId) {
         return new Promise((resolve, reject) => {
 
-            console.log(accountType, accountId, userId, teamId);
-
             if (!accountType || !accountId || !userId || !teamId) {
                 reject(new Error("Please verify your inputs: 1. Account id, \n\r 2.Team id"));
             } else {

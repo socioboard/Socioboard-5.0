@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on giphyposts collection of mongo DB
 const giphyPost = new Schema({
     giphyId: { type: String, index: true, unique: true },
     sourceUrl: { type: String, },
     title: { type: String },
     description: { type: String },
+    category: { type: String },
     publisherName: { type: String },
     publishedDate: { type: Date, default: Date.now },
     postSourceUrl: { type: String },
@@ -23,6 +26,7 @@ const giphyPost = new Schema({
 });
 
 giphyPost.methods.insertManyGiphy = function (posts) {
+    // Inserting multiple posts in giphyposts collection
     return this.model('GiphyPosts')
         .insertMany(posts)
         .then((postdetails) => {
@@ -34,6 +38,7 @@ giphyPost.methods.insertManyGiphy = function (posts) {
 };
 
 giphyPost.methods.getBatchPost = function (batchId) {
+    // Fetching a specified post from giphyposts collection
     var query = {
         batchId: new RegExp(batchId, 'i')
     };
@@ -43,17 +48,20 @@ giphyPost.methods.getBatchPost = function (batchId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
-giphyPost.methods.getPreviousPost = function (keyword, skip, limit) {
+giphyPost.methods.getPreviousPost = function (keyword, sort, skip, limit) {
+    // Fetching posts from the giphyposts collection with keyword matching in anywhere in the post
     var query = {
-        $or: [
-            { description: new RegExp(keyword, 'i') },
-            { title: new RegExp(keyword, 'i') },
-            { publishedDate: new RegExp(keyword, 'i') },
-            { rating: new RegExp(keyword, 'i') }]
+        $and: [{
+            $or: [
+                { description: new RegExp(keyword, 'i') },
+                { title: new RegExp(keyword, 'i') },
+                { publishedDate: new RegExp(keyword, 'i') },
+                { rating: new RegExp(keyword, 'i') }]
+        }, { category: new RegExp(sort, "i") }]
     };
     return this.model('GiphyPosts')
         .find(query)
@@ -64,15 +72,15 @@ giphyPost.methods.getPreviousPost = function (keyword, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 giphyPost.methods.updateServerMediaUrl = function (serverMedia) {
 
+    // Updating serverMediaUrl to each post
     var updates = [];
     serverMedia.map(function (item) {
-        console.log(`Giphy Id : ${item.giphyId} Server Media Url : ${JSON.stringify(item.serverMediaUrl)} \n`);
         var update = this.model('GiphyPosts')
             .update({ "giphyId": item.giphyId }, { "$set": { "serverMediaUrl": item.serverMediaUrl } });
 

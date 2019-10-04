@@ -13,8 +13,10 @@ class BoardLibs {
             if (!userId || !teamId || !boardName || !keyword) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that whether user is belongs to that Team or not
                 return this.isTeamValidForUser(userId, teamId)
                     .then(() => {
+                        // Checking that the Board is already exists or not by name
                         return boards.findOne({
                             where: {
                                 board_name: boardName,
@@ -27,6 +29,7 @@ class BoardLibs {
                         if (boardDetails) {
                             throw new Error("Sorry! You have already create board with same name on current team!");
                         } else {
+                            // Creating Board in boards DB
                             return boards.create({
                                 board_name: boardName,
                                 keyword: keyword,
@@ -50,8 +53,10 @@ class BoardLibs {
             if (!userId || !teamId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that whether user is belongs to that Team or not
                 return this.isTeamValidForUser(userId, teamId)
                     .then(() => {
+                        // Fetching all Boards
                         return boards.findAll({
                             where: {
                                 user_id: userId,
@@ -74,8 +79,10 @@ class BoardLibs {
             if (!userId || !teamId || !keyword) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that whether user is belongs to that Team or not
                 return this.isTeamValidForUser(userId, teamId)
                     .then(() => {
+                        // Updating the existed Board keyword
                         return boards.update({
                             keyword: keyword
                         },
@@ -103,8 +110,10 @@ class BoardLibs {
             if (!userId || !teamId || !boardId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that whether user is belongs to that Team or not
                 return this.isTeamValidForUser(userId, teamId)
                     .then(() => {
+                        // Deleting the Board
                         return boards.destroy({
                             where: {
                                 user_id: userId,

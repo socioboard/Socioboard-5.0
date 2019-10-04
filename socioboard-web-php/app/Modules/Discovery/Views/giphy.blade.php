@@ -45,11 +45,22 @@
         <div class="col-md-12">
             <div class="card bg-light border-0 shadow">
                 <div class="card-body">
-                    <form class="form-inline mb-2" id="gifForm">
-                        <label class="sr-only" for="giphy_search">Keyword</label>
-                        <input type="text" class="form-control col-9 border-0 rounded-pill" id="giphy_search"
-                               name="keyword"   placeholder="keyword">
-                        <div class="text-center col-3">
+                    <form class="form-inline mb-2" id="giphyForm">
+                        <div class="form-group col-4">
+                            <label for="giphy_search">Keyword</label>
+                            <input type="text" class="form-control col-12 border-0 rounded-pill" id="giphy_search" name="keyword"
+                                   placeholder="keyword" value="{{env('KEYWORD_CONTENT_STUDIO')}}">
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="filter">Filter</label>
+                            <select class="form-control col-12" id="filter">
+                                <option value="G">G(General audiences ->All ages admitted)</option>
+                                <option value="PG">PG(Parental guidance suggested ->Some material may not be suitable for children)</option>
+                                <option value="PG-13">PG-13( Parents strongly cautioned ->Some material may be inappropriate for children under 13)</option>
+                                <option value="R">R(Restricted -> Under 17 requires accompanying parent or adult guardian)</option>
+                            </select>
+                        </div>
+                        <div class="text-center col-2">
                             <button type="submit" class="btn btn-primary col-12 rounded-pill">Submit</button>
                         </div>
                     </form>
@@ -60,11 +71,13 @@
     <div class="card-columns mt-5" id="giphy">
 
 
-        @include('Discovery::incPostModal')
-
-
     </div>
-
+    <div class="d-flex justify-content-center" >
+        <div class="spinner-border" role="status"  id="bootLoader" style="display: none;">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    @include('Discovery::incPostModal')
 
     @endsection
 
@@ -75,11 +88,16 @@
 @section('script')
 
     <script>
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'Giphy';
+
         var val=[];
         var result=[];
 
         $(document).ready(function(){
             $(document).on('click','.resocio', function(){
+                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -88,12 +106,13 @@
                 var image = $(this).closest('.card').find('img').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 result = val.split(',')
-                console.log("hdjshd=> ",result)
+                console.log(result,val,image,msg);
                 $.each(result, function(key,value) {
                     if(value.indexOf(".jpg") >= 1){
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
                                 "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
                     }else if(value.indexOf(".mp4") >= 1){
+                        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                         appenddata +=  "<li class='clearimag' id='" +key +"'><video autoplay width='100px' height='100px'  src='" + value + "'" +
                                 " id='" +key +"' ></video><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
                     }else{
@@ -113,12 +132,7 @@
 
 //                    console.log('image===>',image);
             });
-            $(document).on('click','.resociovideo', function(){
-                var video = $(this).closest('.card').find('source').attr('src');
-                val = $(this).closest('.card').find('input').val();
-                $('#postModal').modal('show');
-//                    console.log('video===>',video);
-            });
+
 
 
             $('body').on('click', '.remove-pic', function () {
@@ -129,7 +143,6 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
             });
             $('#hint_brand').on('hide', function (e) {
                 names = [];
@@ -138,7 +151,6 @@
         })
 
         function post(postStatus){
-            console.log(postStatus);
 //        var btn = $(this);
 //        $(btn).buttonLoader('start');
             var form = document.getElementById('publishForm');
@@ -172,12 +184,10 @@
                     }
                 },
                 success: function (response) {
-                    console.log(response);
 
                     $('#test').hide();
                     $('#testText').html('Post');
 
-                    console.log(response);
 //                document.getElementById("publishForm").reset();
                     $('#publishForm').trigger("reset");
 //                        $(".emojionearea-editor").text("");
@@ -220,7 +230,9 @@
 
     </script>
     <script>
-        getGiphy("a");
+
+        var data = '<?php echo env('KEYWORD_CONTENT_STUDIO');?>';
+        var filterBy = 'G';
         var pageId1 = 1;
         var action = "inactive";
         $("#normal_post_area").emojioneArea({
@@ -230,7 +242,7 @@
         if(action=='inactive')
         {
             action ="active";
-            getImgur(data, pageId1,0);
+            getGiphy(data,filterBy, pageId1,0);
         }
         // all social list div open
         $('.all_social_div').css({
@@ -245,14 +257,15 @@
             });
         });
 
-        function getGiphy(keyword,pageId,search){
+        function getGiphy(keyword,filter,pageId,search){
             var gifData = "";
             $.ajax({
                 url: "/getGiphy",
                 type: 'POST',
                 data: {
                     keyword:keyword,
-                    pageId: 1
+                    filter: filter,
+                    pageId: pageId
                 },
                 beforeSend:function(){
                     $("#bootLoader").css("display","block");
@@ -263,7 +276,6 @@
                 },
                 success: function (response) {
                     pageId1 += 1;
-                    console.log("inc after succ ================"+pageId1);
                     $("#bootLoader").css("display","none");
                     if(response.giphyDetails.length == 0){
                         action = "active";
@@ -274,8 +286,7 @@
                     if(response.code == 200){
                         $.each(response.giphyDetails, function(key,value) {
                             if(value.mediaUrl[0] != undefined && value.mediaUrl[0] != ""){
-
-                                gifData += '<div class="card bg-dark text-white border-0 shadow"> <img src="'+ value.mediaUrl +'" class="card-img-top" alt="sample"> <div class="card-body p-2"> <h5 class="card-title giphy_title">'+ value.title +'</h5> <p class="card-text"> <a href="javascript:void(0);" class="text-white float-right" data-toggle="modal" data-target="#postModal"> <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </a> </p> </div> </div>';
+                                gifData += '<div class="card bg-dark text-white border-0 shadow"><input class="multiImages" value='+ value.mediaUrl +' style="display: none"> <img src="'+ value.mediaUrl +'" class="card-img-top" alt="sample"> <div class="card-body p-2"> <h5 class="card-title giphy_title messageSocio">'+ value.title +'</h5> <p class="card-text"> <a href="javascript:void(0);" class="text-white float-right resocio" > <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </a> </p> </div> </div>';
                             }
 
 
@@ -295,11 +306,15 @@
 
 
 
-        $(document).on('submit','#gifForm',function(e){
+        $(document).on('submit','#giphyForm',function(e){
             e.preventDefault();
-
-            var data = $('#giphy_search').val();
-            getGiphy(data,1,1);
+             data = $('#giphy_search').val();
+             filterBy = document.getElementById('filter').value;
+            if(data == ""){
+                swal("Please enter valid keyword");
+            }else {
+                pageId1 =1;
+                getGiphy(data,filterBy,pageId1,1);}
         });
 
         // infinite scroll
@@ -307,14 +322,13 @@
             if ($(window).scrollTop() + $(window).height() >= $("#giphy").height() && action == 'inactive') {
 //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-
+                console.log(data,filterBy);
                 setTimeout(function () {
-                    getGiphy(data, pageId1,0);
+                    getGiphy(data,filterBy, pageId1,0);
                 }, 1000);
             }
         });
 
 
     </script>
-
     @endsection

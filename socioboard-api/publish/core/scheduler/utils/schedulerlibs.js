@@ -5,6 +5,8 @@ const logger = require('../../../utils/logger');
 const SchedulePost = require('../../../../library/mongoose/models/scheduleposts');
 const ScheduleBase = require('../utils/schedulebase');
 const TaskModel = require('../../../../library/mongoose/models/taskmodels');
+const AutomatedRssMongoModel = require('../../../../library/mongoose/models/automatedrss');
+const url = require('url');
 
 const db = require('../../../../library/sequelize-cli/models/index');
 const Operator = db.Sequelize.Op;
@@ -255,6 +257,7 @@ class ScheduleLibs extends ScheduleBase {
                             one_time_schedule_date: oneTimeScheduleDateTime,
                             running_days_of_weeks: runningDays,
                             created_date: moment.utc(),
+                            start_date: moment.utc(),
                             end_date: moment.utc().add(1, 'years'),
                             user_id: userId,
                             team_id: postInfo.teamId
@@ -290,6 +293,144 @@ class ScheduleLibs extends ScheduleBase {
                     .catch((error) => {
                         reject(error);
                     });
+            }
+        });
+    }
+
+    createRss(userId, teamId, rssDetails, userScopeMaxScheduleCount) {
+        return new Promise((resolve, reject) => {
+            if (!userId || !teamId || !rssDetails)
+                reject(new Error("Invalid Inputs"));
+            if (rssDetails.rss_feed_url == "string" || rssDetails.rss_feed_url == null && rssDetails.account_ids.length > 0)
+                reject(new Error('Invalid rss data'));
+            if (!Boolean(rssDetails.custom_interval))
+                reject(new Error('Invalid time Interval'));
+            if (rssDetails.start_date && rssDetails.end_date) {
+                if (moment(rssDetails.start_date) < moment() || rssDetails.start_date > rssDetails.end_date)
+                    reject(new Error('please check that start date should be greater then now or end date should be greater than start date.'));
+            }
+            var result = url.parse(rssDetails.rss_feed_url);
+            if (result.protocol == "http:") {
+                reject(new Error("Sorry, Rss feed only support https protocol"));
+            }
+            var runningDays = "";
+            var todaysTiming = [];
+            var createdResponse = '';
+            var scheduledId = '';
+            var scheduleMongoId = {};
+            logger.info(`process started! and inputs are ${userId}, ${teamId}, ${JSON.stringify(rssDetails)}, ${userScopeMaxScheduleCount}`);
+            return this.verifyAccounts(rssDetails.account_ids)
+                .then(() => {
+                    return this.getActiveScheduleCount(userId);
+                })
+                .then((activeScheduleCount) => {
+                    logger.info(`activeScheduleCount : ${activeScheduleCount}`);
+                    if (activeScheduleCount >= userScopeMaxScheduleCount)
+                        throw new Error("Sorry, As per your plan you can't schedule any more posts.");
+                    else {
+                        return teamUserJoinTable.findOne({
+                            where: {
+                                user_id: userId,
+                                team_id: teamId,
+                                left_from_team: 0
+                            }
+                        });
+                    }
+                })
+                .then((teamUserResponse) => {
+                    if (!teamUserResponse)
+                        throw new Error("Sorry, you aren't part of the team!");
+                    else {
+                        var endDate = '';
+                        var rssData = {
+                            teamId: teamId,
+                            userId: userId,
+                            rssDetails: rssDetails
+                        };
+                        var automatedRssMongoModelObject = AutomatedRssMongoModel();
+                        return automatedRssMongoModelObject.insertRss(rssData)
+                            .then((response) => {
+                                scheduleMongoId = response[0]._id;
+                                var startDate = moment(rssDetails.start_date);
+                                var interval = rssDetails.custom_interval;
+                                if (rssDetails.end_date > moment().endOf('day'))
+                                    endDate = moment(startDate).endOf('day');
+                                else
+                                    endDate = moment(rssDetails.end_date);
+                                logger.info("schedule details are saved in mongo!");
+
+                                return this.getTimeIntervals(startDate, endDate, interval)
+                                    .then((scheduleTimings) => {
+                                        return this.getRunningDayAndTodayTimings(scheduleTimings)
+                                            .then((result) => {
+                                                runningDays = result.runningDays ? result.runningDays : 'onetimeschedule';
+                                                todaysTiming = result.todaysTiming;
+                                            })
+                                            .catch((error) => {
+                                                throw error;
+                                            });
+                                    });
+                            })
+                            .then(() => {
+                                logger.info(`Today Schedule Timings : ${JSON.stringify(todaysTiming)}`);
+
+                                // Add to schedule_details queue
+                                return scheduleDetails.create({
+                                    schedule_type: 2,
+                                    module_name: "rss",
+                                    schedule_status: 1,
+                                    //scheduleStatus : 1=ready queue, 2=wait(pause) state, 3= approvalpending, 4=rejected, 5=draft, 6=done            
+                                    mongo_schedule_id: String(scheduleMongoId),
+                                    one_time_schedule_date: rssDetails.start_date,
+                                    running_days_of_weeks: runningDays,
+                                    created_date: moment.utc(),
+                                    start_date: rssDetails.start_date,
+                                    end_date: rssDetails.end_date,
+                                    interval: rssDetails.custom_interval,
+                                    user_id: userId,
+                                    team_id: teamId
+                                });
+                            })
+                            .then((response) => {
+                                scheduledId = response.schedule_id;
+                                if (todaysTiming.length > 0) {
+                                    return this.makeSchedule(scheduledId, todaysTiming)
+                                        .then((response) => {
+                                            resolve({ code: 200, status: "success", message: createdResponse, scheduleInfo: response });
+                                        })
+                                        .catch((expiredTimings) => {
+                                            resolve({ code: 200, status: "success", message: createdResponse, expiredTimings: expiredTimings });
+                                        });
+                                }
+                                else {
+                                    resolve('successfully created.');
+                                }
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
+                    }
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
+    getTimeIntervals(startDate, endDate, interval) {
+        return new Promise((resolve, reject) => {
+            if (!startDate || !endDate || !interval) {
+                reject(new Error('Invalid Inputs'));
+            } else {
+                var scheduleTimings = [];
+                var numberofintervals = endDate.diff(startDate, 'minutes') / interval;
+                if (startDate < endDate) {
+                    for (var i = 0; i < numberofintervals; i++) {
+                        var temp = moment(startDate);
+                        scheduleTimings.push(temp.add(i * interval, 'minutes'));
+                    }
+                }
+                resolve(scheduleTimings);
             }
         });
     }
@@ -425,6 +566,154 @@ class ScheduleLibs extends ScheduleBase {
         });
     }
 
+    updateAutomatedRss(userId, teamId, scheduleId, rssDetails) {
+        return new Promise((resolve, reject) => {
+            if (!userId || !rssDetails) {
+                reject(new Error("Invalid Inputs"));
+            } else {
+                var scheduleIdDetails = {};
+                var scheduleMongoId = null;
+                var runningDays = "";
+                var todaysTiming = [];
+                var endDate = '';
+                var previousMongoData = '';
+
+                return scheduleDetails.findOne({
+                    where: {
+                        [Operator.and]: [{
+                            user_id: userId
+                        }, {
+                            schedule_id: scheduleId
+                        }, {
+                            schedule_status: [1, 3]
+                        }, {
+                            team_id: teamId
+                        }, {
+                            schedule_type: 2
+                        }]
+                    }
+                })
+                    .then((scheduleData) => {
+                        if (!scheduleData)
+                            throw new Error("Schedule details aren't available to edit, Please make sure following,  1.schedule should be in ready., \n\r 2. valid teamId!, \n\r 3.it's not rss");
+                        else {
+                            scheduleIdDetails = scheduleData;
+                            return scheduledInformations.findAll({ where: { schedule_id: scheduleId } });
+                        }
+                    })
+                    .then((scheduleInfo) => {
+                        if (scheduleInfo.length > 0) {
+                            scheduleInfo.forEach(element => {
+                                var scheduleJob = schedule.scheduledJobs[element.scheduler_name];
+                                logger.info(scheduleJob);
+                                if (scheduleJob) {
+                                    logger.info("Running schedule has been cancelled!");
+                                    scheduleJob.cancel();
+                                }
+                            });
+                        }
+                        return;
+                    })
+                    .then(() => {
+                        return scheduledInformations.destroy({ where: { schedule_id: scheduleId } })
+                            .then(() => {
+                                return AutomatedRssMongoModel.findByIdAndRemove(scheduleIdDetails.mongo_schedule_id);
+                            })
+                            .then((response) => {
+                                previousMongoData = response;
+
+                                var taskModels = new TaskModel();
+                                return taskModels.deletePublishTask(userId, 3, scheduleId);
+                            })
+                            .catch((error) => { throw error; });
+                    })
+                    .then(() => {
+                        var data = {
+                            name: previousMongoData.rssDetails[0].name,
+                            rss_feed_url: previousMongoData.rssDetails[0].rss_feed_url,
+                            custom_interval: rssDetails.custom_interval,
+                            start_date: rssDetails.start_date,
+                            end_date: rssDetails.end_date,
+                            account_ids: previousMongoData.rssDetails[0].account_ids
+                        };
+                        var rssData = {
+                            teamId: teamId,
+                            userId: userId,
+                            rssDetails: data
+                        };
+                        var automatedRssMongoModel = new AutomatedRssMongoModel();
+                        return automatedRssMongoModel.insertRss(rssData);
+                    })
+                    .then((response) => {
+                        logger.info('updated response \n ', JSON.stringify(response));
+                        logger.info("schedule details are saved in mongo!");
+                        scheduleMongoId = response[0]._id;
+                        var startDate = moment(rssDetails.start_date);
+                        var interval = rssDetails.custom_interval;
+                        if (rssDetails.end_date > moment().endOf('day'))
+                            endDate = moment(startDate).endOf('day');
+                        else
+                            endDate = moment(rssDetails.end_date);
+                        logger.info("schedule details are saved in mongo!");
+                        return this.getTimeIntervals(startDate, endDate, interval)
+                            .then((scheduleTimings) => {
+                                logger.info('scheduleTimings', scheduleTimings);
+                                return this.getRunningDayAndTodayTimings(scheduleTimings)
+                                    .then((result) => {
+                                        runningDays = result.runningDays ? result.runningDays : 'onetimeschedule';
+                                        todaysTiming = result.todaysTiming;
+                                    })
+                                    .catch((error) => {
+                                        throw error;
+                                    });
+                            });
+                    })
+                    .then(() => {
+                        logger.info(`Today Schedule Timings : ${JSON.stringify(todaysTiming)}`);
+
+                        // Add to schedule_details queue
+                        return scheduleDetails.update({
+                            schedule_type: 2,
+                            module_name: "rss",
+                            schedule_status: 1,
+                            //scheduleStatus : 1=ready queue, 2=wait(pause) state, 3= approvalpending, 4=rejected, 5=draft, 6=done            
+                            mongo_schedule_id: String(scheduleMongoId),
+                            one_time_schedule_date: rssDetails.start_date,
+                            running_days_of_weeks: runningDays,
+                            created_date: moment.utc(),
+                            start_date: rssDetails.start_date,
+                            end_date: rssDetails.end_date,
+                            interval: rssDetails.custom_interval,
+                            user_id: userId,
+                            team_id: teamId
+                        }, { where: { schedule_id: scheduleId } });
+                    })
+                    .then(() => {
+                        if (todaysTiming.length > 0) {
+                            logger.info('making schedule', scheduleId, todaysTiming);
+                            return this.makeSchedule(scheduleId, todaysTiming)
+                                .then((response) => {
+                                    resolve({ code: 200, status: "success", scheduleInfo: response });
+                                })
+                                .catch((expiredTimings) => {
+                                    resolve({ code: 200, status: "success", expiredTimings: expiredTimings });
+                                });
+
+                        }
+                        else {
+                            return 'success fully created.';
+                        }
+                    })
+                    .then(() => {
+                        resolve("schedule details are updated successfully");
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
     createScheduleTask(teamId, userId, userName, scheduleId) {
         return new Promise((resolve, reject) => {
             return this.getTeamsAllAdmin(teamId)
@@ -492,6 +781,39 @@ class ScheduleLibs extends ScheduleBase {
                         response.forEach(element => {
                             mongoIds.push(element.mongo_schedule_id);
                         });
+                        return SchedulePost.find({ _id: { $in: mongoIds } });
+                    } else
+                        return [];
+                })
+                    .then((mongoValues) => {
+                        resolve({ scheduleDetails: userScheduleDetails, postContents: mongoValues });
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
+    getParticularScheduleDetails(userId, scId) {
+        return new Promise((resolve, reject) => {
+            if (!userId || !Boolean(Number(scId))) {
+                reject(new Error("Invalid Inputs"));
+            } else {
+                var userScheduleDetails = null;
+                return scheduleDetails.findOne({
+                    where: { user_id: userId, schedule_id: scId },
+                    include: [{
+                        model: userDetails,
+                        as: "UserSchedule",
+                        attributes: [['first_name', 'name'],]
+                    }],
+                    raw: true
+                }).then((response) => {
+                    userScheduleDetails = response;
+                    var mongoIds = [];
+                    if (response) {
+                        mongoIds.push(response.mongo_schedule_id);
                         return SchedulePost.find({ _id: { $in: mongoIds } });
                     } else
                         return [];
@@ -705,11 +1027,11 @@ class ScheduleLibs extends ScheduleBase {
                         return scheduleDetails.update({
                             schedule_status: newScheduleStatus,
                         }, {
-                                where: {
-                                    user_id: userId,
-                                    schedule_id: scheduleId
-                                }
-                            });
+                            where: {
+                                user_id: userId,
+                                schedule_id: scheduleId
+                            }
+                        });
                     })
                     .then(() => {
                         var schedulePost = new SchedulePost();
@@ -746,8 +1068,14 @@ class ScheduleLibs extends ScheduleBase {
                         throw new Error("Not found or you don't have a access to delete");
                     else {
                         var mongoIds = scheduleData.mongo_schedule_id;
-                        return SchedulePost.findByIdAndRemove(mongoIds)
-                            .then(() => {
+                        var mongoModel = '';
+                        if (scheduleData.schedule_type == 2)
+                            mongoModel = AutomatedRssMongoModel;
+                        else
+                            mongoModel = SchedulePost;
+
+                        return mongoModel.findByIdAndRemove(mongoIds)
+                            .then((response) => {
                                 return scheduledInformations.findAll({ where: { schedule_id: scheduleId } });
                             })
                             .then((scheduleInfo) => {

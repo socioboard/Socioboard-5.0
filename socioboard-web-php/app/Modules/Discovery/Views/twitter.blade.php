@@ -145,68 +145,52 @@
 
 
     @include('Discovery::incPostModal')
-@endsection
+
+    @endsection
 
 
-@section('script')
+    @section('script')
 
 
-        <!-- country picker -->
+            <!-- country picker -->
     <script src="/assets/plugins/bootstrap-select/js/bootstrap-select.js"></script>
     <script src="/assets/plugins/country-picker/js/countrypicker.js"></script>
 
     <script>
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'Twitter';
         var val=[];
         var result=[];
+        var image;
 
-        $(document).ready(function(){
-            $(document).on('click','.resocio', function(){
-
+        $(document).ready(function() {
+            $(document).on('click', '.twt_resocio_btn', function () {
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
-                var appenddata="";
-                var msg ="";
+                var appenddata = "";
+                var msg = "";
+                msg = $(this).closest('.card').find('.tweet-details').text();
+                image = $(this).closest('.card').find('.tweet-media-url').text();
+                tweetUrl = $(this).closest('.card').find('.tweet-url').text();
+//                var image = $(this).closest('.card').find('img').attr('src');
+//                var image = $('a').hasClass('MediaCard-borderOverlay').show();
+//                val = $(this).closest('.card').find('input').val();
+//                result = val.split(',');
+                if (image !== '')
+                    appenddata += "<li class='clearimag' ><img width='100px' height='100px' src='" + image + "' " +
+                            "title='" + image + "' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
 
-
-                var image = $(this).closest('.card').find('img').attr('src');
-// if image is not present put a consition here TODO
-                val = $(this).closest('.media').find('.multiImages').val();
-                console.log("val=======>",val);
-                msg = $(this).closest('.media').find('.messageSocio').text();
-//                console.log("message=======>",msg);
-                result = val.split(',')
-//                console.log("hdjshd=> ",result)
-                $.each(result, function(key,value) {
-                    if(value.indexOf(".jpg") >= 1){
-                        appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
-                                "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
-                    }else if(value.indexOf(".mp4") >= 1){
-                        appenddata +=  "<li class='clearimag' id='" +key +"'><video autoplay width='100px' height='100px'  src='" + value + "'" +
-                                " id='" +key +"' ></video><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
-                    }else{
-                        appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px'  src='" + value + "'" +
-                                "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
-                    }
-                });
+                $('#normal_post_area').data("emojioneArea").setText(msg);
 
                 $('#media-list').prepend(appenddata);
-                $('.emojionearea-editor').text(msg);
 
-//                        var gg  =$('#appendData').append(  '<div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>');
+                $('#reimage').attr('src', image);
 
-//                $('').val(messageInput);
-                $('#reimage').attr('src',image);
+                $('#incpostModal').modal('show');
 
-                $('#postModal').modal('show');
 
-//                    console.log('image===>',image);
             });
-//            $(document).on('click','.resociovideo', function(){
-//                var video = $(this).closest('.card').find('source').attr('src');
-//                val = $(this).closest('.card').find('input').val();
-//                $('#postModal').modal('show');
-////                    console.log('video===>',video);
-//            });
 
 
             $('body').on('click', '.remove-pic', function () {
@@ -217,7 +201,6 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
             });
             $('#hint_brand').on('hide', function (e) {
                 names = [];
@@ -225,20 +208,18 @@
             });
         })
 
-        function post(){
-
-//        var btn = $(this);
-//        $(btn).buttonLoader('start');
+        function post(postStatus) {
             var form = document.getElementById('publishForm');
 
             var formData = new FormData(form);
 
             var selected = [];
-            $('#checkboxes input:checked').each(function() {
+            $('#checkboxes input:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
-            formData.append('checked',selected);
-            formData.append('imagevideos',result);
+            formData.append('checked', selected);
+            formData.append('imagevideos', image);
+            formData.append('postStatus', postStatus);
 
 
             $.ajax({
@@ -248,46 +229,65 @@
                 processData: false,
                 contentType: false,
                 type: 'POST',
-                beforeSend:function(){
+                beforeSend: function () {
                     $('#messageError').text("");
-                    $('#test').show();
-                    $('#testText').html('Uploading');
+                    if (postStatus == 1) {
+                        $('#test').show();
+                        $('#testText').html('Uploading');
+                    } else if (postStatus == 0) {
+                        $('#draftspinstyle').show();
+                        $('#draftspin').html('Uploading');
+                    }
                 },
                 success: function (response) {
-                    console.log(response);
 
                     $('#test').hide();
                     $('#testText').html('Post');
 
-                    console.log(response);
 //                document.getElementById("publishForm").reset();
                     $('#publishForm').trigger("reset");
-                    $(".emojionearea-editor").text("");
-                    $("#hint_brand").css("display","none");
-//                    $("#option_upload").css("display","block");
+//                        $(".emojionearea-editor").text("");
+                    $("#hint_brand").css("display", "none");
+//                        $("#option_upload").css("display","block");
                     $("#test").attr("disabled", true);
-                    if(response.code == 404){
-                        console.log(response.message)
+                    if (response.code == 404) {
+//                        console.log(response.message)
                         $('#messageError').text(response.message);
-                    }else if(response.code == 400){
+                    } else if (response.code == 400) {
                         swal(response.message);
-                    }else if(response.code == 200){
+                    } else if (response.code == 200) {
+                        $(".emojionearea-editor").text("");
                         swal(response.message);
+
+                        if (response.errors.length != 0) {
+                            $.each(response.errors, function (key, value) {
+                                console.log(value.error);
+                                $.toaster({
+                                    priority: 'warning',
+                                    title: 'Could not publish on account',
+                                    message: ' ' + value.firstName + ' ' + value.error
+                                })
+                                ;
+                            });
+                        }
+
                         document.getElementById("publishForm").reset();
                         $('#postModal').modal('hide');
-                    }else if(response.code == 500){
+                    } else if (response.code == 500) {
                         console.log(response.message);
-
                         swal("Something went wrong... Please try again after sometime")
                         $('#postModal').modal('hide');
 
                     }
                 },
-                error:function(error){
+                error: function (error) {
                     console.log(error)
+                    swal("Something went wrong... Please try again after sometime")
+                    $('#postModal').modal('hide');
                 }
             })
         }
+
 
 
 
@@ -323,7 +323,6 @@
                 $(".country_list_div").show();
                 var selectpicker = $('#selectpicker').find(":selected").text();
                 alert(selectpicker)
-                console.log(selectpicker);
                 alert(selectpicker)
 
             }
@@ -337,7 +336,6 @@
 
         function getTrends(country){
             var trends='';
-            console.log("Country =========="+country);
             $.ajax({
                 url: "/getTrends",
                 type: 'POST',
@@ -349,17 +347,15 @@
                 },
                 success: function (response) {
 
-                    console.log(response);
 
                     if(response.code == 200){
                         $('#trendsSettingsModal').modal('hide');
-console.log(response.trends);
                         $.each(response.trends, function(key1,value1) {
                             trends += '<div  class="list-group-item list-group-item-action"><h6 class="keyword_font">'+ value1.title +'</h6> <p class="trending_text">'+value1.tweetCount+'  tweets</p></div>'
                         });
                         $("#trends").append(trends);
                     }else if(response.code == 400 || response.code == 500){
-                        console.log(response.message)
+//                        console.log(response.message)
                     }
                 },
                 error:function(error){
@@ -381,21 +377,28 @@ console.log(response.trends);
                     $("#tweet").children().remove();
                 },
                 success: function (response) {
-
-                    console.log(response);
-
                     if(response.code == 200){
-
-
                         $.each(response.tweets, function(key,value) {
-                            $.each(response.tweets, function(key,value) {
-                                tweetData = '<div class="card mb-1"><div class="dropleft float-right twt_resocio_btn"> <span class="dropdown-toggle dropdown-toggle-none-c" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-angle-down"></i> </span> <div class="dropdown-menu p-0"> <div class="dropdown-item" data-toggle="modal" data-target="#postModal"> <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </div></div> </div><blockquote class="twitter-tweet"> <div id="container"></div> "'+ value.tweetDetails+'" <a href="'+ value.tweetUrl +'"></a> </blockquote></div> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><//script>'
-                                $("#tweet").append(tweetData);
-                            });
+                            var tweetDetails = value.tweetDetails;
+                            var tweetMediaUrl =  value.tweetMediaUrl ;
+                            var tweetUrl = value.tweetUrl;
 
+
+                            tweetData = '<div class="card mb-1"><p style="display: none" class="tweet-details">'
+                                    +tweetDetails+'</p><p style="display: none" class="tweet-media-url">'+tweetMediaUrl+'' +
+                                    '</p><p style="display: none" class="tweet-url">'+tweetUrl+'</p>' +
+                                    '<div class="dropleft float-right twt_resocio_btn"> ' +
+                                    '<span class="dropdown-toggle dropdown-toggle-none-c" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+                                    ' <i class="fas fa-angle-down"></i> </span> <div class="dropdown-menu p-0">' +
+                                    ' <div class="dropdown-item" data-toggle="modal" data-target="#postModal"> ' +
+                                    '<span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> ' +
+                                    '<i class="fas fa-retweet text-primary"></i> re-socio </span> </div></div> </div><blockquote class="twitter-tweet"> ' +
+                                    '<div id="container"></div> "'+ value.tweetDetails+'" <a href="'+ value.tweetUrl +'"></a> </blockquote></div> ' +
+                                    '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><//script>'
+                            $("#tweet").append(tweetData);
                         });
                     }else if(response.code == 400 || response.code == 500){
-                        console.log(response.message)
+//                        console.log(response.message)
                     }
                 },
                 error:function(error){
@@ -409,7 +412,6 @@ console.log(response.trends);
         //            function resocio(){
         ////                debugger;
         ////              var i = $(this).closest('.card').find('img').attr('src');
-        ////                console.log('image===>',i);
         //            }
 
         function getTwitter(keyword){
@@ -429,22 +431,22 @@ console.log(response.trends);
                 },
                 success: function (response) {
 
-                    console.log(response);
 
                     if(response.code == 200){
                         $.each(response.tweets, function(key,value) {
-
-                            tweetData = '<div class="card mb-1"><div class="dropleft float-right twt_resocio_btn"> <span class="dropdown-toggle dropdown-toggle-none-c" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-angle-down"></i> </span> <div class="dropdown-menu p-0"> <div class="dropdown-item" data-toggle="modal" data-target="#postModal"> <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </div></div> </div><blockquote class="twitter-tweet"> <div id="container"></div> "'+ value.tweetDetails+'" <a href="'+ value.tweetUrl +'"></a> </blockquote></div> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><//script>'
+                            var tweetDetails = value.tweetDetails;
+                            var tweetMediaUrl =  value.tweetMediaUrl ;
+                            var tweetUrl = value.tweetUrl;
+                            tweetData = '<div class="card mb-1"><p style="display: none" class="tweet-details">'+tweetDetails+'</p><p style="display: none" class="tweet-media-url">'+tweetMediaUrl+'</p><p style="display: none" class="tweet-url">'+tweetUrl+'</p><div class="dropleft float-right twt_resocio_btn"> <span class="dropdown-toggle dropdown-toggle-none-c" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-angle-down"></i> </span> <div class="dropdown-menu p-0"> <div class="dropdown-item resocio" data-toggle="modal" data-target="#postModal"><span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span></div></div> </div><blockquote class="twitter-tweet"> <div id="container"></div> "'+ value.tweetDetails+'" <a href="'+ value.tweetUrl +'"></a> </blockquote></div> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><//script>'
                             $("#tweet").append(tweetData);
                         });
                         $.each(response.trends, function(key1,value1) {
                             trends += '<div  class="list-group-item list-group-item-action"><h6 class="keyword_font">'+ value1.title +'</h6> <p class="trending_text">'+value1.tweetCount+'  tweets</p></div>'
-                        });
-                        console.log("------------------")
+                        })
 
                         $("#trends").append(trends);
                     }else if(response.code == 400 || response.code == 500){
-                        console.log(response.message)
+//                        console.log(response.message)
                     }
                 },
                 error:function(error){
@@ -455,15 +457,17 @@ console.log(response.trends);
         }
 
         $(document).ready(function(){
-
             $(document).on('submit','#twitterForm',function(e){
                 e.preventDefault();
-
                 var data = $('#twitter_search').val();
-                getTwitterSearch(data);
+
+                if(data == ""){
+                    swal("Please enter valid input");
+                }else {
+                    pageId1 = 1
+                    getTwitterSearch(data);}
+
             });
-
-
         });
 
 
@@ -471,6 +475,4 @@ console.log(response.trends);
 
 
     </script>
-
-
 @endsection

@@ -1,5 +1,6 @@
 const moment = require('moment');
 const FacebookMongoPostModel = require('../../../library/mongoose/models/facebookposts');
+const logger = require('../../utils/logger');
 
 var helper = {};
 
@@ -10,7 +11,7 @@ var itemsForComment = ['comment'];
 
 // Available Verbs in fb - add, block, edit, edited, delete, follow, hide, mute, remove, unblock, unhide, update
 helper.webhookEvents = function (webhookObject) {
-    console.log("Process started for facebook..",webhookObject);
+    logger.info(`Process started for facebook.. ${webhookObject}`);
     var facebookMongoPostModelObject = new FacebookMongoPostModel();
     if (webhookObject.object == 'page') {
         webhookObject.entry.forEach(entry => {
@@ -53,10 +54,10 @@ helper.webhookEvents = function (webhookObject) {
                             facebookMongoPostModelObject = new FacebookMongoPostModel(postDetails);
                             return facebookMongoPostModelObject.save()
                                 .then((object) => {
-                                    console.log(`Post Details : ${JSON.stringify(object)}`);
+                                    logger.info(`Post Details : ${JSON.stringify(object)}`);
                                 })
                                 .catch((error) => {
-                                    console.log(`Post Details not saved : ${error.message}`);
+                                    logger.info(`Post Details not saved : ${error.message}`);
                                 });
                         }
                         if (change.value.verb == 'remove') {
@@ -64,10 +65,10 @@ helper.webhookEvents = function (webhookObject) {
                                 facebookMongoPostModelObject = new FacebookMongoPostModel();
                                 return facebookMongoPostModelObject.deleteSinglePost(postDetails.postId)
                                     .then(() => {
-                                        console.log(`Post ${postDetails.postId} has been deleted!`);
+                                        logger.info(`Post ${postDetails.postId} has been deleted!`);
                                     })
                                     .catch((error) => {
-                                        console.log(`Post Details not deleted : ${error.message}`);
+                                        logger.info(`Post Details not deleted : ${error.message}`);
                                     });
                             }
                         }
@@ -79,20 +80,20 @@ helper.webhookEvents = function (webhookObject) {
                                 facebookMongoPostModelObject = new FacebookMongoPostModel();
                                 return facebookMongoPostModelObject.updateLikeCount(postDetails.postId, 'increment')
                                     .then(() => {
-                                        console.log(`Post ${postDetails.postId} reaction has been incremented!`);
+                                        logger.info(`Post ${postDetails.postId} reaction has been incremented!`);
                                     })
                                     .catch((error) => {
-                                        console.log(`Post Details not update the reaction count : ${error.message}`);
+                                        logger.info(`Post Details not update the reaction count : ${error.message}`);
                                     });
                             }
                             else if (change.value.verb == 'remove') {
                                 facebookMongoPostModelObject = new FacebookMongoPostModel();
                                 return facebookMongoPostModelObject.updateLikeCount(postDetails.postId, 'decrement')
                                     .then(() => {
-                                        console.log(`Post ${postDetails.postId} reaction has been decremented!`);
+                                        logger.info(`Post ${postDetails.postId} reaction has been decremented!`);
                                     })
                                     .catch((error) => {
-                                        console.log(`Post Details not update the reaction count : ${error.message}`);
+                                        logger.info(`Post Details not update the reaction count : ${error.message}`);
                                     });
                             }
                         }
@@ -104,20 +105,20 @@ helper.webhookEvents = function (webhookObject) {
                                 facebookMongoPostModelObject = new FacebookMongoPostModel();
                                 return facebookMongoPostModelObject.updateCommentCount(postDetails.postId, 'increment')
                                     .then(() => {
-                                        console.log(`Post ${postDetails.postId} comment has been incremented!`);
+                                        logger.info(`Post ${postDetails.postId} comment has been incremented!`);
                                     })
                                     .catch((error) => {
-                                        console.log(`Post Details not update the comment count : ${error.message}`);
+                                        logger.info(`Post Details not update the comment count : ${error.message}`);
                                     });
                             }
                             else if (change.value.verb == 'remove') {
                                 facebookMongoPostModelObject = new FacebookMongoPostModel();
                                 return facebookMongoPostModelObject.updateCommentCount(postDetails.postId, 'decrement')
                                     .then(() => {
-                                        console.log(`Post ${postDetails.postId} comment has been decremented!`);
+                                        logger.info(`Post ${postDetails.postId} comment has been decremented!`);
                                     })
                                     .catch((error) => {
-                                        console.log(`Post Details not update the comment count : ${error.message}`);
+                                        logger.info(`Post Details not update the comment count : ${error.message}`);
                                     });
                             }
                         }

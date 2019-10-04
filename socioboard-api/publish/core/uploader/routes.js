@@ -28,20 +28,24 @@ const uploadServices = new UploadServices(config.get('uploadService'));
  *     consumes:
  *       - multipart/form-data
  *     parameters:
+ *       - in: query
+ *         description: Provide title 
+ *         name: title
+ *         type: string
  *       - in: formData
  *         name: media
  *         type: file
  *         required: true
  *         description: The file to upload.
  *       - in: query
- *         description: teamId 
+ *         description: Provide teamId 
  *         name: teamId
  *         type: string
  *       - in: query
- *         description: public(0) or private(1) 
+ *         description: Specify public(0) or private(1) or publish(3)
  *         name: privacy
  *         type: number
- *         enum: [0,1]
+ *         enum: [0,1,3]
  *     responses:
  *       200:
  *         description: Return success!
@@ -69,16 +73,16 @@ routes.post('/media', uploadServices.mediaUpload.array('media', 5), fileUploader
  *       - multipart/form-data
  *     parameters:
  *       - in: query
- *         description: teamId 
+ *         description: Provide teamId 
  *         name: teamId
  *         type: number
  *       - in: query
- *         description: public(0), private(1), both(2) 
+ *         description: Specify type, public(0), private(1), both(2) or publish(3)
  *         name: privacy
  *         type: number
- *         enum: [0,1,2]
+ *         enum: [0,1,2,3]
  *       - in: query
- *         description: Provide the pagination Id 
+ *         description: Provide the pagination id 
  *         name: pageId
  *         type: integer
  *     responses:
@@ -113,7 +117,7 @@ routes.get('/getMediaDetails', fileUploaderController.getUserMediaDetails);
  *         name: mediaId
  *         type: string
  *       - in: query
- *         description: perform force delete  0-no 1-yes
+ *         description: Specify option of perform force delete 0-no or 1-yes
  *         name: isForceDelete
  *         type: integer
  *         enum: [0,1]

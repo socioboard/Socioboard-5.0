@@ -45,12 +45,15 @@ class FriendshipLibs {
             if (!accountId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Facebook account or not
                 return this.getSocialAccount(1, accountId, userId, teamId)
                     .then((account) => {
+                        // If yes, fetching facebook profile stats
                         return this.facebookHelper.getFbProfileStats(account.access_token);
                     })
                     .then((result) => {
                         if (result) {
+                            // Creating or updating the values in frinds stats table in DB
                             return this.createOrUpdateFriendsList(accountId, result)
                                 .then(() => {
                                     resolve(result);
@@ -72,12 +75,15 @@ class FriendshipLibs {
             if (!accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Facebook Page account or not
                 return this.getSocialAccount([2, 3], accountId, userId, teamId)
                     .then((account) => {
+                        // If yes, fetching facebook page stats
                         return this.facebookHelper.getFbPageStats(account.access_token);
                     })
                     .then((updateDetail) => {
                         if (updateDetail) {
+                            // Creating or updating the values in frinds stats table in DB
                             return this.createOrUpdateFriendsList(accountId, updateDetail)
                                 .then(() => {
                                     resolve(updateDetail);
@@ -100,11 +106,14 @@ class FriendshipLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var updateStats = {};
+                // Checking whether user is having that Twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching twitter stats
                         return this.twitterHelper.getLookupList(socialAcc.access_token, socialAcc.refresh_token, socialAcc.user_name);
                     })
                     .then((response) => {
+                        // Creating or updating the values in frinds stats table in DB
                         return this.createOrUpdateFriendsList(accountId, response)
                             .then(() => {
                                 resolve(response);
@@ -123,8 +132,10 @@ class FriendshipLibs {
             if (!userId || !accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Instagram account or not
                 return this.getSocialAccount(5, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching Instagram profile stats
                         return this.instagramHelper.getInstagramProfileInformation(socialAcc.access_token);
                     })
                     .then((response) => {
@@ -136,6 +147,7 @@ class FriendshipLibs {
                             total_post_count: parsedData.media,
                             profile_picture: response.ProfilePicture,
                         };
+                        // Creating or updating the values in frinds stats table in DB
                         return this.createOrUpdateFriendsList(accountId, updateDetails)
                             .then(() => {
                                 resolve(response);
@@ -154,8 +166,10 @@ class FriendshipLibs {
             if (!userId || !accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Linkedin profile account or not
                 return this.getSocialAccount(6, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching linkedin profile stats
                         return this.linkedInHelper.getProfileDetails(socialAcc.access_token);
                     })
                     .then((response) => {
@@ -187,11 +201,14 @@ class FriendshipLibs {
             if (!userId || !accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Youtube account or not
                 return this.getSocialAccount(9, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching youtube stats
                         return this.googleHelper.getYtbChannelDetails(socialAcc.user_name, socialAcc.refresh_token);
                     })
                     .then((response) => {
+                        // Creating or updating the values in frinds stats table in DB
                         return this.createOrUpdateFriendsList(accountId, response)
                             .then(() => {
                                 resolve(response);
@@ -210,11 +227,14 @@ class FriendshipLibs {
             if (!userId || !accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Pinterest account or not
                 return this.getSocialAccount(11, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching pinterest stats
                         return this.pinterestHelper.userDetails(socialAcc.user_name, socialAcc.access_token);
                     })
                     .then((response) => {
+                        // Creating or updating the values in frinds stats table in DB
                         return this.createOrUpdateFriendsList(accountId, response)
                             .then(() => {
                                 resolve(response);
@@ -234,11 +254,14 @@ class FriendshipLibs {
             if (!userId || !accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that Instagram Business account or not
                 return this.getSocialAccount(12, accountId, userId, teamId)
                     .then((socialAcc) => {
+                        // If yes, fetching instagram business stats
                         return this.facebookHelper.getInstaBusinessStats(socialAcc.access_token);
                     })
-                    .then((response) => {             
+                    .then((response) => {
+                        // Creating or updating the values in frinds stats table in DB
                         return this.createOrUpdateFriendsList(accountId, response)
                             .then(() => {
                                 resolve(response);

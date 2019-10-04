@@ -7,12 +7,15 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
     Route::get('login', 'UserController@login');
     Route::post('login', 'UserController@login');
     Route::post('/forgot-password', 'UserController@forgotpassword');
+    Route::get('verifyPasswordToken','UserController@verifyPasswordToken');
+    Route::post('/resetPassword','UserCOntroller@resetPassword');
     Route::get('social/{network}', 'UserController@social');
     Route::get('facebook-callback', 'UserController@facebookCallback');
     Route::get('facebook', 'UserController@redirectToProvider');
     Route::get('google-callback', 'UserController@googleCallback');
     Route::get('two-step-authentication', 'UserController@twoStepAuthentication');
     Route::post('two-step-authentication', 'UserController@twoStepAuthentication');
+//    Route::get('accept-invitation', 'TeamController@acceptInvitation');
 
     Route::group(['middleware' => ['authenticateuser:user']], function () {
 
@@ -20,6 +23,8 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::get('dashboard/{team}','UserController@dashboard');
         Route::post('getTeamDetails','UserController@getTeamDetails');
         Route::get('settings','UserController@account');
+        Route::get('get-user-info','UserController@getUserInfo');
+//        Route::get('link_shortening','UserController@linkShortening');
         Route::get('logout','UserController@logout');
         Route::post('change-password','UserController@changePassword');
         Route::post('Two-Step-activation','UserController@TwoStepActivation');
@@ -28,6 +33,12 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
 
         //notification
         Route::get('notification','UserController@notification');
+        Route::get('/get-user-notification','UserController@getUserNotification');
+        Route::get('/get-all-user-notification','UserController@getUserNotification');
+        Route::get('/get-team-notification','UserController@getTeamNotification');
+        Route::get('/get-all-team-notification','UserController@getTeamNotification');
+        Route::get('seeAllNotifications','UserController@seeAllNotifications');
+//        Route::get('/get-new-session','UserController@getNewSession');
 
         //payment
         Route::get('payment/paypalSuccess','PaymentController@paymentSuccess');
@@ -40,12 +51,12 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
         //lock and unlock acc
         Route::post('lock-account','UserController@lockUnlockAccount');
 
+        //Link shortening
+        Route::get('link-shortening','UserController@linkShortening');
+        Route::post('link-shortening','UserController@linkShortening');
 
-
-
+        //Dowload Invoice
+        Route::post('/get-invoice','UserController@getInvoice');
 
     });
-
-
-
 });

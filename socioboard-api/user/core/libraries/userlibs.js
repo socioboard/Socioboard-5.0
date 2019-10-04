@@ -27,12 +27,12 @@ class UserLibs {
                     where: {
                         user_id: Number(userId)
                     },
-                    attributes: ['user_id', 'email', 'phone_no', 'first_name', 'last_name', 'profile_picture', 'is_account_locked', 'is_admin_user'],
+                    attributes: ['user_id', 'email', 'phone_no', 'first_name', 'last_name', 'date_of_birth', 'phone_code', 'about_me', 'profile_picture', 'is_account_locked', 'is_admin_user'],
                     include: [{
                         model: userActivation,
                         as: "Activations",
                         where: { id: db.Sequelize.col('user_activation_id') },
-                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'email_validate_token', 'forgot_password_validate_token', 'forgot_password_token_expire']
+                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'shortenStatus', 'email_validate_token', 'forgot_password_validate_token', 'forgot_password_token_expire']
                     }]
                 })
                     .then((userDetails) => {

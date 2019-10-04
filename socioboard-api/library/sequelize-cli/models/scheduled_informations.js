@@ -25,10 +25,19 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(64),
       allowNull: false
     },
+    /**
+     * 1- ready Queue
+     * 2- wait(pause)
+     * 3- approvalpending
+     * 4- rejected
+     * 5- draft
+     * 6- done
+     */
     status: {
       type: Sequelize.INTEGER(2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      comment: "1- ready Queue, 2-wait(pause), 3-approvalpending, 4-rejected, 5-draft, 6-done"
       // 0- Not Yet Started, 1- Running, 2-Completed, 3-Errored, 4-Paused, 5-Stopped(they made main schedule as stopped), 6- Expired, 7-Draft, 8- Admin Request, 9 -Rejected By Admin, 10- Cancelled
     }
   }, {});

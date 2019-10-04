@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on instagramstoryinsights collection of mongo DB
 const instagramStoryInsights = new Schema({
 
     socialAccountId: { type: String, index: true },
@@ -25,6 +26,7 @@ const instagramStoryInsights = new Schema({
 });
 
 instagramStoryInsights.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('InstagramStoryInsights')
         .bulkWrite(posts.map((post) => {
             return {
@@ -36,12 +38,12 @@ instagramStoryInsights.methods.insertManyPosts = function (posts) {
             };
         }))
         .catch((error) => {
-            console.log(error.message);
             return 0;
         });
 };
 
 instagramStoryInsights.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching the posts from the collection related to an account
     return this.model('InstagramStoryInsights')
         .aggregate([
             { $match: { socialAccountId: accountId } },
@@ -50,20 +52,19 @@ instagramStoryInsights.methods.getSocialAccountPosts = function (accountId, skip
             { $skip: skip }
         ])
         .then(function (result) {
-            console.log(result);
             if (result.length > 0) {
                 return result;
             }
             return [];
         })
         .catch(function (error) {
-            console.log(error);
             throw new Error(error.message);
         });
 };
 
 
 instagramStoryInsights.methods.deleteAccountPosts = function (accountId) {
+    // Deleting all posts related to an account
     var query = {
         socialAccountId: new RegExp(accountId, 'i')
     };
@@ -73,7 +74,7 @@ instagramStoryInsights.methods.deleteAccountPosts = function (accountId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            return error;
         });
 };
 

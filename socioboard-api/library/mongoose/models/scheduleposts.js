@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on scheduleposts collection of mongo DB
 const schedulePosts = new Schema({
 
     postType: { type: String },
@@ -50,6 +51,7 @@ const schedulePosts = new Schema({
 
 
 schedulePosts.methods.getPostsById = function (postIds) {
+    // Fetching a specified post details
     var query = { _id: { $in: postIds } };
     return this.model('SchedulePost')
         .find(query)
@@ -64,6 +66,7 @@ schedulePosts.methods.getPostsById = function (postIds) {
 
 
 schedulePosts.methods.getScheduleDetails = function (id) {
+    // Fetching a specified schedule details
     var query = {
         _id: String(id),
     };
@@ -78,6 +81,7 @@ schedulePosts.methods.getScheduleDetails = function (id) {
 };
 
 schedulePosts.methods.updateAdminResponse = function (scheduleId, adminResponse) {
+    // Updating the admin approval status to a particular schedule
     return this.model('SchedulePost')
         .findOneAndUpdate(
             { _id: String(scheduleId) },
@@ -92,6 +96,7 @@ schedulePosts.methods.updateAdminResponse = function (scheduleId, adminResponse)
 };
 
 schedulePosts.methods.updateStatus = function (scheduleId, status) {
+    // Updating the status of a particular schedule
     return this.model('SchedulePost')
         .findOneAndUpdate(
             { _id: String(scheduleId) },

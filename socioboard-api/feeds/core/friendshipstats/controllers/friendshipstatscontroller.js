@@ -13,7 +13,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -21,7 +21,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -34,7 +34,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_page_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_page_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -42,7 +42,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_page_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.fb_page_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -55,7 +55,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.twitter_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.twitter_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -63,7 +63,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.twitter_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.twitter_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -76,7 +76,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -84,7 +84,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -97,7 +97,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.LinkedIn,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.linkedIn_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.linkedIn_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -105,7 +105,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.LinkedIn,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.linkedIn_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.linkedIn_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -118,7 +118,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.youtube_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.youtube_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -126,7 +126,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.youtube_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.youtube_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -139,7 +139,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Pinterest,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.pinterest_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.pinterest_profile_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -147,7 +147,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Pinterest,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.pinterest_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.pinterest_profile_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });
@@ -160,7 +160,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_business_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_business_stats.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", friendShipStats: response });
             })
@@ -168,7 +168,7 @@ class FrienshipStatController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_business_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.friendship_stats_event_lable.instagram_business_stats_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", message: error.message });
             });

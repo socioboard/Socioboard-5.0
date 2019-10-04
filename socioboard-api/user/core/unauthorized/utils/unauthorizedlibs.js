@@ -27,7 +27,7 @@ class UnAuthorizedUtils extends UserLibs {
         Object.assign(this, UserTeamAccount);
         this.analyticsServices = new AnalyticsServices(config.get('analytics'));
         this.authorizeServices = new AuthorizeServices(config.get('authorize'));
-        this.sendEmailServices = new SendEmailServices(config.get('mailService'));     
+        this.sendEmailServices = new SendEmailServices(config.get('mailService'));
         this.coreServices = new CoreServices(config.get('authorize'));
         this.fbConnect = new Facebook(config.get('facebook_api'));
         this.googleConnect = new Google(config.get('google_api'));
@@ -39,6 +39,7 @@ class UnAuthorizedUtils extends UserLibs {
                 reject(new Error('Invalid Inputs'));
             }
             else {
+                // Checking user existance
                 return userDetails.findOne({
                     where: {
                         [Operator.or]: [{
@@ -194,8 +195,10 @@ class UnAuthorizedUtils extends UserLibs {
             if (!code) {
                 reject({ error: true, message: "Invalid code" });
             } else {
+                // Fetching Facebook access token of user
                 return this.fbConnect.getUserAccessToken(code)
                     .then((accessToken) => {
+                        // Fetching user profile details from Facebook
                         return this.fbConnect.userProfileInfo(accessToken);
                     })
                     .then((userDetails) => {
@@ -238,6 +241,7 @@ class UnAuthorizedUtils extends UserLibs {
                                 "accessToken": userDetails.access_token,
                                 "refreshToken": userDetails.access_token
                             };
+                            // Checking user already existed or not.
                             return this.isUserRegister(userDetails.user_id, userDetails.email);
                         }
                     })
@@ -245,6 +249,7 @@ class UnAuthorizedUtils extends UserLibs {
                         if (result.status == 'registered') {
                             return result;
                         } else {
+                            // Adding user
                             return this.createUser(userInfo);
                         }
                     })
@@ -286,7 +291,7 @@ class UnAuthorizedUtils extends UserLibs {
                                     throw error;
                                 });
                         }
-                    })                   
+                    })
                     .catch((error) => {
                         reject(error);
                     });
@@ -302,6 +307,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!code) {
                 reject({ error: true, message: "Invalid code" });
             } else {
+                // Fetching Google access token of user
                 return this.googleConnect.getGoogleAccessToken(code, config.get('google_api.redirect_url'))
                     .then((tokens) => {
                         logger.info(`tokens : ${tokens}`);
@@ -351,6 +357,7 @@ class UnAuthorizedUtils extends UserLibs {
                                 "accessToken": profileDetails.access_token,
                                 "refreshToken": profileDetails.refresh_token
                             };
+                            // Checking user already existed or not.
                             return this.isUserRegister(profileDetails.id, profileDetails.email);
                         }
                     })
@@ -358,11 +365,13 @@ class UnAuthorizedUtils extends UserLibs {
                         if (result.status == 'registered') {
                             return result;
                         } else {
+                            // Adding user.
                             return this.createUser(userInfo);
                         }
                     })
                     .then((userDetails) => {
                         var userId = userDetails.userId ? userDetails.userId : userDetails.user.user_id ? userDetails.user.user_id : null;
+                        // Making a secrete token for user
                         return this.getUserAccessToken(userId);
                     })
                     .then((result) => {
@@ -385,6 +394,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!userId && userId != 0) {
                 reject({ message: 'Invalid UserId', error: true });
             } else {
+                // Locking all social accounts
                 return this.lockUserSocialAccounts(userId)
                     .then((result) => {
                         if (!result.success)
@@ -401,6 +411,7 @@ class UnAuthorizedUtils extends UserLibs {
                         if (!userInformation)
                             throw new Error('Cant able to find the user');
                         else {
+                            // Updating user plan to Basic
                             return userInformation.Activations.update({
                                 last_login: moment(),
                                 user_plan: 0,
@@ -423,6 +434,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!userNameOrEmail || !password) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // checking user Existance
                 return userDetails.findOne({
                     where: {
                         [Operator.or]: [{
@@ -494,7 +506,9 @@ class UnAuthorizedUtils extends UserLibs {
             if (!userInfo) {
                 reject({ error: true, message: 'Invalid UserInfo' });
             } else {
+                // Creating an activation Link
                 var activationLink = `${config.get('user_socioboard.host_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
+                // Appending activation link in Mail content
                 var htmlContent = this.sendEmailServices.template.forgotpassword.replace('[FirstName]', `${userInfo.first_name}`).replace('[ActivationLink]', activationLink);
                 var emailDetails = {
                     "subject": config.get('mailTitles.forgot_password_request'),
@@ -520,6 +534,7 @@ class UnAuthorizedUtils extends UserLibs {
             } else if (oldPassword == newPassword) {
                 reject(new Error("New password shouldn't be equal to previous password!"));
             } else {
+                // Checking user Existance
                 return userDetails.findOne({
                     where: {
                         email: email,
@@ -529,8 +544,10 @@ class UnAuthorizedUtils extends UserLibs {
                     .then(function (user) {
                         if (!user)
                             throw new Error('Sorry! Email not registered.');
+                        // Comparing the current and entered Passwords
                         if (user.password !== oldPassword)
                             throw new Error('Sorry! Wrong Password.');
+                        // Updating user with new Password
                         return userDetails.update({ password: newPassword }, {
                             where: {
                                 user_id: user.user_id
@@ -543,8 +560,6 @@ class UnAuthorizedUtils extends UserLibs {
                         reject(error);
                     });
             }
-
-
         });
     }
 
@@ -553,6 +568,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!email || !newPassword) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking user Existance
                 return userDetails.findOne({
                     where: {
                         email: email,
@@ -562,6 +578,7 @@ class UnAuthorizedUtils extends UserLibs {
                     .then(function (user) {
                         if (!user)
                             throw new Error('Sorry! Email not registered.');
+                        // Updating user with new Password
                         return userDetails.update({ password: newPassword }, {
                             where: {
                                 user_id: user.user_id
@@ -583,6 +600,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!email) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking user Existance
                 return userDetails.findOne({
                     where: {
                         email: email
@@ -605,16 +623,18 @@ class UnAuthorizedUtils extends UserLibs {
                             forgot_password_validate_token: newForgotVerificationToken,
                             forgot_password_token_expire: newExpireDate
                         }, {
-                                where: {
-                                    id: user.user_activation_id
-                                }
-                            });
+                            where: {
+                                id: user.user_activation_id
+                            }
+                        });
                     })
                     .then(() => {
+                        // Fetching updated user details
                         return this.getUserDetails(FetchedUserDetails.user_id);
                     })
                     .then((userInfo) => {
-                        if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'apidevelopment') {
+                        // Sending mail to reset Pasword
+                        if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'phpdev' || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'apidevelopment') {
                             return this.sendForgotPasswordMail(userInfo)
                                 .then(() => {
                                     return `Success! Please check your email for reset your password!`;
@@ -645,6 +665,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!email || !activationToken) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking user Existance with email
                 return userDetails.findOne({
                     where: {
                         email: email
@@ -664,7 +685,9 @@ class UnAuthorizedUtils extends UserLibs {
                         else {
                             var expireDate = user.Activations.forgot_password_token_expire;
 
+                            // Checking Token got expired or not
                             if (moment(expireDate).isBefore(moment.utc())) {
+                                // Token got expired, making new Token
                                 var newExpireDate = moment().add(1, 'days');
                                 var newPasswordVerificationToken = this.coreServices.getGuid();
                                 return userActivation.update({
@@ -690,6 +713,7 @@ class UnAuthorizedUtils extends UserLibs {
                                         }
                                     });
                             }
+                            // Validating Token with existing token
                             else if (user.Activations.forgot_password_validate_token === activationToken) {
                                 return "success";
                             }
@@ -718,6 +742,7 @@ class UnAuthorizedUtils extends UserLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
 
+                // Checking user existance with email
                 return userDetails.findOne({
                     where: {
                         email: email
@@ -750,6 +775,7 @@ class UnAuthorizedUtils extends UserLibs {
                             logger.info(`${email} Is Expired : ${moment(expireDate).isBefore(moment.utc())}`);
 
                             if (moment(expireDate).isBefore(moment.utc())) {
+                                // Token expired, making new Token and sending it to user
                                 var newExpireDate = moment().add(1, 'days');
                                 var newEmailVerificationToken = this.coreServices.getGuid();
                                 return userActivation.update({
@@ -783,6 +809,7 @@ class UnAuthorizedUtils extends UserLibs {
                                     });
                             }
                             else {
+                                // Making user Activated
                                 return userActivation.update({ activation_status: 1, },
                                     { where: { id: user.user_activation_id } })
                                     .then(() => { return "success"; })
@@ -792,7 +819,7 @@ class UnAuthorizedUtils extends UserLibs {
                             }
                         }
                         else {
-                            reject(new Error("Invalid verification token!")) ;
+                            reject(new Error("Invalid verification token!"));
                         }
                     })
                     .then((message) => {
@@ -814,6 +841,7 @@ class UnAuthorizedUtils extends UserLibs {
                 reject(new Error('Invalid Inputs'));
             }
             else {
+                // Checking and getting user details with email
                 return this.getUserDetailsByEmail(email)
                     .then((userDetails) => {
                         if (!userDetails)
@@ -835,6 +863,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!userName) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking userName existance
                 return userDetails.findOne({
                     where: {
                         user_name: userName,
@@ -857,6 +886,7 @@ class UnAuthorizedUtils extends UserLibs {
             if (!email) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking user email existance
                 return userDetails.findOne({
                     where: {
                         email: email,

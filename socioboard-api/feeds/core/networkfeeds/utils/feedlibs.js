@@ -39,10 +39,12 @@ class FeedsLibs {
             if (!Boolean(pageId)) {
                 reject(new Error("Please validate the page id!"));
             } else {
+                // Checking whether user is having that facebook account or not
                 return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
                     .then((socialAccountDetails) => {
                         var offset = (pageId - 1) * config.get('perPageLimit');
                         var facebookMongoPostModelObject = new FacebookMongoPostModel();
+                        // Fetching the facebook feeds from Mongo DB
                         return facebookMongoPostModelObject.getSocialAccountPosts(socialAccountDetails.social_id, offset, config.get('perPageLimit'));
                     })
                     .then((response) => {
@@ -66,6 +68,7 @@ class FeedsLibs {
                         if (isRunRecentPost) {
                             var socialAccountInfo = {};
                             var feeds = [];
+                            // Checking whether user is having that facebook account or not
                             return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
                                 .then((socialAccountDetails) => {
                                     socialAccountInfo = socialAccountDetails;
@@ -76,8 +79,10 @@ class FeedsLibs {
                                     })
                                         .then((updatedAccountData) => {
                                             if (updatedAccountData && updatedAccountData.updated_date)
+                                                // Fetching recent facebook feeds
                                                 return this.facebookHelper.getRecentFacebookFeeds(socialAccountInfo.access_token, socialAccountInfo.social_id, updatedAccountData.updated_date, config.get('facebook_api.app_id'), config.get('facebook_api.version'));
                                             else
+                                                // Fetching feeds from DB (existed feeds)
                                                 return this.facebookHelper.getFacebookPosts(socialAccountInfo.access_token, socialAccountInfo.social_id, config.get('facebook_api.app_id'), config.get('facebook_api.version'));
                                         });
                                 })
@@ -85,11 +90,13 @@ class FeedsLibs {
                                     if (postDetails && postDetails.feeds && postDetails.feeds.length > 0) {
                                         feeds = postDetails.feeds;
                                         var facebookMongoPostModelObject = new FacebookMongoPostModel();
+                                        // Updating the feeds in Mongo DB
                                         return facebookMongoPostModelObject.insertManyPosts(postDetails.feeds);
                                     } else
                                         return [];
                                 })
                                 .then(() => {
+                                    // Creating or updating the recent feeds table with new fetched time
                                     return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id)
                                         .then(() => { return feeds; })
                                         .catch((error) => { throw error; });
@@ -98,6 +105,7 @@ class FeedsLibs {
                         }
                     })
                     .then(() => {
+                        // Fetching the existing feeds from DB
                         return this.getFacebookFeeds(userId, accountId, teamId, pageId);
                     })
                     .then((feeds) => resolve(feeds))
@@ -114,10 +122,12 @@ class FeedsLibs {
             if (!Boolean(pageId)) {
                 reject(new Error("Please validate the page id!"));
             } else {
+                // Checking whether user is having that twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAccountDetails) => {
                         var offset = (pageId - 1) * config.get('perPageLimit');
                         var twitterMongoPostModelObject = new TwitterMongoPostModel();
+                        // Fetching the twitter feeds from Mongo DB
                         return twitterMongoPostModelObject.getSocialAccountPosts(socialAccountDetails.social_id, offset, config.get('perPageLimit'));
                     })
                     .then((response) => {
@@ -142,24 +152,29 @@ class FeedsLibs {
                         if (isRunRecentPost) {
                             var socialAccountInfo = {};
                             var tweets = [];
+                            // Checking whether user is having that twitter account or not
                             return this.getSocialAccount(4, accountId, userId, teamId)
                                 .then((socialAccountDetails) => {
                                     socialAccountInfo = socialAccountDetails;
                                     var twitterMongoPostModel = new TwitterMongoPostModel();
-
+                                    // Fetching recent Tweet from DB
                                     return twitterMongoPostModel.findLastRecentTweetId()
                                         .then((recentTweetId) => {
+                                            // Fetching tweets from recent DB tweet to now from twitter
                                             return this.twitterHelper.getTimeLineTweets(socialAccountInfo.access_token, socialAccountInfo.refresh_token, socialAccountInfo.user_name, recentTweetId);
                                         })
                                         .then((timelineTweets) => {
+                                            // Formating the fetched tweet response
                                             return this.twitterHelper.parseTweetDetails(timelineTweets, socialAccountInfo.social_id, config.get('twitter_api.app_name'), config.get('twitter_api.version'));
                                         })
                                         .then((postDetails) => {
                                             tweets = postDetails.tweets;
                                             var twitterMongoPostModelObject = new TwitterMongoPostModel();
+                                            // Updating the Twitter post model with new tweets
                                             return twitterMongoPostModelObject.insertManyPosts(postDetails.tweets);
                                         })
                                         .then(() => {
+                                            // Creating or updating the recent feeds table with new fetched time
                                             return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id);
                                         })
                                         .then(() => { return tweets; })
@@ -183,12 +198,15 @@ class FeedsLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var socialAccountInfo = {};
+                // Checking whether user is having that twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAccountDetails) => {
                         socialAccountInfo = socialAccountDetails;
+                        // Fetching the home tweets of twitter
                         return this.twitterHelper.getTimeLineTweets(socialAccountDetails.access_token, socialAccountDetails.refresh_token, socialAccountDetails.user_name);
                     })
                     .then((timelineTweets) => {
+                        // Formating the fetched tweet response
                         return this.twitterHelper.parseTweetDetails(timelineTweets, socialAccountInfo.social_id, config.get('twitter_api.app_name'), config.get('twitter_api.version'));
                     })
                     .then((tweets) => {
@@ -207,12 +225,15 @@ class FeedsLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var socialAccountInfo = {};
+                // Checking whether user is having that twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAccountDetails) => {
                         socialAccountInfo = socialAccountDetails;
+                        // Fetching tweets by keyword from twitter
                         return this.twitterHelper.getTweetsByKeyword(socialAccountDetails.access_token, socialAccountDetails.refresh_token, keyword);
                     })
                     .then((timelineTweets) => {
+                        // Formating the fetched tweet response
                         resolve(this.twitterHelper.parseTweetDetails(timelineTweets.statuses, socialAccountInfo.social_id, config.get('twitter_api.app_name'), config.get('twitter_api.version')));
                     })
                     .then((tweets) => {
@@ -231,12 +252,15 @@ class FeedsLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var socialAccountInfo = {};
+                // Checking whether user is having that twitter account or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then((socialAccountDetails) => {
                         socialAccountInfo = socialAccountDetails;
+                        // Fetching user mentioned (tagged) tweets from twitter
                         return this.twitterHelper.getMentionTimeLineTweets(socialAccountDetails.access_token, socialAccountDetails.refresh_token);
                     })
                     .then((timelineTweets) => {
+                        // Formating the fetched twitter response
                         return this.twitterHelper.parseTweetDetails(timelineTweets, socialAccountInfo.social_id, config.get('twitter_api.app_name'), config.get('twitter_api.version'));
                     })
                     .then((tweets) => {
@@ -256,6 +280,7 @@ class FeedsLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var feeds = [];
+                // Checking whether user is having that Linkedin in company account or not
                 return this.getSocialAccount(7, accountId, userId, teamId)
                     .then((socialAccount) => {
                         return this.linkedInHelper.getCompanyUpdates(socialAccount.social_id, socialAccount.access_token);
@@ -298,6 +323,7 @@ class FeedsLibs {
             if (!accountId || !boardId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking whether user is having that pinterest account or not
                 return this.getSocialAccount(11, accountId, userId, teamId)
                     .then((socialAccount) => {
                         FetchedSocialAccount = socialAccount;
@@ -315,6 +341,7 @@ class FeedsLibs {
                         if (boardInfo == null)
                             throw new Error("No board found with requested account.");
                         var boardName = String(boardInfo.board_url).replace('https://www.pinterest.com/', '');
+                        // Fetching pinterst pins of that Board
                         return this.pinterestHelper.getBoardPins(FetchedSocialAccount.access_token, boardName);
                     })
                     .then((pinsDetails) => {
@@ -331,10 +358,12 @@ class FeedsLibs {
             if (!accountId || !pageId || pageId == 0 || pageId == null) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user is having that instagram account or not
                 return this.getSocialAccount(5, accountId, userId, teamId)
                     .then((socialAccount) => {
                         var offset = (pageId - 1) * config.get('perPageLimit');
                         var InstagramMongoPostModelObject = new InstagramMongoPostModel();
+                        // Fetching instagram feeds from DB 
                         return InstagramMongoPostModelObject.getSocialAccountPosts(socialAccount.social_id, offset, config.get('perPageLimit'));
                     })
                     .then((response) => {
@@ -354,10 +383,12 @@ class FeedsLibs {
             if (!accountId || !Boolean(pageId)) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user is having that instagram business account or not
                 return this.getSocialAccount(12, accountId, userId, teamId)
                     .then((socialAccount) => {
                         var offset = (pageId - 1) * config.get('perPageLimit');
                         var InstagramBusinessMongoPostModelObject = new InstagramBusinessMongoPostModel();
+                        // Fetching instagram business feeds from DB
                         return InstagramBusinessMongoPostModelObject.getSocialAccountPosts(socialAccount.social_id, offset, config.get('perPageLimit'));
                     })
                     .then((response) => {
@@ -383,6 +414,7 @@ class FeedsLibs {
                     .then((isRunRecentPost) => {
                         if (isRunRecentPost) {
                             var socialAccountInfo = {};
+                            // Checking whether user is having that instagram account or not
                             return this.getSocialAccount(5, accountId, userId, teamId)
                                 .then((socialAccount) => {
                                     socialAccountInfo = socialAccount;
@@ -394,8 +426,10 @@ class FeedsLibs {
                                         .then((updatedAccountData) => {
                                             if (updatedAccountData && updatedAccountData.updated_date) {
                                                 var instagramMongoPostModel = new InstagramMongoPostModel();
+                                                // Finding the last feed Id
                                                 return instagramMongoPostModel.findLastRecentInstaId()
-                                                    .then((recentInstaId) => {                                                      
+                                                    .then((recentInstaId) => {
+                                                        // Fetching feeds from that last feed Id to till now from instagram
                                                         return this.instagramHelper.getInstagramFeeds(socialAccount.access_token, socialAccount.social_id, recentInstaId);
                                                     })
                                                     .then((feedDetails) => {
@@ -405,17 +439,18 @@ class FeedsLibs {
                                                         else {
                                                             feeds.push(feedDetails);
                                                             var instagramMongoPostModelObject = new InstagramMongoPostModel();
+                                                            // Updating the new instagram feeds in DB
                                                             return instagramMongoPostModelObject.insertManyPosts(feedDetails)
                                                                 .then(() => {
-                                                                    return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id)
-                                                                        .then(() => { return feeds; })
-                                                                        .catch((error) => { throw error; });
+                                                                    // Creating or updating the recent feeds table with new fetched time
+                                                                    return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id);
                                                                 })
                                                                 .catch((error) => { throw error; });
                                                         }
                                                     });
                                             }
                                             else {
+                                                // Fetching the existing feeds from DB
                                                 return this.instagramHelper.getInstagramFeeds(socialAccount.access_token, socialAccount.social_id, '')
                                                     .then((feedDetails) => {
                                                         if (!feedDetails) {
@@ -426,9 +461,8 @@ class FeedsLibs {
                                                             var instagramMongoPostModelObject = new InstagramMongoPostModel();
                                                             return instagramMongoPostModelObject.insertManyPosts(feedDetails)
                                                                 .then(() => {
-                                                                    return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id)
-                                                                        .then(() => { return feeds; })
-                                                                        .catch((error) => { throw error; });
+                                                                    // Creating or updating the recent feeds table with new fetched time
+                                                                    return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id);
                                                                 })
                                                                 .catch((error) => { throw error; });
                                                         }
@@ -438,6 +472,7 @@ class FeedsLibs {
                                 });
                         }
                         else {
+                            // Fetching instagram feeds from DB
                             return this.getInstaFeedsFromDB(userId, accountId, teamId, pageId)
                                 .then((response) => { feeds.push(response); })
                                 .catch((error) => { throw error; });
@@ -465,6 +500,7 @@ class FeedsLibs {
                         if (isRunRecentPost) {
                             var socialAccountInfo = {};
                             var feeds = [];
+                            // Checking whether user is having that instagram account or not
                             return this.getSocialAccount(5, accountId, userId, teamId)
                                 .then((socialAccount) => {
                                     socialAccountInfo = socialAccount;
@@ -489,6 +525,7 @@ class FeedsLibs {
                                                             var instagramMongoPostModelObject = new InstagramMongoPostModel();
                                                             return instagramMongoPostModelObject.insertManyPosts(feedDetails)
                                                                 .then(() => {
+                                                                    // Creating or updating the recent feeds table with new fetched time
                                                                     return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id)
                                                                         .then(() => { return feeds; })
                                                                         .catch((error) => { throw error; });
@@ -508,6 +545,7 @@ class FeedsLibs {
                                                             var instagramMongoPostModelObject = new InstagramMongoPostModel();
                                                             return instagramMongoPostModelObject.insertManyPosts(feedDetails)
                                                                 .then(() => {
+                                                                    // Creating or updating the recent feeds table with new fetched time
                                                                     return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id)
                                                                         .then(() => { return feeds; })
                                                                         .catch((error) => { throw error; });
@@ -520,6 +558,7 @@ class FeedsLibs {
                                 });
                         }
                         else {
+                            // Fetching instagram feeds from DB
                             return this.getInstaFeedsFromDB(userId, accountId, teamId, pageId);
                         }
                     }).then((feeds) => {
@@ -538,7 +577,7 @@ class FeedsLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var businessFeeds = [];
-
+                var socialAccountInfo = {};
                 return accountUpdateTable.findOne({
                     where: { account_id: accountId }
                 })
@@ -548,10 +587,11 @@ class FeedsLibs {
                             diff = moment.tz(new Date(), "GMT").diff(moment.tz(result.updated_date, 'GMT'), config.get('instagram.update_time_frequency_factor'));
                         }
 
-                        // i've to check insta or facebook ??
                         if (!result || diff > config.get('instagram.update_time_frequency_value')) {
+                            // Checking whether user is having that instagram business account or not
                             return this.getSocialAccount(12, accountId, userId, teamId)
                                 .then((socialAccount) => {
+                                    socialAccountInfo = socialAccount;
                                     if (socialAccount == null)
                                         throw new Error("No profile found or account isn't instagram business profile.");
                                     else
@@ -560,34 +600,24 @@ class FeedsLibs {
                                 .then((response) => {
                                     businessFeeds = response;
                                     var instagramMongoPostModelObject = new InstagramBusinessMongoPostModel();
-                                    return instagramMongoPostModelObject.insertManyPosts(response)
+                                    return instagramMongoPostModelObject.insertManyPosts(response.feeds)
                                         .then(() => {
-                                            return accountUpdateTable.findOne({
-                                                where: { account_id: accountId }
-                                            })
-                                                .then((result) => {
-                                                    if (!result) {
-                                                        return accountUpdateTable.create({
-                                                            account_id: accountId,
-                                                            updated_date: moment.utc().format()
-                                                        });
-                                                    } else {
-                                                        return result.update({ updated_date: moment.utc().format() });
-                                                    }
-                                                }).catch((error) => { throw error; });
+                                            // Creating or updating the recent feeds table with new fetched time
+                                            return this.createOrEditLastUpdateTime(accountId, socialAccountInfo.social_id);
                                         })
                                         .catch((error) => { throw error; });
-                                });
+                                })
+                                .catch((error) => { throw error; });
                         }
                         else {
-                            return this.getInstaBusinessFeedsFromDB(userId, accountId, teamId, pageId)                          
+                            return this.getInstaBusinessFeedsFromDB(userId, accountId, teamId, pageId)
                                 .then((InstaBusinessFeeds) => {
                                     businessFeeds = InstaBusinessFeeds;
                                 })
                                 .catch((error) => { throw error; });
                         }
                     }).then(() => {
-                        resolve(businessFeeds);
+                        resolve(businessFeeds.feeds ? businessFeeds.feeds : businessFeeds);
                     }).catch((error) => {
                         reject(error);
                     });
@@ -601,6 +631,7 @@ class FeedsLibs {
             if (!Boolean(pageId)) {
                 reject(new Error("Please validate the page id!"));
             } else {
+                // Checking whether user is having that youtube account or not
                 return this.getSocialAccount(9, accountId, userId, teamId)
                     .then((socialAccount) => {
                         var offset = (pageId - 1) * config.get('perPageLimit');

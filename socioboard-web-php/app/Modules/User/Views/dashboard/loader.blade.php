@@ -125,9 +125,6 @@
             type:'GET',
 
             success:function(response){
-                console.log(response)
-//                console.log(JSON.parse(response))
-                console.log(response['code'])
                if(response.code == 200){
                    location.href = "dashboard/"+response.team;
                }

@@ -2,7 +2,7 @@
     <div class="container">
         <a class="navbar-brand" href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][0][0]->team_id}}">
             <strong class="text-orange-dark" data-toggle="tooltip" data-placement="bottom" title="SocioBoard">
-                <img src="../../assets/imgs/sb_icon.png" class="logo-brand" />
+                <img src="/assets/imgs/sb_icon.png" class="logo-brand" />
             </strong>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -71,12 +71,12 @@
                                 Content Studio
                             </a>
                             <div class="dropdown-menu" aria-labelledby="ContentStudio">
-                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/imgur" title="Imgur">Imgur</a>
-                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/flickr" title="Flickr">Flickr</a>
-                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/dailymotion" title="Dailymotion">Dailymotion</a>
-                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/newsapi" title="NewsApi">NewsApi</a>
-                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/pixabay" title="Pixabay">Pixabay</a>
-                                {{--<a class="dropdown-item" href="{{env('APP_URL')}}discovery/giphy" title="Giphy">Giphy</a>--}}
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/imgur" title="Imgur">Imgur</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/flickr" title="Flickr">Flickr</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/dailymotion" title="Dailymotion">Dailymotion</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/newsapi" title="NewsApi">NewsApi</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/pixabay" title="Pixabay">Pixabay</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}content-studio/giphy" title="Giphy">Giphy</a>
                             </div>
                         @else
                             <a class="nav-link dropdown-toggle" href="#" id="discoveryNavbarDropdown" role="button"
@@ -95,7 +95,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="boardNavbarDropdown">
                                 <a class="dropdown-item" href="{{env('APP_URL')}}discovery/youtube" title="Youtube">YouTube</a>
-                                {{--<a class="dropdown-item" href="{{env('APP_URL')}}discovery/twitter" title="Twitter">Twitter</a>--}}
+                                <a class="dropdown-item" href="{{env('APP_URL')}}discovery/twitter" title="Twitter">Twitter</a>
                             </div>
                         @else
                             <a class="nav-link dropdown-toggle" href="#" id="boardNavbarDropdown" role="button" data-toggle="dropdown"
@@ -111,7 +111,7 @@
                                 RSS
                             </a>
                             <div class="dropdown-menu" aria-labelledby="rssDrop">
-                                <a class="nav-link " href="{{env('APP_URL')}}discovery/rss-feed" >  Content Feeds</a>
+                                <a class="nav-link " href="{{env('APP_URL')}}rss-feed" >  Content Feeds</a>
                             </div>
                         @else
                             <a class="nav-link dropdown-toggle" href="#" id="rssDrop" role="button" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->rss_feeds}})"
@@ -139,6 +139,14 @@
                     {{--</a>--}}
                     {{--@endif--}}
                     {{--</li>--}}
+                    <li class="nav-item">
+                        @if(session()->get('user')['userDetails']->userPlanDetails->board_me == 1)
+                            <a class="nav-link" href="{{env('APP_URL')}}boardMe">BoardMe</a>
+                        @else
+                            <a class="nav-link" href="#" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->board_me}})">BoardMe</a>
+
+                        @endif
+                    </li>
 
                     <li class="nav-item dropdown">
                         @if(session()->get('user')['userDetails']->userPlanDetails->social_report == 1)
@@ -154,9 +162,27 @@
                                     Business Account</a>
                                 <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('YOUTUBE')}}"
                                    title="YouTube">YouTube</a>
+                                {{--<a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('TWITTER')}}"--}}
+                                                                   {{--title="Twitter">Twitter</a>--}}
                             </div>
                         @else
                             <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->social_report}})">Report</a>
+                        @endif
+
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        @if(session()->get('user')['userDetails']->userPlanDetails->share_library == 1)
+                            <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Image Library</a>
+
+                            <div class="dropdown-menu" aria-labelledby="ReportDropdown">
+                                <a class="dropdown-item" href="{{env('APP_URL')}}/image-library/1" title="Private Image Library">Private Image Library</a>
+                                <a class="dropdown-item" href="{{env('APP_URL')}}/image-library/0"
+                                   title="Public Image Library">Public Image Library</a>
+                            </div>
+                        @else
+                            <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->share_library}})">Report</a>
                         @endif
 
                     </li>
@@ -165,18 +191,20 @@
                     {{--</li>--}}
                 </ul>
                 <ul class="navbar-nav">
+                    <input type="hidden" id="ga_email" value="{{session('user')['userDetails']->email}}" />
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="notficationDropdown"
-                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick="dec_notify()">
                             <i class="far fa-bell text-primary" data-toggle="tooltip" data-placement="bottom"
                                title="Notifications"></i>
                             <span class="badge badge-noti-count"></span>
                         </a>
                         <div class="dropdown-menu notification_drop p-0" aria-labelledby="notficationDropdown">
-                            <div class="list-group list-group-flush p-0" id="notify">
+                            <div class="list-group list-group-flush p-0">
+                                <div id="notify" style="max-height: 250px; overflow-y: scroll;">
 
-
-                                <a href="settings/notification.html"
+                                </div>
+                                <a href="{{env('APP_URL')}}seeAllNotifications"
                                    class="list-group-item list-group-item-action p-2 text-center text-primary">
                                     See All
                                 </a>
@@ -228,10 +256,10 @@
                             {{--<a class="dropdown-item" href="#">YT Team Invite</a>--}}
                             {{--<a class="dropdown-item" href="#">Referral</a>--}}
                             {{--<a class="dropdown-item" href="#">Always Free</a>--}}
-                            {{--<a class="dropdown-item" href="#">Link Shortening</a>--}}
+                            <a class="dropdown-item" href="{{env('APP_URL')}}link-shortening">Link Shortening</a>
                             <a class="dropdown-item" href="{{env('APP_URL')}}updatePlan" >Upgrade Plan</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="../logout">Logout <i class="fas fa-sign-out-alt text-primary float-right"></i></a>
+                            <a class="dropdown-item" href="{{env('APP_URL')}}logout">Logout <i class="fas fa-sign-out-alt text-primary float-right"></i></a>
                         </div>
                     </li>
                 </ul>

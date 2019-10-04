@@ -11,11 +11,12 @@ const requestPromise = require('request-promise');
 const configruation = require('../../../config/configuration');
 const AnalyticsServices = require('../../../../library/utility/analyticsServices');
 const analyticsServices = new AnalyticsServices(config.get('analytics'));
+const logger = require('../../../utils/logger');
 
 var helper = {};
 
 function scheduleParseWebhook(receivedObjet) {
-    console.log(`Process Started and received object ${JSON.stringify(receivedObjet)}`);
+    logger.info(`Process Started and received object ${JSON.stringify(receivedObjet)}`);
     var scheduleDate = moment().add(1, 'seconds');
     var batchId = String(moment().unix());
     var time = new Date(scheduleDate);
@@ -41,7 +42,7 @@ helper.fbWebhookValidation = function (req, res) {
         req.query["hub.mode"] == 'subscribe' &&
         req.query["hub.verify_token"] == config.get('facebook_api.webhook_token')
     ) {
-        console.log('Facebook Webhook Validated..');
+        logger.info('Facebook Webhook Validated..');
         res.send(req.query["hub.challenge"]);
     } else {
         res.sendStatus(400);
@@ -50,7 +51,7 @@ helper.fbWebhookValidation = function (req, res) {
 
 helper.fbWebhookEvents = function (req, res) {
     if (!req.isXHubValid()) {
-        console.log('Warning - request header X-Hub-Signature not present or invalid');
+        logger.info('Warning - request header X-Hub-Signature not present or invalid');
         res.sendStatus(401);
         return;
     }
@@ -64,7 +65,7 @@ helper.instaWebhookValidation = function (req, res) {
         req.query["hub.mode"] == 'subscribe' &&
         req.query["hub.verify_token"] == config.get('instagram.webhook_token')
     ) {
-        console.log('Instagram Webhook Validated..');
+        logger.info('Instagram Webhook Validated..');
         res.send(req.query["hub.challenge"]);
     } else {
         res.sendStatus(400);
@@ -73,7 +74,7 @@ helper.instaWebhookValidation = function (req, res) {
 
 helper.instaWebhookEvents = function (req, res) {
     if (!req.isXHubValid()) {
-        console.log('Warning - request header X-Hub-Signature not present or invalid');
+        logger.info('Warning - request header X-Hub-Signature not present or invalid');
         res.sendStatus(401);
         return;
     }
@@ -136,7 +137,7 @@ helper.stopTwitterWebhook = function (req, res) {
     requestPromise.get(request_options)
         .then(function (body) {
             var webhook_id = JSON.parse(body)[0].id;
-            console.log('Deleting webhook config:', webhook_id);
+            logger.info('Deleting webhook config:', webhook_id);
             request_options = {
                 url: `https://api.twitter.com/1.1/account_activity/all/${config.get('twitter_api.webhook_environment')}/webhooks/${webhook_id}.json`,
                 oauth: twitterOauth,
@@ -210,7 +211,7 @@ helper.twitterWebhookEvents = function (req, res) {
         twitterWebhooks.webhookEvents(req.body);
     }
     else {
-        console.log('Signature not presented in twitter webhooks');
+        logger.info('Signature not presented in twitter webhooks');
     }
     res.status(200).send('200');
 };
@@ -225,7 +226,7 @@ helper.youtubeWebhookValidation = function (req, res) {
 };
 
 helper.youtubeWebhookEvents = function (req, res) {
-    console.log(`Received the data from youtube..`);
+    logger.info(`Received the data from youtube..`);
     res.status(200).send('200 OK');
     if (req.body.feed && req.body.feed.entry) {
         youtubeWebhooks.webhookEvents(req.body);

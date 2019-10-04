@@ -51,7 +51,7 @@ class ReportController extends Controller
                 }
             }
             if($profile == null){
-                return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or beongs to different team");
+                return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or belongs to different team");
             }
             switch($network){
                 case env('FACEBOOKPAGE'):
@@ -66,6 +66,7 @@ class ReportController extends Controller
                 case env('LINKEDINCOMPANY'):
                    break;
                 case env('TWITTER'):
+                    return view('Team::AppInsight.TwitterReport')->with(['profileData'=>$profile]);
                     break;
                 default :
                     return redirect()->back()->with('Fail', 'We currently don\'t have insight for this network ');
@@ -216,7 +217,6 @@ class ReportController extends Controller
             $result['message']= "Something went wrong";
             return $result;
 //            $result['data']= $weekResult;
-            dd($e->getMessage());
         }
     }
 
@@ -285,7 +285,6 @@ class ReportController extends Controller
             }
             return $result;
         }catch (\Exception $e){
-            dd($e->getMessage());
             $result['code']=500;
             $result['message']="Failed";
             Log::info("Exception in youtube insight . ".$e->getMessage()." @ ".$e->getLine()." in file ".$e->getFile());
@@ -382,8 +381,39 @@ class ReportController extends Controller
             $result['code']=500;
             $result['message']="Something went wrong";
             return $result;
-            dd($e->getMessage());
         }
+    }
+
+
+    public function getTwitterInsight(Request $request){
+        try{
+            $team_id = Session::get('currentTeam')['team_id'];
+            $helper = Helper::getInstance();
+            $response = $helper->apiCallGetFeeds('networkinsights/getTwitterInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->untill);
+            if($response->code == 200 && $response->status == "success") {
+                if(isset($response->result->error)){
+                    $result['code'] = 500;
+                    $result['message']= $response->result->error->message;
+                }else {
+                    $result['code'] = 200;
+                    $result['message'] = "success";
+                    $result['data'] = $response->result;
+                }
+                return $result;
+            }else if($response->code == 400){
+                Log::info("In twitter report. Twitter was inactive Account id".$request->accountId);
+                $result['code'] = 400;
+                $result['message']= $response->error;
+                return $result;
+            }
+        }catch (\Exception $e){
+            Log::error("Exception in Twitter insight ".$e->getMessage()." @ ".$e->getLine()." in ".$e->getFile());
+            $result['code']=500;
+            $result['message']="Something went wrong";
+            return $result;
+        }
+
+
     }
 
 

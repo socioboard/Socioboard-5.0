@@ -12,13 +12,16 @@ function Pinterest(pinterest_api) {
 Pinterest.prototype.getAppAccessToken = function (code) {
 
     return new Promise((resolve, reject) => {
+        // Hitting the pinterest api to get user accessToken by giving user code
         request.post({
             url: `https://api.pinterest.com/v1/oauth/token?grant_type=authorization_code&client_id=${this.pinterest_api.client_id}&client_secret=${this.pinterest_api.client_secret}&code=${code}`
         }, function (error, response, body) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 reject(error);
             } else {
                 var parsedBody = JSON.parse(body);
+                // Sending response
                 resolve(parsedBody.access_token);
             }
         });
@@ -27,8 +30,10 @@ Pinterest.prototype.getAppAccessToken = function (code) {
 
 Pinterest.prototype.userProfileInfo = function (accessToken) {
     return new Promise((resolve, reject) => {
+        // Hitting the pinterest api to get user profile details by using user accessToken
         return requestPromise(`https://api.pinterest.com/v1/users/me/?access_token=${accessToken}&fields=first_name%2Cid%2Clast_name%2Curl%2Cusername%2Cimage%2Ccounts%2Cbio%2Caccount_type`)
             .then((body) => {
+                // Formating the response
                 var parsedBody = JSON.parse(body);
                 var parsedBodyData = parsedBody.data;
                 var profileInfo = {
@@ -44,6 +49,7 @@ Pinterest.prototype.userProfileInfo = function (accessToken) {
                     access_token: accessToken,
                     profile_url: parsedBodyData.url
                 };
+                // Sending response
                 resolve(profileInfo);
             })
             .catch((error) => {
@@ -51,9 +57,6 @@ Pinterest.prototype.userProfileInfo = function (accessToken) {
             });
     });
 };
-
-
-
 Pinterest.prototype.addPinterestProfile = function addFacebook(network, teamId, code) {
     var userInformations = null;
     var accessTokens = null;
@@ -61,12 +64,15 @@ Pinterest.prototype.addPinterestProfile = function addFacebook(network, teamId, 
         if (!code) {
             reject("Can't get code from pinterest!");
         } else {
+            // Caliing function of getting accessToken by giving code as input
             return this.getAppAccessToken(code)
                 .then((accessToken) => {
                     accessTokens = accessToken;
+                    // After getting accessToken, sending it to get user profile details
                     return this.userProfileInfo(accessToken);
                 })
                 .then((userDetails) => {
+                    // Formating the response
                     var user = {
                         UserName: userDetails.user_name,
                         FirstName: userDetails.first_name,
@@ -86,10 +92,12 @@ Pinterest.prototype.addPinterestProfile = function addFacebook(network, teamId, 
                 })
                 .then((user) => {
                     userInformations = user;
+                    // Fetching user Boards with user accessToken
                     return this.getBoards(accessTokens);
                 })
                 .then((boards) => {
                     userInformations.Boards = boards;
+                    // Sending response
                     resolve(userInformations);
                 })
                 .catch((error) => {
@@ -99,18 +107,18 @@ Pinterest.prototype.addPinterestProfile = function addFacebook(network, teamId, 
     });
 };
 
-
-
-
 Pinterest.prototype.getBoards = function (access_token) {
     return new Promise((resolve, reject) => {
         request.get({
             url: `https://api.pinterest.com/v1/me/boards?&access_token=${access_token}&fields=creator%2Cid%2Cname%2Cprivacy%2Curl`
         }, function (error, response, body) {
+            // Checking whether it sent error in callback or not
             var boardDetails = [];
             if (error) {
+                // Sending response
                 resolve(boardDetails);
             } else {
+                // Formating the response
                 var parsedBody = JSON.parse(body);
                 var parsedBodyData = parsedBody.data;
 
@@ -128,8 +136,10 @@ Pinterest.prototype.getBoards = function (access_token) {
                         };
                         boardDetails.push(boardDetail);
                     });
+                    // Sending response
                     resolve(boardDetails);
                 } else {
+                    // Sending response
                     resolve(boardDetails);
                 }
             }
@@ -144,10 +154,12 @@ Pinterest.prototype.deleteBoards = function (accessToken, boardUrl) {
         request.delete({
             url: `https://api.pinterest.com/v1/boards/${boardUrl}?&access_token=${accessToken}`
         }, function (error, respnse, body) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 reject(error);
             } else {
                 var parsedBody = JSON.parse(body);
+                // Sending response
                 resolve(parsedBody);
             }
         });
@@ -159,10 +171,12 @@ Pinterest.prototype.getBoardDetails = function (access_token, boardurl) {
         request.get({
             url: `https://api.pinterest.com/v1/boards/${boardurl}?&access_token=${access_token}&fields=creator%2Cid%2Cname%2Cprivacy%2Curl`
         }, function (error, response, body) {
-
+            // Checking whether it sent error in callback or not
             if (error) {
+                // Sending response
                 resolve({});
             } else {
+                // Formating the response
                 var parsedBody = JSON.parse(body);
                 var parsedBodyData = parsedBody.data;
                 var admin_lastName = parsedBodyData.creator ? parsedBodyData.creator.last_name : '';
@@ -175,6 +189,7 @@ Pinterest.prototype.getBoardDetails = function (access_token, boardurl) {
                     board_admin_url: parsedBodyData.creator.url,
                     board_admin_id: parsedBodyData.creator.id
                 };
+                // Sending response
                 resolve(boardDetail);
             }
         });
@@ -186,9 +201,11 @@ Pinterest.prototype.getPins = function (access_token, callback) {
         request.get({
             url: `https://api.pinterest.com/v1/me/pins?&access_token=${access_token}`
         }, function (error, respnse, body) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback(error);
             } else {
+                // Formating the response into JSON object
                 var parsedBody = JSON.parse(body);
                 callback(parsedBody);
             }
@@ -204,14 +221,22 @@ Pinterest.prototype.getBoardPins = function (access_token, board_name) {
             reject(new Error("Invalid Inputs"));
         } else {
             var url = `https://api.pinterest.com/v1/boards/${board_name}pins?&access_token=${access_token}`;
+            // Hitting the pinterest api to get pins of a specified board related to an user profile by that profile accessToken
             request.get({
                 url: url
             }, function (error, respnse, body) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Formating the response
                     var parsedBody = JSON.parse(body);
-                    resolve(parsedBody);
+                    // Checking whether response contain rate limit error or not
+                    if (parsedBody.message)
+                        reject(parsedBody);
+                    else
+                        // Sending response
+                        resolve(parsedBody);
                 }
             });
         }
@@ -221,13 +246,17 @@ Pinterest.prototype.getBoardPins = function (access_token, board_name) {
 Pinterest.prototype.createBoard = function (access_token, board_name, board_description) {
 
     return new Promise((resolve, reject) => {
+        // Hitting the pinterest api to create a Board in profile using profile accessToken with board details
         request.post({
             url: `https://api.pinterest.com/v1/boards/?access_token=${access_token}&name=${board_name}&description=${board_description}`
         }, function (error, response, body) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 reject(error);
             } else {
+                // Formating the response
                 var parsedBody = JSON.parse(body);
+                // Sending response
                 resolve(parsedBody);
             }
         });
@@ -247,6 +276,7 @@ Pinterest.prototype.createPins = function (postDetails, boardIds, accessToken) {
 
         return Promise.all(boardIds.map(function (board) {
             return new Promise((resolve, reject) => {
+                // Hitting the pinterest api to create a pin under specified Board of a profile accessToken
                 requestPromise.post({
                     url: `https://api.pinterest.com/v1/pins/?board=${board}&access_token=${accessToken}&link=${postDetails.link}&note=${postDetails.message}`,
                     formData: formData
@@ -255,6 +285,7 @@ Pinterest.prototype.createPins = function (postDetails, boardIds, accessToken) {
 
                         response.push(body);
 
+                        // Formating the response
                         var parsedBody = JSON.parse(body);
                         if (parsedBody.data) {
                             successPins.push(parsedBody.data.url);
@@ -262,11 +293,13 @@ Pinterest.prototype.createPins = function (postDetails, boardIds, accessToken) {
                         else if (parsedBody.message) {
                             failedBoards.push(board);
                         }
+                        // Sending response
                         resolve();
                     })
                     .catch((error) => {
                         errors.push(error);
                         failedBoards.push(board);
+                        // Sending response
                         resolve();
                     });
             });
@@ -279,6 +312,7 @@ Pinterest.prototype.createPins = function (postDetails, boardIds, accessToken) {
                     errors: errors
                 };
 
+                // Sending response
                 resolve(publishResponse);
             })
             .catch((error) => {
@@ -288,6 +322,7 @@ Pinterest.prototype.createPins = function (postDetails, boardIds, accessToken) {
                     response: response,
                     errors: errors
                 };
+                // Sending response
                 resolve(publishResponse);
             });
 
@@ -303,9 +338,11 @@ Pinterest.prototype.userDetails = function (UserName, accessToken) {
             reject(new Error('Invalid Inputs'));
         } else {
             request.get(`https://api.pinterest.com/v1/users/${UserName}/?access_token=${accessToken}&fields=first_name%2Cid%2Clast_name%2Curl%2Ccounts%2Cbio%2Cimage`, function (error, respnse, body) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Formating the response
                     var response = JSON.parse(body);
                     var updateDetail = {
                         follower_count: response.data.counts.followers,
@@ -314,6 +351,7 @@ Pinterest.prototype.userDetails = function (UserName, accessToken) {
                         bio_text: response.data.bio,
                         board_count: response.data.counts.boards,
                     };
+                    // Sending response
                     resolve(updateDetail);
                 }
             });

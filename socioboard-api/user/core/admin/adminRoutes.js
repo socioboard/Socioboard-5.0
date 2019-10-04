@@ -12,18 +12,24 @@ const adminController = require('./controller/adminController');
  *          description: To specify the coupon code upto 32 characters
  *       start_date:
  *          type: string
- *          description: To specify the conpon's start date
+ *          description: To specify the coupon's start date
  *          format: date-time
  *       end_date:
  *          type: string
- *          description: To specify the conpon's end date
+ *          description: To specify the coupon's end date
  *          format: date-time
  *       discount:
  *          type: integer
  *          description: To specify the discount percentage upto 100
  *       max_use:
  *          type: integer
- *          description: To specify maximum number user can use this coupon 
+ *          description: To specify maximum number user can use this coupon
+ *     example:
+ *       coupon_code: "SB80"
+ *       start_date: "2019-07-17T09:34:49.889Z" 
+ *       end_date: "2019-08-17T09:34:49.889Z"
+ *       discount: 80
+ *       max_use: 2
  */
 
 /**
@@ -65,11 +71,11 @@ routes.get('/getAppUserStats', adminController.getAppUserStats);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: month 
+*         description: Provide month 
 *         name: month
 *         type: integer
 *       - in: query
-*         description: year
+*         description: Provide year
 *         name: year
 *         type: integer
 *     responses:
@@ -97,7 +103,7 @@ routes.get('/getMonthlyUserStats', adminController.getMonthlyUserStats);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: FilterType ( 0-AllUsers, 1-UserPlan, 2-paymentStatus, 3-NameOrEmail )
+*         description: Specify filterType ( 0-AllUsers, 1-UserPlan, 2-paymentStatus, 3-NameOrEmail )
 *         name: filterType
 *         type: integer
 *         default: 0
@@ -117,7 +123,7 @@ routes.get('/getMonthlyUserStats', adminController.getMonthlyUserStats);
 *         name: nameOrEmail
 *         type: string
 *       - in: query
-*         description: Pagination Id 
+*         description: Provide pagination id 
 *         name: pageId
 *         type: integer
 *     responses:
@@ -146,21 +152,21 @@ routes.get('/getUsers', adminController.getUsers);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: FilterType ( 1-today, 2-yesterday, 3-currentWeek, 4-currentMonth, 5-customDates )
+*         description: Specify filterType ( 1-today, 2-yesterday, 3-currentWeek, 4-currentMonth, 5-customDates )
 *         name: filterType
 *         type: integer
 *         default: 0
 *         enum: [1,2,3,4,5]
 *       - in: query
-*         description : StartDate format(YYYY-MM-DD)
+*         description : Provide startDate format(YYYY-MM-DD)
 *         name: startDate
 *         type: string
 *       - in: query
-*         description : EndDate format(YYYY-MM-DD)
+*         description : Provide endDate format(YYYY-MM-DD)
 *         name: endDate
 *         type: string
 *       - in: query
-*         description : Pagination Id
+*         description : Provide pagination id
 *         name: pageId
 *         type: integer
 *     responses:
@@ -189,7 +195,7 @@ routes.get('/getRecentSignup', adminController.getRecentSignup);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: userId 
+*         description: Provide userId 
 *         name: userId
 *         type: integer
 *     responses:
@@ -253,11 +259,11 @@ routes.put('/updateUserlock', adminController.updateUserlock);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: Enter userId 
+*         description: Provide userId 
 *         name: userId
 *         type: integer
 *       - in: query
-*         description: Enter planId 
+*         description: Provide planId 
 *         name: planId
 *         type: integer
 *       - in: query
@@ -293,12 +299,12 @@ routes.put('/updatePlanForTrail', adminController.updatePlanForTrail);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: enter userId 
+*         description: Provide userId 
 *         name: userId
 *         type: integer
 *         required: true
 *       - in: query
-*         description: Two step login  0-disable or 1-enable 
+*         description: Specify Two step login either 0-disable or 1-enable 
 *         name: options
 *         type: integer
 *         enum: [0,1]
@@ -324,7 +330,7 @@ routes.put('/updateTwoStepOptions', adminController.updateTwoStepOptions);
 *     - AccessToken: []
 *     tags:
 *       - Admin
-*     description: To get full package details.
+*     description: To get All packages details
 *     produces:
 *       - application/json
 *     responses:
@@ -349,10 +355,10 @@ routes.get('/getPackages', adminController.getPackages);
  *          description: "To specify the plan_name with maximum 32 characters."
  *       account_count:
  *          type: integer
- *          description: "To specify the available_network so user can access."
+ *          description: "To specify the maximum account count that user can access."
  *       plan_price: 
  *          type: integer
- *          description: "To specify the available_network so user can access."
+ *          description: "To specify the plan_price to be paid for this package."
  *       member_count: 
  *          type: integer
  *          description: "To specify the member_count that how many team members you allowing."
@@ -435,6 +441,31 @@ routes.get('/getPackages', adminController.getPackages);
  *          type: integer
  *          description: "To specify the calendar that user is having calendar feature or not."
  *          default : 5
+ *     example:
+ *       plan_name: "Socioboard"
+ *       account_count: 250
+ *       plan_price: 125 
+ *       member_count: 512
+ *       available_network: 1-2-3-4-5-6-7-8-9-10-11
+ *       browser_extension: 1
+ *       scheduling_posting: 1
+ *       mobile_apps: 1
+ *       support_24_7: 1
+ *       crm: 1
+ *       calendar: 1
+ *       rss_feeds: 1
+ *       social_report: 1,
+ *       discovery: 1,
+ *       twitter_engagement: 1,
+ *       link_shortening: 1,
+ *       shareathon: 0,
+ *       content_studio: 0,
+ *       team_report: 0,
+ *       board_me: 0,
+ *       share_library: 0,
+ *       custom_report: 0,
+ *       maximum_schedule: 0,
+ *       maximum_referal_count: 0
  *        
  */
 
@@ -453,7 +484,7 @@ routes.get('/getPackages', adminController.getPackages);
  *       - application/json
  *     parameters:
  *       - name: packageDetails
- *         description: to create new package.
+ *         description: Provide details to create new package.
  *         in: body
  *         required: true
  *         schema:
@@ -481,17 +512,17 @@ routes.post('/addPackage', adminController.addPackage);
  *     - AccessToken: []
  *     tags:
  *       - Admin
- *     description: To register the package
+ *     description: To edit the existing package
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: enter planId 
+ *         description: Provide planId 
  *         name: planId
  *         type: integer
  *         required : true
  *       - name: packageDetails
- *         description: to edit package.
+ *         description: Provide details to edit package.
  *         in: body
  *         required: true
  *         schema:
@@ -520,17 +551,17 @@ routes.put('/editPackage', adminController.editPackage);
 *     - AccessToken: []
 *     tags:
 *       - Admin
-*     description: To update package activate or deactivate options for a admin.
+*     description: To update package activate or deactivate options.
 *     produces:
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: enter planId 
+*         description: Provide planId 
 *         name: planId
 *         type: integer
 *         required: true
 *       - in: query
-*         description: Package activation 0-deactivate or 1-activate 
+*         description: Specify package activation either 0-deactivate or 1-activate 
 *         name: options
 *         type: integer
 *         enum: [0,1]
@@ -561,7 +592,7 @@ routes.put('/updatePackageActivations', adminController.updatePackageActivations
  *       - application/json
  *     parameters:
  *       - name: couponDetails
- *         description: Conpon's information
+ *         description: Provide Coupon's information
  *         in: body
  *         required: true
  *         schema:
@@ -600,7 +631,7 @@ routes.post('/createcoupons', adminController.createCoupon);
  *         type: string
  *         required : true
  *       - in: query
- *         description: enter coupon status ( 0-deactive, 1-active)
+ *         description: Specify coupon status either 0-deactive or 1-active 
  *         name: status
  *         type: integer
  *         enum : [0, 1]
@@ -682,7 +713,7 @@ routes.post('/getCouponInfo', adminController.getCouponInfo);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Enter paymentMode
+ *         description: Specify paymentMode(0-paypal or 1-payUmoney)
  *         name: paymentMode
  *         enum: [0,1]
  *         type: integer

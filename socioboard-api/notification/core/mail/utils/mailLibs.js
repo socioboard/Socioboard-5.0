@@ -13,17 +13,16 @@ class MailLibs {
 
     sendLoginReminder() {
         return new Promise((resolve, reject) => {
+            // Fetching user details who's last login is more than 3 days
             return userDetails.findAll({
                 attributes: ['user_id', 'first_name', 'email'],
                 include: [{
                     model: userActivation,
                     as: 'Activations',
                     where: {
-                        [Operator.and]: [{
-                            last_login: {
-                                [Operator.lte]: moment().subtract(3, 'days').startOf('day'),
-                            }
-                        }]
+                        last_login: {
+                            [Operator.lte]: moment().subtract(3, 'days').startOf('day'),
+                        }
                     },
                     attributes: ['id', 'user_plan', 'account_expire_date', 'last_login'],
                 }]
@@ -31,8 +30,8 @@ class MailLibs {
                 .then(function (users) {
 
 
-                    logger.info(`Reminding mail for user : ${JSON.stringify(users)} `);
-
+                    logger.info(`Reminding mail for non-active user : ${JSON.stringify(users)} `);
+                    // Creating object for sending emails
                     var sendEmailServiceObject = new SendEmailService(config.get('mailService'));
                     var scheduleObject = {
                         moduleId: 3,
@@ -42,10 +41,11 @@ class MailLibs {
                         teamId: -1,
                         newsletterContent: '',
                     };
+                    // Sending in-active email
                     return sendEmailServiceObject.mailServiceSchedule(scheduleObject);
                 })
                 .then(() => {
-                    resolve();
+                    resolve(true);
                 })
                 .catch(function (error) {
                     reject(error);
@@ -55,22 +55,25 @@ class MailLibs {
 
     sendExpiredInitimation() {
         return new Promise((resolve, reject) => {
+            // Fetching all user who's account got expired
             return userDetails.findAll({
                 attributes: ['user_id', 'first_name', 'email'],
                 include: [{
                     model: userActivation,
                     as: 'Activations',
                     where: {
-                        [Operator.and]: [{
-                            account_expire_date: {
-                                [Operator.lt]: moment().startOf('day'),
-                            }
-                        }]
+                        account_expire_date: {
+                            [Operator.lt]: moment().startOf('day'),
+                            [Operator.gt]: moment().subtract(1, 'day').startOf('day')
+                        }
                     },
                     attributes: ['id', 'user_plan', 'account_expire_date'],
                 }]
             })
                 .then(function (users) {
+                    logger.info(`Expired users are : ${JSON.stringify(users)}`);
+                    console.log(JSON.stringify(users));
+                    // Creating object for sending emails
                     var sendEmailServiceObject = new SendEmailService(config.get('mailService'));
                     var scheduleObject = {
                         moduleId: 2,
@@ -80,10 +83,11 @@ class MailLibs {
                         teamId: -1,
                         newsletterContent: '',
                     };
+                    // Sending account expired mail
                     return sendEmailServiceObject.mailServiceSchedule(scheduleObject);
                 })
                 .then(() => {
-                    resolve();
+                    resolve(true);
                 })
                 .catch(function (error) {
                     reject(error);
@@ -93,22 +97,24 @@ class MailLibs {
 
     sendExpireAlert() {
         return new Promise((resolve, reject) => {
+            // Fetching all user's whos's account is going to expire in a Week
             return userDetails.findAll({
                 attributes: ['user_id', 'first_name', 'email'],
                 include: [{
                     model: userActivation,
                     as: 'Activations',
                     where: {
-                        [Operator.and]: [{
-                            account_expire_date: {
-                                [Operator.lt]: moment().add(7, 'days').startOf('day'),
-                            }
-                        }]
+                        account_expire_date: {
+                            [Operator.lt]: moment().add(7, 'days').startOf('day'),
+                            [Operator.gt]: moment().startOf('day'),
+                        }
                     },
                     attributes: ['id', 'user_plan', 'account_expire_date'],
                 }]
             })
                 .then(function (users) {
+                    logger.info(`Expire users are : ${JSON.stringify(users)}`);
+                    // Creating object for sending emails
                     var sendEmailServiceObject = new SendEmailService(config.get('mailService'));
                     var scheduleObject = {
                         moduleId: 1,
@@ -118,10 +124,11 @@ class MailLibs {
                         teamId: -1,
                         newsletterContent: '',
                     };
+                    // Sending expiry notification mail
                     return sendEmailServiceObject.mailServiceSchedule(scheduleObject);
                 })
                 .then(() => {
-                    resolve();
+                    resolve(true);
                 })
                 .catch((error) => {
                     reject(error);
@@ -132,7 +139,7 @@ class MailLibs {
     sendCustomNotifications(notificationDetails) {
 
         logger.info(notificationDetails);
-        
+        // Fetching all users who's account is going to expire at end of the day
         return new Promise((resolve, reject) => {
             if (!notificationDetails) {
                 reject(new Error("Invalid Inputs"));
@@ -143,16 +150,16 @@ class MailLibs {
                         model: userActivation,
                         as: 'Activations',
                         where: {
-                            [Operator.and]: [{
-                                account_expire_date: {
-                                    [Operator.eq]: moment().endOf('day'),
-                                }
-                            }]
+                            account_expire_date: {
+                                [Operator.gt]: moment().startOf('day'),
+                                [Operator.lt]: moment().endOf('day'),
+                            }
                         },
                         attributes: ['id', 'user_plan', 'account_expire_date'],
                     }]
                 })
                     .then(function (users) {
+                        // Creating object for sending emails
                         var sendEmailServiceObject = new SendEmailService(config.get('mailService'));
                         var scheduleObject = {
                             moduleId: 4,
@@ -162,6 +169,7 @@ class MailLibs {
                             teamId: -1,
                             newsletterContent: notificationDetails,
                         };
+                        // sending a custom notification mail
                         return sendEmailServiceObject.mailServiceSchedule(scheduleObject);
                     })
                     .then(() => {
@@ -181,6 +189,7 @@ class MailLibs {
             } else {
                 const mailServiceMongoModelObject = new MailServiceMongoModel();
                 if (notifyType == -1 || (notifyType > 0 && notifyType <= 11)) {
+                    // Fetching all notification mails sent to an user with filters
                     return mailServiceMongoModelObject.getNotificationMailInfo(userEmail, days, notifyType)
                         .then((report) => {
                             resolve(report);

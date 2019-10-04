@@ -17,6 +17,7 @@ const UserTeamAccount = {
 
     isTeamValidForUser(userId, teamId) {
         return new Promise((resolve, reject) => {
+            // Checking whether that user is belongs to that Team or not
             return userTeamJoinTable.findOne({
                 where: {
                     user_id: userId,
@@ -37,6 +38,7 @@ const UserTeamAccount = {
 
     isAccountValidForTeam(teamId, accountId) {
         return new Promise((resolve, reject) => {
+            // Checking whether that account is belongs to that Team or not
             return teamSocialAccountJoinTable.findOne({
                 where: {
                     account_id: accountId,
@@ -56,8 +58,10 @@ const UserTeamAccount = {
 
     isTeamAccountValidForUser(userId, teamId, accountId) {
         return new Promise((resolve, reject) => {
+            // Checking whether that user is belongs to that Team or not
             return this.isTeamValidForUser(userId, teamId)
                 .then(() => {
+                    // Checking whether that account is belongs to that Team or not
                     return this.isAccountValidForTeam(teamId, accountId);
                 })
                 .then(() => resolve())
@@ -70,6 +74,7 @@ const UserTeamAccount = {
             if (!userId) {
                 reject(new Error("Invalid userId"));
             } else {
+                // Fetching all Teams of an user
                 return userTeamJoinTable.findAll({
                     where: { user_id: userId, left_from_team: 0, invitation_accepted: 1 },
                     attributes: ["id", "team_id"]
@@ -92,6 +97,7 @@ const UserTeamAccount = {
 
     getAccountsTeam(accountId) {
         return new Promise((resolve, reject) => {
+            // Fetching the Team which the account is belongs to
             return teamSocialAccountJoinTable.findAll({
                 where: {
                     account_id: accountId,
@@ -115,13 +121,16 @@ const UserTeamAccount = {
         return new Promise((resolve, reject) => {
             var accountTeams = [];
             var userTeams = [];
+            // Fetching user teams
             return this.getUserTeams(userId)
                 .then((userTeam) => {
                     userTeams = userTeam;
+                    // Fetching the Team which the account is belongs to
                     return this.getAccountsTeam(accountId);
                 })
                 .then((accountTeam) => {
                     accountTeams = accountTeam;
+                    // Validating that the user Teams consist of account Team or not
                     var intersectTeams = lodash.intersection(accountTeams, userTeams);
                     resolve({ isValid: intersectTeams.length > 0 ? true : false, intersectTeams: intersectTeams });
                 })
@@ -134,11 +143,10 @@ const UserTeamAccount = {
     getSocialAccount(accountType, accountId, userId, teamId) {
         return new Promise((resolve, reject) => {
 
-            console.log(accountType, accountId, userId, teamId);
-
             if (!accountType || !accountId || !userId || !teamId) {
                 reject(new Error("Please verify your inputs: 1. Account id, \n\r 2.Team id"));
             } else {
+                // Validating that the account is valid for user
                 return this.isTeamAccountValidForUser(userId, teamId, accountId)
                     .then(() => {
                         return socialAccount.findOne({
@@ -167,6 +175,7 @@ const UserTeamAccount = {
             if (!accountId || !frequencyValue || !frequencyFactor) {
                 reject(new Error("Please verify account id valid or not!"));
             } else {
+                // Fetching account feed updated details
                 return accountFeedsUpdateTable.findOne({
                     where: {
                         account_id: accountId
@@ -176,7 +185,9 @@ const UserTeamAccount = {
                         if (!result)
                             resolve(true);
                         else {
+                            // Calculating the difference
                             var difference = moment.tz(new Date(), "GMT").diff(moment.tz(result.updated_date, 'GMT'), frequencyFactor);
+                            // Sending yes or no to Fetch or not 
                             resolve(difference > frequencyValue);
                         }
                     })
@@ -192,17 +203,20 @@ const UserTeamAccount = {
             if (!accountId) {
                 reject(new Error("Please verify account id!"));
             } else {
+                // Fetching details of feed update of an account
                 return accountFeedsUpdateTable.findOne({
                     where: { account_id: accountId }
                 })
                     .then((result) => {
                         if (!result) {
+                            // Creating data in feed update for an account
                             return accountFeedsUpdateTable.create({
                                 account_id: accountId,
                                 social_id: socialId,
                                 updated_date: moment.utc().format()
                             });
                         } else
+                            // Updating the existing account details
                             return result.update({ updated_date: moment.utc().format() });
                     })
                     .then(() => resolve())
@@ -216,11 +230,13 @@ const UserTeamAccount = {
             if (!accountId || !data) {
                 reject(new Error("Please verify account id or data to update!"));
             } else {
+                // Fetching details of friends stats of an account
                 return updateFriendsTable.findOne({
                     where: { account_id: accountId }
                 })
                     .then((result) => {
                         if (!result) {
+                            // If not found, Adding details to that table
                             return updateFriendsTable.create({
                                 account_id: accountId,
                                 friendship_count: data.friendship_count == undefined ? null : data.friendship_count,
@@ -238,6 +254,7 @@ const UserTeamAccount = {
                                 updated_date: moment.utc().format()
                             });
                         } else
+                            // If found, updating the existed values
                             return result.update({
                                 friendship_count: data.friendship_count == undefined ? null : data.friendship_count,
                                 follower_count: data.follower_count == undefined ? null : data.follower_count,

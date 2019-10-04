@@ -24,7 +24,7 @@ const authorizedUserController = require('./controllers/usercontroller');
  *       phoneCode:
  *         type: string
  *         description: "To specify the user's phone code and should not be more than 10 characters."
- *         default: "NA"
+ *         default: "0"
  *       phoneNumber:
  *         type: string
  *         description: "To specify the user's phone code, also which should be valid numberic characters with maximum length of 15 digits."
@@ -33,6 +33,15 @@ const authorizedUserController = require('./controllers/usercontroller');
  *         type: string
  *         description: "To specify about user's information."
  *         default: null
+ *     example:
+ *       firstName: "Socio"
+ *       lastName: "Board"
+ *       dateOfBirth: "1997-09-07"
+ *       profilePicture: "https://www.socioboard.com/contents/socioboard/images/Socioboard.png"
+ *       phoneCode: "+91"
+ *       phoneNo: "8324575248"
+ *       aboutMe: "A business person"
+ * 
  * /v1/user/changePassword:
  *   post:
  *     operationId: secured_changePassword
@@ -48,11 +57,11 @@ const authorizedUserController = require('./controllers/usercontroller');
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's current password 
+ *         description: Provide user's current password 
  *         name: currentPassword
  *         type: string
  *       - in: query
- *         description: Enter the new password
+ *         description: Enter new password
  *         name: newPassword
  *         type: string
  *     responses:
@@ -63,7 +72,7 @@ const authorizedUserController = require('./controllers/usercontroller');
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.post('/changePassword',authorizedUserController.changePassword);
+routes.post('/changePassword', authorizedUserController.changePassword);
 
 
 /**
@@ -76,18 +85,18 @@ routes.post('/changePassword',authorizedUserController.changePassword);
  *     - AccessToken: []
  *     tags:
  *       - Users
- *     description: To request for changing the current user plan    
+ *     description: To request for changing the current user plan from higher plan to lower plan  
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's current plan 
+ *         description: Provide user's current plan 
  *         name: currentPlan
  *         type: integer
  *       - in: query
- *         description: User's new plan
+ *         description: Enter user's new plan
  *         name: newPlan
  *         type: integer
  *     responses:
@@ -98,7 +107,7 @@ routes.post('/changePassword',authorizedUserController.changePassword);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.get('/changePlan',authorizedUserController.changePlan);
+routes.get('/changePlan', authorizedUserController.changePlan);
 
 /**
  * @swagger
@@ -118,11 +127,11 @@ routes.get('/changePlan',authorizedUserController.changePlan);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's current payment type 
+ *         description: Provide user's current payment type 
  *         name: currentPaymentType
  *         type: integer
  *       - in: query
- *         description: User's new payment type
+ *         description: Provide user's new payment type
  *         name: newPaymentType
  *         type: integer
  *     responses:
@@ -133,7 +142,7 @@ routes.get('/changePlan',authorizedUserController.changePlan);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.get('/changePaymentType',authorizedUserController.changePaymentType);
+routes.get('/changePaymentType', authorizedUserController.changePaymentType);
 
 
 
@@ -154,7 +163,7 @@ routes.get('/changePaymentType',authorizedUserController.changePaymentType);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Two step activate 
+ *         description: Specify Two step activate (1-for Active, 0-for Non-Active) 
  *         name: twoStepActivate
  *         type: integer
  *     responses:
@@ -165,7 +174,7 @@ routes.get('/changePaymentType',authorizedUserController.changePaymentType);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.get('/changeTwoStepOptions',authorizedUserController.change2StepOptions);
+routes.get('/changeTwoStepOptions', authorizedUserController.change2StepOptions);
 
 
 /**
@@ -178,7 +187,7 @@ routes.get('/changeTwoStepOptions',authorizedUserController.change2StepOptions);
  *     - AccessToken: []
  *     tags:
  *       - Users
- *     description: To request for getting new user details   
+ *     description: To request for getting user's updated details  
  *     produces:
  *       - application/json
  *     responses:
@@ -189,7 +198,7 @@ routes.get('/changeTwoStepOptions',authorizedUserController.change2StepOptions);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.get('/getUserInfo',authorizedUserController.getUserInfo);
+routes.get('/getUserInfo', authorizedUserController.getUserInfo);
 
 
 /**
@@ -207,7 +216,7 @@ routes.get('/getUserInfo',authorizedUserController.getUserInfo);
  *       - application/json
  *     parameters:
  *       - name: userDetails
- *         description: User's profile details
+ *         description: Provide user's profile details
  *         in: body
  *         required: true
  *         schema:
@@ -223,6 +232,65 @@ routes.get('/getUserInfo',authorizedUserController.getUserInfo);
  *       401:
  *         $ref: "#/responses/unauthorizedError"
  */
-routes.post('/updateProfileDetails',authorizedUserController.UpdateProfileDetails);
+routes.post('/updateProfileDetails', authorizedUserController.UpdateProfileDetails);
+
+
+/**
+ * @swagger
+ * /v1/user/changeShortenStatus:
+ *   put:
+ *     operationId: secured_changeShortenStatus
+ *     summary: Secured 
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Users
+ *     description: To request for changing the shorten url status    
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/x-www-form-urlencoded
+ *     parameters:
+ *       - in: query
+ *         description: Specify Two step activate (1-for Active, 0-for Non-Active) 
+ *         name: status
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.put('/changeShortenStatus', authorizedUserController.changeShortenStatus);
+
+/**
+ * @swagger
+ * /v1/user/getShortenUrl:
+ *   get:
+ *     operationId: secured_getShortenUrl
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Users
+ *     description: To fetch the shorten urls
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Provide long Url
+ *         name: longurl
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.get('/getShortenUrl', authorizedUserController.getShortenUrl);
 
 module.exports = routes;

@@ -130,12 +130,14 @@
             />
     <link rel="stylesheet" type="text/css" href="../../assets/plugins/emojionearea/css/emojionearea.min.css"/>
     <link rel="stylesheet" type="text/css" href="../../assets/css/style.css" />
-  @yield('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.css" />
+    @yield('style')
 
 </head>
 
 <body>
 <header>
+
     @include('User::dashboard.incNav')
 </header>
 <main>
@@ -163,7 +165,7 @@
 <script type="text/javascript" src="/assets/plugins/toaster/jquery.toaster.js"></script>
 <script type="text/javascript" src="/assets/plugins/emojionearea/js/emojionearea.min.js"></script>
 <script type="text/javascript" src="../../assets/js/main.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 <!-- sidebar toggle -->
 <script type="text/javascript">
     $(document).ready(function() {
@@ -270,7 +272,6 @@
                     }
                     picReader.readAsDataURL(file);
                 }
-                console.log(names);
             } else if (getAttr == "type2") {
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
@@ -315,7 +316,6 @@
                     picReader.readAsDataURL(file);
                 }
                 // return array of file name
-                console.log(names);
             }
         });
 
@@ -331,7 +331,6 @@
                 names.splice(yet, 1);
             }
             // return array of file name
-            console.log(names);
         });
         $("#hint_brand").on("hide", function(e) {
             names = [];
@@ -339,6 +338,7 @@
         });
     });
 </script>
+@include('User::dashboard.incNotificationJs')
 @yield('script')
 </body>
 </html>

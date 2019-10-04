@@ -1,17 +1,24 @@
 <div class="row text-center pt-1 m-0 border">
+
+    @if ($userProfile->account_type !== 5)  {{-- not an Instagram --}}
     <div class="col-md-4">
         <a href="javascript:void(0);" class="text-dark post_like_btn @if ($feed->liked) visited @endif"
            data-accountId="{{ $request->get('account_id')}}"
            data-postId="{{ $feed->postId }}">
             <span class="counter">{{$feed->likeCount}}</span> <i class="far fa-thumbs-up"></i> Like</a>
     </div>
+    @endif
+
+    @if ($userProfile->account_type !== 5)  {{-- not an Instagram --}}
     <div class="col-md-4">
         <a href="javascript:void(0);" class="text-dark post_cmt_btn" data-id="{{$feed->postId}}">
             <i class="far fa-comment-alt"></i> Comments </a>
     </div>
+    @endif
+
     <div class="col-md-4">
-        <a href="javascript:void(0);" class="text-dark post_rsc_btn" data-toggle="modal" data-target="#postModal" data-link="https://www.facebook.com/{{$feed->socialAccountId}}/posts/{{$feed->postId}}">
-            <span data-toggle="tooltip" data-placement="top"
+        <a href="javascript:void(0);" data-toggle="modal" data-target="#incpostModal" data-link="https://www.facebook.com/{{$feed->socialAccountId}}/posts/{{$feed->postId}}">
+            <span data-toggle="tooltip" data-placement="top" class="resocio_btn"
                   title="Using re-socio you can share this post with your own content.">
               <i class="fas fa-retweet text-primary"></i> re-socio
             </span>

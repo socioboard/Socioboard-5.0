@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on facebookposts collection of mongo DB
 const facebookPost = new Schema({
     postId: { type: String, index: true, unique: true },
     privacy: { type: String },
@@ -32,7 +33,8 @@ const facebookPost = new Schema({
 });
 
 facebookPost.methods.insertManyPosts = function (posts) {
-        return this.model('FacebookPosts')
+    // Inserting the posts data into the facebookposts collection
+    return this.model('FacebookPosts')
         .bulkWrite(posts.map((post) => {
             return {
                 updateOne: {
@@ -42,12 +44,13 @@ facebookPost.methods.insertManyPosts = function (posts) {
                 },
             };
         }))
-        .catch((error) => {           
+        .catch((error) => {
             return 0;
         });
 };
 
 facebookPost.methods.getBatchPost = function (batchId) {
+    // Fetching a specified post 
     var query = {
         batchId: new RegExp(batchId, 'i')
     };
@@ -62,6 +65,7 @@ facebookPost.methods.getBatchPost = function (batchId) {
 };
 
 facebookPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching posts fro facebookposts with sorting of published date
     var query = {
         socialAccountId: new RegExp(accountId, 'i')
     };
@@ -79,6 +83,7 @@ facebookPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
 };
 
 facebookPost.methods.getPreviousPost = function (keyword, skip, limit) {
+    // Fetching the previous posts matching with keyword in any field of the post
     var query = {
         $or: [
             { socialAccountId: new RegExp(keyword, 'i') },
@@ -100,6 +105,7 @@ facebookPost.methods.getPreviousPost = function (keyword, skip, limit) {
 };
 
 facebookPost.methods.deleteAccountPosts = function (accountId) {
+    // Deleting all posts related to an account
     var query = {
         socialAccountId: new RegExp(accountId, 'i')
     };
@@ -114,6 +120,7 @@ facebookPost.methods.deleteAccountPosts = function (accountId) {
 };
 
 facebookPost.methods.deleteSinglePost = function (postId) {
+    // Deleting a single post
     var query = {
         postId: new RegExp(postId, 'i')
     };
@@ -128,6 +135,7 @@ facebookPost.methods.deleteSinglePost = function (postId) {
 };
 
 facebookPost.methods.updateLikeCount = function (postId, method) {
+    // Updating like status of a specified post
     var query = {
         postId: new RegExp(postId, 'i')
     };
@@ -149,6 +157,7 @@ facebookPost.methods.updateLikeCount = function (postId, method) {
 };
 
 facebookPost.methods.updateCommentCount = function (postId, method) {
+    // Updating the comment count for a specified post
     var query = {
         postId: new RegExp(postId, 'i')
     };

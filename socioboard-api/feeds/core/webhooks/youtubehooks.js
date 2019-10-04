@@ -1,9 +1,10 @@
 const YoutubeMongoPostModel = require('../../../library/mongoose/models/youtubepost');
+const logger = require('../../utils/logger');
 const config = require('config');
 var helper = {};
 
 helper.webhookEvents = function (responseBody) {
-    console.log(`Youtube Received Details :\n ${JSON.stringify(responseBody)}`);
+    logger.info(`Youtube Received Details :\n ${JSON.stringify(responseBody)}`);
     if (responseBody.feed && responseBody.feed.entry) {
         var postDetails = [];
         responseBody.feed.entry.forEach(entry => {
@@ -23,7 +24,7 @@ helper.webhookEvents = function (responseBody) {
             var youtubeMongoPostModelObject = new YoutubeMongoPostModel();
             youtubeMongoPostModelObject.FindInsertOrUpdate(details);
         });
-        console.log(`Full Details : ${JSON.stringify(postDetails)}`);
+        logger.info(`Full Details : ${JSON.stringify(postDetails)}`);
     }
 };
 

@@ -16,11 +16,11 @@ const taskController = require('../task/controllers/taskcontrollers');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - name: pageId
- *         description: pagination id
+ *         description: Provide pagination id
  *         in: query
  *         type: integer
  *     responses:
@@ -48,15 +48,15 @@ routes.get("/getTasks", taskController.getTasks);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: task id 
+ *         description: Provide task id 
  *         name: taskId
  *         type: string
  *       - name: assigningUserId
- *         description: assigning User Id
+ *         description: Provide assigning user id
  *         in: query
  *         type: integer
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *     responses:
@@ -85,17 +85,17 @@ routes.put("/assignTask", taskController.assignTask);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: task id 
+ *         description: Provide task id 
  *         name: taskId
  *         type: string
  *       - name: status
- *         description: task status
+ *         description: Specify task status
  *         in: query
  *         enum: ["Approved", "Rejected"]
  *         type: string
  *         default: "Approved"
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *     responses:

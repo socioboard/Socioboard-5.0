@@ -1,5 +1,6 @@
 const request = require('request');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 let payment_url = {
     'prod': 'https://secure.payu.in/',
@@ -34,7 +35,7 @@ function PayUMoney(authorization, key, salt, mode) {
 
 PayUMoney.prototype.makePayment = function (data, callback) {
 
-    console.log(`Data : ${JSON.stringify(data)}`);
+    logger.info(`Data : ${JSON.stringify(data)}`);
 
     var hashString = `${this.credentails.key}|${data.txnid}|${data.amount}|${data.productinfo}|${data.firstname}|${data.email}|${data.udf1}|${data.udf2}|||||||||${this.credentails.salt}`;
     var hash = crypto.createHash('sha512').update(hashString).digest('hex');
@@ -47,11 +48,11 @@ PayUMoney.prototype.makePayment = function (data, callback) {
         json: true,
     }, function (error, response, body) {
         if (!error) {
-            console.log(JSON.stringify(response));
+            logger.info(JSON.stringify(response));
             var result = response.headers.location;
             callback(error, result);
         } else {
-            console.log(error);
+            logger.info(error);
         }
     });
 };
@@ -59,14 +60,14 @@ PayUMoney.prototype.makePayment = function (data, callback) {
 PayUMoney.prototype.paymentResponse = function (txnid, callback) {
     var postData = `merchantKey=${this.credentails.key}&merchantTransactionIds=${txnid}`;
     var url = `${rest_url[this.mode]}${API.paymentResponse}${postData}`;
-    console.log(`Response URl : ${url}`);
+    logger.info(`Response URl : ${url}`);
     request.post({
         headers: this.headers,
         url: url,
         json: true,
     }, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            console.log(body);
+            logger.info(body);
             //var result = JSON.parse(body);
             callback(error, body);
         }

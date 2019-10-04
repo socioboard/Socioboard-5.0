@@ -8,10 +8,15 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
+      /**
+       * 0- image
+       * 1- video
+       */
       type: {
         type: Sequelize.INTEGER(3),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: "0-Image, 1-Video"
       },
       media_url: {
         allowNull: false,
@@ -21,10 +26,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.TEXT
       },
+      /**
+       * 0- public
+       * 1- private
+       */
       privacy_type: {
         type: Sequelize.INTEGER(3),
         allowNull: false,
-        defaultValue: 0
+        defaultValue: 0,
+        comment: "0-public, 1-private, 3-publish"
       },
       media_size: {
         type: Sequelize.INTEGER,

@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
           }
         }
       },
+      /**
+      * true - ads are enabled : 1
+      * false - ads are not enabled : 0
+      */
       is_socioboard_ads_enabled: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
@@ -45,7 +49,8 @@ module.exports = (sequelize, Sequelize) => {
       referal_status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false
+        defaultValue: false,
+        comment: "0: inactive : false, 1: active : true"
       }
     },
     {});

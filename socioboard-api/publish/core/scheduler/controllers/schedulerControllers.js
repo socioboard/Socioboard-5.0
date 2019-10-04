@@ -14,7 +14,7 @@ scheduleServices.create = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.create_schedule.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.body.postInfo.teamId)
+                label: configruation.publiser_service_events.schedule_event_label.create_schedule.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.body.postInfo.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -22,7 +22,7 @@ scheduleServices.create = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.create_schedule_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.body.postInfo.teamId)
+                label: configruation.publiser_service_events.schedule_event_label.create_schedule_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.body.postInfo.teamId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -35,7 +35,7 @@ scheduleServices.getScheduleDetails = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_details.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -43,11 +43,33 @@ scheduleServices.getScheduleDetails = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_details_failed.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
 };
+
+scheduleServices.getParticularScheduleDetails = (req, res) => {
+    var scheduleLib = new ScheduleLib();
+    return scheduleLib.getParticularScheduleDetails(req.body.userScopeId, req.query.scId)
+        .then((response) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Scheduler,
+                label: configruation.publiser_service_events.schedule_event_label.getParticularSchedule_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId).replace('{{scId}}', req.query.scId)
+            });
+            res.status(200).json(response);
+        })
+        .catch((error) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Scheduler,
+                label: configruation.publiser_service_events.schedule_event_label.getParticularSchedule_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId).replace('{{scId}}', req.query.scId)
+            });
+            res.status(200).json({ code: 400, status: "failed", error: error.message });
+        });
+};
+
 
 scheduleServices.getFilteredScheduleDetails = (req, res) => {
 
@@ -57,7 +79,7 @@ scheduleServices.getFilteredScheduleDetails = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus)
+                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -65,7 +87,7 @@ scheduleServices.getFilteredScheduleDetails = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus)
+                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -79,7 +101,7 @@ scheduleServices.getScheduleDetailsByCategories = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_with_category.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{category}}', req.query.scheduleCategory == 1 ? "daywise" : "normal")
+                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_with_category.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{category}}', req.query.scheduleCategory == 1 ? "daywise" : "normal").replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -87,7 +109,7 @@ scheduleServices.getScheduleDetailsByCategories = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_with_category_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{category}}',  req.query.scheduleCategory == 1 ? "daywise" : "normal")
+                label: configruation.publiser_service_events.schedule_event_label.filtered_schedule_details_with_category_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{category}}', req.query.scheduleCategory == 1 ? "daywise" : "normal").replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -100,7 +122,7 @@ scheduleServices.edit = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_edit.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_edit.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -108,7 +130,7 @@ scheduleServices.edit = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_edit_failed.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_edit_failed.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -121,7 +143,7 @@ scheduleServices.changeScheduleStatus = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_change.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_change.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -129,7 +151,7 @@ scheduleServices.changeScheduleStatus = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_change_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_change_failed.replace('{{user}}', req.body.userScopeName).replace('{{status}}', req.query.scheduleStatus).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -142,7 +164,7 @@ scheduleServices.delete = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_delete.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_delete.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -150,7 +172,7 @@ scheduleServices.delete = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_delete.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_delete.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -163,7 +185,7 @@ scheduleServices.cancel = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_cancel.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_cancel.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -171,7 +193,7 @@ scheduleServices.cancel = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Scheduler,
-                label: configruation.publiser_service_events.schedule_event_label.schedule_cancel_failed.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.schedule_event_label.schedule_cancel_failed.replace('{{user}}', req.body.userScopeName).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -185,7 +207,7 @@ scheduleServices.startDaywiseSchedule = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.daywise_schedule.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.daywise_schedule.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -193,7 +215,7 @@ scheduleServices.startDaywiseSchedule = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.daywise_schedule_failed.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.daywise_schedule_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -206,7 +228,7 @@ scheduleServices.startTodaySchedule = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.onetime_schedule.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.onetime_schedule.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -214,7 +236,7 @@ scheduleServices.startTodaySchedule = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.onetime_schedule_failed.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.onetime_schedule_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -227,7 +249,7 @@ scheduleServices.startSchedulerCron = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.start_cron.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.start_cron.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json(response);
         })
@@ -235,7 +257,7 @@ scheduleServices.startSchedulerCron = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.start_cron_failed.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.start_cron_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -248,7 +270,7 @@ scheduleServices.deleteAllSchedules = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.delete_all_schedules.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.delete_all_schedules.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", data: response });
         })
@@ -256,7 +278,7 @@ scheduleServices.deleteAllSchedules = (req, res) => {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Admin,
-                label: configruation.publiser_service_events.admin_event_label.delete_all_schedules_failed.replace('{{admin}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.admin_event_label.delete_all_schedules_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
@@ -264,11 +286,85 @@ scheduleServices.deleteAllSchedules = (req, res) => {
 
 scheduleServices.createAutomatedRss = (req, res) => {
     var scheduleLib = new ScheduleLib();
-    return scheduleLib.createAutomatedRssSchedule(req.body.userScopeId,req.query.teamId, req.body.rssDetails)
-        .then(() => {          
-            res.status(200).json({ code: 200, status: "success" });
+    return scheduleLib.createAutomatedRssSchedule(req.body.userScopeId, req.query.teamId, req.body.postInfo)
+        .then((result) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.create_rss_schedule.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
+            });
+            res.status(200).json({ code: 200, status: "success", message: result });
         })
-        .catch((error) => {          
+        .catch((error) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.create_rss_schedule_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
+            });
+            res.status(200).json({ code: 400, status: "failed", error: error.message });
+        });
+};
+
+scheduleServices.getAutomatedRss = (req, res) => {
+    var scheduleLib = new ScheduleLib();
+    return scheduleLib.getScheduleDetails(req.body.userScopeId, req.query.pageId)
+        .then((result) => {
+            res.status(200).json({ code: 200, status: "success", message: result });
+        })
+        .catch((error) => {
+            res.status(200).json({ code: 400, status: "failed", error: error.message });
+        });
+};
+
+scheduleServices.updateAutomatedRss = (req, res) => {
+    var scheduleLib = new ScheduleLib();
+    return scheduleLib.updateAutomatedRss(req.body.userScopeId, req.query.teamId, req.query.scheduleId, req.body.postInfo)
+        .then((result) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.edit_rss_schedule.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
+            });
+            res.status(200).json({ code: 200, status: "success", message: result });
+        })
+        .catch((error) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.edit_rss_schedule_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{scid}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
+            });
+            res.status(200).json({ code: 400, status: "failed", error: error.message });
+        });
+};
+
+scheduleServices.deleteAutomatedRss = (req, res) => {
+    var scheduleLib = new ScheduleLib();
+    return scheduleLib.deleteAutomatedRss(req.body.userScopeId, req.query.teamId, req.query.rssId)
+        .then((result) => {
+            res.status(200).json({ code: 200, status: "success", message: result });
+        })
+        .catch((error) => {
+            res.status(200).json({ code: 400, status: "failed", error: error.message });
+        });
+};
+
+scheduleServices.createRssSchedule = (req, res) => {
+    var scheduleLib = new ScheduleLib();
+    return scheduleLib.createRss(req.query.userScopeId, req.query.teamId, req.body.postInfo, req.body.userScopeMaxScheduleCount)
+        .then((result) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.create_rss_schedule.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
+            });
+            res.status(200).json({ code: 200, status: "success", message: result });
+        })
+        .catch((error) => {
+            analyticsServices.registerEvents({
+                category: req.body.userScopeEmail,
+                action: configruation.publiser_service_events.event_action.Rss,
+                label: configruation.publiser_service_events.rss_event_label.create_rss_schedule_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
+            });
             res.status(200).json({ code: 400, status: "failed", error: error.message });
         });
 };

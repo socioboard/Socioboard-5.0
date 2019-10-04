@@ -127,6 +127,9 @@
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'Team';
+        var eventAction = 'Create-Team';
         $(document).ready(function(){
             $(document).on('submit','#createTeam',function(e){
 
@@ -151,7 +154,6 @@
                          * 204 => team name required
                          * 500 => exception
                          * 400 => Team already exists*/
-                        console.log(response);
                         if(response.code ==200){
                             swal(response.message);
                             setTimeout(function() {
@@ -174,5 +176,4 @@
             });
         });
     </script>
-
     @endsection
