@@ -44,10 +44,24 @@
             <div class="card bg-light border-0 shadow">
                 <div class="card-body">
                     <form class="form-inline mb-2" id="flickrForm">
-                        <label class="sr-only" for="flickr_search">Keyword</label>
-                        <input type="text" name="keyword" class="form-control col-9 border-0 rounded-pill" id="flickr_search"
-                               placeholder="keyword">
-                        <div class="text-center col-3">
+                        <div class="form-group col-4">
+                            <label for="flickr_search">Keyword</label>
+                            <input type="text" class="form-control col-12 border-0 rounded-pill" id="flickr_search" name="keyword"
+                                   placeholder="keyword" value="{{env('KEYWORD_CONTENT_STUDIO')}}">
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="sort_by">Sort by</label>
+                            <select class="form-control col-12" id="sort_by">
+                                <option value="date-posted-asc">date-posted-asc</option>
+                                <option value="date-posted-desc">date-posted-desc</option>
+                                <option value="date-taken-asc">date-taken-asc</option>
+                                <option value="date-taken-desc">date-taken-desc</option>
+                                <option value="interestingness-desc">interestingness-desc</option>
+                                <option value="interestingness-asc">interestingness-asc</option>
+                                <option value="relevance">relevance</option>
+                            </select>
+                        </div>
+                        <div class="text-center col-2">
                             <button type="submit" class="btn btn-primary col-12 rounded-pill">Submit</button>
                         </div>
                     </form>
@@ -73,6 +87,9 @@
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'Flicker';
         var val=[];
         var result=[];
 
@@ -83,11 +100,9 @@
                 var appenddata="";
                 var msg ="";
                 msg = $(this).closest('.card').find('.messageSocio').text();
-
                 var image = $(this).closest('.card').find('img').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 result = val.split(',')
-                console.log("hdjshd=> ",result)
                 $.each(result, function(key,value) {
                     if(value.indexOf(".jpg") >= 1){
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
@@ -110,13 +125,6 @@
 
                 $('#postModal').modal('show');
 
-//                    console.log('image===>',image);
-            });
-            $(document).on('click','.resociovideo', function(){
-                var video = $(this).closest('.card').find('source').attr('src');
-                val = $(this).closest('.card').find('input').val();
-                $('#postModal').modal('show');
-//                    console.log('video===>',video);
             });
 
 
@@ -128,13 +136,12 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
             });
             $('#hint_brand').on('hide', function (e) {
                 names = [];
                 z = 0;
             });
-        })
+        });
 
         function post(postStatus){
 
@@ -166,12 +173,10 @@
                     $('#testText').html('Uploading');
                 },
                 success: function (response) {
-                    console.log(response);
 //                    return 1;
                     $('#test').hide();
                     $('#testText').html('Post');
 
-                    console.log(response);
 //                document.getElementById("publishForm").reset();
                     $('#publishForm').trigger("reset");
                     $(".emojionearea-editor").text("");
@@ -214,7 +219,8 @@
     </script>
     <script>
 //        getFlickr("a");
-        var data = "a";
+        var data = '<?php echo env('KEYWORD_CONTENT_STUDIO');?>';
+        var sortBy = "date-posted-asc";
         var pageId1 = 1;
         var action = "inactive";
         // normal post emoji
@@ -224,7 +230,7 @@
         });
         if (action == 'inactive') {
             action = "active";
-            getFlickr(data, pageId1,0);
+            getFlickr(data,sortBy, pageId1,0);
         }
         // all social list div open
         $('.all_social_div').css({
@@ -246,13 +252,14 @@
         ////                console.log('image===>',i);
         //            }
 
-        function getFlickr(keyword,pageId,search){
+        function getFlickr(keyword,sort,pageId,search){
             var imgurData = "";
             $.ajax({
                 url: "/getFlickr",
                 type: 'POST',
                 data: {
                     keyword:keyword,
+                    sort: sort,
                     pageId: pageId
                 },
                 beforeSend:function(){
@@ -280,6 +287,7 @@
                                     imgurData += '<div class="card bg-dark text-white border-0 shadow"><input class="multiImages" value=' + value.mediaUrl + ' style="display: none">' +
                                             '<img src="' + value.mediaUrl + '" class="card-img-top" alt="sample" ><div class="card-body p-2"><h5 class="card-title imgur_title messageSocio">' + value.title + '</h5><p class="card-text"><a href="javascript:void(0)" class="text-white float-right resocio"><span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."><i class="fas fa-retweet text-primary"></i> re-socio</span></a></p></div></div>'
                                 } else if (str.indexOf(".mp4") >= 1) {
+                                    document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                                     imgurData += ' <div class="card bg-dark text-white border-0 shadow"> <input class="multiImages" value=' + value.mediaUrl + ' style="display: none">' +
                                             '<div class="video_imgur"> <video poster="//i.imgur.com/FS6micJ.jpg" muted="muted" autoplay="autoplay" loop="loop" class="video_width_full"> <source src="' + value.mediaUrl + '" type="video/mp4"> </video> </div> <div class="card-body p-2"> <h5 class="card-title imgur_title messageSocio">' + value.title + '</h5> <p class="card-text"> <a href="javascript:void(0);" class="text-white float-right resocio" > <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </a> </p> </div> </div>'
                                 } else if (str.indexOf(".gif") >= 1) {
@@ -313,22 +321,22 @@
 
             $(document).on('submit','#flickrForm',function(e){
                 e.preventDefault();
-                searchcount =1;
-                pageId1 =1
                  data = $('#flickr_search').val();
-                getFlickr(data, pageId1,1);
+                 sortBy = document.getElementById("sort_by").value;
+                if(data == ""){
+                    swal("Please enter valid input");
+                }else {
+                    pageId1 = 1;
+                getFlickr(data,sortBy, pageId1,1);}
             });
-
-
-
         });
         $(window).scroll(function () {
             if ($(window).scrollTop() + $(window).height() >= $("#flickr").height() && action == 'inactive') {
         //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-
+                console.log(data,sortBy);
                 setTimeout(function () {
-                    getFlickr(data, pageId1,0);
+                    getFlickr(data, sortBy,pageId1,0);
                 }, 1000);
             }
         });
@@ -336,5 +344,4 @@
 
 
     </script>
-
 @endsection

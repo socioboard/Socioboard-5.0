@@ -15,7 +15,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.get_tasks.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.publiser_service_events.task_event_module.get_tasks.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json(result);
             })
@@ -23,7 +23,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.get_tasks_failed.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.publiser_service_events.task_event_module.get_tasks_failed.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -36,7 +36,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.assign_task.replace('{{user}}', req.body.userScopeName).replace('{{taskId}}', req.query.taskId).replace('{{member}}', req.query.assigningUserId)
+                    label: configruation.publiser_service_events.task_event_module.assign_task.replace('{{user}}', req.body.userScopeName).replace('{{taskId}}', req.query.taskId).replace('{{member}}', req.query.assigningUserId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json(result);
             })
@@ -44,7 +44,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.assign_task_failed.replace('{{user}}', req.body.userScopeName).replace('{{taskId}}', req.query.taskId).replace('{{member}}', req.query.assigningUserId)
+                    label: configruation.publiser_service_events.task_event_module.assign_task_failed.replace('{{user}}', req.body.userScopeName).replace('{{taskId}}', req.query.taskId).replace('{{member}}', req.query.assigningUserId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -57,7 +57,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.update_task_status.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{status}}', req.query.status)
+                    label: configruation.publiser_service_events.task_event_module.update_task_status.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{status}}', req.query.status).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json(result);
             })
@@ -65,7 +65,7 @@ class TaskController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.publiser_service_events.event_action.Task,
-                    label: configruation.publiser_service_events.task_event_module.update_task_status_failed.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{status}}', req.query.status)
+                    label: configruation.publiser_service_events.task_event_module.update_task_status_failed.replace('{{admin}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{status}}', req.query.status).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });

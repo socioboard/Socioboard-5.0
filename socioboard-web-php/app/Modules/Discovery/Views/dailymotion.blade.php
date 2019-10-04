@@ -37,6 +37,43 @@
         <div class="col-md-12">
             <h4>dailymotion</h4>
         </div>
+    </div><div class="row">
+        <div class="col-md-12">
+            <div class="card bg-light border-0 shadow">
+                <div class="card-body">
+                    <form class="form-inline mb-2" id="dailymotionForm">
+                        <div class="form-group col-3">
+                            <label for="filter">Filter</label>
+                            <select class="form-control col-12" id="filter">
+                                <option value="what-to-watch">what-to-watch </option>
+                                <option value="recommended">recommended</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="sort_by">Sort by</label>
+                            <select class="form-control col-12" id="sort_by">
+                                <option value="recent">recent</option>
+                                <option value="visited">visited</option>
+                                <option value="visited-hour"> visited-hour</option>
+                                <option value="visited-today">visited-today</option>
+                                <option value="visited-week">visited-week</option>
+                                <option value="visited-month">visited-month</option>
+                                <option value="relevance">relevance</option>
+                                <option value="trending">trending</option>
+                                <option value="old">old</option>
+                                <option value="live-audienc">live-audienc</option>
+                                <option value="least-visit">least-visit</option>
+                                <option value="live-airing-time">live-airing-time</option>
+                                <option value="random">random</option>
+                            </select>
+                        </div>
+                        <div class="text-center col-2">
+                            <button type="submit" class="btn btn-primary col-12 rounded-pill">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     {{--<div class="row">--}}
@@ -75,6 +112,11 @@
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'Content-Studio';
+        var eventAction = 'Dailymotion';
+
+
         var val=[];
         var result=[];
 
@@ -139,7 +181,6 @@
                     names.splice(yet, 1);
                 }
                 // return array of file name
-                console.log(names);
             });
             $('#hint_brand').on('hide', function (e) {
                 names = [];
@@ -181,12 +222,10 @@
 
                 },
                 success: function (response) {
-                    console.log(response);
 
                     $('#test').hide();
                     $('#testText').html('Post');
 
-                    console.log(response);
 //                document.getElementById("publishForm").reset();
                     $('#publishForm').trigger("reset");
                     $(".emojionearea-editor").text("");
@@ -194,7 +233,6 @@
 //                    $("#option_upload").css("display","block");
                     $("#test").attr("disabled", true);
                     if(response.code == 404){
-                        console.log(response.message)
                         $('#messageError').text(response.message);
                     }else if(response.code == 400){
                         swal(response.message);
@@ -209,7 +247,6 @@
                         document.getElementById("publishForm").reset();
                         $('#postModal').modal('hide');
                     }else if(response.code == 500){
-                        console.log(response.message);
 
                         swal("Something went wrong... Please try again after sometime")
                         $('#postModal').modal('hide');
@@ -226,8 +263,10 @@
 
     </script>
     <script>
-        var data = "a";
+        var data = '<?php echo env('KEYWORD_CONTENT_STUDIO');?>';
         var pageId1 = 1;
+        var filterBy = "what-to-watch";
+        var sortBy = "recent";
         var action = "inactive";
         // normal post emoji
         $("#normal_post_area").emojioneArea({
@@ -237,7 +276,7 @@
         if(action=='inactive')
         {
             action ="active";
-            getDailyMotion(data, pageId1,0);
+            getDailyMotion(filterBy,sortBy, pageId1,0);
         }
         // all social list div open
         $('.all_social_div').css({
@@ -259,13 +298,14 @@
         ////                console.log('image===>',i);
         //            }
 
-        function getDailyMotion(keyword,pageId,search){
+        function getDailyMotion(filter,sort,pageId,search){
             var dailyData = "";
             $.ajax({
                 url: "/get-daily-motion",
                 type: 'POST',
                 data: {
-                    keyword:keyword,
+                    filter: filter,
+                    sort: sort,
                     pageId: pageId
                 },
                 beforeSend:function(){
@@ -280,7 +320,6 @@
 
                     if(response.code == 200){
                         pageId1 += 1;
-                        console.log("page================="+ pageId1)
                         $("#bootLoader").css("display","none");
                         if(response.DailyDetails.length == 0){
                            action = "active";
@@ -292,7 +331,7 @@
                             if(value.mediaUrl != undefined && value.mediaUrl != "") {
 
                                 var str = value.mediaUrl
-                                dailyData += '<div class="card bg-dark text-white border-0 shadow"><input class="multiImages" value=' + value.sourceUrl + ' style="display: none"> <div class="video_dailymotion"> <div class="embed-responsive embed-responsive-16by9"> <iframe class="embed-responsive-item" src="'+ value.mediaUrl +'" allowfullscreen></iframe> </div> </div> <div class="card-body p-2"> <h5 class="card-title dailymotion_title">' +
+                                dailyData += '<div class="card bg-dark text-white border-0 shadow"><input class="multiImages" value=' + value.mediaUrl + ' style="display: none"> <div class="video_dailymotion"> <div class="embed-responsive embed-responsive-16by9"> <iframe class="embed-responsive-item" src="'+ value.mediaUrl +'" allowfullscreen="true"></iframe> </div> </div> <div class="card-body p-2"> <h5 class="card-title dailymotion_title">' +
                                         ''+ value.title +'</h5> <p class="card-text"> <span class="messageSocio" style="display: none">' + value.title + ' </span> ' +
                                         '<a href="javascript:void(0);" class="text-white float-right resocio" data-toggle="modal" data-target="#postModal"> ' +
                                         '<span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </a> </p> </div></div>';
@@ -323,12 +362,15 @@
 
             $(document).on('submit','#dailymotionForm',function(e){
                 e.preventDefault();
+                filterBy = document.getElementById("filter").value;
+                sortBy = document.getElementById("sort_by").value;
                 pageId1 = 1
                 var data = $('#dailymotion_search').val();
-                getDailyMotion(data,pageId1 ,1);
+                getDailyMotion(filterBy,sortBy,pageId1 ,1);
 
             });
             $(document).on('click','.resocio', function(){
+                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -337,11 +379,9 @@
 
                 var image = $(this).closest('.card').find('iframe').attr('src');
                 val = $(this).closest('.card').find('input').val();
-                console.log(val);
                 result = val.split(',')
-                console.log("hdjshd=> ",result)
                 $.each(result, function(key,value) {
-                        appenddata +=  "<li class='clearimag' id='" +key +"' > <iframe class='embed-responsive-item' id='" +key +"' src='"+ value+"' ></iframe><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
+                        appenddata +=  "<li class='clearimag' id='" +key +"' > <iframe frameborder='0' width='480' height='270'  class='embed-responsive-item' src='"+ value +"' allowfullscreen allow='autoplay'></iframe><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
 //                        appenddata +=  '<li><video width="320" height="240" controls> <source src="'+ value +'" type="video/mp4"> <source src="'+ value +'"  type="video/ogg"> Your browser does not support the video tag.</video></li>';
                 });
 
@@ -366,14 +406,13 @@
 
 //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-
+                console.log(filterBy,sortBy);
                 setTimeout(function () {
-                    getDailyMotion(data, pageId1,0);
+                    getDailyMotion(filterBy,sortBy, pageId1,0);
                 }, 1000);
             }
         });
 
 
     </script>
-
 @endsection

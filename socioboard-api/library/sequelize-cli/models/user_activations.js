@@ -69,12 +69,13 @@ module.exports = (sequelize, Sequelize) => {
     payment_type: {
       type: Sequelize.INTEGER.UNSIGNED,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      comment: "0-Paypal, 1-PayUmoney"
     },
 
     last_payment_id: {
       type: Sequelize.INTEGER.UNSIGNED,
-      allowNull: true,  
+      allowNull: true,
     },
 
     /*
@@ -97,6 +98,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    shortenStatus: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0,
+      comment: "0-normal, 1-firebase"
     },
     /*
      * 0 - Manually
@@ -129,7 +136,8 @@ module.exports = (sequelize, Sequelize) => {
     user_plan: {
       type: Sequelize.INTEGER.UNSIGNED,
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      comment: "0-Basic, 1-Standard, 2-Premium, 3-Deluxe, 4-Topaz, 5-Ruby, 6-Gold, 7-Platinum"
     },
     created_date: {
       type: Sequelize.DATE,
@@ -168,7 +176,7 @@ module.exports = (sequelize, Sequelize) => {
         beforeCreate,
       }
     });
-    
+
   user_activations.associate = function (models) {
     // associations can be defined here
   };

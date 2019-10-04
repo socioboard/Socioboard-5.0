@@ -11,11 +11,9 @@
 
 <script>
     window.dataLayer = window.dataLayer || [];
-
     function gtag() {
         dataLayer.push(arguments);
     }
-
     gtag("js", new Date());
     gtag("config", "UA-58515856-3");
 </script>
@@ -40,7 +38,8 @@
         });
 
         // loading content for the first page
-        loadPageContent(currentPage);
+
+        //loadPageContent(currentPage);
     });
 </script>
 
@@ -64,7 +63,7 @@
         var animationParams = {
             opacity: 0.25,
             //left: "+=50",
-            ///height: "toggle"
+            //height: "toggle"
         };
 
         // send only first time
@@ -159,20 +158,21 @@
             // array of files
             $("#media-list li").each(function () {
                 if (null != $(this).data('media-id')) {
-                    console.log($(this).data('media-id'));
                     mediaPaths.push($(this).data('media-path'));
                 }
             });
 
             $.ajax({
                 method: "POST",
-                url: currentDirectory + "/{{$account_id}}/reShare", // /view-facebook-feeds  /view-twitter-feeds
+               // url: currentDirectory + "/{{$account_id}}/reShare", // /view-facebook-feeds  /view-twitter-feeds
+                 url: currentDirectory + "/reShare", // /view-facebook-feeds  /view-twitter-feeds
                 data: {
                     accountId: {{$account_id}},
                     teamId: {{Session::get('currentTeam')['team_id']}},
                     link: $(this).data('link'),
                     mediaPaths: mediaPaths,
-                    accountIds: getCheckedFBaccounts(),
+                    accountIds: getCheckedAccounts(),
+                    boardIds: getCheckedBoards(),
                     message: modalDialog.find('div .emojionearea-editor').html(),
                 },
                 beforeSend: function () {
@@ -180,6 +180,7 @@
                 }
             })
                 .done(function (req) {
+
                     var msg = jQuery.parseJSON(req);
                     modalDialogShow(msg.status, msg.message);
                 });
@@ -207,13 +208,6 @@
         });
     });
 
-    // infinite scroll
-    $(window).scroll(function () {
-        if ($(window).scrollTop() >= $(document).height() - 1.5 * $(window).height()) {
-            loadPageContent(currentPage);
-        }
-    });
-
 
     //    images and videos upload
     $(function () {
@@ -223,7 +217,6 @@
             var getAttr = $(this).attr("click-type");
             var files = event.target.files;
 
-            //console.warn(event);
 
             //var output = document.getElementById("media-list");
             var z = 0;
@@ -244,7 +237,6 @@
             }
             ;
 
-            //console.log(files);
 
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
@@ -267,7 +259,6 @@
                     })
                         .done(function (req) {
                             var msg = jQuery.parseJSON(req);
-                            //console.log(msg);
                             mediaUploadFinished(msg.localFileId, msg.path);
                         });
 
@@ -286,7 +277,6 @@
             } // end for
 
             // return array of file name
-            console.log(names);
         });
 
         // removing media object from list
@@ -299,7 +289,6 @@
                 names.splice(yet, 1);
             }
             // return array of file name
-            console.log(names);
         });
         $("#hint_brand").on("hide", function (e) {
             names = [];
@@ -309,13 +298,9 @@
     //    images and videos upload finish
 
 
-    var currentPage = 1;
-    var pageLoadingProcessing = 0;
-
 
     // Modal dialog - showing the window and filling with content
     function modalDialogShow(status, message) {
-
 
         if (status != 'success') {
             status = 'error'
@@ -334,12 +319,10 @@
     function mediaUploadStarted(target, fileId) {
         target.attr('data-media-id', fileId);
         target.addClass('media-uploading');
-        //console.log('class media-uploading started for file '+fileId);
     }
 
     /* removing class when uploading get completed */
     function mediaUploadFinished(fileId, path) {
-        console.log('upload finished for *[data-media-id="' + fileId + '"], API path = ' + path);
         $('*[data-media-id="' + fileId + '"]').removeClass('media-uploading'); // remove progressbar
         $('*[data-media-id="' + fileId + '"]').attr('data-media-path', path); // path with file in API
     }
@@ -377,10 +360,9 @@
         return content;
     }
 
-    function getCheckedFBaccounts() {
+    function getCheckedAccounts() {
         var out = [];
         $('#media-popup-fb-accounts li input:checked').each(function () {
-            //console.log($(this).data('account-id'));
             out.push($(this).data('account-id'));
 
         });
@@ -388,11 +370,19 @@
     }
 
 
+    function getCheckedBoards() {
+        var out = [];
+        $('#media-popup-fb-accounts li input:checked').each(function () {
+            out.push($(this).data('board-id'));
+        });
+
+        return out;
+    }
+
     $('#postModal').on('hide.bs.modal show.bs.modal', function () {
         var activeElement = $(document.activeElement).attr('id');
 
         if (activeElement == 'modalButtonDraft') {
-            //console.log('Draft will be saved');
         }
         else {
             // resetting content
@@ -402,7 +392,43 @@
             // cleaning
             var lastLi = '<li class="myupload">' + $('#postModal #media-list li.myupload').html() + '</li>';
             $('#postModal ul#media-list').html('');
-            $('#postModal ul#media-list').append(lastLi);
+           // $('#postModal ul#media-list').append(lastLi);  // add [+] to upload files
         }
     })
 </script>
+
+
+
+<script>
+    // add files and upload to server
+    function addExternalMediaToList(id, type, src, text) {
+        // show file in the list
+        $('#media-list').prepend('<li class="media_for_upload" data-media-id="' + id + '"><img src="' + src + '" title="' + text + '" /></li>');
+
+        // add CSS style for uploading process
+        mediaUploadStarted($("#media-list li:first"), id);
+
+        // upload sterting
+        $.ajax({
+            method: "POST",
+            url: "/view-facebook-feeds/{{$account_id}}/postFiles",
+            data: {
+                teamId: {{Session::get('currentTeam')['team_id']}},
+                name: id,
+                src: src,
+                type: type,
+                // message: text,
+            }
+        })
+            .done(function (req) {
+                var msg = jQuery.parseJSON(req);
+                mediaUploadFinished(msg.localFileId, msg.path);
+            });
+
+    }
+</script>
+
+
+<div id="container"></div>
+
+

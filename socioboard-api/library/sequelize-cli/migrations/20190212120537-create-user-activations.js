@@ -62,12 +62,13 @@ module.exports = {
       payment_type: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        defaultValue: 0  
+        defaultValue: 0,
+        comment: "0-Paypal, 1-PayUmoney"
       },
 
       last_payment_id: {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: true,  
+        allowNull: true,
       },
 
       /*
@@ -122,7 +123,8 @@ module.exports = {
       user_plan: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        defaultValue: 0    
+        defaultValue: 0,
+        comment: "0-Basic, 1-Standard, 2-Premium, 3-Deluxe, 4-Topaz, 5-Ruby, 6-Gold, 7-Platinum"
       },
       created_date: {
         type: Sequelize.DATE,

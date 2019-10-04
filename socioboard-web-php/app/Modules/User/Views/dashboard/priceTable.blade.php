@@ -2,6 +2,11 @@
 @section('title')
     <title>SocioBoard | Price</title>
 @endsection
+<script>
+    //for GA
+    var eventCategory = 'User';
+    var eventAction = 'Price-Table';
+</script>
 
 @section('price')
     <div class="container margin-top-60">
@@ -116,7 +121,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Social Accounts</th>
-                        <td class="text-center">10 per network</td>
+                        <td class="text-center">No limit per network</td>
                         <td class="text-center">1 per network</td>
                         <td class="text-center">No limit per network</td>
                         <td class="text-center">No limit per network</td>
@@ -235,7 +240,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Total Profiles</th>
-                        <td class="text-center">2</td>
+                        <td class="text-center">10</td>
                         <td class="text-center">2</td>
                         <td class="text-center">5</td>
                         <td class="text-center">10</td>
@@ -406,17 +411,19 @@
                         {{--<td class="text-center"><i class="far fa-check-circle"></i></td>--}}
                         {{--<td class="text-center"><i class="far fa-check-circle"></i></td>--}}
                     {{--</tr>--}}
-                    {{--<tr>--}}
-                        {{--<th scope="row">BoardMe</th>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-check-circle"></i></td>--}}
-                        {{--<td class="text-center"><i class="far fa-check-circle"></i></td>--}}
-                    {{--</tr>--}}
+                    <tr>
+                        <th scope="row">BoardMe</th>
+                        <td class="text-center"><i class="far fa-check-circle"></i></td>
+
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-times-circle text-danger"></i></td>
+                        <td class="text-center"><i class="far fa-check-circle"></i></td>
+                        <td class="text-center"><i class="far fa-check-circle"></i></td>
+                    </tr>
                     {{--<tr>--}}
                         {{--<th scope="row">Image & Shared Library</th>--}}
                         {{--<td class="text-center"><i class="far fa-times-circle text-danger"></i></td>--}}

@@ -20,6 +20,7 @@ class AdminUtils {
 
     findUserStats() {
         return new Promise((resolve, reject) => {
+            // Finding Application user statistics 
             userDetails.findOne({
                 attributes: [
                     [db.Sequelize.fn("sum", db.Sequelize.where(db.Sequelize.col('user_id'), { [Operator.ne]: null })), "totalUsers"],
@@ -63,12 +64,15 @@ class AdminUtils {
 
     findTodayUserStats() {
         return new Promise((resolve, reject) => {
+            // Finding user statistics
             return this.findUserStats()
                 .then((response) => {
+                    // Adding filter to Today
                     response.month = Number(moment().format('MM'));
                     response.year = Number(moment().format('YYYY'));
                     if (response.totalUsers) {
                         var appMemberStatsModel = new AppUserStatsModel();
+                        // Inserting into mongo DB 
                         appMemberStatsModel.insertMany(response)
                             .then((result) => {
                                 resolve(result);
@@ -91,6 +95,7 @@ class AdminUtils {
                 .then((response) => {
                     counts = response;
                     var appUserStatsModel = new AppUserStatsModel();
+                    // Fetching application users for a month range from mongo DB
                     return appUserStatsModel.getMonthlyStats();
                 })
                 .then((response) => {
@@ -108,6 +113,7 @@ class AdminUtils {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var appUserStatsModel = new AppUserStatsModel();
+                // Fetching application user for a specified month from mongo DB
                 return appUserStatsModel.getParticularMonth(month, year)
                     .then((response) => {
                         resolve(response);
@@ -129,7 +135,9 @@ class AdminUtils {
             if (!pageId)
                 reject(new Error("Invalid Inputs"));
             else {
+                // Making offset/skip value
                 var offset = (pageId - 1) * config.get('perPageLimit');
+                // Fetching users from DB with conditions
                 return userDetails.findAll({
                     where: conditions,
                     attributes: ['user_id', 'first_name', 'last_name', 'profile_picture', 'email', 'date_of_birth', 'phone_no', 'country', 'is_admin_user', 'is_account_locked'],
@@ -145,6 +153,7 @@ class AdminUtils {
                 })
                     .then((fulldetails) => {
                         var userProfileInfo = [];
+                        // Arranging the fetails in a structural format 
                         fulldetails.map(user => {
                             var info = {
                                 AccountId: user.user_id,
@@ -229,6 +238,7 @@ class AdminUtils {
             if (!userId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching user payments 
                 return userPayments.findAll({
                     where: { user_id: userId, payment_status: 1 }
                 })
@@ -247,6 +257,7 @@ class AdminUtils {
             if (!userId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching user Details from userDetails amd Activations
                 return userDetails.findOne({
                     where: {
                         user_id: userId
@@ -272,33 +283,36 @@ class AdminUtils {
         });
     }
 
-    getRecentSignup(filterType, since, untill,pageId) {
+    getRecentSignup(filterType, since, untill, pageId) {
         return new Promise((resolve, reject) => {
             if (!filterType) {
                 reject(new Error("Please select a valid filterType(1-5)"));
             } else {
                 switch (Number(filterType)) {
                     case 1:
-                        since = moment().startOf('day').format('YYYY-MM-DD');
-                        untill = moment().endOf('day').format('YYYY-MM-DD');
+                        since = moment().startOf('day');
+                        untill = moment().endOf('day');
                         break;
                     case 2:
-                        since = moment().subtract(1, "days").startOf('day').format('YYYY-MM-DD');
-                        untill = moment().subtract(1, "days").endOf('day').format('YYYY-MM-DD');
+                        since = moment().subtract(1, "days").startOf('day');
+                        untill = moment().subtract(1, "days").endOf('day');
                         break;
                     case 3:
-                        since = moment().startOf('week').format('YYYY-MM-DD');
-                        untill = moment().endOf('day').format('YYYY-MM-DD');
+                        since = moment().startOf('week');
+                        untill = moment().endOf('day');
                         break;
                     case 4:
-                        since = moment().startOf('month').format('YYYY-MM-DD');
-                        untill = moment().endOf('day').format('YYYY-MM-DD');
+                        since = moment().startOf('month');
+                        untill = moment().endOf('day');
                         break;
                     case 5:
                         if (!since || !untill)
                             throw new Error('Start date and end date are compulsary for this filter.');
                         else if (since > untill)
                             throw new Error("start date should be less than end date");
+                        else
+                            since = moment(since).startOf('day');
+                        untill = moment(untill).endOf('day');
                         break;
                     default:
                         throw new Error("please choose valid filter type");
@@ -308,7 +322,7 @@ class AdminUtils {
                         [Operator.between]: [since, untill]
                     }
                 };
-
+                // Fetching user information with Filters
                 return this.filterUserInfo(null, dateCondition, pageId)
                     .then((userProfileInfo) => { resolve({ count: userProfileInfo.length, accounts: userProfileInfo }); })
                     .catch((error) => reject(error));
@@ -321,8 +335,10 @@ class AdminUtils {
             if (!userId || !(options == 0 || options == 1)) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching user 
                 return this.fetchUser(userId)
                     .then((result) => {
+                        // Updating user to either lock/unlock
                         return result.update({
                             is_account_locked: options
                         });
@@ -340,6 +356,7 @@ class AdminUtils {
             if (!userId || !planId || !dayCount) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that the requested plan is available or not
                 return applicationInformations.findOne({
                     where: { plan_id: planId }
                 })
@@ -347,12 +364,14 @@ class AdminUtils {
                         if (!result)
                             throw new Error("Sorry, Specified plan is not available currently");
                         else
+                            // Fething user to whome you want to update
                             return this.fetchUser(userId);
                     })
                     .then((result) => {
                         if (dayCount > config.get('maximumTrialPeriod')) {
                             throw new Error(`Cant able to add trial period more than ${config.get('maximumTrialPeriod')} days`);
                         } else {
+                            // Updating user with new plam
                             return userActivation.update({
                                 user_plan: planId,
                                 account_expire_date: moment.utc().add(dayCount, 'days')
@@ -372,9 +391,11 @@ class AdminUtils {
             if (!userId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching user
                 return this.fetchUser(userId)
                     .then((result) => {
                         if (option == 1 || option == 0) {
+                            // Updating user with new 2step option
                             return userActivation.update({
                                 activate_2step_verification: option,
                             }, { where: { id: result.Activations.id } });
@@ -392,6 +413,7 @@ class AdminUtils {
 
     getPackages() {
         return new Promise((resolve, reject) => {
+            // Fetching all packages
             return applicationInformations.findAll({})
                 .then((packages) => {
                     resolve(packages);
@@ -407,6 +429,7 @@ class AdminUtils {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var requestBody = packageData.package;
+                // Checking the package is already exists or not
                 return applicationInformations.findOne({
                     attributes: [
                         [db.Sequelize.fn('max', db.Sequelize.col('plan_id')), "MaximumPlanId"]
@@ -447,12 +470,14 @@ class AdminUtils {
                                 maximum_schedule: Number(packageObject.maximum_schedule),
                                 maximum_referal_count: Number(packageObject.maximum_referal_count),
                             };
+                            // Updating the packages with new package details
                             return applicationInformations.findOrCreate({ where: { plan_name: requestBody.plan_name }, defaults: plans });
                         }
                     })
                     .then((response) => {
                         const [instance, wasCreated] = response;
                         if (!wasCreated) {
+                            // Else, throwing error of already available package with same name
                             throw new Error("Package is already available with same name.");
                         } else {
                             resolve(instance);
@@ -471,6 +496,7 @@ class AdminUtils {
             if (!packageData || !planId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Finding the Package
                 return applicationInformations.findOne({
                     where: { plan_id: planId }
                 })
@@ -478,6 +504,7 @@ class AdminUtils {
                         if (!details) {
                             throw new Error("No package found or access denied!");
                         } else {
+                            // Updating the package with new details
                             return details.update(packageData).then((result) => {
                                 return result;
                             });
@@ -499,6 +526,7 @@ class AdminUtils {
                 reject(new Error("Invalid Inputs"));
             } else {
                 if (activationStatus == 0 || activationStatus == 1) {
+                    // Fetching the plan details
                     return applicationInformations.findOne({
                         where: { plan_id: planId }
                     })
@@ -506,6 +534,7 @@ class AdminUtils {
                             if (!result)
                                 throw new Error("Invalid plan id!");
                             else {
+                                // Updating plan details of acive or not
                                 return result.update({
                                     is_plan_active: activationStatus
                                 });
@@ -544,6 +573,7 @@ class AdminUtils {
                     couponInfo.status = true;
                     couponInfo.added_admin_id = userId;
 
+                    // Creating a package if not exist, or else updating
                     return coupons.findOrCreate({
                         where: { coupon_code: couponInfo.coupon_code },
                         defaults: couponInfo
@@ -569,12 +599,14 @@ class AdminUtils {
             if (!couponCode || !(status == 0 || status == 1)) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Finding coupon information 
                 return coupons.findOne({ where: { coupon_code: couponCode, status: { [Operator.ne]: status } } })
                     .then((coupon) => {
                         if (!coupon) {
                             var errorMsg = status == 1 ? "Coupon code already activated!" : "Coupon code already deactivated!";
                             reject(new Error(`Mismatched coupon code or ${errorMsg}`));
                         } else {
+                            // Updating coupon status
                             return coupon.update({ status: status })
                                 .then(() => {
                                     resolve(status == 1 ? "Coupon code activated!" : "Coupon code deactivated!");
@@ -590,6 +622,7 @@ class AdminUtils {
 
     getCoupons() {
         return new Promise((resolve, reject) => {
+            // Finding all coupons from DB
             return coupons.findAll({})
                 .then((coupons) => {
                     resolve(coupons);
@@ -617,6 +650,7 @@ class AdminUtils {
                         }
                     }]
                 };
+                // Fetching user details
                 return userDetails.findOne({
                     where: conditions,
                     attributes: ['user_id', 'user_name', 'first_name', 'last_name', 'email', 'phone_no', 'date_of_birth'],
@@ -657,6 +691,7 @@ class AdminUtils {
                 reject(new Error("Invalid Inputs"));
             }
             else {
+                // Fetching all un-verified payments
                 return userPayments.findAll({ where: { is_payment_verified: 0, payment_mode: paymentMode } })
                     .then((result) => {
                         if (!result) {
@@ -678,6 +713,7 @@ class AdminUtils {
                 reject(new Error("Invalid Inputs"));
             }
             else {
+                // Checking that the payment id is available or not
                 return userPayments.findOne({ where: { payment_id: paymentId } })
                     .then((result) => {
                         if (!result) {

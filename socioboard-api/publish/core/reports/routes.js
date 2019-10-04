@@ -11,16 +11,16 @@ const accountController = require('./controllers/reportControllers');
  *     - AccessToken: []
  *     tags:
  *       - Report
- *     description: To get the published post reports
+ *     description: To get the schedule published post reports
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: schedule id 
+ *         description: Provide schedule id 
  *         name: scheduleId
  *         type: integer
  *       - in: query
- *         description: page id 
+ *         description: Provide page id 
  *         name: pageId
  *         type: integer
  *     responses:
@@ -45,20 +45,20 @@ routes.get("/getSchedulePublishedReport", accountController.getSchedulePublished
  *     - AccessToken: []
  *     tags:
  *       - Report
- *     description: To get the published post reports
+ *     description: To get the account published post reports
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: account id 
+ *         description: Provide account id 
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: page id 
+ *         description: Provide page id 
  *         name: pageId
  *         type: integer
  *     responses:
@@ -86,11 +86,11 @@ routes.get("/getAccountPublishedReport", accountController.getAccountPublishedRe
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: account id 
+ *         description: Provide account id 
  *         name: accountId
  *         type: integer
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *     responses:
@@ -168,20 +168,20 @@ routes.get("/getAccountwisePublishCount", accountController.getAccountwisePublis
  *     - AccessToken: []
  *     tags:
  *       - Report
- *     description: To fetch the current user tweets
+ *     description: To fetch the twitter messages
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -205,20 +205,20 @@ routes.get("/getTwitterMessage", accountController.getTwitterMessage);
  *     - AccessToken: []
  *     tags:
  *       - Report
- *     description: To fetch the current user tweets
+ *     description: To fetch the twitter messages between 2 users
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Twitter Receiver id
+ *         description: Provide twitter receiver id
  *         name: receiverId
  *         type: string  
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true
@@ -249,11 +249,11 @@ routes.get("/getMessageBetweenTwoUsers", accountController.getMessageBetweenTwoU
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: integer
  *         required: true

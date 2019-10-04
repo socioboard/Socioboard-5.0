@@ -40,7 +40,6 @@ class LinkedInController extends Controller
 
                 $data = (str_replace("state=","state=".$network."_",$response->navigateUrl));
 
-//             dd($data);
                 header('Location: '.$data);
                 exit(0);
             }else if($response->code == 400 && $response->status == "failed"){
@@ -60,7 +59,6 @@ class LinkedInController extends Controller
     public function linkedinCallBack(Request $request){
 
         $team = Session::get('currentTeam')['team_id'];
-//        dd($team);
         $help = Helper::getInstance();
         $a = $request->state;
         try {
@@ -97,7 +95,6 @@ class LinkedInController extends Controller
             }
         } catch (\Exception $e) {
             Log::info("Exception " . $e->getCode() . "=>" . $e->getLine() . "=>" . $e->getMessage());
-            dd("exception" . $e->getMessage().$e->getLine());
             return redirect('dashboard/' . $team)->with('FBError', 'Something went wrong');
         }
 
@@ -138,7 +135,6 @@ class LinkedInController extends Controller
             //team/addBulkSocialProfiles?TeamId
             try {
                 $response = Helper::getInstance()->apiCallPost($SocialAccounts, 'team/addBulkSocialProfiles?TeamId=' . $request->teamId);
-//dd($response);
 
                 Log::info("Linkedin page adding ".date('y-m-d h:m:s'));
                 Log::info($response);

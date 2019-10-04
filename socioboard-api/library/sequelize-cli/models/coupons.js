@@ -24,9 +24,14 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      /**
+       * 1- acitve
+       * 0- de-active
+       */
       status: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        comment: "1-Active, 0-De-active"
       },
       discount: {
         allowNull: true,

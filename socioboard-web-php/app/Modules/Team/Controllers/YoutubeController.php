@@ -32,7 +32,6 @@ class YoutubeController extends Controller
             $result = [];
 
             $responseForParticular = $help->apiCallGet("team/getSocialProfilesById?accountId=".$account_id);
-
             if($responseForParticular->code == 200){
                 if($network == env('YOUTUBE')){
                     return view('Team::youtube.youtubeFeeds')->with(["account_id"=>$account_id,
@@ -40,8 +39,8 @@ class YoutubeController extends Controller
                         "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
                         "profileData" => $responseForParticular->profile
                     ]);
-                }else if($network == env('INSTAGRAMBUSINESSPAGE')){
-                    return view('Team::instagram.instagramFeeds')->with(["account_id"=>$account_id,
+                }else if($network == env('INSTAGRAMBUSINESSPAGE')){//D:\bitbuckets\socioboard-upwork\web\app\Modules\Team\Views\instagram\instagramBusinessFeeds.blade.php
+                    return view('Team::instagram.instagramBusinessFeeds')->with(["account_id"=>$account_id,
                         "account_type"=>$network,
                         "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
                         "profileData" => $responseForParticular->profile,
@@ -59,7 +58,6 @@ class YoutubeController extends Controller
                 return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or beongs to different team");
             }
         }catch (\Exception $e){
-            dd($e->getMessage());
 
             Log::info("Get feeds profile Exception ".$e->getMessage()." in line ".$e->getLine()." in file ".$e->getFile());
             return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or beongs to different team");
@@ -91,7 +89,6 @@ class YoutubeController extends Controller
             }
             return $result;
         }catch (\Exception $e){
-            dd($e->getMessage());
         }
     }
 
@@ -116,18 +113,20 @@ class YoutubeController extends Controller
           $result['code']=200;
           if(strpos($responseForParticular->data->message,'commented')!=false)
               $result['message']="Successfully commented";
-          else
+          else{
               $result['message']=$responseForParticular->data->message;
+          }
 
       }else{
-          Log::info("Youtube like/dislike/comment failed because");
-          Log::info($responseForParticular);
 
+          Log::info("Youtube like/dislike/comment failed because");
           $result['code']=200;
           if(isset($responseForParticular->data->error))
               $result['message']=$responseForParticular->data->error;
           else
               $result['message']="Could not perform action";
+
+
       }
 
         }catch (\Exception $e){

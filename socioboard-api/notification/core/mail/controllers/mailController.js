@@ -62,7 +62,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.email_expire.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.email_expire.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: "Added to mail service queue, It will take few minutes to complete." });
             })
@@ -70,7 +70,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.email_expire_failed.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.email_expire_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -82,7 +82,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.email_expired.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.email_expired.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: "Added to mail service queue, It will take few minutes to complete." });
             })
@@ -90,7 +90,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.email_expired_failed.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.email_expired_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -102,7 +102,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.recent_login.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.recent_login.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: "Added to mail service queue, It will take few minutes to complete." });
             })
@@ -110,7 +110,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.recent_login_failed.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.recent_login_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -122,7 +122,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.notification_email.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.notification_email.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: "Added to mail service queue, It will take few minutes to complete." });
             })
@@ -130,7 +130,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.notification_email_failed.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.emails_event_lable.notification_email_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -142,7 +142,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.mails_sent_list.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.email)
+                    label: configruation.user_service_events.emails_event_lable.mails_sent_list.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.email).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", result: message });
             })
@@ -150,7 +150,7 @@ class MailController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Mail,
-                    label: configruation.user_service_events.emails_event_lable.mails_sent_list.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.email)
+                    label: configruation.user_service_events.emails_event_lable.mails_sent_list.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.email).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });

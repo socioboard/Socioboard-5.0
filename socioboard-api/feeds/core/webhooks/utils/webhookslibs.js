@@ -1,4 +1,5 @@
 const config = require('config');
+const logger = require('../../../utils/logger')
 
 class WebhookLibs {
 
@@ -46,15 +47,17 @@ class WebhookLibs {
                 oauth: twitterOauth,
             };
 
+            // GET request to fetch all running webhooks
             requestPromise.get(request_options)
                 .then(function (body) {
                     var webhook_id = JSON.parse(body)[0].id;
-                    console.log('Deleting webhook config:', webhook_id);
+                    logger.info('Deleting webhook config:', webhook_id);
                     request_options = {
                         url: `https://api.twitter.com/1.1/account_activity/all/${config.get('twitter_api.webhook_environment')}/webhooks/${webhook_id}.json`,
                         oauth: twitterOauth,
                         resolveWithFullResponse: true
                     };
+                    // Deleting all running webhooks, given by twitter
                     return requestPromise.delete(request_options);
                 })
                 .then(function (response) {

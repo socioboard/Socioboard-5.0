@@ -12,9 +12,41 @@ use Illuminate\Support\Facades\Session;
 
 class DiscoveryController extends Controller
 {
-    public function imgur(Request $request){
-        return view('Discovery::imgur',[
-            "socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
+
+    public function contentStudio(Request $request,$type)
+    {
+        $Team = Session::get('currentTeam')['SocialAccount'];
+
+        switch($type){
+        case "imgur":
+                return view('Discovery::imgur',[
+                    "socialAccount"=>$Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            case "flickr":
+                return view('Discovery::flickr',["socialAccount"=> $Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            case "pixabay":
+                return view('Discovery::pixabay',["socialAccount"=> $Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            case "dailymotion":
+                return view('Discovery::dailymotion',["socialAccount"=> $Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            case "newsapi":
+                return view('Discovery::newsapi',["socialAccount"=> $Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            case "giphy":
+                return view('Discovery::giphy',["socialAccount"=> $Team,
+                    "pinterestBoards" => Session::get('pinterestBoards')]);
+                break;
+            default :
+                return redirect('dashboard/'.Session::get('currentTeam')['team_id']);
+            break;
+        }
     }
 
 
@@ -22,12 +54,9 @@ class DiscoveryController extends Controller
         $imgurDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getImgur?keyword=".$request->keyword."&pageId=".$request->pageId);
-//        dd( $responseForParticular );
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getImgur?keyword=".$request->keyword."&pageId=".$request->pageId."&filter=".$request->filter."&sort=".$request->sort);
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $imgurDetails =$responseForParticular->response;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -52,31 +81,18 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
-
-
-
-    public function giphy(){
-        return view('Discovery::giphy',[
-            "socialAccount"=> Session::get('currentTeam')['SocialAccount'] ]);
-    }
-
-
-
 
     public function getGiphy(Request $request){
 //   return 1;
         $gifDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getGiphy?keyword=".$request->keyword."&pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getGiphy?keyword=".$request->keyword."&pageId=".$request->pageId."&filter=".$request->filter);
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $gifDetails =$responseForParticular->response;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -101,13 +117,7 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
-    }
-
-    public function pixabay(){
-        return view('Discovery::pixabay',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
-
     }
 
     public function getPixabay(Request $request){
@@ -115,13 +125,10 @@ class DiscoveryController extends Controller
         $gifDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getPixabay?keyword=".$request->keyword."&pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getPixabay?keyword=".$request->keyword."&pageId=".$request->pageId."&filter=".$request->filter."&sort=".$request->sort);
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $pixabayDetails =$responseForParticular->response;
-//                    dd($imgurDetails );
-
                 $result['code'] =200;
                 $result['status'] ="success";
                 $result['pixaDetails'] =$pixabayDetails;
@@ -144,24 +151,17 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
 
-
-    public function flickr(){
-        return view('Discovery::flickr',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
-    }
     public function getFlickr(Request $request){
         $gifDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getFlickr?keyword=".$request->keyword."&pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getFlickr?keyword=".$request->keyword."&pageId=".$request->pageId."&sort=".$request->sort);
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $flickrDetails =$responseForParticular->response;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -186,27 +186,19 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
 
-
-    public function dailymotion(){
-        return view('Discovery::dailymotion',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
-    }
     public function getDailymotion(Request $request){
 
         $dailyMotionDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getDailyMotion?pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getDailyMotion?pageId=".$request->pageId."&filter=".$request->filter."&sort=".$request->sort);
 
-//            dd($responseForParticular );
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $dailyMotionDetails =$responseForParticular->response->dailymotionDetails;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -231,24 +223,19 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
-    public function newsApi(){
-        return view('Discovery::newsapi',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
-    }
+
     public function getNews(Request $request){
 
         $dailyMotionDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getNewsApi?keyword=".$request->keyword."&pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getNewsApi?keyword=".$request->keyword."&pageId=".$request->pageId."&filter=".$request->filter."&sort=".$request->sort);
 
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $newsApiDetails =$responseForParticular->response->newsApiDetails;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -273,13 +260,14 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
 
 
     public function rssFeed(){
-        return view('Discovery::rssfeeds',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
+        return view('Discovery::rssfeeds',["socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+            "pinterestBoards" => Session::get('pinterestBoards')
+        ]);
     }
     public function getRss(Request $request){
 
@@ -292,9 +280,7 @@ class DiscoveryController extends Controller
         try{
             $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getRssFeeds?rssUrl=".$request->keyword);
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $rssDetails =$responseForParticular->response;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -319,22 +305,21 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
     public function youtube(){
-        return view('Discovery::youtube',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
+        return view('Discovery::youtube',["socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+            "pinterestBoards" => Session::get('pinterestBoards')
+        ]);
     }
     public function getYoutube(Request $request){
 
         $youtubeDetails=[];
         $result=[];
         try{
-            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getYoutube?keyword=".$request->keyword."&pageId=".$request->pageId);
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getYoutube?keyword=".$request->keyword."&pageId=".$request->pageId."&sort=".$request->sort);
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $youtubeDetails=$responseForParticular->response->youtubeDetails;
-//                    dd($imgurDetails );
 
                 $result['code'] =200;
                 $result['status'] ="success";
@@ -359,13 +344,15 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
 
     public function twitter(){
 
-        return view('Discovery::twitter',["socialAccount"=> Session::get('currentTeam')['SocialAccount']]);
+        return view('Discovery::twitter',[
+            "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+            "pinterestBoards" => Session::get('pinterestBoards')
+        ]);
     }
     public function getTwitter(Request $request){
         $youtubeDetails=[];
@@ -376,13 +363,13 @@ class DiscoveryController extends Controller
                 $country = $_COOKIE['country'];
             }
             $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getCurrentTrends?countryCode=".$country);
-
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $trends=$responseForParticular->response;
                 if (strpos($trends[0]->title, '#') !== false) {
                 $val =    str_replace("#","",$trends[0]->title);
 
+                }else{
+                    $val = $trends[0]->title;
                 }
 
                 $responseForTwtter = Helper::getInstance()->apiCallGetFeeds("trends/getTwitter?keyword=".$val);
@@ -417,7 +404,6 @@ class DiscoveryController extends Controller
             $result['status'] ="failed";
             $result['message'] =$e->getMessage();
             return $result;
-            dd($e->getMessage());
         }
     }
 
@@ -439,7 +425,6 @@ class DiscoveryController extends Controller
             $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getCurrentTrends?countryCode=".$country);
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                     $result['code'] =200;
                     $result['status'] ="success";
                     $result['trends'] =$responseForParticular->response;
@@ -457,7 +442,6 @@ class DiscoveryController extends Controller
             }
             return $result;
         }catch (\Exception $e){
-//            dd($e->getMessage());
             Log::info("Exception in imgur get ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
             $result['code'] =500;
             $result['status'] ="failed";
@@ -475,7 +459,6 @@ class DiscoveryController extends Controller
             $responseForParticular = Helper::getInstance()->apiCallGetFeeds("trends/getTwitter?keyword=".$request->Keyword);
 
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
-//                    dd($responseForParticular);
                 $result['code'] =200;
                 $result['status'] ="success";
                 $result['tweets']=$responseForParticular->response->tweets;
@@ -493,7 +476,6 @@ class DiscoveryController extends Controller
             }
             return $result;
         }catch (\Exception $e){
-            dd($e->getMessage());
             Log::info("Exception in imgur get ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
             $result['code'] =500;
             $result['status'] ="failed";
@@ -503,23 +485,21 @@ class DiscoveryController extends Controller
     }
 
     public function boardMe(Request $request){
+
         if($request->isMethod('get')){
-            return view('Discovery::boardMe.Loadpage');
+            return view('Discovery::boardMe.LoadPage');
         }else if($request->isMethod('post')){
             $resultData =[];
             try{
                 $helper = Helper::getInstance();
-//                dd($request->all());
                 $data['team_id'] = Session::get('currentTeam')['team_id'];
                 $response = Helper::getInstance()->apiCallFeedsPut($data,"boards/create?boardName=".$request->boardName."&keyword=".$request->boardKeyword."&teamId=".Session::get('currentTeam')['team_id']);
-
-
                 if($response->getStatusCode() == 200){
                     $result = json_decode($response->getBody()->getContents());
                     if($result->code == 400){
                         Log::info("Could not create board".$request->boardName." for team ". $data['team_id'] ." at time ".date('y-m-s'));
                         $resultData['code']=400;
-                        $resultData['code']=$result->error;
+                        $resultData['message']=$result->error;
                     }else if($result->code == 200){
                         Log::info("Created board".$request->boardName." for team ". $data['team_id'] ." at time ".date('y-m-s'));
 
@@ -532,7 +512,7 @@ class DiscoveryController extends Controller
                     Log::info($response);
 
                     $resultData['code']= 500;
-                    $resultData['Data']="Something went wrong";
+                    $resultData['message']="Something went wrong";
                 }
                 return $resultData;
             }catch (\Exception $e){
@@ -545,6 +525,119 @@ class DiscoveryController extends Controller
         }
     }
 
+
+    public function getAllBoards(){
+
+        $result=[];
+        try{
+            $responseForParticular = Helper::getInstance()->apiCallGetFeeds("boards/getAllBoards?&teamId=".Session::get('currentTeam')['team_id']);
+
+            if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
+                $result['code'] =200;
+                $result['status'] ="success";
+                $result['message'] =$responseForParticular->message;
+            }
+            else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
+
+                $result['code'] =400;
+                $result['status'] ="failed";
+                $result['message'] =$responseForParticular->error;
+                Log::info("Could not fetch boards!!!". $responseForParticular->error);
+            }
+            return $result;
+        }catch (\Exception $e){
+            Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+            $result['code'] =500;
+            $result['status'] ="failed";
+            $result['message'] =$e->getMessage();
+            return $result;
+        }
+
+    }
+
+    public function boardView(Request $request){
+        $data = [
+            'boardName'  => $request->boardName,
+            'key'   => $request->key,
+        ];
+        return view('Discovery::boardMe.boardView')->with(['data'=>$data, "socialAccount" => Session::get('currentTeam')['SocialAccount']]);
+    }
+
+
+
+    public function boardDelete(Request $request){
+
+        $boardId = $request->boardId;
+
+        $result=[];
+        try{
+            $responseForParticular = Helper::getInstance()->apiDeleteFeeds("boards/delete?boardId=$boardId&teamId=".Session::get('currentTeam')['team_id']);
+            if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
+                $result['code'] =200;
+                $result['status'] ="success";
+                $result['message'] =$responseForParticular->message;
+            }
+            else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
+                $result['code'] =400;
+                $result['status'] ="failed";
+                $result['message'] =$responseForParticular->error;
+                Log::info("Could not delete the board!!!". $responseForParticular->error);
+            }
+        }catch (\Exception $e){
+            Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+            $result['code'] =500;
+            $result['status'] ="failed";
+            $result['message'] =$e->getMessage();
+        }
+        return $result ;
+
+    }
+
+    public function boardEdit(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('Discovery::boardMe.Loadpage');
+        }
+        else if ($request->isMethod('post')) {
+            $resultData = [];
+            $boardId =  $request->boardId;
+            $teamId = Session::get('currentTeam')['team_id'];
+            $keyword = $request->boardKeyword;
+            try{
+                $helper = Helper::getInstance();
+                $data['team_id'] = Session::get('currentTeam')['team_id'];
+                $responseForParticular = Helper::getInstance()->apiCallFeedsPut($data,"boards/update?boardId=$boardId&teamId=$teamId&keyword=$keyword");
+                if($responseForParticular->getStatusCode() == 200){
+                    $result = json_decode($responseForParticular->getBody()->getContents());
+                    if($result->code == 400){
+                        Log::info("Could not create board".$request->boardName." for team ". $data['team_id'] ." at time ".date('y-m-s'));
+                        $resultData['code']=400;
+                        $resultData['message']=$result->error;
+                    }else if($result->code == 200){
+                        Log::info("Created board".$request->boardName." for team ". $data['team_id'] ." at time ".date('y-m-s'));
+                        $resultData['code']= 200;
+                        $resultData['Data']=$result->message;
+                    }
+
+                }else{
+                    Log::info("Could not create board".$request->boardName." for team ". $data['team_id'] ." at time ".date('y-m-s'));
+                    Log::info($responseForParticular);
+
+                    $resultData['code']= 500;
+                    $resultData['message']="Something went wrong";
+                }
+                return $resultData;
+
+            }catch (\Exception $e){
+                Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+                $result['code'] =500;
+                $result['status'] ="failed";
+                $result['message'] =$e->getMessage();
+                return $result;
+            }
+
+        }
+    }
 
 
 

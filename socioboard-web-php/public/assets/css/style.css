@@ -719,6 +719,7 @@ ul#media-list {
 .notification_desc {
     font-size: 12px;
     line-height: initial;
+    word-break: break-all;
 }
 
 .badge-noti-count{

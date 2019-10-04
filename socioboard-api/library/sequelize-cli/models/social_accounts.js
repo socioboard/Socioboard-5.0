@@ -7,6 +7,19 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true,
             primaryKey: true
         },
+        /**
+         * 1-Facebook user,
+         * 2-Facebook page, 
+         * 3-Facebook group,
+         * 4-Twitter, 
+         * 5-Instagram,
+         * 6-Linkedin Personal,
+         * 7-Linkedin Business,
+         * 8-Google Plus, 
+         * 9-Youtube, 
+         * 10-Google analytics,
+         * 11-Dailymotion
+         */
         account_type: {
             type: Sequelize.INTEGER(1),
             allowNull: false,

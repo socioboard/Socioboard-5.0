@@ -12,7 +12,7 @@ const Operator = db.Sequelize.Op;
 
 class ReportLibs {
 
-    constructor() {       
+    constructor() {
         this.coreServices = new CoreServices();
         this.userTeamAccountLibs = new UserTeamAccountLibs();
     }
@@ -22,9 +22,11 @@ class ReportLibs {
             if (!accountId || !userId || !teamId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating the user is belongs to that Team or not
                 return this.userTeamAccountLibs.isTeamAccountValidForUser(userId, teamId, accountId)
                     .then(() => {
                         var publishedPostObject = new PublishedPost();
+                        // Fetching the Today posted post count of a particular account
                         return publishedPostObject.getTodayPostsCount(accountId);
                     })
                     .then((postCount) => {
@@ -43,6 +45,7 @@ class ReportLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var reportDetails = [];
+                // Checking the user that does the user have any social accounts or not
                 return socialAccount.findAll({
                     where: {
                         account_admin_id: userId,
@@ -56,6 +59,7 @@ class ReportLibs {
 
                             logger.info(`Total account count : ${socialAcc.length}`);
 
+                            // Fetching X day post count for each account
                             return Promise.all(socialAcc.map(account => {
                                 var publishedPostObject = new PublishedPost();
                                 return publishedPostObject.getXdaysPostsCount(account.account_id, dayCount)
@@ -89,6 +93,7 @@ class ReportLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var reportDetails = [];
+                // Checking the user that does the user have any social accounts or not
                 return socialAccount.findAll({
                     where: {
                         account_admin_id: userId,
@@ -104,6 +109,7 @@ class ReportLibs {
 
                             return Promise.all(socialAcc.map(account => {
                                 var publishedPostObject = new PublishedPost();
+                                // Fetching post count for each account
                                 return publishedPostObject.getAccountPublishCount(account.account_id)
                                     .then((count) => {
                                         var accountDetails = {
@@ -137,6 +143,7 @@ class ReportLibs {
             if (!scheduleId || !userId || !pageId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching the schedule details of a schedule Id
                 return scheduleDetails.findOne({ where: { schedule_id: scheduleId, user_id: userId } })
                     .then((result) => {
                         if (!result) {
@@ -164,12 +171,15 @@ class ReportLibs {
             if (!accountId || !teamId || !pageId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking the user that the user is belongs to the Team or not
                 return this.userTeamAccountLibs.isTeamValidForUser(userId, teamId)
                     .then(() => {
+                        // Checking that the account is belongs to that Team or not
                         return this.userTeamAccountLibs.isAccountValidForTeam(teamId, accountId);
                     })
                     .then(() => {
                         var publishedPostObject = new PublishedPost();
+                        // Fetching the posts published in that particular account
                         return publishedPostObject.getAccountPublishedReport(accountId, teamId, ((pageId - 1) * config.get('perPageLimit')), config.get('perPageLimit'));
                     })
                     .then((publishedDetails) => {
@@ -187,9 +197,10 @@ class ReportLibs {
             if (!accountId || !userId || !teamId) {
                 reject(new Error("Invalid Inputs"));
             } else {
-
+                // Checking the user that the user is belongs to the Team or not and account is belongs to that Team or not
                 return this.isTeamAccountValidForUser(userId, teamId, accountId)
                     .then(() => {
+                        // Checking that the account is belongs to Twitter or not
                         return socialAccount.findOne({
                             where: {
                                 [Operator.and]: [{
@@ -225,6 +236,7 @@ class ReportLibs {
             if (!accountId || !receiverId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that the account is belongs to Twitter or not
                 return socialAccount.findOne({
                     where: {
                         [Operator.and]: [{
@@ -259,6 +271,7 @@ class ReportLibs {
             if (!accountId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking that the account is belongs to Twitter or not
                 return socialAccount.findOne({
                     where: {
                         [Operator.and]: [{
@@ -275,6 +288,7 @@ class ReportLibs {
                         else {
                             var offset = (pageId - 1) * config.get('perPageLimit');
                             var twitterMongoMessageModelObject = new TwitterMongoMessageModel();
+                            // Fetching previously messaged users of that account
                             return twitterMongoMessageModelObject.getPreviouslyMessagedUsers(socialAccount.social_id, socialAccount.user_name, offset, config.get('perPageLimit'));
                         }
                     })

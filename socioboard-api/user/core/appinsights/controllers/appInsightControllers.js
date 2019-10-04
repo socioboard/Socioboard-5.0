@@ -12,7 +12,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_all_realTime_users.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.app_insights_event_lable.get_all_realTime_users.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', data: result });
             })
@@ -20,7 +20,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_all_realTime_users_failed.replace('{{admin}}', req.body.userScopeName)
+                    label: configruation.user_service_events.app_insights_event_lable.get_all_realTime_users_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -33,7 +33,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_realTime_activities.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_realTime_activities.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', data: response });
             })
@@ -41,7 +41,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_realTime_activities_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_realTime_activities_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -54,7 +54,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_all_users.replace('{{admin}}', req.body.userScopeName).replace('{{startdate}}', req.query.startDate).replace('{{enddate}}', req.query.endDate)
+                    label: configruation.user_service_events.app_insights_event_lable.get_all_users.replace('{{admin}}', req.body.userScopeName).replace('{{startdate}}', req.query.startDate).replace('{{enddate}}', req.query.endDate).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', data: response.result });
             })
@@ -62,7 +62,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_all_users_failed.replace('{{admin}}', req.body.userScopeName).replace('{{startdate}}', req.query.startDate).replace('{{enddate}}', req.query.endDate)
+                    label: configruation.user_service_events.app_insights_event_lable.get_all_users_failed.replace('{{admin}}', req.body.userScopeName).replace('{{startdate}}', req.query.startDate).replace('{{enddate}}', req.query.endDate).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -75,7 +75,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', data: result });
             })
@@ -83,7 +83,47 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
+                });
+                res.status(200).json({ code: 400, status: 'failed', error: error.message });
+            });
+    }
+
+    getUsersActivitiesByDate(req, res) {
+        return appinsightlibs.getUsersActivitiesByDate(req.query.userEmail, req.query.startDate, req.query.endDate, req.query.pageId)
+            .then((result) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_byDate.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId).replace('{{startDate}}', req.query.startDate).replace('{{endDate}}', req.query.endDate)
+                });
+                res.status(200).json({ code: 200, status: 'success', data: result });
+            })
+            .catch((error) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_byDate_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId).replace('{{startDate}}', req.query.startDate).replace('{{endDate}}', req.query.endDate)
+                });
+                res.status(200).json({ code: 400, status: 'failed', error: error.message });
+            });
+    }
+
+    getUsersActivitiesByAction(req, res) {
+        return appinsightlibs.getUsersActivitiesByAction(req.query.userEmail, req.query.action, req.query.pageId)
+            .then((result) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_by_action.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId).replace('{{action}}', req.query.action)
+                });
+                res.status(200).json({ code: 200, status: 'success', data: result });
+            })
+            .catch((error) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_activities_by_action_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId).replace('{{action}}', req.query.action)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
@@ -95,7 +135,7 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_action_count.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_action_count.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: 'success', data: response.result });
             })
@@ -103,12 +143,31 @@ class AppInsightController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.AppInsights,
-                    label: configruation.user_service_events.app_insights_event_lable.get_user_action_count_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail)
+                    label: configruation.user_service_events.app_insights_event_lable.get_user_action_count_failed.replace('{{admin}}', req.body.userScopeName).replace('{{user}}', req.query.userEmail).replace('{{id}}', req.body.userScopeId)
+                });
+                res.status(200).json({ code: 400, status: 'failed', error: error.message });
+            });
+    }
+
+    getTodayActionwiseCount(req, res) {
+        return appinsightlibs.getTodayActionwiseCount()
+            .then((response) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_today_action_count.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
+                });
+                res.status(200).json({ code: 200, status: 'success', data: response.result });
+            })
+            .catch((error) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.user_service_events.event_action.AppInsights,
+                    label: configruation.user_service_events.app_insights_event_lable.get_today_action_count_failed.replace('{{admin}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: 'failed', error: error.message });
             });
     }
 }
-
 
 module.exports = new AppInsightController();

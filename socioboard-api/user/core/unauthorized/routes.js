@@ -42,7 +42,7 @@ const unauthorizedUserController = require('./controllers/usercontroller');
  *       phoneCode:
  *          type: string
  *          description: "To specify the user's phone code and should not be more than 10 characters."
- *          default: "NA"
+ *          default: "0"
  *       phoneNo:
  *          type: string
  *          description: "To specify the user's phone code, also which should be valid numberic characters with maximum length of 15 digits."
@@ -59,6 +59,19 @@ const unauthorizedUserController = require('./controllers/usercontroller');
  *          type: string
  *          description: "To specify about user's information."
  *          default: null
+ *     example:
+ *       userName: "socioboard"
+ *       email: "socioboard@socioboard.com"
+ *       password: "SocIo@123~"
+ *       firstName: "socio"
+ *       lastName: "board"
+ *       dateOfBirth: "1997-09-07"
+ *       profilePicture: "https://www.socioboard.com/contents/socioboard/images/Socioboard.png"
+ *       phoneCode: "+91"
+ *       phoneNo: "1324575248"
+ *       country: "India"
+ *       timeZone: "+5:30"
+ *       aboutMe: "A business person"
  * 
  *   userRewards:
  *     properties:
@@ -146,6 +159,7 @@ routes.get("/checkUserNameAvailability", unauthorizedUserController.checkUserNam
  *         description: enter email
  *         name: email
  *         type: string
+ *         example: "socioboard@socioboard.com"
  *     responses:
  *       200:
  *         description: Success
@@ -165,7 +179,7 @@ routes.get("/checkEmailAvailability", unauthorizedUserController.checkEmailAvail
  *       - application/json
  *     parameters:
  *       - name: userDetails
- *         description: User's personal, activation, rewards information
+ *         description: Provide user's personal information
  *         in: body
  *         required: true
  *         schema:
@@ -193,7 +207,7 @@ routes.put("/register", unauthorizedUserController.register);
  *       - application/json
  *     parameters:
  *       - in: body
- *         description: User's Email or username
+ *         description: Provide user’s email or username and password
  *         name: userDetails
  *         schema:
  *            type: object
@@ -222,7 +236,7 @@ routes.post("/login", unauthorizedUserController.login);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: facebook or google
+ *         description: Specify the network, either facebook or google
  *         name: network
  *         type: string
  *         default: "facebook"
@@ -254,11 +268,11 @@ routes.get("/paypal/successDetails/", unauthorizedUserController.paypalSuccess);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's email 
+ *         description: Provide user's email 
  *         name: email
  *         type: string
  *       - in: query
- *         description: email activation token
+ *         description: Provide email activation token
  *         name: activationToken
  *         type: string
  *     responses:
@@ -284,7 +298,7 @@ routes.get('/verifyEmail', unauthorizedUserController.verifyEmail);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's email 
+ *         description: Provide user's email 
  *         name: email
  *         type: string
  *     responses:
@@ -310,11 +324,11 @@ routes.get('/forgotPassword', unauthorizedUserController.forgotPassword);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's email 
+ *         description: Provied user's email 
  *         name: email
  *         type: string
  *       - in: query
- *         description: email activation token
+ *         description: Provide email activation token
  *         name: activationToken
  *         type: string
  *     responses:
@@ -340,11 +354,11 @@ routes.get('/verifyPasswordToken', unauthorizedUserController.verifyPasswordToke
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's email 
+ *         description: Provide user's email 
  *         name: email
  *         type: string
  *       - in: query
- *         description: Enter the new password
+ *         description: Enter new password
  *         name: newPassword
  *         type: string
  *     responses:
@@ -363,12 +377,12 @@ routes.post('/resetPassword', unauthorizedUserController.resetPassword);
  *   get:
  *     tags:
  *       - Open
- *     description: To get activationLink
+ *     description: To get activationLink to Mail
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: enter registered userEmail
+ *         description: Provide registered userEmail
  *         name: userEmail
  *         type: string
  *     responses:
@@ -394,11 +408,11 @@ routes.get('/twoStepLogin', unauthorizedUserController.twoStepLogin);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: csrf Value 
+ *         description: Provide csrf value 
  *         name: csrf
  *         type: string
  *       - in: query
- *         description: verification Code
+ *         description: Enter verification Code
  *         name: code
  *         type: string
  *     responses:

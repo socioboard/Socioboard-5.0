@@ -1,13 +1,13 @@
 @extends('User::dashboard.master')
 @section('title')
-    <title>SocioBoard | Dashboard</title>
+    <title>SocioBoard | Dashboardd</title>
 @endsection
 
 @section('style')
     <style>
         /*.rounded-circle{*/
-            /*height:75px;*/
-            /*width:75px;*/
+        /*height:75px;*/
+        /*width:75px;*/
         /*}*/
 
         .profile_action_dropdown .dropleft .dropdown-toggle::before {
@@ -28,7 +28,7 @@
         }
 
     </style>
-    @endsection
+@endsection
 
 
 @section('welcome')
@@ -58,21 +58,21 @@
             </div>
         </div>
         {{--<div class="col-md-3">--}}
-            {{--<div class="shadow mb-5 bg-white rounded">--}}
-                {{--<div class="card-body">--}}
-                    {{--<div>--}}
-                        {{--<h5>BoardMe</h5>--}}
-                        {{--<h2>0</h2>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
+        {{--<div class="shadow mb-5 bg-white rounded">--}}
+        {{--<div class="card-body">--}}
+        {{--<div>--}}
+        {{--<h5>BoardMe</h5>--}}
+        {{--<h2>0</h2>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
         {{--</div>--}}
         <div class="col-md-3">
             <div class="shadow mb-5 bg-white rounded">
                 <div class="card-body">
                     <div>
-                    <h5>Plan Details</h5>
-                    @if( $activation['user_plan'] == env('BASIC') )
+                        <h5>Plan Details</h5>
+                        @if( $activation['user_plan'] == env('BASIC') )
                             <h6><span style="font-size: 2rem;">Basic plan </span> <span class="badge badge-danger float-right" style="margin-top: 5px;">Upgrade
 										it !</span></h6>
                         @elseif($activation['user_plan'] == env('STANDARD'))
@@ -104,24 +104,24 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
 
 @section('social')
-{{--{{ session('FBError')}}--}}
+    {{--{{ session('FBError')}}--}}
     @if (session('FBError'))
         <h5 style="color: red;text-align: center">{{ session('FBError') }}</h5>
     @endif
 
-@if($errors->any())
-    <h5 style="color: red;text-align: center">{{$errors->first()}}</h5>
-@endif
+    @if($errors->any())
+        <h5 style="color: red;text-align: center">{{$errors->first()}}</h5>
+    @endif
 
-<h5 style="color: red;text-align: center" id="accError"></h5>
+    <h5 style="color: red;text-align: center" id="accError"></h5>
 
-{{--@if(session()->has('facebookPage'))--}}
+    {{--@if(session()->has('facebookPage'))--}}
 
     {{--<input style="display: none"  class="fbpagesession"  id="facebookPageSession">--}}
-{{--@endif--}}
+    {{--@endif--}}
 
 
 
@@ -181,41 +181,41 @@
 
         <!-- tumblr -->
         {{--<div class="col-md-4 active_account">--}}
-            {{--<div class="shadow mb-5 bg-white tumb-card rounded">--}}
-                {{--<div class="card-body">--}}
-							{{--<span class="card_social_ribbon">--}}
-								{{--<i class="fab fa-tumblr"></i>--}}
-							{{--</span>--}}
-							{{--<span class="profile_close">--}}
-								{{--<i class="fas fa-times"></i>--}}
-							{{--</span>--}}
-                    {{--<div class="text-center">--}}
-                        {{--<img class="rounded-circle" src="https://mir-s3-cdn-cf.behance.net/user/115/9cd6be10442367.5bb6f52b991c0.jpg"--}}
-                             {{--alt="ChanchalSantra">--}}
-                        {{--<h5 class="card-title no-space">Chanchal Santra</h5>--}}
-                        {{--<p class="card-text">Design is a FUNNY word !!</p>--}}
-                    {{--</div>--}}
-                    {{--<div class="row">--}}
-                        {{--<div class="col-md-6">--}}
-                            {{--<div class="text-center">--}}
-                                {{--<h5>50</h5>--}}
-                                {{--<h6>Follower</h6>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                        {{--<div class="col-md-6">--}}
-                            {{--<div class="text-center">--}}
-                                {{--<h5>50</h5>--}}
-                                {{--<h6>Following</h6>--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="card-footer bg-transparent">--}}
-                    {{--<a href="#" class="btn btn-primary col-md-12">View Feeds</a>--}}
-                    {{--<a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a>--}}
-                    {{--<a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a>--}}
-                {{--</div>--}}
-            {{--</div>--}}
+        {{--<div class="shadow mb-5 bg-white tumb-card rounded">--}}
+        {{--<div class="card-body">--}}
+        {{--<span class="card_social_ribbon">--}}
+        {{--<i class="fab fa-tumblr"></i>--}}
+        {{--</span>--}}
+        {{--<span class="profile_close">--}}
+        {{--<i class="fas fa-times"></i>--}}
+        {{--</span>--}}
+        {{--<div class="text-center">--}}
+        {{--<img class="rounded-circle" src="https://mir-s3-cdn-cf.behance.net/user/115/9cd6be10442367.5bb6f52b991c0.jpg"--}}
+        {{--alt="ChanchalSantra">--}}
+        {{--<h5 class="card-title no-space">Chanchal Santra</h5>--}}
+        {{--<p class="card-text">Design is a FUNNY word !!</p>--}}
+        {{--</div>--}}
+        {{--<div class="row">--}}
+        {{--<div class="col-md-6">--}}
+        {{--<div class="text-center">--}}
+        {{--<h5>50</h5>--}}
+        {{--<h6>Follower</h6>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="col-md-6">--}}
+        {{--<div class="text-center">--}}
+        {{--<h5>50</h5>--}}
+        {{--<h6>Following</h6>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="card-footer bg-transparent">--}}
+        {{--<a href="#" class="btn btn-primary col-md-12">View Feeds</a>--}}
+        {{--<a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a>--}}
+        {{--<a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a>--}}
+        {{--</div>--}}
+        {{--</div>--}}
         {{--</div>--}}
         <!-- Google plus -->
 
@@ -224,41 +224,41 @@
         <!-- Google Analytics -->
 
     </div>
-    @endsection
+@endsection
 
 
 {{--@section('nav')--}}
-    {{--<ul class="navbar-nav">--}}
-        {{--<li class="nav-item dropdown">--}}
-            {{--<a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="teamNavbarDropdown" role="button"--}}
-               {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                {{--<i class="fas fa-chalkboard-teacher text-primary" data-toggle="tooltip" data-placement="bottom" title="Teams"></i>--}}
-            {{--</a>--}}
-            {{--@if(session()->has('team'))--}}
+{{--<ul class="navbar-nav">--}}
+{{--<li class="nav-item dropdown">--}}
+{{--<a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="teamNavbarDropdown" role="button"--}}
+{{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+{{--<i class="fas fa-chalkboard-teacher text-primary" data-toggle="tooltip" data-placement="bottom" title="Teams"></i>--}}
+{{--</a>--}}
+{{--@if(session()->has('team'))--}}
 
-                {{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
-                    {{--@for ($i = 0; $i < count(session()->get('team')['teamSocialAccountDetails']); $i++)--}}
-                            {{--<a class="dropdown-item"  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>--}}
+{{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
+{{--@for ($i = 0; $i < count(session()->get('team')['teamSocialAccountDetails']); $i++)--}}
+{{--<a class="dropdown-item"  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>--}}
 
-                    {{--@endfor--}}
-                        {{--<div class="dropdown-divider"></div>--}}
-                        {{--<a class="dropdown-item" href="{{env('APP_URL')}}acceptnvitation">Accept Invitation</a>--}}
-                        {{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team/{{session()->get('currentTeam')['team_id']}}" id="">View Team</a>--}}
-                        {{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
+{{--@endfor--}}
+{{--<div class="dropdown-divider"></div>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}acceptnvitation">Accept Invitation</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team/{{session()->get('currentTeam')['team_id']}}" id="">View Team</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
 
-                {{--</div>--}}
-            {{--@else--}}
-                {{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
-                    {{--<a class="dropdown-item active" href="#">SocioBoard</a>--}}
-                    {{--<div class="dropdown-divider"></div>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team?id=">View Team</a>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
-                {{--</div>--}}
-            {{--@endif--}}
-        {{--</li>--}}
-    {{--</ul>--}}
-    {{--@endsection--}}
+{{--</div>--}}
+{{--@else--}}
+{{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
+{{--<a class="dropdown-item active" href="#">SocioBoard</a>--}}
+{{--<div class="dropdown-divider"></div>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team?id=">View Team</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
+{{--</div>--}}
+{{--@endif--}}
+{{--</li>--}}
+{{--</ul>--}}
+{{--@endsection--}}
 
 @section('addaccountModal')
     <div class="modal fade addFacebookPageModal" id="addProfileModal" tabindex="-1" role="dialog" aria-labelledby="addProfileModalLabel"
@@ -268,7 +268,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="addProfileModalLabel">Adding Profiles</h5>
                     <button id="closeModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true" id="close-add-profile-modal">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -286,24 +286,24 @@
                                aria-controls="pills-instagram" aria-selected="false"><i class="fab fa-instagram"></i></a>
                         </li>
                         {{--<li class="nav-item">--}}
-                            {{--<a class="nav-link" id="pills-linkedin-tab" data-toggle="pill" href="#pills-linkedin" role="tab" aria-controls="pills-linkedin"--}}
-                               {{--aria-selected="false"><i class="fab fa-linkedin-in"></i></a>--}}
+                        {{--<a class="nav-link" id="pills-linkedin-tab" data-toggle="pill" href="#pills-linkedin" role="tab" aria-controls="pills-linkedin"--}}
+                        {{--aria-selected="false"><i class="fab fa-linkedin-in"></i></a>--}}
                         {{--</li>--}}
                         {{--<li class="nav-item">--}}
-                            {{--<a class="nav-link" id="pills-tumblr-tab" data-toggle="pill" href="#pills-tumblr" role="tab" aria-controls="pills-tumblr"--}}
-                               {{--aria-selected="false"><i class="fab fa-tumblr"></i></a>--}}
+                        {{--<a class="nav-link" id="pills-tumblr-tab" data-toggle="pill" href="#pills-tumblr" role="tab" aria-controls="pills-tumblr"--}}
+                        {{--aria-selected="false"><i class="fab fa-tumblr"></i></a>--}}
                         {{--</li>--}}
                         {{--<li class="nav-item">--}}
-                            {{--<a class="nav-link" id="pills-google-tab" data-toggle="pill" href="#pills-google" role="tab" aria-controls="pills-google"--}}
-                               {{--aria-selected="false"><i class="fab fa-google-plus-g"></i></a>--}}
+                        {{--<a class="nav-link" id="pills-google-tab" data-toggle="pill" href="#pills-google" role="tab" aria-controls="pills-google"--}}
+                        {{--aria-selected="false"><i class="fab fa-google-plus-g"></i></a>--}}
                         {{--</li>--}}
                         <li class="nav-item">
                             <a class="nav-link" id="pills-youtube-tab" data-toggle="pill" href="#pills-youtube" role="tab" aria-controls="pills-youtube"
                                aria-selected="false"><i class="fab fa-youtube"></i></a>
                         </li>
                         {{--<li class="nav-item">--}}
-                            {{--<a class="nav-link" id="pills-google-analytics-tab" data-toggle="pill" href="#pills-google-analytics" role="tab"--}}
-                               {{--aria-controls="pills-google-analytics" aria-selected="false"><i class="fas fa-chart-line"></i></a>--}}
+                        {{--<a class="nav-link" id="pills-google-analytics-tab" data-toggle="pill" href="#pills-google-analytics" role="tab"--}}
+                        {{--aria-controls="pills-google-analytics" aria-selected="false"><i class="fas fa-chart-line"></i></a>--}}
                         {{--</li>--}}
                         <li class="nav-item">
                             <a class="nav-link" id="pills-pinterest-tab" data-toggle="pill" href="#pills-pinterest"
@@ -324,40 +324,40 @@
 
                             @if($fbpcount == 1)
 
-                            <div class="card margin-top-10 fb_page_div">
-                                <div class="card-body bg-white">
-                                    <h6><b>Choose Facebook Pages To Connect</b></h6>
-                                    <div class="fb_page_scroll">
-                                        <ul class="list-group">
+                                <div class="card margin-top-10 fb_page_div">
+                                    <div class="card-body bg-white">
+                                        <h6><b>Choose Facebook Pages To Connect</b></h6>
+                                        <div class="fb_page_scroll">
+                                            <ul class="list-group">
 
-                                            <li class="list-group-item page_list">
+                                                <li class="list-group-item page_list">
 
                                                     @for($i=0; $i<count(session()->get('facebookPage')); $i++)
-                                                    <div class="media">
-                                                        <img class="mr-3 pp_50 rounded-circle" src="{{session()->get('facebookPage')[$i]->profilePicture}}" alt="page title">
-                                                        <div class="media-body">
+                                                        <div class="media">
+                                                            <img class="mr-3 pp_50 rounded-circle" src="{{session()->get('facebookPage')[$i]->profilePicture}}" alt="page title">
+                                                            <div class="media-body">
 															<span class="float-right badge badge-secondary">
 																<div class="custom-control custom-checkbox" id="checkboxes">
                                                                     <input type="checkbox" class="custom-control-input" id="{{session()->get('facebookPage')[$i]->pageId}}" name="{{session()->get('facebookPage')[$i]->pageName}}">
                                                                     <label class="custom-control-label" for="{{session()->get('facebookPage')[$i]->pageId}}"><span style="display: flex; margin-top: 6px;">Add</span></label>
                                                                 </div>
 															</span>
-                                                            <h5 class="mt-2 mb-0 page_name">{{session()->get('facebookPage')[$i]->pageName}}</h5>
-                                                            <b style="font-size: 12px;">Follower:</b> {{session()->get('facebookPage')[$i]->fanCount}}
+                                                                <h5 class="mt-2 mb-0 page_name">{{session()->get('facebookPage')[$i]->pageName}}</h5>
+                                                                <b style="font-size: 12px;">Follower:</b> {{session()->get('facebookPage')[$i]->fanCount}}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                @endfor
+                                                    @endfor
 
 
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="">
-                                        <p class="float-left">&nbsp;</p>
-                                        <button type="button" id="checkedPages" class="btn btn-fb btn-sm margin-top-10 float-right">Add <i class="far fa-plus-square"></i></button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="">
+                                            <p class="float-left">&nbsp;</p>
+                                            <button type="button" id="checkedPages" class="btn btn-fb btn-sm margin-top-10 float-right">Add <i class="far fa-plus-square"></i></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             @endif
 
@@ -365,7 +365,7 @@
                         <div class="tab-pane fade" id="pills-twitter" role="tabpanel" aria-labelledby="pills-twitter-tab">
                             <div class="text-center">
                                 <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
-                            <a href="{{env('APP_URL')}}twitter/{{$currentTeam['team_id']}}">    <button class="btn btn-sm btn-twt">Add a Twitter Profile</button></a>
+                                <a href="{{env('APP_URL')}}twitter/{{$currentTeam['team_id']}}">    <button class="btn btn-sm btn-twt">Add a Twitter Profile</button></a>
                                 <div class="form-group custom-control custom-checkbox margin-top-10">
                                     <input type="checkbox" class="custom-control-input" id="Remember_check" checked="">
                                     <label class="custom-control-label text-gray-light" for="Remember_check">Follow Socioboard on twitter for
@@ -447,18 +447,18 @@
 
                                                     @for($i=0; $i<count(session()->get('linkedCompany')); $i++)
                                                         @if(session()->get('linkedCompany')[$i]->isAlreadyAdded != true)
-                                                        <div class="media">
-                                                            <img class="mr-3 pp_50 rounded-circle" src="{{session()->get('linkedCompany')[$i]->profileUrl}}" alt="page title">
-                                                            <div class="media-body">
+                                                            <div class="media">
+                                                                <img class="mr-3 pp_50 rounded-circle" src="{{session()->get('linkedCompany')[$i]->profileUrl}}" alt="page title">
+                                                                <div class="media-body">
 															<span class="float-right badge badge-secondary">
 																<div class="custom-control custom-checkbox" id="linkedincheckboxes">
                                                                     <input type="checkbox" class="custom-control-input" id="{{session()->get('linkedCompany')[$i]->companyId}}" name="{{session()->get('linkedCompany')[$i]->companyName}}">
                                                                     <label class="custom-control-label" for="{{session()->get('linkedCompany')[$i]->companyId}}"><span style="display: flex; margin-top: 6px;">Add</span></label>
                                                                 </div>
 															</span>
-                                                                <h5 class="mt-2 mb-0 page_name">{{session()->get('linkedCompany')[$i]->companyName}}</h5>
+                                                                    <h5 class="mt-2 mb-0 page_name">{{session()->get('linkedCompany')[$i]->companyName}}</h5>
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                         @endif
                                                     @endfor
                                                 </li>
@@ -473,17 +473,17 @@
                             @endif
                         </div>
                         {{--<div class="tab-pane fade" id="pills-tumblr" role="tabpanel" aria-labelledby="pills-tumblr-tab">--}}
-                            {{--<div class="text-center">--}}
-                                {{--<p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr--}}
-                                    {{--website.</p>--}}
-                                {{--<button type="button" class="btn btn-tumb btn-sm">Add a Tumblr Profile</button>--}}
-                            {{--</div>--}}
+                        {{--<div class="text-center">--}}
+                        {{--<p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr--}}
+                        {{--website.</p>--}}
+                        {{--<button type="button" class="btn btn-tumb btn-sm">Add a Tumblr Profile</button>--}}
+                        {{--</div>--}}
                         {{--</div>--}}
                         {{--<div class="tab-pane fade" id="pills-google" role="tabpanel" aria-labelledby="pills-google-tab">--}}
-                            {{--<div class="text-center">--}}
-                                {{--<p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website.</p>--}}
-                             {{--<a href="{{env('APP_URL')}}googleAdd/{{$currentTeam['team_id']}}">   <button type="button" class="btn btn-google btn-sm">Add a Google+ Profile</button></a>--}}
-                            {{--</div>--}}
+                        {{--<div class="text-center">--}}
+                        {{--<p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website.</p>--}}
+                        {{--<a href="{{env('APP_URL')}}googleAdd/{{$currentTeam['team_id']}}">   <button type="button" class="btn btn-google btn-sm">Add a Google+ Profile</button></a>--}}
+                        {{--</div>--}}
                         {{--</div>--}}
                         <div class="tab-pane fade" id="pills-youtube" role="tabpanel" aria-labelledby="pills-youtube-tab">
                             <div class="text-center">
@@ -604,8 +604,9 @@
     </div>
 
     <input style="display:none" id="teamId" value="{{$currentTeam['team_id']}}">
+    @include('User::dashboard.incModalPost')
 
-    <!-- post modal -->
+            <!-- post modal -->
     <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -622,8 +623,12 @@
                         <div class="form-group">
 								<textarea name="message" class="form-control border border-light" id="normal_post_area" rows="3"
                                           placeholder="Write something !" ></textarea>
-                            <p id="messageError" style="color: red" ></p>
                         </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control border border-light" name="link" id="outgoing_link" placeholder="Enter outgoing link">
+                        </div>
+                        <p id="messageError" style="color: red" ></p>
+
                         <!-- image and video upload -->
                         <div class="row">
                             <div class="col-12" id="option_upload">
@@ -650,11 +655,11 @@
                             <div class="col-12" id="hint_brand">
                                 <ul id="media-list" class="clearfix">
                                     <li class="myupload">
-											{{--<span>--}}
-												{{--<i class="fa fa-plus" aria-hidden="true"></i>--}}
-												{{--<input type="file" click-type="type2" id="picupload" class="picupload"--}}
-                                                       {{--multiple>--}}
-											{{--</span>--}}
+                                        {{--<span>--}}
+                                        {{--<i class="fa fa-plus" aria-hidden="true"></i>--}}
+                                        {{--<input type="file" click-type="type2" id="picupload" class="picupload"--}}
+                                        {{--multiple>--}}
+                                        {{--</span>--}}
                                     </li>
                                 </ul>
                             </div>
@@ -664,7 +669,7 @@
                         <!-- user or pages add list -->
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-fb btn-sm all_social_btn">Add Accounts</button>
+                                <button type="button" id="add-account-for-publish" class="btn btn-fb btn-sm all_social_btn">Add Accounts</button>
                                 <div class="all_social_div">
                                     <div>
                                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -681,24 +686,24 @@
                                                             class="fab fa-twitter"></i></a>
                                             </li>
                                             {{--<li class="nav-item">--}}
-                                                {{--<a class="nav-link" id="pills-linkedin-profile-tab"--}}
-                                                   {{--data-toggle="pill" href="#pills-linkedin-profile" role="tab"--}}
-                                                   {{--aria-controls="pills-linkedin-profile" aria-selected="false"><i--}}
-                                                            {{--class="fab fa-linkedin-in"></i></a>--}}
+                                            {{--<a class="nav-link" id="pills-linkedin-profile-tab"--}}
+                                            {{--data-toggle="pill" href="#pills-linkedin-profile" role="tab"--}}
+                                            {{--aria-controls="pills-linkedin-profile" aria-selected="false"><i--}}
+                                            {{--class="fab fa-linkedin-in"></i></a>--}}
                                             {{--</li>--}}
                                             {{--<li class="nav-item">--}}
-                                                {{--<a class="nav-link" id="pills-insta-profile-tab"--}}
-                                                   {{--data-toggle="pill" href="#pills-insta-profile" role="tab"--}}
-                                                   {{--aria-controls="pills-insta-profile" aria-selected="false"><i--}}
-                                                            {{--class="fab fa-linkedin-in"></i></a>--}}
+                                            {{--<a class="nav-link" id="pills-insta-profile-tab"--}}
+                                            {{--data-toggle="pill" href="#pills-insta-profile" role="tab"--}}
+                                            {{--aria-controls="pills-insta-profile" aria-selected="false"><i--}}
+                                            {{--class="fab fa-linkedin-in"></i></a>--}}
                                             {{--</li>--}}
 
-                                            {{--<li class="nav-item">--}}
-                                                {{--<a class="nav-link" id="pills-pinterest-profile-tab"--}}
-                                                   {{--data-toggle="pill" href="#pills-pinterest-profile" role="tab"--}}
-                                                   {{--aria-controls="pills-pinterest-profile" aria-selected="false"><i--}}
-                                                            {{--class="fab fa-pinterest-p"></i></a>--}}
-                                            {{--</li>--}}
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-pinterest-profile-tab"
+                                                   data-toggle="pill" href="#pills-pinterest-profile" role="tab"
+                                                   aria-controls="pills-pinterest-profile" aria-selected="false"><i
+                                                            class="fab fa-pinterest-p"></i></a>
+                                            </li>
                                         </ul>
                                         <div class="tab-content" id="pills-tabContent">
                                             <div class="tab-pane fade show active" id="pills-facebook-profile"
@@ -710,7 +715,7 @@
                                                             <ul class="list-group">
                                                                 @for($i=0;$i<count($socialAccount);$i++)
                                                                     @if( $socialAccount[$i]->account_type == env('FACEBOOKPAGE'))
-                                                                    @if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
+                                                                        @if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
                                                                             <li class="list-group-item page_list">
                                                                                 <div class="media">
                                                                                     <img class="mr-3 pp_50 rounded-circle"  src="{{$socialAccount[$i]->profile_pic_url}}"  alt="page title">
@@ -820,257 +825,92 @@
                                                  aria-labelledby="pills-pinterest-profile-tab">
                                                 <div class="card margin-top-10">
                                                     <div class="card-body bg-white p-2">
-                                                        <h6><b>Choose Pinterest Profile for posting</b></h6>
+                                                        <h6><b>Choose Pinterest boards for posting</b></h6>
                                                         <div class="accordion" id="accordionExample">
-                                                            <div class="card border-0">
-                                                                <div class="card-header bg-danger text-white p-1 m-0"
-                                                                     id="headingOne" style="cursor: pointer;">
-                                                                    <div data-toggle="collapse"
-                                                                         data-target="#profile_pin_1"
-                                                                         aria-expanded="true"
-                                                                         aria-controls="profile_pin_1">
-                                                                        <div class="media">
-                                                                            <img src="../assets/imgs/bydefault.png"
-                                                                                 class="mr-3 pp_50 rounded-circle"
-                                                                                 alt="avatar">
-                                                                            <div class="media-body">
-                                                                                <h5 class="mt-0 mb-0">Chanchal</h5>
-                                                                                <span>2</span> boards
+                                                            @for($i=0;$i<count($socialAccount);$i++)
+                                                                @if( $socialAccount[$i]->account_type == env('PINTEREST'))
+                                                                    @if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
+                                                                        <div class="card border-0">
+                                                                            <div class="card-header bg-danger text-white p-1 m-0"
+                                                                                 id="headingOne" style="cursor: pointer;">
+                                                                                <div data-toggle="collapse"
+                                                                                     data-target="#profile_pin_1"
+                                                                                     aria-expanded="true"
+                                                                                     aria-controls="profile_pin_1">
+                                                                                    <div class="media">
+                                                                                        <img src="{{$socialAccount[$i]->profile_pic_url}}"
+                                                                                             class="mr-3 pp_50 rounded-circle"
+                                                                                             alt="avatar">
+                                                                                        <div class="media-body">
+                                                                                            <h5 class="mt-0 mb-0">{{$socialAccount[$i]->first_name}}</h5>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
+                                                                            @if($i == 0)
+                                                                                <div id="profile_pin_1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                                    @else
+                                                                                        <div id="profile_pin_1" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                                                            @endif
+
+                                                                                            <div class="card-body p-2">
+                                                                                                <ul class="list-group">
+                                                                                                    @for($j=0;$j<count($pinterestBoards);$j++)
+
+                                                                                                        @if($pinterestBoards[$j]->account_id == $socialAccount[$i]->account_id)
+
+                                                                                                            @for($l=0;$l<count($pinterestBoards[$j]->boards);$l++)
+                                                                                                                <li class="list-group-item page_list">
+                                                                                                                    <div class="media">
+                                                                                                                        {{--<img class="mr-3 pp_50 rounded-circle"--}}
+                                                                                                                        {{--src="{{$pinterestBoards[$j]->boards[$l]->board_url}}"--}}
+                                                                                                                        {{--alt="page title">--}}
+                                                                                                                        <div class="media-body">
+                                                                                                                <span class="float-right badge badge-light">
+                                                                                                                    <div class="custom-control custom-checkbox" id="boardsCheckbox">
+                                                                                                                        <input type="checkbox" class="custom-control-input" id="{{$pinterestBoards[$j]->account_id}}_{{$pinterestBoards[$j]->boards[$l]->board_id}}" name="{{$pinterestBoards[$j]->account_id}}_{{$pinterestBoards[$j]->boards[$l]->board_id}}">
+                                                                                                                        <label class="custom-control-label" for="{{$pinterestBoards[$j]->account_id}}_{{$pinterestBoards[$j]->boards[$l]->board_id}}">
+                                                                                                                            <span style="display: flex; margin-top: 6px;">Add</span>
+                                                                                                                        </label>
+                                                                                                                    </div>
+                                                                                                                </span>
+                                                                                                                            <h5 class="mt-2 mb-0 page_name">{{$pinterestBoards[$j]->boards[$l]->board_name}}</h5>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </li>
+                                                                                                            @endfor
+                                                                                                        @endif
+                                                                                                    @endfor
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                </div>
+                                                                            @endif
+                                                                            @endif
+                                                                            @endfor
+
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="profile_pin_1" class="collapse show"
-                                                                     aria-labelledby="headingOne"
-                                                                     data-parent="#accordionExample">
-                                                                    <div class="card-body p-2">
-                                                                        <ul class="list-group">
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_1">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_1"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_2">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_2"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_3">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_3"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card border-0">
-                                                                <div class="card-header bg-danger text-white p-1 m-0"
-                                                                     id="headingTwo" style="cursor: pointer;">
-                                                                    <div data-toggle="collapse"
-                                                                         data-target="#profile_pin_2"
-                                                                         aria-expanded="true"
-                                                                         aria-controls="profile_pin_2">
-                                                                        <div class="media">
-                                                                            <img src="../assets/imgs/bydefault.png"
-                                                                                 class="mr-3 pp_50 rounded-circle"
-                                                                                 alt="avatar">
-                                                                            <div class="media-body">
-                                                                                <h5 class="mt-0 mb-0">Socioboard
-                                                                                </h5>
-                                                                                <span>3</span> boards
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="profile_pin_2" class="collapse"
-                                                                     aria-labelledby="headingTwo"
-                                                                     data-parent="#accordionExample">
-                                                                    <div class="card-body p-2">
-                                                                        <ul class="list-group">
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_21">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_21"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_22">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_22"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="list-group-item page_list">
-                                                                                <div class="media">
-                                                                                    <img class="mr-3 pp_50 rounded-circle"
-                                                                                         src="../assets/imgs/64x64.jpg"
-                                                                                         alt="page title">
-                                                                                    <div class="media-body">
-																							<span
-                                                                                                    class="float-right badge badge-light">
-																								<div
-                                                                                                        class="custom-control custom-checkbox">
-                                                                                                    <input
-                                                                                                            type="checkbox"
-                                                                                                            class="custom-control-input"
-                                                                                                            id="pin_board_23">
-                                                                                                    <label
-                                                                                                            class="custom-control-label"
-                                                                                                            for="pin_board_23"><span
-                                                                                                                style="display: flex; margin-top: 6px;">Add</span></label>
-                                                                                                </div>
-																							</span>
-                                                                                        <h5
-                                                                                                class="mt-2 mb-0 page_name">
-                                                                                            board name one</h5>
-                                                                                        <b
-                                                                                                style="font-size: 12px;">pin:</b>
-                                                                                        14
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                      <div class="float-right">
-                            {{--<button type="button" onclick="post(0)" class="btn btn-secondary"><i id="draftspinstyle" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="draftspin">Draft</span></button>--}}
-                            <button type="button" onclick="post(1)" class="btn btn-primary"><i id="test" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="testText">Post</span></button>
-                </div>
-                    </form>
+                            <div class="float-right">
+                                <button type="button" onclick="post(0)" class="btn btn-secondary"><i id="draftspinstyle" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="draftspin">Draft</span></button>
+                                <button type="button" onclick="post(1)" class="btn btn-primary"><i id="test" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="testText">Post</span></button>
+                            </div>
+                        </div></form>
                 </div>
 
             </div>
         </div>
     </div>
+
     <div class="">
         <button type="button" class="btn btn-primary btn-lg shadow post_floating_btn" data-toggle="modal" data-target="#postModal">
             <i class="fas fa-pencil-ruler" style="margin-top: 8px;"></i>
@@ -1081,20 +921,22 @@
 @section('script')
 
     <script>
+        //for GA
+        var eventCategory = 'User';
+        var eventAction = 'Dashboard('+'{{$currentTeam['team_name']}}'+')';
+
         var teamid = $('#teamId').val();
-        //        var currentDiv = "";
         var delAccountId = "";
         var $lnc = 0;
         var fbp = 0;
         var yc = 0;
-
         var ga = 0;
         var insta =0;
-
         getNetworkOnLoad();
 
-       $ga = {{$ganalyticscount}}
 
+        //       To check if session exists for adding accounts
+        $ga = {{$ganalyticscount}}
        $lnc = {{$lnccount}}
        $fbp = {{$fbpcount}}
        $yc = {{$youtubeChannels}}
@@ -1113,23 +955,13 @@
             }else if($fbp==1){
                 $("#pills-facebook").trigger('click');
             }else if($ga==1){
-
                 $("#pills-google-analytics-tab").trigger('click');
             }
-            if($insta ===   1){
-//                alert(333);
+            if($insta === 1){
                 $("#pills-instagram-tab").trigger('click');
-
             }
         }
 
-//        function facebookpageLoad(){
-//            var fbpageSession = document.getElementById('facebookPageSession').className;
-//            if(fbpageSession !== undefined && fbpageSession == "fbpagesession" ){
-////                $("a").trigger("click");
-//                $('#addProfileModal').modal('show');
-//            }
-//        }
 
         function getNetworkOnLoad(){
             var data = '';
@@ -1142,9 +974,9 @@
             var ganalytics='';
             var facebookPage='';
             var pinterest='';
-            var teamId = $('#teamId').val();
-            var teamActive = document.getElementById(teamId);
+            var teamId = $('#teamId').val();var teamActive = document.getElementById(teamId);
             teamActive.setAttribute('class', 'dropdown-item active');
+
 
 
             $.ajax({
@@ -1161,30 +993,29 @@
                      * 500 => Something went wrong(Exception)
                      * 400 => Access denied*/
 
-                    console.log(response.data.SocialAccount);
 
                     if( response.data.SocialAccount.length === 0){
-                    //integrate a no account image if asked
+                        //integrate a no account image if asked
 
                     }else{
                         $.each(response.data.SocialAccount, function(key,value){
                             switch(value.account_type) {
                                 case 1:
                                     // code block
-                                    {{--data += '<div class="col-md-4 active_account"><div class="shadow mb-5 bg-white fb-card rounded"><div class="card-body"><span class="card_social_ribbon"><i class="fab fa-facebook-f"></i></span> <div id="profile_action_dropdown"  class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" href="#" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div><div class="text-center"><img class="rounded-circle" src="'+value.profile_pic_url+'" alt="profile picture"><h5 class="card-title no-space">'+value.first_name+'</h5><p class="card-text">'+value.email+'</p></div><div class="row text-center mt-1"><div class="col-md-6"><h5>'+value.friendship_counts+'</h5></div><div class="col-md-6"><h5>Friends</h5>  </div></div></div> <div class="card-footer bg-transparent"><a href="{{env('APP_URL')}}view-facebook-feeds/'+value.account_id+'" class="btn btn-primary col-md-12">View Feeds</a><a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a> <a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a> </div> </div></div>'--}}
-                                 if(value.join_table_teams_social_accounts.is_account_locked === false){
-                                     //do not add deactive class
-                                     data += '<div class="col-md-4 active_account "> <div class="shadow mb-5 bg-white fb-card rounded">  <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-facebook-f"></i> </span> <div  class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+ value.friendship_counts +'' +
-                                             '</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}view-facebook-feeds/'+value.account_id+' " class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+                                {{--data += '<div class="col-md-4 active_account"><div class="shadow mb-5 bg-white fb-card rounded"><div class="card-body"><span class="card_social_ribbon"><i class="fab fa-facebook-f"></i></span> <div id="profile_action_dropdown"  class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" href="#" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div><div class="text-center"><img class="rounded-circle" src="'+value.profile_pic_url+'" alt="profile picture"><h5 class="card-title no-space">'+value.first_name+'</h5><p class="card-text">'+value.email+'</p></div><div class="row text-center mt-1"><div class="col-md-6"><h5>'+value.friendship_counts+'</h5></div><div class="col-md-6"><h5>Friends</h5>  </div></div></div> <div class="card-footer bg-transparent"><a href="{{env('APP_URL')}}view-facebook-feeds/'+value.account_id+'" class="btn btn-primary col-md-12">View Feeds</a><a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a> <a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a> </div> </div></div>'--}}
+                                    if(value.join_table_teams_social_accounts.is_account_locked === false){
+                                        //do not add deactive class
+                                        data += '<div class="col-md-4 active_account "> <div class="shadow mb-5 bg-white fb-card rounded">  <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-facebook-f"></i> </span> <div  class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+ value.friendship_counts +'' +
+                                                '</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
 
-                                 }else{
-                                     data += '<div class="col-md-4 active_account "> <div class="shadow mb-5 bg-white fb-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-facebook-f"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);"><i class="fas fa-user-lock fa-fw"></i> Un-Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'' +
-                                             '</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+                                    }else{
+                                        data += '<div class="col-md-4 active_account "> <div class="shadow mb-5 bg-white fb-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-facebook-f"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);"><i class="fas fa-user-lock fa-fw"></i> Un-Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'' +
+                                                '</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
 
-                                 }
+                                    }
                                     break;
                                 case 2:
-                                    {{--facebookPage += '<div class="col-md-4 active_account"><div class="shadow mb-5 bg-white fb-card rounded"><div class="card-body"><span class="card_social_ribbon"><i class="fab fa-facebook-f"></i></span><span class="profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="fas fa-times"></i></span><div class="text-center"><img class="rounded-circle" src="'+value.profile_pic_url+'" alt="profile picture"><h5 class="card-title no-space">'+value.first_name+'</h5></div><div class="row text-center mt-1"><div class="col-md-6"><h5>'+value.friendship_counts+'</h5></div><div class="col-md-6"><h5>Followers</h5>  </div></div></div> <div class="card-footer bg-transparent"><a href="{{env('APP_URL')}}view-facebook-feeds/'+value.account_id+'" class="btn btn-primary col-md-12">View Feeds</a><a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a> <a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a> </div> </div></div>'--}}
+                                {{--facebookPage += '<div class="col-md-4 active_account"><div class="shadow mb-5 bg-white fb-card rounded"><div class="card-body"><span class="card_social_ribbon"><i class="fab fa-facebook-f"></i></span><span class="profile_close" onclick="SocialAccountDelete('+value.account_id+');"><i class="fas fa-times"></i></span><div class="text-center"><img class="rounded-circle" src="'+value.profile_pic_url+'" alt="profile picture"><h5 class="card-title no-space">'+value.first_name+'</h5></div><div class="row text-center mt-1"><div class="col-md-6"><h5>'+value.friendship_counts+'</h5></div><div class="col-md-6"><h5>Followers</h5>  </div></div></div> <div class="card-footer bg-transparent"><a href="{{env('APP_URL')}}view-facebook-feeds/'+value.account_id+'" class="btn btn-primary col-md-12">View Feeds</a><a href="#" class="btn btn-dark col-md-12 margin-top-10">Update Profile</a> <a href="#" class="btn btn-outline-dark col-md-12 margin-top-10">View Account</a> </div> </div></div>'--}}
 
                                     if(value.join_table_teams_social_accounts.is_account_locked === false){
                                         //do not add deactive class
@@ -1216,15 +1047,16 @@
 
                                     break;
                                 case 5:
-
-                                    if(value.join_table_teams_social_accounts.is_account_locked === false){
+                                    if (value.join_table_teams_social_accounts.is_account_locked === false) {
                                         //do not add deactive class
-                                        insta += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i>Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');" ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Following</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
 
-                                    }else{
-                                        insta += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);" ><i class="fas fa-user-lock fa-fw"></i> Un-Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); "><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Following</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+                                        insta += ' ' +
+                                                '<div class="col-md-4 active_account">' +
+                                                '<div class="shadow mb-5 bg-white inst-card rounded"><div class="card-body"><span class="card_social_ribbon"><i class="fab fa-instagram"></i></span><div class="profile_action_dropdown dropleft"><span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><i class="fas fa-chevron-down"></i></span><div class="dropdown-menu" aria-labelledby="profile_drop"><a class="dropdown-item" onclick="lock(' + value.account_id + ',1);" ><i class="fas fa-user-lock fa-fw"></i>Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete(' + value.account_id + ');" ><i class="far fa-trash-alt fa-fw"></i>Delete this account</a ></div></div><div class="text-center"><img class="rounded-circle card-avatar" src="' + value.profile_pic_url + '" alt="profile picture" /> <h5 class="card-title no-space">' + value.first_name + '</h5><p class="card-text">' + value.email + '</p></div><div class="row text-center mt-1"><div class="col-md-6"> <h5>' + value.friendship_counts + '</h5></div> <div class="col-md-6"> <h5>Following</h5></div></div></div><div class="card-footer bg-transparent"><a href="{{env('APP_URL')}}view-instagram-feeds/' + value.account_id + '" class="btn btn-primary col-md-12">View Feeds</a></div></div></div>'
+                                    } else {
+                                        insta += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock(' + value.account_id + ',0);" ><i class="fas fa-user-lock fa-fw"></i> Un-Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete(' + value.account_id + '); "><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="' + value.profile_pic_url + '" alt="profile picture" /> <h5 class="card-title no-space">' + value.first_name + '</h5> <p class="card-text">' + value.email + '</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>' + value.friendship_counts + '</h5></div> <div class="col-md-6"> <h5>Following</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+
                                     }
-
                                     break;
                                 case 6:
                                     if(value.join_table_teams_social_accounts.is_account_locked === false){
@@ -1274,10 +1106,10 @@
                                 case 11:
                                     if(value.join_table_teams_social_accounts.is_account_locked === false){
                                         //do not add deactive class
-                                        pinterest += '  <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white pin-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-pinterest-p"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); " ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture"/> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"> <div class="col-md-6">  <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Boards</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}report/'+value.account_id+'/'+value.account_type+'" class="btn btn-primary col-md-12" class="btn btn-primary col-md-12">View Feeds</a> </div> </div> </div>'
+                                        pinterest += '  <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white pin-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-pinterest-p"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i> Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); " ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture"/> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"> <div class="col-md-6">  <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}view-pinterest-feeds/'+value.account_id+'" class="btn btn-primary col-md-12" class="btn btn-primary col-md-12">View Feeds</a> </div> </div> </div>'
 
                                     }else{
-                                        pinterest += '   <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white pin-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-pinterest-p"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);" ><i class="fas fa-user-lock fa-fw"></i> Un- Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); " ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture"/> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"> <div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Boards</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" class="btn btn-primary col-md-12">View Feeds</a> </div> </div> </div>'
+                                        pinterest += '   <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white pin-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-pinterest-p"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);" ><i class="fas fa-user-lock fa-fw"></i> Un- Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); " ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture"/> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"> <div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Friends</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}view-pinterest-feeds/'+value.account_id+'" class="btn btn-primary col-md-12" class="btn btn-primary col-md-12">View Feeds</a> </div> </div> </div>'
                                     }
 
 
@@ -1285,14 +1117,20 @@
                                 case 12:
                                     if(value.join_table_teams_social_accounts.is_account_locked === false){
                                         //do not add deactive class
-                                        instaB += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i>Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');" ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Follower</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}get-feeds/'+value.account_id+'/'+value.account_type+'" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+//                                        alert(value.profile_pic_url);
+                                        if(value.profile_pic_url === ""){
+                                            instaB += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i>Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');" ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Follower</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}get-feeds/'+value.account_id+'/'+value.account_type+'" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+
+                                        }else{
+                                            instaB += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card-body"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',1);" ><i class="fas fa-user-lock fa-fw"></i>Lock this account</a > <a class="dropdown-item profile_close" onclick="SocialAccountDelete('+value.account_id+');" ><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Follower</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="{{env('APP_URL')}}get-feeds/'+value.account_id+'/'+value.account_type+'" class="btn btn-primary col-md-12" >View Feeds</a > </div> </div> </div>'
+                                        }
 
                                     }else{
                                         instaB += ' <div class="col-md-4 active_account"> <div class="shadow mb-5 bg-white inst-card rounded"> <div class="card_deactivate"> <span class="card_social_ribbon"> <i class="fab fa-instagram"></i> </span> <div class="profile_action_dropdown dropleft"> <span class="dropdown-toggle" id="profile_drop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <i class="fas fa-chevron-down"></i> </span> <div class="dropdown-menu" aria-labelledby="profile_drop"> <a class="dropdown-item" onclick="lock('+value.account_id+',0);" ><i class="fas fa-user-lock fa-fw"></i> Un-Lock this account</a > <a class="dropdown-item profile_close" onclick=" SocialAccountDelete('+value.account_id+'); "><i class="far fa-trash-alt fa-fw"></i> Delete this account</a > </div> </div> <div class="text-center"> <img class="rounded-circle card-avatar" src="'+value.profile_pic_url+'" alt="profile picture" /> <h5 class="card-title no-space">'+value.first_name+'</h5> <p class="card-text">'+value.email+'</p> </div> <div class="row text-center mt-1"><div class="col-md-6"> <h5>'+value.friendship_counts+'</h5></div> <div class="col-md-6"> <h5>Follower</h5> </div> </div> </div> <div class="card-footer bg-transparent"> <a href="#" class="btn btn-primary col-md-12" >View Report</a > </div> </div> </div>'
                                     }
 
                                 default:
-                                // code block
+                                    // code block
                                     break;
                             }
 
@@ -1344,6 +1182,13 @@
                             timer: 1500
                         });
                         document.location.href = '{{env('APP_URL')}}dashboard/'+teamid;
+                    }else if(response.code == 400){
+                        swal({
+                            text: response.message,
+                            type:"warning",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                     }else{
                         swal({
                             text: "Sorry, Not able to process account deletion currently",
@@ -1365,7 +1210,6 @@
             $('#linkedincheckboxes input:checked').each(function() {
                 selectedCom.push($(this).attr('name'));
             });
-            console.log(selectedCom);
 
             $.ajax({
                 url: "/linkedInCompany",
@@ -1377,7 +1221,6 @@
                 beforeSend:function(){
                 },
                 success: function (response) {
-                    console.log(response);
                     /*200=>success account added
                      * 400 => access denied
                      * 500 =>exception*/
@@ -1409,7 +1252,6 @@
             $('#Analyticscheckboxes input:checked').each(function() {
                 selectedAna.push($(this).attr('name'));
             });
-            console.log(selectedAna);
 
             $.ajax({
                 url: "/googleAnalyticsAccount",
@@ -1421,7 +1263,6 @@
                 beforeSend:function(){
                 },
                 success: function (response) {
-                    console.log(response);
                     /*200=>success account added
                      * 400 => access denied
                      * 500 =>exception*/
@@ -1453,7 +1294,6 @@
             $('#channelCheckboxes input:checked').each(function() {
                 selectedChannels.push($(this).attr('name'));
             });
-            console.log(selectedChannels);
 
             $.ajax({
                 url: "/youtubeChannels",
@@ -1465,7 +1305,6 @@
                 beforeSend:function(){
                 },
                 success: function (response) {
-                    console.log(response);
                     /*200=>success account added
                      * 400 => access denied
                      * 500 =>exception*/
@@ -1500,7 +1339,6 @@
             $('#InstaBusinesscheckboxes input:checked').each(function() {
                 selected.push($(this).attr('name'));
             });
-            console.log(selected);
 
             var teamId = $('#teamId').val();
 
@@ -1514,7 +1352,6 @@
                 beforeSend:function(){
                 },
                 success: function (response) {
-                    console.log(response);
 
                     /*200=>success account added
                      * 400 => access denied
@@ -1546,6 +1383,19 @@
         });
 
 
+        //       Ajax for clearing profile session
+        $('#close-add-profile-modal').click(function(){
+
+            $.ajax({
+                url: "/clear-add-profile-session",
+                type: 'GET',
+                beforeSend:function(){
+                },
+                success: function (response) {
+
+                }
+            })
+        });
         $(document).ready(function(){
 
             $( "#checkedPages").click(function() {
@@ -1553,7 +1403,6 @@
                 $('#checkboxes input:checked').each(function() {
                     selected.push($(this).attr('name'));
                 });
-                console.log(selected);
 
                 var teamId = $('#teamId').val();
 
@@ -1567,7 +1416,6 @@
                     beforeSend:function(){
                     },
                     success: function (response) {
-                        console.log(response);
                         /*200=>success account added
                          * 400 => access denied
                          * 500 =>exception*/
@@ -1577,7 +1425,7 @@
                             $('#addProfileModal').modal('hide')
 
                             swal({
-                           text: response.message,
+                                text: response.message,
                                 icon: "warning",
                                 buttons: true,
                                 dangerMode: true,});
@@ -1598,345 +1446,182 @@
 
         });
 
-
-
     </script>
-    {{--<script>--}}
-
-        {{--var userId = $('#userID').val();--}}
-        {{--var team = $('#teamSocket').val();--}}
-        {{--console.log("team")--}}
-        {{--console.log(team);--}}
-        {{--socket.on('connect', () => {--}}
-            {{--console.log("User has been Connected..");--}}
-            {{--console.log(userId);--}}
-            {{--console.log(team);--}}
-{{--//        console.log(socket.id);--}}
-            {{--var details = {--}}
-                {{--userId: userId,--}}
-                {{--teamIds: team--}}
-            {{--};--}}
-            {{--socket.emit('subscribe', details);--}}
-        {{--});--}}
-    {{--</script>--}}
 
 
-{{--post modal script--}}
-<script>
+    {{--post modal script--}}
+    <script>
 
-    // button loader
-//    (function ($) {
-//        $.fn.buttonLoader = function (action) {
-//            var self = $(this);
-//            //start loading animation
-//            if (action == 'start') {
-//                if ($(self).attr("disabled") == "disabled") {
-//                    e.preventDefault();
-//                }
-//                //disable buttons when loading state
-//                $('.has-spinner').attr("disabled", "disabled");
-//                $(self).attr('data-btn-text', $(self).text());
-//                //binding spinner element to button and changing button text
-//                $(self).html('<span class="spinner"><i class="fas fa-spinner fa-spin"></i></span> Uploading');
-//                $(self).addClass('active');
-//            }
-//            //stop loading animation
-//            if (action == 'stop') {
-//                $(self).html($(self).attr('data-btn-text'));
-//                $(self).removeClass('active');
-//                //enable buttons after finish loading
-//                $('.has-spinner').removeAttr("disabled");
-//            }
-//        }
-//    })(jQuery);
-    function post(postStatus){
-        console.log(postStatus);
-//        var btn = $(this);
-//        $(btn).buttonLoader('start');
-        var form = document.getElementById('publishForm');
 
-        var formData = new FormData(form);
-        console.log(formData);
-        var selected = [];
-        $('#checkboxes input:checked').each(function() {
-            selected.push($(this).attr('name'));
+        // normal post emoji
+
+        $("#normal_post_area").emojioneArea({
+            pickerPosition: "right",
+            tonesStyle: "bullet"
         });
-        formData.append('checked',selected);
-        formData.append('postStatus',postStatus);
 
-
-
-        $.ajax({
-            url: "/publish-data",
-            data: formData,
-            cache: false,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            beforeSend:function(){
-                $('#messageError').text("");
-
-                if(postStatus == 1){
-                    $('#test').show();
-                    $('#testText').html('Uploading');
-                }else if(postStatus == 0){
-                    $('#draftspinstyle').show();
-                    $('#draftspin').html('Uploading');
-                }
-
-            },
-        success: function (response) {
-            $('#test').hide();
-            $('#testText').html('Post');
-
-            console.log(response);
-//                document.getElementById("publishForm").reset();
-            $('#publishForm').trigger("reset");
-            $(".emojionearea-editor").text("");
-            $("#hint_brand").css("display","none");
-            $("#option_upload").css("display","block");
-            $("#test").attr("disabled", true);
-                if(response.code == 404){
-                    console.log(response.message)
-                    $('#messageError').text(response.message);
-                }else if(response.code == 400){
-                    swal(response.message);
-                }else if(response.code == 200){
-                    swal(response.message);
-                    document.getElementById("publishForm").reset();
-                    $('#postModal').modal('hide');
-                }else if(response.code == 500){
-                    console.log(response.message);
-
-                    swal("Something went wrong... Please try again after sometime")
-                    $('#postModal').modal('hide');
-
-                }
-            },
-            error:function(error){
-                console.log(error)
-            }
-        })
-    }
-
-//    $(document).on('submit','#publishForm',function(e){
-//        e.preventDefault();
-//
-//        var form = document.getElementById('publishForm');
-//
-//        var formData = new FormData(form);
-//
-//
-//
-//        var selected = [];
-//        $('#checkboxes input:checked').each(function() {
-//            selected.push($(this).attr('name'));
-//        });
-//        formData.append('checked',selected);
-//
-//
-//        $.ajax({
-//            url: "/publish-data",
-//            data: formData,
-//            cache: false,
-//            processData: false,
-//            contentType: false,
-//            type: 'POST',
-//            beforeSend:function(){
-//                $('#messageError').text("");
-//
-//            },
-//            success: function (response) {
-//                alert(1);
-//                console.log(response);
-//                return 1;
-//
-//                if(response.code == 404){
-//                    $('#messageError').text(response.message);
-//                }else if(response.code == 400){
-//                    swal(response.message);
-//                }else if(response.code == 200){
-//                    swal(response.message);
-//                }
-//            },
-//            error:function(error){
-//                console.log(error)
-//            }
-//        })
-//    });
-    // normal post emoji
-
-    $("#normal_post_area").emojioneArea({
-        pickerPosition: "right",
-        tonesStyle: "bullet"
-    });
-
-    // all social list div open
-    $('.all_social_div').css({
-        'display': 'none'
-    });
-    $('.all_social_btn').click(function () {
+        // all social list div open
         $('.all_social_div').css({
-            'display': 'block'
-        });
-        $('.all_social_btn').css({
             'display': 'none'
         });
-    });
-    //    images and videos upload
-    $(function () {
-        var names = [];
-        $('#hint_brand').css("display", "none");
-        $('body').on('change', '.picupload', function (event) {
+        $('.all_social_btn').click(function () {
+            $('.all_social_div').css({
+                'display': 'block'
+            });
+            $('.all_social_btn').css({
+                'display': 'none'
+            });
+        });
+        //    images and videos upload
+        $(function () {
+            var names = [];
+            $('#hint_brand').css("display", "none");
+            $('body').on('change', '.picupload', function (event) {
 
-            var getAttr = $(this).attr('click-type');
-            var files = event.target.files;
-            var output = document.getElementById("media-list");
-            var z = 0
-            if (getAttr == 'type1') {
-                $('#media-list').html('');
-//                $('#media-list').html('<li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="type2" id="picupload" class="picupload" multiple></span></li>');
-                $('#hint_brand').css("display", "block");
-                $('#option_upload').css("display", "none");
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    names.push($(this).get(0).files[i].name);
-                    if (file.type.match('image')) {
-                        var picReader = new FileReader();
-                        picReader.fileName = file.name
-                        picReader.addEventListener("load", function (event) {
-                            var picFile = event.target;
-                            var div = document.createElement("li");
-                            div.innerHTML = "<img src='" + picFile.result + "'" +
-                                    "title='" + picFile.name + "'/><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
-                            $("#media-list").prepend(div);
-                        });
-                    } else {
-                        var picReader = new FileReader();
-                        picReader.fileName = file.name
-                        picReader.addEventListener("load", function (event) {
-                            var picFile = event.target;
-                            var div = document.createElement("li");
-                            div.innerHTML = "<video src='" + picFile.result + "'" +
-                                    "title='" + picFile.name + "'></video><div id='" + z + "'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
-                            $("#media-list").prepend(div);
-                        });
+                var getAttr = $(this).attr('click-type');
+                var files = event.target.files;
+                var output = document.getElementById("media-list");
+                var z = 0
+                if (getAttr == 'type1') {
+                    $('#media-list').html('');
+                    //                $('#media-list').html('<li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="type2" id="picupload" class="picupload" multiple></span></li>');
+                    $('#hint_brand').css("display", "block");
+                    $('#option_upload').css("display", "none");
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        names.push($(this).get(0).files[i].name);
+                        if (file.type.match('image')) {
+                            var picReader = new FileReader();
+                            picReader.fileName = file.name
+                            picReader.addEventListener("load", function (event) {
+                                var picFile = event.target;
+                                var div = document.createElement("li");
+                                div.innerHTML = "<img src='" + picFile.result + "'" +
+                                        "title='" + picFile.name + "'/><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
+                                $("#media-list").prepend(div);
+                            });
+                        } else {
+                            var picReader = new FileReader();
+                            picReader.fileName = file.name
+                            picReader.addEventListener("load", function (event) {
+                                var picFile = event.target;
+                                var div = document.createElement("li");
+                                div.innerHTML = "<video src='" + picFile.result + "'" +
+                                        "title='" + picFile.name + "'></video><div id='" + z + "'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
+                                $("#media-list").prepend(div);
+                            });
+                        }
+                        picReader.readAsDataURL(file);
                     }
-                    picReader.readAsDataURL(file);
-                }
-                console.log(names);
-            } else if (getAttr == 'type2') {
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    names.push($(this).get(0).files[i].name);
-                    if (file.type.match('image')) {
-                        var picReader = new FileReader();
-                        picReader.fileName = file.name
-                        picReader.addEventListener("load", function (event) {
-                            var picFile = event.target;
-                            var div = document.createElement("li");
-                            div.innerHTML = "<img src='" + picFile.result + "'" +
-                                    "title='" + picFile.name + "'/><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
-                            $("#media-list").prepend(div);
+                } else if (getAttr == 'type2') {
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        names.push($(this).get(0).files[i].name);
+                        if (file.type.match('image')) {
+                            var picReader = new FileReader();
+                            picReader.fileName = file.name
+                            picReader.addEventListener("load", function (event) {
+                                var picFile = event.target;
+                                var div = document.createElement("li");
+                                div.innerHTML = "<img src='" + picFile.result + "'" +
+                                        "title='" + picFile.name + "'/><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
+                                $("#media-list").prepend(div);
 
-                        });
-                    } else {
-                        var picReader = new FileReader();
-                        picReader.fileName = file.name
-                        picReader.addEventListener("load", function (event) {
+                            });
+                        } else {
+                            var picReader = new FileReader();
+                            picReader.fileName = file.name
+                            picReader.addEventListener("load", function (event) {
 
-                            var picFile = event.target;
+                                var picFile = event.target;
 
-                            var div = document.createElement("li");
+                                var div = document.createElement("li");
 
-                            div.innerHTML = "<video src='" + picFile.result + "'" +
-                                    "title='" + picFile.name + "'></video><div class='post-thumb'><div  class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
-                            $("#media-list").prepend(div);
+                                div.innerHTML = "<video src='" + picFile.result + "'" +
+                                        "title='" + picFile.name + "'></video><div class='post-thumb'><div  class='inner-post-thumb'><a href='javascript:void(0);' data-id='" + event.target.fileName + "' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div>";
+                                $("#media-list").prepend(div);
 
-                        });
+                            });
+                        }
+                        picReader.readAsDataURL(file);
                     }
-                    picReader.readAsDataURL(file);
+                    // return array of file name
                 }
+
+            });
+
+            $('body').on('click', '.remove-pic', function () {
+                $(this).parent().parent().parent().remove();
+                var removeItem = $(this).attr('data-id');
+                var yet = names.indexOf(removeItem);
+                if (yet != -1) {
+                    names.splice(yet, 1);
+                }
+
                 // return array of file name
-                console.log(names);
-            }
-
+                $('#option_upload').css("display", "block");
+            });
+            $('#hint_brand').on('hide', function (e) {
+                names = [];
+                z = 0;
+            });
         });
 
-        $('body').on('click', '.remove-pic', function () {
-            $(this).parent().parent().parent().remove();
-            var removeItem = $(this).attr('data-id');
-            var yet = names.indexOf(removeItem);
-            if (yet != -1) {
-                names.splice(yet, 1);
-            }
-
-            // return array of file name
-            console.log(names);
-            $('#option_upload').css("display", "block");
-        });
-        $('#hint_brand').on('hide', function (e) {
-            names = [];
-            z = 0;
-        });
-    });
 
 
 
 
-
-    //to get the country code
-    getCountryCode();
-    function getCountryCode(){
-        $.ajax({
-            url: "https://ipapi.co/json/",
-            type: 'GET',
-            success: function (response) {
-                var country = (window.location.hostname);
-                console.log(response.country);
-                document.cookie = 'country='+response.country+";"+ ';domain='+country+';path=/';
-            },
-            error:function(error){
-                console.log(error)
-//                    $('#error').text("Something went wrong.. Not able to create team");
-            }
-        });
-    }
-
-//    Lock and unlock acc 0=> unlock, 1=> lock
-    function lock(accId,lockStat){
-        $.ajax({
-            type: "POST",
-            url: "/lock-account",
-            data:{
-                accId:accId,
-                lockStat: lockStat
-            },
-            beforeSend: function(){
-            },
-            cache: false,
-            success: function(response){
-                console.log(response);
-                if(response.code == 200){
-                    swal({
-                        text: "Account Unlocked successfully",
-                        type:"success",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    document.location.href = '{{env('APP_URL')}}dashboard/'+teamid;
-                }else if(response.code == 201){
-                    swal({
-                        text: "Account locked successfully",
-                        type:"success",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    document.location.href = '{{env('APP_URL')}}dashboard/'+teamid;
+        //to get the country code
+        getCountryCode();
+        function getCountryCode(){
+            $.ajax({
+                url: "https://ipapi.co/json/",
+                type: 'GET',
+                success: function (response) {
+                    var country = (window.location.hostname);
+                    document.cookie = 'country='+response.country+";"+ ';domain='+country+';path=/';
+                },
+                error:function(error){
+                    console.log(error);
+                    //                    $('#error').text("Something went wrong.. Not able to create team");
                 }
+            });
+        }
 
-            }
-        });
-    }
-</script>
-    @endsection
+        //    Lock and unlock acc 0=> unlock, 1=> lock
+        function lock(accId,lockStat){
+            $.ajax({
+                type: "POST",
+                url: "/lock-account",
+                data:{
+                    accId:accId,
+                    lockStat: lockStat
+                },
+                beforeSend: function(){
+                },
+                cache: false,
+                success: function(response){
+                    if(response.code == 200){
+                        swal({
+                            text: "Account Unlocked successfully",
+                            type:"success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        document.location.href = '{{env('APP_URL')}}dashboard/'+teamid;
+                    }else if(response.code == 201){
+                        swal({
+                            text: "Account locked successfully",
+                            type:"success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        document.location.href = '{{env('APP_URL')}}dashboard/'+teamid;
+                    }
+
+                }
+            });
+        }
+    </script>
+
+@endsection

@@ -13,6 +13,10 @@ const app = express();
 class App {
 
     constructor() {            
+
+        const server = require('http').Server(app);
+        const io = require('socket.io')(server);
+
         app.use(morgan("tiny", { "stream": logger.stream }));
         app.use(helmet());
         app.use(express.json({ limit: '100mb' }));
@@ -37,12 +41,12 @@ class App {
                 return swagger;
             })
             .then(() => {
-                var routes = new Routes(app);
+                var routes = new Routes(app, io);
                 return routes;
-            })            
+            })
             .then(() => {
                 let port = config.get('notification_socioboard.port');
-                app.listen(port, () => {
+                server.listen(port, () => {
                     logger.info(`service listening on ${config.get('notification_socioboard.host_url')} with ${process.env.NODE_ENV} Environment!`);
                     console.log(`service listening on ${config.get('notification_socioboard.host_url')} with ${process.env.NODE_ENV} Environment!`);
                 });

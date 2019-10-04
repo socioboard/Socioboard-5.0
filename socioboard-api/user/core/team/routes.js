@@ -16,11 +16,16 @@ const teamManagementController = require('./controllers/teammanagement');
  *       logoUrl:
  *         type: string
  *         description: "To specify the team's logo which should be a valid url."
+ *     example: 
+ *       name: "social"
+ *       description: "all social Accounts"
+ *       logoUrl: "https://www.socioboard.com/contents/socioboard/images/Socioboard.png"
+ * 
  *   SocialAccounts:
  *     properties:
  *       account_type:
  *         type: string
- *         description: "To specify the account type 1-Facebook, 2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-Linkedin,7-LinkedinBusiness,8-GooglePlus,9-Youtube,10-GoogleAnalytics"
+ *         description: "To specify the account type 1-Facebook, 2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-Linkedin,7-LinkedinBusiness,8-GooglePlus,9-Youtube,10-GoogleAnalytics,11-Pinterest,12-InstagramBusiness"
  *       user_name:
  *         type: string
  *         description: "To specify the username of the social profile."
@@ -57,6 +62,21 @@ const teamManagementController = require('./controllers/teammanagement');
  *       info:
  *         type: string
  *         description: "To specify the short note about the social profile."
+ *     example: 
+ *       account_type: "1"
+ *       user_name: "socio123"
+ *       first_name: "socio"
+ *       last_name: "board"
+ *       email: "socioboard@socioboard.com"
+ *       social_id: "sb124234123"
+ *       profile_pic_url: "https://www.socioboard.com/contents/socioboard/images/Socioboard.png"
+ *       cover_pic_url: "https://www.socioboard.com/contents/socioboard/images/Socioboard.png"
+ *       profile_url: "https://www.socioboard.com/user/socioboard/socio123"
+ *       access_token: "Sifnjfdhfefdwndijvbufkjcvdbvivnriurhgueg8rgijvbciudwff3495ry748truiefeiuf4treugfeuyfr46rfufhdbfuy"
+ *       refresh_token: "SuewfefgEWFEFefdhfdfDVCverf4t34t$#FRCs4t84fgRSGRG4t43fF4t4"
+ *       friendship_counts: "243"
+ *       info: "Build the success life with using Smart utils like sociobord for Social Networks"
+ * 
  * /v1/team/getDetails:
  *   get:
  *     operationId: secured_teamGetDetails
@@ -80,8 +100,6 @@ const teamManagementController = require('./controllers/teammanagement');
  */
 routes.get('/getDetails', teamManagementController.getDetails);
 
-
-
 /**
  * @swagger
  * /v1/team/getTeamDetails:
@@ -92,12 +110,12 @@ routes.get('/getDetails', teamManagementController.getDetails);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request for profile details of team   
+ *     description: To request for profile details of particular team   
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -110,7 +128,6 @@ routes.get('/getDetails', teamManagementController.getDetails);
  */
 routes.get('/getTeamDetails', teamManagementController.getTeamDetails);
 
-
 /**
  * @swagger
  * /v1/team/getSocialProfiles:
@@ -121,7 +138,7 @@ routes.get('/getTeamDetails', teamManagementController.getTeamDetails);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request for profile details of team   
+ *     description: To request for social profile details 
  *     produces:
  *       - application/json
  *     responses:
@@ -133,7 +150,6 @@ routes.get('/getTeamDetails', teamManagementController.getTeamDetails);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.get('/getSocialProfiles', teamManagementController.getSocialProfiles);
-
 
 /**
  * @swagger
@@ -150,7 +166,7 @@ routes.get('/getSocialProfiles', teamManagementController.getSocialProfiles);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Account id 
+ *         description: Provide account id 
  *         name: accountId
  *         type: integer
  *     responses:
@@ -178,7 +194,7 @@ routes.get('/getSocialProfilesById', teamManagementController.getSocialProfilesB
  *       - application/json
  *     parameters:
  *       - name: teamDetails
- *         description: Team's information
+ *         description: Provide Team's information
  *         in: body
  *         required: true
  *         schema:
@@ -196,7 +212,6 @@ routes.get('/getSocialProfilesById', teamManagementController.getSocialProfilesB
  */
 routes.post('/create', teamManagementController.createTeam);
 
-
 /**
  * @swagger
  * /v1/team/edit:
@@ -212,11 +227,11 @@ routes.post('/create', teamManagementController.createTeam);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *       - name: teamDetails
- *         description: Team's information
+ *         description: Provide Team's information
  *         in: body
  *         required: true
  *         schema:
@@ -233,7 +248,6 @@ routes.post('/create', teamManagementController.createTeam);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.post('/edit', teamManagementController.editTeam);
-
 
 /**
  * @swagger
@@ -252,7 +266,7 @@ routes.post('/edit', teamManagementController.editTeam);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -264,7 +278,6 @@ routes.post('/edit', teamManagementController.editTeam);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.delete('/delete', teamManagementController.deleteTeam);
-
 
 /**
  * @swagger
@@ -283,15 +296,15 @@ routes.delete('/delete', teamManagementController.deleteTeam);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *       - in: query
- *         description: Email Id
+ *         description: Provide email id
  *         name: Email
  *         type: string
  *       - in: query
- *         description: Permission 1- full permission , 0 - Approval required
+ *         description: Specify Permission of either 1- full permission or 0 - Approval required
  *         name: Permission
  *         type: integer
  *         default: 1
@@ -306,7 +319,6 @@ routes.delete('/delete', teamManagementController.deleteTeam);
  */
 routes.post('/invite', teamManagementController.inviteTeam);
 
-
 /**
  * @swagger
  * /v1/team/declineTeamInvitation:
@@ -317,14 +329,14 @@ routes.post('/invite', teamManagementController.inviteTeam);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to invite a member to team   
+ *     description: To request to decline a team invitation   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -337,7 +349,6 @@ routes.post('/invite', teamManagementController.inviteTeam);
  */
 routes.post('/declineTeamInvitation', teamManagementController.declineTeamInvitation);
 
-
 /**
  * @swagger
  * /v1/team/getTeamInvitations:
@@ -348,7 +359,7 @@ routes.post('/declineTeamInvitation', teamManagementController.declineTeamInvita
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to getting team invitations   
+ *     description: To request to getting team un-accepted invitations   
  *     produces:
  *       - application/json
  *     responses:
@@ -371,14 +382,14 @@ routes.get('/getTeamInvitations', teamManagementController.getTeamInvitations);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to invite a member to team   
+ *     description: To Accept Pending Team invitation   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -390,35 +401,6 @@ routes.get('/getTeamInvitations', teamManagementController.getTeamInvitations);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.post('/acceptInvitation', teamManagementController.acceptTeamInvitation);
-/**
- * @swagger
- * /v1/team/declineTeamInvitation:
- *   post:
- *     operationId: secured_team_declineTeamInvitation
- *     summary: Secured
- *     security:
- *     - AccessToken: []
- *     tags:
- *       - Team
- *     description: To request to invite a member to team
- *     produces:
- *       - application/json
- *     consumes:
- *       - application/x-www-form-urlencoded
- *     parameters:
- *       - in: query
- *         description: Team id
- *         name: TeamId
- *         type: integer
- *     responses:
- *       200:
- *         description: Return success!
- *       404:
- *         description: Return Not Found or ErrorMessage
- *       401:
- *         $ref: "#/responses/unauthorizedError"
- */
-routes.post('/declineTeamInvitation', teamManagementController.declineTeamInvitation);
 
 /**
  * @swagger
@@ -430,18 +412,18 @@ routes.post('/declineTeamInvitation', teamManagementController.declineTeamInvita
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to withdraw invitation from member to team   
+ *     description: To request to withdraw invitation of Pending invited member for a team 
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's Email
+ *         description: Provide user's Email
  *         name: EmailId
  *         type: string
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -453,7 +435,6 @@ routes.post('/declineTeamInvitation', teamManagementController.declineTeamInvita
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.delete('/withdrawInvitation', teamManagementController.withdrawInvitation);
-
 
 /**
  * @swagger
@@ -472,11 +453,11 @@ routes.delete('/withdrawInvitation', teamManagementController.withdrawInvitation
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: member Id
+ *         description: Provide member id
  *         name: memberId
  *         type: string
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -504,7 +485,7 @@ routes.delete('/removeTeamMember', teamManagementController.removeTeamMember);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: category (0-all, 1-pending, 2-accepted, 3-left from team) 
+ *         description: Specify category (0-all, 1-pending, 2-accepted, 3-left from team) 
  *         name: category
  *         type: integer
  *         enum : [0,1,2,3]
@@ -519,7 +500,6 @@ routes.delete('/removeTeamMember', teamManagementController.removeTeamMember);
  */
 routes.get('/getTeamMembers', teamManagementController.getTeamMembers);
 
-
 /**
  * @swagger
  * /v1/team/getProfileRedirectUrl:
@@ -530,18 +510,18 @@ routes.get('/getTeamMembers', teamManagementController.getTeamMembers);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to withdraw invitation from member to team   
+ *     description: To get profile redirectUrl for specified Network   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: teamId
  *         type: integer
  *       - in: query
- *         description: Network
+ *         description: Specify Network from list
  *         name: network
  *         type: string
  *         default: "Facebook"
@@ -555,10 +535,6 @@ routes.get('/getTeamMembers', teamManagementController.getTeamMembers);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.get('/getProfileRedirectUrl', teamManagementController.getProfileRedirectUrl);
-
-
-
-
 
 /**
  * @swagger
@@ -577,11 +553,11 @@ routes.get('/getProfileRedirectUrl', teamManagementController.getProfileRedirect
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: User's State
+ *         description: Provide user's state
  *         name: state
  *         type: string
  *       - in: query
- *         description: Verification Code of the network 
+ *         description: Provide verification Code of the network 
  *         name: code
  *         type: string
  *     responses:
@@ -604,19 +580,19 @@ routes.get('/addSocialProfile', teamManagementController.addSocialProfile);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to add your other team account 
+ *     description: To request to add a new social profile to team 
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         required: true
  *         name: TeamId
  *         type: integer
  *       - in: body
  *         required: true
  *         name: profileDetails
- *         description: Social profile details
+ *         description: Provide social profile details
  *         schema:
  *           type: array
  *           items:
@@ -630,8 +606,6 @@ routes.get('/addSocialProfile', teamManagementController.addSocialProfile);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.post('/addBulkSocialProfiles', teamManagementController.addBulkSocialProfiles);
-
-
 
 /**
  * @swagger
@@ -650,7 +624,7 @@ routes.post('/addBulkSocialProfiles', teamManagementController.addBulkSocialProf
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Account Id
+ *         description: Provide account id
  *         name: AccountId
  *         type: string
  *     responses:
@@ -663,7 +637,6 @@ routes.post('/addBulkSocialProfiles', teamManagementController.addBulkSocialProf
  */
 routes.delete('/deleteSocialProfile', teamManagementController.deleteSocialProfile);
 
-
 /**
  * @swagger
  * /v1/team/addOtherTeamAccount:
@@ -674,18 +647,18 @@ routes.delete('/deleteSocialProfile', teamManagementController.deleteSocialProfi
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to add your other team account 
+ *     description: To request to add a social profile to team
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Account Id
+ *         description: Provide account id
  *         name: AccountId
  *         type: string
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -708,18 +681,18 @@ routes.post('/addOtherTeamAccount', teamManagementController.addOtherTeamSocialP
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To request to delete a social profile to team   
+ *     description: To request to delete a social profile from team   
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Account Id
+ *         description: Provide account id
  *         name: AccountId
  *         type: string
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -731,7 +704,6 @@ routes.post('/addOtherTeamAccount', teamManagementController.addOtherTeamSocialP
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.delete('/deleteTeamSocialProfile', teamManagementController.deleteTeamSocialProfile);
-
 
 /**
  * @swagger
@@ -750,7 +722,7 @@ routes.delete('/deleteTeamSocialProfile', teamManagementController.deleteTeamSoc
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *     responses:
@@ -773,22 +745,22 @@ routes.post('/leave', teamManagementController.leaveFromTeam);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To edit a team member permission   
+ *     description: To edit a member permission of a particular Team  
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         name: TeamId
  *         type: integer
  *       - in: query
- *         description: Member Id
+ *         description: Provide member id
  *         name: MemberId
  *         type: string
  *       - in: query
- *         description: Permission 1- full permission , 0 - Approval required
+ *         description: Specify Permission of either 1- full permission or 0 - Approval required
  *         name: Permission
  *         type: integer
  *         default: 1
@@ -802,7 +774,6 @@ routes.post('/leave', teamManagementController.leaveFromTeam);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.post('/editMemberPermission', teamManagementController.editTeamMemberPermission);
-
 
 /**
  * @swagger
@@ -819,7 +790,7 @@ routes.post('/editMemberPermission', teamManagementController.editTeamMemberPerm
  *       - application/json
  *     parameters:
  *       - in: body
- *         description: Array of account Ids
+ *         description: Provide array of account Id's
  *         name: addingSocialIds
  *         type: array
  *         items:
@@ -833,7 +804,6 @@ routes.post('/editMemberPermission', teamManagementController.editTeamMemberPerm
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.put('/lockProfiles', teamManagementController.lockProfiles);
-
 
 /**
  * @swagger
@@ -850,7 +820,7 @@ routes.put('/lockProfiles', teamManagementController.lockProfiles);
  *       - application/json
  *     parameters:
  *       - in: body
- *         description: Array of account Ids
+ *         description: Provide array of account Id's
  *         name: addingSocialIds
  *         type: array
  *         items:
@@ -865,7 +835,6 @@ routes.put('/lockProfiles', teamManagementController.lockProfiles);
  */
 routes.put('/unlockProfiles', teamManagementController.unlockProfiles);
 
-
 /**
  * @swagger
  * /v1/team/getTeamInsights:
@@ -876,12 +845,12 @@ routes.put('/unlockProfiles', teamManagementController.unlockProfiles);
  *     - AccessToken: []
  *     tags:
  *       - Team
- *     description: To fetch the team insights 
+ *     description: To fetch the particular team insights 
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Team id 
+ *         description: Provide team id 
  *         required: true
  *         name: TeamId
  *         type: integer

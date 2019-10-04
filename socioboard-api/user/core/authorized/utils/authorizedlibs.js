@@ -28,6 +28,7 @@ class AuthorizedLibs extends UserLibs {
                 reject({ error: true, message: "New password should not match with current password!" });
             }
             else {
+                // Finding user
                 return userDetails.findOne({
                     where: {
                         user_id: userId,
@@ -39,6 +40,7 @@ class AuthorizedLibs extends UserLibs {
                             throw new Error('Sorry! Email not registered.');
                         if (user.password !== currentPassword)
                             throw new Error('Sorry! Wrong Password.');
+                        // Updating user with new password
                         return userDetails.update({ password: newPassword }, { where: { user_id: user.user_id } });
                     })
                     .then(function () {
@@ -56,7 +58,7 @@ class AuthorizedLibs extends UserLibs {
         return new Promise((resolve, reject) => {
             if (!userId || !profileDetails) {
                 reject({ error: true, message: "Invalid Inputs" });
-            } else {              
+            } else {
                 var updatedData = {};
                 return userDetails.findOne({
                     where: { user_id: userId },
@@ -66,6 +68,7 @@ class AuthorizedLibs extends UserLibs {
                         if (!user)
                             throw new Error('No user found!');
                         else {
+                            // Updating user with new details
                             return user.update({
                                 first_name: profileDetails.firstName,
                                 last_name: profileDetails.lastName,
@@ -77,10 +80,11 @@ class AuthorizedLibs extends UserLibs {
                             });
                         }
                     })
-                    .then(()=>{
-                        return this.getUserAccessToken(userId);                       
+                    .then(() => {
+                        // Creating new access Token with updated details
+                        return this.getUserAccessToken(userId);
                     })
-                    .then((response)=>{
+                    .then((response) => {
                         updatedData.data = response.user;
                         updatedData.accessToken = response.accessToken;
                         resolve(updatedData);
@@ -98,6 +102,7 @@ class AuthorizedLibs extends UserLibs {
             if (!userId || userId < 0 || newPaymentType == null || newPaymentType == undefined || currentPaymentType == null || currentPaymentType == undefined) {
                 reject({ error: true, message: "Invalid Inputs" });
             } else {
+                // Fetching user and Payment details of specified payment type
                 return userDetails.findOne({
                     where: { user_id: userId },
                     attributes: ['user_id', 'email'],
@@ -117,10 +122,12 @@ class AuthorizedLibs extends UserLibs {
                         if (!user)
                             throw new Error('No user found with current payment type!');
                         else {
+                            // Updating user with new payment type
                             return user.Activations.update({
                                 payment_type: newPaymentType
                             })
                                 .then(() => {
+                                    // Generating new access token with updated details
                                     return super.getUserAccessToken(user.user_id);
                                 }).catch((error) => {
                                     throw new Error(error.message);
@@ -143,22 +150,13 @@ class AuthorizedLibs extends UserLibs {
             if (!userId || (twoStepActivate != 0 && twoStepActivate != 1)) {
                 reject({ error: true, message: "Invalid Inputs" });
             } else {
-                return userDetails.findOne({
-                    where: { user_id: userId },
-                    attributes: ['user_id', 'email'],
-                    include: [{
-                        model: userActivation,
-                        as: "Activations",
-                        where: {
-                            id: db.Sequelize.col('user_activation_id'),
-                        },
-                        attributes: ['id', 'activate_2step_verification']
-                    }]
-                })
+                // Fetching user activation details 
+                return this.getUserActivationDetails(userId)
                     .then(function (user) {
                         if (user === null)
                             throw new Error('No user found!');
                         else {
+                            // Updating user with Changes in 2step authentication
                             return user.Activations.update({
                                 activate_2step_verification: twoStepActivate
                             })
@@ -186,10 +184,12 @@ class AuthorizedLibs extends UserLibs {
             if (!userId || currentPlan == null || currentPlan == undefined || newPlan == null || newPlan == undefined) {
                 reject({ error: true, message: "Invalid Inputs" });
             }
+            // Validating the user that, new plan and old plan are same or not
             else if (currentPlan == newPlan) {
                 reject(new Error("Current and new plan are same!"));
             }
             else {
+                // Fetching the user details and current plan details
                 return userDetails.findOne({
                     where: { user_id: userId },
                     attributes: ['user_id', 'email', 'phone_no', 'first_name', 'last_name', 'profile_picture', 'is_account_locked', 'is_admin_user'],
@@ -210,6 +210,7 @@ class AuthorizedLibs extends UserLibs {
                             return user;
                         else {
                             fetchedUserInfo = user.toJSON();
+                            // Fetching new plan details
                             return this.getPlanDetails(newPlan)
                                 .then((planDetails) => {
                                     fetchedUserInfo.userPlanDetails = planDetails.toJSON();
@@ -225,39 +226,109 @@ class AuthorizedLibs extends UserLibs {
                             throw new Error('Not found, Please check current plan or user details!');
                         else {
                             userInformation = user;
+                            // Locking all social accounts
                             return this.lockUserSocialAccounts(userId);
                         }
                     })
                     .then(() => {
                         if (newPlan == 0) {
+                            // Updating user with new plan
                             return userInformation.Activations.update({
                                 last_login: moment(),
                                 user_plan: newPlan,
                                 account_expire_date: moment.utc().add(1, 'months'),
                             })
                                 .then(() => {
+                                    // Generating access Token with updated plan details
                                     return this.getUserAccessToken(userId);
                                 }).catch(function (error) {
                                     throw new Error(error.message);
                                 });
                         }
                         else if (newPlan < currentPlan) {
+                            // Updating user with new plan
                             return userInformation.Activations.update({
                                 last_login: moment(),
                                 user_plan: newPlan
                             })
                                 .then(() => {
+                                    // Generating access Token with updated plan details
                                     return this.getUserAccessToken(userId);
                                 }).catch(function (error) {
                                     throw new Error(error.message);
                                 });
                         }
                         else {
+                            // If requested plan is higher than current plan we are throwing an error message
                             throw new Error("Please use proper payment endpoints to upgrade plans.");
                         }
                     })
                     .then((userDetails) => {
                         resolve(userDetails);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
+    changeShortenStatus(userId, status) {
+        return new Promise((resolve, reject) => {
+            if (!userId || (status != 0 && status != 1)) {
+                reject({ error: true, message: "Invalid Inputs" });
+            } else {
+                // Checking that the status of update are same or not
+                return this.getUserActivationDetails(userId)
+                    .then((user) => {
+                        if (user === null)
+                            throw new Error('No user found!');
+                        else {
+                            if (user.Activations.shortenStatus == status) {
+                                throw new Error('Current Status and updated status are same.');
+                            }
+                            else {
+                                // If not we are updating with requested status
+                                return user.Activations.update({
+                                    shortenStatus: status
+                                })
+                                    .catch(function (error) {
+                                        throw new Error(error.message);
+                                    });
+                            }
+                        }
+                    })
+                    .then(() => {
+                        resolve('successfully updated');
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
+
+    getUserActivationDetails(userId) {
+        return new Promise((resolve, reject) => {
+            if (!userId) {
+                reject(new Error('Invalid Inputs'));
+            } else {
+                // Fetching the user activation details like 2 step, shortenUrl
+                return userDetails.findOne({
+                    where: { user_id: userId },
+                    attributes: ['user_id', 'email'],
+                    include: [{
+                        model: userActivation,
+                        as: "Activations",
+                        where: {
+                            id: db.Sequelize.col('user_activation_id'),
+                        },
+                        attributes: ['id', 'activate_2step_verification', 'shortenStatus']
+                    }]
+                })
+                    .then((user) => {
+                        resolve(user);
                     })
                     .catch((error) => {
                         reject(error);

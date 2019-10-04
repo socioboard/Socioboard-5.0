@@ -14,6 +14,7 @@ class UploadLibs {
             if (!userId || !teamId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking the user that the user is belongs to the Team or not
                 userTeamJoinTable.findOne({
                     where: {
                         team_id: teamId,
@@ -37,6 +38,7 @@ class UploadLibs {
     isTeamValidForUser(userId, teamId) {
 
         return new Promise((resolve, reject) => {
+            // Checking the user that the user is belongs to the Team or not
             return userTeamJoinTable.findOne({
                 where: {
                     user_id: userId,
@@ -66,6 +68,7 @@ class UploadLibs {
                 var ffmpegWatermarkObject = new ffmpeg(String(imagefilePath));
                 var waterFile = `${config.get('uploadService.thumbnail_path')}/wm${moment().unix()}.jpg`;
                 ffmpegWatermarkObject.then((video) => {
+                    // Generating a Watermark
                     video.fnAddWatermark(config.get('uploadService.assert'), waterFile, {
                         position: 'C'
                     })
@@ -94,7 +97,7 @@ class UploadLibs {
                 logger.info(thumbnailFile);
                 return ffmpegObject
                     .then((video) => {
-
+                        // Generating a thumbnail
                         video.fnExtractFrameToJPG(config.get('uploadService.thumbnail_path'), {
                             frame_rate: 3,
                             number: 1,
@@ -115,9 +118,9 @@ class UploadLibs {
         });
     }
 
-    uploadMedia(userId, teamId, privacy, files) {
+    uploadMedia(userId, teamId, privacy, files, title) {
         return new Promise((resolve, reject) => {
-            if (!userId || !teamId || !privacy) {
+            if (!userId || !teamId || !privacy || !title) {
                 reject(new Error("Invalid Input"));
             } else {
                 const fileExistsStatus = fs.existsSync(config.get('uploadService.thumbnail_path'));
@@ -139,6 +142,7 @@ class UploadLibs {
                                     mime_type: file.mimetype,
                                     media_url: `/images/${file.filename}`,
                                     thumbnail_url: `/images/${file.filename}`,
+                                    title: title
                                 };
                                 mediaDetails.push(fileDetails);
                                 return;
@@ -175,7 +179,8 @@ class UploadLibs {
                                             file_name: file.filename,
                                             mime_type: file.mimetype,
                                             media_url: `/videos/${file.filename}`,
-                                            thumbnail_url: `/thumbnails${thumbnailUrl}`
+                                            thumbnail_url: `/thumbnails${thumbnailUrl}`,
+                                            title: title
                                         };
                                         mediaDetails.push(fileDetails);
                                         return;
@@ -187,7 +192,33 @@ class UploadLibs {
                         }));
                     })
                     .then(() => {
-                        return userMediaDetails.bulkCreate(mediaDetails, { returning: true });
+                        if (privacy == 3) {
+                            return userMediaDetails.bulkCreate(mediaDetails, { returning: true });
+                        }
+                        else {
+                            var size = 0;
+                            return userMediaDetails.findAll({
+                                where: { user_id: Number(userId), team_id: Number(teamId), privacy_type: [0, 1] },
+                                attributes: ['media_size', 'file_name', 'title', 'mime_type']
+                            })
+                                .then((medias) => {
+                                    return Promise.all(medias.map(media => {
+                                        if (media.privacy_type == 1 || media.privacy_type == 0)
+                                            size += media.media_size
+                                    }))
+                                        .then(() => {
+                                            if (size < config.get('uploadService.max_size')) {
+                                                return userMediaDetails.bulkCreate(mediaDetails, { returning: true });
+                                            }
+                                            else
+                                                throw new Error('Sorry! You reached maximum size of upload data.');
+                                        })
+                                })
+                                .catch((error) => {
+                                    throw error;
+                                });
+                        }
+
                     })
                     .then((details) => {
                         resolve(details);
@@ -209,9 +240,7 @@ class UploadLibs {
                 reject(new Error("Please check pageId greater than 0"));
             else {
                 var conditions = { user_id: Number(userId) };
-
-                if (privacy == 0 || privacy == 1)
-                    conditions.privacy_type = Number(privacy);
+                var usedSpace = 0;
 
                 if (teamId && teamId != -1)
                     conditions.team_id = Number(teamId);
@@ -220,25 +249,112 @@ class UploadLibs {
 
                 var limit = config.get('perPageLimit');
 
+                if (pageId == 1) {
+                    // Fetching media and media sizes also
+                    return this.getUserMediaSize(userId, teamId, conditions)
+                        .then((result) => {
+                            logger.info(result, 'result');
+                            usedSpace = result.usedSize;
+                            return this.getUserMediaFromDB(userId, teamId, conditions, offset, limit, privacy)
+                                .then((result) => {
+                                    logger.info(result, 'result');
+                                    resolve({ totalSize: config.get('uploadService.max_size'), usedSize: usedSpace, data: result.data });
+                                })
+                                .catch((error) => {
+                                    throw error;
+                                })
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        })
+                }
+                else {
+                    // Fetching only media from DB
+                    return this.getUserMediaFromDB(userId, teamId, conditions, offset, limit, privacy)
+                        .then((result) => {
+                            resolve({ totalSize: config.get('uploadService.max_size'), usedSize: usedSpace, data: result.data });
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        })
+                }
+            }
+        });
+
+    }
+
+    getUserMediaFromDB(userId, teamId, conditions, offset, limit, privacy) {
+        return new Promise((resolve, reject) => {
+            logger.info('conditions', userId, teamId, conditions, offset, limit, privacy);
+            if (!userId || !teamId || !conditions || !limit) {
+                reject(new Error('Invalid Inputs to get Media Details'))
+            } else {
+                var data = [];
+                // Checking the user that the user is belongs to the Team or not
                 return this.isTeamValidForUser(userId, teamId)
                     .then(() => {
                         return userMediaDetails.findAll({
                             where: conditions,
-                            attributes: ['id', 'team_id', 'privacy_type', 'media_size', 'file_name', 'mime_type', 'media_url', 'thumbnail_url', 'created_date'],
+                            attributes: ['id', 'team_id', 'privacy_type', 'media_size', 'file_name', 'title', 'mime_type', 'media_url', 'thumbnail_url', 'created_date'],
                             order: [['created_date', 'DESC']],
                             offset: offset,
                             limit: limit,
                         });
                     })
-                    .then((data) => {
-                        resolve(data);
+                    .then((result) => {
+                        return Promise.all(result.map(element => {
+                            if (privacy == 2)
+                                data.push(element);
+                            else if (element.privacy_type == privacy)
+                                data.push(element);
+                        }))
+                            .then(() => {
+                                resolve({ data: data });
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
                     })
                     .catch((error) => {
                         reject(error);
                     });
             }
-        });
+        })
+    }
 
+    getUserMediaSize(userId, teamId, conditions) {
+        return new Promise((resolve, reject) => {
+            logger.info(conditions)
+            if (!conditions) {
+                reject(new Error('Invalid Inputs to get userMediaSize'));
+            } else {
+                var usedSpace = 0;
+                // Checking the user that the user is belongs to the Team or not
+                return this.isTeamValidForUser(userId, teamId)
+                    .then(() => {
+                        return userMediaDetails.findAll({
+                            where: conditions,
+                            attributes: ['team_id', 'privacy_type', 'media_size'],
+                            order: [['created_date', 'DESC']],
+                        });
+                    })
+                    .then((result) => {
+                        return Promise.all(result.map(element => {
+                            if (element.privacy_type == 1 || element.privacy_type == 0)
+                                usedSpace += element.media_size;
+                        }))
+                            .then(() => {
+                                resolve({ usedSize: usedSpace });
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        })
     }
 
     deleteUserMedia(isForceDelete, userId, mediaId) {
@@ -252,6 +368,7 @@ class UploadLibs {
                 if (isForceDelete == 1) {
                     var media_url = null;
                     var thumbnail = null;
+                    // Checking that the user is having that media or not
                     return userMediaDetails.findOne({
                         where: {
                             id: mediaId,
@@ -279,6 +396,7 @@ class UploadLibs {
                             }
                             var isThumbnailUrlExists = fs.existsSync(thumbnail);
                             if (isThumbnailUrlExists) {
+                                // Deleting media from the Folder(storage)
                                 fs.unlink(thumbnail, (error) => {
                                     if (error)
                                         logger.info(error.message);
@@ -287,6 +405,7 @@ class UploadLibs {
                             return;
                         })
                         .then(() => {
+                            // Deleting the data from DB
                             return userMediaDetails.destroy({
                                 where: {
                                     id: mediaId,
@@ -308,6 +427,7 @@ class UploadLibs {
                         });
                 }
                 else if (isForceDelete == 0) {
+                    // Deteling data from DB
                     return userMediaDetails.destroy({
                         where: {
                             id: mediaId,

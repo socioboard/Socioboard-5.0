@@ -8,11 +8,15 @@ const DbConnect = require('./startup/dbconnect');
 const Swagger = require('./startup/swagger');
 const Routes = require('./startup/routes');
 const config = require('config');
+const fs = require('fs');
 const app = express();
+
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 class App {
 
-    constructor() {            
+    constructor() {
         app.use(morgan("tiny", { "stream": logger.stream }));
         app.use(helmet());
         app.use(express.json({ limit: '100mb' }));
@@ -39,10 +43,19 @@ class App {
             .then(() => {
                 var routes = new Routes(app);
                 return routes;
-            })            
+            })
+            .then(() => {
+                if (!fs.existsSync(config.get('payment.base_path'))) {
+                    fs.mkdirSync(config.get('payment.base_path'));
+                }
+
+                if (!fs.existsSync(config.get('payment.payment_path'))) {
+                    fs.mkdirSync(config.get('payment.payment_path'));
+                }
+            })
             .then(() => {
                 let port = config.get('user_socioboard.port');
-                app.listen(port, () => {
+                server.listen(port, () => {
                     logger.info(`service listening on ${config.get('user_socioboard.host_url')} with ${process.env.NODE_ENV} Environment!`);
                     console.log(`service listening on ${config.get('user_socioboard.host_url')} with ${process.env.NODE_ENV} Environment!`);
                 });

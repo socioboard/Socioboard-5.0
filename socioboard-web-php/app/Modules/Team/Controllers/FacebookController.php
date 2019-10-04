@@ -8,18 +8,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
+//use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
+//use Illuminate\Support\Facades\Validator;
 use Mockery\CountValidator\Exception;
-use Illuminate\Support\Facades\Storage;
-use App\Modules\Discovery\Controllers\DiscoveryPublishController;
-use App\Modules\Team\Controllers\TeamController;
-
+//use App\Modules\Discovery\Controllers\DiscoveryPublishController;
+//use App\Modules\Team\Controllers\TeamController;
 
 class FacebookController extends Controller
 {
-
     protected $client;
     protected $API_URL;
 
@@ -27,7 +24,6 @@ class FacebookController extends Controller
     {
         $this->client = new Client();
         $this->API_URL = env('API_URL') . env('VERSION') . '/';
-
     }
 
 
@@ -36,9 +32,12 @@ class FacebookController extends Controller
 
     public function FacebookAdd($network, $teamId)
     {
+
         try {
             $help = Helper::getInstance();
+//            Log("Network ".$network);
             $response = $help->apiCallGet('team/getProfileRedirectUrl?teamId=' . $teamId . "&network=" . $network);
+//Log::info("Redirection  ".$response->navigateUrl);
             if ($response->code == 200 && $response->status == "success") {
                 $data = (str_replace("state=", "state=" . $network . "_", $response->navigateUrl));
                 header('Location: ' . $data);
@@ -71,44 +70,51 @@ class FacebookController extends Controller
                     Session::put('facebookPage', $responsePage->pages);
                     return redirect('dashboard/' . $teamId);
                 } else if ($responsePage->code == 400 && $responsePage->status == "failed") {
+                    Log::info("Exception in Fbp account adding" );
                     return redirect('dashboard/' . $teamId)->withErrors([$responsePage->error]);
 
                 } else {
+                    Log::info("Exception in Fbp account adding" );
                     return redirect('dashboard/' . $teamId)->withErrors(['Not able to add your account']);
                     return Redirect::back()->withErrors(['Not able to add your account']);
                 }
             } else if (strpos($a, env('ACCOUNT_ADD_FB')) !== false) {
                 $response = $help->apiCallGet('team/addSocialProfile?state=' . explode('_', $request->state)[1] . '&code=' . $request->code);
+
                 if ($response->code == 200 && $response->status == "success") {
                     $team = Helper::getInstance()->getTeamNewSession();
                     return redirect('dashboard/' . $teamId);
                 } else if ($response->code == 400 && $response->status == "failed") {
-                    return redirect('dashboard/' . $teamId)->withErrors([$response->error]);
+                    Log::info(" Fb account adding error" );
+                    return redirect('dashboard/' . $teamId)->withErrors([$response->message]);
+                }else if($response->code == 403 ){
+                    Log::info(" Fb account adding error" );
+                    return redirect('dashboard/' . $teamId)->withErrors([$response->message]);
                 } else {
+                    Log::info("Fb  account adding" );
                     return redirect('dashboard/' . $teamId)->with('FBError', 'Not able to add your account');
-
                 }
             }else if(strpos($a, env('ACCOUNT_ADD_INSTAGRAM_PAGE')) !== false){
                 $responseInstaBusiness = $help->apiCallGet('profile/getInstaBusinessAccount?code=' . $request->code);
-
                 if ($responseInstaBusiness->code == 200 && $responseInstaBusiness->status == "success") {
                     Session::put('InstaBusiness', $responseInstaBusiness->pages);
                     return redirect('dashboard/' . $teamId);
                 } else if ($responseInstaBusiness->code == 400 && $responseInstaBusiness->status == "failed") {
+                    Log::info("Exception in adding instagram business account" );
                     return redirect('dashboard/' . $teamId)->withErrors([$responseInstaBusiness->error]);
                 } else {
+                    Log::info("Exception in adding instagram business account" );
                     return redirect('dashboard/' . $teamId)->withErrors(['Not able to add your account']);
                     return Redirect::back()->withErrors(['Not able to add your account']);
                 }
-
             }
             else {
                 return redirect('dashboard/' . $teamId)->withErrors(['Something went wrong']);
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
+
             Log::info("Exception " . $e->getCode() . "=>" . $e->getLine() . "=>" . $e->getMessage());
-            return Redirect::back()->withErrors(['Something weent wrong']);
+            return Redirect::back()->withErrors(['Something went wrong']);
         }
 
 //            $response = $help->apiCallGet('team/addSocialProfile?state='.$request->state.'&code='.$request->code);
@@ -134,7 +140,6 @@ class FacebookController extends Controller
     // for facebook page
     public function facebookPageAdd(Request $request)
     {
-//        dd(($request->pages));
         $pages = [];
         $k = 0;
         $pages = $request->pages;
@@ -144,7 +149,6 @@ class FacebookController extends Controller
         if ($request->pages != null && $pageSession != null) {
 
             for ($i = 0; $i < count($pages); $i++) {
-//                dd($pages[$i]);
                 /*account_type=2,user_name,last_name="",email="",social_id,profile_pic_url,cover_pic_url,access_token,refresh_token,friendship_counts,info=""*/
                 for ($j = 0; $j < count($pageSession); $j++) {
                     if ($pageSession[$j]->pageName == $pages[$i]) {
@@ -176,11 +180,13 @@ class FacebookController extends Controller
                     $result['status'] = "success";
                     return $result;
                 } else if ($response['data']['code'] == 400 && $response['data']['status'] == "failed") {
+                    Log::info("Exception in adding facebook page " );
                     $result['code'] = 400;
                     $result['status'] = "failure";
                     $result['message'] = $response['data']["error"];
                     return $result;
                 } else {
+                    Log::info("Exception in adding facebook page " );
                     $result['code'] = 400;
                     $result['status'] = "failure";
                     $result['message'] = $response['data']["error"];
@@ -188,6 +194,7 @@ class FacebookController extends Controller
                     return Redirect::back()->withErrors(["Not able to add your facebook page.. Please try again after sometime"]);
                 }
             } catch (Exception $e) {
+                Log::info("Exception in facebook page adding  " . $e->getCode() . "=>" . $e->getLine() . "=>" . $e->getMessage());
 
 //                return $e->getMessage();
                 $result['code'] = 500;
@@ -248,11 +255,13 @@ class FacebookController extends Controller
                     $result['status'] = "success";
                     return $result;
                 } else if ($response['data']['code'] == 400 && $response['data']['status'] == "failed") {
+                    Log::info("Exception in adding instagram business page " );
                     $result['code'] = 400;
                     $result['status'] = "failure";
                     $result['message'] = $response['data']["error"];
                     return $result;
                 } else {
+                    Log::info("Exception in adding instagram business page " );
                     $result['code'] = 400;
                     $result['status'] = "failure";
                     $result['message'] = $response['data']["error"];
@@ -260,6 +269,7 @@ class FacebookController extends Controller
                     return Redirect::back()->withErrors(["Not able to add your facebook page.. Please try again after sometime"]);
                 }
             } catch (Exception $e) {
+                Log::info("Exception in instagram business page adding  " . $e->getCode() . "=>" . $e->getLine() . "=>" . $e->getMessage());
 
 //                return $e->getMessage();
                 $result['code'] = 500;
@@ -288,10 +298,20 @@ class FacebookController extends Controller
 //              $result['status']="Success";
                 return $result;
             } else {
+                $result['code'] = 400;
+                $result['status'] = "fail";
+                $result['message'] = $response->error;
+//              $result['status']="Success";
+                return $result;
             }
 
         } catch (Exception $e) {
-
+            Log::info("Exception in deleting social account " . $e->getCode() . "=>" . $e->getLine() . "=>" . $e->getMessage());
+            $result['code'] = 400;
+            $result['status'] = "fail";
+            $result['message']=" Something went wrong";
+//              $result['status']="Success";
+            return $result;
         }
     }
 
@@ -317,31 +337,36 @@ class FacebookController extends Controller
 
         try {
             $responseForParticular = $help->apiCallPostFeeds(null, "feeds/getRecentFbFeeds?" . http_build_query($params), null, "GET");
-
             $value = Session::get('currentTeam')['SocialAccount'];
+
             for ($i = 0; $i < count($value); $i++) {
                 if ($value[$i]->account_id == $account_id) {
                     $profileData = (array)$value[$i];
                 }
             }
-            if ($responseForParticular->data->code == 200 && $responseForParticular->data->status == "success") {
-                //$profiles = $this->viewProfiles();
-//                print_r($profiles); die;
 
-                return view('Team::FacebookFeeds',
-                    [
-                        'feeds' => $responseForParticular->data->posts,
-                        'userProfile' => (object)$profileData,
-                        'socioboard_accounts' => TeamController::getAllSocialAccounts(),
-                        'team_id' => Session::get('currentTeam')['team_id'],
-                        'account_id' => $account_id,
-                    ]);
+
+
+
+            if ($responseForParticular->data->code == 200 && $responseForParticular->data->status == "success") {
+
+                $fbParams = [
+                    'feeds' => $responseForParticular->data->posts,
+                    'userProfile' => (object)$profileData,
+                    'socioboard_accounts' => TeamController::getAllSocialAccounts(),
+                    'team_id' => Session::get('currentTeam')['team_id'],
+                    'account_id' => $account_id,
+                    "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+                    "pinterestBoards"=> Session::get('pinterestBoards'),
+                ];
+
+                return view('Team::Facebook.index', $fbParams);
             } else {
-                return view('Team::FacebookFeeds', ['status' => 0, 'feed' => []]);
+                throw new \Exception($responseForParticular->data->message);
+                return TeamController::showErrorPage($e, ['link' => '/', 'message' => $e->getMessage() ] );
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            return view('Team::FacebookFeeds', ['status' => 0, 'feed' => []]);
+            return TeamController::showErrorPage($e, ['link' => '/', 'message' => 'Return' ] );
         }
     }
 
@@ -386,8 +411,6 @@ class FacebookController extends Controller
                 return null;
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            return null;
 
         }
     }
@@ -395,8 +418,6 @@ class FacebookController extends Controller
 
     public function test()
     {
-//        dd(1);
-        dd(Session::all());
         $data = (Session::get("user")["userDetails"]);
         $data->user_id = 6;
         Session::push('user', $data);
@@ -439,7 +460,6 @@ class FacebookController extends Controller
                 return null;
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return null;
         }
     }
@@ -504,7 +524,6 @@ class FacebookController extends Controller
                 return null;
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return json_encode(['status' => 'error', 'message' => 'code: ' . $apiResponse->statusCode . ', error: ' . $e->getMessage()]);
         }
     }
@@ -536,7 +555,6 @@ class FacebookController extends Controller
                     return null;
                 }
             } catch (\Exception $e) {
-                dd($e->getMessage());
                 return json_encode(['status' => 'Sytem error', 'message' => $e->getMessage()]);
             }
         }
@@ -588,93 +606,31 @@ class FacebookController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return null;
         }
     }
 */
 
-    public function uploadMedia(Request $request)
-    {
-        //print_r($_REQUEST);
-        $helper = Helper::getInstance();
-        //    $path =   storage_path().'\public\\'.date('Y-m').'\\'. time().'_'. rand(1000, 9999).'.'.pathinfo($request->input('name'), PATHINFO_EXTENSION);
-        $path = '\public\\' . date('Y-m') . '\\' . time() . '_' . rand(1000, 9999) . '.' . pathinfo($request->input('name'), PATHINFO_EXTENSION);
-        $team_id = (integer)Session::get('currentTeam')['team_id'];
-
-        try {
-            // save file to storage
-            Storage::put($path, $this->convertFile($request->input('content')));
-
-            $filePath = storage_path() . '\app' . $path;
-
-            if (file_exists($filePath)) {//file exists
-                // call API to upload file
-                $apiResponse = (object)$helper->apiCallPostPublish(["name" => "media", "file" => $filePath], "upload/media?teamId=" . $team_id . "&privacy=0", true);
-
-                if ($apiResponse->statusCode == 200) {
-                    $data = (object)$apiResponse->data;
-                    if ($data->code == 200 && $data->status == "success") {
-                        // try this row with data!
-                        $fileDetails = (object)$data->mediaDetails[0];
-                        //dd($fileDetails);
-                        Storage::delete($path);
-                        Log::info("Deleted a file -> " . $path . " after sending file to api with path " . $fileDetails->media_url . '');
-                        return json_encode([
-                            'status' => $data->status,
-                            'path' => $fileDetails->media_url,
-                            'thumbnail' => $fileDetails->thumbnail_url,
-                            'localFileId' => $request->input('name'),
-                        ]);
-                    } else {
-                        return json_encode(['status' => $data->status, 'message' => $data->error->message]);
-                    }
-                } else {
-                    return json_encode(['status' => 'error', 'message' => 'response status code ' + $apiResponse->statusCode]);
-                }
-            } else {
-                // echo 'file is absent';
-                return json_encode(['status' => 'error', 'message' => 'trying to upload unexistent file']);
-            };
-
-
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return null;
-        }
-    }
-
 
 //    public function test()
 //    {
-//        dd(Session::all());
 //        $data = (Session::get("user")["userDetails"]);
 //        $data->user_id = 6;
 //        Session::push('user', $data);
-//        dd(Session::get("user")["userDetails"]);
 //        return view('Team::test');
 //    }
 
-    // converts from rfc-2397 to raw file data
-    function convertFile($content)
-    {
-        $fileContent = substr($content, 7 + strpos($content, 'base64'));
-        $fileContent = base64_decode($fileContent);
-        return $fileContent;
-    }
 
 
     function FacebookFanInsight(Request $request)
     {
         try {
-            dd(Session::get('currentTeam'));
             return view('Team::AppInsight.FacebookFanpageReport');
 
 
 //            D:\bitbuckets\socioboard-upwork\web\app\Modules\Team\Views\AppInsight\FacebookFanpageReport.blade.php
 
         } catch (\Exception $e) {
-            dd($e->getMessage());
         }
     }
 

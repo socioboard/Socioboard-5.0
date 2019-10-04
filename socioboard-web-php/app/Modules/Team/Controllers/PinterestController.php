@@ -8,15 +8,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Response;
+//use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
-use Mockery\CountValidator\Exception;
+
+//use Illuminate\Support\Facades\Validator;
+//use Mockery\CountValidator\Exception;
+use Cache;
 
 class PinterestController extends Controller
 {
-
-
     protected $client;
     protected $API_URL;
 
@@ -24,7 +25,93 @@ class PinterestController extends Controller
     {
         $this->client = new Client();
         $this->API_URL = env('API_URL') . env('VERSION') . '/';
+    }
 
+    public function viewPage($account_id, $page_id = 0)
+    {
+
+
+
+        if (\Request::route()->getName() == 'socialNetworkDashboard') {
+            $boards = (array)$this->getBoards($account_id);
+
+            $i = 0;
+            foreach ($boards as $value) {
+                if ($i == 0) {
+                    $board_id = (integer)$value->board_id;
+                };
+                $i++;
+            }
+
+            return redirect( route('socialNetworkPinterestPageContent', [
+                'account_id' => $account_id,
+                'page_id' => $board_id,
+            ]));
+        } else
+            {
+            try {
+                return view('Team::Pinterest.index',
+                    [
+                        //To specify the account type 1-Facebook, 2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-Linkedin,7-LinkedinBusiness,8-GooglePlus,9-Youtube,10-GoogleAnalytics
+                        'userProfile' => TeamController::getProfileInfo($account_id, 5),
+                        'socioboard_accounts' => TeamController::getAllSocialAccounts(),
+                        'account_id' => $account_id,
+                        'board_id' => $page_id,
+                        'account_info' => TeamController::getAccountInfoById($account_id),
+                        'boards' => $this->getBoards($account_id),
+                        'feeds' => $this->viewPosts($account_id, $page_id),
+                        "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
+                        "pinterestBoards"=> Session::get('pinterestBoards'),
+                    ]);
+            } catch (\Exception $e) {
+                return TeamController::showErrorPage($e);
+            }
+        }
+    }
+
+
+    public function viewPosts($account_id, $board_id)
+    {
+        $params = [
+            'boardId' => $board_id,
+            'accountId' => $account_id,
+            'teamId' => (integer)@Session::get('currentTeam')['team_id'],
+        ];
+
+        try {
+            $response = Cache::remember('response_pinterest_' . $account_id . '_' . $board_id, 3600, function () use ($params) {
+                return $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
+            });
+
+            if ($response->statusCode == 200 && $response->data->code == 200 && $response->data->status == "success") {
+                if (!empty($response->data->pins->message)) {
+                    echo $response->data->pins->message;
+                } else {
+                    return $response->data->pins->data;
+                }
+            } else {
+                return 'Problem with sesponse data, code=' . $response->data->code;
+            }
+
+        } catch (\Exception $e) {
+            return TeamController::showErrorPage($e);
+        }
+    }
+
+    /* Returns a list of Pinterest boards or null */
+    public function getBoards($account_id)
+    {
+        try {
+            $response = Helper::getInstance()->apiCallGet("profile/fetchNewPinterestBoards?accountId=" . $account_id . "");
+
+            if ($response->code == 200 && $response->status == "success") {
+                return $response->boards;
+            } else {
+                return null;
+            }
+        } catch (\Exception $e) {
+            return TeamController::showErrorPage($e);
+        }
     }
 
 
@@ -33,7 +120,6 @@ class PinterestController extends Controller
         try {
             $help = Helper::getInstance();
             $response = $help->apiCallGet('team/getProfileRedirectUrl?teamId=' . $teamId . "&network=" . $network);
-
 
             if ($response->code == 200 && $response->status == "success") {
 //                $data = (str_replace("state=", "state=" . $network . "_", $response->navigateUrl)); // previously state was provided in url itself now we get in seperate firld
@@ -97,8 +183,6 @@ class PinterestController extends Controller
 
         $state = Session::get('pinterestState')['state'];
         $code = $request['code'];
-//        dd($code);
-//        dd($state." ".$code);
         $team = Session::get('currentTeam')['team_id'];
         try {
             $help = Helper::getInstance();
@@ -123,9 +207,6 @@ class PinterestController extends Controller
         }
 
     }
-
-
-
 
 
 }

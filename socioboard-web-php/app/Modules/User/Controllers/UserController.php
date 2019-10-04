@@ -36,7 +36,6 @@ class UserController extends Controller
         if ($request->isMethod('get')) {
             return view('User::signup');
         } else if ($request->isMethod('post')) {
-//            dd(22);
             $rules = array(
 
                 "username" => 'required|max:32|min:2|regex:/([a-zA-Z]+)([0-9]*)/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/
@@ -47,7 +46,6 @@ class UserController extends Controller
 //                "passwd" => ['required'=>'regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\?]).*$/'],
                 "c_passwd" => 'required_with:passwd|same:passwd',
             );
-//            dd($rules);
             try {
                 $customMessage =[
                     'passwd.regex' => 'Password must consist atleast 1 uppercase, 1 lowercase and 1 special character',
@@ -76,7 +74,7 @@ class UserController extends Controller
                         "password" =>$request->passwd,
                         "firstName" => $request->first_name,
                         "profilePicture"=>env('APP_URL')."assets/imgs/user-avatar.png",
-                        "phoneCode"=>'NA',
+                        "phoneCode"=>'0',
                         "phoneNo"=>0,
                         "country"=>'NA',
                         "timeZone"=>'NA',
@@ -122,7 +120,6 @@ class UserController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-//                dd($e->getLine());
                 Log::info("Sign up Exception ".$e->getLine()." => ".$e->getMessage());
                 return redirect('signup')->with('error', 'Registration failed:(');
                 throw new \Exception("Exception " . $e->getMessage());
@@ -132,7 +129,6 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-
         if (Session::has('user')) {
             $team = Helper::getInstance()->getTeamNewSession();
             return redirect('dashboard/' . $team['teamSocialAccountDetails'][0][0]->team_id);
@@ -142,6 +138,7 @@ class UserController extends Controller
         } elseif ($request->isMethod('POST')) {
             $user = [];
             $team = [];
+            $teamOwner="";
             //accout activation condition must be added here
             $rules = array(
                 "email" => 'required',
@@ -157,40 +154,49 @@ class UserController extends Controller
                         "user" => $request->email,
                         "password" => $request->passwd
                     );
-                    $data = json_encode($loginData);
+//                    $data = json_encode($loginData);
 
 
                     $api_url = $this->API_URL . 'login';
-
                     $response = $this->client->post($api_url, [RequestOptions::JSON => $loginData]);
                     $result = json_decode($response->getBody()->getContents());
-//                    dd($result);
                     if ($response->getStatusCode() == 200) {
-                        if (isset($result->isTwoStepEnabled)) {
-                            return redirect($result->redirectUrl);
-                        }
-//                        dd($result );
-                        if ($result->code == 404 && $result->status = "failure")
-                            return redirect('login')->with('invalid', $result->message);
-                        else if ($result->code == 400 && $result->status = "failure")
-                            return redirect('login')->with('email_act', $result->message);
+                        //if not admin
+                            if (isset($result->isTwoStepEnabled)) {
+                                return redirect($result->redirectUrl);
+                            }
+                            if ($result->code == 404 && $result->status = "failure")
+                                return redirect('login')->with('invalid', $result->message);
+                            else if ($result->code == 400 && $result->status = "failure")
+                                return redirect('login')->with('email_act', $result->message);
 
 
-                        //TODO get ip and system address of client
+                            //TODO get ip and system address of client
 
 
+                            $user = array(
+                                'accessToken' => $result->accessToken,
+                                'userDetails' => $result->user
+                            );
+                            Session::put('user', $user);
+                            $team = Helper::getInstance()->getTeamNewSession();
+                            for ($i = 0; $i < count($team['teamSocialAccountDetails']); $i++) {
+                                if ($team['teamSocialAccountDetails'][$i][0]->team_admin_id == $result->user->user_id) {
+                                    Session::put('ownerTeamId', $team['teamSocialAccountDetails'][$i][0]->team_id);
+                                    $teamOwner = Session::get('ownerTeamId');
+                                    break;
+                                }
+                            }
 
-                        $user = array(
-                            'accessToken' => $result->accessToken,
-                            'userDetails' => $result->user
-                        );
-//dd($user);
-                        Session::put('user', $user);
-//                        dd(    Session::get('user')['userDetails']->userPlanDetails);
+                            //                        Session::put('ownerTeam',)
 
-                        $team = Helper::getInstance()->getTeamNewSession();
-
-                        return redirect('dashboard/' . $team['teamSocialAccountDetails'][0][0]->team_id);
+                            if ($teamOwner != "") {
+                                return redirect('dashboard/' . $teamOwner);
+                            } else {
+                                Session::forget('user');
+                                Session::forget('team');
+                                return redirect('login')->with('error', 'Default Socioboard team does not exist');
+                            }
 
 
                     } else {
@@ -205,8 +211,27 @@ class UserController extends Controller
         }
     }
 
+    public function getUserInfo(){
+        $help = Helper::getInstance();
+        try{
+            $responseForParticular = $help->apiCallGet("user/getUserInfo");
+
+            if ($responseForParticular->code == 200 && $responseForParticular->status == "success") {
+                $result['code']=200;
+                $result['details']=$responseForParticular->userDetails;
+                return $result;
+            } else {
+                $result['code']=201;
+                $result['message']='Something went wrong';
+                return $result;
+            }
+
+        }
+        catch (\Exception $e){
+        }
+    }
+
     public function dashboard(Request $request,$team){
-//        dd(Session::get('team'));
         $user = [];
         $currentTeam=[];
         $teamDetails=[];
@@ -216,10 +241,8 @@ class UserController extends Controller
         $gac=0;
         $yc=0;
         $insta=0;
-//        dd(Session::get('user'));
         $user = (array)Session::get('user')['userDetails'];
         $teamSession =Session::get('team');
-//dd($user['userPlanDetails']);
 
         $help = Helper::getInstance();
         try{
@@ -229,14 +252,14 @@ class UserController extends Controller
             if($responseForParticular->code==200&& $responseForParticular->status == "success"){
 
                 $currentTeam =(array)$responseForParticular->teamSocialAccountDetails[0];
-//dd($currentTeam );
+
 
                 if(Session::has($currentTeam)){
                     Session::forget('currentTeam');
-                    Session::put('currentTeam',$currentTeam);
+                    Session::forget('pinterestBoards');
                 }
                 Session::put('currentTeam',$currentTeam);
-
+                Session::put('pinterestBoards',(array)$responseForParticular->pinterestBoards);
             }else{
                 //TODO work here
                 return view('User::dashboard.dashboard',[
@@ -264,15 +287,9 @@ class UserController extends Controller
                 $insta =1;
 
             }
-//            dd($insta);
-//            dd($teamSession['teamSocialAccountDetails']);
             foreach($teamSession['teamSocialAccountDetails'] as $team){
                $teamId[] = $team[0]->team_id;
             }
-//            dd(Session::get('currentTeam')['SocialAccount']);
-//            if((array)$user['userPlanDetails']->is_plan_active){
-//                return redirect('updatePlan');
-//            }
 
             return view('User::dashboard.dashboard',[
                 'user'=>$user,
@@ -286,12 +303,12 @@ class UserController extends Controller
                 "youtubeChannels" => $yc,
                 "teamid"=>$teamId,
                 "instaBusiness" => $insta,
-                "socialAccount"=>Session::get('currentTeam')['SocialAccount']]);  // taking current team social account
+                "socialAccount"=>Session::get('currentTeam')['SocialAccount'],
+                "pinterestBoards" => Session::get('pinterestBoards')]);  // taking current team social account
 
 
         }catch (\Exception $e){
             Log::info("Exception  ".$e->getLine()."=> ".$e->getCode()." => ".$e->getMessage());
-            dd($e->getMessage());
 //            return view('User::dashboard.dashboard',['user'=>$user,'activation'=>(array)$user['Activations']]);
         }
 
@@ -309,9 +326,7 @@ class UserController extends Controller
             } else {
                 //TODO work here
             }
-//            dd($responseForParticular );
         }catch (\Exception $e){
-            dd($e->getMessage());
         }
     }
 
@@ -333,17 +348,18 @@ class UserController extends Controller
             Session::forget('linkedCompany');
         Session::forget('GoogleAnalytics');
         Session::forget('youtubeChannels');
+        Session::flush();
 
         return redirect('login')->with('logout', 'Come back soon:(');
     }
 
+
     public function forgotpassword(Request $request){
-        $email = $request->fp_email;
+        $email = urlencode($request->fp_email);
         $result = [];
         $api_url = $this->API_URL . 'forgotPassword?email='.$email;
         try{
             $response = $this->client->get($api_url);
-//            dd($response->getStatusCode());
             if($response->getStatusCode() == 200){
                 $response1 = json_decode($response->getBody()->getContents() );
                 $result['code']= 200;
@@ -360,6 +376,57 @@ class UserController extends Controller
         }
     }
 
+    public function verifyPasswordToken(Request $request){
+        $email = urlencode($request['email']);
+        $activationToken = $request['activationToken'];
+        $api_url = $this->API_URL.'verifyPasswordToken?email='.$email.'&activationToken='.$activationToken;
+        try {
+            $response = $this->client->get($api_url);
+            if($response->getStatusCode() == 200){
+                $resp = json_decode($response->getBody()->getContents());
+                $resetEmail = $request['email'] ;
+                return redirect('login')->with('resetPassword', $resetEmail);
+            }
+//            dd($response->getStatusCode());
+        } catch(\Exception $e){
+            if($e->getCode() === 404){
+                Log::info('Exception ' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
+                return redirect('login')->with('error', 'Could not verify!!!Try again.."');
+            }
+        }
+
+
+    }
+
+    public function resetPassword(Request $request){
+        $email = urlencode($request['reset_email']);
+        $resetPassword = urlencode($request['reset_password']);
+        $api_url = $this->API_URL.'resetPassword?email='.$email.'&newPassword='.$resetPassword ;
+        try {
+            $response = $this->client->post($api_url);
+            $resp = $response->getBody()->getContents();
+            if($response->getStatusCode() == 200){
+                $resp1 = json_decode($resp);
+                if($resp1->code == 200){
+                    if($resp1->code == 200){
+                        return redirect('login')->with('restPwdMsg', "Password Reset Successfull Please Login.....");
+                    }
+                }
+                else{
+                    return redirect('login')->with('restPwdMsgError', $resp1->error);
+                }
+
+            }
+        } catch(\Exception $e) {
+            Log::info('Exception ' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
+            return redirect('login')->with('error', 'Could not change password!!!Try again..');
+        }
+    }
+
+
+
+
+
     public function social($network){
         if($network == "google" || $network == "facebook"){
             $api_url = $this->API_URL . 'Sociallogin?network='.$network;
@@ -373,7 +440,6 @@ class UserController extends Controller
                     return redirect('signup')->with('invalidSocial','Sorry something went wrong:(');
                 }
             }catch (\Exception $e){
-                dd($e->getMessage());
                 Log::info('Exception in social login '.$e->getLine()." => ".$e->getMessage());
                 return redirect('signup')->with('invalidSocial','Sorry something went wrong:(');
             }
@@ -396,7 +462,6 @@ class UserController extends Controller
                         'accessToken'=>$result->accessToken,
                         'userDetails'=>$result->user
                     );
-//                dd($result);
                     Session::put('user',$user);
                     $response = Helper::getInstance()->apiCallGet("team/getDetails");
                     if($response->code == 200 && $response->status =="success"){
@@ -418,7 +483,6 @@ class UserController extends Controller
 
             }
         }catch (\Exception $e){
-            dd($e->getMessage());
             return redirect('login')->with('invalidSocial','Sorry something went wrong:(');
         }
     }
@@ -426,8 +490,10 @@ class UserController extends Controller
     //google callback for login...
     public function googlecallback(Request $request){
         try{
+
             $api_url = $this->API_URL . 'auth/google/callback?code='.$request["code"];
             $response = $this->client->get($api_url);
+
             if ($response->getStatusCode() == 200){
                 $result= json_decode($response->getBody()->getContents());
 
@@ -452,10 +518,11 @@ class UserController extends Controller
                     return redirect('dashboard/'.$team['teamSocialAccountDetails'][0][0]->team_id);
                 }else if($result->code == 401){
                     return redirect('login')->with('invalidSocial','Sorry something went wrong:(');
-                }else if($result->code == 404){
-                    return redirect('login')->with('invalidSocial',$result->error);
                 }else{
-                    return redirect('login')->with('invalidSocial',$result->error);
+                    if(isset($result->error))
+                        return redirect('login')->with('invalidSocial',$result->error);
+                    else
+                        return redirect('login')->with('invalidSocial',"Something went wrong");
 
                 }
 
@@ -464,7 +531,6 @@ class UserController extends Controller
                 return redirect('login')->with('invalidSocial','Sorry something went wrong:(');
             }
         }catch (\Exception $e){
-            dd($e->getMessage());
             return redirect('login')->with('invalidSocial','Sorry something went wrong:(');
         }
     }
@@ -520,7 +586,6 @@ class UserController extends Controller
                 return redirect('login')->with('invalid','Authentication failed');
             }
         }catch (\Exception $e){
-            dd($e->getMessage());
         }
     }
 
@@ -562,7 +627,6 @@ class UserController extends Controller
                             if($response['data']['code']==400){
                                 Log::info('Change password exception ');
                                 Log::info($response['data']);
-//                                dd(11);
 //                                $result['code']=400;
 //                                $result['message']="Sorry, You have entered a wrong password";
                                 return Response::json(array(
@@ -583,16 +647,12 @@ class UserController extends Controller
                         }
                     }catch (\Exception $e){
                         Log::info('Exception changePw: '.$e->getLine()." => code ".$e->getCode()." => ".$e->getMessage());
-                        dd("Exception");
                     }
                 }
 
             }catch (\Exception $e){
-                dd("Exception".$e->getMessage());
             }
-
         }else{
-            dd("invalid method");
         }
     }
 
@@ -616,9 +676,6 @@ class UserController extends Controller
             }
         }
     }
-
-
-
 
     //Profile updation
     public function profileUpdate(Request $request){
@@ -662,7 +719,6 @@ class UserController extends Controller
 
                 if($response->code==200 && $response->status == "success"){
 //                    $data = (Session::get("user")["userDetails"]);
-//                    dd(Session::get("user")["accessToken"]);
 //                    $data->first_name = $response['data']['user']['first_name'];
 //                    $data->last_name = $response['data']['user']['last_name'];
 //                    $data->profile_picture = $response['data']['user']['profile_picture'];
@@ -670,7 +726,6 @@ class UserController extends Controller
 //                    $acc = $response['data']['accessToken'];
 //                    Session::push('user',$data);
 //                    Session::push('user',$acc);
-//                    dd(Session::get("user"));
 
                     $user = array(
                         'accessToken' => $response->accessToken,
@@ -686,7 +741,6 @@ class UserController extends Controller
                         'message' => "Profile Updated Successfully!"
                     ), 200);
                 }else if($response->code == 404){
-//                    dd($response);
                     return Response::json(array(
                         'code'=>201,
                         'success' => false,
@@ -712,12 +766,109 @@ class UserController extends Controller
 
     }
 
-
     public function notification(Request $request){
         if($request->isMethod('GET')){
             return view('User::notification');
         }
     }
+
+    public function seeAllNotifications(Request $request){
+        if($request->isMethod('GET')){
+            $userDetails = array(Session::get('user')['userDetails']);
+            $userId = $userDetails[0]->user_id;
+            $result=[];
+            try{
+                $responseForParticular = Helper::getInstance()->apiCallGetNotification("notify/getUserNotification?userId=".$userId."&pageId=1");
+                if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
+                    $result['code'] =200;
+                    $result['status'] ="success";
+                    $result['notifications'] = $responseForParticular->notifications;
+                }
+                else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
+                    $result['code'] =400;
+                    $result['status'] ="failed";
+                    $result['message'] =$responseForParticular->error;
+                    Log::info("Could not fetch notifications!!!". $responseForParticular->error);
+                }
+                $teamSess = Session::get('team');
+                return view('User::dashboard.seeAllNotifications',['result'=> $result]);
+            }catch (\Exception $e){
+                Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+                $result['code'] =500;
+                $result['status'] ="failed";
+                $result['message'] =$e->getMessage();
+                return view('User::dashboard.seeAllNotifications',['result'=>$result]);
+            }
+
+        }
+    }
+
+    //get User NOtification
+    public function getUserNotification(Request $request){
+        $userDetails = array(Session::get('user')['userDetails']);
+        $userId = $userDetails[0]->user_id;
+        $result=[];
+        try{
+            $responseForParticular = Helper::getInstance()->apiCallGetNotification("notify/getUserNotification?userId=".$userId."&pageId=".$request['pageId']);
+            if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
+                $result['code'] =200;
+                $result['status'] ="success";
+                $result['notifications'] = $responseForParticular->notifications;
+            }
+            else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
+
+                $result['code'] =400;
+                $result['status'] ="failed";
+                $result['message'] =$responseForParticular->error;
+                Log::info("Could not fetch notifications!!!". $responseForParticular->error);
+            }
+            return $result;
+        }catch (\Exception $e){
+            Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+            $result['code'] =500;
+            $result['status'] ="failed";
+            $result['message'] =$e->getMessage();
+            return $result;
+        }
+    }
+
+    //get Team Notification
+    public function getTeamNotification(Request $request){
+        $teamId = Session::get('currentTeam')['team_id'];
+        $result=[];
+        try{
+            $responseForParticular = Helper::getInstance()->apiCallGetNotification("notify/getTeamNotification?teamId=".$teamId."&pageId=".$request['pageId']);
+            if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
+                $result['code'] =200;
+                $result['status'] ="success";
+                $result['notifications'] = $responseForParticular->notifications;
+            }
+            else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
+
+                $result['code'] =400;
+                $result['status'] ="failed";
+                $result['message'] =$responseForParticular->error;
+                Log::info("Could not fetch notifications!!!". $responseForParticular->error);
+            }else{
+
+            }
+            return $result;
+        }catch (\Exception $e){
+            Log::info("Exception :: ".$e->getFile()." => ".$e->getLine()." => ".$e->getMessage());
+            $result['code'] =500;
+            $result['status'] ="failed";
+            $result['message'] =$e->getMessage();
+            return $result;
+        }
+    }
+
+
+//    public function getNewSession(Request $request){
+//        if (Session::has('user')) {
+//            $team = Helper::getInstance()->getTeamNewSession();
+//            return redirect('dashboard/' . $team['teamSocialAccountDetails'][0][0]->team_id);
+//        }
+//    }
 
 
     public function lockUnlockAccount(Request $request){
@@ -769,5 +920,74 @@ class UserController extends Controller
         }
     }
 
+    public function getInvoice(Request $request){
+        if($request->isMethod('post')){
+            $result = [];
+            $helper = Helper::getInstance();
+
+            try {
+                $response = $helper->apiGetInvoice("payment/paymentInvoiceDownloader");
+                if ($response->code == 200 && $response->status == "success") {
+                    $result['code'] = 200;
+                    $result['messaage'] = $response->data->message;
+                    $result['file'] = $response->data->file;
+                } else {
+                    $result['code'] = 400;
+                    if (isset($response->error))
+                        $result['message'] = $response->error;
+                    else if (isset($response->error))
+                        $result['message'] = "Something went wrong";
+                    else
+                        $result['message'] = "Something went wrong";
+                }
+            } catch (\Exception $e) {
+                Log::info(" Invoice download Exception " . $e->getMessage() . " in file " . $e->getFile() . " at line " . $e->getLine());
+                $result['code'] = 200;
+                $result['message'] = "Something went wrong";
+
+            }
+        }
+            return $result;
+    }
+
+
+    public function linkShortening(Request $request){
+        if ($request->isMethod('get')) {
+            return view("User::dashboard.linkShortening", ['status' => (int)Session::get('user')['userDetails']->Activations->shortenStatus]);
+        } else if ($request->isMethod('post')) {
+            $result = [];
+            $data =[];
+            $helper = Helper::getInstance();
+            try {
+                $response = $helper->apiCallPut($data,'user/changeShortenStatus?status=' . $request->status);
+                if ($response['data']['code'] == 200 && $response['data']['status']== "success") {
+                    $responseInfo = $helper->apiCallGet('user/getUserInfo');
+                    Session::forget('user');
+                    $user = array(
+                        'accessToken' => $responseInfo->accessToken,
+                        'userDetails' => $responseInfo->userDetails
+                    );
+                    Session::put('user', $user);
+                    $result['code'] = 200;
+                    $result['message'] = $response['data']['message'];
+                } else {
+                    $result['code'] = 400;
+                    if (isset($response['data']['error']))
+                        $result['message'] = $response['data']['error'];
+                    else if (isset($response['data']['message']))
+                        $result['message'] = $response['data']['message'];
+                    else
+                        $result['message'] = "Something went wrong";
+                }
+            } catch (\Exception $e) {
+                Log::info(" Link shortening exception " . $e->getMessage() . " in file " . $e->getFile() . " at line " . $e->getLine());
+                $result['code'] = 200;
+                $result['message'] = "Something went wrong";
+
+            }
+            return $result;
+
+        }
+    }
 
 }

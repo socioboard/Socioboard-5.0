@@ -62,6 +62,7 @@ class TeamLibs {
             if (!userId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching user Teams respective to userId
                 return userDetails.findOne({
                     where: { user_id: userId },
                     attributes: ['user_id'],
@@ -85,6 +86,7 @@ class TeamLibs {
                             throw new Error("Cant able to fetch the team for respective user!");
                         } else {
                             filteredTeams = teamInformation;
+                            // Fetching social accounts belongs to Team/s
                             return Promise.all(teamInformation.Team.map(function (teamResponse) {
                                 return teamInfo.findAll({
                                     where: {
@@ -105,17 +107,17 @@ class TeamLibs {
                     })
                     .then((teamSocialAccounts) => {
                         teamDetails = teamSocialAccounts;
+                        // Fetching the members of Team/s
                         return Promise.all(filteredTeams.Team.map(function (teamResponse) {
                             return userTeamJoinTable.findAll({
-                                where: {
-                                    team_id: teamResponse.dataValues.team_id
-                                },
+                                where: { team_id: teamResponse.dataValues.team_id, left_from_team: false },
                                 attributes: ['id', 'team_id', 'invitation_accepted', 'permission', 'user_id']
                             });
                         }));
                     })
                     .then((teamMembers) => {
                         teamMemberDetails = teamMembers;
+                        // Fetching member profile details
                         return Promise.all(teamMembers.map(function (teamResponse) {
                             return Promise.all(teamResponse.map(function (userIdentifier) {
                                 return userDetails.findOne({
@@ -127,6 +129,7 @@ class TeamLibs {
                     })
                     .then((response) => {
                         memberProfileDetails = response;
+                        // Fetching social accounts of user
                         return socialAccount.findAll({
                             where: { account_admin_id: userId },
                             attributes: ['account_id', 'first_name', 'account_type', 'profile_pic_url']
@@ -154,6 +157,7 @@ class TeamLibs {
                 var pinterestBoards = [];
                 var SocialAccountStats = [];
 
+                // Validating user belongs to the Team or not
                 return userDetails.findOne({
                     where: { user_id: userId },
                     attributes: ['user_id'],
@@ -185,6 +189,7 @@ class TeamLibs {
                         }
                         else {
                             filteredTeams = teamInformation;
+                            // Fetching social accounts related to that Team
                             return Promise.all(teamInformation.Team.map(function (teamResponse) {
                                 return teamInfo.findAll({
                                     where: {
@@ -206,11 +211,10 @@ class TeamLibs {
                     .then((teamSocialAccounts) => {
                         // if (teamDetails.length < 0) throw new Error('No Social Account to the Team.');
                         teamDetails = teamSocialAccounts;
+                        // Fetching Team members
                         return Promise.all(filteredTeams.Team.map(function (teamResponse) {
                             return userTeamJoinTable.findAll({
-                                where: {
-                                    team_id: teamResponse.dataValues.team_id
-                                },
+                                where: { team_id: teamResponse.dataValues.team_id, left_from_team: false },
                                 attributes: ['id', 'team_id', 'invitation_accepted', 'permission', 'user_id']
                             });
                         }));
@@ -236,6 +240,7 @@ class TeamLibs {
                     })
                     .then((accounts) => {
                         var pinterestIds = [];
+                        // Fetching social account stats for each account
                         return Promise.all(accounts.map(account => {
                             var fields = [];
                             switch (Number(account.account_type)) {
@@ -263,6 +268,11 @@ class TeamLibs {
                                 default:
                                     break;
                             }
+
+                            if (account.account_type == 11) {
+                                pinterestIds.push(account.account_id);
+                            }
+
                             if (fields.length > 0) {
                                 return updateFriendsTable.findOne({
                                     where: { account_id: account.account_id },
@@ -276,11 +286,6 @@ class TeamLibs {
                                         logger.error(error.message);
                                     });
                             }
-
-                            if (account.account_type == 11) {
-                                pinterestIds.push(account.account_id);
-                            }
-
                         }))
                             .then(() => {
                                 logger.info(`Length: ${SocialAccountStats.length}`);
@@ -293,6 +298,7 @@ class TeamLibs {
 
                     })
                     .then((pinterestIds) => {
+                        // Fetching pinterest boads
                         return Promise.all(pinterestIds.map(function (accountId) {
                             return pinterestBoard.findAll({
                                 where: {
@@ -350,11 +356,13 @@ class TeamLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var socialAccounts = {};
+                // Fetching social account
                 return socialAccount.findOne({
                     where: { account_admin_id: userId, account_id: accountId }
                 })
                     .then((account) => {
                         var fields = [];
+                        // Fetching account statistics/stats
                         switch (Number(account.account_type)) {
                             case 1:
                                 fields = ['friendship_count', 'page_count', 'profile_picture'];
@@ -411,11 +419,13 @@ class TeamLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 var socialAccounts = [];
+                // Fetching all social accounts of an user
                 return socialAccount.findAll({
                     where: { account_admin_id: userId }
                 })
                     .then((accounts) => {
                         var fields = [];
+                        // Fetching each account stats
                         return Promise.all(accounts.map(account => {
                             switch (Number(account.account_type)) {
                                 case 1:
@@ -475,6 +485,7 @@ class TeamLibs {
             if (!userId || !teamDescription) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating Team details (already exists or not)
                 return db.sequelize.transaction(function (t) {
                     return teamInfo.findOne({
                         where: {
@@ -526,6 +537,7 @@ class TeamLibs {
             if (!userId || !teamId || !teamDescription) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating User belongs to that particular team or not
                 return db.sequelize.transaction(function (t) {
                     return teamInfo.findOne({
                         where: {
@@ -541,6 +553,7 @@ class TeamLibs {
                             if (!team)
                                 throw new Error("Team not found or access denied!");
                             else {
+                                // Updating the team
                                 return team.update({
                                     team_name: teamDescription.name,
                                     team_description: teamDescription.description,
@@ -568,6 +581,7 @@ class TeamLibs {
             if (!userId || !teamId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating User belongs to that particular team or not
                 return db.sequelize.transaction(function (t) {
                     return teamInfo.findOne({
                         where: {
@@ -579,6 +593,7 @@ class TeamLibs {
                         },
                         attributes: ['team_id', 'team_name', 'is_default_team']
                     }, { transaction: t })
+                        // Finding all team information or throwing error message
                         .then((team) => {
                             if (!team) {
                                 throw new Error("Team not found or access denied!");
@@ -601,6 +616,7 @@ class TeamLibs {
                                 usersTeamIds.push(String(element.team_id));
                             });
                             if (usersTeamIds.includes(teamId)) {
+                                // Fetching social accounts belongs to that Team
                                 return teamSocialAccountJoinTable.findAll({
                                     where: {
                                         team_id: usersTeamIds
@@ -617,6 +633,7 @@ class TeamLibs {
                                 var deleteAccounts = [];
                                 var currentTeamAccounts = [];
 
+                                // Fetching all accounts Id's and storing it in a variable
                                 teamsAccount.forEach(element => {
                                     if (element.team_id == teamId) {
                                         currentTeamAccounts.push(element.account_id);
@@ -635,6 +652,7 @@ class TeamLibs {
                                     });
                                     var filteredDeleteAccounts = lodash.intersection(currentTeamAccounts, deleteAccounts);
                                     if (filteredDeleteAccounts.length > 0) {
+                                        // Deleting the listed social accounts belongs to that Team
                                         return socialAccount.destroy(
                                             { where: { account_id: filteredDeleteAccounts } },
                                             { transaction: t });
@@ -684,6 +702,7 @@ class TeamLibs {
             if (!userId || !userName || !teamId || !invitingUserEmail || !permission || !maximumMemberCount) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Validating User belongs to that particular team or not
                 return db.sequelize.transaction((t) => {
                     return teamInfo.findOne({
                         where: {
@@ -700,6 +719,7 @@ class TeamLibs {
 
                             teamDetails = teamInfo;
 
+                            // Validating the inviting user belongs to the socioboard or not
                             return userDetails.findOne({
                                 where: { email: invitingUserEmail },
                                 include: [{
@@ -719,6 +739,7 @@ class TeamLibs {
                             }
                         })
                         .then(() => {
+                            // Checking that till now how many members we have invited
                             return userTeamJoinTable.count({
                                 where: {
                                     [Operator.and]: [{
@@ -730,12 +751,14 @@ class TeamLibs {
                             }, { transaction: t });
                         })
                         .then((count) => {
+                            // Validating the maximum people we can invite based on our current plan
                             var availableMemberCount = maximumMemberCount - count;
                             if (availableMemberCount <= 0)
                                 throw new Error(`Sorry, As per your plan, you can't invite any more user.`);
                             return;
                         })
                         .then(() => {
+                            // Checking that, we already invited the same user or not
                             return userTeamJoinTable.findOne({
                                 where: {
                                     [Operator.and]: [{
@@ -751,6 +774,7 @@ class TeamLibs {
                             if (invitingUserInfo)
                                 throw new Error("Same user already invited or left the team");
                             else {
+                                // Creating an invitation to the Team
                                 return userTeamJoinTable.create({
                                     team_id: teamId,
                                     user_id: invitingUserId,
@@ -764,7 +788,7 @@ class TeamLibs {
                         .then(() => {
                             let targetUserId = [];
                             targetUserId.push(invitingUserId);
-
+                            // Sending notification to specified inviting user of invitation to a Team
                             var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
                             notification.notificationMessage = `${userName} invited to join ${teamDetails.team_name} Team.`;
                             notification.teamName = teamDetails.team_name;
@@ -796,6 +820,7 @@ class TeamLibs {
     getTeamInvitations(userId) {
         return new Promise((resolve, reject) => {
             var invitationData = [];
+            // Finding user invitation acceptance pending Team/s Id's
             return userDetails.findOne({
                 where: { user_id: userId },
                 attributes: ['user_id'],
@@ -810,6 +835,7 @@ class TeamLibs {
                 }]
             })
                 .then((teamInformation) => {
+                    // Fetching the full information about each team
                     return Promise.all(teamInformation.Team.map(function (teamResponse) {
                         return teamInfo.findAll({
                             where: {
@@ -862,6 +888,7 @@ class TeamLibs {
         let acceptResponse = '';
         let adminId = '';
         return new Promise((resolve, reject) => {
+            // Checking invitations are there or not
             return db.sequelize.transaction((t) => {
                 return userTeamJoinTable.findOne({
                     where: {
@@ -880,6 +907,7 @@ class TeamLibs {
 
                         adminId = userTeamJoinTableInfo.invited_by;
 
+                        // Updating the status of invitation to Accepted
                         return userTeamJoinTableInfo.update({
                             invitation_accepted: true,
                             left_from_team: false
@@ -895,6 +923,7 @@ class TeamLibs {
                         let targetUserId = [];
                         targetUserId.push(adminId);
 
+                        // Sending notification to the user who invited saying, the user is Accepted invitation
                         var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
                         notification.notificationMessage = `${userName} accepted your invitation for ${teamDetails.team_name} team.`;
                         notification.teamName = teamDetails.team_name;
@@ -926,6 +955,7 @@ class TeamLibs {
         let adminId = '';
         let deleteInfo = '';
         return new Promise((resolve, reject) => {
+            // Checking invitations are there or not
             return db.sequelize.transaction((t) => {
                 return userTeamJoinTable.findOne({
                     where: {
@@ -946,6 +976,7 @@ class TeamLibs {
                         if (userTeamJoinTableInfo == null)
                             throw new Error("You don't have invitation for this team or You already a member of this team!");
 
+                        // Updating the invitation to Decline (removing the invitation from DB)
                         adminId = userTeamJoinTableInfo.invited_by;
                         return userTeamJoinTable.destroy({
                             where: {
@@ -967,6 +998,7 @@ class TeamLibs {
                         let targetUserId = [];
                         targetUserId.push(adminId);
 
+                        // Sending notification to invited user saying, user declined your Invitation
                         var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
                         notification.notificationMessage = `${userName} declined your invitation for joining a ${teamDetails.team_name} team.`;
                         notification.teamName = teamDetails.team_name;
@@ -979,6 +1011,7 @@ class TeamLibs {
                             .then((savedObject) => {
                                 var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
                                 return notification.sendUserNotification(adminId, encryptedNotifications);
+
                             })
                             .catch((error) => {
                                 throw error;
@@ -996,6 +1029,7 @@ class TeamLibs {
 
     withdrawInvitation(userId, teamId, emailId) {
         return new Promise((resolve, reject) => {
+            // Checking user is belongs to the team or not
             return db.sequelize.transaction(function (t) {
                 return teamInfo.findOne({
                     where: {
@@ -1010,6 +1044,7 @@ class TeamLibs {
                         if (teamInfo == null)
                             throw new Error("Not Found or Access Denied!");
                         else {
+                            // Checking the invited user is belongs to the socioboard or not
                             return userDetails.findOne({
                                 where: { email: emailId },
                                 attributes: ['user_id']
@@ -1020,6 +1055,7 @@ class TeamLibs {
                         if (user == null)
                             throw new Error(`No such email registered with ${config.get('applicationName')}!`);
                         else {
+                            // Deleting the invitation made to the user 
                             return userTeamJoinTable.destroy({
                                 where: {
                                     [Operator.and]: [{
@@ -1046,12 +1082,13 @@ class TeamLibs {
         });
     }
 
-    removeTeamMember(userId, teamId, memberId) {
+    removeTeamMember(userId, userName, teamId, memberId) {
         return new Promise((resolve, reject) => {
             if (!userId || !teamId || !memberId) {
                 reject(new Error('Invalid Inputs'));
             } else {
-                var member = '';
+                var teamDetails = {};
+                // Checking user is belongs to the team or not
                 return db.sequelize.transaction((t) => {
                     return teamInfo.findOne({
                         where: {
@@ -1062,10 +1099,11 @@ class TeamLibs {
                             }]
                         }
                     }, { transaction: t })
-                        .then((teamInfo) => {
-                            if (teamInfo == null)
+                        .then((teamData) => {
+                            if (teamData == null)
                                 throw new Error("Not found or access denied!");
                             else {
+                                teamDetails = teamData;
                                 return userDetails.findOne({
                                     where: { user_id: memberId },
                                     attributes: ['user_id', 'first_name']
@@ -1076,7 +1114,7 @@ class TeamLibs {
                             if (user == null)
                                 throw new Error(`No such member registered with ${config.get('applicationName')}!`);
                             else {
-                                member = user.first_name;
+                                // removing the Team member
                                 return userTeamJoinTable.destroy({
                                     where: {
                                         [Operator.and]: [{
@@ -1094,8 +1132,30 @@ class TeamLibs {
                         .then((response) => {
                             if (response == 0)
                                 throw new Error("Already removed from your team.");
-                            else
-                                resolve(`Successfully removed member(${member}) from team(${teamId})`);
+                            else {
+                                let targetUserId = [];
+                                targetUserId.push(memberId);
+
+                                // Sending notification to user saying, You've been removed from Team
+                                var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+                                notification.notificationMessage = `You have been removed from team(${teamDetails.team_name})`;
+                                notification.teamName = teamDetails.team_name;
+                                notification.notifyType = 'team_removeTeamMember';
+                                notification.initiatorName = userName;
+                                notification.status = 'success';
+                                notification.targetUserId = targetUserId;
+
+                                return notification.saveNotifications()
+                                    .then((savedObject) => {
+                                        var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
+                                        return notification.sendUserNotification(memberId, encryptedNotifications);
+                                    }).then(() => {
+                                        resolve(`Successfully removed member(${memberId}) from team(${teamId})`);
+                                    })
+                                    .catch(() => {
+                                        throw error;
+                                    })
+                            }
                         })
                         .catch((error) => {
                             reject(error);
@@ -1121,11 +1181,13 @@ class TeamLibs {
                 }
 
                 var matchedUser = [];
+                // Fetching all Team members
                 return userTeamJoinTable.findAll({
                     where: condition,
                     attributes: ['user_id', 'team_id']
                 })
                     .then((users) => {
+                        // Fetching all Team members details
                         return Promise.all(users.map(user => {
                             return userDetails.findOne({
                                 where: {
@@ -1157,6 +1219,7 @@ class TeamLibs {
 
         var resultJson = null;
         return new Promise((resolve, reject) => {
+            // Checking user is belongs to the team or not
             return db.sequelize.transaction((t) => {
                 return teamInfo.findOne({
                     where: {
@@ -1182,11 +1245,12 @@ class TeamLibs {
                             throw new Error("Team not found or You don't have access to add the profile to team");
                         }
                         else {
-
+                            // swithing to whichever network is selected by user
                             switch (network) {
                                 case "Facebook":
                                 case "FacebookPage":
                                 case "FacebookGroup":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('1')) {
                                         redirectUrl = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.scopes')}&state=${encryptedState}`;
                                         resultJson = { code: 200, status: "success", message: "Navigated to facebook.", navigateUrl: redirectUrl };
@@ -1195,6 +1259,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "InstagramBusiness":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('12')) {
                                         let scopes = `${config.get('facebook_api.scopes')},${config.get('instagram.business_account_scopes')}`;
                                         redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${scopes}&state=${encryptedState}`;
@@ -1204,6 +1269,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "Twitter":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('4')) {
                                         return this.twtConnect.requestToken()
                                             .then((response) => {
@@ -1225,6 +1291,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "LinkedIn":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('6')) {
                                         redirectUrl = this.linkedInConnect.getOAuthUrl(encryptedState);
                                         resultJson = { code: 200, status: "success", message: "Navigated to linkedIn.", navigateUrl: redirectUrl };
@@ -1233,6 +1300,7 @@ class TeamLibs {
 
                                     break;
                                 case "LinkedInCompany":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('6')) {
                                         redirectUrl = this.linkedInConnect.getV1OAuthUrl(encryptedState);
                                         resultJson = { code: 200, status: "success", message: "Navigated to linkedIn.", navigateUrl: redirectUrl };
@@ -1241,6 +1309,7 @@ class TeamLibs {
 
                                     break;
                                 case "Youtube":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('9')) {
                                         redirectUrl = this.googleConnect.getGoogleAuthUrl('youtube', encryptedState);
                                         resultJson = { code: 200, status: "success", message: "Navigated to youtube.", navigateUrl: redirectUrl };
@@ -1248,6 +1317,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "GoogleAnalytics":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('10')) {
                                         redirectUrl = this.googleConnect.getGoogleAuthUrl('googleAnalytics', encryptedState);
                                         resultJson = { code: 200, status: "success", message: "Navigated to google analytics.", navigateUrl: redirectUrl };
@@ -1255,6 +1325,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "Instagram":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('5')) {
                                         redirectUrl = `https://api.instagram.com/oauth/authorize/?client_id=${config.get('instagram.client_id')}&redirect_uri=${encodeURIComponent(config.get('instagram.redirect_url'))}&response_type=code`;
                                         resultJson = { code: 200, status: "success", message: "Navigated to instagram.", navigateUrl: redirectUrl, state: encryptedState };
@@ -1262,6 +1333,7 @@ class TeamLibs {
                                         throw new Error("Sorry, Requested network not available for your plan.");
                                     break;
                                 case "Pinterest":
+                                    // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('11')) {
                                         redirectUrl = `https://api.pinterest.com/oauth/?response_type=code&redirect_uri=${config.get('pinterest.redirect_url')}&client_id=${config.get('pinterest.client_id')}&scope=${config.get('pinterest.scopes')}`;
                                         resultJson = { code: 200, status: "success", message: "Navigated to pinterest.", navigateUrl: redirectUrl, state: encryptedState };
@@ -1364,7 +1436,7 @@ class TeamLibs {
                                     })
                                     .catch((error) => {
                                         // appInsights
-                                        logger.error(`error on fetching post details ${error.message}`);
+                                        logger.error(`Error on fetching post details ${error.message}`);
                                         return;
                                     });
                             case 4:
@@ -1421,7 +1493,7 @@ class TeamLibs {
                                     })
                                     .catch((error) => {
                                         // appInsights
-                                        logger.error(`error on fetching post details ${error.message}`);
+                                        logger.error(`Error on fetching post details ${error.message}`);
                                         return;
                                     });
                             case 12:
@@ -1441,11 +1513,11 @@ class TeamLibs {
                                     })
                                     .catch((error) => {
                                         // appInsights
-                                        logger.error(`error on fetching post details ${error.message}`);
+                                        logger.error(`Error on fetching post details ${error.message}`);
                                         return;
                                     });
                             default:
-                                logger.info(`default account type ${socialAccount.account_type}`);
+                                logger.info(`Default account type ${socialAccount.account_type}`);
                                 break;
                         }
                     }
@@ -1468,6 +1540,7 @@ class TeamLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
                 logger.info(`profiles, ${profile}`);
+                // Validating that the user is belongs to the Team or not
                 return db.sequelize.transaction((t) => {
                     return teamInfo.findOne({
                         where: {
@@ -1477,7 +1550,7 @@ class TeamLibs {
                                 team_id: profile.TeamId
                             }]
                         },
-                        attributes: ['team_id']
+                        attributes: ['team_id', 'team_name']
                     }, { transaction: t })
                         .then((team) => {
                             if (team == null)
@@ -1503,6 +1576,7 @@ class TeamLibs {
                                 throw new Error("Account has been added already!");
                             }
                             else {
+                                // Adding/Creating account
                                 logger.info("Account is addding!");
                                 return socialAccount.create({
                                     account_type: profile.Network,
@@ -1524,6 +1598,7 @@ class TeamLibs {
                         })
                         .then((profileDetails) => {
                             ProfileInfo = profileDetails;
+                            // Setting the Account to the Team
                             return profileDetails.setTeam(teamDetails, { transaction: t, through: { is_account_locked: false } });
                         })
                         .then(() => {
@@ -1542,6 +1617,7 @@ class TeamLibs {
                         })
                         .then(() => {
                             logger.info('Started fetching feeds');
+                            // Started fetching feeds of the added account
                             return this.scheduleNetworkPostFetching(ProfileInfo.account_id)
                                 .catch((error) => { logger.error(error.message); });
                         })
@@ -1555,6 +1631,7 @@ class TeamLibs {
                             let targetTeamsId = [];
                             targetTeamsId.push(profile.TeamId);
 
+                            // Sending notification to the Team members saying, an account is added to the Team
                             var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
                             notification.notificationMessage = `${userName} added the social profiles to a ${teamDetails.team_name} team.`;
                             notification.teamName = teamDetails.team_name;
@@ -1588,6 +1665,7 @@ class TeamLibs {
         var ProfileCount = null;
         return new Promise((resolve, reject) => {
 
+            // Checking the number of accounts added by the user
             return db.sequelize.transaction((t) => {
                 return socialAccount.count({
                     where: { account_admin_id: userId },
@@ -1596,6 +1674,7 @@ class TeamLibs {
                     .then((count) => {
                         ProfileCount = count;
                         var planCount = userScopeMaxAccountCount;
+                        // Calculating how may accounts user can add by user plan
                         var availableAccounts = planCount - ProfileCount;
                         if (availableAccounts > 0) {
                             return availableAccounts;
@@ -1616,6 +1695,7 @@ class TeamLibs {
                             var networkId = this.coreServices.networks[queryInputs.network];
                             logger.info(`networkId: ${networkId}`);
 
+                            // Adding account and updating Friends stats
                             switch (queryInputs.network) {
                                 case "Facebook":
                                     if (userScopeAvailableNetworks.includes('1')) {
@@ -2106,6 +2186,7 @@ class TeamLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var fetchedSocialAccount = '';
+                // Fetching user social accounts
                 return db.sequelize.transaction((t) => {
                     return socialAccount.findOne({
                         where: {
@@ -2134,6 +2215,7 @@ class TeamLibs {
 
                                 schedule.scheduleJob(batchId, time, () => {
                                     logger.info(`Started network posts deleting for social id: ${this.scheduleObject.socialId}`);
+                                    // Started network posts deleting for social account
                                     this.deleteAccountsMongoPosts(this.scheduleObject)
                                         .then(() => {
                                             logger.info("Deleting process completed.");
@@ -2240,6 +2322,7 @@ class TeamLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var teamDetails = {};
+                // Validating user belongs to that Team or not
                 return db.sequelize.transaction((t) => {
                     return teamInfo.findOne({
                         where: {
@@ -2256,6 +2339,7 @@ class TeamLibs {
                                 throw new Error("You don't have access to add the profile to the team.");
                             else {
                                 teamDetails = team;
+                                // Finding the giver account is present in database or not
                                 return socialAccount.findOne({
                                     where: {
                                         account_id: accountId
@@ -2266,6 +2350,7 @@ class TeamLibs {
                         })
                         .then((socialAcc) => {
                             if (socialAcc && socialAcc.account_admin_id && socialAcc.account_admin_id == userId)
+                                // Adding social account to the Team
                                 return socialAcc.addTeam(teamDetails, { transaction: t, through: { is_account_locked: false } });
                             else
                                 throw new Error("You aren't an admin for an account!");
@@ -2287,6 +2372,8 @@ class TeamLibs {
             if (!userId || !teamId || !accountId || !userName) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                var teamDetails = {};
+                // Validating user belongs to that Team or not
                 return db.sequelize.transaction((t) => {
                     return teamInfo.findOne({
                         where: {
@@ -2296,12 +2383,14 @@ class TeamLibs {
                                 team_id: teamId
                             }]
                         },
-                        attributes: ['team_id']
+                        attributes: ['team_id', 'team_name']
                     }, { transaction: t })
                         .then((team) => {
                             if (team == null)
                                 throw new Error("You don't have access to add the profile to the team.");
                             else {
+                                teamDetails = team;
+                                // Finding the giver account is present in database or not
                                 return socialAccount.findOne({
                                     where: {
                                         [Operator.and]: [{
@@ -2318,6 +2407,7 @@ class TeamLibs {
                             if (!socialAcc) {
                                 throw new Error("Not found or You aren't an admin for an account!");
                             } else {
+                                // Deleting the account from Team
                                 return teamSocialAccountJoinTable.destroy({
                                     where: {
                                         [Operator.and]: [{
@@ -2330,18 +2420,24 @@ class TeamLibs {
                             }
                         })
                         .then(() => {
-                            var notification = {
-                                TeamId: teamId,
-                                Module: "Team's Profile Removed.",
-                                Status: 200,
-                                AccountId: userId,
-                                Description: `${userName} removed one profile from Team.`,
-                                Value: 'MongoId'
-                            };
-                            var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(notification));
 
-                            var notifyServices = new NotificationServices(config.get('notification_socioboard.host_url'));
-                            return notifyServices.sendTeamNotification(teamId, encryptedNotifications);
+                            let targetTeamsId = [];
+                            targetTeamsId.push(teamId);
+
+                            // Sending notification to the Team members saying, Social account has been deleted from the Team
+                            var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+                            notification.notificationMessage = `${userName} removed one profile from Team.`;
+                            notification.teamName = teamDetails.team_name;
+                            notification.notifyType = 'team_deleteTeamSocialProfile';
+                            notification.initiatorName = userName;
+                            notification.status = 'success';
+                            notification.targetTeamsId = targetTeamsId;
+
+                            return notification.saveNotifications()
+                                .then((savedObject) => {
+                                    var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
+                                    return notification.sendTeamNotification(teamId, encryptedNotifications);
+                                });
                         })
                         .then(() => {
                             resolve('success');
@@ -2364,6 +2460,7 @@ class TeamLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 let teamName = '';
+                // Validating user belongs to that Team or not
                 return db.sequelize.transaction((t) => {
                     return userTeamJoinTable.findOne({
                         where: {
@@ -2394,6 +2491,7 @@ class TeamLibs {
                         })
                         .then((teamInfoResponse) => {
 
+                            // Validating that the user is Admin or not
                             if (teamInfoResponse.team_admin_id == userId)
                                 throw new Error("Admin can't leave the leave, rather delete the team!");
 
@@ -2406,6 +2504,7 @@ class TeamLibs {
                             let targetTeamsId = [];
                             targetTeamsId.push(teamId);
 
+                            // Sending notification to team members saying, user left from the Team
                             var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
                             notification.notificationMessage = `${userName} left from ${teamName} team.`;
                             notification.teamName = teamName;
@@ -2442,6 +2541,7 @@ class TeamLibs {
             } else {
                 return db.sequelize.transaction((t) => {
 
+                    // Validating user belongs to that Team or not
                     return teamInfo.findOne({
                         where: {
                             [Operator.and]: [{
@@ -2455,6 +2555,7 @@ class TeamLibs {
                             if (teamInfo == null)
                                 throw new Error("Team Not Found or Access Denied!");
                             else {
+                                // Validating the member belongs to that Team or not
                                 return userTeamJoinTable.findOne({
                                     where: {
                                         [Operator.and]: [{
@@ -2471,13 +2572,33 @@ class TeamLibs {
                             if (teamProfile == null)
                                 throw new Error("No such member found!");
                             else {
+                                // Updating the member permisiion
                                 return teamProfile.update({
                                     permission: permission,
                                 }, { transaction: t });
                             }
                         })
                         .then(() => {
-                            resolve('success');
+                            let targetUserId = [];
+                            targetUserId.push(memberId);
+
+                            // Sending notification to the member saying, your permissions has been updated
+                            var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+                            notification.notificationMessage = `Team Admin has changed your Team permission to ${permission == 1 ? "fullPermission" : "approvalNeeded"} `;
+                            notification.teamName = teamInfo.team_name;
+                            notification.notifyType = 'team_editMemberPermission';
+                            notification.initiatorName = user.first_name;
+                            notification.status = 'success';
+                            notification.targetUserId = targetUserId;
+
+                            return notification.saveNotifications()
+                                .then((savedObject) => {
+                                    var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
+                                    return notification.sendUserNotification(memberId, encryptedNotifications);
+                                })
+                                .then(() => {
+                                    resolve('success');
+                                });
                         })
                         .catch(function (error) {
                             reject(error);
@@ -2495,6 +2616,7 @@ class TeamLibs {
                 return db.sequelize.transaction(function (t) {
                     var updatedAccounts = [];
                     var erroredProfiles = [];
+                    // Validating user that the accounts are belongs to user or not
                     return socialAccount.findAll({
                         where: {
                             [Operator.and]: [{
@@ -2514,6 +2636,7 @@ class TeamLibs {
                                     updatedAccounts.push(String(account.account_id));
                                 });
                                 erroredProfiles = lodash.pullAll(body, updatedAccounts);
+                                // Locking the social account
                                 return teamSocialAccountJoinTable.update({
                                     is_account_locked: 1
                                 }, { where: { account_id: accounts.map(t => t.account_id) } }, { transaction: t });
@@ -2530,7 +2653,7 @@ class TeamLibs {
         });
     }
 
-    unlockProfiles(userId, body) {
+    unlockProfilesOld(userId, body) {
         return new Promise((resolve, reject) => {
             if (!userId || !body) {
                 reject(new Error('Invalid Inputs'));
@@ -2538,6 +2661,7 @@ class TeamLibs {
                 return db.sequelize.transaction(function (t) {
                     var updatedAccounts = [];
                     var erroredProfiles = [];
+                    // Validating user that the accounts are belongs to user or not
                     return socialAccount.findAll({
                         where: {
                             [Operator.and]: [{
@@ -2557,6 +2681,7 @@ class TeamLibs {
                                     updatedAccounts.push(String(account.account_id));
                                 });
                                 erroredProfiles = lodash.pullAll(body, updatedAccounts);
+                                // Un-locking the social account
                                 return teamSocialAccountJoinTable.update({
                                     is_account_locked: 0
                                 }, { where: { account_id: accounts.map(t => t.account_id) } }, { transaction: t });
@@ -2568,6 +2693,83 @@ class TeamLibs {
                             reject(error);
                         });
                 });
+            }
+        });
+    }
+
+    unlockProfiles(userId, body, maxAccounts) {
+        return new Promise((resolve, reject) => {
+            if (!userId || !body || !maxAccounts) {
+                reject(new Error('Invalid Inputs'));
+            } else {
+                var OpenAccountsCount = 0;
+                // Validating user that the accounts are belongs to user or not
+                return socialAccount.findAndCountAll({
+                    where: { account_admin_id: userId },
+                    include: [{
+                        model: teamInfo,
+                        as: "Team",
+                        through: {
+                            model: teamSocialAccountJoinTable,
+                            where: { is_account_locked: 0 }
+                        }
+                    }],
+                    raw: true
+                })
+                    .then((result) => {
+                        return Promise.all(result.rows.map(account => {
+                            if (account['Team.join_table_teams_social_accounts.is_account_locked'] == 0) {
+                                OpenAccountsCount += 1;
+                            }
+                        }))
+                            .then(() => {
+                                // Validating the user plan account size
+                                logger.info(`pending accounts size, OpenAccountsCount <= maxAccounts, ${OpenAccountsCount <= maxAccounts}`);
+                                if (OpenAccountsCount <= maxAccounts) {
+                                    return db.sequelize.transaction(function (t) {
+                                        var updatedAccounts = [];
+                                        var erroredProfiles = [];
+                                        return socialAccount.findAll({
+                                            where: {
+                                                [Operator.and]: [{
+                                                    account_id: body
+                                                }, {
+                                                    account_admin_id: userId
+                                                }]
+                                            },
+                                            attributes: ['account_id']
+                                        }, { transaction: t })
+                                            .then((accounts) => {
+                                                if (accounts.length == 0) {
+                                                    throw new Error("Sorry, either accounts not found or you dont have access of those accounts!");
+                                                }
+                                                else {
+                                                    accounts.forEach(account => {
+                                                        updatedAccounts.push(String(account.account_id));
+                                                    });
+                                                    erroredProfiles = lodash.pullAll(body, updatedAccounts);
+                                                    // Un-locking the social accout
+                                                    return teamSocialAccountJoinTable.update({
+                                                        is_account_locked: 0
+                                                    }, { where: { account_id: accounts.map(t => t.account_id) } }, { transaction: t });
+                                                }
+                                            })
+                                            .then(() => {
+                                                resolve({ updatedProfiles: updatedAccounts, errorProfiles: erroredProfiles });
+                                            }).catch((error) => {
+                                                throw error;
+                                            });
+                                    });
+                                }
+                                else {
+                                    reject(new Error("Sorry! As per your plan you can't unlock more accounts."));
+                                }
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
+                    })
+                    .catch((error) => { reject(error); })
             }
         });
     }

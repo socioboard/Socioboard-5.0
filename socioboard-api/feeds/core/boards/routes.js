@@ -17,15 +17,15 @@ const boardController = require('./controllers/boardControllers');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Board Name
+ *         description: Provide Board name
  *         name: boardName
  *         type: string  
  *       - in: query
- *         description: Keyword
+ *         description: Provide keyword
  *         name: keyword
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *     responses:
@@ -53,7 +53,7 @@ routes.put('/create', boardController.create);
  *       - application/json
  *     parameters: 
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *     responses:
@@ -82,15 +82,15 @@ routes.get('/getAllBoards', boardController.getAllBoards);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Board Id
+ *         description: Provide Board id
  *         name: boardId
  *         type: integer  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *       - in: query
- *         description: Keyword
+ *         description: Provide keyword
  *         name: keyword
  *         type: string  
  *     responses:
@@ -119,11 +119,11 @@ routes.put('/update', boardController.update);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Board Id
+ *         description: Provide Board id
  *         name: boardId
  *         type: integer  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *     responses:

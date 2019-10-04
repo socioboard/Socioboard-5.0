@@ -17,6 +17,7 @@ var appUserStats = new Schema({
 appUserStats.index({ "month": 1, "year": 1 }, { "unique": true });
 
 appUserStats.methods.insertMany = function (details) {
+    // Inserting/Adding data into the table
     return this.model('AppUserStats')
         .insertMany(details)
         .then((postdetails) => {
@@ -28,6 +29,7 @@ appUserStats.methods.insertMany = function (details) {
 };
 
 appUserStats.methods.getMonthlyStats = function () {
+    // Fetching monthly status of application from DB
     return this.model('AppUserStats')
         .find({})
         .then(function (result) {
@@ -39,6 +41,7 @@ appUserStats.methods.getMonthlyStats = function () {
 };
 
 appUserStats.methods.getParticularMonth = function (month, year) {
+    // Fetching specified month status of application from DB
     var query = {
         month: { $gte: month },
         year: { $gte: year },

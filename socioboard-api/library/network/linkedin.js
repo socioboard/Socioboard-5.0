@@ -16,6 +16,7 @@ LinkedIn.prototype.getV1OAuthUrl = function (state) {
 
 LinkedIn.prototype.getV1ProfileAccessToken = function (res, code, state, callback) {
     this.LinkedInApiConfig.auth.getAccessToken(res, code, state, function (error, results) {
+        // Checking whether it sent error in callback or not
         if (error)
             callback(error, null);
         else
@@ -42,6 +43,7 @@ LinkedIn.prototype.getV1ProfileDetails = function (accessToken) {
                 access_token: accessToken,
                 info: response.headline ? response.headline : ''
             };
+            // Sending response
             resolve(profileInfo);
         });
     });
@@ -49,12 +51,14 @@ LinkedIn.prototype.getV1ProfileDetails = function (accessToken) {
 
 LinkedIn.prototype.getOAuthUrl = function (state) {
 
+    // Creating a specific url based on requirement(input)
     if (!state)
         return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${this.linkedIn_api.client_id}&redirect_uri=${this.linkedIn_api.redirect_url}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
     else
         return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${this.linkedIn_api.client_id}&redirect_uri=${this.linkedIn_api.redirect_url}&state=${state}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
 
 
+    // with old scopes
     // if (!state) {
     //     return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${this.linkedIn_api.client_id}&redirect_uri=${this.linkedIn_api.redirect_url}&scope=r_basicprofile%20r_emailaddress%20w_share%20rw_company_admin`;
     // } else {
@@ -67,6 +71,7 @@ LinkedIn.prototype.getProfileAccessToken = function (code) {
         var postParameters = {
             method: 'POST',
             uri: 'https://www.linkedin.com/oauth/v2/accessToken',
+            // Making a JSON object of inputs in request
             qs: {
                 grant_type: 'authorization_code',
                 client_id: this.linkedIn_api.client_id,
@@ -76,8 +81,10 @@ LinkedIn.prototype.getProfileAccessToken = function (code) {
             },
             json: true,
         };
+        // Hitting linkedin api to get access token
         return requestPromise(postParameters)
             .then((response) => {
+                // Sending response
                 resolve(response.access_token);
             })
             .catch((error) => {
@@ -86,12 +93,13 @@ LinkedIn.prototype.getProfileAccessToken = function (code) {
     });
 };
 
-function ParseProfileInfo(profileDetails,accessToken) {
+function ParseProfileInfo(profileDetails, accessToken) {
     return new Promise((resolve, reject) => {
 
         logger.info("Informations");
         logger.info(profileDetails);
 
+        // Formating the response in a structural object useful to insert into DB
         var profileInfo = {
             user_id: profileDetails.id,
             email: profileDetails.emailAddress ? profileDetails.emailAddress : '',
@@ -99,11 +107,13 @@ function ParseProfileInfo(profileDetails,accessToken) {
             first_name: profileDetails.firstName.localized.en_US,
             last_name: profileDetails.lastName.localized.en_US ? profileDetails.lastName.localized.en_US : '',
             profile_url: profileDetails.vanityName ? profileDetails.vanityName : '',
-            picture_url: profileDetails.profilePicture ? profileDetails.profilePicture.displayImage ? profileDetails.profilePicture.displayImage : '' : '',
+            picture_url: profileDetails.profilePicture ? profileDetails.profilePicture['displayImage~'].elements[3].identifiers[0].identifier ? profileDetails.profilePicture['displayImage~'].elements[3].identifiers[0].identifier : "" : '',
+            // coverpic_url: profileDetails.backgroundPicture ? profileDetails.backgroundPicture['displayImage~'].elements[3].identifiers[0].identifier ? profileDetails.backgroundPicture['displayImage~'].elements[3].identifiers[0].identifier : "" : '',        
             friend_count: '0',
             access_token: accessToken,
             info: profileDetails.headline ? profileDetails.headline : ''
         };
+        // Sending response
         resolve(profileInfo);
     });
 }
@@ -115,31 +125,39 @@ LinkedIn.prototype.getProfileDetails = function (accessToken) {
         } else {
             var requestInfo = {
                 method: 'GET',
-                uri: 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,vanityName,headline',
+                uri: 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,vanityName,headline)',
                 headers: { 'Authorization': `Bearer ${accessToken}` }
             };
+            // Hitting linkedin api to get profile details with accessToken
             return requestPromise(requestInfo)
                 .then((details) => {
+                    // Formating the response into JSON
                     var profileDetails = JSON.parse(details);
+                    // Formating whole JSON into required object
                     return ParseProfileInfo(profileDetails, accessToken);
-                    
                 })
                 .then((profileInfo) => {
+                    // Sending response
                     resolve(profileInfo);
                 })
                 .catch((error) => {
+                    // Checking the error of no profile pic
                     if (error.message.includes("Cannot read property 'displayImage' of undefined")) {
                         var requestInfo = {
                             method: 'GET',
                             uri: 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,emailAddress,vanityName,headline)',
                             headers: { 'Authorization': `Bearer ${accessToken}` }
                         };
+                        // Hitting linkedin api for getting profile details without profile pic
                         return requestPromise(requestInfo)
                             .then((details) => {
+                                // Formating the response into JSON
                                 var profileDetails = JSON.parse(details);
+                                // Formating whole JSON into required object
                                 return ParseProfileInfo(profileDetails, accessToken);
                             })
                             .then((profileInfo) => {
+                                // Sending response
                                 resolve(profileInfo);
                             })
                             .catch((error) => {
@@ -162,6 +180,7 @@ LinkedIn.prototype.getCompanyProfileDetails = function (code) {
                 else {
                     var linkedInCompanyPages = `https://api.linkedin.com/v1/companies?oauth2_access_token=${accessToken}&format=json&is-company-admin=true`;
                     request.get(linkedInCompanyPages, function (error, response, body) {
+                        // Checking whether it sent error in callback or not
                         if (error)
                             reject(error);
                         else {
@@ -169,6 +188,7 @@ LinkedIn.prototype.getCompanyProfileDetails = function (code) {
                                 access_token: accessToken,
                                 company_details: JSON.parse(body)
                             };
+                            // Sending response
                             resolve(pageDetails);
                         }
                     });
@@ -185,14 +205,18 @@ LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code) {
         if (!code) {
             reject("Can't get code from linkedIn!");
         } else {
+            // Calling a function to fetch the accessToken by giving user code
             return this.getProfileAccessToken(code)
                 .then((accessToken) => {
+                    // Checking whether it gave user accessToken or not
                     if (!accessToken)
                         throw new Error("Can't get access token from linkedIn!");
                     else
+                        // Fetching user profile details with user accessToken
                         return this.getProfileDetails(accessToken);
                 })
                 .then((userDetails) => {
+                    // Formating the details
                     var user = {
                         UserName: userDetails.user_id,
                         FirstName: userDetails.first_name,
@@ -208,6 +232,7 @@ LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code) {
                         TeamId: teamId,
                         Network: network,
                     };
+                    // Sending response
                     resolve(user);
                 })
                 .catch((error) => {
@@ -226,6 +251,7 @@ LinkedIn.prototype.publishPostOnCompany = function (postDetails, accessToken, ca
             "comment": postDetails.message,
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -243,6 +269,7 @@ LinkedIn.prototype.publishPostOnCompany = function (postDetails, accessToken, ca
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -260,6 +287,7 @@ LinkedIn.prototype.publishPostOnCompany = function (postDetails, accessToken, ca
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -274,6 +302,7 @@ LinkedIn.prototype.publishPostOnCompany = function (postDetails, accessToken, ca
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -317,7 +346,7 @@ function uploadImages(url, accessToken, mediaPath) {
             };
             return requestPromise(postParameter)
                 .then((response) => {
-                   
+                    // Sending response
                     resolve(response);
                 })
                 .catch((error) => {
@@ -350,6 +379,7 @@ function registerMedia(accessToken, target, userName) {
         };
         return requestPromise(postParameter)
             .then((response) => {
+                // Sending response
                 resolve(response);
             })
             .catch((error) => {
@@ -379,6 +409,7 @@ LinkedIn.prototype.publishPost = function (target, postDetails, accessToken, use
                 };
                 return requestPromise(postParameters)
                     .then((response) => {
+                        // Sending response
                         resolve(response.body);
                     })
                     .catch((error) => {
@@ -393,6 +424,7 @@ LinkedIn.prototype.publishPost = function (target, postDetails, accessToken, use
                     return uploadImages(uploadUrl, accessToken, postDetails.mediaPath[0]);
                 })
                 .then((response) => {
+                    // Sending response
                     resolve(response.body);
                 })
                 .catch((error) => {
@@ -409,9 +441,11 @@ LinkedIn.prototype.publishPost = function (target, postDetails, accessToken, use
                 },
                 "visibility": { "code": "anyone" }
             }, function (error, share) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject({ code: 400, status: "failed", message: error });
                 } else {
+                    // Sending response
                     resolve({ code: 200, status: "success", message: share });
                 }
             });
@@ -423,9 +457,11 @@ LinkedIn.prototype.publishPost = function (target, postDetails, accessToken, use
                 },
                 "visibility": { "code": "anyone" }
             }, function (error, share) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject({ code: 400, status: "failed", message: error });
                 } else {
+                    // Sending response
                     resolve({ code: 200, status: "success", message: share });
                 }
             });
@@ -445,6 +481,7 @@ LinkedIn.prototype.publishV1PostOnProfile = function (postDetails, accessToken, 
             "comment": postDetails.message,
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -462,6 +499,7 @@ LinkedIn.prototype.publishV1PostOnProfile = function (postDetails, accessToken, 
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -479,6 +517,7 @@ LinkedIn.prototype.publishV1PostOnProfile = function (postDetails, accessToken, 
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -493,6 +532,7 @@ LinkedIn.prototype.publishV1PostOnProfile = function (postDetails, accessToken, 
             },
             "visibility": { "code": "anyone" }
         }, function (error, share) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 callback({ code: 400, status: "failed", message: error });
             } else {
@@ -507,14 +547,17 @@ LinkedIn.prototype.publishV1PostOnProfile = function (postDetails, accessToken, 
 
 LinkedIn.prototype.getCompanyUpdates = function (companyId, accessToken) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!companyId || !accessToken) {
             reject(new Error("Invalid Inputs"));
         } else {
             var linkedin = this.LinkedInApiConfig.init(accessToken);
             linkedin.companies.updates(companyId, function (error, updates) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
                 } else {
+                    // Sending response
                     resolve(updates);
                 }
             });
@@ -527,6 +570,7 @@ LinkedIn.prototype.getCompanyInsights = function (accessToken, socialId, since, 
         var report = {};
         var statusUpdateUrl = `https://api.linkedin.com/v1/companies/${socialId}/company-statistics?time-granularity=day&start-timestamp=${since}&format=json&oauth2_access_token=${accessToken}`;
         request.get(statusUpdateUrl, function (error, response, body) {
+            // Checking whether it sent error in callback or not
             if (error)
                 reject(error);
             else {
@@ -534,10 +578,12 @@ LinkedIn.prototype.getCompanyInsights = function (accessToken, socialId, since, 
             }
             var followerUpdateUrl = `https://api.linkedin.com/v1/companies/${socialId}/historical-follow-statistics?time-granularity=day&start-timestamp=${since}&end-timestamp=${untill}&format=json&oauth2_access_token=${accessToken}`;
             request.get(followerUpdateUrl, function (error, response, body) {
+                // Checking whether it sent error in callback or not
                 if (error)
                     reject(error);
                 else {
                     report.companyFollowersStatistics = JSON.parse(body);
+                    // Sending response
                     resolve(report);
                 }
             });
@@ -547,9 +593,11 @@ LinkedIn.prototype.getCompanyInsights = function (accessToken, socialId, since, 
 
 LinkedIn.prototype.likePost = function (accessToken, postId, userId) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !postId || !userId) {
             reject(new Error('Invalid Inputs'));
         } else {
+            // Hitting the linkedin api to like a specified post of a user
             request.post({
                 headers: { 'Authorization': `Bearer ${accessToken}`, 'content-type': 'application/json' },
                 url: `https://api.linkedin.com/v2/socialActions/{shareUrn|ugcPostUrn|commentUrn}/likes`,
@@ -558,9 +606,11 @@ LinkedIn.prototype.likePost = function (accessToken, postId, userId) {
                     "object": `urn:li:share:${postId}`
                 }
             }, function (error, response, body) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
-                } else {                    
+                } else {
+                    // Sending response
                     resolve(body);
                 }
             });
@@ -570,6 +620,7 @@ LinkedIn.prototype.likePost = function (accessToken, postId, userId) {
 
 LinkedIn.prototype.commentPost = function (accessToken, postId, userId, comment) {
     return new Promise((resolve, reject) => {
+        // Checking whether the inputs are having values or not
         if (!accessToken || !postId || !userId || !comment) {
             reject(new Error('Invalid Inputs'));
         } else {
@@ -584,9 +635,11 @@ LinkedIn.prototype.commentPost = function (accessToken, postId, userId, comment)
                     }
                 }
             }, function (error, response, body) {
+                // Checking whether it sent error in callback or not
                 if (error) {
                     reject(error);
-                } else {                   
+                } else {
+                    // Sending response
                     resolve(body);
                 }
             });
@@ -600,12 +653,14 @@ LinkedIn.prototype.getConnections = function (accessToken) {
             headers: { 'Authorization': `Bearer ${accessToken}`, 'content-type': 'application/json' },
             url: `https://api.linkedin.com/v2/connections?q=viewer&projection=(paging)`
         }, function (error, response, body) {
+            // Checking whether it sent error in callback or not
             if (error) {
                 reject(error);
-            } else {             
+            } else {
                 var updateDetail = {
                     friendship_count: response.paging.total,
                 };
+                // Sending response
                 resolve(updateDetail);
             }
         });

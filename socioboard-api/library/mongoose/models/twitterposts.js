@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on twitterposts collection of mongo DB
 const twitterPost = new Schema({
     tweetId: { type: String, index: true, unique: true },
     publishedDate: { type: Date, default: Date.now, index: true },
@@ -42,6 +43,7 @@ const twitterPost = new Schema({
 });
 
 twitterPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('TwitterPosts')
         .bulkWrite(posts.map((post) => {
             return {
@@ -53,12 +55,12 @@ twitterPost.methods.insertManyPosts = function (posts) {
             };
         }))
         .catch((error) => {
-            console.log(error.message);
             return 0;
         });
 };
 
 twitterPost.methods.getBatchPost = function (batchId) {
+    // Fetching posts by batch Id
     var query = {
         batchId: new RegExp(batchId, 'i')
     };
@@ -68,11 +70,12 @@ twitterPost.methods.getBatchPost = function (batchId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching the posts related to an account of twtitter
     var query = {
         accountId: new RegExp(accountId, 'i')
     };
@@ -85,11 +88,12 @@ twitterPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.getPreviousPost = function (keyword, skip, limit) {
+    // Fetching posts related to a keyword containing in the post
     var query = {
         $or: [
             { socialAccountId: new RegExp(keyword, 'i') },
@@ -106,11 +110,12 @@ twitterPost.methods.getPreviousPost = function (keyword, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.updateLike = function (tweetId, isliked) {
+    // Updating the like status to a post
     var query = {
         tweetId: new RegExp(tweetId, 'i')
     };
@@ -122,11 +127,12 @@ twitterPost.methods.updateLike = function (tweetId, isliked) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.updateLikeRetweetCount = function (tweetId, favoriteCount, retweetCount) {
+    // Updating the retweet count of a particular tweet
     var query = {
         tweetId: new RegExp(tweetId, 'i')
     };
@@ -141,11 +147,12 @@ twitterPost.methods.updateLikeRetweetCount = function (tweetId, favoriteCount, r
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.updateLikeCount = function (tweetId, method) {
+    // Updating like count of a tweet
     var query = {
         tweetId: new RegExp(tweetId, 'i')
     };
@@ -162,11 +169,12 @@ twitterPost.methods.updateLikeCount = function (tweetId, method) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.updateCommentCount = function (tweetId, method) {
+    // Updating comment count of a tweet
     var query = {
         tweetId: new RegExp(tweetId, 'i')
     };
@@ -183,11 +191,12 @@ twitterPost.methods.updateCommentCount = function (tweetId, method) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.addcomments = function (tweetId, message, commentedId, mediaUrls) {
+    // Updating/Adding comments to a tweet
     var query = {
         tweetId: new RegExp(tweetId, 'i')
     };
@@ -198,11 +207,12 @@ twitterPost.methods.addcomments = function (tweetId, message, commentedId, media
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.deletecomments = function (id) {
+    // Deleting comment from the tweets
     var query = { "comments.commentedId": new RegExp(id, 'i') };
     var updateObject = { $pull: { comments: { commentedId: id } } };
     return this.model('TwitterPosts')
@@ -211,11 +221,12 @@ twitterPost.methods.deletecomments = function (id) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.deleteAccountPosts = function (accountId) {
+    // Deleting all posts related to an account
     var query = {
         accountId: new RegExp(accountId, 'i')
     };
@@ -225,11 +236,12 @@ twitterPost.methods.deleteAccountPosts = function (accountId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 
 twitterPost.methods.deleteSingleTweet = function (accountId, tweetId) {
+    // Deleting a paricular tweet from an account
     var query = {
         $and: [{
             accountId: new RegExp(accountId, 'i'),
@@ -239,7 +251,6 @@ twitterPost.methods.deleteSingleTweet = function (accountId, tweetId) {
     return this.model('TwitterPosts')
         .findOneAndDelete(query)
         .then(function (result) {
-            console.log(`Response : ${JSON.stringify(result)}`);
             return result;
         })
         .catch(function (error) {
@@ -248,6 +259,7 @@ twitterPost.methods.deleteSingleTweet = function (accountId, tweetId) {
 };
 
 twitterPost.methods.findLastRecentTweetId = function () {
+    // Fetching the recent tweet
     return this.model('TwitterPosts')
         .find().limit(1).sort({ publishedDate: -1 })
         .then(function (result) {
@@ -265,6 +277,7 @@ twitterPost.methods.findLastRecentTweetId = function () {
 
 
 twitterPost.methods.findTweet = function (tweetId) {
+    // Fetching a particular tweet details
     return this.model('TwitterPosts')
         .findOne({
             tweetId: tweetId

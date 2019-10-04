@@ -77,6 +77,7 @@ class ProfileLibs {
             if (!userId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking the user is belongs to the Team or not
                 return userTeamJoinTable.findOne({
                     where: {
                         [Operator.and]: [{
@@ -106,6 +107,7 @@ class ProfileLibs {
             if (!accountId || !teamId) {
                 reject(new Error('Invalid Inputs'));
             } else {
+                // Checking that the account is locked or not
                 return accountTeamJoinTable.findOne({
                     where: {
                         [Operator.and]: [{
@@ -132,6 +134,7 @@ class ProfileLibs {
             if (!userId || !accountId || !reject) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Checking whether user belongs to the Team or not
                 return this.isUserMemberOfATeam(userId, teamId)
                     .then((isMember) => {
                         if (!isMember)
@@ -139,12 +142,14 @@ class ProfileLibs {
                         return;
                     })
                     .then(() => {
+                        // Checking account is locked or not
                         return this.isAccountLocked(accountId, teamId);
                     })
                     .then((result) => {
                         if (result) {
                             throw new Error("Account has been locked.");
                         } else {
+                            // Fetching the social account details
                             return socialAccount.findOne({
                                 where: {
                                     [Operator.and]: [{
@@ -195,6 +200,7 @@ class ProfileLibs {
             if (!code) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching linkedin company profile details using auth code 
                 return this.linkedInHelper.getCompanyProfileDetails(code)
                     .then((response) => {
                         logger.info(`Response : ${JSON.stringify(response)}`);
@@ -242,6 +248,7 @@ class ProfileLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
 
+                // Fetching youtube channels with auth code
                 return this.googleHelper.getYoutubeChannels(code)
                     .then((response) => {
                         var channelDetails = response.parsedBody;
@@ -250,6 +257,7 @@ class ProfileLibs {
                         if (channelDetails.items) {
                             var etag = channelDetails.etag;
                             channelDetails.items.forEach(channel => {
+                                // Formating the response in a structural way
                                 var channelDetails = {
                                     channelId: channel.id,
                                     channelName: channel.snippet.title,
@@ -374,6 +382,7 @@ class ProfileLibs {
             if (!accountId || !access_token) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching pinterest Boards.
                 this.pinterestHelper.getBoards(access_token)
                     .then((result) => {
                         response = result;
@@ -413,11 +422,13 @@ class ProfileLibs {
                     })
                     .then(() => {
                         if (newBoards.length > 0)
+                            // Inserting Boards into DB
                             return pinterestBoards.bulkCreate(newBoards, { returning: true });
                         else
                             return;
                     })
                     .then(() => {
+                        // Fetching all board details of that account
                         return pinterestBoards.findAll({
                             where: { social_account_id: accountId }
                         });
@@ -439,12 +450,14 @@ class ProfileLibs {
                 reject(new Error("Invalid Inputs"));
             }
             else {
+                // Getting pinterest account
                 this.getSocialAccountInfo(accountId)
                     .then((socialAccounts) => {
                         if (!socialAccounts)
                             throw new Error("Sorry, The requested account not found.");
                         else {
                             accessToken = socialAccounts.access_token;
+                            // Creating Board with the account access token
                             return this.pinterestHelper.createBoard(socialAccounts.access_token, boardName, boardDescription);
                         }
                     })
@@ -469,6 +482,7 @@ class ProfileLibs {
                             throw new Error("Cant able to create boards");
                         else {
                             boardInfo.social_account_id = accountId;
+                            // Adding the Board data into DB
                             return pinterestBoards.create(boardInfo);
                         }
                     })
@@ -536,6 +550,7 @@ class ProfileLibs {
                 reject(new Error("Invalid Inputs"));
             } else {
 
+                // Fetching instagram business accounts (linked with Facebook)
                 this.facebookHelper.getPagesConnectWithInsta(code)
                     .then((pageDetails) => {
                         logger.info(`Page Details: ${JSON.stringify(pageDetails)}`);
@@ -556,6 +571,7 @@ class ProfileLibs {
                         logger.info(`Added Instagram Pages : ${JSON.stringify(instagramAddedPages)}`);
 
                         return Promise.all(instagramAddedPages.map(businessAccount => {
+                            // Getting instagram business profile details
                             return this.facebookHelper.getInstaBusinessAccount(businessAccount.accessToken)
                                 .then((instaAccounts) => {
                                     logger.info(`Response Instagram Info : ${JSON.stringify(instaAccounts)}`);
@@ -566,6 +582,7 @@ class ProfileLibs {
                                         business_accountId = instaAccounts.connected_instagram_account.id;
                                     }
                                     return Promise.all(instaAccounts.instagram_accounts.data.map((profile) => {
+                                        // Formating the result/profile response
                                         var instaAcc = {
                                             userName: profile.username,
                                             social_id: business_accountId,
@@ -624,6 +641,7 @@ class ProfileLibs {
             if (!accountId) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching a specified social account
                 return socialAccount.findOne({
                     where: { account_id: accountId },
                 })
@@ -647,6 +665,7 @@ class ProfileLibs {
             if (!code) {
                 reject(new Error("Invalid Inputs"));
             } else {
+                // Fetching Facebook groups from facebook with auth code
                 this.facebookHelper.getOwnFacebookGroups(code)
                     .then((groupInfo) => {
                         if (groupInfo.groupDetails) {

@@ -21,8 +21,6 @@ class UpdloadMedia {
                 var extension = fileArray.pop();
                 var fileName = `${moment().unix()}.${extension}`;
 
-                console.log(`Uploaded File Name : ${fileName}`);
-
                 cb(null, fileName);
 
                 // cb(null, `${file.originalname}`);
@@ -40,8 +38,6 @@ class UpdloadMedia {
                 var fileArray = file.originalname.split('.');
                 var extension = fileArray.pop();
                 var fileName = `${moment().unix()}.${extension}`;
-
-                console.log(`Uploaded File Name : ${fileName}`);
 
                 cb(null, fileName);
             }

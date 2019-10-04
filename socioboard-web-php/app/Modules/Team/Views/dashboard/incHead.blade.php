@@ -8,6 +8,8 @@
     <meta name="author" content="Socioboard Technologies">
     <meta name="designer" content="Chanchal Santra">
 
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <link rel="apple-touch-icon" sizes="57x57" href="../../assets/imgs/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="../../assets/imgs/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="../../assets/imgs/favicon/apple-icon-72x72.png">

@@ -16,15 +16,15 @@ const friendsController = require('./controllers/friendsController');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *       - in: query
- *         description: Cursor Value
+ *         description: Specify cursor value (0 or -1 or 1)
  *         name: cursorValue
  *         type: string  
  *     responses:
@@ -53,15 +53,15 @@ routes.get("/getTwitterFollowers", friendsController.getTwitterFollowers);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *       - in: query
- *         description: Cursor Value
+ *         description: Provide cursor value
  *         name: cursorValue
  *         type: string  
  *     responses:
@@ -85,24 +85,24 @@ routes.get("/getTwitterFollowing", friendsController.getTwitterFollowing);
  *     - AccessToken: []
  *     tags:
  *       - Friends
- *     description: To fetch twitter following details of an account
+ *     description: To fetch twitter users details by username
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Twitter account id
+ *         description: Provide twitter account id
  *         name: accountId
  *         type: string  
  *       - in: query
- *         description: Team Id
+ *         description: Provide team id
  *         name: teamId
  *         type: integer  
  *       - in: query
- *         description: Search Keyword
+ *         description: Provide search keyword
  *         name: keyword
  *         type: string  
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: string  
  *     responses:

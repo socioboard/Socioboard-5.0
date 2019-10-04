@@ -11,7 +11,7 @@ const routes = require('express').Router();
 *     - AccessToken: []
 *     tags:
 *       - AppInsights
-*     description: To send notification to all user who has not login in app last 7 days
+*     description: To get all real time users
 *     produces:
 *       - application/json
 *     responses:
@@ -38,7 +38,7 @@ routes.get('/getAllRealtimeUsers', controllers.getAllRealtimeUsers);
 *     description: To get real time user activites
 *     parameters:
 *       - in: query
-*         description: user email Id
+*         description: Provide user email id
 *         name: userEmail
 *         type: string
 *     produces:
@@ -66,11 +66,11 @@ routes.get('/getRealtimeUsersActivities', controllers.getRealtimeUsersActivities
 *     description: To get all user who are used in between specified start and end dates
 *     parameters:
 *       - in: query
-*         description: startDate in YYYY-MM-DD format
+*         description: Specify startDate in YYYY-MM-DD format
 *         name: startDate
 *         type: string
 *       - in: query
-*         description: endDate in YYYY-MM-DD format
+*         description: Specify endDate in YYYY-MM-DD format
 *         name: endDate
 *         type: string
 *     produces:
@@ -99,15 +99,15 @@ routes.get('/getAllUser', controllers.getAllUser);
 *     description: To get most action used by an user
 *     parameters:
 *       - in: query
-*         description: user email Id
+*         description: Provide user email id
 *         name: userEmail
 *         type: string
 *       - in: query
-*         description: startDate in YYYY-MM-DD format
+*         description: Specify startDate in YYYY-MM-DD format
 *         name: startDate
 *         type: string
 *       - in: query
-*         description: endDate in YYYY-MM-DD format
+*         description: Specify endDate in YYYY-MM-DD format
 *         name: endDate
 *         type: string
 *     produces:
@@ -122,6 +122,30 @@ routes.get('/getAllUser', controllers.getAllUser);
 */
 routes.get('/getUserActionCount', controllers.getUserActionCount);
 
+
+/**
+* @swagger
+* /v1/appinsights/getTodayActionwiseCount:
+*   get:
+*     operationId: secured_insights_getTodayActionwiseCount
+*     summary: Secured - Admin Only
+*     security:
+*     - AccessToken: []
+*     tags:
+*       - AppInsights
+*     description: To fetch activity wise count for all users.
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Return success!
+*       404: 
+*         description: Return Not Found or ErrorMessage
+*       401:
+*         $ref: "#/responses/unauthorizedError"
+*/
+routes.get('/getTodayActionwiseCount', controllers.getTodayActionwiseCount);
+
 /**
 * @swagger
 * /v1/appinsights/getUsersActivities:
@@ -132,14 +156,14 @@ routes.get('/getUserActionCount', controllers.getUserActionCount);
 *     - AccessToken: []
 *     tags:
 *       - AppInsights
-*     description: To get the user activites
+*     description: To get the user activites upto last 30 days
 *     parameters:
 *       - in: query
-*         description: user email Id
+*         description: Provide user email id
 *         name: userEmail
 *         type: string
 *       - in: query
-*         description: Pagination Id
+*         description: Provide pagination id
 *         name: pageId
 *         type: integer
 *     produces:
@@ -154,7 +178,81 @@ routes.get('/getUserActionCount', controllers.getUserActionCount);
 */
 routes.get('/getUsersActivities', controllers.getUsersActivities);
 
+/**
+* @swagger
+* /v1/appinsights/get-users-activities-by-date:
+*   get:
+*     operationId: secured_insights_getUsersActivitiesByDate
+*     summary: Secured - Admin Only
+*     security:
+*     - AccessToken: []
+*     tags:
+*       - AppInsights
+*     description: To get the user activites by date
+*     parameters:
+*       - in: query
+*         description: Provide user email id
+*         name: userEmail
+*         type: string
+*       - in: query
+*         description: Specify startDate in YYYY-MM-DD format
+*         name: startDate
+*         type: string
+*       - in: query
+*         description: Specify endDate in YYYY-MM-DD format
+*         name: endDate
+*         type: string
+*       - in: query
+*         description: Provide pagination id
+*         name: pageId
+*         type: integer
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Return success!
+*       404: 
+*         description: Return Not Found or ErrorMessage
+*       401:
+*         $ref: "#/responses/unauthorizedError"
+*/
+routes.get('/get-users-activities-by-date', controllers.getUsersActivitiesByDate);
 
+/**
+* @swagger
+* /v1/appinsights/getUsersActivitiesByAction:
+*   get:
+*     operationId: secured_insights_getUsersActivitiesByAction
+*     summary: Secured - Admin Only
+*     security:
+*     - AccessToken: []
+*     tags:
+*       - AppInsights
+*     description: To get the users activity based on specific action
+*     parameters:
+*       - in: query
+*         description: Provide user email id
+*         name: userEmail
+*         type: string
+*       - in: query
+*         description: Specify action
+*         name: action
+*         type: string
+*       - in: query
+*         description: Provide pagination id
+*         name: pageId
+*         type: integer
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Return success!
+*       404: 
+*         description: Return Not Found or ErrorMessage
+*       401:
+*         $ref: "#/responses/unauthorizedError"
+*/
+routes.get('/getUsersActivitiesByAction', controllers.getUsersActivitiesByAction);
 
 
 module.exports = routes;

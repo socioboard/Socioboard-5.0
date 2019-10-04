@@ -4,6 +4,7 @@ const { google } = require('googleapis');
 const requestPromise = require('request-promise');
 const crypto = require('crypto');
 const moment = require('moment');
+const logger = require('../utils/logger');
 
 
 function Google(google_api) {
@@ -22,6 +23,7 @@ function getOauthConnection(accessToken, refreshToken) {
     return oAuthConnection;
 }
 
+// Creating a different urls to hit google based on request type
 Google.prototype.getGoogleAuthUrl = function (type, state) {
     var url = "";
     switch (type) {
@@ -37,12 +39,14 @@ Google.prototype.getGoogleAuthUrl = function (type, state) {
         default:
             break;
     }
+    // Returning a specified url based on request type
     return url;
 };
 
 Google.prototype.getGoogleAccessToken = function (code, redirectUrl) {
     return new Promise((resolve, reject) => {
         var requestBody = `code=${code}&redirect_uri=${redirectUrl}&client_id=${this.google_api.client_id}&client_secret=${this.google_api.client_secrets}&scope=&grant_type=authorization_code`;
+        // Hitting google to get accessToken and refreshToken
         request.post({
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             url: 'https://www.googleapis.com/oauth2/v4/token',
@@ -56,6 +60,7 @@ Google.prototype.getGoogleAccessToken = function (code, redirectUrl) {
                     access_token: parsedBody.access_token,
                     refresh_token: parsedBody.refresh_token
                 };
+                // Sending response 
                 resolve(tokens);
             }
         });
@@ -65,6 +70,7 @@ Google.prototype.getGoogleAccessToken = function (code, redirectUrl) {
 Google.prototype.getGoogleProfileInformation = function (tokens) {
 
     return new Promise((resolve, reject) => {
+        // Hitting google with accessToken to get data of google profile details
         request.get({
             headers: { 'Authorization': `Bearer ${tokens.access_token}` },
             url: 'https://www.googleapis.com/oauth2/v2/userinfo'
@@ -93,6 +99,7 @@ Google.prototype.getGoogleProfileInformation = function (tokens) {
                     access_token: tokens.access_token,
                     refresh_token: tokens.refresh_token
                 };
+                // Sending response    
                 resolve(userDetails);
             }
         });
@@ -104,6 +111,7 @@ Google.prototype.getGoogleProfileInformation = function (tokens) {
 Google.prototype.reconnectGoogle = function (refreshtoken, callback) {
     try {
         var requestBody = `client_secret=${this.google_api.client_secrets}&grant_type=refresh_token&refresh_token=${refreshtoken}&client_id=${this.google_api.client_id}`;
+        // Hitting google to reconnect (extend the accessToken validity)
         request.post({
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             url: 'https://www.googleapis.com/oauth2/v4/token',
@@ -132,6 +140,7 @@ Google.prototype.getYoutubeChannels = function (code) {
                     if (!tokens) {
                         reject(new Error("Invalid access token"));
                     } else {
+                        // Hitting google to get data of youtube channels
                         request.get({
                             headers: { 'Authorization': `Bearer ${tokens.access_token}` },
                             url: 'https://www.googleapis.com/youtube/v3/channels/?part=snippet%2CcontentDetails%2Cstatistics&mine=true&maxResults=50'
@@ -140,6 +149,7 @@ Google.prototype.getYoutubeChannels = function (code) {
                                 callback(error, null);
                             } else {
                                 var parsedBody = JSON.parse(body);
+                                // Sending response        
                                 resolve({ parsedBody: parsedBody, tokens: tokens });
                             }
                         });
@@ -159,6 +169,7 @@ Google.prototype.getGoogleAnalyticsAccount = function (code) {
         } else {
             return this.getGoogleAccessToken(code, this.google_api.google_profile_add_redirect_url)
                 .then((tokens) => {
+                    // Hitting google to get data google analtics
                     request.get({
                         headers: { 'Authorization': `Bearer ${tokens.access_token}` },
                         url: 'https://www.googleapis.com/analytics/v3/management/accountSummaries'
@@ -167,6 +178,7 @@ Google.prototype.getGoogleAnalyticsAccount = function (code) {
                             reject(error);
                         } else {
                             var parsedBody = JSON.parse(body);
+                            // Sending response          
                             resolve({ parsedBody: parsedBody, tokens: tokens });
                         }
                     });
@@ -185,6 +197,7 @@ Google.prototype.getActiveUserDetails = function (refreshToken, profileId, callb
             callback({ code: 400, status: "failed", error: error });
         }
         else {
+            // Hitting google to get data of present user details
             request.get({
                 url: `https://www.googleapis.com/analytics/v3/data/realtime?ids=ga:${profileId}&metrics=${this.google_api.ganalytics_activeuser_metrics}&dimensions=${this.google_api.ganalytics_activeuser_dimensions}&access_token=${tokens.access_token}`
             }, function (error, response, body) {
@@ -227,12 +240,14 @@ Google.prototype.getPageViewDetails = function (refreshToken, profileId, startDa
             callback({ code: 400, status: "failed", error: error });
         }
         else {
+            // Hitting google to get data of analytics page view details
             request.get({
                 url: `https://www.googleapis.com/analytics/v3/data/ga?ids=ga:${profileId}&metrics=${this.google_api.ganalytics_page_detail_metrics}&start-date=${startDate}&end-date=${endDate}&access_token=${tokens.access_token}`
             }, function (error, response, body) {
                 if (error) {
                     callback(error, null);
                 } else {
+                    // Formating the response(making body data to JSON)
                     var parsedBody = JSON.parse(body);
                     var trafficDetail = {
                         sessions: parsedBody.totalsForAllResults["ga:sessions"],
@@ -260,6 +275,7 @@ Google.prototype.firebaseShortUrls = function (dynamicUrl, apiKey, longUrl) {
             if (error) {
                 reject(error);
             } else {
+                // Sending response        
                 resolve(body);
             }
         });
@@ -277,7 +293,7 @@ Google.prototype.youtubeVideoLike = function (videoId, rating, refreshToken) {
                     reject(error);
                 } else {
                     return this.getVideoRatingDetails(videoId, tokens.access_token)
-                        .then((ratingresult) => {                            
+                        .then((ratingresult) => {
                             if (ratingresult == "none" || ratingresult != rating) {
                                 request.post({
                                     url: `https://www.googleapis.com/youtube/v3/videos/rate?id=${videoId}&rating=${rating}&access_token=${tokens.access_token}`,
@@ -285,11 +301,13 @@ Google.prototype.youtubeVideoLike = function (videoId, rating, refreshToken) {
                                     if (error) {
                                         reject(error);
                                     } else {
+                                        // Sending response       
                                         resolve(response);
                                     }
                                 });
                             }
                             else {
+                                // Sending response        
                                 resolve(`Already ${rating}ed`);
                             }
                         });
@@ -314,6 +332,7 @@ Google.prototype.youtubeCommentReply = function (parentId, comment, refreshToken
                             "textOriginal": comment
                         }
                     };
+                    // Hitting google to make a comment to a comment
                     request({
                         url: `https://www.googleapis.com/youtube/v3/comments?part=snippet&access_token=${tokens.access_token}`,
                         method: "POST",
@@ -327,6 +346,7 @@ Google.prototype.youtubeCommentReply = function (parentId, comment, refreshToken
                             reject(error);
                         }
                         else {
+                            // Sending response       
                             resolve(body);
                         }
                     });
@@ -357,6 +377,7 @@ Google.prototype.youtubeVideoComment = function (videoId, comment, refreshToken)
                             "videoId": videoId
                         }
                     };
+                    // Hitting google to make a comment to an youtube video
                     request({
                         url: `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&access_token=${tokens.access_token}`,
                         method: "POST",
@@ -370,6 +391,7 @@ Google.prototype.youtubeVideoComment = function (videoId, comment, refreshToken)
                             reject(error);
                         }
                         else {
+                            // Sending response        
                             resolve(body);
                         }
                     });
@@ -443,9 +465,11 @@ Google.prototype.getYoutubeChannelsInfo = function (channelId, refreshToken) {
                                     return null;
                                 });
                         }
+                        // Sending response           
                         resolve(youtubeFeeds);
                     })
-                    .catch((error) => {                     
+                    .catch((error) => {
+                        // Sending response         
                         resolve(youtubeFeeds);
                     });
             }
@@ -471,9 +495,11 @@ Google.prototype.getYtbChannelDetails = function (channelId, refreshToken) {
                             // "viewCount": "130",
                             // "commentCount": "0",
                         };
+                        // Sending response       
                         resolve(updateDetail);
                     })
                     .catch((error) => {
+                        // Sending response     
                         resolve(youtubeFeeds);
                     });
             }
@@ -486,7 +512,7 @@ Google.prototype.getYoutubeChannelVideos = function (refreshToken, callback) {
         if (error) {
             callback({ code: 400, status: "failed", error: error });
         } else {
-            // console.log(tokens.access_token);
+            // Hitting google to get data of youtube videos
             request.get({
                 url: `https://www.googleapis.com/youtube/v3/search/?part=snippet&maxResults=25&forMine=true&access_token=${tokens.access_token}&type=video`
             }, function (error, response, body) {
@@ -511,9 +537,11 @@ Google.prototype.getVideoRatingDetails = function (videoId, refreshToken) {
             if (error) {
                 reject(error);
             } else {
+                // Hitting google to get data of video ratings
                 requestPromise.get(`https://www.googleapis.com/youtube/v3/videos/getRating?id=${videoId}&part=statistics&access_token=${tokens.access_token}`)
                     .then((response) => {
                         var parsedResponse = JSON.parse(response);
+                        // Sending response        
                         resolve(parsedResponse.items[0].rating);
                     })
                     .catch((error) => {
@@ -553,9 +581,10 @@ Google.prototype.updateSubscriptions = function (channelId, isSubscribe) {
             form: form,
             encoding: "utf-8"
         };
-
+        // Hitting google to update subscription
         requestPromise.post(postParams)
             .then((response) => {
+                // Sending response          
                 resolve(`${mode} done!`);
             })
             .catch((error) => {
@@ -570,14 +599,14 @@ Google.prototype.youtubeInsights = function (refreshToken, socialId, since, unti
             if (error) {
                 callback({ code: 400, status: "failed", error: error });
             } else {
-                // console.log(tokens.access_token);
                 var url = `https://youtubeanalytics.googleapis.com/v2/reports?dimensions=day&endDate=${untill}&ids=channel%3D%3D${socialId}&metrics=${this.google_api.youtube_insights_metrics}&sort=-day&startDate=${since}&access_token=${tokens.access_token}`;
+                // Hitting google to get data of youtube insights
                 return request.get(url, (error, response, body) => {
                     if (error) {
                         reject(error);
                     } else {
-                        // console.log(body);
                         var parsedBody = JSON.parse(body);
+                        // Sending response       
                         resolve(parsedBody);
                     }
                 });
@@ -643,8 +672,10 @@ function createResource(properties) {
 
 Google.prototype.uploadVideoOnYoutube = function (accessToken, refreshToken, postDetails, callback) {
 
+    // Updating the token
     this.reconnectGoogle(refreshToken, (error, tokens) => {
 
+        // Checking whether it sent error in callback or not
         if (error) {
             callback({ code: 400, status: "failed", error: error });
         }
@@ -670,19 +701,21 @@ Google.prototype.uploadVideoOnYoutube = function (accessToken, refreshToken, pos
             parameters.auth = oAuthConnection;
             parameters.media = { body: fs.createReadStream(`public/videos/${postDetails.mediaPath}`) };
             parameters.notifySubscribers = false;
+            // creating the source of video
             parameters.resource = createResource(properties);
+            // Hitting the google api to add Video into youtube
             var req = service.videos.insert(parameters, function (err, data) {
+                // Checking whether it sent error in callback or not
                 if (err) {
-                    // console.log('The API returned error: ' + JSON.stringify(err) );
                     //callback({ code: 403, status: "failed", message: err });
                     //callback(err);
-                    console.log(err);
+                    logger.info(err);
                 }
                 if (data) {
-                    // console.log('The API returned response: ' + JSON.stringify(data) );
+                    // logger.info('The API returned response: ' + JSON.stringify(data) );
                     //callback({ code: 200, status: "success", message: data });
                     //callback(data);
-                    console.log(data);
+                    logger.info(data);
                 }
             });
 
@@ -708,9 +741,9 @@ Google.prototype.uploadVideoOnYoutube = function (accessToken, refreshToken, pos
             //             body: fs.createReadStream(`public/videos/${postDetails.mediaPath}`),
             //         },
             //     }, (response) => {
-            //         console.log(response);
-            //         console.log(` \n Old Access Token : ${accessToken} \n`);
-            //         console.log(` \n New Access Token : ${NewAccessToken} \n`);
+            //         logger.info(response);
+            //         logger.info(` \n Old Access Token : ${accessToken} \n`);
+            //         logger.info(` \n New Access Token : ${NewAccessToken} \n`);
             //         // callback({ code: 200, status: "success", message: response });
             //     }
             // );

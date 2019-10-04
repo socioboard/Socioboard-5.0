@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+
 
 class ScheduleController extends Controller
 {
@@ -16,7 +18,10 @@ class ScheduleController extends Controller
     {
         if ($request->isMethod('get')) {
 
-            return view('Schedule::schedule', ["socialAccount" => Session::get('currentTeam')['SocialAccount']]);
+            return view('Schedule::schedule', [
+                "socialAccount" => Session::get('currentTeam')['SocialAccount'],
+                "pinterestBoards" => Session::get('pinterestBoards')
+            ]);
         } else if ($request->isMethod('post')) {
 
             $helper = Helper::getInstance();
@@ -28,6 +33,9 @@ class ScheduleController extends Controller
             $linkMedia = "";
             $postType = "Text";
             $timestamp = "";
+            $pinboardata=[];
+            $privacy = env('POST_PRIVACY'); // default public
+
             $postStatus = $request->scheduleType;
             if ($request->sMessage == "" && $request->sLink == "") {
                 $result['code'] = 404;
@@ -41,11 +49,48 @@ class ScheduleController extends Controller
             $Days = explode(",", $request["selectDays"]);
             $publishImages = [];
 //for checking if profiles selected are not
-            if (count($accountType) == 1 && $accountType[0] == "") {
+            if (count($accountType) == 1 && $accountType[0] == ""&&  $request->selectedBoards == "") {
                 $result['code'] = 400;
                 $result['status'] = "failure";
                 $result['message'] = "Please select atleast 1 account.";
                 return ($result);
+            }
+
+            if($request->selectedBoards != ""){
+                if($request->sLink == "" || $request->imageName == ""){
+                    $result['code']=400;
+                    $result['status']="failure";
+                    $result['message']="For posting on boards image and link is neccessdary";
+                    return ($result);
+                }
+                $k=0;
+                $baordsAcc = explode(',',$request->selectedBoards);
+                $j=0;
+                for($i=0;$i<count($baordsAcc);$i++){
+                    if (isset($boardsData[$j-1]['accountId']) && $boardsData[$j-1]['accountId'] == explode('_',$baordsAcc[$i])[0]){
+                        $boardsData[$j-1]['boardId'][$k] = explode('_',$baordsAcc[$i])[1];
+                        $k++;
+                        unset($baordsAcc[$i]);
+                        $baordsAcc = array_values($baordsAcc);
+                        $i--;;
+                        print_r($i);
+                        echo "</br>";
+                    }else{
+                        $k=0;
+                        $boardsData[$j]['accountId'] = (int)explode('_',$baordsAcc[$i])[0];
+                        $boardsData[$j]['boardId'][$k] = explode('_',$baordsAcc[$i])[1];
+                        $data = explode('_',$baordsAcc[$i])[0]."--".env('PINTEREST');
+                        array_push($accountType,$data);
+                        $k++;
+                        $j++;
+
+                    }
+                }
+
+                for($m=0;$m<count($boardsData);$m++){
+                    array_push($pinboardata,$boardsData[$m]);
+                }
+
             }
             if ($request->daywsiseChecked == 1) {
                 if ($request->dayWiseDateTime == null || count($Days) == 0) {
@@ -81,11 +126,8 @@ class ScheduleController extends Controller
             }
             try {
                 $team = Session::get('currentTeam')['team_id'];
-                if ($request->sLink != '') {
-                    //type link
-                    $postType = "Link";
-                    $linkMedia = $request->slink;
-                } else if ($request->hasFile('imageName')) {
+               if ($request->hasFile('imageName')) {
+
                     //type image
                     if ($request->hasFile('videoupload')) {
                         $result['code'] = 400;
@@ -107,7 +149,7 @@ class ScheduleController extends Controller
                             file_put_contents($path, file_get_contents($image->path()));
                             $filedata = array("name" => "media",
                                 "file" => $path);
-                            $response = $helper->apiCallPostPublish($filedata, "upload/media?teamId=" . $team . "&privacy=0", true);
+                            $response = $helper->apiCallPostPublish($filedata, "upload/media?title=schedule&teamId=" . $team . "&privacy=".$privacy, true);
                             if ($response['statusCode'] == 200) {
 
                                 //getting filename for
@@ -150,78 +192,40 @@ class ScheduleController extends Controller
                     }
                 }
 
+                if ($request->sLink != '') {
+                    //type link
+                    $postType = "Link";
+                    $linkMedia = $request->slink;
+                    $postType ="Link";
+                    if((int)Session::get('user')['userDetails']->Activations->shortenStatus == 1){
+                        $shortenLinkResponse = $helper->apiCallGet("user/getShortenUrl?longurl=".$linkMedia);
+                        if($shortenLinkResponse->code == 200){
+                            $linkMedia = $shortenLinkResponse->message->shortLink;
+                        }
+                    }
+                }
 
-                $pin = array("accountId"=>0,
-                    "boardId"=>['2222']);
+//                $pin = array("accountId"=>0,
+//                    "boardId"=>['2222']);
 //                $pinD = json_encode($pin );
 
 
                 //accounts array
                 foreach ($accountType as $a) {
-                    $splitedAccData = explode('--', $a);
-                    $oba = new \stdClass();
-                    $oba->accountType = $splitedAccData[1];
-                    $oba->accountId = $splitedAccData[0];
 
-                    $accountDetail[] = ($oba);
-//                    $accountDetail[] = array("accountType"=>$splitedAccData[1],
-//                        "accountId"=>$splitedAccData[0]); //json encode this
-//                    $res=
-//                    $accountDetail[]->accountType =$splitedAccData[1];
-//                    $accountDetail[]->accountId =$splitedAccData[0];
+                    if($a != ""){
+                        $splitedAccData = explode('--', $a);
+                        $oba = new \stdClass();
+                        $oba->accountType = $splitedAccData[1];
+                        $oba->accountId = $splitedAccData[0];
+                        $accountDetail[] = ($oba);
+                    }
 
 
                 }
 
-//dd(json_decode(json_encode($accountDetail)));
 
-//                if ($publishVideos != null) {        //Publish videos
-//                    $publishData['postInfo'] = array(
-//                        "postType" => $postType,
-//                        "description" => $request->sMessage,
-//                        "shareLink" => $linkMedia,
-//                        "mediaUrl" => $publishVideos,
-//                        "postingSocialIds" =>  ($accountDetail),
-//                        "pinBoards" => [
-//                            $pin
-//                        ],
-//                        "scheduleCategory" => 1,
-//                        "teamId" => $team,
-//                        "moduleName" => "Schedule",
-//                        "moduleValues" => "",
-//                        "scheduleStatus" => (int)$postStatus,
-//                        "normalScheduleDate" => $timestamp,
-//                        "daywiseScheduleTimer" =>($timeDArray)
-//                    );
-//                } else if ($publishImages != null) {                 //publish images
-//                    $publishData['postInfo'] = array(
-//                        "postType" => $postType,
-//                        "description" => $request->sMessage,
-//                        "shareLink" => $linkMedia,
-//                        "mediaUrl" => $publishImages,
-//                        "postingSocialIds" => ($accountDetail),
-//                        "pinBoards" => [
-//                            $pin
-//                        ],
-//                        "scheduleCategory" => 1,
-//
-//                        "teamId" => $team,
-//                        "moduleName" => "Schedule",
-//                        "moduleValues" => "",
-//                        "scheduleStatus" => (int)$postStatus,
-//                        "normalScheduleDate" => $timestamp,
-//                        "daywiseScheduleTimer" => ($timeDArray)
-//
-//                    );
-//
-//
-//                } else {  //publish text // no need of checking links because any how postType will change once entered into link codition
-
-
-
-//                }
                 Log::info("scheduling");
-//                return json_encode($publishData);
                 if($request->daywsiseChecked == 1){
                     Log::info("Daywise scheduling");
                     $publishData['postInfo'] = array(
@@ -230,7 +234,7 @@ class ScheduleController extends Controller
                         "shareLink" => $linkMedia,
                         "mediaUrl" => $publishImages,
                         "postingSocialIds" => ($accountDetail),
-                        "pinBoards" => [$pin]  ,
+                        "pinBoards" => $pinboardata  ,
                         "scheduleCategory" => ENV('DAYWISE_SCHEDULE'),
                         "teamId" => $team,
                         "moduleName" => "Schedule",
@@ -239,6 +243,7 @@ class ScheduleController extends Controller
                         "normalScheduleDate" => $timestamp,
                         "daywiseScheduleTimer" => ($timeDArray)
                     );
+
                     $publishresponse = $helper->apiCallPostPublish($publishData, "schedule/create");
                     Log::info("Daywise scheduling");
                     Log::info($publishresponse);
@@ -251,7 +256,7 @@ class ScheduleController extends Controller
                         "shareLink" => $linkMedia,
                         "mediaUrl" => $publishImages,
                         "postingSocialIds" => ($accountDetail),
-                        "pinBoards" => [$pin]  ,
+                        "pinBoards" => $pinboardata  ,
                         "scheduleCategory" => env('NORMAL_SCHEDULE'),
                         "teamId" => $team,
                         "moduleName" => "Schedule",
@@ -260,7 +265,6 @@ class ScheduleController extends Controller
                         "normalScheduleDate" => $timestamp,
                         "daywiseScheduleTimer" => ($timeDArray)
                     );
-//                    dd($publishData);
                     $publishresponse = $helper->apiCallPostPublish($publishData, "schedule/create");
                     Log::info("Normal scheduling");
                     Log::info($publishresponse);
@@ -270,7 +274,7 @@ class ScheduleController extends Controller
                 if ($publishresponse['statusCode'] == 200 && $publishresponse['data']['code'] == 200 && $publishresponse['data']['status'] == "success") {
                Log::info("SChedule successful");
                     $result['code'] = 200;
-                    $result['message'] = "Scheuled successfully";
+                    $result['message'] = "Scheduled successfully";
                     $result['status'] = "success";
                     return $result;
                 } else if ($publishresponse['data']['code'] == 400 && $publishresponse['data']['status'] == "failed") {
@@ -290,7 +294,6 @@ class ScheduleController extends Controller
                 $result['status'] = "failure";
                 $result['message'] ="Something went wrong.. Please try again later";
                 return ($result);
-                dd($e->getMessage());
             }
         }
     }
@@ -311,125 +314,165 @@ class ScheduleController extends Controller
             $contents=[];
             $result=[];
             $socialId="";
+            $publishresponse="";
             if($request->methods == 'socio' || $request->methods == "daywise"){
-                $publishresponse = $helper->apiCallPublishGet("schedule//getScheduleDetailsByCategories?scheduleStatus=".$request->scheuleStatus."&scheduleCategory=".$request->scheduleCategory."&fetchPageId=".$request->pageId);
+                $publishresponse = $helper->apiCallPublishGet("schedule/getScheduleDetailsByCategories?scheduleStatus=".$request->scheuleStatus."&scheduleCategory=".$request->scheduleCategory."&fetchPageId=".$request->pageId);
             }else if($request->methods == 'draft'){
                 $publishresponse = $helper->apiCallPublishGet("schedule/getFilteredScheduleDetails?scheduleStatus=5&fetchPageId=".$request->pageId);
-            }else if($request->methods == "history"){
-                $publishresponse = $helper->apiCallPublishGet("schedule/getFilteredScheduleDetails?scheduleStatus=6&fetchPageId=".$request->pageId);
-
-//            echo "pageid ".$request->pageId;
-//            dd($request->pageId);
-//                $publishresponse = $helper->apiCallPublishGet("schedule/getScheduleDetails?fetchPageId=".(int)$request->pageId);
-//                return json_encode($publishresponse );
-
+            }else if($request->methods == "history") {
+                $publishresponse = $helper->apiCallPublishGet("schedule/getFilteredScheduleDetails?scheduleStatus=6&fetchPageId=" . $request->pageId);
             }
-
-            if(count($publishresponse->scheduleDetails) == count($publishresponse->postContents)){
-                $result['code']=200;
-                for($i=0; $i<count($publishresponse->scheduleDetails) ; $i++){
+            if($publishresponse->code == 200){
+                if(count($publishresponse->scheduleDetails) == count($publishresponse->postContents)){
+                    $result['code']=200;
+                    for($i=0; $i<count($publishresponse->scheduleDetails) ; $i++){
 //            $contents[$i]['scheduleStatus'] = $publishresponse->postContents[$i]->scheduleStatus;
-                    switch($publishresponse->scheduleDetails[$i]->schedule_status){
-                        case 1:
-                            $contents[$i]['scheduleStatus'] = "Ready queue";
-                            $contents[$i]['cancel'] ='<a onclick="deleteSchedule('.$publishresponse->scheduleDetails[$i]->schedule_id.',1)" data-toggle="tooltip" title="Cancel schedule"><i class="fas fa-window-close"></i></a>';
-                            break;
-                        case 2:
-                            $contents[$i]['scheduleStatus'] = "Wait (pause) state";
-                            $contents[$i]['cancel'] ="";
-                            break;
-                        case 3:
-                            $contents[$i]['scheduleStatus'] = "Approval pending";
-                            $contents[$i]['cancel'] ="";
+                        switch($publishresponse->scheduleDetails[$i]->schedule_status){
+                            case 1:
+                                $contents[$i]['scheduleStatus'] = "Ready queue";
+                                $contents[$i]['cancel'] ='<a onclick="deleteSchedule('.$publishresponse->scheduleDetails[$i]->schedule_id.',1)" data-toggle="tooltip" title="Cancel schedule"><i class="fas fa-window-close"></i></a>';
+                                break;
+                            case 2:
+                                $contents[$i]['scheduleStatus'] = "Wait (pause) state";
+                                $contents[$i]['cancel'] ="";
+                                break;
+                            case 3:
+                                $contents[$i]['scheduleStatus'] = "Approval pending";
+                                $contents[$i]['cancel'] ="";
 
-                            break;
-                        case 4:
-                            $contents[$i]['scheduleStatus'] = "Rejected";
-                            $contents[$i]['cancel'] ="";
+                                break;
+                            case 4:
+                                $contents[$i]['scheduleStatus'] = "Rejected";
+                                $contents[$i]['cancel'] ="";
 
-                            break;
-                        case 5:
-                            $contents[$i]['scheduleStatus'] = "Draft";
-                            $contents[$i]['cancel'] ="";
+                                break;
+                            case 5:
+                                $contents[$i]['scheduleStatus'] = "Draft";
+                                $contents[$i]['cancel'] ="";
 
-                            break;
-                        case 6:
-                            $contents[$i]['scheduleStatus'] = "Completed";
-                            $contents[$i]['cancel'] ="";
+                                break;
+                            case 6:
+                                $contents[$i]['scheduleStatus'] = "Completed";
+                                $contents[$i]['cancel'] ="";
 
-                            break;
-                        case 7:
-                            $contents[$i]['scheduleStatus'] = "Canceled";
-                            $contents[$i]['cancel'] ="";
+                                break;
+                            case 7:
+                                $contents[$i]['scheduleStatus'] = "Canceled";
+                                $contents[$i]['cancel'] ="";
 
-                            break;
-                    }
-                    //info required from post contents
-                    if($publishresponse->postContents[$i]->_id == $publishresponse->scheduleDetails[$i]->mongo_schedule_id){
-                        $contents[$i]['message'] = $publishresponse->postContents[$i]->description;
-                        foreach($publishresponse->postContents[$i]->postingSocialIds as $key=>$value){
+                                break;
+                        }
+                        //info required from post contents
+                        if($publishresponse->postContents[$i]->_id == $publishresponse->scheduleDetails[$i]->mongo_schedule_id){
+                            $contents[$i]['message'] = $publishresponse->postContents[$i]->description;
+                            foreach($publishresponse->postContents[$i]->postingSocialIds as $key=>$value){
 //                return ($publishresponse->postContents[$i]->postingSocialIds);
 
-                            switch($value->accountType ){
-                                case 1:
-                                    $icon =     '<i class="fab fa-facebook-f"></i>';
-                                    break;
-                                case 2:
-                                    $icon =     '<i class="fab fa-facebook-f"></i>';
-                                    break;
-                                case 3:
-                                    $icon =     '<i class="fab fa-facebook-f"></i>';
-                                    break;
-                                case 4:
-                                    $icon =     '<i class="fab fa-twitter"></i>'; //twitter
-                                    break;
-                                case 5:
-                                    $icon =     '<i class="fab fa-instagram"></i>'; //instagram
-                                    break;
-                                case 6:
-                                    $icon =     ' <i class="fab fa-linkedin-in"></i>'; //LINKEDIN
-                                    break;
-                                case 7:
-                                    $icon =     ' <i class="fab fa-linkedin-in"></i>'; //LINKEDINCOMPANY
-                                    break;
-                                case 9:
-                                    $icon =     ' <i class="fab fa-youtube"></i>'; //youtube
-                                    break;
-                                case 10:
-                                    $icon =     '<i class="fas fa-chart-line"></i>'; //google analytics
-                                    break;
-                                case 11:
-                                    $icon =     '  <i class="fab fa-pinterest-p"></i>'; //pinterest
-                                    break;
+                                switch($value->accountType ){
+                                    case 1:
+                                        $icon =     '<i class="fab fa-facebook-f"></i>';
+                                        break;
+                                    case 2:
+                                        $icon =     '<i class="fab fa-facebook-f"></i>';
+                                        break;
+                                    case 3:
+                                        $icon =     '<i class="fab fa-facebook-f"></i>';
+                                        break;
+                                    case 4:
+                                        $icon =     '<i class="fab fa-twitter"></i>'; //twitter
+                                        break;
+                                    case 5:
+                                        $icon =     '<i class="fab fa-instagram"></i>'; //instagram
+                                        break;
+                                    case 6:
+                                        $icon =     ' <i class="fab fa-linkedin-in"></i>'; //LINKEDIN
+                                        break;
+                                    case 7:
+                                        $icon =     ' <i class="fab fa-linkedin-in"></i>'; //LINKEDINCOMPANY
+                                        break;
+                                    case 9:
+                                        $icon =     ' <i class="fab fa-youtube"></i>'; //youtube
+                                        break;
+                                    case 10:
+                                        $icon =     '<i class="fas fa-chart-line"></i>'; //google analytics
+                                        break;
+                                    case 11:
+                                        $icon =     '  <i class="fab fa-pinterest-p"></i>'; //pinterest
+                                        break;
 
+                                }
+                                if($key == 0 ){
+                                    $socialId = $icon;
+                                }else{
+                                    $socialId = $socialId."   ".$icon;
+                                }
                             }
-                            if($key == 0 ){
-                                $socialId = $icon;
-                            }else{
-                                $socialId = $socialId."   ".$icon;
-                            }
+                            $contents[$i]['postingSocialIds'] = $socialId;
                         }
-                        $contents[$i]['postingSocialIds'] = $socialId;
+
+
+                        $contents[$i]['scheduleId'] = $publishresponse->scheduleDetails[$i]->schedule_id;
+                        $contents[$i]['schedulername'] = $publishresponse->scheduleDetails[$i]->{"UserSchedule.name"};
+
                     }
-
-
-                    $contents[$i]['scheduleId'] = $publishresponse->scheduleDetails[$i]->schedule_id;
-                    $contents[$i]['schedulername'] = $publishresponse->scheduleDetails[$i]->{"UserSchedule.name"};
+                    $result['content'] = $contents;
 
                 }
-            $result['content'] = $contents;
-
+                else
+                {
+                    $result['code']= 400;
+                    $result['message']="Something went wrong";
+                    Log::info("Getting history scheduleDetails and  postContents  mismatch");
+                }
             }else{
                 $result['code']= 400;
-                $result['message']="Something went wrong";
+                if(isset($publishresponse->error)){
+                    $result['message']=$publishresponse->error;
+                }else{
+                    $result['message']=$publishresponse->message;
+                }
                 Log::info("Getting history scheduleDetails and  postContents  mismatch");
             }
-
-
             return ($result);
 
         }catch (\Exception $e){
-            dd($e->getMessage());
+            $result['code']= 400;
+            $result['message']="Something went wrong";
+            Log::info("Getting history error ".$e->getMessage()." @ ".$e->getLine());
+            return ($result);
+        }
+
+    }
+
+
+    //post-now-draft
+    public function getDraftHistory(Request $request){
+        try{
+            $icon="";
+            $helper = Helper::getInstance();
+            $contents=[];
+            $result=[];
+            $socialId="";
+            $publishresponse="";
+            if($request->methods == 'postHistory'){
+                $team = Session::get('currentTeam')['team_id'];
+                $publishresponse = $helper->apiCallPublishGet("publish/getDraftedPosts?teamId=".$team."&pageId=1");
+            }
+
+
+            if($publishresponse->code == 200){
+            }else{
+                $result['code']= 400;
+                if(isset($publishresponse->error)){
+                    $result['message']=$publishresponse->error;
+                }else{
+                    $result['message']=$publishresponse->message;
+                }
+                Log::info("Getting history scheduleDetails and  postContents  mismatch");
+            }
+            return ($result);
+
+        }catch (\Exception $e){
             $result['code']= 400;
             $result['message']="Something went wrong";
             Log::info("Getting history error ".$e->getMessage()." @ ".$e->getLine());
@@ -480,4 +523,68 @@ class ScheduleController extends Controller
 
         }
     }
+
+
+    //Image library
+
+    public function imageLibrary(Request $request, $type){
+        try{
+            if($request->isMethod('GET')){
+                if($type == 0){ //Public
+                    return view('Schedule::imageLibrary.public_image_library',
+                        [    "socialAccount" => Session::get('currentTeam')['SocialAccount'],
+                            "pinterestBoards" => Session::get('pinterestBoards')]);
+                }else if($type == 1){ //Private
+                    return view('Schedule::imageLibrary.private_image_library',
+                        [    "socialAccount" => Session::get('currentTeam')['SocialAccount'],
+                            "pinterestBoards" => Session::get('pinterestBoards')]);
+                }
+            }else if($request->isMethod('POST')){
+                $helper = Helper::getInstance();
+                $teamId = Session::get('currentTeam')['team_id'];
+//                upload/getMediaDetails?teamId=1&privacy=0&pageId=1
+                $response = $helper->apiCallPublishGet("upload/getMediaDetails?teamId=".$teamId."&privacy=".$type."&pageId=".$request->pageId);
+               if($response->code == 200){
+                   $result['code'] = 200;
+                   $result['data'] =[];
+                  foreach( $response->data as $media){
+                      if(strpos($media->media_url,'images') !== false){
+                          array_push($result['data'],$media);
+                      }
+                  }
+                   $result['totalSize']=$response->totalSize/1024/1024;
+                   $result['usedSize']=$response->usedSize/1024/1024;
+               }else{
+                   $result['code'] = 400;
+                   if(isset($response->error))
+                       $result['message'] = $response->error;
+                   else if(isset($response->message))
+                       $result['message'] = $response->message;
+                   else
+                       $result['message'] ="Something went wrong";
+               }
+                return $result;
+            }
+        }catch (\Exception $e){
+            Log::info(" Image library exception " . $e->getMessage() . " in file " . $e->getFile() . " at line " . $e->getLine());
+        }
+    }
+
+    //delete media
+    public function mediaDelete(Request $request,$id){
+        $response = Helper::getInstance()->apiCallPublishDelete("upload/deleteMedia?mediaId=".$id."&isForceDelete=1");
+
+        if($response->code == 200){
+//            return redirect('dashboard/' . $teamId)->with('message', "Currently not able to add your account");
+
+            return Redirect::back()->withErrors([ $response->message]);
+        }else{
+            return Redirect::back()->withErrors([$response->error]);
+
+        }
+
+    }
+
+
+
 }

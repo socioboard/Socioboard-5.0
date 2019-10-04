@@ -4,6 +4,7 @@
 
     $(document).ready(function() {
         $(document).on('click','.resocio', function(){
+            document.getElementById("pills-pinterest-profile-tab").style.display = "none";
             $('.clearimag').remove();
             $('.post-thumb').remove();
 //                var appenddata="";
@@ -12,8 +13,8 @@
                $('#normal_post_area').data("emojioneArea").setText(msg);
 //                var image = $(this).closest('.card').find('img').attr('src');
             val = $(this).closest('.card').find('input').val();
-            $("#link").attr("value", val);
-            console.log("hdjshd=> ",val)
+            console.log('link---'+val);
+            $("#outgoing_link").attr("value", val);
 
 
 
@@ -38,7 +39,6 @@
 
             $('#postModal').modal('show');
 
-//                    console.log('image===>',image);
         });
 
 
@@ -51,7 +51,6 @@
                 names.splice(yet, 1);
             }
             // return array of file name
-            console.log(names);
         });
         $('#hint_brand').on('hide', function (e) {
             names = [];
@@ -87,12 +86,10 @@
                 $('#testText').html('Uploading');
             },
             success: function (response) {
-                console.log(response);
 
                 $('#test').hide();
                 $('#testText').html('Post');
 
-                console.log(response);
 //                document.getElementById("publishForm").reset();
 
                 $("#hint_brand").css("display","none");
@@ -104,7 +101,6 @@
                 }else if(response.code == 400){
                     swal(response.message);
                 }else if(response.code == 200){
-                    console.log("Error length.------>"+response.errors.length);
                     if(response.errors.length != 0){
 
 

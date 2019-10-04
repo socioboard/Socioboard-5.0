@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
+const logger = require('./../../utils/logger');
 const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on instagrambusinessposts collection of mongo DB
 const instagramBusinessPost = new Schema({
     postId: { type: String, index: true, unique: true },
     permalink: { type: String },
@@ -35,8 +37,9 @@ const instagramBusinessPost = new Schema({
 });
 
 instagramBusinessPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('InstagramBusinessPosts')
-        .bulkWrite(posts.feeds.map((post) => {
+        .bulkWrite(posts.map((post) => {
             return {
                 updateOne: {
                     filter: { postId: post.postId },
@@ -46,12 +49,13 @@ instagramBusinessPost.methods.insertManyPosts = function (posts) {
             };
         }))
         .catch((error) => {
-            console.log(error.message);
+            logger.info(error.message);
             return 0;
         });
 };
 
 instagramBusinessPost.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching the posts from the collection for a specified account with sort of published date
     return this.model('InstagramBusinessPosts')
         .aggregate([
             { $match: { socialAccountId: accountId } },
@@ -60,19 +64,18 @@ instagramBusinessPost.methods.getSocialAccountPosts = function (accountId, skip,
             { $skip: skip }
         ])
         .then(function (result) {
-            console.log(result);
             if (result.length > 0) {
                 return result;
             }
             return [];
         })
         .catch(function (error) {
-            console.log(error);
             throw new Error(error.message);
         });
 };
 
 instagramBusinessPost.methods.deleteAccountPosts = function (accountId) {
+    // Deleting all posts related to an account
     var query = {
         socialAccountId: new RegExp(accountId, 'i')
     };
@@ -82,7 +85,7 @@ instagramBusinessPost.methods.deleteAccountPosts = function (accountId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            throw error;
         });
 };
 

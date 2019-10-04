@@ -6,18 +6,18 @@ const mails = require('../core/mail/routes');
 
 class Routes {
 
-    constructor(app) {
+    constructor(app, io) {
         this.configureCors(app);
         
-        const server = require('http').Server(app);
-        const io = require('socket.io')(server);
-
         const notifyRoutes = require('../core/notify/routes')(io);
         const socketLibs = require("../core/notify/socketServices")(io);
   
         app.use("/v1/notify/", notifyRoutes);
-        
+
+        io.on('connection', socketLibs.handleSocket);
+
         app.use(authenticate);
+        
         app.use(adminAuthenticate);
         app.use('/v1/mail/', mails);
         app.use('/v1/insights/',insight);
@@ -26,7 +26,7 @@ class Routes {
             res.status(404).send("Woops! 404 Not Found");
         });
         
-        io.on('connection', socketLibs.handleSocket);
+        
     }
 
     configureCors(app) {

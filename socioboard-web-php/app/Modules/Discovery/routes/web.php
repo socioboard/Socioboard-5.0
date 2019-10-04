@@ -4,17 +4,13 @@ Route::group(['module' => 'Discovery', 'middleware' => ['web'], 'namespace' => '
 
 
     Route::group(['middleware' => ['authenticateuser:user']], function () {
-        Route::get('discovery/imgur', 'DiscoveryController@imgur');
+
+        Route::get('content-studio/{type}', 'DiscoveryController@contentStudio');
         Route::post('getImurg', 'DiscoveryController@getImurg');
-        Route::get('discovery/giphy', 'DiscoveryController@giphy');
         Route::post('getGiphy', 'DiscoveryController@getGiphy');
-        Route::get('discovery/pixabay', 'DiscoveryController@pixabay');
         Route::post('getPixabay', 'DiscoveryController@getPixabay');
-        Route::get('discovery/flickr', 'DiscoveryController@flickr');
         Route::post('getFlickr', 'DiscoveryController@getFlickr');
-        Route::get('discovery/dailymotion', 'DiscoveryController@dailymotion');
         Route::post('get-daily-motion', 'DiscoveryController@getDailymotion');
-        Route::get('discovery/newsapi', 'DiscoveryController@newsapi');
         Route::post('getNews', 'DiscoveryController@getNews');
         Route::get('discovery/rss-feed', 'DiscoveryController@rssFeed');
         Route::post('getRss', 'DiscoveryController@getRss');
@@ -26,6 +22,11 @@ Route::group(['module' => 'Discovery', 'middleware' => ['web'], 'namespace' => '
         Route::post('getTwitterSearch', 'DiscoveryController@getTwitterSearch');
         Route::get('boardMe', 'DiscoveryController@boardMe');
         Route::post('board-me-add', 'DiscoveryController@boardMe');
+        Route::get('/get-all-boards', 'DiscoveryController@getAllBoards');
+        Route::get('/boardView','DiscoveryController@boardView');
+        Route::post('/delete-board','DiscoveryController@boardDelete');
+        Route::post('/board-edit','DiscoveryController@boardEdit');
+//        Route::get('/name/{id?}', 'DiscoveryController@getAllBoards');
 
         Route::post('publish-data-discovery', 'DiscoveryPublishController@publishdatadiscovery');
 

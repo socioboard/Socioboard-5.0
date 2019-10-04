@@ -24,11 +24,11 @@
                   <i class="fab fa-instagram"></i>
                 </span>
                         <div class="text-center">
-                            <img
-                                    class="rounded-circle"
-                                    src="{{$profileData->profile_pic_url}}"
-                                    alt="No profile"
-                                    />
+                            @if($profileData->profile_pic_url == "")
+                                <img class="rounded-circle avatar_100 mb-2" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="Profile Data"/>
+                            @else
+                                <img class="rounded-circle avatar_100 mb-2" src="{{$profileData->profile_pic_url}}" alt="Profile Data"/>
+                            @endif
                             <h5 class="card-title no-space">{{$profileData->first_name}}</h5>
                             <p class="card-text"> </p>
                         </div>
@@ -87,7 +87,6 @@
 
         var count =0;
         var fbId = document.getElementById('accountidFetch').value ;
-        console.log(fbId);
         var firstDate = new Date();
         var chartData = [];
         var filterPeriod = 1;
@@ -115,7 +114,6 @@
                 },
                 cache: false,
                 success: function(response){
-                    console.log(response);
 
                     // Add data
                     if(response.code == 200){
@@ -136,7 +134,6 @@
 
 
 
-                        console.log(chartData)
 
                     }else if(response.code == 400){
                         $('#accountInactive').text(response.message).css('display','block');
@@ -246,17 +243,16 @@
 
         $(function () {
 
-            var start = moment().subtract(29, 'days');
+//            var start = moment().subtract(29, 'days');
+            var start = moment();
             var end = moment();
 
             function cb(start, end) {
-//                console.log(document.getElementsByTagName("li")[0].getAttribute("data-range-key"));
 
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 if(count>0){
                     setTimeout(function(){ $('#reportrange').click()
                         var filterTpe = $($('.ranges>ul').find('.active')).attr('data-range-key');
-                        console.log("DT picker ");
                         switch(filterTpe){
                             case "Today":
                                 filterPeriod=1;
@@ -264,7 +260,7 @@
                             case "Yesterday":
                                 filterPeriod=2;
                                 break;
-                            case "Last 7 Days":
+                            case "Last Week":
                                 filterPeriod=3;
                                 break;
                             case "Last 30 Days":
@@ -283,8 +279,8 @@
                                 filterPeriod=1;
                                 break;
                         }
-                        console.log(filterTpe)
                         getInstagramInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
+                        $('.daterangepicker').css('display','none');
                     }, 100);
 
 //                    if()
@@ -303,7 +299,7 @@
                 ranges: {
                     'Today': [moment(), moment()],
                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last Week': [moment().subtract(6, 'days'), moment()],
                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                     'This Month': [moment().startOf('month'), moment().endOf('month')],
                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
@@ -312,7 +308,6 @@
 
 
             cb(start, end);
-            //         console.log("jjdksj " + aa);
 
 
 

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on notificationinfo collection of mongo DB
 var notificationInfo = new Schema({
     userEmail: { type: String },
     notification_type: { type: Number },
@@ -18,6 +19,7 @@ var notificationInfo = new Schema({
 });
 
 notificationInfo.methods.insertMany = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('MailServices')
         .insertMany(posts)
         .then((postdetails) => {
@@ -45,7 +47,7 @@ notificationInfo.methods.getNotificationMailInfo = function (email, datePreset, 
         .then(function (result) {
             return result;
         })
-        .catch(function () { 
+        .catch(function () {
             return [];
         });
 };

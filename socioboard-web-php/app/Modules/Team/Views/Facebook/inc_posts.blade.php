@@ -22,6 +22,10 @@
                     </div>
             </div>
             <div class="facebook-container">
+                    <?php
+                    $mediaUrls=implode(',', $feed->mediaUrls)?>
+                    <p style="display: none" class="fb-mediaUrl"  data-url={{$mediaUrls}}></p>
+                <p style="display: none" class="fb-description" data-desc={{$feed->description}}></p>
                 <div class="fb-video" data-href="{{$feed->postUrl}}" data-width="750" data-show-text="true">
                     <blockquote cite="{{$feed->postUrl}}" class="fb-xfbml-parse-ignore"></blockquote>
                 </div>
@@ -36,6 +40,10 @@
         @default
         <!--  -------- post:{{ $feed->postType }} start ---------  -->
             <div class="facebook-container">
+                <?php
+                $mediaUrls=implode(',', $feed->mediaUrls)?>
+                <p style="display: none" class="fb-mediaUrl"  data-url={{$mediaUrls}}></p>
+                <p style="display: none" class="fb-description" >{{$feed->description}}</p>
                 <div class="fb-post" data-show-text="true"
                      data-href="https://www.facebook.com/{{$feed->socialAccountId}}/posts/{{$feed->postId}}/"
                      data-width="auto" data-show-text="true">

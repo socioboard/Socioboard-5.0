@@ -16,11 +16,11 @@ const paymentControllers = require('./controllers/paymentControllers');
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: User New Plan Id
+ *         description: Provide user new plan id
  *         name: newPlanId
  *         type: integer
  *       - in: query
- *         description: Payment Mode 0-Paypal, 1-PayUMoney
+ *         description: Specify Payment mode either 0-Paypal or 1-PayUMoney
  *         name: paymentMode
  *         type: integer
  *         default: 0
@@ -54,11 +54,11 @@ routes.get('/getPaymentRedirectUrl', paymentControllers.getPaymentRedirectUrl);
  *       - application/json
  *     parameters:
  *       - in: query
- *         description: Token
+ *         description: Provide Token of PayPal from PayPal response
  *         name: token
  *         type: string
  *       - in: query
- *         description: PayerId
+ *         description: Provide PayerId of PayPal from PayPal response
  *         name: payerId
  *         type: string
  *     responses:
@@ -122,6 +122,22 @@ routes.get('/paypalPaymentSuccess', paymentControllers.paypalPaymentSuccess);
  *       udf2:
  *         type: string
  *         description: ""
+ *     example:
+ *       key: "mfgnhgY"
+ *       txnid: "Sociogfd3350847"
+ *       amount: "6868.00"
+ *       productinfo: "Platinum"
+ *       firstname: "socio"
+ *       email: "socio@socioboard.in"
+ *       mihpayid: "404071"
+ *       status: "success"
+ *       hash: "d4b207grjyjgfg1db5fd40a453aae8074523c72ca8e82477762edb96f5f7a220c2c81ab6a7ee869ebbcef837b5d8ed1927"
+ *       cardnum: "401200XXXXXXXXX"
+ *       phone: "45678162198"
+ *       pg_type: "AXISPG"
+ *       addedon: "2019-07-17 13:38:31"
+ *       udf1: "2"
+ *       udf2: "7"
  */
 
 
@@ -140,7 +156,7 @@ routes.get('/paypalPaymentSuccess', paymentControllers.paypalPaymentSuccess);
  *       - application/json
  *     parameters:
  *       - in: body
- *         description: TransactionDetails
+ *         description: Provide transactionDetails
  *         name: transactionDetails
  *         schema:
  *            type: object
@@ -204,6 +220,30 @@ routes.get('/getMyLastPaymentInfo', paymentControllers.getMyLastPaymentInfo);
  *         $ref: "#/responses/unauthorizedError"
  */
 routes.get('/getFullPaymentHistory', paymentControllers.getFullPaymentHistory);
+
+
+/**
+ * @swagger
+ * /v1/payment/paymentInvoiceDownloader:
+ *   get:
+ *     operationId: secured_payment_paymentInvoiceDownloader
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - Payment
+ *     description: To get payment invoice of an user
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.get('/paymentInvoiceDownloader', paymentControllers.paymentInvoiceDownloader);
 
 routes.get('/paypalNotify', paymentControllers.paypalNotify);
 

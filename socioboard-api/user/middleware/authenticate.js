@@ -37,10 +37,8 @@ module.exports = (req, res, next) => {
             req.body.userScopeMaxScheduleCount = parsedToken.userPlanDetails.maximum_schedule;
             req.body.userScopeIsAdmin = parsedToken.is_admin_user;
 
-            console.log(`User Admin Details : ${req.body.userScopeIsAdmin}`);
 
             if (remindingDays < 0) {
-                console.log(`\n Expired \n`);
                 var redirectValueFromRequest = req.query.redirectToken;
                 if (redirectValueFromRequest) {
 
@@ -88,7 +86,7 @@ module.exports = (req, res, next) => {
                 req.query.requestSecret = decryptedMessage.requestSecret;
             }
         } catch (error) {
-            console.log("Twitter state has an issues.");
+            logger.info("Twitter state has an issues.");
         }
 
         var decodedToken = authorizeService.verifyToken(decryptedMessage.accessToken);

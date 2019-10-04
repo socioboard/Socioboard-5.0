@@ -25,6 +25,7 @@ class InsightLibs {
                     if (result.length > 0) {
                         return Promise.all(result.map(socialAccount => {
                             twtAccount = socialAccount;
+                            // Checking that whether that account is locked or not
                             return teamSocialAccount.findOne({
                                 where: {
                                     account_id: socialAccount.account_id,
@@ -35,12 +36,15 @@ class InsightLibs {
                                     if (runnigAccount) {
                                         var accountId = runnigAccount.dataValues.account_id;
                                         var updatedTwitterStats = {};
+                                        // Fetching twitter stats
                                         return this.twitterHelper.getLookupList(twtAccount.access_token, twtAccount.refresh_token, twtAccount.user_name)
                                             .then((updatedProfileDetails) => {
                                                 updatedTwitterStats = updatedProfileDetails;
+                                                // Updating or creating the status of fetching stats in DB
                                                 return this.createOrUpdateFriendsList(accountId, updatedProfileDetails);
                                             })
                                             .then(() => {
+                                                // Formating the response
                                                 var insightObject = {
                                                     followerCount: updatedTwitterStats.follower_count,
                                                     followingCount: updatedTwitterStats.following_count,
@@ -50,8 +54,9 @@ class InsightLibs {
                                                     retweetCount: updatedTwitterStats.retweet_count
                                                 };
                                                 var twtMongomodelObject = new TwitterInsightMongoModel();
+                                                // Adding it to the Mongo DB
                                                 return twtMongomodelObject.addInsights(accountId, insightObject);
-                                            })                                         
+                                            })
                                             .catch((error) => {
                                                 throw error;
                                             });
@@ -66,7 +71,7 @@ class InsightLibs {
                             .then(() => {
                                 resolve("success");
                             })
-                            .catch((error)=>{
+                            .catch((error) => {
                                 throw error;
                             });
                     }
@@ -78,9 +83,6 @@ class InsightLibs {
                 });
         });
     }
-
-
-    
 }
 
 module.exports = InsightLibs;

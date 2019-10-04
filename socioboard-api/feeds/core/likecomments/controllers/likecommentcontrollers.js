@@ -15,7 +15,7 @@ class LikeCommentController {
                     analyticsServices.registerEvents({
                         category: req.body.userScopeEmail,
                         action: configruation.feeds_service_events.event_action.Facebook,
-                        label: configruation.feeds_service_events.like_comment_event_label.facebook_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId)
+                        label: configruation.feeds_service_events.like_comment_event_label.facebook_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                     });
                     res.status(200).json({ code: 200, status: "success", message: "Successfully liked." });
                 }
@@ -26,7 +26,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.like_comment_event_label.facebook_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.facebook_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -39,7 +39,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.like_comment_event_label.facebook_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.facebook_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: "Successfully commented.", commentedId: response.id });
             })
@@ -47,7 +47,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Facebook,
-                    label: configruation.feeds_service_events.like_comment_event_label.facebook_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.facebook_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.postId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -60,7 +60,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -68,7 +68,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -81,7 +81,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_dislike.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_dislike.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -89,7 +89,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_dislike_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_dislike_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -102,7 +102,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: `Successfully commented and commented id is ${response.commentId}.` });
             })
@@ -110,7 +110,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -123,7 +123,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_delete.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_delete.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -131,7 +131,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Twitter,
-                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_delete_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.twitter_comment_delete_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.tweetId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -144,7 +144,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_like.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -152,7 +152,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_like_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -165,7 +165,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -173,7 +173,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -186,7 +186,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_reply.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_reply.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -194,7 +194,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Youtube,
-                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_reply_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId)
+                    label: configruation.feeds_service_events.like_comment_event_label.youtube_comment_reply_failed.replace('{{user}}', req.body.userScopeName).replace('{{post}}', req.query.videoId).replace('{{teamId}}', req.query.teamId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -207,7 +207,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_comments.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{accountId}}', req.query.accountId)
+                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_comment.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -215,7 +215,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_comments_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{accountId}}', req.query.accountId)
+                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
@@ -228,7 +228,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_reply_comment.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{commentId}}', req.query.commentId).replace('{{accountId}}', req.query.accountId)
+                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_reply_comment.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{commentId}}', req.query.commentId).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 200, status: "success", message: response });
             })
@@ -236,7 +236,7 @@ class LikeCommentController {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.feeds_service_events.event_action.Instagram,
-                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_reply_comment.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{commentId}}', req.query.commentId).replace('{{accountId}}', req.query.accountId)
+                    label: configruation.feeds_service_events.like_comment_event_label.insta_business_reply_comment_failed.replace('{{user}}', req.body.userScopeName).replace('{{teamId}}', req.query.teamId).replace('{{commentId}}', req.query.commentId).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
                 });
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });

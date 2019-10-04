@@ -32,11 +32,16 @@
 
         </div>
     </div>
+
     @endsection
 
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'User';
+        var eventAction = 'Accept-Invitation';
+
         $(document).ready(function(){
             $(document).on('click','.accept',function(){
                 var team = $(this).attr('id');
@@ -48,9 +53,11 @@
                     },
                     //TODO remove user invitation column
                     success: function(response){
-                        console.log(response.code);
                         if(response.code === 200 ){
-                            swal("invitation accepted")
+                            swal("invitation accepted");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
                         }
                     },
                     error: function (error) {
@@ -72,7 +79,10 @@
                     success: function(response){
                         console.log(response.code);
                         if(response.code === 200 ){
-                            swal("invitation Declined")
+                            swal("invitation Declined");
+                            setTimeout( function(){
+                                location.reload();
+                            },1000);
                         }
                     },
                     error: function (error) {

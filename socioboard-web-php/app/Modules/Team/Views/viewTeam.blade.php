@@ -59,7 +59,6 @@
             <div class="card mb-4 border-0 shadow">
                 <div class="card-body">
                         <h5>{{$teamDetails['team_name']}}</h5>
-
                     <hr>
                     @if($defaultTeam == 1)
                     <p>This is By default team...</p>
@@ -219,6 +218,17 @@
                                     <h5 class="mt-1 mb-0">{{$teamMemeberActivation[$i]->first_name}}</h5>
                                    @if($teamMemeberActivation[$i]->invitation_accepted == true)
                                     <small class="text-success">accepted</small>
+                                        @if($adminDetails['email'] !== $teamMemeberActivation[$i]->email )
+                                            @if($adminDetails['email'] !== session('user')['userDetails']->email)
+                                                <div class="float-right">
+                                                    <button  class="btn btn-primary btn-sm quit-team" data-toggle="tooltip" data-placement="top" id="{{$teamMemeberActivation[$i]->email}}+{{$teamMemeberActivation[$i]->team_id}}+{{$teamMemeberActivation[$i]->user_id}}" title="Quit Team"><i class="fas fa-sign-out-alt "></i></button>
+                                                </div>
+                                            @else
+                                                <div class="float-right">
+                                                    <button class="btn btn-primary btn-sm remove" data-toggle="tooltip" data-placement="top" id="{{$teamMemeberActivation[$i]->email}}+{{$teamMemeberActivation[$i]->team_id}}+{{$teamMemeberActivation[$i]->user_id}}" title="Remove"><i class="fas fa-user-minus"></i></button>
+                                                </div>
+                                            @endif
+                                        @endif
                                        @else
                                         <div class="float-right">
                                             <button class="btn btn-primary btn-sm withdraw" data-toggle="tooltip" data-placement="top" id="{{$teamMemeberActivation[$i]->email}}+{{$teamMemeberActivation[$i]->team_id}}" title="Withdraw invitation"><i class="fas fa-door-closed"></i></button>
@@ -304,6 +314,9 @@
 
 @section('script')
     <script>
+        //for GA
+        var eventCategory = 'Team';
+        var eventAction = 'View-Team';
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
@@ -331,7 +344,6 @@
                      * 200 => success
                      * 500 => Something went wrong(Exception)
                      * 400 => Access denied*/
-          console.log(response);
                     if(response.code == 200){
                         alert(response.message);
                         // redirect to create team
@@ -412,7 +424,6 @@
                     //200 => success, 400=> Not able to edit team currently, 500=> Something went wrong from our side:(
 
 
-                    console.log(response);
 
                     if(response.code == 500){
                         swal({
@@ -460,6 +471,58 @@
                 error: function (error) {
                     console.log(error)
                     swal("Not able to accept invitation");
+                }
+            });
+        })
+
+        //remove member
+        $(document).on('click','.remove',function(){
+            var data = $(this).attr('id');
+            $.ajax({
+                type: "POST",
+                url: "/remove-member",
+                data: {
+                    data: data
+                },
+                success: function(response){
+                    if(response.code === 200 ){
+                        swal(response.message);
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                    swal("Not able to remove!!");
+                }
+            });
+        })
+
+        //leave team
+        $(document).on('click','.quit-team',function(){
+
+            var teamData = $(this).attr('id');
+            $.ajax({
+                type: "POST",
+                url: "/leave-team",
+                data: {
+                    data: teamData
+                },
+                success: function(response){
+                    if(response.code === 200 ){
+                        swal(response.message);
+
+                        window.location ='{{env('APP_URL')}}dashboard/'+response.owner;
+//                        setTimeout(function() {APP_URL
+//                            location.reload();
+//                        }, 1000);
+
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                    swal("Not able to leave the team currently!!");
                 }
             });
         })
@@ -525,7 +588,6 @@
                 var data = event.dataTransfer.getData("Text");
                 event.target.appendChild(document.getElementById(data));
                 var ac =data.split("dragtarget")[1];
-                console.log(ac);
 //                return 1;
                 $.ajax({
                     url: "/addToOtherTeam",
@@ -542,7 +604,6 @@
                          * 400=>access denied, email not found
                          * 500 => exception
                          * */
-                        console.log(response);
 
                         if(response.code == 202){
 

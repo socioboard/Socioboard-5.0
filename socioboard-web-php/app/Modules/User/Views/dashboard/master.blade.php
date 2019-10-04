@@ -3,9 +3,20 @@
 
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145069111-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-145069111-1');
+    </script>
+
+    <meta http-equiv="Content-Type" content="application/javascript" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
-    <title>SocioBoard | Dashboard</title>
+    @yield('title')
     <meta name="google-site-verification" content="" />
     <meta name="description"
           content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it." />
@@ -28,7 +39,7 @@
     <link rel="icon" type="image/png" sizes="96x96" href="../assets/imgs/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/imgs/favicon/favicon-16x16.png">
 
-
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="manifest" href="../assets/imgs/favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
@@ -79,14 +90,15 @@
 
 <main>
     <div class="container margin-top-60">
-       @yield('welcome')
+        @yield('welcome')
 
-        <!-- all social profiles -->
-       @yield('social')
+                <!-- all social profiles -->
+        @yield('social')
 
         {{--Accounts part--}}
         @yield('account')
-
+        @yield('link-shortening')
+        {{--@yield('linkShortening')--}}
         @yield('createteam')
 
         @yield('viewTeam')
@@ -99,7 +111,7 @@
         @yield('acceptInvitation')
         @yield('loader')
         @yield('price')
-
+        @yield('seeAllNotifications')
 
         {{-- Discovery --}}
         @yield('imgur')
@@ -119,105 +131,111 @@
         @yield('schedule')
         @yield('post_hitory')
 
+
+        {{--image library--}}
+        @yield('public_library')
+
+
+
     </div>
 
 
 
     {{--<footer>--}}
-        {{--<div class="main_footer">--}}
-            {{--<div class="container">--}}
-                {{--<div class="row">--}}
-                    {{--<div class="col-md-3 text-center">--}}
-                        {{--<img src="../assets/imgs/sb_icon.png" class="img-fluid" style="width: 100px;padding: 10px;">--}}
-                        {{--<h3>SOCIOBOARD</h3>--}}
-                    {{--</div>--}}
-                    {{--<div class="col-md-3">--}}
-                        {{--<h6><strong>SOCIOBOARD</strong></h6>--}}
-                        {{--<ul class="no-padding">--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Page 1</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Page 2</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Page 3</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Page 4</a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                    {{--<div class="col-md-3">--}}
-                        {{--<h6><strong>COMPANY</strong></h6>--}}
-                        {{--<ul class="no-padding">--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Careers</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Training</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">FAQs</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="#" class="text-white">Page 4</a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                    {{--<div class="col-md-3">--}}
-                        {{--<h6><strong>SOCIAL</strong></h6>--}}
-                        {{--<ul class="no-padding">--}}
-                            {{--<li>--}}
-                                {{--<div class="fb-like text-white" data-href="https://www.facebook.com/SocioBoard" data-layout="button"--}}
-                                     {{--data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>--}}
-                            {{--</li>--}}
-                            {{--<li class="mt-2">--}}
-                                {{--<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>--}}
-                                {{--<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a class="twitter-follow-button" href="https://twitter.com/Socioboard" data-show-screen-name="false">Follow</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw/featured" target="_blank" class="btn btn-yt-tutorial btn-sm text-white">--}}
-                                    {{--<i class="fab fa-youtube"></i> <b>tutorial</b>--}}
-                                {{--</a>--}}
-                            {{--</li>--}}
-                            {{--<li>--}}
-                                {{--<a href="https://play.google.com/store/apps/details?id=com.socioboard&hl=en" target="_blank" class="btn btn-sm btn-android-app"><i--}}
-                                            {{--class="fab fa-google-play"></i> <b>Android--}}
-                                        {{--App</b></a>--}}
-                                {{--<a href="https://itunes.apple.com/sg/app/socioboard/id923398550?mt=8" target="_blank" class="btn btn-sm btn-app-store"><i--}}
-                                            {{--class="fab fa-apple"></i> <b>IOS App</b></a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="sub_footer">--}}
-            {{--<div class="container">--}}
-                {{--<div class="row">--}}
-                    {{--<div class="col-md-12">--}}
-                        {{--<p class="no-space text-center">--}}
+    {{--<div class="main_footer">--}}
+    {{--<div class="container">--}}
+    {{--<div class="row">--}}
+    {{--<div class="col-md-3 text-center">--}}
+    {{--<img src="../assets/imgs/sb_icon.png" class="img-fluid" style="width: 100px;padding: 10px;">--}}
+    {{--<h3>SOCIOBOARD</h3>--}}
+    {{--</div>--}}
+    {{--<div class="col-md-3">--}}
+    {{--<h6><strong>SOCIOBOARD</strong></h6>--}}
+    {{--<ul class="no-padding">--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Page 1</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Page 2</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Page 3</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Page 4</a>--}}
+    {{--</li>--}}
+    {{--</ul>--}}
+    {{--</div>--}}
+    {{--<div class="col-md-3">--}}
+    {{--<h6><strong>COMPANY</strong></h6>--}}
+    {{--<ul class="no-padding">--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Careers</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Training</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">FAQs</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="#" class="text-white">Page 4</a>--}}
+    {{--</li>--}}
+    {{--</ul>--}}
+    {{--</div>--}}
+    {{--<div class="col-md-3">--}}
+    {{--<h6><strong>SOCIAL</strong></h6>--}}
+    {{--<ul class="no-padding">--}}
+    {{--<li>--}}
+    {{--<div class="fb-like text-white" data-href="https://www.facebook.com/SocioBoard" data-layout="button"--}}
+    {{--data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>--}}
+    {{--</li>--}}
+    {{--<li class="mt-2">--}}
+    {{--<a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>--}}
+    {{--<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a class="twitter-follow-button" href="https://twitter.com/Socioboard" data-show-screen-name="false">Follow</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw/featured" target="_blank" class="btn btn-yt-tutorial btn-sm text-white">--}}
+    {{--<i class="fab fa-youtube"></i> <b>tutorial</b>--}}
+    {{--</a>--}}
+    {{--</li>--}}
+    {{--<li>--}}
+    {{--<a href="https://play.google.com/store/apps/details?id=com.socioboard&hl=en" target="_blank" class="btn btn-sm btn-android-app"><i--}}
+    {{--class="fab fa-google-play"></i> <b>Android--}}
+    {{--App</b></a>--}}
+    {{--<a href="https://itunes.apple.com/sg/app/socioboard/id923398550?mt=8" target="_blank" class="btn btn-sm btn-app-store"><i--}}
+    {{--class="fab fa-apple"></i> <b>IOS App</b></a>--}}
+    {{--</li>--}}
+    {{--</ul>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--<div class="sub_footer">--}}
+    {{--<div class="container">--}}
+    {{--<div class="row">--}}
+    {{--<div class="col-md-12">--}}
+    {{--<p class="no-space text-center">--}}
 
-                            {{--Copyright � 2014 - 2019 Socioboard Technologies Pvt. Ltd. All Rights Reserved.--}}
+    {{--Copyright � 2014 - 2019 Socioboard Technologies Pvt. Ltd. All Rights Reserved.--}}
 
 
-                            {{--&nbsp; <a href="../PrivacyPolicy.html" target="_blank" class="text-orange-light">Privacy Policy</a>--}}
-                            {{--&nbsp; <a href="../Refund_Policy.html" target="_blank" class="text-orange-light">Refund Policy</a>--}}
-                            {{--&nbsp; <a href="../TermsConditions.html" target="_blank" class="text-orange-light">Terms Conditions</a>--}}
-                        {{--</p>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
+    {{--&nbsp; <a href="../PrivacyPolicy.html" target="_blank" class="text-orange-light">Privacy Policy</a>--}}
+    {{--&nbsp; <a href="../Refund_Policy.html" target="_blank" class="text-orange-light">Refund Policy</a>--}}
+    {{--&nbsp; <a href="../TermsConditions.html" target="_blank" class="text-orange-light">Terms Conditions</a>--}}
+    {{--</p>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+    {{--</div>--}}
     {{--</footer>--}}
 
     <!-- Add Profile Modal -->
     @yield('addaccountModal')
-    <!-- profile delete modal -->
+            <!-- profile delete modal -->
     <div class="modal fade" id="profileDeleteModal" tabindex="-1" role="dialog" aria-labelledby="profileDeletModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -351,19 +369,19 @@
         </div>
     </div>
 
-<?php
+    <?php
 
-//for socket getting teams id
+    //for socket getting teams id
     $data = Session::get('team')['teamSocialAccountDetails'];
     foreach($data as $team){
         $teamId[] = $team[0]->team_id;
     }
-        $value = json_encode($teamId);
+    $value = json_encode($teamId);
 
-  //gettting current team id
-  $teamId =Session::get('currentTeam')['team_id'];
+    //gettting current team id
+    $teamId =Session::get('currentTeam')['team_id'];
 
-     ?>
+    ?>
     <input type="hidden" id="userID" value={{session()->get('user')['userDetails']->user_id}} />
     <input type="hidden" id="teamSocket" value="{{$value}}" />
     <input style="display:none" id="teamId" value="{{$teamId}}">
@@ -371,15 +389,8 @@
 
 </main>
 @yield('modals')
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-58515856-3"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 
-    gtag('config', 'UA-58515856-3');
-</script>
 
 <script type="text/javascript" src="../assets/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../assets/plugins/popper/umd/popper.min.js"></script>
@@ -436,99 +447,30 @@
     });
 </script>
 
+@yield('script')
 {{--Plan   (Aishwarya M)--}}
 
 @include('User::dashboard.incPlanChangeJs')
 
 {{--uncomment in local--}}
-{{--<script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>--}}
 
 
-{{--Uncomment in server--}}
-<script src="https://nodeuser.socioboard.com/socket.io/socket.io.js"></script>
-
-
+@include('User::dashboard.incNotificationJs')
+        <!-- Google Analytics -->
 <script>
-
-    var notify_count =0;
-    var notifyCount="";
-    app_url = '<?php echo env("API_URL_NOTIFY");?>';
-
-    var teamId = $('#teamId').val();
-    var teamActive = document.getElementById(teamId);
-    teamActive.setAttribute('class', 'dropdown-item active');
-    var url = '<?php echo env('APP_URL') ?>';
-    var socket = io.connect('http://127.0.0.1:3000');
-
-//commeneted before
-//    function subscribe(userId, teamIds) {
-//        var details = {
-//            userId: userId,
-//            teamIds: teamIds
-//        };
-//        socket.emit('subscribe', details);
-//    }
-
-    var userId = $('#userID').val();
-    var team = $('#teamSocket').val();
-    var notifyData = "";
-    console.log("team")
-    console.log(team);
-    socket.on('connect', () => {
-        console.log("User has been Connected..");
-        console.log(userId);
-        console.log(team);
-//        console.log(socket.id);
-        var details = {
-            userId: userId,
-            teamIds: team
-        };
-        socket.emit('subscribe', details);
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+    ga('create', '{{env('GA_TRACK_ID')}}', 'auto', {
+        'name': 'event'
     });
-    function unsubscribe(team) {
-        socket.emit('teamUnsubscribe', team);
-    }
-
-    socket.on('disconnect', () => {
-        console.log('User Disconnected..');
+    ga('event.send', 'pageview');
+    ga('event.send', 'event', {
+        'eventCategory': eventCategory,
+        'eventAction': eventAction,
+        'eventLabel': '{{session('user')['userDetails']->email}}'
     });
-
-    socket.on('notification', (messge) => {
-        notify_count++;
-        var type = '<?php echo env('TEAM_INVITE_NOTIFY') ?>';
-
-
-        let utime = (messge.dateTime.split(".")[0]);
-        let newDate = new Date(messge.dateTime.split(".")[0]).getTime();
-        alert(newDate)
-        var currentdate = Date.now();
-//        console.log("current date=====>" + currentdate)
-//        console.log("newDate date=====>" + newDate)
-//        var res = Math.abs(newDate - currentdate) / 1000;
-//        var days = Math.floor(res / 86400);
-////        console.log("  time  ========>"+timeDiff);
-//        console.log("  Date ========>" + days);
-
-
-
-        if(messge.notifyType === type && messge.status === "success"){
-//            console.log((messge.dateTime)/1000);
-            //TODO checking mins
-            notifyData += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">fff</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
-        }
-
-        notifyCount += '';
-        $("#notify").append(notifyData);
-        $(".badge-noti-count").text(notify_count);
-
-        console.log(messge);
-
-    });
-
 </script>
-
-
-@yield('script')
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
 </body>
 
 </html>

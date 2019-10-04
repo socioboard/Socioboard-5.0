@@ -14,7 +14,7 @@ reportServices.getTodayPostedCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.today_post_count.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId)
+                label: configruation.publiser_service_events.report_event_label.today_post_count.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: 'success', postCount: postCount });
         })
@@ -22,7 +22,7 @@ reportServices.getTodayPostedCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.today_post_count_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId)
+                label: configruation.publiser_service_events.report_event_label.today_post_count_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -35,7 +35,7 @@ reportServices.getXDayPublishCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.xday_post_count.replace('{{user}}', req.body.userScopeName).replace('{{days}}', req.query.dayCount)
+                label: configruation.publiser_service_events.report_event_label.xday_post_count.replace('{{user}}', req.body.userScopeName).replace('{{days}}', req.query.dayCount).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", reportDetails: reportDetails });
         })
@@ -43,7 +43,7 @@ reportServices.getXDayPublishCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.xday_post_count_failed.replace('{{user}}', req.body.userScopeName).replace('{{days}}', req.query.dayCount)
+                label: configruation.publiser_service_events.report_event_label.xday_post_count_failed.replace('{{user}}', req.body.userScopeName).replace('{{days}}', req.query.dayCount).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -56,7 +56,7 @@ reportServices.getAccountwisePublishCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.account_published_count.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.account_published_count.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", reportDetails: reportDetails });
         })
@@ -64,7 +64,7 @@ reportServices.getAccountwisePublishCount = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.account_published_count_failed.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.account_published_count_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -77,7 +77,7 @@ reportServices.getSchedulePublishedReport = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.schedule_publish_report.replace('{{user}}', req.body.userScopeName).replace('{{mongoId}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.report_event_label.schedule_publish_report.replace('{{user}}', req.body.userScopeName).replace('{{mongoId}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", publishedDetails: publishedDetails });
         })
@@ -85,7 +85,7 @@ reportServices.getSchedulePublishedReport = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.schedule_publish_report_failed.replace('{{user}}', req.body.userScopeName).replace('{{mongoId}}', req.query.scheduleId)
+                label: configruation.publiser_service_events.report_event_label.schedule_publish_report_failed.replace('{{user}}', req.body.userScopeName).replace('{{mongoId}}', req.query.scheduleId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -98,7 +98,7 @@ reportServices.getAccountPublishedReport = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.account_published_report.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId)
+                label: configruation.publiser_service_events.report_event_label.account_published_report.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", publishedDetails: publishedDetails });
         })
@@ -106,7 +106,7 @@ reportServices.getAccountPublishedReport = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.account_published_report_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId)
+                label: configruation.publiser_service_events.report_event_label.account_published_report_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -119,7 +119,7 @@ reportServices.getTwitterMessage = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.twitter_message_list.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.twitter_message_list.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", count: response.length, posts: response });
         })
@@ -127,7 +127,7 @@ reportServices.getTwitterMessage = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.twitter_message_list_failed.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.twitter_message_list_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -140,7 +140,7 @@ reportServices.getMessageBetweenTwoUsers = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.twitter_messages_between_users.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.twitter_messages_between_users.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", count: response.length, posts: response });
         })
@@ -148,7 +148,7 @@ reportServices.getMessageBetweenTwoUsers = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.twitter_messages_between_users_failed.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.twitter_messages_between_users_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });
@@ -161,7 +161,7 @@ reportServices.getPreviouslyMessagedUsers = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.previously_messaged_users.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.previously_messaged_users.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 200, status: "success", count: response.length, posts: response });
         })
@@ -169,7 +169,7 @@ reportServices.getPreviouslyMessagedUsers = function (req, res) {
             analyticsServices.registerEvents({
                 category: req.body.userScopeEmail,
                 action: configruation.publiser_service_events.event_action.Report,
-                label: configruation.publiser_service_events.report_event_label.previously_messaged_users.replace('{{user}}', req.body.userScopeName)
+                label: configruation.publiser_service_events.report_event_label.previously_messaged_users_failed.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
             });
             res.status(200).json({ code: 400, status: 'failed', error: error.message });
         });

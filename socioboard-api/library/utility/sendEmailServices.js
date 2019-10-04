@@ -2,6 +2,7 @@
 const moment = require('moment');
 const schedule = require('node-schedule');
 const MailServiceMongoModel = require('../mongoose/models/mailservices');
+const logger = require('../utils/logger');
 
 // constructor function
 function SendEmailServices() {
@@ -138,13 +139,11 @@ SendEmailServices.prototype.mailServiceSchedule = function () {
             mailServiceConfiguration: this.mailServiceConfiguration
         };
 
-        console.log("scheduleObject", scheduleObject);
-
         var time = new Date(scheduleDate);
 
         schedule.scheduleJob(this.batchId, time, function (scheduleObject) {
 
-            console.log("Mail service query has been started with batch Id %s of module Id %s", scheduleObject.batchId, scheduleObject.moduleId);
+            logger.info("Mail service query has been started with batch Id %s of module Id %s", scheduleObject.batchId, scheduleObject.moduleId);
 
             var emailContent = "";
             var emailTitle = "";
@@ -171,8 +170,8 @@ SendEmailServices.prototype.mailServiceSchedule = function () {
             }
 
             return sendNotificationMails(scheduleObject, emailTitle, emailContent, scheduleObject.newsletterContent, scheduleObject.mailServiceConfiguration)
-                .then(() => console.log("Process completed"))
-                .catch((error) => { console.log("Process Failed"); });
+                .then(() => logger.info("Process completed"))
+                .catch((error) => { logger.info("Process Failed"); });
 
         }.bind(null, scheduleObject));
 
@@ -233,10 +232,10 @@ function sendNotificationMails(scheduleObject, emailTitle, emailContent, newslet
 
             mailServices.sendEmailByGmail(emailDetails, function (error, info) {
                 if (error) {
-                    console.log(error);
+                    logger.info(error);
                 }
                 else {
-                    console.log(info);
+                    logger.info(info);
                 }
             });
         }))

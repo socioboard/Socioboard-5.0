@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 const Schema = mongoose.Schema;
+const logger = require('../../utils/logger');
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on filckrposts collection of mongo DB
 const flickrPost = new Schema({
     flickrId: { type: String, index: true, unique: true },
     sourceUrl: { type: String, },
     title: { type: String },
     description: { type: String },
+    category: { type: String },
     publisherName: { type: String },
     publishedDate: { type: Date, default: Date.now },
     mediaUrl: { type: [String] },
@@ -20,6 +23,7 @@ const flickrPost = new Schema({
 });
 
 flickrPost.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts
     return this.model('FlickrPosts')
         .insertMany(posts)
         .then((postdetails) => {
@@ -30,12 +34,15 @@ flickrPost.methods.insertManyPosts = function (posts) {
         });
 };
 
-flickrPost.methods.getPreviousPost = function (keyword, skip, limit) {
+flickrPost.methods.getPreviousPost = function (keyword, sort, skip, limit) {
+    // Fetching posts from the flickrposts collection
     var query = {
-        $or: [
-            { description: new RegExp(keyword, 'i') },
-            { title: new RegExp(keyword, 'i') }
-        ]
+        $and: [{
+            $or: [
+                { description: new RegExp(keyword, 'i') },
+                { title: new RegExp(keyword, 'i') }
+            ]
+        }, { category: new RegExp(sort, "i") }]
     };
     return this.model('FlickrPosts')
         .find(query)
@@ -46,11 +53,12 @@ flickrPost.methods.getPreviousPost = function (keyword, skip, limit) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 
 flickrPost.methods.getBatchPost = function (batchId) {
+    // Fetching a specified post from the flickr posts
     var query = {
         batchId: new RegExp(batchId, 'i')
     };
@@ -60,7 +68,7 @@ flickrPost.methods.getBatchPost = function (batchId) {
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            logger.info(error);
         });
 };
 

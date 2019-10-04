@@ -86,7 +86,6 @@
 
         var count =0;
         var fbId = document.getElementById('accountidFetch').value ;
-        console.log(fbId);
         var firstDate = new Date();
         var chartData = [];
         var filterPeriod = 3;
@@ -112,14 +111,12 @@
                 },
                 cache: false,
                 success: function(response){
-                    console.log(response);
 
                     // Add data
                     if(response.code == 200){
                         am4core.useTheme(am4themes_animated);
                         // Increase contrast by taking evey second color
                         chart.colors.step = 2;
-                        console.log(response.data);
                         $.each(response.data, function(key,value){
                                 chartData.push({
                                     date: value.day,
@@ -240,13 +237,11 @@
             var end = moment();
 
             function cb(start, end) {
-//                console.log(document.getElementsByTagName("li")[0].getAttribute("data-range-key"));
 
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                 if(count>0){
                     setTimeout(function(){ $('#reportrange').click()
                         var filterTpe = $($('.ranges>ul').find('.active')).attr('data-range-key');
-                        console.log("DT picker ");
                         switch(filterTpe){
                             case "Today":
                                 filterPeriod=1;
@@ -254,7 +249,7 @@
                             case "Yesterday":
                                 filterPeriod=2;
                                 break;
-                            case "Last 7 Days":
+                            case "Last Week":
                                 filterPeriod=3;
                                 break;
                             case "Last 30 Days":
@@ -273,8 +268,8 @@
                                 filterPeriod=1;
                                 break;
                         }
-                        console.log(filterTpe)
                         getFacebookInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
+                        $('.daterangepicker').css('display','none');
                     }, 100);
 
 //                    if()
@@ -292,7 +287,7 @@
                 endDate: end,
                 ranges: {
 
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last Week': [moment().subtract(6, 'days'), moment()],
                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                     'This Month': [moment().startOf('month'), moment().endOf('month')],
                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
@@ -301,7 +296,6 @@
 
 
             cb(start, end);
-            //         console.log("jjdksj " + aa);
 
 
 

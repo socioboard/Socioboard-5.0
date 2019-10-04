@@ -16,7 +16,8 @@
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^1.0",
         "rap2hpoutre/laravel-log-viewer": "^1.0",
-        "ibonly/laravel-accountkit": "^1.2"
+        "ibonly/laravel-accountkit": "^1.2",
+        "google/apiclient" : "^1.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

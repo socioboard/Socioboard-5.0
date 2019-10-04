@@ -19,19 +19,25 @@ const planValidator = require('../../utils/planvalidator');
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for giphy posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Search keyword 
+ *         description: Provide search keyword 
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
+ *         type: string
+ *       - in: query
+ *         description: Provide filter
+ *         name: filter
+ *         enum: ["G","PG","PG-13","R"]
+ *         default: "G"
  *         type: string
  *     responses:
  *       200:
@@ -53,20 +59,26 @@ routes.get('/getGiphy', planValidator.isUserObtianedPermission('contentstudio'),
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for newsApi posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Search keyword 
+ *         description: Provide search keyword 
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["publishedAt","popularity","relevancy"]
+ *         default: "relevancy"
  *     responses:
  *       200:
  *         description: Return success!
@@ -88,20 +100,32 @@ routes.get('/getNewsApi', planValidator.isUserObtianedPermission('contentstudio'
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for pixaBay posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Search keyword 
+ *         description: Provide search keyword 
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide filter
+ *         name: filter
+ *         enum: ["fashion","nature","backgrounds","science","education","people","feelings","religion","health","places","animals","industry","food","computer","sports","transportation","travel","buildings","business","music"]
+ *         default: "nature"
+ *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["popular","latest"]
+ *         default: "latest"
  *     responses:
  *       200:
  *         description: Return success!
@@ -123,20 +147,26 @@ routes.get('/getPixabay', planValidator.isUserObtianedPermission('contentstudio'
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for flickr posts  
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Search keyword 
+ *         description: Provide search keyword 
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["date-posted-asc","date-posted-desc","date-taken-asc","date-taken-desc","interestingness-desc","interestingness-asc","relevance"]
+ *         default: "relevance"
  *     responses:
  *       200:
  *         description: Return success!
@@ -158,16 +188,28 @@ routes.get('/getFlickr', planValidator.isUserObtianedPermission('contentstudio')
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for dailyMotion posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide filter
+ *         name: filter
+ *         enum: ["what-to-watch","recommended"]
+ *         default: "recommended"
+ *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["recent","visited","visited-hour","visited-today","visited-week","visited-month","random","relevance","trending","old","live-audience","least-visit","live-airing-time"]
+ *         default: "recent"
  *     responses:
  *       200:
  *         description: Return success!
@@ -188,20 +230,32 @@ routes.get('/getDailyMotion', planValidator.isUserObtianedPermission('contentstu
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for imgur posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Search keyword 
+ *         description: Provide search keyword 
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination id 
+ *         description: Provide pagination id 
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide filter
+ *         name: filter
+ *         enum: ["hot","top"]
+ *         default: "hot"
+ *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["viral","top","time"]
+ *         default: "viral"
  *     responses:
  *       200:
  *         description: Return success!
@@ -224,14 +278,14 @@ routes.get('/getImgur', planValidator.isUserObtianedPermission('contentstudio'),
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for rss feeds    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Rss Feed Url
+ *         description: Provide rss feed Url
  *         name: rssUrl
  *         type: string
  *     responses:
@@ -256,20 +310,26 @@ routes.get('/getRssFeeds', planValidator.isUserObtianedPermission('rssfeeds'), t
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for youtube posts
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Keyword
+ *         description: Provide keyword
  *         name: keyword
  *         type: string
  *       - in: query
- *         description: Pagination Id
+ *         description: Provide pagination id
  *         name: pageId
  *         type: string
+ *       - in: query
+ *         description: Provide sort
+ *         name: sort
+ *         type: string
+ *         enum: ["date","rating","relevance","title","viewCount"]
+ *         default: "relevance"
  *     responses:
  *       200:
  *         description: Return success!
@@ -290,14 +350,14 @@ routes.get('/getYoutube', planValidator.isUserObtianedPermission('discovery'), t
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for twitter current trends    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: country code ISO-3166 
+ *         description: Provide country code ISO-3166 
  *         name: countryCode
  *         type: string
  *     responses:
@@ -320,14 +380,14 @@ routes.get('/getCurrentTrends', trendsController.getCurrentTrends);
  *     - AccessToken: []
  *     tags:
  *       - Trends
- *     description: To request for changing the current user plan    
+ *     description: To request for twitter posts    
  *     produces:
  *       - application/json
  *     consumes:
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: keyword
+ *         description: Provide keyword
  *         name: keyword
  *         type: string
  *     responses:

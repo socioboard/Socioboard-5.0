@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
+// All functions will execute on twittermessages collection of mongo DB
 const twitterMessage = new Schema({
     messageId: { type: String, index: true, unique: true },
     messagedDate: { type: Date, default: Date.now, index: true },
@@ -36,6 +37,7 @@ const twitterMessage = new Schema({
 });
 
 twitterMessage.methods.insertManyPosts = function (posts) {
+    // Inserting multiple posts into the collection
     return this.model('TwitterMessages')
         .bulkWrite(posts.map((post) => {
             return {
@@ -47,12 +49,12 @@ twitterMessage.methods.insertManyPosts = function (posts) {
             };
         }))
         .catch((error) => {
-            console.log(error.message);
             return 0;
         });
 };
 
 twitterMessage.methods.getSocialAccountPosts = function (accountId, skip, limit) {
+    // Fetching the details of an account
     return this.model('TwitterMessages')
         .aggregate([
             { $match: { accountId: accountId } },
@@ -61,19 +63,18 @@ twitterMessage.methods.getSocialAccountPosts = function (accountId, skip, limit)
             { $skip: skip }
         ])
         .then(function (result) {
-            console.log(result);
             if (result.length > 0) {
                 return result;
             }
             return [];
         })
         .catch(function (error) {
-            console.log(error);
             throw new Error(error.message);
         });
 };
 
 twitterMessage.methods.getMessageBetweenUsers = function (senderId, receiverId, skip, limit) {
+    // Fetching the details of messages between users
     var query = {
         $or: [{
             $and: [
@@ -97,11 +98,12 @@ twitterMessage.methods.getMessageBetweenUsers = function (senderId, receiverId, 
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            return error;
         });
 };
 
 twitterMessage.methods.getMessageBetweenTwoUsers = function (userId1, userId2, skip, limit) {
+    // Fetching the details of messages between 2 users
     var query = {
         $or: [{
             $and: [
@@ -125,11 +127,12 @@ twitterMessage.methods.getMessageBetweenTwoUsers = function (userId1, userId2, s
             return result;
         })
         .catch(function (error) {
-            console.log(error);
+            return error;
         });
 };
 
 twitterMessage.methods.getPreviouslyMessagedUsers = function (senderId, screenName, skip, limit) {
+    // Fetching the details of perviously messaged user
     return this.model('TwitterMessages')
         .aggregate([
             { $match: { $and: [{ accountId: senderId }] } },

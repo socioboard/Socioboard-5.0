@@ -25,6 +25,16 @@ class NotifyController {
                 res.status(200).json({ code: 400, status: 'success', error: error.message });
             });
     }
+    
+    updateNotificationStatus(req, res) {
+        notifyModel.updateNotificationStatus(req.query.mongoId, rea.query.status)
+            .then((response) => {
+                res.status(200).json({ code: 200, status: 'success', notifications: response });
+            })
+            .catch((error) => {
+                res.status(200).json({ code: 400, status: 'success', error: error.message });
+            });
+    }
 }
 
 module.exports = new NotifyController();

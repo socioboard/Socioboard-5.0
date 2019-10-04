@@ -116,17 +116,17 @@ routes.post('/sendLoginReminder', controllers.sendLoginReminder);
 *       - application/json
 *     parameters:
 *       - in: query
-*         description: user email 
+*         description: Provide user email 
 *         name: email
 *         type: string
 *       - in: query
-*         description: notification type { -1 - For all, 1- Expire within a week, 2- Expired users, 3- Login Reminder, 4- Other newsletters, 5- Schedule success update, 6- Schedule failed, 7- Daily team report, 8- Every 15 days team report, 9- Every 30 days team report, 10- Every 60 days team report, 11- Every 90 days team report} 
+*         description: Specify notification type { -1 - For all, 1- Expire within a week, 2- Expired users, 3- Login Reminder, 4- Other newsletters, 5- Schedule success update, 6- Schedule failed, 7- Daily team report, 8- Every 15 days team report, 9- Every 30 days team report, 10- Every 60 days team report, 11- Every 90 days team report} 
 *         name: notifyType
 *         type: integer
 *         enum : [-1,1,2,3,4,5,6,7,8,9,10,11]
 *         default : -1
 *       - in: query
-*         description: Number of days 
+*         description: Provide number of days 
 *         name: days
 *         type: integer
 *     responses:

@@ -1,6 +1,7 @@
 const MailBase = require('../utility/mailBase');
 const moment = require('moment');
 const MailServiceMongoModel = require('../mongoose/models/mailservices');
+const logger = require('../utils/logger');
 
 class MailService extends MailBase {
 
@@ -71,8 +72,8 @@ class MailService extends MailBase {
             }
 
             this.sendNotificationMails(scheduleObject, emailTitle, emailContent, scheduleObject.newsletterContent, scheduleObject.mailServiceConfiguration)
-                .then(() => { console.log("Process completed"); })
-                .catch((error) => { console.log("Process Failed"); });
+                .then(() => { logger.info("Process completed"); })
+                .catch((error) => { logger.info("Process failed"); });
 
             resolve(true);
 
