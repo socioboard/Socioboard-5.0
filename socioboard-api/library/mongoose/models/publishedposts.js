@@ -86,6 +86,21 @@ publishedPost.methods.getAccountPublishCount = function (accountId) {
         });
 };
 
+publishedPost.methods.getTeamPublishedCount = function (teamId) {
+    // Fetching total posts counts published in an account
+    var query = {
+        TeamId: Number(teamId)
+    };
+    return this.model('PublishedPosts')
+        .find(query)
+        .then((result) => {
+            return result.length;
+        })
+        .catch((error) => {
+            throw error;
+        });
+};
+
 publishedPost.methods.getSchedulePublishedReport = function (mongoId, skip, limit) {
 
     // Fetching publish details of a specified content id

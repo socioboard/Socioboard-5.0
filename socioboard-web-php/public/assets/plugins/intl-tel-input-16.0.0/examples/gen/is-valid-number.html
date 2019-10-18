@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example: Validation</title>
+    <link rel="stylesheet" href="../css/prism.css">
+    <link rel="stylesheet" href="../../build/css/intlTelInput.css?1560794689211">
+    <link rel="stylesheet" href="../../build/css/demo.css?1560794689211">
+    
+      <link rel="stylesheet" href="../css/isValidNumber.css?1560794689211">
+    
+
+    <!-- GOOGLE ANALYTICS -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-85394876-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <!-- /GOOGLE ANALYTICS -->
+  </head>
+
+  <body>
+    <a href="/">Back</a>
+    <h1>Example: Validation</h1>
+    <p>Use the isValidNumber method (which utilises Google's libphonenumber) to validate the telephone number on the blur event.</p>
+
+    <h2>Markup</h2>
+    <pre><code class="language-markup">&lt;input id=&quot;phone&quot; type=&quot;tel&quot;&gt;
+&lt;span id=&quot;valid-msg&quot; class=&quot;hide&quot;&gt;✓ Valid&lt;/span&gt;
+&lt;span id=&quot;error-msg&quot; class=&quot;hide&quot;&gt;&lt;/span&gt;
+</code></pre>
+
+    <h2>Code</h2>
+    <pre><code class="language-javascript">var input = document.querySelector(&quot;#phone&quot;),
+  errorMsg = document.querySelector(&quot;#error-msg&quot;),
+  validMsg = document.querySelector(&quot;#valid-msg&quot;);
+
+// here, the index maps to the error code returned from getValidationError - see readme
+var errorMap = [&quot;Invalid number&quot;, &quot;Invalid country code&quot;, &quot;Too short&quot;, &quot;Too long&quot;, &quot;Invalid number&quot;];
+
+// initialise plugin
+var iti = window.intlTelInput(input, {
+  utilsScript: &quot;../../build/js/utils.js?1560794689211&quot;
+});
+
+var reset = function() {
+  input.classList.remove(&quot;error&quot;);
+  errorMsg.innerHTML = &quot;&quot;;
+  errorMsg.classList.add(&quot;hide&quot;);
+  validMsg.classList.add(&quot;hide&quot;);
+};
+
+// on blur: validate
+input.addEventListener(&#39;blur&#39;, function() {
+  reset();
+  if (input.value.trim()) {
+    if (iti.isValidNumber()) {
+      validMsg.classList.remove(&quot;hide&quot;);
+    } else {
+      input.classList.add(&quot;error&quot;);
+      var errorCode = iti.getValidationError();
+      errorMsg.innerHTML = errorMap[errorCode];
+      errorMsg.classList.remove(&quot;hide&quot;);
+    }
+  }
+});
+
+// on keyup / change flag: reset
+input.addEventListener(&#39;change&#39;, reset);
+input.addEventListener(&#39;keyup&#39;, reset);
+</code></pre>
+
+    <h2>Result</h2>
+    <div id="result">
+      <input id="phone" type="tel">
+<span id="valid-msg" class="hide">✓ Valid</span>
+<span id="error-msg" class="hide"></span>
+
+    </div>
+
+    <script src="../js/prism.js"></script>
+    <script src="../../build/js/intlTelInput.js?1560794689211"></script>
+    <script src="./js/isValidNumber.js?1560794689211"></script>
+  </body>
+</html>

@@ -180,6 +180,7 @@
             var newKeyword = $('#boardKeyword').val();
             var oldKeyword = $('#oldKeyword').val();
             var boardId = $('#boardId').val();
+            console.log(boardId);
             var board = $('#boardName').val();
             var form = document.getElementById('boardEdit');
             var formData = new FormData(form);

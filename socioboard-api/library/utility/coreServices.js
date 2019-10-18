@@ -72,6 +72,12 @@ CoreServices.prototype.getRandomNumbers = function () {
     return randomNum.substring(0, 4);
 };
 
+CoreServices.prototype.getRandomNumbersByLength = function (len) {
+    var randomNum = Math.floor(10093404234099 + Math.random() * 90010234092439);
+    randomNum = String(randomNum);
+    return randomNum.substring(0, len);
+};
+
 CoreServices.prototype.getRandomCharacters = function (len) {
     charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     var randomString = '';

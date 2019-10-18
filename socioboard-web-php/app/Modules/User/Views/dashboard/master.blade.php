@@ -25,6 +25,8 @@
     <meta name="author" content="Socioboard Technologies">
     <meta name="designer" content="Chanchal Santra">
 
+    {{--    {{for tel}}--}}
+    <link rel="stylesheet" href="assets/plugins/intel-tel-input/intlTelInput.css">
     <link rel="apple-touch-icon" sizes="57x57" href="../assets/imgs/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="../assets/imgs/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="../assets/imgs/favicon/apple-icon-72x72.png">

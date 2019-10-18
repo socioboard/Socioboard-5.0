@@ -304,10 +304,10 @@ routes.put('/updatePlanForTrail', adminController.updatePlanForTrail);
 *         type: integer
 *         required: true
 *       - in: query
-*         description: Specify Two step login either 0-disable or 1-enable 
+*         description: Specify Two step login either 0-disable or 1-Only Phone, 2-phone & email 
 *         name: options
 *         type: integer
-*         enum: [0,1]
+*         enum: [0,1,2]
 *         default: 0
 *     responses:
 *       200:

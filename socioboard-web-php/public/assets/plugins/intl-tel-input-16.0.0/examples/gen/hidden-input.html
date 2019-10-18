@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example: Submitting the full international number using a hidden input</title>
+    <link rel="stylesheet" href="../css/prism.css">
+    <link rel="stylesheet" href="../../build/css/intlTelInput.css?1560794689211">
+    <link rel="stylesheet" href="../../build/css/demo.css?1560794689211">
+    
+
+    <!-- GOOGLE ANALYTICS -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-85394876-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <!-- /GOOGLE ANALYTICS -->
+  </head>
+
+  <body>
+    <a href="/">Back</a>
+    <h1>Example: Submitting the full international number using a hidden input</h1>
+    <p>If you're submitting the form using Ajax, simply use getNumber to get the full international number before sending it. If you're using the standard form POST method, you can use the hiddenInput option to automatically create a hidden input that gets populated with the full international number on submit. Try submitting a valid number below, and then check the 'full_phone' parameter in the URL.</p>
+
+    <h2>Markup</h2>
+    <pre><code class="language-markup">&lt;form&gt;
+  &lt;input id=&quot;phone&quot; type=&quot;tel&quot; name=&quot;phone&quot;&gt;
+  &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+    <h2>Code</h2>
+    <pre><code class="language-javascript">var input = document.querySelector(&quot;#phone&quot;);
+window.intlTelInput(input, {
+  hiddenInput: &quot;full_phone&quot;,
+  utilsScript: &quot;../../build/js/utils.js?1560794689211&quot; // just for formatting/placeholders etc
+});
+</code></pre>
+
+    <h2>Result</h2>
+    <div id="result">
+      <form>
+  <input id="phone" type="tel" name="phone">
+  <button type="submit">Submit</button>
+</form>
+
+    </div>
+
+    <script src="../js/prism.js"></script>
+    <script src="../../build/js/intlTelInput.js?1560794689211"></script>
+    <script src="./js/hiddenInput.js?1560794689211"></script>
+  </body>
+</html>

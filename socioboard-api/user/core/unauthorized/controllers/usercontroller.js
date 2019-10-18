@@ -70,8 +70,8 @@ class UserControllers {
                     throw new Error("User has already register!");
                 else {
                     if (!requestBody.user.profilePicture || requestBody.user.profilePicture == '') {
-                        requestBody.user.profilePicture = `${config.get("user_socioboard.host_url")}${config.get('profile_url_assert')}`;                                    
-                        requestBody.user.profilePicture = requestBody.user.profilePicture.replace("http","https");
+                        requestBody.user.profilePicture = `${config.get("user_socioboard.host_url")}${config.get('profile_url_assert')}`;
+                        requestBody.user.profilePicture = requestBody.user.profilePicture.replace("http", "https");
                         logger.info(requestBody.user.profilePicture);
                     }
                     requestBody.user.isAdminUser = false;
@@ -276,14 +276,27 @@ class UserControllers {
                         .then((userInfo) => {
                             logger.info(`Fetched User : ${JSON.stringify(userInfo)}`);
                             if (result.isTwoStepEnabled) {
-                                logger.info('2 step');
-                                analyticsServices.registerEvents({
-                                    category: fetchedEmail,
-                                    action: configruation.user_service_events.event_action.Open,
-                                    label: configruation.user_service_events.unauthorized_event_label.login_twostep_request
-                                });
-                                var csrf = authorizeServices.encrypt(JSON.stringify(userInfo.user));
-                                res.status(200).json({ code: 200, status: "success", isTwoStepEnabled: true, redirectUrl: `${config.get('user_socioboard.host_url')}/v1/twoStepLogin?csrf=${csrf}` });
+                                // create OTPtoken
+                                // send mail
+                                return unauthorizedLibs.getOTPToken(fetchedUserId)
+                                    .then((OTPtoken) => {
+                                        return unauthorizedLibs.sendOTP({ email: fetchedEmail, userId: fetchedUserId })
+                                            .then((message) => {
+                                                logger.info('2 step');
+                                                analyticsServices.registerEvents({
+                                                    category: fetchedEmail,
+                                                    action: configruation.user_service_events.event_action.Open,
+                                                    label: configruation.user_service_events.unauthorized_event_label.login_twostep_request
+                                                });
+                                                res.status(200).json({ code: 200, status: "success", isTwoStepEnabled: true, message: message, user: { user_id: fetchedUserId, email: fetchedEmail }, OTPToken: OTPtoken });
+                                            })
+                                            .catch((error) => {
+                                                throw new Error('Error while sending otp mail');
+                                            })
+                                    })
+                                    .catch((error) => {
+                                        throw new Error('Error while generating OTP token');
+                                    });
                             } else {
                                 logger.info('success');
                                 analyticsServices.registerEvents({
@@ -452,7 +465,7 @@ class UserControllers {
             csrf: csrf_guid,
             version: account_kit_api_version,
         };
-        response.status(200).json({ code: 200, status: "success", viewDetails: view });
+        res.status(200).json({ code: 200, status: "success", viewDetails: view });
     }
 
     twoStepLoginSuccess(request, response) {
@@ -527,6 +540,25 @@ class UserControllers {
                 }
             });
         });
+    }
+
+    twoStepLoginValidate(req, res) {
+        return unauthorizedLibs.twoStepLoginValidate(req.query.email, req.query.emailtoken, req.query.mobiletoken)
+            .then((userInfo) => {
+                analyticsServices.registerEvents({
+                    category: req.query.email,
+                    action: configruation.user_service_events.event_action.Open,
+                    label: configruation.user_service_events.unauthorized_event_label.two_way_auth
+                });
+                res.status(200).json({ code: 200, status: "success", user: userInfo.user, accessToken: userInfo.accessToken });
+            }).catch((error) => {
+                analyticsServices.registerEvents({
+                    category: req.query.email,
+                    action: configruation.user_service_events.event_action.Open,
+                    label: configruation.user_service_events.unauthorized_event_label.two_way_auth_failed
+                });
+                res.status(200).json({ code: 404, status: "failed", error: error.message });
+            });
     }
 
     paypalSuccess(req, res) {

@@ -37,14 +37,16 @@ class YoutubeController extends Controller
                     return view('Team::youtube.youtubeFeeds')->with(["account_id"=>$account_id,
                         "account_type"=>$network,
                         "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
-                        "profileData" => $responseForParticular->profile
+                        "profileData" => $responseForParticular->profile,
+                        "pinterestBoards"=> Session::get('pinterestBoards')
                     ]);
                 }else if($network == env('INSTAGRAMBUSINESSPAGE')){//D:\bitbuckets\socioboard-upwork\web\app\Modules\Team\Views\instagram\instagramBusinessFeeds.blade.php
                     return view('Team::instagram.instagramBusinessFeeds')->with(["account_id"=>$account_id,
                         "account_type"=>$network,
                         "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
                         "profileData" => $responseForParticular->profile,
-                        "instagramStats"=>\unserialize($responseForParticular->profile->info)
+                        "instagramStats"=>\unserialize($responseForParticular->profile->info),
+                        "pinterestBoards"=> Session::get('pinterestBoards')
                     ]);
                 }
             }else if($responseForParticular->code == 400){

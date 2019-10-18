@@ -32,7 +32,7 @@ class UserLibs {
                         model: userActivation,
                         as: "Activations",
                         where: { id: db.Sequelize.col('user_activation_id') },
-                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'shortenStatus', 'email_validate_token', 'forgot_password_validate_token', 'forgot_password_token_expire']
+                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'shortenStatus', 'email_validate_token', 'forgot_password_validate_token', 'forgot_password_token_expire', 'otp_token', 'otp_token_expire']
                     }]
                 })
                     .then((userDetails) => {
@@ -63,7 +63,7 @@ class UserLibs {
                         model: userActivation,
                         as: "Activations",
                         where: { id: db.Sequelize.col('user_activation_id') },
-                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'email_validate_token']
+                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'email_validate_token', 'otp_token', 'otp_token_expire']
                     }]
                 })
                     .then((userDetails) => {
@@ -95,6 +95,32 @@ class UserLibs {
                         else {
                             resolve(result);
                         }
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
+    getOTPToken(userId) {
+        return new Promise((resolve, reject) => {
+            if (!userId && userId != 0) {
+                reject({ message: 'Invalid UserId', error: true });
+            } else {
+                var userInfo = {};
+                return this.updateUserLoginTime(userId)
+                    .then(() => {
+                        return this.getUserDetails(userId);
+                    })
+                    .then((userDetails) => {
+                        var userDetails = userDetails.toJSON();
+                        userInfo.user_id = userDetails.user_id;
+                        userInfo.email = userDetails.email;
+                        return this.authorizeServices.createToken(userInfo);
+                    })
+                    .then((accessToken) => {
+                        resolve(accessToken);
                     })
                     .catch((error) => {
                         reject(error);

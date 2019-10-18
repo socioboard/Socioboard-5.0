@@ -163,9 +163,11 @@ routes.get('/changePaymentType', authorizedUserController.changePaymentType);
  *       - application/x-www-form-urlencoded
  *     parameters:
  *       - in: query
- *         description: Specify Two step activate (1-for Active, 0-for Non-Active) 
+ *         description: Specify Two step activate (0-for Non-Active, 1-for Mobile, 2-for Mobile & Email ) 
  *         name: twoStepActivate
  *         type: integer
+ *         enum: [0, 1, 2]
+ *         default: 1
  *     responses:
  *       200:
  *         description: Return success!

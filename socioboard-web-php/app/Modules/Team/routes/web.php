@@ -14,6 +14,7 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('/delete-team', 'TeamController@deleteTeam');
         Route::post('/invite-team/{id}', 'TeamController@inviteTeam');
         Route::post('/addToOtherTeam', 'TeamController@addToOtherTeam');
+        Route::post('/deleteTeamSocialProfile', 'TeamController@deleteTeamSocialProfile');
         Route::post('/edit-team', 'TeamController@editteam');
         Route::get('accept-invitation', 'TeamController@acceptInvitation');
         Route::post('accept-invitation', 'TeamController@acceptInvitation'); // accept inv
@@ -29,7 +30,7 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('facebookPageAdd', 'FacebookController@facebookPageAdd');
 
         Route::post('insta-business-add', 'FacebookController@instaBusinessAdd');
-
+        Route::get('clear-add-profile-session','TeamController@clearAddSession');
 
 
         Route::post('deleteSocialAccount', 'FacebookController@deleteSocialAccount');
@@ -125,6 +126,8 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
         //pinterest
         Route::get('pinterest/{network}/{teamid}', 'PinterestController@pinterestAdd');
         Route::get('pinterest-callback', 'PinterestController@pinterestCallback');
+        Route::get('pin-board-create', 'PinterestController@boardCreate');
+        Route::get('pin-board-delete','PinterestController@boardDelete');
 
 
         //publish
@@ -133,10 +136,12 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
 
         //App insight
         Route::get('report/{account_id}/{network}', 'ReportController@reportingTo');
+        Route::get('team-report/{team_id}', 'ReportController@teamReport');
         Route::post('get-facebook-insight', 'ReportController@getFacebookFanInsight');
         Route::post('get-youtube-insight', 'ReportController@getYoutubeInsight');
         Route::post('get-insta-insight', 'ReportController@getInstaInsight');
         Route::post('get-twitter-insight', 'ReportController@getTwitterInsight');
+        Route::post('get-team-insight', 'ReportController@getTeamReport');
 
 
         //youtube Feeds

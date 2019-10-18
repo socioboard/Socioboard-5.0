@@ -52,28 +52,10 @@
                             $("#bootLoader").css("display","none");
                             if(response['notifications'].length == 0) actionUser = "active";
                             else actionUser = "inactive";
-                                        notifications.forEach(function(notification){
-
-                                let utime = (notification.dateTime.split(".")[0]);
-                                let newDate = new Date(notification.dateTime.split(".")[0]).getTime();
-                                var currentdate = Date.now();
-                                var res = Math.abs(newDate - currentdate) / 1000;
-                                var days = Math.floor(res / 86400);
-                                if(notification.notifyType === 'team_invite' ){
-                                    if(days == 0)  notify_Data += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else if(days == 1) notify_Data += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else  notify_Data += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
-                                else if( notification.notifyType === 'team_decline' || notification.notifyType === 'team_accept'){
-                                    if(days == 0)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else if(days == 1) notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
-                                else if(notification.notifyType === 'team_removeTeamMember'){
-                                    if (days == 0)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
-                                    else if(days == 1) notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">' + days + ' days ago</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
-                                    else  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
+                            notifications.forEach(function(notification){
+                                if(notification.notifyType === 'team_invite' ) notify_Data += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                                else if( notification.notifyType === 'team_decline' || notification.notifyType === 'team_accept') notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                                else if(notification.notifyType === 'team_removeTeamMember') notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
                             });
                             $("#notifications").append(notify_Data);
                             notify_Data = '';
@@ -106,36 +88,16 @@
                             if(response['notifications'].length == 0) actionTeam = "active";
                             else actionTeam = "inactive";
                             notifications.forEach(function(notification){
-
-                                let utime = (notification.dateTime.split(".")[0]);
-                                let newDate = new Date(notification.dateTime.split(".")[0]).getTime();
-                                var currentdate = Date.now();
-                                var res = Math.abs(newDate - currentdate) / 1000;
-                                var days = Math.floor(res / 86400);
                                 if(notification.notifyType === 'publish_publishPosts'){
                                     notificationPublish = notification.notificationMessage;
                                     var result = notificationPublish.split(",");
                                     var link = notificationPublish.split('"');
                                     var publishedUrl = link[1];
-                                    if(days == 0)  notify_Data += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
-                                    else if(days == 1) notify_Data += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else  notify_Data += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                                    notify_Data += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
                                 }
-                                else if(notification.notifyType === 'team_addProfile'){
-                                    if(days == 0)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else if(days == 1)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
-                                else if( notification.notifyType === 'team_deleteTeamSocialProfile'){
-                                    if(days == 0)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else if(days == 1)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                    else  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
-                                else if(notification.notifyType === 'team_leave') {
-                                    if (days == 0)  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
-                                    else if(days == 1) notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">' + days + ' days ago</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
-                                    else  notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                                }
+                                else if(notification.notifyType === 'team_addProfile') notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                                else if( notification.notifyType === 'team_deleteTeamSocialProfile') notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                                else if(notification.notifyType === 'team_leave') notify_Data += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + notification.notifyType + '</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">' + notification.notificationMessage + '</p> </a>'
                             });
                             $("#notifications").append(notify_Data);
                             notify_Data = '';

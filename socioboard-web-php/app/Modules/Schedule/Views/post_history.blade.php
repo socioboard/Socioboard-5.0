@@ -377,7 +377,6 @@
                 },
                 cache: false,
                 success: function(data){
-
 //                        document.getElementById("Button").disabled = true;
                     if(data.code == 200){
                         if(data.content.length == 0){
@@ -394,13 +393,13 @@
                             );
                         }
                         for(var i=0; i < data.content.length ;i++ ){
-                            if(data.content[i].message === "" ){
+                            if(data.content[i].message !== "" ){
                                 appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
-                                        '<td>'+ data.content[i].message +'</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '<td>'+ data.content[i].message +'</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +' ' +data.content[i].edit +
                                         '</td>  </tr>';
                             }else{
                                 appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
-                                        '<td>No message</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
+                                        '<td>No message</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +' ' +data.content[i].edit+
                                         '</td>  </tr>';
                             }
 //<a data-toggle="tooltip" title="Edit schedule" onclick="deleteSchedule('+ data.content[i].scheduleId+')"> <i class="fas fa-pen-square"></i></a>
@@ -480,7 +479,7 @@
                             }else{
                                 appendData = '<tr> <td>'+data.content[i].schedulername+'</td> ' +
                                         '<td>No message</td> <td> '+ data.content[i].postingSocialIds +' </td> <td> '+ data.content[i].scheduleStatus +'      <td><a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> '+ data.content[i].cancel +'' +
-                                        '</td>  </tr>';
+                                        '</td> <a onclick="deleteSchedule('+ data.content[i].scheduleId+',0)" data-toggle="tooltip" title="Delete schedule"><i class="fas fa-trash-alt"></i> </a> </tr>';
                             }
 //<a data-toggle="tooltip" title="Edit schedule" onclick="deleteSchedule('+ data.content[i].scheduleId+')"> <i class="fas fa-pen-square"></i></a>
                             $(tableID).DataTable().destroy();

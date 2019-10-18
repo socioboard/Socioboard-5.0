@@ -26,7 +26,6 @@ class Helper
     {
         $this->client = new Client();
         $this->token = Session::get(('user'))['accessToken'];
-//        dd($this->token );
         $this->API_URL = env('API_URL') . env('VERSION') . '/';
 
         $this->API_URL_PUBLISH = env('API_URL_PUBLISH') . env('VERSION_PUBLISH') . '/';
@@ -69,7 +68,6 @@ class Helper
     public function apiCallPost($data, $route, $is_multipart = false, $query = false)
     {
         $api_url = $this->API_URL . $route;
-
         $result = [];
         $response = null;
         try {
@@ -153,6 +151,7 @@ class Helper
     }
     public function apiCallPut($data, $route, $is_multipart = false, $query = false)
     {
+
         $api_url = $this->API_URL . $route;
 
         $result = [];
@@ -198,7 +197,6 @@ class Helper
     public function apiCallPublishPut($data, $route, $is_multipart = false, $query = false)
     {
         $api_url = $this->API_URL_PUBLISH . $route;
-
         $result = [];
         $response = null;
         try {
@@ -242,8 +240,6 @@ class Helper
     public function apiCallPostPublish($data, $route, $is_multipart = false)
     {
         $api_url = $this->API_URL_PUBLISH . $route;
-//dd($api_url);
-
         $result = [];
         $response = null;
         try {
@@ -260,14 +256,12 @@ class Helper
                     'headers' => ['x-access-token' => $this->token],
                 ]);
             } else {
-
                 $response = $this->client->post($api_url, [RequestOptions::JSON => $data,
                     'headers' => ['x-access-token' => $this->token],
                 ]);
             }
             if ($response->getStatusCode() == 200) {
                 $data = json_decode($response->getBody()->getContents(), true);
-
                 $result['statusCode'] = $response->getStatusCode();
                 $result['data'] = $data;
 
@@ -287,6 +281,8 @@ class Helper
         }
 
     }
+
+
     public function apiCallPostFeeds($data, $route, $is_multipart = false, $method = 'POST')
     {
         $api_url = $this->API_URL_FEEDS . $route;
@@ -380,7 +376,6 @@ class Helper
     public function apiCallGetFeeds($route)
     {
         $api_url = $this->API_URL_FEEDS . $route;
-//        dd($api_url);
         $result = [];
         $response = null;
         try {
@@ -473,7 +468,6 @@ class Helper
     public function apiCallPublishGet($route)
     {
         $api_url = $this->API_URL_PUBLISH . $route;
-//        dd($api_url);
         $result = [];
         $response = null;
         try {
@@ -501,7 +495,6 @@ class Helper
                 'headers' => ['x-access-token' => $this->token],
             ]);
             $responseBody = json_decode($response->getBody()->getContents());
-//            dd($responseBody);
             return $responseBody;
 
 
@@ -600,9 +593,7 @@ class Helper
             $response = $this->client->get($api_url, [
                 'headers' => ['x-access-token' => $this->token],
             ]);
-//            dd($response);
             $responseBody = json_decode($response->getBody()->getContents());
-//            dd($responseBody);
             return $responseBody;
 
         } catch (\Exception $e) {

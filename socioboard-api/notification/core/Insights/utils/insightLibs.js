@@ -1,13 +1,13 @@
 const db = require('../../../../library/sequelize-cli/models/index');
 const socialAccounts = db.social_accounts;
 const teamSocialAccount = db.join_table_teams_social_accounts;
-const logger = require('../../../utils/logger');
 const config = require('config');
 
 const TwitterHelper = require('../../../../library/network/twitter');
 const TwitterInsightMongoModel = require('../../../../library/mongoose/models/twitterInsights');
 const UserTeamAccount = require('../../../../library/mixins/userteamaccount');
 
+const teamInfo = db.team_informations;
 
 class InsightLibs {
     constructor() {
@@ -65,7 +65,7 @@ class InsightLibs {
                                         throw new Error('No running accounts found.');
                                 })
                                 .catch((error) => {
-                                    logger.error(error.message);
+                                    throw error
                                 });
                         }))
                             .then(() => {
@@ -81,6 +81,24 @@ class InsightLibs {
                 .catch((error) => {
                     reject(error);
                 });
+        });
+    }
+
+    updateTeamReport() {
+        return new Promise((resolve, reject) => {
+            return teamInfo.findAll({ raw: true })
+                .then((teamsDetails) => {
+                    // Update reports for each team
+                    return Promise.all(teamsDetails.map(teamInfo => {
+                        return this.createOrUpdateTeamReport(teamInfo.team_id, true);
+                    }));
+                })
+                .then(() => {
+                    resolve('successfully updated insights of all teams');
+                })
+                .catch((error) => {
+                    reject(error);
+                })
         });
     }
 }

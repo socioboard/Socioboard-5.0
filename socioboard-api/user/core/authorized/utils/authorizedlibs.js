@@ -147,7 +147,7 @@ class AuthorizedLibs extends UserLibs {
 
     change2StepOptions(userId, twoStepActivate) {
         return new Promise((resolve, reject) => {
-            if (!userId || (twoStepActivate != 0 && twoStepActivate != 1)) {
+            if (!userId || (twoStepActivate != 0 && twoStepActivate != 1 && twoStepActivate != 2)) {
                 reject({ error: true, message: "Invalid Inputs" });
             } else {
                 // Fetching user activation details 
@@ -156,6 +156,19 @@ class AuthorizedLibs extends UserLibs {
                         if (user === null)
                             throw new Error('No user found!');
                         else {
+                            if (twoStepActivate == 2) {
+                                if (!user.phone_no || user.phone_no == 0 || user.phone_no == null) {
+                                    throw new Error('Sorry, You need to have proper phone number to make 2 way authentication with phonenumber.');
+                                }
+                                else {
+                                    return user.Activations.update({
+                                        activate_2step_verification: twoStepActivate
+                                    })
+                                        .catch(function (error) {
+                                            throw new Error(error.message);
+                                        });
+                                }
+                            }
                             // Updating user with Changes in 2step authentication
                             return user.Activations.update({
                                 activate_2step_verification: twoStepActivate
@@ -166,7 +179,7 @@ class AuthorizedLibs extends UserLibs {
                         }
                     })
                     .then(() => {
-                        resolve('success');
+                        resolve(twoStepActivate == 1 ? "Please keep your mobile available while log-in to Socioboard." : twoStepActivate == 2 ? 'Please keep open of email and mobile while sign-in to Socioboard' : "Your sign-in is not secure.");
                     })
                     .catch((error) => {
                         reject(error);
@@ -288,7 +301,7 @@ class AuthorizedLibs extends UserLibs {
                                 throw new Error('Current Status and updated status are same.');
                             }
                             else {
-                                // If not we are updating with requested status
+                                // If not, we are updating with requested status
                                 return user.Activations.update({
                                     shortenStatus: status
                                 })
@@ -317,7 +330,7 @@ class AuthorizedLibs extends UserLibs {
                 // Fetching the user activation details like 2 step, shortenUrl
                 return userDetails.findOne({
                     where: { user_id: userId },
-                    attributes: ['user_id', 'email'],
+                    attributes: ['user_id', 'email', 'phone_no', 'phone_code'],
                     include: [{
                         model: userActivation,
                         as: "Activations",

@@ -97,7 +97,6 @@
 
         $(document).ready(function(){
             $(document).on('click','.resocio', function(){
-                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -161,6 +160,11 @@
             $('#checkboxes input:checked').each(function() {
                 selected.push($(this).attr('name'));
             });
+            var selectedBoards = [];
+            $('#boardsCheckbox input:checked').each(function() {
+                selectedBoards.push($(this).attr('name'));
+            });
+            formData.append('selectedBoards',selectedBoards);
             formData.append('checked',selected);
             formData.append('imagevideos',result);
             formData.append('postStatus',postStatus);

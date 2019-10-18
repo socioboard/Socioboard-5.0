@@ -453,7 +453,7 @@ class ScheduleLibs extends ScheduleBase {
                         }, {
                             schedule_id: scheduleId
                         }, {
-                            schedule_status: [1, 3]
+                            schedule_status: [1, 3, 5]
                         }, {
                             team_id: teamId
                         }]
@@ -461,7 +461,7 @@ class ScheduleLibs extends ScheduleBase {
                 })
                     .then((scheduleData) => {
                         if (!scheduleData)
-                            throw new Error("Schedule details aren't available to edit, Please make sure following,  1.schedule should be in ready or waiting for admin approval state, \n\r 2. valid teamId!");
+                            throw new Error("Schedule details aren't available to edit, Please make sure following,  1.schedule should be in ready or waiting for admin approval state or Drafted one, \n\r 2. valid teamId!");
                         else {
                             scheduleIdDetails = scheduleData;
                             return scheduledInformations.findAll({ where: { schedule_id: scheduleId } });

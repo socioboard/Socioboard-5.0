@@ -402,7 +402,7 @@ routes.get('/twoStepLogin', unauthorizedUserController.twoStepLogin);
  *   post:
  *     tags:
  *       - Open
- *     description: To request for reset the password 
+ *     description: To request for validating 2 step
  *     summary: NOTE  It should run only when otp verified successfully
  *     produces:
  *       - application/json
@@ -422,6 +422,37 @@ routes.get('/twoStepLogin', unauthorizedUserController.twoStepLogin);
  *         description: Return Not Found or ErrorMessage
  */
 routes.post('/twoStepLoginSuccess', unauthorizedUserController.twoStepLoginSuccess);
+
+/**
+ * @swagger
+ * /v1/twoStepLoginValidate:
+ *   post:
+ *     tags:
+ *       - Open
+ *     description: To request for verifying the user OTP's
+ *     summary: NOTE  It should run only when otp entered
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Provide email
+ *         name: email
+ *         type: string
+ *       - in: query
+ *         description: Enter email verification Code
+ *         name: emailtoken
+ *         type: number
+ *       - in: query
+ *         description: Enter mobile verification Code
+ *         name: mobiletoken
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ */
+routes.post('/twoStepLoginValidate', unauthorizedUserController.twoStepLoginValidate);
 
 
 

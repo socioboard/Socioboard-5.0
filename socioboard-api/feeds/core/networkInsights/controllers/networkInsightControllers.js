@@ -113,6 +113,26 @@ class NetworkInsightController {
             });
     }
 
+    getTeamInsights(req, res) {
+        var networkInsightLibs = new NetworkInsightLibs();
+        return networkInsightLibs.getTeamInsights(req.body.userScopeId, req.query.teamId, req.query.filterPeriod, req.query.since, req.query.untill)
+            .then((response) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.feeds_service_events.event_action.Team,
+                    label: configruation.feeds_service_events.networkInsights_event_label.team_insights.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId).replace('{{teamId}}', req.query.teamId)
+                });
+                res.status(200).json({ code: 200, status: "success", result: response });
+            })
+            .catch((error) => {
+                analyticsServices.registerEvents({
+                    category: req.body.userScopeEmail,
+                    action: configruation.feeds_service_events.event_action.Team,
+                    label: configruation.feeds_service_events.networkInsights_event_label.team_insights_failed.replace('{{user}}', req.body.userScopeName).replace('{{accountId}}', req.query.accountId).replace('{{id}}', req.body.userScopeId).replace('{{teamId}}', req.query.teamId)
+                });
+                res.status(200).json({ code: 400, status: "failed", error: error.message });
+            });
+    }
 }
 module.exports = new NetworkInsightController();
 

@@ -58,7 +58,7 @@ scheduleServices.getParticularScheduleDetails = (req, res) => {
                 action: configruation.publiser_service_events.event_action.Scheduler,
                 label: configruation.publiser_service_events.schedule_event_label.getParticularSchedule_details.replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId).replace('{{scId}}', req.query.scId)
             });
-            res.status(200).json(response);
+            res.status(200).json({ code: 200, status: "success", data: response });
         })
         .catch((error) => {
             analyticsServices.registerEvents({

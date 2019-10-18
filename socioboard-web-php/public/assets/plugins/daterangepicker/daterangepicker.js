@@ -1344,7 +1344,7 @@
                 } else {
                     this.chosenLabel = null;
                 }
-                this.showCalendars();
+                // this.showCalendars();
             }
         },
 

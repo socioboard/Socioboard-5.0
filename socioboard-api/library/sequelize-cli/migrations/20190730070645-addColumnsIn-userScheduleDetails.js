@@ -9,9 +9,9 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn('users_schedule_details', 'start_date', { type: Sequelize.DATE, allowNull: true })
+    return queryInterface.removeColumn('users_schedule_details', 'start_date')
       .then(() => {
-        return queryInterface.addColumn('users_schedule_details', 'interval', { type: Sequelize.INTEGER, allowNull: true });
+        return queryInterface.removeColumn('users_schedule_details', 'interval');
       });
   }
 };

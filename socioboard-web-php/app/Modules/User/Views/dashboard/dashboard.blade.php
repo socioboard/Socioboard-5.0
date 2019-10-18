@@ -321,7 +321,7 @@
                                 <a href="{{env('APP_URL')}}facebook-add/{{env('ACCOUNT_ADD_FB')}}/{{$currentTeam['team_id']}}"><button type="button" class="btn btn-fb btn-sm" >Add a Facebook Profile</button></a>
                                 <a href="{{env('APP_URL')}}facebook-add/{{env('ACCOUNT_ADD_FBP')}}/{{$currentTeam['team_id']}}"><button type="button" class="btn btn-fb btn-sm fb_page_btn">Add a Facebook Fanpage</button></a>
                             </div>
-
+                            <?php $fbPageCount = 0; ?>
                             @if($fbpcount == 1)
 
                                 <div class="card margin-top-10 fb_page_div">
@@ -493,6 +493,7 @@
                             </div>
 
                             {{--to show analytics acc--}}
+                            <?php $youtubeChannelsCount = 0; ?>
                             @if($youtubeChannels == 1)
                                 <div class="card margin-top-10 in_page_div">
                                     <div class="card-body bg-white">
@@ -500,8 +501,9 @@
                                         <div class="fb_page_scroll">
                                             <ul class="list-group">
                                                 <li class="list-group-item page_list">
+
                                                     @for($i=0; $i<count(session()->get('youtubeChannels')); $i++)
-                                                        @if(!isset(session()->get('youtubeChannels')[$i]->isAlreadyAdded))
+                                                        @if(!isset(session()->get('youtubeChannels')[$i]->isAlreadyAdded))<?php $youtubeChannelsCount++; ?>
                                                             <div class="media">
                                                                 <img class="mr-3 pp_50 rounded-circle" src="{{session()->get('youtubeChannels')[$i]->channelImage}}" alt="page title">
                                                                 <div class="media-body">
@@ -516,14 +518,19 @@
                                                                     <b style="font-size: 12px;">comments:</b> {{session()->get('youtubeChannels')[$i]->friendshipCount->commentCount}}
                                                                 </div>
                                                             </div>
+                                                        @else
+                                                            <div class="media">Channel {{session()->get('youtubeChannels')[$i]->channelName }} is already added</div>
+
                                                         @endif
                                                     @endfor
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="">
+                                            @if($youtubeChannelsCount > 0)
                                             <p class="float-left">&nbsp;</p>
                                             <button type="button" id="checkedChannels" class="btn btn-fb btn-sm margin-top-10 float-right">Add <i class="far fa-plus-square"></i></button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

@@ -170,12 +170,24 @@ module.exports = (sequelize, Sequelize) => {
         }
       }
     },
-
+    otp_token: {
+      type: Sequelize.STRING(32),
+      allowNull: true,
+      comment: 'first half for email, next half for phone'
+    },
+    otp_token_expire: {
+      type: Sequelize.DATE, allowNull: true, validate: {
+        isDate: {
+          args: true,
+          msg: "otp_token_expire should be a valid date format."
+        }
+      }, comment: 'expires in 10 minutes'
+    }
   }, {
-      hooks: {
-        beforeCreate,
-      }
-    });
+    hooks: {
+      beforeCreate,
+    }
+  });
 
   user_activations.associate = function (models) {
     // associations can be defined here

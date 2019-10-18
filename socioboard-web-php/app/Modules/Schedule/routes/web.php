@@ -10,7 +10,8 @@ Route::group(['module' => 'Schedule', 'middleware' => ['web'], 'namespace' => 'A
         Route::post('get-draft-history','ScheduleController@getDraftHistory');
         Route::post('get-post-history','ScheduleController@getPostHistory');
         Route::post('schedule-action','ScheduleController@scheduleAction');
-
+        Route::get('/scheduleEdit','ScheduleController@scheduleEdit');
+        Route::post('/edit-schedule-post','ScheduleController@editSchedulePost');
 
 //        Route::post('schedule_post','ScheduleController@schedule');
 

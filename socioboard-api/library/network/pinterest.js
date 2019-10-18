@@ -174,7 +174,7 @@ Pinterest.prototype.getBoardDetails = function (access_token, boardurl) {
             // Checking whether it sent error in callback or not
             if (error) {
                 // Sending response
-                resolve({});
+                reject(error);
             } else {
                 // Formating the response
                 var parsedBody = JSON.parse(body);

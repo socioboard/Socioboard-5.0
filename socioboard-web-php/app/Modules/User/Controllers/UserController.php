@@ -57,10 +57,8 @@ class UserController extends Controller
                 $validator = Validator::make($request->all(), $rules,$customMessage);
 
                 if ($validator->fails()) {
-
-                    return redirect()->back()->withErrors($validator)->withInput();
+                    return $validator->errors();
                 } else {
-
 //                    $iterations = 1000;
 //// Generate a random IV using openssl_random_pseudo_bytes()
 //// random_bytes() or another suitable source of randomness
@@ -71,14 +69,14 @@ class UserController extends Controller
                     $user = array(
                         "userName" => $request->username,
                         "email" => $request->email_id,
-                        "password" =>$request->passwd,
+                        "password" =>md5($request->passwd),
                         "firstName" => $request->first_name,
-                        "profilePicture"=>env('APP_URL')."assets/imgs/user-avatar.png",
-                        "phoneCode"=>'0',
-                        "phoneNo"=>0,
-                        "country"=>'NA',
-                        "timeZone"=>'NA',
-                        "aboutMe"=>""
+                        "profilePicture" =>env('APP_URL')."assets/imgs/user-avatar.png",
+                        "phoneCode" => $request->dialcode,
+                        "phoneNo" => $request->phone,
+                        "country" => 'NA',
+                        "timeZone" => 'NA',
+                        "aboutMe" => ""
 //                        "isAdminUser"=>false
                     );
 //                    $userActivation = array(
@@ -105,23 +103,32 @@ class UserController extends Controller
 
                     $result =json_decode($response->getBody()->getContents()) ;
 
-                    if($result->code == 400){
-                        return redirect('signup')->with('error', $result->error);
 
+                    if($result->code == 400){
+                        $res['code'] = 400;
+                        $res['error'] = $result->error;
+                        return $res;
                     }
 
                     if($response->getStatusCode() == 200){
-
-                        return redirect('login')->with('status', 'Registered Successfully!');
+                        $res['code'] = 200;
+                        $res['message'] = 'Registered Successfully!';
+                        return $res;
                     }else if($response->getStatusCode() == 400){
-                        return redirect('signup')->with('error', 'Registration failed:(');
+                        $res['code'] = 400;
+                        $res['error'] = 'Registration failed:(';
+                        return $res;
                     }else{
-                        return redirect('signup')->with('error', 'Registration failed:(');
+                        $res['code'] = 400;
+                        $res['error'] = 'Registration failed:(';
+                        return $res;
                     }
                 }
             } catch (\Exception $e) {
                 Log::info("Sign up Exception ".$e->getLine()." => ".$e->getMessage());
-                return redirect('signup')->with('error', 'Registration failed:(');
+                $res['code'] = 400;
+                $res['error'] = 'Registration failed:(';
+                return $result;
                 throw new \Exception("Exception " . $e->getMessage());
             }
         }
@@ -152,7 +159,7 @@ class UserController extends Controller
 
                     $loginData = array(
                         "user" => $request->email,
-                        "password" => $request->passwd
+                        "password" => md5($request->passwd)
                     );
 //                    $data = json_encode($loginData);
 
@@ -163,7 +170,8 @@ class UserController extends Controller
                     if ($response->getStatusCode() == 200) {
                         //if not admin
                             if (isset($result->isTwoStepEnabled)) {
-                                return redirect($result->redirectUrl);
+                                return redirect()->route('twoStepAuth', ['email' => $result->user->email]);
+//                                return redirect(env('APP_URL').two-step-authentication);
                             }
                             if ($result->code == 404 && $result->status = "failure")
                                 return redirect('login')->with('invalid', $result->message);
@@ -291,6 +299,7 @@ class UserController extends Controller
                $teamId[] = $team[0]->team_id;
             }
 
+
             return view('User::dashboard.dashboard',[
                 'user'=>$user,
                 'activation'=>(array)$user['Activations'],
@@ -387,7 +396,6 @@ class UserController extends Controller
                 $resetEmail = $request['email'] ;
                 return redirect('login')->with('resetPassword', $resetEmail);
             }
-//            dd($response->getStatusCode());
         } catch(\Exception $e){
             if($e->getCode() === 404){
                 Log::info('Exception ' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
@@ -560,9 +568,11 @@ class UserController extends Controller
             }
 
         }elseif($request->isMethod('get')){
-            return view('User::twoStep',['csrf'=>$request->csrf]);
+            return view('User::twoStep',['csrf'=>$request->csrf, 'email' => $request->email]);
         }
     }
+
+
 
     // this function is written cause after 2 step auth we cannot hit another api directly so we
     //we are redirecting it to a new page and from here we are moving to dahboard page based on the team id
@@ -683,7 +693,7 @@ class UserController extends Controller
         $rules = array(
             "firstName" => 'max:15|min:2|regex:/^[a-zA-Z]+$/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/ Alphanumeeric
             "lastName" => 'max:15|min:2|regex:/^[a-zA-Z]+$/',
-            "phone" => 'regex:/[0-9]{10}/',
+            "phone" => 'size:10',
         );
         $customMessage =[
             'firstName' => 'Please provide valid characters as input with atleast 2 and atmost 15 characters ',
@@ -813,6 +823,10 @@ class UserController extends Controller
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
                 $result['code'] =200;
                 $result['status'] ="success";
+                foreach($responseForParticular->notifications as $notification){
+                    $time = $notification->dateTime;
+                    $notification->dateTime = \Carbon\Carbon::parse($time)->diffForHumans();
+                }
                 $result['notifications'] = $responseForParticular->notifications;
             }
             else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
@@ -841,6 +855,10 @@ class UserController extends Controller
             if($responseForParticular->code == 200 && $responseForParticular->status == "success"){
                 $result['code'] =200;
                 $result['status'] ="success";
+                foreach($responseForParticular->notifications as $notification){
+                    $time = $notification->dateTime;
+                    $notification->dateTime = \Carbon\Carbon::parse($time)->diffForHumans();
+                }
                 $result['notifications'] = $responseForParticular->notifications;
             }
             else if($responseForParticular->code == 404 && $responseForParticular->status == "failed"){
