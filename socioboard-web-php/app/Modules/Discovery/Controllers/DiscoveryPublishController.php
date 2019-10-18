@@ -152,7 +152,7 @@ class DiscoveryPublishController extends Controller
                     $result['message']="For posting on boards image, message and link are necessary";
                     return ($result);
                 }
-                if(!filter_var($request->link, FILTER_VALIDATE_URL)){
+                if($request->link != null && !filter_var($request->link, FILTER_VALIDATE_URL)){
                     $result['code']=400;
                     $result['status']="failure";
                     $result['message']="Provide valid URL";
@@ -200,7 +200,6 @@ class DiscoveryPublishController extends Controller
 
                 }
             }
-
             $publishData=array(
                 "postType"=>$postType,
                 "postStatus"=>$request->postStatus,
@@ -211,9 +210,7 @@ class DiscoveryPublishController extends Controller
                 "pinBoards"=> $pinboardata
 
             );
-
             $publishresponse = $helper->apiCallPostPublish($publishData,"publish/publishPosts?teamId=".$team);
-
             if($publishresponse['statusCode'] == 200 && $publishresponse['data']['code']==200 && $publishresponse['data']['status']=="success"){
                 $result['code']=200;
                 $result['message']=$publishresponse['data']['message'];

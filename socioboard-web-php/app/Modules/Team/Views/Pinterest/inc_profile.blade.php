@@ -1,8 +1,51 @@
 {{-- print_r($userProfile --}}
 {{--print_r($boards) --}}
+<div
+        class="modal fade"
+        id="createPinBoardModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="createBoardModalLabel"
+        aria-hidden="true"
+        >
+    <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Board</h5>
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                        >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="boardCreate">
+                    <p type="text" class="form-control" id="accId" name="accId"  style="display: none"/>
 
+                    <div class="form-group">
+                        <label for="boardname">Board Name</label>
+                        <input type="text" class="form-control" id="boardname" name="boardName" placeholder="Enter Board Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="boar">Board Description</label>
+                        <input type="text" class="form-control" id="decsription" name="boardDescription" placeholder="Board Description"/>
+                    </div> <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary" id="pinCreate">Create</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="shadow mb-5 bg-white pin-card rounded">
-
+    <p id="accountID" type="hidden" style="display: none;">{{$userProfile->account_id }}</p>
     <div class="card-body">
 
         <span class="card_social_ribbon">
@@ -50,7 +93,9 @@
        data-boardId="{{ $board->board_id }}"
        data-accountId="{{ $account_id }}"
        data-toggle="pill" href="#v-pills-boardone" role="tab" aria-controls="v-pills-boardone"
-       aria-selected=@if ($loop->index==0) "true" @else "false" @endif >{{ $board->board_name }}</a>
+       aria-selected=@if ($loop->index==0) "true" @else "false" @endif >{{ $board->board_name }}
+        <span onclick="deleteBoard('{{ $account_id }}','{{$board->board_id}}')" title="Delete this board" class="float-right"><i class="far fa-times-circle"></i></span></a>
+
     @endforeach
 
     {{--
@@ -58,3 +103,4 @@
     --}}
 
 </div>
+<a class="btn btn-sm btn-primary float-left open-createPinBoardModal" href="#" data-toggle="modal" data-target="#createPinBoardModal"> Create Pinterest Board</a>

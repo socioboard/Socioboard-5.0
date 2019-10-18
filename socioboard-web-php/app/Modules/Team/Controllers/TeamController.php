@@ -94,6 +94,10 @@ class TeamController extends Controller
         }
     }
 
+    public function clearAddSession(){
+        if(session()->has('youtubeChannels')) Session::forget('youtubeChannels');
+    }
+
     public function viewTeam($id)
     {
         $help = Helper::getInstance();
@@ -110,9 +114,9 @@ class TeamController extends Controller
                     'teamMembers' => $resp->teamMembers,
                     'memberProfileDetails' => $resp->memberProfileDetails
                 );
+
                 Session::put('team', $team);
                 $teamSess = Session::get('team');
-
 
             }
 
@@ -190,7 +194,6 @@ class TeamController extends Controller
                     $profAvailable = $allSocioAcc->profiles;
 //                    $reindex = array_values($allSocioAcc->profiles);
                 }
-
                 return view('Team::viewTeam', ['defaultTeam' => $teamDefault,
                     'teamDetails' => $teamDetails,
                     'adminDetails' => $adminDetails,
@@ -401,6 +404,14 @@ class TeamController extends Controller
         //TODO check cases
     }
 
+    public function deleteTeamSocialProfile(Request $request){
+        $data = [];
+        $helper = Helper::getInstance();
+        $response = $helper->apiDelete("team/deleteTeamSocialProfile?AccountId=".$request->accountId."&TeamId=".$request->teamId);
+        return $response;
+    }
+
+
 
     public function editteam(Request $request)
     {
@@ -413,7 +424,7 @@ class TeamController extends Controller
         $data['TeamInfo'] = $teamInfo;
 //200 => success, 400=> Not able to edit team currently, 500=> Something went wrong from our side:(
         try {
-            $response = Helper::getInstance()->apiCallPost($data, "team/edit?TeamId=" . $request->teamId);
+            $response = Helper::getInstance()->apiCallPost($data, "team/edit?TeamId=" . session()->get('currentTeam')['team_id']);
             if ($response['statusCode'] == 200 && $response['data']['code'] == 200 && $response['data']['status'] == "success") {
                 $team = Helper::getInstance()->getTeamNewSession();
                 $result['code'] = 200;

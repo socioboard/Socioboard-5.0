@@ -128,6 +128,7 @@
 
 @section('incJS')
     <script>
+
         //for GA
         var eventCategory = 'View-Feeds';
         var eventAction = 'Pinterest-Feeds';

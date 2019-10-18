@@ -108,6 +108,7 @@
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
                                 "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
                     }else if(value.indexOf(".mp4") >= 1){
+                        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                         appenddata +=  "<li class='clearimag' id='" +key +"'><video autoplay width='100px' height='100px'  src='" + value + "'" +
                                 " id='" +key +"' ></video><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
                     }else{
@@ -152,9 +153,15 @@
             var formData = new FormData(form);
 
             var selected = [];
+
             $('#checkboxes input:checked').each(function() {
                 selected.push($(this).attr('name'));
             });
+            var selectedBoards = [];
+            $('#boardsCheckbox input:checked').each(function() {
+                selectedBoards.push($(this).attr('name'));
+            });
+            formData.append('selectedBoards',selectedBoards);
             formData.append('checked',selected);
             formData.append('imagevideos',result);
             formData.append('postStatus',postStatus);
@@ -334,7 +341,6 @@
             if ($(window).scrollTop() + $(window).height() >= $("#flickr").height() && action == 'inactive') {
         //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-                console.log(data,sortBy);
                 setTimeout(function () {
                     getFlickr(data, sortBy,pageId1,0);
                 }, 1000);

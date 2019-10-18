@@ -23,27 +23,27 @@
 
                         <!-- image and video upload -->
                         <div class="row">
-                            <div class="col-12" id="option_upload">
-                                <small>Note: Add only 4 items at a single time.</small>
-                                <ul class="btn-nav">
-                                    <li>
-											<span>
-												<i class="far fa-image text-secondary"></i>
-												<input id="imagePOst" type="file" name="imageName[]" click-type="type1" class="picupload" multiple
-                                                       accept="image/*" />
-											</span>
-                                    </li>
-                                    <li>
-											<span>
-												<i class="fas fa-video text-secondary"></i>
-												<input type="file" name="videoupload[]" click-type="type1" class="picupload" multiple
-                                                       accept="video/*" />
-											</span>
-                                    </li>
-                                </ul>
-                                <br/>
+                            {{--<div class="col-12" id="option_upload">--}}
+                                {{--<small>Note: Add only 4 items at a single time.</small>--}}
+                                {{--<ul class="btn-nav">--}}
+                                    {{--<li>--}}
+											{{--<span>--}}
+												{{--<i class="far fa-image text-secondary"></i>--}}
+												{{--<input id="imagePOst" type="file" name="imageName[]" click-type="type1" class="picupload" multiple--}}
+                                                       {{--accept="image/*" />--}}
+											{{--</span>--}}
+                                    {{--</li>--}}
+                                    {{--<li>--}}
+											{{--<span>--}}
+												{{--<i class="fas fa-video text-secondary"></i>--}}
+												{{--<input type="file" name="videoupload[]" click-type="type1" class="picupload" multiple--}}
+                                                       {{--accept="video/*" />--}}
+											{{--</span>--}}
+                                    {{--</li>--}}
+                                {{--</ul>--}}
+                                {{--<br/>--}}
 
-                            </div>
+                            {{--</div>--}}
                             <div class="col-12" id="hint_brand">
                                 <ul id="media-list" class="clearfix">
                                     {{--<li class="myupload">--}}

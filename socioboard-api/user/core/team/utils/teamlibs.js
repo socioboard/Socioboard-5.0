@@ -521,6 +521,9 @@ class TeamLibs {
                             return teamDetails.setUser(user, { transaction: t, through: { invitation_accepted: true, permission: 1, left_from_team: false, invited_by: 0 } });
                         })
                         .then(() => {
+                            return UserTeamAccount.createOrUpdateTeamReport(teamDetails.dataValues.team_id, '');
+                        })
+                        .then(() => {
                             logger.info(teamDetails);
                             resolve(teamDetails.toJSON());
                         })
@@ -2774,8 +2777,159 @@ class TeamLibs {
         });
     }
 
-    getTeamInsights(teamId, userId, userName) {
+    getTeamInsights(teamId, userId, userName, update) {
 
+        return new Promise((resolve, reject) => {
+
+            resolve('Sorry, we are not using this route,')
+
+            if (!userId || !teamId || !userName) {
+                reject(new Error("Invalid Inputs"));
+            } else {
+                var filteredTeams = null;
+                var teamDetails = null;
+                var SocialAccountStats = {};
+                SocialAccountStats.facebookStats = [];
+                SocialAccountStats.twitterStats = [];
+                SocialAccountStats.instagramStats = [];
+                SocialAccountStats.youtubeStats = [];
+
+                var teamMembers = 0;
+                var invitedList = 0;
+                var socialProfiles = 0;
+                var data = {};
+                var updatedData = {};
+                return this.getTeamSocialAccounts(userId, teamId)
+                    .then((teamSocialAccounts) => {
+                        filteredTeams = teamSocialAccounts.filteredTeams;
+                        teamDetails = teamSocialAccounts.teamDetails;
+                        return Promise.all(filteredTeams.Team.map(function (teamResponse) {
+                            return userTeamJoinTable.findAll({
+                                where: {
+                                    team_id: teamResponse.dataValues.team_id,
+                                },
+                                attributes: ['id', 'team_id', 'invitation_accepted', 'permission', 'user_id'],
+                                raw: true
+                            });
+                        }));
+                    })
+                    .then((teamMembersData) => {
+                        teamMembersData.forEach(element => {
+                            if (element[0].invitation_accepted == true) {
+                                teamMembers += 1;
+                            }
+                            if (element[0].invitation_accepted == false) {
+                                invitedList += 1;
+                            }
+                        });
+                        return Promise.all(teamDetails[0].map(accounts => {
+                            socialProfiles = accounts.SocialAccount.length;
+                            return Promise.all(accounts.SocialAccount.map(account => {
+                                var fields = [];
+                                switch (Number(account.account_type)) {
+                                    case 1:
+                                        fields = ['account_id', 'friendship_count', 'page_count'];
+                                        break;
+                                    case 4:
+                                        fields = ['account_id', 'follower_count', 'following_count', 'total_like_count', 'total_post_count'];
+                                        break;
+                                    case 5:
+                                        fields = ['account_id', 'friendship_count', 'follower_count', 'following_count', 'total_post_count'];
+                                        break;
+                                    case 9:
+                                        fields = ['account_id', 'subscription_count', 'total_post_count'];
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                if (fields.length > 0) {
+                                    return updateFriendsTable.findOne({
+                                        where: { account_id: account.account_id },
+                                        attributes: fields
+                                    })
+                                        .then((resultData) => {
+                                            var data = resultData.toJSON();
+                                            switch (Number(account.account_type)) {
+                                                case 1:
+                                                    SocialAccountStats.facebookStats.push({ facebookStats: data });
+                                                    break;
+                                                case 4:
+                                                    SocialAccountStats.twitterStats.push({ twitterStats: data });
+                                                    break;
+                                                case 5:
+                                                    SocialAccountStats.instagramStats.push({ instagramStats: data });
+                                                    break;
+                                                case 9:
+                                                    SocialAccountStats.youtubeStats.push({ youTubeStats: data });
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            logger.error(error.message);
+                                        });
+                                }
+                            }));
+                        }));
+                    })
+                    .then(function () {
+                        data = {
+                            teamId: teamId,
+                            insights: {
+                                teamMembersCount: teamMembers,
+                                invitedList: invitedList,
+                                socialProfilesCount: socialProfiles,
+                                SocialAccountStats: SocialAccountStats
+                            }
+                        };
+                        updatedData = [{
+                            teamMembersCount: teamMembers,
+                            invitedList: invitedList,
+                            socialProfilesCount: socialProfiles,
+                            SocialAccountStats: SocialAccountStats
+
+                        }];
+
+                        var teamInsightsMongoModelObject = TeamInsightsMongoModel();
+                        // insertInsights(data) then addTeamInsights(teamId, updatedData)
+                        console.log('update or insert, Update status is', update);
+                        if (!update || update == null || update == false)
+                            return teamInsightsMongoModelObject.insertInsights(data);
+                        else
+                            return teamInsightsMongoModelObject.addTeamInsights(teamId, updatedData)
+                    })
+                    .then(() => {
+                        resolve(updatedData);
+                    })
+                    .catch((error) => {
+                        throw error;
+                    });
+            }
+        });
     }
+
+    createTeamInsights(teamId, userId, userName) {
+        return new Promise((resolve, reject) => {
+            if (!userId || !teamId || !userName) {
+                reject(new Error("Invalid Inputs"));
+            } else {
+                return this.getTeamSocialAccounts(userId, teamId)
+                    .then((teamInformation) => {
+                        if (!teamInformation.filteredTeams)
+                            throw new Error("Team not found or access denied!");
+                        else
+                            return this.createOrUpdateTeamReport(teamId, '');
+                    })
+                    .then((teamSocialAccounts) => {
+                        resolve(teamSocialAccounts);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
+
 }
 module.exports = TeamLibs;

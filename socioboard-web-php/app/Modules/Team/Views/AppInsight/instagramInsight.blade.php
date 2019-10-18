@@ -64,10 +64,6 @@
                                 </div>
                             </div>
                             <hr />
-                            {{--<h5>--}}
-                            {{--<i class="far fa-flag fa-fw"></i> IMPRESSIONS BY AGE &--}}
-                            {{--GENDER--}}
-                            {{--</h5>--}}
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="chart" id="fb_impressions_gender"></div>

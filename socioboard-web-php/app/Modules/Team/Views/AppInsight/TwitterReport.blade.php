@@ -16,7 +16,7 @@
         @include("Team::AppInsight.incProfileSelect")
         <input id="accountidFetch" value="{{$profileData->account_id}}" style="display: none;"/>
         <div class="row">
-            <!-- facebook profile-->
+            <!-- facebook profi le-->
             <div class="col-md-4">
                 <div class="shadow mb-5 bg-white fb-card rounded">
                     <div class="card-body">
@@ -110,6 +110,7 @@
                 beforeSend: function(){
                     chartData =[];
                     chart = am4core.create("fb_pages", am4charts.XYChart);
+                    console.log("Chartb-->", chart.xAxes);
                 },
                 cache: false,
                 success: function(response){
@@ -136,7 +137,7 @@
                                 posts: 0
                             });
                         }
-
+                        console.log(chartData);
 
                     }else if(response.code == 400){
                         swal(response.message);
@@ -153,10 +154,11 @@
                     }
 
                     chart.data =  chartData;
-
+                    console.log("Charta-->", chart.xAxes);
                     // Create axes
                     var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
                     dateAxis.renderer.minGridDistance = 50;
+                    console.log("Chartab-->", chart.xAxes);
 
                     // Create series
 
@@ -280,6 +282,7 @@
                 if(count>0){
                     setTimeout(function(){ $('#reportrange').click()
                         var filterTpe = $($('.ranges>ul').find('.active')).attr('data-range-key');
+                        console.log(filterTpe);
                         switch(filterTpe){
                             case "Today":
                                 filterPeriod=1;
@@ -300,7 +303,7 @@
                                 filterPeriod=6;
                                 break;
                             case "Custom Range":
-                                filterPeriod=6;
+                                filterPeriod=7;
                                 break;
                             default :
                                 filterPeriod=1;

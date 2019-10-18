@@ -27,6 +27,48 @@ class PinterestController extends Controller
         $this->API_URL = env('API_URL') . env('VERSION') . '/';
     }
 
+    public function boardCreate(Request $request){
+
+        $result = [];
+//        $api_url = $this->API_URL . "profile/createPinterestBoards?accountId=".$request->accountId."&boardName=".urlencode($request->boardName)."&boardDescription=".urlencode($request->boardDesc);
+        try {
+            $response = Helper::getInstance()->apiCallGet("profile/createPinterestBoards?accountId=".$request->accountId."&boardName=".urlencode($request->boardName)."&boardDescription=".urlencode($request->boardDesc));
+
+            if ($response->code == 200 && $response->status == "success") {
+                $result['code'] = 200;
+                return $response;
+            } else {
+                $result['code'] = 201;
+                $result['error'] = $result->error;
+            }
+        }catch (\Exception $e){
+            if($e->getCode() === 404){
+            }
+
+        }
+
+    }
+
+    public function boardDelete(Request $request){
+        $result = [];
+        try {
+            $response = Helper::getInstance()->apiDelete("profile/deletePinterestBoards?accountId=".$request->accountId."&boardId=".$request->boardId);
+            if ($response->code == 200 && $response->status == "success") {
+                $result['code'] = 200;
+                return $response;
+            } else {
+                $result['code'] = 201;
+                return $response;
+            }
+
+        }catch (\Exception $e){
+            if($e->getCode() === 404){
+            }
+
+        }
+    }
+
+
     public function viewPage($account_id, $page_id = 0)
     {
 
@@ -103,7 +145,6 @@ class PinterestController extends Controller
     {
         try {
             $response = Helper::getInstance()->apiCallGet("profile/fetchNewPinterestBoards?accountId=" . $account_id . "");
-
             if ($response->code == 200 && $response->status == "success") {
                 return $response->boards;
             } else {

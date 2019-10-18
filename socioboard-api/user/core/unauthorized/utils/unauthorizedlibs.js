@@ -10,6 +10,7 @@ const Facebook = require('../../../../library/network/facebook');
 const Google = require('../../../../library/network/google');
 const UserLibs = require('../../libraries/userlibs');
 const logger = require('../../../utils/logger');
+var http = require("https");
 
 const UserTeamAccount = require('../../../../library/mixins/userteamaccount');
 
@@ -176,6 +177,10 @@ class UnAuthorizedUtils extends UserLibs {
                                     return;
                                 }
                             }
+                        })
+                        .then(() => {
+                            // create team report for that team
+                            return this.createOrUpdateTeamReport(team.dataValues.team_id, '');
                         })
                         .then(() => {
                             resolve({ userId: fetchedUserId, userInfo: userInfo });
@@ -499,6 +504,188 @@ class UnAuthorizedUtils extends UserLibs {
                     });
             }
         });
+    }
+
+    sendOTP(userInfo) {
+        return new Promise((resolve, reject) => {
+            if (!userInfo) {
+                reject({ error: true, message: 'Invalid UserInfo' });
+            } else {
+                var OTP = this.coreServices.getRandomNumbersByLength(12);
+                var newExpireDate = moment().add(10, "minutes");
+
+                return this.getUserDetails(userInfo.userId)
+                    .then((user) => {
+                        var otpCondition = user.Activations.activate_2step_verification;
+                        var userPhoneNumber = user.phone_no;
+                        var phoneCode = user.phone_code;
+                        return user.Activations.update({
+                            otp_token: String(OTP),
+                            otp_token_expire: newExpireDate
+                        })
+                            .then((result) => {
+
+                                // check condition on which it should send OTP
+                                if (otpCondition == 1) {
+
+                                    var mobileOtp = OTP.slice(6, 12);
+                                    return this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber)
+                                        .then(() => {
+                                            resolve('Mobile OTP sent successfully, Please verify it');
+                                        })
+                                        .catch((error) => {
+                                            reject("can't able to send Mobile OTP message.");
+                                        });
+                                }
+                                if (otpCondition == 2) {
+                                    var mobileOtp = OTP.slice(6, 12);
+                                    this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber);
+
+                                    // .then(() => {
+                                    var mailOtp = OTP.slice(0, 6);
+                                    return this.sendOtpToEmail(mailOtp, userInfo.email);
+                                    // })
+
+                                }
+                            }).then(() => {
+                                resolve(otpCondition == 1 ? "Mobile OTP sent successfully, Please verify it" : "Mobile & Email OTP sent successfully, Please verify it");
+                            })
+                            .catch((error) => { console.log(error); throw error; })
+                    })
+                    .catch((error) => reject(error));
+            }
+        });
+    }
+
+    sendOtpToMobile(otp, country, mobileNumber) {
+        return new Promise((resolve, reject) => {
+            if (!otp || !mobileNumber || mobileNumber == 0 || country == 0 || !country) {
+                reject(new Error('Invalid Inputs to send Mobile OTP'));
+            }
+            else {
+
+                var options = {
+                    "method": "POST",
+                    "hostname": "api.msg91.com",
+                    "port": null,
+                    "path": "/api/v2/sendsms?country=91",
+                    "headers": {
+                        "authkey": config.get('mobileOtp.authkey'),
+                        "content-type": "application/json"
+                    }
+                };
+
+                var req = http.request(options, function (res) {
+                    var chunks = [];
+
+                    res.on("data", function (chunk) {
+                        chunks.push(chunk);
+                    });
+
+                    res.on("end", function () {
+                        var body = Buffer.concat(chunks);
+                        logger.info(body.toString());
+                    });
+                });
+
+                req.write(JSON.stringify({
+                    sender: config.get('mobileOtp.sender'),
+                    route: config.get('mobileOtp.route'),
+                    country: country,
+                    sms:
+                        [{ message: `Your Socioboard 2-way OTP is: ${otp}`, to: [mobileNumber] }]
+                }));
+                req.end();
+                resolve();
+            }
+        })
+    }
+
+    sendOtpToEmail(otp, email) {
+        return new Promise((resolve, reject) => {
+            if (!otp || !email) {
+                reject(new Error('Invalid Inputs to send Email OTP'));
+            } else {
+                var htmlContent = this.sendEmailServices.template.mail_otp.replace('[OTP]', otp);
+                var emailDetails = {
+                    "subject": config.get('mailTitles.OTP_title'),
+                    "toMail": email,
+                    "htmlContent": htmlContent
+                };
+                this.sendEmailServices.sendMails(config.get('mailService.defaultMailOption'), emailDetails)
+                    .then((result) => {
+                        logger.info(`OTP mail status: ${JSON.stringify(result)}`);
+                    })
+                    .catch((error) => {
+                        logger.error(`OTP mail status: ${JSON.stringify(error)}`);
+                    });
+                resolve();
+            }
+        })
+    }
+
+
+
+    twoStepLoginValidate(email, emailOtp, mobileOtp) {
+        return new Promise((resolve, reject) => {
+            if (!email) {
+                reject(new Error('Invalid Inputs'));
+            } else {
+                return this.getUserDetailsByEmail(email)
+                    .then((user) => {
+                        // condition for checking what option is selected by user
+                        // for mobile OTP
+                        if (user.Activations.activate_2step_verification == 1) {
+                            if (!email || !mobileOtp)
+                                throw new Error("As per your 2-way request you need to enter Mobile OTP");
+                            else {
+                                var mobOtp = user.Activations.otp_token.slice(6, 12);
+                                // validating mobile otp
+                                if (mobOtp == Number(mobOtp)) {
+                                    return this.getUserAccessToken(user.user_id)
+                                        .then((userInfo) => {
+                                            resolve({ user: userInfo.user, accessToken: userInfo.accessToken });
+                                        })
+                                        .catch((error) => {
+                                            throw new Error('Error in creating AccessToken');
+                                        })
+                                }
+                                else
+                                    throw new Error("OTP's are not matching, please try again");
+                            }
+                        }
+                        // for Mobile and Email OTP
+                        if (user.Activations.activate_2step_verification == 2) {
+                            //  condition for checking inputs
+                            if (!email || !emailOtp || !mobileOtp)
+                                throw new Error("As per your 2-way request you need to enter Email & Mobile OTP's");
+                            else {
+                                // Validate Mobile  and Email OTP
+
+                                if (moment(user.Activations.otp_token_expire).add(10, "minutes") < moment().subtract(5, "hours").subtract(30, "minutes"))
+                                    throw new Error('OTP got expired');
+                                else {
+                                    var mailOtp = user.Activations.otp_token.slice(0, 6);
+                                    var mobOtp = user.Activations.otp_token.slice(6, 12);
+                                    // validating mail otp and mobile otp
+                                    if (mailOtp == Number(emailOtp) && mobOtp == Number(mobileOtp)) {
+                                        return this.getUserAccessToken(user.user_id)
+                                            .then((userInfo) => {
+                                                resolve({ user: userInfo.user, accessToken: userInfo.accessToken });
+                                            })
+                                            .catch((error) => {
+                                                throw new Error('Error in creating AccessToken');
+                                            })
+                                    }
+                                    else
+                                        throw new Error("OTP's are not matching, please try again");
+                                }
+                            }
+                        }
+                    })
+                    .catch((error) => { console.log(error); reject(error); })
+            }
+        })
     }
 
     sendForgotPasswordMail(userInfo) {

@@ -13,6 +13,8 @@
     <meta name="author" content="Socioboard Technologies">
     <meta name="designer" content="Chanchal Santra">
 
+{{--    {{for tel}}--}}
+    <link rel="stylesheet" href="assets/plugins/intel-tel-input/intlTelInput.css">
     <link rel="apple-touch-icon" sizes="57x57" href="assets/imgs/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="assets/imgs/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="assets/imgs/favicon/apple-icon-72x72.png">
@@ -34,7 +36,7 @@
     <meta name="theme-color" content="#ffffff">
     <meta property="og:site_name" content="socioboard.com">
     <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
-    <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
+    <meta property="og:description" content="Beï¿½itï¿½marketing(findingï¿½leads/customers)ï¿½onï¿½Socialï¿½media,ï¿½orï¿½listeningï¿½toï¿½customerï¿½complaints,ï¿½replyingï¿½toï¿½them,ï¿½managingï¿½multipleï¿½socialï¿½mediaï¿½accountsï¿½fromï¿½oneï¿½singleï¿½dashboard,ï¿½findingï¿½influencersï¿½inï¿½aï¿½particularï¿½categoryï¿½andï¿½reachingï¿½outï¿½toï¿½themï¿½andï¿½manyï¿½moreï¿½things,ï¿½Socioboardï¿½productsï¿½canï¿½doï¿½it.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="http://i.imgur.com/1B8wv5m.png">
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
@@ -45,6 +47,7 @@
     <link rel="stylesheet" type="text/css" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="assets/plugins/fontawesome/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
 
 
 </head>
@@ -181,7 +184,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p class="no-space text-center">
-                            Copyright © 2014 - 2019 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
+                            Copyright ï¿½ 2014 - 2019 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
                             &nbsp; <a href="PrivacyPolicy.html" target="_blank" class="text-orange-light">Privacy
                                 Policy</a>
                             &nbsp; <a href="Refund_Policy.html" target="_blank" class="text-orange-light">Refund
@@ -199,6 +202,7 @@
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-58515856-3"></script>
+<script src="../assets/js/sweetalert.min.js"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }

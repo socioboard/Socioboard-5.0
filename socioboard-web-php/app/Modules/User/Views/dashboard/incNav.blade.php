@@ -135,6 +135,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >Report</a>
 
                         <div class="dropdown-menu" aria-labelledby="ReportDropdown">
+
+                            <a class="dropdown-item"  href="{{env('APP_URL')}}team-report/{{session()->get('currentTeam')['team_id']}}" ><strong>{{session()->get('currentTeam')['team_name']}}</strong> Team Report</a>
                             <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('FACEBOOKPAGE')}}" title="Facebook">Facebook
                                 Page</a>
                             <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('TWITTER')}}"
@@ -147,6 +149,8 @@
                     @else
                         <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->social_report}})">Report</a>
                     @endif
+
+
 
                 </li>
                 <li class="nav-item dropdown">
@@ -179,7 +183,7 @@
                     </a>
                     <div class="dropdown-menu notification_drop p-0" aria-labelledby="notficationDropdown">
                         <div class="list-group list-group-flush p-0">
-                            <div id="notify" style="max-height: 250px; overflow-y: scroll;" onscroll="functionNotify(this)">
+                            <div id="notify" style="max-height: 250px; overflow-y: scroll" onscroll="functionNotify(this)">
 
                             </div>
                             <a href="{{env('APP_URL')}}seeAllNotifications"

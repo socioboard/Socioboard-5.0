@@ -1,6 +1,11 @@
 <script>
+    var eventCategory = 'Content-Studio';
+    var eventAction = 'Youtube';
+
+    console.log(123);
     var data = '<?php echo $data['key'];?>'
     var pageId1 = 1;
+    var sortBy = "date";
     var action = "inactive";
     var youtubeDetails =[];
 
@@ -12,7 +17,7 @@
     if(action=='inactive')
     {
         action ="active";
-        getyoutube(data, pageId1,0);
+        getyoutube(data,sortBy, pageId1,0);
     }
     // all social list div open
     $('.all_social_div').css({
@@ -27,13 +32,14 @@
         });
     });
 
-    function getyoutube(keyword,pageId,search){
+    function getyoutube(keyword,sort,pageId,search){
         var youtube = "";
         $.ajax({
             url: "/getYoutube",
             type: 'POST',
             data: {
                 keyword:keyword,
+                sort: sort,
                 pageId: pageId
             },
             beforeSend:function(){
@@ -44,7 +50,7 @@
                 youtubeDetails = [];
             },
             success: function (response) {
-
+                console.log(response);
                 if(response.code == 200){
                     pageId1 += 1;
                     $("#bootLoader").css("display","none");
@@ -55,6 +61,7 @@
                     }
                     $.each(response.youtubeDetails, function(key,value) {
                         if(value.mediaUrl != undefined && value.mediaUrl != "") {
+                            console.log(456);
 
                             var date = value.publishedDate.split('T');
                             var str = value.mediaUrl
@@ -99,7 +106,7 @@
             action = 'active';
 
             setTimeout(function () {
-                getyoutube(data, pageId1,0);
+                getyoutube(data,sortBy, pageId1,0);
             }, 1000);
         }
     });

@@ -134,7 +134,6 @@
 
         $(document).ready(function(){
             $(document).on('click','.resocio', function(){
-                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -142,7 +141,7 @@
                 msg = $(this).closest('.card').find('.messageSocio').text();
                 var image = $(this).closest('.card').find('img').attr('src');
                 val = $(this).closest('.card').find('input').val();
-                result = val.split(',')
+                result = val.split(',');
                 console.log(result,image,val,msg);
                 $.each(result, function(key,value) {
                     if(value.indexOf(".jpg") >= 1){
@@ -198,12 +197,18 @@
             var formData = new FormData(form);
 
             var selected = [];
+            var selectedBoards = [];
             $('#checkboxes input:checked').each(function() {
                 selected.push($(this).attr('name'));
+            });
+            $('#boardsCheckbox input:checked').each(function() {
+                selectedBoards.push($(this).attr('name'));
             });
             formData.append('checked',selected);
             formData.append('imagevideos',result);
             formData.append('postStatus',postStatus);
+            formData.append('selectedBoards',selectedBoards);
+
 
             $.ajax({
                 url: "/publish-data-discovery",

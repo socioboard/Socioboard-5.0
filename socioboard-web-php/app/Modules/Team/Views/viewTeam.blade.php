@@ -14,37 +14,37 @@
         }
     </style>
 
-    @endsection
+@endsection
 
 {{--@section('nav')--}}
-    {{--<ul class="navbar-nav">--}}
-        {{--<li class="nav-item dropdown">--}}
-            {{--<a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="teamNavbarDropdown" role="button"--}}
-               {{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                {{--<i class="fas fa-chalkboard-teacher text-primary" data-toggle="tooltip" data-placement="bottom" title="Teams"></i>--}}
-            {{--</a>--}}
-            {{--@if(session()->has('team'))--}}
+{{--<ul class="navbar-nav">--}}
+{{--<li class="nav-item dropdown">--}}
+{{--<a class="nav-link dropdown-toggle dropdown-toggle-none-c" href="#" id="teamNavbarDropdown" role="button"--}}
+{{--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+{{--<i class="fas fa-chalkboard-teacher text-primary" data-toggle="tooltip" data-placement="bottom" title="Teams"></i>--}}
+{{--</a>--}}
+{{--@if(session()->has('team'))--}}
 {{--                {{session()->get('team')['teamSocialAccountDetails'][0][0]->team_id}}--}}
-                {{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
-                    {{--@for ($i = 0; $i < count(session()->get('team')['teamSocialAccountDetails']); $i++)--}}
-                        {{--<a class="dropdown-item"  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>--}}
+{{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
+{{--@for ($i = 0; $i < count(session()->get('team')['teamSocialAccountDetails']); $i++)--}}
+{{--<a class="dropdown-item"  href="{{env('APP_URL')}}dashboard/{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}" id="{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_id}}">{{session()->get('team')['teamSocialAccountDetails'][$i][0]->team_name}}</a>--}}
 
-                    {{--@endfor--}}
-                    {{--<div class="dropdown-divider"></div>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team/{{session()->get('currentTeam')['team_id']}}" id="">View Team</a>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
+{{--@endfor--}}
+{{--<div class="dropdown-divider"></div>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team/{{session()->get('currentTeam')['team_id']}}" id="">View Team</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
 
-                {{--</div>--}}
-            {{--@else--}}
-                {{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
-                    {{--<a class="dropdown-item active" href="#">SocioBoard</a>--}}
-                    {{--<div class="dropdown-divider"></div>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team?id=">View Team</a>--}}
-                    {{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
-                {{--</div>--}}
-            {{--@endif--}}
-        {{--</li>--}}
-    {{--</ul>--}}
+{{--</div>--}}
+{{--@else--}}
+{{--<div class="dropdown-menu" aria-labelledby="teamNavbarDropdown">--}}
+{{--<a class="dropdown-item active" href="#">SocioBoard</a>--}}
+{{--<div class="dropdown-divider"></div>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}view-team?id=">View Team</a>--}}
+{{--<a class="dropdown-item" href="{{env('APP_URL')}}create-team">Create Team</a>--}}
+{{--</div>--}}
+{{--@endif--}}
+{{--</li>--}}
+{{--</ul>--}}
 {{--@endsection--}}
 @section('viewTeam')
     <div class="row margin-top-10">
@@ -58,10 +58,10 @@
         <div class="col-md-3">
             <div class="card mb-4 border-0 shadow">
                 <div class="card-body">
-                        <h5>{{$teamDetails['team_name']}}</h5>
+                    <h5>{{$teamDetails['team_name']}}</h5>
                     <hr>
                     @if($defaultTeam == 1)
-                    <p>This is By default team...</p>
+                        <p>This is By default team...</p>
                     @endif
                     <p>Admin of <span class="text-primary">{{$teamDetails['team_name']}}</span> Team</p>
 
@@ -72,69 +72,77 @@
                         <dd>{{$adminDetails['email']}}</dd>
                     </dl>
                     {{--<button onclick="editTeam()" class="btn btn-sm btn-light shadow-sm" data-toggle="tooltip"--}}
-                       {{--data-placement="top" title="edit"><i class="fas fa-pencil-alt text-info"></i></button>--}}
+                    {{--data-placement="top" title="edit"><i class="fas fa-pencil-alt text-info"></i></button>--}}
+                    @if($defaultTeam != 1)
                     <a href="javascript:void(0);" class="btn btn-sm btn-light shadow-sm" data-toggle="modal"
                        data-target="#editTeamsModal"><i class="fas fa-pencil-alt text-info"></i></a>
-                    @if($defaultTeam != 1)
-                                <button onclick="checkAdmin()"   id="deleteTeam" value="{{$teamDetails['team_id']}}" class="btn btn-sm btn-light shadow-sm"  data-toggle="tooltip"
-                                        data-placement="top" title="delete"><i class="far fa-trash-alt text-danger"></i></button>
-                     @endif
+
+                        <button onclick="checkAdmin()"   id="deleteTeam" value="{{$teamDetails['team_id']}}" class="btn btn-sm btn-light shadow-sm"  data-toggle="tooltip"
+                                data-placement="top" title="delete"><i class="far fa-trash-alt text-danger"></i></button>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-0">
                 <div class="card-body pl-1 pr-1">
-                    <h6 class="text-center">Profile Linked To <span class="text-primary">Team Name</span> </h6>
+                    <h6 class="text-center">Profile Linked To <span class="text-primary">{{$teamDetails['team_name']}}</span> </h6>
                     <div class="div_scroll card-height">
-                        <div class="droptarget">
+                        <div class="droptarget" id="add">
                             @if($teamDetails['SocialAccount'] != null)
-                            @for($i=0;$i<count($teamDetails['SocialAccount']);$i++)
-                                <div class="bg-light media mb-1" id="dragtarget1" draggable="false">
-                                    <img src="{{$teamDetails['SocialAccount'][$i]->profile_pic_url}}" class="rounded-circle mr-1 pp_50"
-                                         alt="avatar">
-                                    <div class="media-body">
-                                        <h5 class="mt-1 mb-0">{{$teamDetails['SocialAccount'][$i]->first_name}}</h5>
-                                        @switch($teamDetails['SocialAccount'][$i]->account_type )
-                                        @case(1)
-                                        <small class="text-truncate">{{env('ACCOUNT_FB')}}</small>
-                                        @break
-                                        @case(2)
-                                        <small class="text-truncate">{{env('ACCOUNT_FBPAGE')}}</small>
-                                        @break
-                                        @case(3)
-                                        <small class="text-truncate">{{env('ACCOUNT_FBGROUP')}}</small>
-                                        @break
-                                        @case(4)
-                                        <small class="text-truncate">{{env('ACCOUNT_TWITTER')}}</small>
-                                        @break
-                                        @case(5)
-                                        <small class="text-truncate">{{env('ACCOUNT_INSTA')}}</small>
-                                        @break
-                                        @case(6)
-                                        <small class="text-truncate">{{env('ACCOUNT_LINKEDIN')}}</small>
-                                        @break
-                                        @case(7)
-                                        <small class="text-truncate">{{env('ACCOUNT_LINKEDINBUSINESS')}}</small>
-                                        @break
-                                        @case(8)
-                                        <small class="text-truncate">{{env('ACCOUNT_GPLUS')}}</small>
-                                        @break
-                                        @case(9)
-                                        <small class="text-truncate">{{env('ACCOUNT_YOUTUBE')}}</small>
-                                        @break
-                                        @case(10)
-                                        <small class="text-truncate">{{env('ACCOUNT_GANALYTICS')}}</small>
-                                        @break
+                                @for($i=0;$i<count($teamDetails['SocialAccount']);$i++)
+                                    <div class="bg-light media mb-1" id="dragtarget{{$teamDetails['SocialAccount'][$i]->account_id}}" draggable="true">
+                                        <img src="{{$teamDetails['SocialAccount'][$i]->profile_pic_url}}" class="rounded-circle mr-1 pp_50"
+                                             alt="avatar">
+                                        <div class="media-body">
+                                            <h5 class="mt-1 mb-0">{{$teamDetails['SocialAccount'][$i]->first_name}}</h5>
+                                            @switch($teamDetails['SocialAccount'][$i]->account_type )
+                                            @case(1)
+                                            <small class="text-truncate">{{env('ACCOUNT_FB')}}</small>
+                                            @break
+                                            @case(2)
+                                            <small class="text-truncate">{{env('ACCOUNT_FBPAGE')}}</small>
+                                            @break
+                                            @case(3)
+                                            <small class="text-truncate">{{env('ACCOUNT_FBGROUP')}}</small>
+                                            @break
+                                            @case(4)
+                                            <small class="text-truncate">{{env('ACCOUNT_TWITTER')}}</small>
+                                            @break
+                                            @case(5)
+                                            <small class="text-truncate">{{env('ACCOUNT_INSTA')}}</small>
+                                            @break
+                                            @case(6)
+                                            <small class="text-truncate">{{env('ACCOUNT_LINKEDIN')}}</small>
+                                            @break
+                                            @case(7)
+                                            <small class="text-truncate">{{env('ACCOUNT_LINKEDINBUSINESS')}}</small>
+                                            @break
+                                            @case(8)
+                                            <small class="text-truncate">{{env('ACCOUNT_GPLUS')}}</small>
+                                            @break
+                                            @case(9)
+                                            <small class="text-truncate">{{env('ACCOUNT_YOUTUBE')}}</small>
+                                            @break
+                                            @case(10)
+                                            <small class="text-truncate">{{env('ACCOUNT_GANALYTICS')}}</small>
+                                            @break
+                                            @case(11)
+                                            <small class="text-truncate">{{env('ACCOUNT_PINTEREST')}}</small>
+                                            @break
+                                            @case(12)
+                                            <small class="text-truncate">{{env('ACCOUNT_INSTA_BUSINESS')}}</small>
+                                            @break
 
-                                        @default
-                                        <p> No profiles available for </p>
-                                        @endswitch
+                                            @default
+                                            <p> No profiles available for </p>
+                                            @endswitch
 
 
+                                        </div>
+                                        {{--<span onclick="deleteTeamSocProfile({{$teamDetails['SocialAccount'][$i]->account_id}})" title="Delete this account" class="float-right"><i class="far fa-times-circle"></i></span>--}}
                                     </div>
-                                </div>
-                            @endfor
+                                @endfor
                             @else
                                 <p> No profiles available for </p>
                             @endif
@@ -151,58 +159,67 @@
                     <p id="info_profile_text" class="text-center">Drag profile to add in your team</p>
 
                     @if( $profileAvailablecount != 0)
-                            <div class="droptarget div_scroll card-height">
+                        <div class="div_scroll card-height">
+                            <div class="droptarget" id="delete">
                                 {{--{{$profilesAvailable[0]->account_id}}--}}
                                 @for($i=0;$i<count($profilesAvailable);$i++)
 
-                                <div class="bg-light media mb-1 " id="dragtarget{{$profilesAvailable[$i]->account_id}}"  draggable="true">
-                                    <img src="{{$profilesAvailable[$i]->profile_pic_url}}" class="rounded-circle mr-1 pp_50" alt="avatar">
-                                    <div class="media-body">
-                                        <h5 class="mt-1 mb-0">{{$profilesAvailable[$i]->first_name}}</h5>
+                                    <div class="bg-light media mb-1 " id="dragtarget{{$profilesAvailable[$i]->account_id}}"  draggable="true">
+                                        <img src="{{$profilesAvailable[$i]->profile_pic_url}}" class="rounded-circle mr-1 pp_50" alt="avatar">
+                                        <div class="media-body">
+                                            <h5 class="mt-1 mb-0">{{$profilesAvailable[$i]->first_name}}</h5>
 
-                                        @switch($profilesAvailable[$i]->account_type)
-                                        @case(1)
-                                        <small class="text-truncate">{{env('ACCOUNT_FB')}}</small>
-                                        @break
-                                        @case(2)
-                                        <small class="text-truncate">{{env('ACCOUNT_FBPAGE')}}</small>
-                                        @break
-                                        @case(3)
-                                        <small class="text-truncate">{{env('ACCOUNT_FBGROUP')}}</small>
-                                        @break
-                                        @case(4)
-                                        <small class="text-truncate">{{env('ACCOUNT_TWITTER')}}</small>
-                                        @break
-                                        @case(5)
-                                        <small class="text-truncate">{{env('ACCOUNT_INSTA')}}</small>
-                                        @break
-                                        @case(6)
-                                        <small class="text-truncate">{{env('ACCOUNT_LINKEDIN')}}</small>
-                                        @break
-                                        @case(7)
-                                        <small class="text-truncate">{{env('ACCOUNT_LINKEDINBUSINESS')}}</small>
-                                        @break
-                                        @case(8)
-                                        <small class="text-truncate">{{env('ACCOUNT_GPLUS')}}</small>
-                                        @break
-                                        @case(9)
-                                        <small class="text-truncate">{{env('ACCOUNT_YOUTUBE')}}</small>
-                                        @break
-                                        @case(10)
-                                        <small class="text-truncate">{{env('ACCOUNT_GANALYTICS')}}</small>
-                                        @break
+                                            @switch($profilesAvailable[$i]->account_type)
+                                            @case(1)
+                                            <small class="text-truncate">{{env('ACCOUNT_FB')}}</small>
+                                            @break
+                                            @case(2)
+                                            <small class="text-truncate">{{env('ACCOUNT_FBPAGE')}}</small>
+                                            @break
+                                            @case(3)
+                                            <small class="text-truncate">{{env('ACCOUNT_FBGROUP')}}</small>
+                                            @break
+                                            @case(4)
+                                            <small class="text-truncate">{{env('ACCOUNT_TWITTER')}}</small>
+                                            @break
+                                            @case(5)
+                                            <small class="text-truncate">{{env('ACCOUNT_INSTA')}}</small>
+                                            @break
+                                            @case(6)
+                                            <small class="text-truncate">{{env('ACCOUNT_LINKEDIN')}}</small>
+                                            @break
+                                            @case(7)
+                                            <small class="text-truncate">{{env('ACCOUNT_LINKEDINBUSINESS')}}</small>
+                                            @break
+                                            @case(8)
+                                            <small class="text-truncate">{{env('ACCOUNT_GPLUS')}}</small>
+                                            @break
+                                            @case(9)
+                                            <small class="text-truncate">{{env('ACCOUNT_YOUTUBE')}}</small>
+                                            @break
+                                            @case(10)
+                                            <small class="text-truncate">{{env('ACCOUNT_GANALYTICS')}}</small>
+                                            @break
+                                            @case(11)
+                                            <small class="text-truncate">{{env('ACCOUNT_PINTEREST')}}</small>
+                                            @break
+                                            @case(12)
+                                            <small class="text-truncate">{{env('ACCOUNT_INSTA_BUSINESS')}}</small>
+                                            @break
 
-                                        @default
-                                        <p> No profiles available for </p>
-                                        @endswitch
+                                            @default
+                                            <p> No profiles available for </p>
+                                            @endswitch
+                                        </div>
                                     </div>
-                                </div>
 
                                 @endfor
                             </div>
-                        @else
+                        </div>
+
+                    @else
                         <p> No profiles available for </p>
-                        @endif
+                    @endif
                 </div>
             </div>
         </div>
@@ -211,13 +228,13 @@
                 <div class="card-body pl-1 pr-1">
                     <h6 class="text-center">Accepted Team Members </h6>
                     <div class="div_scroll card-height">
-                           @for($i=0;$i<count($teamMemeberActivation);$i++)
+                        @for($i=0;$i<count($teamMemeberActivation);$i++)
                             <div class="bg-light media mb-1">
                                 <img src="{{$teamMemeberActivation[$i]->profile}}" class="rounded-circle mr-1 pp_50" alt="avatar">
                                 <div class="media-body">
                                     <h5 class="mt-1 mb-0">{{$teamMemeberActivation[$i]->first_name}}</h5>
-                                   @if($teamMemeberActivation[$i]->invitation_accepted == true)
-                                    <small class="text-success">accepted</small>
+                                    @if($teamMemeberActivation[$i]->invitation_accepted == true)
+                                        <small class="text-success">accepted</small>
                                         @if($adminDetails['email'] !== $teamMemeberActivation[$i]->email )
                                             @if($adminDetails['email'] !== session('user')['userDetails']->email)
                                                 <div class="float-right">
@@ -229,16 +246,16 @@
                                                 </div>
                                             @endif
                                         @endif
-                                       @else
+                                    @else
                                         <div class="float-right">
                                             <button class="btn btn-primary btn-sm withdraw" data-toggle="tooltip" data-placement="top" id="{{$teamMemeberActivation[$i]->email}}+{{$teamMemeberActivation[$i]->team_id}}" title="Withdraw invitation"><i class="fas fa-door-closed"></i></button>
                                         </div>
-                                       <small class="text-danger">pending</small>
+                                        <small class="text-danger">pending</small>
 
-                                       @endif
-                               </div>
+                                    @endif
+                                </div>
                             </div>
-                               @endfor
+                        @endfor
                     </div>
                     <hr>
                     <div class="bg-light text-center mt-1">
@@ -250,12 +267,12 @@
                         <form id="inviteUser">
                             <p id="invite_mail" style="color: red"></p>
                             {{--<div class="form-group">--}}
-                                {{--<label for="permission_option">Select Permission</label>--}}
-                                {{--<select name="permission" class="form-control  border-0" id="permission_option">--}}
-                                    {{--<option selected disabled>Select option</option>--}}
-                                    {{--<option value="0" selected>Approval required</option>--}}
-                                    {{--<option value="1">Full permission</option>--}}
-                                {{--</select>--}}
+                            {{--<label for="permission_option">Select Permission</label>--}}
+                            {{--<select name="permission" class="form-control  border-0" id="permission_option">--}}
+                            {{--<option selected disabled>Select option</option>--}}
+                            {{--<option value="0" selected>Approval required</option>--}}
+                            {{--<option value="1">Full permission</option>--}}
+                            {{--</select>--}}
                             {{--</div>--}}
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
@@ -287,13 +304,13 @@
                     <form id="editTeam">
                         <div class="form-group">
                             <label for="teamName">Team Name</label>
-                            <input type="text" class="form-control" id="teamName" aria-describedby="emailHelp"
-                                name="teamName"   placeholder="Enter team name">
+                            <input pattern=".{4,64}" type="text" class="form-control" id="teamName" aria-describedby="emailHelp"
+                                   name="teamName"  title="min 4 and max 64 characters" placeholder="Enter team name">
                         </div>
                         <div class="form-group">
                             <label for="teamdescription">Team Description</label>
                             <textarea class="form-control" id="teamdescription" aria-describedby="emailHelp"
-                             name="teamDesc"         placeholder="Enter team description"></textarea>
+                                      name="teamDesc"         placeholder="Enter team description"></textarea>
                         </div>
                         <div class="float-right">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -302,8 +319,8 @@
                     </form>
                 </div>
                 {{--<div class="modal-footer">--}}
-                    {{--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--}}
-                    {{--<button type="button" class="btn btn-primary">Update</button>--}}
+                {{--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--}}
+                {{--<button type="button" class="btn btn-primary">Update</button>--}}
                 {{--</div>--}}
             </div>
         </div>
@@ -582,43 +599,86 @@
         document.addEventListener("drop", function (event) {
             event.preventDefault();
             if (event.target.className == "droptarget") {
-
+                console.log($(event.target).attr('id'));
                 document.getElementById("info_profile_text").style.color = "";
                 event.target.style.border = "";
                 var data = event.dataTransfer.getData("Text");
                 event.target.appendChild(document.getElementById(data));
                 var ac =data.split("dragtarget")[1];
-//                return 1;
-                $.ajax({
-                    url: "/addToOtherTeam",
-                    data: {
-                        'teamId':team,
-                        'accountId':ac
-                    },
-                    type: 'POST',
-                    beforeSend:function(){
-                    },
-                    success: function (response) {
-                        /*202=>validation error
-                         * 200 =>success
-                         * 400=>access denied, email not found
-                         * 500 => exception
-                         * */
 
-                        if(response.code == 202){
+                if($(event.target).attr('id') == 'add') {
+                    $.ajax({
+                        url: "/addToOtherTeam",
+                        data: {
+                            'teamId':$('#teamId').val(),
+                            'accountId':ac
+                        },
+                        type: 'POST',
+                        beforeSend:function(){
+                        },
+                        success: function (response) {
+                            /*202=>validation error
+                             * 200 =>success
+                             * 400=>access denied, email not found
+                             * 500 => exception
+                             * */
 
-                        }else if(response.code == 200){
+                            if(response.code == 202){
 
-                        }else if(response.code == 400){
+                            }else if(response.code == 200){
 
-                        }else{
+                            }else if(response.code == 400){
+
+                            }else{
+                            }
+                        },
+                        error:function(error){
+
                         }
-                    },
-                    error:function(error){
-                        $('#invite_mail').text("Not able to send invitation");
-                    }
-                })
+                    })
+
+
+
+
+
+
+                }
+
+                if($(event.target).attr('id') == 'delete') {
+                    $.ajax({
+                        url: "/deleteTeamSocialProfile",
+                        data: {
+                            'teamId':$('#teamId').val(),
+                            'accountId':ac
+                        },
+                        type: 'POST',
+                        beforeSend:function(){
+                        },
+                        success: function (response) {
+
+                            if(response.code == 202){
+
+                            }else if(response.code == 200){
+
+                            }else if(response.code == 400){
+
+                            }else{
+                            }
+                        },
+                        error:function(error){
+
+                        }
+                    })
+
+
+
+
+
+
+                }
+
+
             }
         });
     </script>
-    @endsection
+@endsection

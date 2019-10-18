@@ -114,14 +114,14 @@ class AuthorizedUserController {
     change2StepOptions(req, res) {
 
         return authorizedLibs.change2StepOptions(req.body.userScopeId, req.query.twoStepActivate)
-            .then(() => {
+            .then((response) => {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
                     action: configruation.user_service_events.event_action.Users,
                     label: configruation.user_service_events.authorized_event_label.change_twostep.replace('{{user}}', req.query.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.query.twoStepActivate
                 });
-                res.status(200).json({ code: 200, status: "success" });
+                res.status(200).json({ code: 200, status: "success", messag: response });
             })
             .catch((error) => {
                 analyticsServices.registerEvents({

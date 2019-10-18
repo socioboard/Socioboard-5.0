@@ -472,8 +472,15 @@ class ProfileLibs {
                         } else {
                             if (response.toString().includes('DuplicateBoardSlugException'))
                                 throw new Error('Duplicate board!');
-                            else
-                                throw new Error(JSON.stringify(response));
+                            else {
+                                // Invalid board name.
+                                // { message: 'Invalid board name.', type: 'api' }
+                                // throw new Error(JSON.stringify(response));
+                                if (response.message.includes('Invalid board name.'))
+                                    throw new Error('Please check, requested board is already created.');
+                                else
+                                    throw new Error('Your rate limit is exceeded. Try after 1 Hour');
+                            }
                             //throw new Error('Please check requested board is already created.');
                         }
                     })
@@ -526,7 +533,7 @@ class ProfileLibs {
                         }
                     })
                     .then((response) => {
-                        if (response.message == 'Authorization failed') {
+                        if (response.message) {
                             throw new Error(response.message);
                         } else
                             return pinterestBoards.destroy({ where: { id: id } });

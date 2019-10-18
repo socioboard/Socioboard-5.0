@@ -78,6 +78,38 @@ class ReportController extends Controller
 
     }
 
+    public function teamReport(Request $request, $teamId){
+         return view('Team::AppInsight.teamReport', ['teamId' => $teamId]);
+
+    }
+
+    public function getTeamReport(Request $request){
+            $helper = Helper::getInstance();
+            $result = [];
+            try{
+                $response = $helper->apiCallGetFeeds("networkinsights/getTeamInsights?teamId=".Session::get('currentTeam')['team_id']."&filterPeriod=".$request->filterPeriod."&since=".$request->since."&untill=".$request->until);
+                if($response->code == 200){
+                    $result['code'] = 200;
+                    $result['teamMemberStats'] = $response->result->TeamMemberStats;
+                    $result['facebook'] = $response->result->Facebook;
+                    $result['twitter'] = $response->result->Twitter;
+                    $result['insta'] = $response->result->InstagramBusiness;
+                    $result['youtube'] = $response->result->Youtube;
+                }
+                else{
+                    $result['code'] = 201;
+                    $result['error'] = $response->error;
+                }
+                return $result;
+            }catch (\Exception $e){
+                Log::info("Exception Team insight".date('y-m-d h:m:s').$e->getMessage()." @ ".$e->getLine()." in ".$e->getFile());
+                $result['code'] = 500;
+                $result['message']= "Something went wrong";
+                return $result;
+            }
+
+    }
+
     public function getFacebookFanInsight(Request $request){
         try{
             $team_id = Session::get('currentTeam')['team_id'];

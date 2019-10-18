@@ -405,9 +405,13 @@
         // schedule_post
         $(function () {
             // schedule_post normal
-            $('#schedule_normal_post').datetimepicker();
+            $('#schedule_normal_post').datetimepicker({
+                minDate:moment()
+            });
             // day wise schedule post
-            $('#day_schedule_post').datetimepicker();
+            $('#day_schedule_post').datetimepicker({
+                minDate:moment()
+            });
         });
 
         // --------------------- //
@@ -419,6 +423,7 @@
                 normalChecked = 1;
                 $("#schedule_normal_div").show();
             } else {
+                normalChecked = 0;
                 $("#schedule_normal_div").hide();
             }
         });
@@ -429,6 +434,7 @@
                 daywsiseChecked = 1;
                 $("#day_wise_schedule_div").show();
             } else {
+                daywsiseChecked = 0;
                 $("#day_wise_schedule_div").hide();
             }
         });
@@ -523,7 +529,6 @@
                     }
                     // return array of file name
                 }
-
             });
 
             $('body').on('click', '.remove-pic', function () {
@@ -574,6 +579,8 @@
             formData.append('normalDateTime',$('#schedule_normal_post').val());
             formData.append('dayWiseDateTime',$('#day_schedule_post').val());
             formData.append('selectedBoards',selectedBoards);
+            formData.append('draftToSchedule', 0);
+            formData.append('scheduleStatus', scheduleType);
 
 
 
@@ -626,6 +633,7 @@
                         $(".emojionearea-editor").text("");
                         $("#hint_brand").css("display","none");
                         $("#option_upload").css("display","block");
+                        window.location.href = "{{env('APP_URL')}}post_history";
                     }else if(response.code == 500){
                         swal("Something went wrong... Please try again after sometime");
                         document.getElementById("scheduleForm").reset();

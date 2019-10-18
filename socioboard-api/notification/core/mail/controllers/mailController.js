@@ -18,7 +18,7 @@ class MailController {
     setupMailServicesCrons() {
         logger.info("Cron setup intialized for mail services...");
 
-        schedule.scheduleJob('20 0 * * *', () => {        
+        schedule.scheduleJob('20 0 * * *', () => {
             logger.info(`Cron started to notify all user's whose plan going to expire within 7 days, started time ${moment()}`);
             return mailLibs.sendExpireAlert()
                 .then(() => {
@@ -29,7 +29,7 @@ class MailController {
                 });
         });
 
-        schedule.scheduleJob('0 1 * * *', () => {       
+        schedule.scheduleJob('0 1 * * *', () => {
             logger.info(`Cron started to notify all user's whose plan already expired, started time ${moment()}`);
             return mailLibs.sendExpiredInitimation()
                 .then(() => {
@@ -40,7 +40,7 @@ class MailController {
                 });
         });
 
-        schedule.scheduleJob('0 2 * * *', () => {         
+        schedule.scheduleJob('0 2 * * *', () => {
             logger.info(`Cron started to notify all user's who didnt login application in last 3 days, started time ${moment()}`);
             return mailLibs.sendLoginReminder()
                 .then(() => {
@@ -56,7 +56,7 @@ class MailController {
 
 
 
-    sendExpireAlert(req, res) {     
+    sendExpireAlert(req, res) {
         return mailLibs.sendExpireAlert()
             .then(() => {
                 analyticsServices.registerEvents({
@@ -76,7 +76,7 @@ class MailController {
             });
     }
 
-    sendExpiredInitimation(req, res) {      
+    sendExpiredInitimation(req, res) {
         return mailLibs.sendExpiredInitimation()
             .then(() => {
                 analyticsServices.registerEvents({
@@ -96,7 +96,7 @@ class MailController {
             });
     }
 
-    sendLoginReminder(req, res) {    
+    sendLoginReminder(req, res) {
         return mailLibs.sendLoginReminder()
             .then(() => {
                 analyticsServices.registerEvents({
@@ -116,7 +116,7 @@ class MailController {
             });
     }
 
-    sendCustomNotifications(req, res) {   
+    sendCustomNotifications(req, res) {
         return mailLibs.sendCustomNotifications(req.body.notificationDetails)
             .then(() => {
                 analyticsServices.registerEvents({
@@ -136,7 +136,7 @@ class MailController {
             });
     }
 
-    getUsersMailedInfo(req, res) {      
+    getUsersMailedInfo(req, res) {
         return mailLibs.getUsersMailedInfo(req.query.days, req.query.notifyType, req.query.email)
             .then((message) => {
                 analyticsServices.registerEvents({

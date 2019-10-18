@@ -33,7 +33,6 @@ class GoogleController extends Controller
         try{
             $help = Helper::getInstance();
             $response = $help->apiCallGet('team/getProfileRedirectUrl?teamId='.$teamid."&network=".$network);
-
             if($response->code == 200 && $response->status == "success" ){
                 $data = (str_replace("state=","state=".$network."_",$response->navigateUrl));
                 header('Location: '.$data);
@@ -73,6 +72,7 @@ class GoogleController extends Controller
 
                 $response = $help->apiCallGet('profile/getYoutubeChannels?code=' . $request->code);
                 if ($response->code == 200 && $response->status) {
+                    Session::put('youtubeChannels', $response->channels);
                     return redirect('dashboard/' . $team);
                 } else if ($response->code == 400 && $response->status == "failed") {
                     return redirect('dashboard/' . $team)->with('FBError', $response->error);

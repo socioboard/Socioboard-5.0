@@ -39,7 +39,7 @@ notificationInfo.methods.getNotificationsDetails = function (id, teamId, userId,
 
     return this.model('Notifications')
         .find(query)
-        .sort({ publishedDate: -1 })
+        .sort({ dateTime: -1 })
         .skip(skip)
         .limit(limit)
         .then((result) => {

@@ -5,13 +5,14 @@ const insightLibs = new InsightLibs();
 
 class InsightControllers {
 
-    constructor(){
+    constructor() {
         this.setupTwitterInsightsCrons();
+        this.setupTeamReportInsightCrons();
     }
 
     setupTwitterInsightsCrons() {
         logger.info("Cron setup intialized for twitter insights services...");
-        schedule.scheduleJob('00 22 * * *', () => {        
+        schedule.scheduleJob('00 22 * * *', () => {
             logger.info(`Cron started for updating all twitter account insight's which is not locked for atleast a team, started time ${moment()}`);
             return insightLibs.twtInsights()
                 .then(() => {
@@ -24,6 +25,22 @@ class InsightControllers {
         logger.info("Cron setup completed for twitter insights services...");
     }
 
+    setupTeamReportInsightCrons() {
+        logger.info("Cron setup intialized for teams report insights services...");
+        schedule.scheduleJob('00 32 * * *', () => {
+            logger.info(`Cron started for updating all teams report insight's, started time ${moment()}`);
+            return insightLibs.updateTeamReport()
+                .then(() => {
+                    logger.info(`Cron process completed for updating all teams report insight, completed time ${moment()}`);
+                })
+                .catch((error) => {
+                    logger.error(error);
+                    logger.info(`Cron process errored while updating all teams report insight, stopped time ${moment()}`);
+                });
+        });
+        logger.info("Cron setup completed for teams report insights services...");
+    }
+
     twtInsights(req, res) {
         return insightLibs.twtInsights()
             .then((result) => {
@@ -33,6 +50,17 @@ class InsightControllers {
                 res.status(200).json({ code: 400, status: "failed", error: error.message });
             });
     }
+
+    updateTeamReport(req, res) {
+        return insightLibs.updateTeamReport()
+            .then((response) => {
+                res.status(200).json({ code: 200, status: 'success', TeamInsights: response });
+            })
+            .catch((error) => {
+                res.status(200).json({ code: 400, status: "failed", error: error.message });
+            });
+    }
+
 }
 
 module.exports = new InsightControllers();

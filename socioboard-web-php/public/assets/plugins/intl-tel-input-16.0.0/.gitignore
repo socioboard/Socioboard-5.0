@@ -1,0 +1,17 @@
+/bower_components/
+/node_modules/
+/lib/*
+!/lib/libphonenumber
+/.bower_cache/
+/.sass-cache/
+/.grunt/
+/tmp/
+/vendor/
+/.idea/
+*.iml
+.DS_Store
+
+# these files are now auto-generated
+/src/img/
+
+/src/js/intlTelInputPure.js

@@ -32,4 +32,28 @@ const routes = require('express').Router();
 routes.put('/twtInsights', insightController.twtInsights);
 
 
+/**
+* @swagger
+* /v1/report/updateTeamReport:
+*   put:
+*     operationId: secured_report_updateTeamReport
+*     summary: Secured - Admin Only
+*     security:
+*     - AccessToken: []
+*     tags:
+*       - Insights
+*     description: To update TeamReports
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Return success!
+*       404: 
+*         description: Return Not Found or ErrorMessage
+*       401:
+*         $ref: "#/responses/unauthorizedError"
+*/
+routes.put('/updateTeamReport', insightController.updateTeamReport);
+
+
 module.exports = routes;

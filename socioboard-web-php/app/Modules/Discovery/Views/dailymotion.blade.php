@@ -61,7 +61,7 @@
                                 <option value="relevance">relevance</option>
                                 <option value="trending">trending</option>
                                 <option value="old">old</option>
-                                <option value="live-audienc">live-audienc</option>
+                                <option value="live-audience">live-audience</option>
                                 <option value="least-visit">least-visit</option>
                                 <option value="live-airing-time">live-airing-time</option>
                                 <option value="random">random</option>
@@ -406,7 +406,6 @@
 
 //                    $('#load_popular_message').html("<button class='btn btn-primary' id='load-popular-button'>Click to get more coupons</button>");
                 action = 'active';
-                console.log(filterBy,sortBy);
                 setTimeout(function () {
                     getDailyMotion(filterBy,sortBy, pageId1,0);
                 }, 1000);

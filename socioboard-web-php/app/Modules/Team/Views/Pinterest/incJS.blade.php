@@ -1,4 +1,49 @@
 <script>
+    $(document).on("click", ".open-createPinBoardModal", function () {
+        var accountId = document.getElementById('accountID').innerHTML;
+        console.log(accountId);
+        document.getElementById('accId').innerHTML = accountId;
+        console.log(document.getElementById('accId').innerHTML);
+    });
+
+
+    $(document).on("click", "#pinCreate",function(){
+        var account_id = document.getElementById('accId').innerHTML;
+        var boardName = document.getElementById('boardname').value;
+        var boardDesc = document.getElementById('decsription').value;
+        console.log(account_id,boardName,boardDesc);
+        $.ajax({
+                url: "/pin-board-create",
+                type: 'GET',
+                data: {
+                    accountId:account_id,
+                    boardName:boardName,
+                    boardDesc: boardDesc
+                },
+                beforeSend:function(){
+
+                },
+                success: function (response) {
+                    if(response.code == 200){
+                        console.log(response);
+                        swal("Board created successfully..");
+                        $('#createPinBoardModal').modal('hide');
+                        $("#boardCreate").trigger("reset");
+                    }else{
+                        swal("Could not create board..Try again after some time");
+                        $('#createPinBoardModal').modal('hide');
+                        $("#boardCreate").trigger("reset");
+                    }
+                },
+                error:function(error){
+                    console.log(error)
+                    $('#createPinBoardModal').modal('hide');
+                    $("#boardCreate").trigger("reset");
+                }
+            })
+    })
+
+
     // fo load start page
     currentPage = $('.nav-board').attr('data-boardId');
 
@@ -45,6 +90,39 @@
 
         $('#incpostModal').modal('show');
     });
+
+    function deleteBoard(accId, brdId){
+        console.log(accId,brdId);
+        $.ajax({
+            url: "/pin-board-delete",
+            type: 'GET',
+            data: {
+                accountId:accId,
+                boardId:brdId
+            },
+            beforeSend:function(){
+
+            },
+            success: function (response) {
+                if(response.code == 200){
+                    console.log(response);
+                    swal("Board deleted..");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+
+                }else{
+                    swal("Could not delete board..Try again after some time");
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                }
+            },
+            error:function(error){
+                console.log(error)
+            }
+        })
+    }
 
     function post(postStatus) {
         var form = document.getElementById('publishForm');

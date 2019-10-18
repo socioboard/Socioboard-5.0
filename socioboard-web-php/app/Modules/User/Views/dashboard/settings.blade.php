@@ -15,12 +15,12 @@
                            aria-selected="true">Profile Settings</a>
                         <a class="nav-link rounded-0" id="v-pills-password-tab" data-toggle="pill" href="#v-pills-password"
                            role="tab" aria-controls="v-pills-password" aria-selected="false"> Change Password</a>
-                        {{--<a class="nav-link rounded-0" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-email"--}}
-                           {{--role="tab" aria-controls="v-pills-email" aria-selected="false">Email And SMS</a>--}}
-                        {{--removed temporarily--}}
-                        {{--<a class="nav-link rounded-0" id="v-pills-privacy-security-tab" data-toggle="pill" href="#v-pills-privacy-security"--}}
-                           {{--role="tab" aria-controls="v-pills-privacy-security" aria-selected="false">Privacy--}}
-                            {{--and Security</a>--}}
+{{--                        <a class="nav-link rounded-0" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-email"--}}
+{{--                           role="tab" aria-controls="v-pills-email" aria-selected="false">Email And SMS</a>--}}
+{{--                        removed temporarily--}}
+{{--                        <a class="nav-link rounded-0" id="v-pills-privacy-security-tab" data-toggle="pill" href="#v-pills-privacy-security"--}}
+{{--                           role="tab" aria-controls="v-pills-privacy-security" aria-selected="false">Privacy--}}
+{{--                            and Security</a>--}}
                         <a class="nav-link rounded-0" id="v-pills-billing-tab" data-toggle="pill" href="#v-pills-billing"
                            role="tab" aria-controls="v-pills-billing" aria-selected="false">Billing and Plans</a>
                     </div>
@@ -51,15 +51,24 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="phone" class="col-sm-2 col-form-label"><b class="float-right">Phone</b></label>
-                                        <div class="col-sm-2">
-                                            <input type="text" name="code" class="form-control border border-light" id="countrycode"
-                                                   placeholder="+xx">
-                                        </div><div class="col-sm-4">
-                                            <input type="number" name="phone" class="form-control border border-light" id="phone"
-                                                   placeholder="xxxxxxxxxx">
+                                        <div class="col-sm-6">
+                                            <input type="tel" class="form-control" id="cnt_code" name="phone" >
                                         </div>
-                                        <p id="phoneNameErr"  style="color: red;"></p>
+                                            <span id="valid-msg" class="hide">✓ Valid</span>
+                                            <span id="error-msg" class="hide"></span>
+
                                     </div>
+{{--                                    <div class="form-group row">--}}
+{{--                                        <label for="phone" class="col-sm-2 col-form-label"><b class="float-right">Phone</b></label>--}}
+{{--                                        <div class="col-sm-2">--}}
+{{--                                            <input type="text" name="code" class="form-control border border-light" id="countrycode"--}}
+{{--                                                   placeholder="+xx">--}}
+{{--                                        </div><div class="col-sm-4">--}}
+{{--                                            <input type="number" name="phone" class="form-control border border-light" id="phone"--}}
+{{--                                                   placeholder="xxxxxxxxxx">--}}
+{{--                                        </div>--}}
+{{--                                        <p id="phoneNameErr"  style="color: red;"></p>--}}
+{{--                                    </div>--}}
                                     <div class="form-group row">
                                         <label for="dob"  class="col-sm-2 col-form-label"><b class="float-right">DOB</b></label>
                                         <div class="col-sm-8">
@@ -451,7 +460,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Are you want to activate Two-Factor Authentication ?
+                    Do you want to activate Two-Factor Authentication ?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="TwoStepNo">No</button>
@@ -493,6 +502,50 @@
 
 @endsection
 @section('script')
+    <script src="/assets/plugins/intel-tel-input/intlTelInput.js"></script>
+    <script>
+        var input = document.querySelector("#cnt_code");
+        // initialise plugin
+        var iti = window.intlTelInput(input, {
+            utilsScript: "assets/plugins/intel-tel-input/utils.js",
+            initialCountry: "in",
+            separateDialCode: true,
+            customContainer: "col-md-12 no-padding intelinput-styles",
+        });
+
+
+        var errorMsg = document.querySelector("#error-msg"),
+            validMsg = document.querySelector("#valid-msg");
+
+        // here, the index maps to the error code returned from getValidationError - see readme
+        var errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+
+        var reset = function() {
+            input.classList.remove("error");
+            errorMsg.innerHTML = "";
+            errorMsg.classList.add("hide");
+            validMsg.classList.add("hide");
+        };
+
+        // on blur: validate
+        input.addEventListener('blur', function() {
+            reset();
+            if (input.value.trim()) {
+                if (iti.isValidNumber()) {
+                    validMsg.classList.remove("hide");
+                } else {
+                    input.classList.add("error");
+                    var errorCode = iti.getValidationError();
+                    errorMsg.innerHTML = errorMap[errorCode];
+                    errorMsg.classList.remove("hide");
+                }
+            }
+        });
+
+        // on keyup / change flag: reset
+        input.addEventListener('change', reset);
+        input.addEventListener('keyup', reset);
+    </script>
     <script>
         //for GA
         var eventCategory = 'User';
@@ -517,10 +570,6 @@
 //                        document.getElementById("change_pw").reset();
                 }
             })
-
-
-
-
         }
         function getUserInfo(){
             $.ajax({
@@ -531,10 +580,10 @@
                 contentType: false,
                 success: function (response) {
                     if(response['code'] == "200"){
-                        document.getElementById("phone").value = response['details']['phone_no'];
+                        var phoneNum =  "+" +  response["details"]["phone_code"] + response["details"]["phone_no"] ;
+                        iti.setNumber(phoneNum);
                         document.getElementById("lname").value = response['details']['last_name'];
                         document.getElementById("dob").value = response['details']['date_of_birth'];
-                        document.getElementById("countrycode").value = response['details']['phone_code'];
                         document.getElementById("bio").value = response['details']['about_me'];
                     }
                     else{
@@ -609,8 +658,11 @@
             });
             $(document).on('submit','#profileUpdate',function(e){
                 e.preventDefault();
+                var countryData = iti.getSelectedCountryData();
+                var dialCode = countryData.dialCode;
                 var form = document.getElementById('profileUpdate');
                 var formData = new FormData(form);
+                formData.append('code',dialCode);
                 $.ajax({
                     url: "/profile-update",
                     data: formData,
@@ -620,7 +672,8 @@
                     type: 'POST',
                     beforeSend:function(){
                         $('#firstNameErr').html("");
-                        $('#phoneNameErr').html("");
+                        $('#valid-msg').html("");
+                        $('#error-msg').html("");
                         $('#lastNameErr').html("");
                         $('#profileSuccess').html("");
                     },
@@ -735,7 +788,8 @@
         // dob
         $(function () {
             $('#dob').datetimepicker({
-                disabledTimeIntervals: false
+                disabledTimeIntervals: false,
+                maxDate:moment(),
             });
         });
 

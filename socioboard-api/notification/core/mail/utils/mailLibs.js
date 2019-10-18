@@ -72,7 +72,7 @@ class MailLibs {
             })
                 .then(function (users) {
                     logger.info(`Expired users are : ${JSON.stringify(users)}`);
-                    console.log(JSON.stringify(users));
+                    logger.info(JSON.stringify(users));
                     // Creating object for sending emails
                     var sendEmailServiceObject = new SendEmailService(config.get('mailService'));
                     var scheduleObject = {

@@ -262,7 +262,7 @@
                                 filterPeriod=6;
                                 break;
                             case "Custom Range":
-                                filterPeriod=6;
+                                filterPeriod=;
                                 break;
                             default :
                                 filterPeriod=1;

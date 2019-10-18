@@ -6,6 +6,7 @@ const LinkedInHelper = require('../../../../library/network/linkedin');
 
 const UserTeamAccount = require('../../../../library/mixins/userteamaccount');
 const TwitterInsightMongoModel = require('../../../../library/mongoose/models/twitterInsights');
+const TeamInsightsMongoModel = require('../../../../library/mongoose/models/teamInsights');
 const moment = require('moment');
 
 class NetworkInsightLibs {
@@ -297,61 +298,193 @@ class NetworkInsightLibs {
                 // Validating whether that account is belongs to Twitter or not
                 return this.getSocialAccount(4, accountId, userId, teamId)
                     .then(() => {
-                        switch (Number(filterPeriod)) {
-                            case 1:
-                                since = moment().startOf('day');
-                                untill = moment().endOf('day');
-                                break;
-                            case 2:
-                                since = moment().subtract(1, 'days').startOf('day');
-                                untill = moment().subtract(1, 'days').endOf('day');
-                                break;
-                            case 3:
-                                since = moment().subtract(1, 'weeks').startOf('weeks');
-                                untill = moment().subtract(1, 'weeks').endOf('weeks');
-                                break;
-                            case 4:
-                                since = moment().subtract(30, 'days').startOf('day');
-                                untill = moment();
-                                break;
-                            case 5:
-                                since = moment().startOf('month');
-                                untill = moment();
-                                break;
-                            case 6:
-                                since = moment().startOf('month').subtract(1, 'days').startOf('month');
-                                untill = moment().startOf('month').subtract(1, 'days').endOf('month');
-                                break;
-                            case 7:
-                                if (filterPeriod == 7) {
-                                    if (!since || !untill) throw new Error('Invalid Inputs');
-                                    else {
-                                        since = moment(since).startOf('day');
-                                        untill = moment(untill).endOf('day');
-                                    }
-                                }
-                                break;
-                            default:
-                                throw new Error("please choose valid filter type");
-                        }
-                        if (since <= untill) {
-                            var twitterInsightMongoModelObject = new TwitterInsightMongoModel();
-                            // Fetching insights from Twitter insight model of mongo DB
-                            return twitterInsightMongoModelObject.getInsights(accountId, since, untill)
-                                .then((response) => {
-                                    resolve(response);
-                                })
-                                .catch((error) => {
-                                    throw new Error(error.message);
-                                });
-                        }
-                        else throw new Error('Check range values. since should be lesser than or equals to until');
+                        return this.getFilteredPeriod(filterPeriod, since, untill)
+                            .then((dates) => {
+                                var twitterInsightMongoModelObject = new TwitterInsightMongoModel();
+                                // Fetching insights from Twitter insight model of mongo DB
+                                return twitterInsightMongoModelObject.getInsights(accountId, dates.since, dates.untill)
+                                    .then((response) => {
+                                        resolve(response);
+                                    })
+                                    .catch((error) => {
+                                        throw new Error(error.message);
+                                    });
+                            })
+                            .catch((error) => {
+                                throw error;
+                            });
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+            }
+        });
+    }
+
+    getTeamInsights(userId, teamId, filterPeriod, since, untill) {
+        return new Promise((resolve, reject) => {
+            if (!teamId || !userId || !filterPeriod) {
+                reject(new Error('Invalid Inputs'));
+            }
+            else {
+                var InsightResult = '';
+                var facebookInsights = {};
+                var twitterInsights = {};
+                var youtubeInsights = {};
+                var instagramBusinessInsights = {};
+                var teamMembstats = {};
+
+                var Facebook = [];
+                var Twitter = [];
+                var InstagramBusiness = [];
+                var Youtube = [];
+
+                return this.getFilteredPeriod(filterPeriod, since, untill)
+                    .then((dates) => {
+                        return this.isTeamValidForUser(userId, teamId)
+                            .then(() => {
+                                var teamInsightsMongoModelObject = new TeamInsightsMongoModel();
+                                return teamInsightsMongoModelObject.getInsights(teamId, dates.since, dates.untill)
+                                    .then((result) => {
+                                        InsightResult = result;
+                                        if (InsightResult.length > 0) {
+                                            return Promise.all(InsightResult.map(eachDay => {
+                                                // Intitializing with 0
+                                                twitterInsights.follower_count = 0; twitterInsights.following_count = 0; twitterInsights.total_like_count = 0; twitterInsights.total_post_count = 0;
+                                                instagramBusinessInsights.friendship_count = 0; instagramBusinessInsights.follower_count = 0; instagramBusinessInsights.following_count = 0; instagramBusinessInsights.total_post_count = 0;
+                                                facebookInsights.friendship_count = 0; facebookInsights.page_count = 0;
+                                                youtubeInsights.subscription_count = 0; youtubeInsights.total_post_count = 0;
+
+                                                teamMembstats.teamMembersCount = eachDay.teamMembersCount;
+                                                teamMembstats.invitedList = eachDay.invitedList;
+                                                teamMembstats.socialProfilesCount = eachDay.socialProfilesCount;
+
+                                                var account_type = [1, 4, 5, 9]
+                                                return Promise.all(account_type.map(account => {
+                                                    switch (Number(account)) {
+                                                        case 1:
+                                                            var facebookTemp = {};
+                                                            eachDay.SocialAccountStats[0].facebookStats.forEach(facebook => {
+                                                                facebookTemp.facebookInsights = {};
+                                                                facebookTemp.facebookInsights.friendship_count = facebookInsights.friendship_count += facebook.facebookStats.friendship_count;
+                                                                facebookTemp.facebookInsights.page_count = facebookInsights.page_count += facebook.facebookStats.page_count;
+                                                                facebookTemp.facebookInsights.date = facebookInsights.date = eachDay.date;
+                                                            });
+                                                            Facebook.push({ facebookInsights: facebookTemp.facebookInsights });
+                                                            break;
+                                                        case 4:
+                                                            var twitterTemp = {};
+                                                            eachDay.SocialAccountStats[0].twitterStats.forEach(twitter => {
+                                                                twitterTemp.twitterInsights = {};
+                                                                twitterTemp.twitterInsights.follower_count = twitterInsights.follower_count += twitter.twitterStats.follower_count;
+                                                                twitterTemp.twitterInsights.following_count = twitterInsights.following_count += twitter.twitterStats.following_count;
+                                                                twitterTemp.twitterInsights.total_like_count = twitterInsights.total_like_count += twitter.twitterStats.total_like_count;
+                                                                twitterTemp.twitterInsights.total_post_count = twitterInsights.total_post_count += twitter.twitterStats.total_post_count;
+                                                                twitterTemp.twitterInsights.date = twitterInsights.date = eachDay.date;
+                                                            });
+                                                            Twitter.push({ twitterInsights: twitterTemp.twitterInsights });
+                                                            break;
+                                                        case 5:
+                                                            var instgramBusinessTemp = {};
+                                                            eachDay.SocialAccountStats[0].instagramStats.forEach(instaBusiness => {
+                                                                instgramBusinessTemp.instagramBusinessInsights = {};
+                                                                instgramBusinessTemp.instagramBusinessInsights.friendship_count = instagramBusinessInsights.friendship_count += instaBusiness.instagramStats.friendship_count;
+                                                                instgramBusinessTemp.instagramBusinessInsights.follower_count = instagramBusinessInsights.follower_count += instaBusiness.instagramStats.follower_count;
+                                                                instgramBusinessTemp.instagramBusinessInsights.following_count = instagramBusinessInsights.following_count += instaBusiness.instagramStats.following_count;
+                                                                instgramBusinessTemp.instagramBusinessInsights.total_post_count = instagramBusinessInsights.total_post_count += instaBusiness.instagramStats.total_post_count;
+                                                                instgramBusinessTemp.instagramBusinessInsights.date = instagramBusinessInsights.date = InsightResult[0].date;
+                                                            });
+                                                            InstagramBusiness.push({ instagramBusinessInsights: instgramBusinessTemp.instagramBusinessInsights })
+                                                            break;
+                                                        case 9:
+                                                            var youtubeTemp = {};
+                                                            eachDay.SocialAccountStats[0].youtubeStats.forEach(youtube => {
+                                                                youtubeTemp.youtubeInsights = {};
+                                                                youtubeTemp.youtubeInsights.subscription_count = youtubeInsights.subscription_count += youtube.youtubeStats.subscription_count;
+                                                                youtubeTemp.youtubeInsights.total_post_count = youtubeInsights.total_post_count += youtube.youtubeStats.total_post_count;
+                                                                youtubeTemp.youtubeInsights.date = youtubeInsights.date = InsightResult[0].date;
+                                                            });
+                                                            Youtube.push({ youtubeInsights: youtubeTemp.youtubeInsights });
+                                                            break;
+                                                        default:
+                                                            break;
+                                                    }
+                                                }));
+                                            }))
+                                                .then(() => {
+                                                    resolve({
+                                                        TeamMemberStats: teamMembstats,
+                                                        Facebook: Facebook,
+                                                        Twitter: Twitter,
+                                                        InstagramBusiness: InstagramBusiness,
+                                                        Youtube: Youtube
+                                                    });
+                                                });
+                                        }
+                                        else {
+                                            throw new Error("Sorry, No Team-Reports available in this Time Period");
+                                        }
+                                        // https://stackoverflow.com/questions/41336812/are-nested-catches-within-promises-required
+                                    });
+                            });
                     })
                     .catch((error) => {
                         reject(error);
                     });
             }
         });
+    }
+
+    getFilteredPeriod(filterPeriod, since, untill) {
+        return new Promise((resolve, reject) => {
+            if (!filterPeriod) {
+                reject(new Error("Invalid filterPeriod"));
+            } else {
+                switch (Number(filterPeriod)) {
+                    case 1:
+                        since = moment().startOf('day');
+                        untill = moment().endOf('day');
+                        break;
+                    case 2:
+                        since = moment().subtract(1, 'days').startOf('day');
+                        untill = moment().subtract(1, 'days').endOf('day');
+                        break;
+                    case 3:
+                        since = moment().subtract(1, 'weeks').startOf('weeks');
+                        untill = moment().subtract(1, 'weeks').endOf('weeks');
+                        break;
+                    case 4:
+                        since = moment().subtract(30, 'days').startOf('day');
+                        untill = moment();
+                        break;
+                    case 5:
+                        since = moment().startOf('month');
+                        untill = moment();
+                        break;
+                    case 6:
+                        since = moment().startOf('month').subtract(1, 'days').startOf('month');
+                        untill = moment().startOf('month').subtract(1, 'days').endOf('month');
+                        break;
+                    case 7:
+                        if (filterPeriod == 7) {
+                            if (!since || !untill) throw new Error('Invalid Inputs');
+                            else {
+                                since = moment(since).startOf('day');
+                                untill = moment(untill).endOf('day');
+                            }
+                        }
+                        break;
+                    default:
+                        throw new Error("please choose valid filter type");
+                }
+                if (since <= untill) {
+                    resolve({ since, untill });
+                }
+                else {
+                    reject('Check range values.since should be lesser than or equals to until')
+                }
+            }
+        })
     }
 }
 

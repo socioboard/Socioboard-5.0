@@ -8,13 +8,14 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
     Route::post('login', 'UserController@login');
     Route::post('/forgot-password', 'UserController@forgotpassword');
     Route::get('verifyPasswordToken','UserController@verifyPasswordToken');
-    Route::post('/resetPassword','UserCOntroller@resetPassword');
+    Route::post('/resetPassword','UserController@resetPassword');
     Route::get('social/{network}', 'UserController@social');
     Route::get('facebook-callback', 'UserController@facebookCallback');
     Route::get('facebook', 'UserController@redirectToProvider');
     Route::get('google-callback', 'UserController@googleCallback');
-    Route::get('two-step-authentication', 'UserController@twoStepAuthentication');
-    Route::post('two-step-authentication', 'UserController@twoStepAuthentication');
+//    Route::get('two-step-authentication/{email}', 'UserController@twoStepAuthentication')->name('two-step-authentication');
+//    Route::post('two-step-authentication', 'UserController@twoStepAuthentication');
+//    Route::get('twoStepAuth/{email?}','UserController@twoStepAuth')->name('twoStepAuth');
 //    Route::get('accept-invitation', 'TeamController@acceptInvitation');
 
     Route::group(['middleware' => ['authenticateuser:user']], function () {

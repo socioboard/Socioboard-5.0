@@ -14,8 +14,9 @@
 
 
         // like toogle
-        $(document).on("click", ".button-like", function () {
-            $(".button-like").toggleClass("liked");
+        $(this).on("click", ".button-like", function () {
+            console.log("liked");
+            $(this).toggleClass("liked");
         });
 
 

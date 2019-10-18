@@ -552,7 +552,7 @@ class TeamController {
     }
 
     getTeamInsights(req, res) {
-        return teamLibs.getTeamInsights(req.query.teamId, req.body.userScopeId, req.body.userScopeName)
+        return teamLibs.getTeamInsights(req.query.TeamId, req.body.userScopeId, req.body.userScopeName)
             .then((response) => {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,
@@ -560,7 +560,7 @@ class TeamController {
                     label: configruation.user_service_events.team_event_label.unlock_profiles.replace("{{accounts}}", req.body).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId),
                     value: req.body
                 });
-                res.status(200).json({ code: 200, status: 'success', message: "Accounts are unlocked successfully.", updatedProfiles: response.updatedProfiles, errorProfiles: response.errorProfiles });
+                res.status(200).json({ code: 200, status: 'success', TeamInsights: response });
             })
             .catch((error) => {
                 analyticsServices.registerEvents({

@@ -234,6 +234,47 @@ routes.get('/getInstagramBusinessInsights', networkSightController.getInstagramB
  */
 routes.get('/getTwitterInsights', networkSightController.getTwitterInsights);
 
+/**
+ * @swagger
+ * /v1/networkinsights/getTeamInsights:
+ *   get:
+ *     operationId: secured_networkinsights_getTeamInsights
+ *     summary: Secured
+ *     security:
+ *     - AccessToken: []
+ *     tags:
+ *       - NetworkInsights
+ *     description: To fetch the Team insights
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         description: Team Id
+ *         name: teamId
+ *         type: integer
+ *       - in: query
+ *         description: Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range
+ *         name: filterPeriod
+ *         type: integer
+ *         enum: [1,2,3,4,5,6,7]         
+ *       - in: query
+ *         description: Custom since range in YYYY-MM-DD format
+ *         name: since
+ *         type: string 
+ *       - in: query
+ *         description: Custom untill range in YYYY-MM-DD format
+ *         name: untill
+ *         type: string 
+ *     responses:
+ *       200:
+ *         description: Return success!
+ *       404: 
+ *         description: Return Not Found or ErrorMessage
+ *       401:
+ *         $ref: "#/responses/unauthorizedError"
+ */
+routes.get('/getTeamInsights', networkSightController.getTeamInsights);
+
 module.exports = routes;
 
 

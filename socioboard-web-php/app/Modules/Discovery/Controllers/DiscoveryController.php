@@ -560,7 +560,8 @@ class DiscoveryController extends Controller
             'boardName'  => $request->boardName,
             'key'   => $request->key,
         ];
-        return view('Discovery::boardMe.boardView')->with(['data'=>$data, "socialAccount" => Session::get('currentTeam')['SocialAccount']]);
+        return view('Discovery::boardMe.boardView')->with(['data'=>$data, "socialAccount" => Session::get('currentTeam')['SocialAccount'],
+            "pinterestBoards" => Session::get('pinterestBoards')]);
     }
 
 

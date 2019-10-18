@@ -352,7 +352,7 @@ class Trends {
                             dailymotionDetails: []
                         };
                         if (error) {
-                            console.log(error);
+                            logger.error(error);
                             return dailymotionMongoObject.getPreviousPost(offset, sort, dailymotion.count)
                                 .then((dailymotionDetails) => {
                                     dailymotionResponse.dailymotionDetails = dailymotionDetails;

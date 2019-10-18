@@ -31,8 +31,8 @@ class Swagger {
                 `${rootDir}/core/authorized/routes.js`,
                 `${rootDir}/core/team/routes.js`,
                 `${rootDir}/core/profiles/routes.js`,
-                `${rootDir}/core/payments/routes.js`,              
-                `${rootDir}/core/admin/adminRoutes.js`,              
+                `${rootDir}/core/payments/routes.js`,
+                `${rootDir}/core/admin/adminRoutes.js`,
                 `${rootDir}/core/appinsights/routes.js`
 
             ],
