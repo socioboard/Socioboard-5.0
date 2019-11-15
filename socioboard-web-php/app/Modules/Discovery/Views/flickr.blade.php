@@ -108,7 +108,6 @@
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
                                 "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
                     }else if(value.indexOf(".mp4") >= 1){
-                        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                         appenddata +=  "<li class='clearimag' id='" +key +"'><video autoplay width='100px' height='100px'  src='" + value + "'" +
                                 " id='" +key +"' ></video><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
                     }else{
@@ -294,7 +293,6 @@
                                     imgurData += '<div class="card bg-dark text-white border-0 shadow"><input class="multiImages" value=' + value.mediaUrl + ' style="display: none">' +
                                             '<img src="' + value.mediaUrl + '" class="card-img-top" alt="sample" ><div class="card-body p-2"><h5 class="card-title imgur_title messageSocio">' + value.title + '</h5><p class="card-text"><a href="javascript:void(0)" class="text-white float-right resocio"><span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."><i class="fas fa-retweet text-primary"></i> re-socio</span></a></p></div></div>'
                                 } else if (str.indexOf(".mp4") >= 1) {
-                                    document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                                     imgurData += ' <div class="card bg-dark text-white border-0 shadow"> <input class="multiImages" value=' + value.mediaUrl + ' style="display: none">' +
                                             '<div class="video_imgur"> <video poster="//i.imgur.com/FS6micJ.jpg" muted="muted" autoplay="autoplay" loop="loop" class="video_width_full"> <source src="' + value.mediaUrl + '" type="video/mp4"> </video> </div> <div class="card-body p-2"> <h5 class="card-title imgur_title messageSocio">' + value.title + '</h5> <p class="card-text"> <a href="javascript:void(0);" class="text-white float-right resocio" > <span data-toggle="tooltip" data-placement="top" title="Using re-socio you can share this post with your own content."> <i class="fas fa-retweet text-primary"></i> re-socio </span> </a> </p> </div> </div>'
                                 } else if (str.indexOf(".gif") >= 1) {

@@ -4,7 +4,7 @@
 
     $(document).ready(function() {
         $(document).on('click','.resocio', function(){
-            document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+            // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
             $('.clearimag').remove();
             $('.post-thumb').remove();
 //                var appenddata="";

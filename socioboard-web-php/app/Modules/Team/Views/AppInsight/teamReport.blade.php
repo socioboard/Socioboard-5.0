@@ -129,7 +129,7 @@
                         </h5>
                         <small>Stats for Twitter accounts in the <strong>{{session()->get('currentTeam')['team_name']}}</strong> group.</small>
                         <hr>
-                        
+
                         <!-- <h5><i class="far fa-flag fa-fw"></i> TWITTER STATS</h5>
                         <div class="row">
                             <div class="col-md-4 text-center">
@@ -287,7 +287,7 @@
         var instaChartData = [];
         var fbChartData = [];
         var youtubeChartData = [];
-    
+
         //charts
         var chartTwitter = [];
         var chartInsta = [];
@@ -333,12 +333,11 @@
                 },
                 cache: false,
                 success: function(response){
-                    console.log("TwtResp-----",response);
                      stats = response.twitter;
                      instaStats = response.insta;
                      fbStats = response.facebook;
                      youtubeStats = response.youtube;
-                   
+
                     // Add data
                     if(response.code == 200){
 
@@ -353,7 +352,7 @@
 
                         //twitter stats
                         if(stats.length != 0){
-                            $('#twt_stats').css('display','block'); 
+                            $('#twt_stats').css('display','block');
                             for(i=0; i<stats.length; i++){
                                 if(stats[i].twitterInsights !== undefined){
                                     chartData.push({
@@ -362,14 +361,14 @@
                                         following: stats[i].twitterInsights.following_count,
                                         posts: stats[i].twitterInsights.total_post_count
                                     });
-                                }                    
+                                }
                             }
                             //chart Data
                             if(chartData != '') chartTwitter.data =  chartData;
                             else{
-                                    $('#accountInactiveTwitter').text("No Twitter Stats in this specified time interval....").css('display','block');      
+                                    $('#accountInactiveTwitter').text("No Twitter Stats in this specified time interval....").css('display','block');
                                     $('#twt_stats').css('display','none');
-                            } 
+                            }
 
                             // Create axes
                             var dateAxis = chartTwitter.xAxes.push(new am4charts.DateAxis());
@@ -383,14 +382,14 @@
                             chartTwitter.legend = new am4charts.Legend();
                             chartTwitter.cursor = new am4charts.XYCursor();
                         }else{
-                                $('#accountInactiveTwitter').text("No Twitter Stats in this specified time interval....").css('display','block');      
+                                $('#accountInactiveTwitter').text("No Twitter Stats in this specified time interval....").css('display','block');
                                 // $('#twt_stats').css('display','none');
-                        } 
+                        }
 
 
                         //insta stats(following_count and friendship_count are same)
                         if(instaStats.length != 0){
-                            $('#inst_stats').css('display','block'); 
+                            $('#inst_stats').css('display','block');
                             for(i=0; i<instaStats.length; i++){
                                 if(instaStats[i].instagramBusinessInsights !== undefined){
                                     instaChartData.push({
@@ -399,14 +398,14 @@
                                         following: instaStats[i].instagramBusinessInsights.following_count,
                                         posts: instaStats[i].instagramBusinessInsights.total_post_count
                                     });
-                                }                             
+                                }
                             }
 
                             //chart data
                             if(instaChartData != '') chartInsta.data = instaChartData;
                             else{
                                 $('#accountInactiveInsta').text("No Instagram Stats in this specified time interval....").css('display','block');
-                                // $('#inst_stats').css('display','none'); 
+                                // $('#inst_stats').css('display','none');
                             }
 
                             // Create axes
@@ -423,29 +422,29 @@
                         }
                         else{
                             $('#accountInactiveInsta').text("No Instagram Stats in this specified time interval....").css('display','block');
-                            // $('#inst_stats').css('display','none'); 
+                            // $('#inst_stats').css('display','none');
                         }
 
                         //youtube stats
                         if(youtubeStats.length != 0){
-                            $('#yt_stats').css('display','block'); 
+                            $('#yt_stats').css('display','block');
                             for(i=0; i<youtubeStats.length; i++){
                                 if(youtubeStats[i].youtubeInsights !== undefined){
                                     youtubeChartData.push({
                                         date: youtubeStats[i].youtubeInsights.date,
-                                        subscription_count: youtubeStats[i].youtubeInsights.subscription_count,                                    
+                                        subscription_count: youtubeStats[i].youtubeInsights.subscription_count,
                                         posts: youtubeStats[i].youtubeInsights.total_post_count
                                     });
-                                }                             
+                                }
                             }
 
                             //chart data
                             if(youtubeChartData != '') chartYoutube.data = youtubeChartData;
                             else{
                                 $('#accountInactiveYoutube').text("No Youtube Stats in this specified time interval....").css('display','block');
-                                // $('#yt_stats').css('display','none'); 
+                                // $('#yt_stats').css('display','none');
                             }
-                        
+
 
                             // Create axes
                             var dateAxis = chartYoutube.xAxes.push(new am4charts.DateAxis());
@@ -459,13 +458,13 @@
                             chartYoutube.cursor = new am4charts.XYCursor();
 
                         }else{
-                            $('#accountInactiveYoutube').text("No Youtube Stats in this specified time interval....").css('display','block');      
+                            $('#accountInactiveYoutube').text("No Youtube Stats in this specified time interval....").css('display','block');
                             // $('#yt_stats').css('display','none');
                         }
 
                         //fb stats
                         if(fbStats.length != 0){
-                            $('#fb_stats').css('display','block'); 
+                            $('#fb_stats').css('display','block');
                             for(i=0; i<fbStats.length; i++){
                                 if(fbStats[i].facebookInsights !== undefined){
                                     fbChartData.push({
@@ -493,31 +492,30 @@
 
                             chartFb.legend = new am4charts.Legend();
                             chartFb.cursor = new am4charts.XYCursor();
-                            console.log("Chart--->", chartFb);
                         }
                         else{
-                            $('#accountInactiveFb').text("No Facebook Stats in this specified time interval....").css('display','block');      
+                            $('#accountInactiveFb').text("No Facebook Stats in this specified time interval....").css('display','block');
                             // $('#fb_stats').css('display','none');
                         }
 
                     }
                     else if(response.code == 201){
-                        
+
                             $('#accountInactiveTwitter').text(response.error).css('display','block');
                             $('#twt_stats').css('display','none');
-                        
-                        
+
+
                             $('#accountInactiveInsta').text(response.error).css('display','block');
                             $('#int_stats').css('display','none');
-                        
-                        
+
+
                             $('#accountInactiveYoutube').text(response.error).css('display','block');
                             $('#yt_stats').css('display','none');
-                        
-                        
+
+
                             $('#accountInactiveFb').text(response.error).css('display','block');
                             $('#fb_stats').css('display','none');
-                                                          
+
                     }else{
                         chartData.push({
                             date: Thisdate,
@@ -538,18 +536,18 @@
                             posts: 0
                         });
                 }
-                    
-                
+
+
             });
     }
 
     //for twitter, instagram and facebook-pages stats
     function createAxisAndSeriesReport(field, name, opposite, bullet, valueAxis, series) {
 
-                    
 
 
-            //passed valueAxis and series in respective social stats 
+
+            //passed valueAxis and series in respective social stats
             // var valueAxis = chartTwitter.yAxes.push(new am4charts.ValueAxis());
             // var series = chartTwitter.series.push(new am4charts.LineSeries());
 
@@ -622,7 +620,6 @@
             if(count > 0){
                 setTimeout(function(){ $('#reportrange').click()
                     var filterType = $($('.ranges>ul').find('.active')).attr('data-range-key');
-                    console.log(filterType);
                     switch(filterType){
                         case "Today":
                             filterPeriod = 1;
@@ -695,4 +692,4 @@
 
 </body>
 
-</html> 
+</html>

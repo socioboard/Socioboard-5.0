@@ -3,7 +3,7 @@
 <div class="tab-content" id="v-pills-tabContent">
 
     @if ( !is_array($feeds))
-        no data found
+        {{ $feeds}}
     @else
 
     <div class="tab-pane fade show active" id="v-pills-boardone" role="tabpanel" aria-labelledby="v-pills-boardone-tab">

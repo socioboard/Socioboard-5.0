@@ -2,6 +2,17 @@
 @section('title')
     <title>SocioBoard | Profile Settings</title>
 @endsection
+@section('style')
+    <style type="text/css">
+        .tab-pane {
+            min-height: 500px;
+        }
+
+        .box{
+            display: none;
+        }
+    </style>
+@endsection
 
 
 @section('account')
@@ -463,51 +474,136 @@
                     Do you want to activate Two-Factor Authentication ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="TwoStepNo">No</button>
-                    <button type="button" class="btn btn-primary active_factor" id="TwoStepYes">Yes</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary active_factor" >Yes</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- two steps Factor Modal - step two -->
-    <div class="modal fade" id="step_two_factor_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Two-Factor Authentication | SMS or E-Mail</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="country_code">Country Code<span class="text-orange-dark">*</span></label>
-                            <input value="+1" class="form-control" id="country_code">
+            <!-- two steps Factor Modal - step two -->
+            <div class="modal fade" id="step_two_factor_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Two-Factor Authentication | SMS or E-Mail</h5>
+                            <button type="button" onclick="closeModal()" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="phone_number">Enter Phone Number<span class="text-orange-dark">*</span></label>
-                            <input placeholder="Phone number" class="form-control" id="phone_number">
+                        <div style="align-content: center">
+                            @if(Session::get('twoWayAuth') == 'false')
+                                <h4 class="modal-title" style="color: #002752; text-align: center">You have not activated Two-Factor Authentication </h4>
+                            @elseif(Session::get('twoWayAuth') == 'true')
+                                <h4 class="modal-title" style="color: #002752; text-align: center">You have opted Mobile-otp login </h4>
+                            @elseif(Session::get('twoWayAuth') == '2')
+                                <h4 class="modal-title" style="color: #002752; text-align: center">You have opted Mobile and e-mail otp login </h4>
+                            @endif
+
                         </div>
-                        <div>
-                            <button class="btn bg-orange-dark float-right col-12">Update Details</button>
+
+
+                        <div class="modal-body">
+                            <div>
+                                <form id="two-way-auth">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="no_auth" name="customRadio" class="custom-control-input" value="no_auth">
+                                        <label class="custom-control-label" for="no_auth">No Authentication</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="m_otp" name="customRadio" class="custom-control-input" value="m_otp">
+                                        <label class="custom-control-label" for="m_otp">via mobile OTP</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="email_auth" name="customRadio" class="custom-control-input" value="email_auth">
+                                        <label class="custom-control-label" for="email_auth">Via Email and Mobile OTP</label>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <button class="btn bg-orange-dark float-right col-12">Update Details</button>
+                                    </div>
+                                </form>
+                            </div>
+{{--                            <div class="m_otp box">--}}
+{{--                                <form>--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="country_code">Country Code<span class="text-orange-dark">*</span></label>--}}
+{{--                                        <input value="+1" class="form-control" id="country_code">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="phone_number">Enter Phone Number<span class="text-orange-dark">*</span></label>--}}
+{{--                                        <input placeholder="Phone number" class="form-control" id="phone_number">--}}
+{{--                                    </div>--}}
+{{--                                    <div>--}}
+{{--                                        <button class="btn bg-orange-dark float-right col-12">Update Details</button>--}}
+{{--                                    </div>--}}
+{{--                                </form>--}}
+{{--                            </div>--}}
+{{--                            <div class="email_auth box">--}}
+{{--                                <form>--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="country_code">Country Code<span class="text-orange-dark">*</span></label>--}}
+{{--                                        <input value="+1" class="form-control" id="country_code">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="phone_number">Enter Phone Number<span class="text-orange-dark">*</span></label>--}}
+{{--                                        <input placeholder="Phone number" class="form-control" id="phone_number">--}}
+{{--                                    </div>--}}
+{{--                                    <div>--}}
+{{--                                        <div class="form-group">--}}
+{{--                                            <label for="email">Enter Email<span class="text-orange-dark">*</span></label>--}}
+{{--                                            <input placeholder="Email id" class="form-control" id="email">--}}
+{{--                                        </div>--}}
+{{--                                        <button class="btn bg-orange-dark float-right col-12">Update Details</button>--}}
+{{--                                    </div>--}}
+{{--                                </form>--}}
+{{--                            </div>--}}
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+{{--    <div class="modal fade" id="step_two_factor_Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"--}}
+{{--         aria-hidden="true">--}}
+{{--        <div class="modal-dialog modal-dialog-centered" role="document">--}}
+{{--            <div class="modal-content">--}}
+{{--                <div class="modal-header">--}}
+{{--                    <h5 class="modal-title" id="exampleModalLabel">Two-Factor Authentication | SMS or E-Mail</h5>--}}
+{{--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                        <span aria-hidden="true">&times;</span>--}}
+{{--                    </button>--}}
+{{--                </div>--}}
+{{--                <div class="modal-body">--}}
+{{--                    <form>--}}
+{{--                        <div class="form-group">--}}
+{{--                            <label for="country_code">Country Code<span class="text-orange-dark">*</span></label>--}}
+{{--                            <input value="+1" class="form-control" id="country_code">--}}
+{{--                        </div>--}}
+{{--                        <div class="form-group">--}}
+{{--                            <label for="phone_number">Enter Phone Number<span class="text-orange-dark">*</span></label>--}}
+{{--                            <input placeholder="Phone number" class="form-control" id="phone_number">--}}
+{{--                        </div>--}}
+{{--                        <div>--}}
+{{--                            <button class="btn bg-orange-dark float-right col-12">Update Details</button>--}}
+{{--                        </div>--}}
+{{--                    </form>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 @endsection
 @section('script')
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="/assets/plugins/intel-tel-input/intlTelInput.js"></script>
     <script>
         var input = document.querySelector("#cnt_code");
         // initialise plugin
         var iti = window.intlTelInput(input, {
-            utilsScript: "assets/plugins/intel-tel-input/utils.js",
+            utilsScript: "/assets/plugins/intel-tel-input/utils.js",
             initialCountry: "in",
             separateDialCode: true,
             customContainer: "col-md-12 no-padding intelinput-styles",
@@ -580,11 +676,13 @@
                 contentType: false,
                 success: function (response) {
                     if(response['code'] == "200"){
-                        var phoneNum =  "+" +  response["details"]["phone_code"] + response["details"]["phone_no"] ;
-                        iti.setNumber(phoneNum);
-                        document.getElementById("lname").value = response['details']['last_name'];
-                        document.getElementById("dob").value = response['details']['date_of_birth'];
-                        document.getElementById("bio").value = response['details']['about_me'];
+                      if(response["details"]["phone_no"] != ''){
+                          var phoneNum =  "+" +  response["details"]["phone_code"] + response["details"]["phone_no"] ;
+                          iti.setNumber(phoneNum);
+                      }
+                      document.getElementById("lname").value = response['details']['last_name'];
+                      document.getElementById("dob").value = response['details']['date_of_birth'];
+                      document.getElementById("bio").value = response['details']['about_me'];
                     }
                     else{
                         swal(response['message']);
@@ -601,9 +699,91 @@
 
         }
 
+        //reset step_two_factor_Modal
+        function closeModal(id){
+            document.getElementById("two-way-auth").reset();
+            $(".box").hide();
+            if(twoWay == 'false'){
+                document.getElementById("no_auth").checked = true;
+            }else if(twoWay == 'true'){
+                document.getElementById("m_otp").checked = true;
+            }else if(twoWay == '2'){
+                document.getElementById("email_auth").checked = true;
+            }
+        }
 
 
         $(document).ready(function(){
+             twoWay = '<?php echo json_encode(Session::get("twoWayAuth")) ; ?>';
+            if(twoWay == 'false'){
+                document.getElementById("no_auth").checked = true;
+            }else if(twoWay == 'true'){
+                document.getElementById("m_otp").checked = true;
+            }else if(twoWay == '2'){
+                document.getElementById("email_auth").checked = true;
+            }
+
+            $(document).on('submit', '#two-way-auth', function(e){
+                e.preventDefault();
+                var form = document.getElementById('two-way-auth');
+                var formData = new FormData(form);
+                $.ajax({
+                    url: "/update-two-way-auth",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    beforeSend:function(){
+                        $('#step_two_factor_Modal').modal('hide');
+                    },
+                    success: function (response) {
+                        if(response.code == 200){
+                            swal({
+                                title: "Updated!",
+                                text: "Two step authentication is updated." + response.message,
+                                type: "success",
+                                timer: 3000
+                            });
+                            function finish() {
+                                location.reload(true);
+                                $('#step_two_factor_Modal').modal('hide');
+                            };
+
+                        }
+                        else if(response.code == 404){
+                            swal({title : "Error!",
+                                text : response.error + "Update your mobile number and then try to activate two-step-verification...",
+                                icon:"warning",
+                                closeOnClickOutside: false,
+                                timer: 3000
+                            }).then(()=>{
+                                window.location = "{{env('APP_URL')}}settings";
+                            })
+                        }
+                        else if(response.code == 201){
+                            swal({
+                                title: "Error!",
+                                text: response.error,
+                                type: "fail",
+                                timer: 3000
+                            });
+                            function finish() {
+                                location.reload(true);
+                                $('#step_two_factor_Modal').modal('hide');
+                            };
+                        }
+                    },
+                    error:function(error){
+
+                    }
+                })
+
+            });
+
+
+
+
             $(document).on('submit','#change_pw',function(e){
                 e.preventDefault();
                 var form = document.getElementById('change_pw');
@@ -783,7 +963,21 @@
 //
 //            })
         });
+        $('.active_factor').click(function () {
+            $('#step_one_factor_Modal').modal('hide');
+            $('#step_two_factor_Modal').modal('show', function () {
+            });
+        });
 
+        // Authentication radio div hide show
+        $(document).ready(function(){
+            $('input[type="radio"]').click(function(){
+                var inputValue = $(this).attr("value");
+                var targetBox = $("." + inputValue);
+                $(".box").not(targetBox).hide();
+                $(targetBox).show();
+            });
+        });
 
         // dob
         $(function () {
@@ -798,13 +992,3 @@
         @endsection
 
 
-    {{--<script>--}}
-        {{--// delete profile--}}
-        {{--var currentDiv = "";--}}
-        {{--$('.active_factor').click(function () {--}}
-            {{--$('#step_one_factor_Modal').modal('hide');--}}
-            {{--$('#step_two_factor_Modal').modal('show', function () {--}}
-            {{--});--}}
-        {{--});--}}
-
-    {{--</script>--}}

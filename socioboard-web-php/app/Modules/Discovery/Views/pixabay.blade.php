@@ -129,7 +129,7 @@
                         appenddata += "<li class='clearimag' id='" +key +"'><img width='100px' height='100px' src='" + value + "' " +
                                 "title='image' id='" +key +"' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
                     }else if(value.indexOf(".mp4") >= 1){
-                        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+                        // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                         appenddata +=  "<li class='clearimag' id='" +key +"'><video width='100px' height='100px'  src='" + value + "'" +
                                 " id='" +key +"' ></video><div id='" +key +"'  class='post-thumb'><div  class='inner-post-thumb'><a data-id='" + event.target.fileName + "' href='javascript:void(0);' class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></li>";
                     }else{
@@ -149,7 +149,7 @@
 
             });
             $(document).on('click','.resociovideo', function(){
-                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+                // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 var video = $(this).closest('.card').find('source').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 $('#postModal').modal('show');

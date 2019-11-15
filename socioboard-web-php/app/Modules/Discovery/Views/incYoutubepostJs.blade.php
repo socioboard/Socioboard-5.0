@@ -3,7 +3,7 @@
     var result=[];
 
     $(document).ready(function(){
-        document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+        // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
         $(document).on('click','.resocio', function(){
             $('.clearimag').remove();
             $('.post-thumb').remove();

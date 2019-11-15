@@ -62,16 +62,16 @@
                         <div class="card-body shadow p-2">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link tab active" id="socioqueue-tab" data-toggle="tab" href="#socioqueue" role="tab" aria-controls="socioqueue" aria-selected="true">SocioQueue</a>
+                                    <a class="nav-link tab active" id="socioqueue-tab" data-toggle="tab" href="#socioqueue" role="tab" aria-controls="socioqueue" aria-selected="true" onClick="dis_element(this.id)">SocioQueue</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a  class="nav-link tab" id="daywise-tab" data-toggle="tab"  href="#daywise"  role="tab" aria-controls="daywise" aria-selected="false">Day Wise</a>
+                                    <a  class="nav-link tab" id="daywise-tab" data-toggle="tab"  href="#daywise"  role="tab" aria-controls="daywise" aria-selected="false" onClick="dis_element(this.id)">Day Wise</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link tab" id="draft-tab" data-toggle="tab" href="#draft" role="tab" aria-controls="draft" aria-selected="false">Draft</a>
+                                    <a class="nav-link tab" id="draft-tab" data-toggle="tab" href="#draft" role="tab" aria-controls="draft" aria-selected="false" onClick="dis_element(this.id)">Draft</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link tab" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+                                    <a class="nav-link tab" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false" onClick="dis_element(this.id)">History</a>
                                 </li>
                                 {{--<li class="nav-item">--}}
                                     {{--<a class="nav-link tab" id="post-history-tab" data-toggle="tab" href="#postHistory" role="tab" aria-controls="postHistory" aria-selected="false">Post now draft</a>--}}
@@ -201,6 +201,10 @@
 
 @section('script')
     <script>
+        function dis_element(id){
+            document.getElementById(id).setAttribute("disabled","disabled");
+            console.log("ID===",id);
+        }
 
         //for GA
         var eventCategory = 'Schedule';
@@ -348,7 +352,6 @@
                     })
             });
         function getScheduledPostHistory(scheuleStatus, scheduleCategory, pageId,method){
-
             var appendData ="";
             if(countonload == 0){
                 document.getElementById("prev").disabled = true;

@@ -1,6 +1,6 @@
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-    @if($feeds != null)
+    @if($feeds != null || $feeds == [] || $feeds == '')
     @foreach($feeds as $post)
     <div class="card mb-3">
         <p style="display: none" class="tweet-description">{{$post->descritpion}}</p>
@@ -21,10 +21,12 @@
         <div class="row mt-2 text-center">
 
             <div class="col-md-4">
-                @if($post->isLiked == 'true')
-                    <button class="button button-like post_like_btn liked" data-postId="{{ $post->tweetId }}"><i class="fa fa-heart"></i><span>Like</span></button>
-                @else
-                    <button class="button button-like post_like_btn" data-postId="{{ $post->tweetId }}"><i class="fa fa-heart"></i><span>Like</span></button>
+                @if(isset($post->isLiked))
+                    @if($post->isLiked == 'true')
+                        <button class="button button-like post_like_btn liked visited" data-postId="{{ $post->tweetId }}"><i class="fa fa-heart"></i><span>Like</span></button>
+                    @else
+                        <button class="button button-like post_like_btn" data-postId="{{ $post->tweetId }}"><i class="fa fa-heart"></i><span>Like</span></button>
+                    @endif
                 @endif
             </div>
             <div class="col-md-4">

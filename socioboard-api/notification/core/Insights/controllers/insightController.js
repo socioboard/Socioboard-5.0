@@ -2,6 +2,7 @@ const schedule = require('node-schedule');
 const logger = require('../../../utils/logger');
 const InsightLibs = require('../utils/insightLibs');
 const insightLibs = new InsightLibs();
+const moment = require('moment');
 
 class InsightControllers {
 

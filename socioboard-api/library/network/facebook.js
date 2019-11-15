@@ -960,7 +960,7 @@ Facebook.prototype.getFbProfileStats = function (accessToken) {
                     var parsedData = JSON.parse(body);
                     var updateDetail = {
                         friendship_count: parsedData.friends.summary.total_count,
-                        page_count: parsedData.accounts.summary.total_count,
+                        page_count: 0 || parsedData.accounts.summary.total_count,
                         //group_count: parsedData.TotalGroups, // not getting summary data                    
                         profile_picture: `https://graph.facebook.com/${parsedData.id}/picture?type=large`
                     };

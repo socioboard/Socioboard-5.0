@@ -61,14 +61,14 @@
         var currentdate = Date.now();
         var res = Math.abs(newDate - currentdate) / 1000;
         var days = Math.floor(res / 86400);
-        if(messge.notifyType === 'team_invite' ) notifyData += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
-        else if( messge.notifyType === 'team_decline' || messge.notifyType === 'team_accept') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
+        if(messge.notifyType === 'team_invite' ) notifyData += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Invitation</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
+        else if( messge.notifyType === 'team_decline' || messge.notifyType === 'team_accept') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Invitation</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
         else if(messge.notifyType === 'publish_publishPosts'){
             notificationPublish = messge.notificationMessage;
             var result = notificationPublish.split(",");
             var link = notificationPublish.split('"');
             var publishedUrl = link[1];
-            notifyData += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">'+messge.DateTime+'</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
+            notifyData += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Published</h6> <small class="text-muted">'+messge.DateTime+'</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
 
             //GA
             window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -83,9 +83,9 @@
             });
         }
         else if(messge.notifyType === 'team_addProfile' || messge.notifyType === 'team_deleteTeamSocialProfile'){
-            if(days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
-            else if(days == 1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+messge.notifyType+'</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
-            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            if(days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Profiles</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
+            else if(days == 1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Profiles</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">'+messge.notificationMessage+'</p> </a>'
+            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Profiles</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
             //GA
             window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
             ga('create', '{{env('GA_TRACK_ID')}}', 'auto', {
@@ -100,18 +100,18 @@
         }
 
         else if(messge.notifyType === 'team_leave' ) {
-            if (days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
-            else if(days ==1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
-            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            if (days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Left Team</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            else if(days ==1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Left Team</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Left Team</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
         }
         else if(messge.notifyType === 'team_removeTeamMember'){
             $.ajax({
                 type: 'get',
                 url: "/login"
             })
-            if (days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
-            else if(days ==1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
-            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">' + messge.notifyType + '</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            if (days == 0)  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Member Removed</h6> <small class="text-muted">just now</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            else if(days ==1) notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Member Removed</h6> <small class="text-muted">'+days+' day ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
+            else notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Member Removed</h6> <small class="text-muted">'+days+' days ago</small></div> <p class="mb-1 notification_desc">' + messge.notificationMessage + '</p> </a>'
         }
         $("#notify").prepend(notifyData);
         if(notify_count) $(".badge-noti-count").text(notify_count);
@@ -135,9 +135,9 @@
                         if(response['notifications'].length == 0) userAction = "active";
                         else userAction = "inactive";
                         notifications.forEach(function(notification){
-                            if(notification.notifyType === 'team_invite' ) notifyData += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                            else if( notification.notifyType === 'team_decline' || notification.notifyType === 'team_accept')  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                            else if( notification.notifyType === 'team_removeTeamMember') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                            if(notification.notifyType === 'team_invite' ) notifyData += '<a href="'+app_url+"accept-invitation"+'" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Invitation</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                            else if( notification.notifyType === 'team_decline' || notification.notifyType === 'team_accept')  notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Invitation</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                            else if( notification.notifyType === 'team_removeTeamMember') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Member Removed</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
                         });
                         $("#notify").append(notifyData);
                         if(notify_count) $(".badge-noti-count").text(notify_count);
@@ -178,10 +178,10 @@
                                 var result = notificationPublish.split(",");
                                 var link = notificationPublish.split('"');
                                 var publishedUrl = link[1];
-                                notifyData += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
+                                notifyData += '<a href="'+publishedUrl+'" class="list-group-item list-group-item-action p-2" target="_blank"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Published</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+result[0]+'<br>'+result[1]+'<br>'+result[2]+'</p> </a>'
                             }
-                            else if(notification.notifyType === 'team_addProfile' || notification.notifyType === 'team_deleteTeamSocialProfile')notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
-                            else if(notification.notifyType === 'team_leave') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">'+notification.notifyType+'</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                            else if(notification.notifyType === 'team_addProfile' || notification.notifyType === 'team_deleteTeamSocialProfile')notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Team Profiles</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
+                            else if(notification.notifyType === 'team_leave') notifyData += '<a href="#" class="list-group-item list-group-item-action p-2"> <div class="d-flex w-100 justify-content-between"><h6 class="mb-1 notification_title">Left Team</h6> <small class="text-muted">'+notification.dateTime+'</small></div> <p class="mb-1 notification_desc">'+notification.notificationMessage+'</p> </a>'
                         });
                         $("#notify").append(notifyData);
                         notifyData = '';

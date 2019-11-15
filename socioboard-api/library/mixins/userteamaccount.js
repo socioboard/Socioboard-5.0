@@ -7,6 +7,7 @@ const lodash = require('lodash');
 
 const socialAccount = db.social_accounts;
 const userDetails = db.user_details;
+const userActivation = db.user_activations;
 const userTeamJoinTable = db.join_table_users_teams;
 const teamSocialAccountJoinTable = db.join_table_teams_social_accounts;
 const accountFeedsUpdateTable = db.social_account_feeds_updates;
@@ -484,8 +485,37 @@ const UserTeamAccount = {
                     })
             }
         })
-    }
+    },
 
+    getUserDetails(userId) {
+        return new Promise((resolve, reject) => {
+            if (!userId) {
+                reject({ error: true, message: "Invalid userId" });
+            } else {
+                return userDetails.findOne({
+                    where: {
+                        user_id: Number(userId)
+                    },
+                    attributes: ['user_id', 'email', 'phone_no', 'first_name', 'last_name', 'date_of_birth', 'phone_code', 'about_me', 'profile_picture', 'is_account_locked', 'is_admin_user'],
+                    include: [{
+                        model: userActivation,
+                        as: "Activations",
+                        where: { id: db.Sequelize.col('user_activation_id') },
+                        attributes: ['id', 'last_login', 'user_plan', 'payment_type', 'account_expire_date', 'signup_type', 'activation_status', 'activate_2step_verification', 'shortenStatus', 'email_validate_token', 'forgot_password_validate_token', 'forgot_password_token_expire', 'otp_token', 'otp_token_expire']
+                    }]
+                })
+                    .then((userDetails) => {
+                        if (!userDetails)
+                            reject({ error: true, message: "User not found!" });
+                        else
+                            resolve(userDetails);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            }
+        });
+    }
 
 };
 

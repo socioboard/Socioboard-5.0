@@ -89,12 +89,12 @@
                                                     {{--aria-controls="pills-linkedin-profile"--}}
                                                     {{--aria-selected="false"><i class="fab fa-linkedin-in"></i></a>--}}
                                                     {{--</li>--}}
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" id="pills-pinterest-profile-tab"
-                                                           data-toggle="pill" href="#pills-pinterest-profile"
-                                                           role="tab" aria-controls="pills-pinterest-profile"
-                                                           aria-selected="false"><i class="fab fa-pinterest-p"></i></a>
-                                                    </li>
+{{--                                                    <li class="nav-item">--}}
+{{--                                                        <a class="nav-link" id="pills-pinterest-profile-tab"--}}
+{{--                                                           data-toggle="pill" href="#pills-pinterest-profile"--}}
+{{--                                                           role="tab" aria-controls="pills-pinterest-profile"--}}
+{{--                                                           aria-selected="false"><i class="fab fa-pinterest-p"></i></a>--}}
+{{--                                                    </li>--}}
                                                 </ul>
                                                 <div class="tab-content" id="pills-tabContent">
                                                     <div class="tab-pane fade show active" id="pills-facebook-profile"
@@ -212,79 +212,79 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="tab-pane fade" id="pills-pinterest-profile"
-                                                         role="tabpanel" aria-labelledby="pills-pinterest-profile-tab">
-                                                        <div class="card margin-top-10">
-                                                            <div class="card-body bg-white p-2">
-                                                                <h6><b>Choose Pinterest Profile for posting</b></h6>
-                                                                <div class="accordion" id="accordionExample">
-                                                                    @for($i=0;$i<count($socialAccount);$i++)
-                                                                        @if( $socialAccount[$i]->account_type == env('PINTEREST'))
-                                                                            @if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
-                                                                                <div class="card border-0">
-                                                                                    <div class="card-header bg-danger text-white p-1 m-0"
-                                                                                         id="headingOne" style="cursor: pointer;">
-                                                                                        <div data-toggle="collapse"
-                                                                                             data-target="#profile_pin_1"
-                                                                                             aria-expanded="true"
-                                                                                             aria-controls="profile_pin_1">
-                                                                                            <div class="media">
-                                                                                                <img src="{{$socialAccount[$i]->profile_pic_url}}"
-                                                                                                     class="mr-3 pp_50 rounded-circle"
-                                                                                                     alt="avatar">
-                                                                                                <div class="media-body">
-                                                                                                    <h5 class="mt-0 mb-0">{{$socialAccount[$i]->first_name}}</h5>
+{{--                                                    <div class="tab-pane fade" id="pills-pinterest-profile"--}}
+{{--                                                         role="tabpanel" aria-labelledby="pills-pinterest-profile-tab">--}}
+{{--                                                        <div class="card margin-top-10">--}}
+{{--                                                            <div class="card-body bg-white p-2">--}}
+{{--                                                                <h6><b>Choose Pinterest Profile for posting</b></h6>--}}
+{{--                                                                <div class="accordion" id="accordionExample">--}}
+{{--                                                                    @for($i=0;$i<count($socialAccount);$i++)--}}
+{{--                                                                        @if( $socialAccount[$i]->account_type == env('PINTEREST'))--}}
+{{--                                                                            @if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)--}}
+{{--                                                                                <div class="card border-0">--}}
+{{--                                                                                    <div class="card-header bg-danger text-white p-1 m-0"--}}
+{{--                                                                                         id="headingOne" style="cursor: pointer;">--}}
+{{--                                                                                        <div data-toggle="collapse"--}}
+{{--                                                                                             data-target="#profile_pin_1"--}}
+{{--                                                                                             aria-expanded="true"--}}
+{{--                                                                                             aria-controls="profile_pin_1">--}}
+{{--                                                                                            <div class="media">--}}
+{{--                                                                                                <img src="{{$socialAccount[$i]->profile_pic_url}}"--}}
+{{--                                                                                                     class="mr-3 pp_50 rounded-circle"--}}
+{{--                                                                                                     alt="avatar">--}}
+{{--                                                                                                <div class="media-body">--}}
+{{--                                                                                                    <h5 class="mt-0 mb-0">{{$socialAccount[$i]->first_name}}</h5>--}}
 
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    @if($i == 0)
-                                                                                        <div id="profile_pin_1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                                            @else
-                                                                                                <div id="profile_pin_1" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                                                                    @endif
+{{--                                                                                                </div>--}}
+{{--                                                                                            </div>--}}
+{{--                                                                                        </div>--}}
+{{--                                                                                    </div>--}}
+{{--                                                                                    @if($i == 0)--}}
+{{--                                                                                        <div id="profile_pin_1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">--}}
+{{--                                                                                            @else--}}
+{{--                                                                                                <div id="profile_pin_1" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">--}}
+{{--                                                                                                    @endif--}}
 
-                                                                                                    <div class="card-body p-2">
-                                                                                                        <ul class="list-group">
-                                                                                                            @for($j=0;$j<count($pinterestBoards);$j++)
+{{--                                                                                                    <div class="card-body p-2">--}}
+{{--                                                                                                        <ul class="list-group">--}}
+{{--                                                                                                            @for($j=0;$j<count($pinterestBoards);$j++)--}}
 
-                                                                                                                @if($pinterestBoards[$j]->account_id == $socialAccount[$i]->account_id)
+{{--                                                                                                                @if($pinterestBoards[$j]->account_id == $socialAccount[$i]->account_id)--}}
 
-                                                                                                                    @for($l=0;$l<count($pinterestBoards[$j]->boards);$l++)
-                                                                                                                        <li class="list-group-item page_list">
-                                                                                                                            <div class="media">
-                                                                                                                                {{--<img class="mr-3 pp_50 rounded-circle"--}}
-                                                                                                                                {{--src="{{$pinterestBoards[$j]->boards[$l]->board_url}}"--}}
-                                                                                                                                {{--alt="page title">--}}
-                                                                                                                                <div class="media-body">
-                                                                                                                <span class="float-right badge badge-light">
-                                                                                                                    <div class="custom-control custom-checkbox" id="boardsCheckbox">
-                                                                                                                        <input type="checkbox" class="custom-control-input" id="{{$pinterestBoards[$j]->account_id}}" name="{{$pinterestBoards[$j]->account_id}}_{{$pinterestBoards[$j]->boards[$l]->board_id}}">
-                                                                                                                        <label class="custom-control-label" for="{{$pinterestBoards[$j]->account_id}}">
-                                                                                                                            <span style="display: flex; margin-top: 6px;">Add</span>
-                                                                                                                        </label>
-                                                                                                                    </div>
-                                                                                                                </span>
-                                                                                                                                    <h5 class="mt-2 mb-0 page_name">{{$pinterestBoards[$j]->boards[$l]->board_name}}</h5>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </li>
-                                                                                                                    @endfor
-                                                                                                                @endif
-                                                                                                            @endfor
-                                                                                                        </ul>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                    @endif
-                                                                                    @endfor
-                                                                                </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        {{--todo take from np--}}
+{{--                                                                                                                    @for($l=0;$l<count($pinterestBoards[$j]->boards);$l++)--}}
+{{--                                                                                                                        <li class="list-group-item page_list">--}}
+{{--                                                                                                                            <div class="media">--}}
+{{--                                                                                                                                --}}{{--<img class="mr-3 pp_50 rounded-circle"--}}
+{{--                                                                                                                                --}}{{--src="{{$pinterestBoards[$j]->boards[$l]->board_url}}"--}}
+{{--                                                                                                                                --}}{{--alt="page title">--}}
+{{--                                                                                                                                <div class="media-body">--}}
+{{--                                                                                                                <span class="float-right badge badge-light">--}}
+{{--                                                                                                                    <div class="custom-control custom-checkbox" id="boardsCheckbox">--}}
+{{--                                                                                                                        <input type="checkbox" class="custom-control-input" id="{{$pinterestBoards[$j]->account_id}}" name="{{$pinterestBoards[$j]->account_id}}_{{$pinterestBoards[$j]->boards[$l]->board_id}}">--}}
+{{--                                                                                                                        <label class="custom-control-label" for="{{$pinterestBoards[$j]->account_id}}">--}}
+{{--                                                                                                                            <span style="display: flex; margin-top: 6px;">Add</span>--}}
+{{--                                                                                                                        </label>--}}
+{{--                                                                                                                    </div>--}}
+{{--                                                                                                                </span>--}}
+{{--                                                                                                                                    <h5 class="mt-2 mb-0 page_name">{{$pinterestBoards[$j]->boards[$l]->board_name}}</h5>--}}
+{{--                                                                                                                                </div>--}}
+{{--                                                                                                                            </div>--}}
+{{--                                                                                                                        </li>--}}
+{{--                                                                                                                    @endfor--}}
+{{--                                                                                                                @endif--}}
+{{--                                                                                                            @endfor--}}
+{{--                                                                                                        </ul>--}}
+{{--                                                                                                    </div>--}}
+{{--                                                                                                </div>--}}
+{{--                                                                                        </div>--}}
+{{--                                                                                    @endif--}}
+{{--                                                                                    @endif--}}
+{{--                                                                                    @endfor--}}
+{{--                                                                                </div>--}}
+{{--                                                                </div>--}}
+{{--                                                            </div>--}}
+{{--                                                        </div>--}}
+{{--                                                        --}}{{--todo take from np--}}
                                                     </div>
                                                     {{--todo take from np--}}
                                                 </div>

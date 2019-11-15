@@ -840,7 +840,7 @@ routes.put('/unlockProfiles', teamManagementController.unlockProfiles);
  * /v1/team/getTeamInsights:
  *   get:
  *     operationId: secured_team_getTeamInsights
- *     summary: 
+ *     summary: Moved to feeds Services (N/w insights)
  *     deprecated : true
  *     security:
  *     - AccessToken: []

@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest --maxWorkers=100 --detectOpenHandles --forceExit --verbose --coverage",
     "startdev": "pm2 start ecosystem.config.js --env=apidevelopment -i 4",
-    "startphpdev": "pm2 start ecosystem.config.js --env=phpdev"
+    "startphpdev": "pm2 start ecosystem.config.js --env=phpdev",
+    "start": "pm2 start ecosystem.config.js --env=production"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +22,10 @@
     "express": "^4.16.4",
     "express-x-hub": "^1.0.4",
     "express-xml-bodyparser": "^0.3.0",
-    "googleapis": "^39.2.0",
-    "helmet": "^3.16.0",
+    "googleapis": "^44.0.0",
+    "helmet": "^3.21.1",
     "html-pdf": "^2.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "mustache": "^3.0.1",

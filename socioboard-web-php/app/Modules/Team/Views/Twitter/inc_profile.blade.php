@@ -14,14 +14,14 @@
             <div class="col-md-6">
                 <div class="text-center">
 {{--                    <h5>{{ (integer)@$userProfile->friendship_counts }}</h5>--}}
-                    <h5>{{ (integer)@$userProfile->follower_counts }}</h5>  {{-- Aishwarya --}}
+                    <h5>{{ (integer)@$userProfile->friendship_counts }}</h5>  {{-- Aishwarya --}}
                     <h6>Follower</h6>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="text-center">
-                    <h5>{{ (integer)@$userProfile->following_count  }}</h5>
+                    <h5>{{ (integer)@$userProfile->friendship_counts  }}</h5>
                     <h6>Following</h6>
                 </div>
             </div>

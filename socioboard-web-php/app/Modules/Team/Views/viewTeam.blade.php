@@ -599,7 +599,6 @@
         document.addEventListener("drop", function (event) {
             event.preventDefault();
             if (event.target.className == "droptarget") {
-                console.log($(event.target).attr('id'));
                 document.getElementById("info_profile_text").style.color = "";
                 event.target.style.border = "";
                 var data = event.dataTransfer.getData("Text");

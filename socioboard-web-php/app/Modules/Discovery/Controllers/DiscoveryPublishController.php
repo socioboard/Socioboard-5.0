@@ -190,6 +190,7 @@ class DiscoveryPublishController extends Controller
                 if($request->selectedBoards == ""){
                     $postType ="Link";
                 }
+                if($publishMedia != [])  $postType = 'Image';
                 $linkMedia=$request->link;
                 if((int)Session::get('user')['userDetails']->Activations->shortenStatus == 1){
                     $shortenLinkResponse = $helper->apiCallGet("user/getShortenUrl?longurl=".urlencode($request->link));
@@ -200,6 +201,7 @@ class DiscoveryPublishController extends Controller
 
                 }
             }
+
             $publishData=array(
                 "postType"=>$postType,
                 "postStatus"=>$request->postStatus,

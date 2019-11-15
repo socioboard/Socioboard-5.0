@@ -166,28 +166,28 @@ class AuthorizedUserController {
         } else {
             googleHelper.firebaseShortUrls(config.get('google_api.dynamic_link'), config.get('google_api.api_key'), req.query.longurl)
                 .then((response) => {
-                    if (response.error) {
+                   if (response.error) {
                         analyticsServices.registerEvents({
                             category: req.body.userScopeEmail,
                             action: configruation.user_service_events.event_action.Users,
                             label: configruation.user_service_events.authorized_event_label.short_url_failed.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                         });
                         res.status(200).json({ code: 400, status: "failed", error: response.error.message });
-                    }
-                    if (response.warning) {
+                    } else if (response.warning) {
                         analyticsServices.registerEvents({
                             category: req.body.userScopeEmail,
                             action: configruation.user_service_events.event_action.Users,
                             label: configruation.user_service_events.authorized_event_label.short_url_failed.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
                         });
                         res.status(200).json({ code: 400, status: "failed", error: "Not able to short it." });
+                    } else {
+                        analyticsServices.registerEvents({
+                            category: req.body.userScopeEmail,
+                            action: configruation.user_service_events.event_action.Users,
+                            label: configruation.user_service_events.authorized_event_label.short_url.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
+                        });
+                        res.status(200).json({ code: 200, status: "success", message: response });
                     }
-                    analyticsServices.registerEvents({
-                        category: req.body.userScopeEmail,
-                        action: configruation.user_service_events.event_action.Users,
-                        label: configruation.user_service_events.authorized_event_label.short_url.replace("{{url}}", req.query.longurl).replace('{{user}}', req.body.userScopeName).replace('{{id}}', req.body.userScopeId)
-                    });
-                    res.status(200).json({ code: 200, status: "success", message: response });
                 })
                 .catch((error) => {
                     analyticsServices.registerEvents({

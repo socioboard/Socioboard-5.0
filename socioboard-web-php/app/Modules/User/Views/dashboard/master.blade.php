@@ -3,6 +3,9 @@
 
 
 <head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145069111-1"></script>
@@ -237,6 +240,7 @@
 
     <!-- Add Profile Modal -->
     @yield('addaccountModal')
+
             <!-- profile delete modal -->
     <div class="modal fade" id="profileDeleteModal" tabindex="-1" role="dialog" aria-labelledby="profileDeletModalLabel"
          aria-hidden="true">

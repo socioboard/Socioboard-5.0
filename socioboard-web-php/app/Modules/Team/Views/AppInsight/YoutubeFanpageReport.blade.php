@@ -162,7 +162,6 @@
                 },
                 error: function (error) {
                     console.log(error);
-
                 }
             });
         }
@@ -262,7 +261,7 @@
                                 filterPeriod=6;
                                 break;
                             case "Custom Range":
-                                filterPeriod=;
+                                filterPeriod=7;
                                 break;
                             default :
                                 filterPeriod=1;

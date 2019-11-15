@@ -226,7 +226,6 @@
                 var form = document.getElementById('signup-form');
                 var formData = new FormData(form);
                 formData.append('dialcode',dialCode);
-                console.log(formData);
                 $.ajax({
                     url: "/signup",
                     data: formData,
@@ -241,7 +240,6 @@
 //                        $('#fp_email_id').val();
                     },
                     success: function (response) {
-                        console.log(response);
                         if(response['email_id'] !== undefined) document.getElementById('email').innerHTML = response['email_id'];
                         if(response['first_name'] !== undefined) document.getElementById('fname').innerHTML = response['first_name'];
                         if(response['username'] !== undefined) document.getElementById('usrname').innerHTML = response['username'];
@@ -249,9 +247,8 @@
                         if(response['c_passwd'] !== undefined) document.getElementById('c_passwrd').innerHTML = response['c_passwd'];
 
                         if(response['code'] == 200){
-                            console.log(response['message']);
                             document.getElementById("signup-form").reset();
-                            swal(response['message']);
+                            if(response['message'])swal("Registered Successfully. Please check activation email");
                             setTimeout(function() {
                                 window.location = '/login';
                             }, 2000);

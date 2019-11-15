@@ -3,7 +3,7 @@
 namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;

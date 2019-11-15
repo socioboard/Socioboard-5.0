@@ -4,7 +4,7 @@ namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
 use function foo\func;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //use Illuminate\Support\Facades\Cookie;
@@ -296,7 +296,6 @@ class TwitterController extends Controller
             $help = Helper::getInstance();
 
             $response = $help->apiCallGet('team/addSocialProfile?state=' . $state . '&code=' . $code);
-
             if ($response->code == 200 && $response->status == "success") {
 
                 Session::forget('twitterState');

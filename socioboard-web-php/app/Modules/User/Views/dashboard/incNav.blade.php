@@ -62,6 +62,8 @@
                             Messages</a>
                         <a class="dropdown-item" href="{{env('APP_URL')}}post_history"
                            title="Provides all the history about published and scheduled post.">History</a>
+{{--                        <a class="dropdown-item" href="{{env('APP_URL')}}post_draft_history"--}}
+{{--                           title="Provides all the history about drafted publish post.">Post Draft History</a>--}}
                     </div>
                 </li>
 
@@ -137,12 +139,12 @@
                         <div class="dropdown-menu" aria-labelledby="ReportDropdown">
 
                             <a class="dropdown-item"  href="{{env('APP_URL')}}team-report/{{session()->get('currentTeam')['team_id']}}" ><strong>{{session()->get('currentTeam')['team_name']}}</strong> Team Report</a>
-                            <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('FACEBOOKPAGE')}}" title="Facebook">Facebook
-                                Page</a>
+{{--                            <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('FACEBOOKPAGE')}}" title="Facebook">Facebook--}}
+{{--                                Page</a>--}}
                             <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('TWITTER')}}"
                                title="Twitter">Twitter</a>
-                            <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('INSTAGRAMBUSINESSPAGE')}}" title="Instagram">Instagram
-                                Business Account</a>
+{{--                            <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('INSTAGRAMBUSINESSPAGE')}}" title="Instagram">Instagram--}}
+{{--                                Business Account</a>--}}
                             <a class="dropdown-item" href="{{env('APP_URL')}}/report/{{env('REPORT_INITIAL')}}/{{env('YOUTUBE')}}"
                                title="YouTube">YouTube</a>
                         </div>
@@ -164,7 +166,7 @@
                                title="Public Image Library">Public Image Library</a>
                         </div>
                     @else
-                        <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->share_library}})">Report</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="ReportDropdown" onclick="planCheck({{session()->get('user')['userDetails']->userPlanDetails->share_library}})">Image Library</a>
                     @endif
 
                 </li>

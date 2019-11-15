@@ -170,7 +170,7 @@
 
                     }
                     else if(response.code == 201 && response.data.length == 0){
-                        $("#youtubeFeeds").append("No More Feeds...");
+                        $("#youtubeFeeds").append("No Feeds to show...");
                         $(".yt_cmt_div").css('display', 'none');
                     }else if(response.code == 400){
 

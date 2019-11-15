@@ -286,7 +286,6 @@ class Helper
     public function apiCallPostFeeds($data, $route, $is_multipart = false, $method = 'POST')
     {
         $api_url = $this->API_URL_FEEDS . $route;
-
         $result = [];
         $response = null;
         try {
@@ -302,8 +301,8 @@ class Helper
                     ],
                     'headers' => ['x-access-token' => $this->token],
                 ]);
-            } else {
 
+            } else {
                 // data to send
                 $requestData = [
                     RequestOptions::JSON => $data,
@@ -479,8 +478,8 @@ class Helper
 
         } catch (\Exception $e) {
             Log::info("Exception apiget " . $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage());
-
-            throw new \Exception($e->getMessage());
+            return $e->getLine() . " => " . $e->getCode() . " => " . $e->getMessage();
+//            throw new \Exception($e->getMessage());
         }
     }
 
@@ -603,7 +602,15 @@ class Helper
         }
     }
 
-
+    public function getNewSession(){
+        $res = Helper::getInstance()->apiCallGet('user/getUserInfo');
+        $user = array(
+            'accessToken' => $res->accessToken,
+            'userDetails' => $res->userDetails
+        );
+        Session::put('user', $user);
+        Session::put('twoWayAuth', $res->userDetails->Activations->activate_2step_verification);
+    }
 
     public function getTeamNewSession()
     {

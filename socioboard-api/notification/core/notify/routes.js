@@ -12,7 +12,8 @@ module.exports = (io) => {
      * /v1/notify/sendTeamNotification:
      *   get:
      *     operationId: secured_notify_sendTeamNotification
-     *     summary: Secured
+     *     summary: This functionality works inside, Here no need to check
+     *     deprecated: true
      *     security:
      *     - AccessToken: []
      *     tags:
@@ -54,7 +55,8 @@ module.exports = (io) => {
      * /v1/notify/sendUserNotification:
      *   get:
      *     operationId: secured_notify_sendUserNotification
-     *     summary: Secured
+     *     summary: Secured, This functionality works inside, no need to check
+     *     deprecated : true
      *     security:
      *     - AccessToken: []
      *     tags:

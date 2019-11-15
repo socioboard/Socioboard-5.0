@@ -3,7 +3,7 @@
 namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -178,6 +178,8 @@ class FacebookController extends Controller
                     $team = Helper::getInstance()->getTeamNewSession();
                     $result['code'] = 200;
                     $result['status'] = "success";
+                    if(isset($response['data']['errorProfileId'])) $result['errorIds'] = $response['data']['errorProfileId'];
+                    else $response['errorIds'] = "";
                     return $result;
                 } else if ($response['data']['code'] == 400 && $response['data']['status'] == "failed") {
                     Log::info("Exception in adding facebook page " );
@@ -253,6 +255,8 @@ class FacebookController extends Controller
                     $team = Helper::getInstance()->getTeamNewSession();
                     $result['code'] = 200;
                     $result['status'] = "success";
+                    if(isset($response['data']['errorProfileId'])) $result['errorIds'] = $response['data']['errorProfileId'];
+                    else $response['errorIds'] = "";
                     return $result;
                 } else if ($response['data']['code'] == 400 && $response['data']['status'] == "failed") {
                     Log::info("Exception in adding instagram business page " );
@@ -542,8 +546,7 @@ class FacebookController extends Controller
 
         if ($request->input('comment') != null) {
             try {
-                $apiResponse = $help->apiCallPostFeeds($params, "likecomments/fbcomment?" . http_build_query($params), null, 'GET');
-
+                $apiResponse = $help->apiCallPostFeeds($params, "likecomments/fbcomment?" . http_build_query($params), null, 'POST');
                 if ($apiResponse->statusCode == 200) {
                     if ($apiResponse->data->code == 200 && $apiResponse->data->status == "success") {
                         // try this row with data!

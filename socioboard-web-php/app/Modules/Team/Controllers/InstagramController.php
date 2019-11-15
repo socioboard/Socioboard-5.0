@@ -3,7 +3,7 @@
 namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -36,9 +36,8 @@ class InstagramController extends Controller
                 'teamId' => $team_id,
                 'socioboard_accounts' => TeamController::getAllSocialAccounts(),
             ];
-
             //print_r( TeamController::getAccountInfoById($account_id));
-            return view('Team::Instagram.index',
+            return view('Team::Instagrm.index',
                 [
                     //To specify the account type 1-Facebook, 2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-Linkedin,7-LinkedinBusiness,8-GooglePlus,9-Youtube,10-GoogleAnalytics
                     'userProfile' => TeamController::getProfileInfo($account_id, 5),
@@ -48,6 +47,7 @@ class InstagramController extends Controller
                     "pinterestBoards"=> Session::get('pinterestBoards'),
 
                 ]);
+
         } catch (\Exception $e) {
             Log::error('Exception' . $e->getCode() . " @=> " . $e->getLine() . " message=> " . $e->getMessage());
             return view('Team::index',
@@ -83,7 +83,7 @@ class InstagramController extends Controller
                 if ($response->data->code == 200 && $response->data->status == "success") {
 
 
-                    return view('Team::Instagram.inc_posts',
+                    return view('Team::Instagrm.inc_posts',
                         [
                             'feeds' => $response->data->feeds[0],
                             'userProfile' => TeamController::getProfileInfo($account_id, 5),

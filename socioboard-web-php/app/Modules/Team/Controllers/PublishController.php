@@ -57,7 +57,6 @@ class PublishController extends Controller
     }
 
     public function publishData(Request $request){
-
             $helper =Helper::getInstance();
             $accountType=[];
             $boardsData=[];
@@ -69,7 +68,7 @@ class PublishController extends Controller
             $link=$request->link;
             $postType="Text";
             $postStatus = $request->postStatus;
-            if($request->message == "" && $request->link == "" ){
+            if($request->message == "" || $request->message == null && $request->link == "" ){
                 $result['code']=404;
                 $result['status']="failure";
 //                $result['message']="Message field or outgoing link is required";
@@ -193,6 +192,7 @@ class PublishController extends Controller
                     if($request->selectedBoards == ""){
                         $postType ="Link";
                     }
+                    if($publishImages != []) $postType = 'Image';
                     if((int)Session::get('user')['userDetails']->Activations->shortenStatus == 1){
                         $shortenLinkResponse = $helper->apiCallGet("user/getShortenUrl?longurl=".$request->link);
                         if($shortenLinkResponse->code == 200){
@@ -200,6 +200,7 @@ class PublishController extends Controller
                         }
                     }
                 }else $link = '';
+
                 $publishData=array(
                     "postType"=>$postType,
                     "postStatus"=>$postStatus,
