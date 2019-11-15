@@ -4,8 +4,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
 
     Route::get('signup', 'UserController@signup');
     Route::post('signup', 'UserController@signup');
-    Route::get('login', 'UserController@login');
+    Route::get('login/{email?}/{twoWayChoice?}', 'UserController@login')->name('login');
     Route::post('login', 'UserController@login');
+    Route::post('mob-otp-login', 'UserController@mobOtpLogin');
+    Route::post('email-otp-login', 'UserController@emailOtpLogin');
     Route::post('/forgot-password', 'UserController@forgotpassword');
     Route::get('verifyPasswordToken','UserController@verifyPasswordToken');
     Route::post('/resetPassword','UserController@resetPassword');
@@ -30,6 +32,7 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
         Route::post('change-password','UserController@changePassword');
         Route::post('Two-Step-activation','UserController@TwoStepActivation');
         Route::post('profile-update','UserController@profileUpdate');
+        Route::post('update-two-way-auth','UserController@updateTwoWayAuth');
 
 
         //notification

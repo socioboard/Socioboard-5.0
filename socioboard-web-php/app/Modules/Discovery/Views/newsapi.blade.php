@@ -104,7 +104,7 @@
 
         $(document).ready(function(){
             $(document).on('click','.resocio', function(){
-                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+                // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 $('.clearimag').remove();
                 $('.post-thumb').remove();
                 var appenddata="";
@@ -136,7 +136,7 @@
 
             });
             $(document).on('click','.resociovideo', function(){
-                document.getElementById("pills-pinterest-profile-tab").style.display = "none";
+                // document.getElementById("pills-pinterest-profile-tab").style.display = "none";
                 var video = $(this).closest('.card').find('source').attr('src');
                 val = $(this).closest('.card').find('input').val();
                 $('#postModal').modal('show');

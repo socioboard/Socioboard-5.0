@@ -178,9 +178,7 @@
 //                val = $(this).closest('.card').find('input').val();
 //                result = val.split(',');
                 console.log("Image==",image);
-                if (image === '') document.getElementById("pills-pinterest-profile-tab").style.display = "none";
-
-                else appenddata += "<li class='clearimag' ><img width='100px' height='100px' src='" + image + "' " +
+                appenddata += "<li class='clearimag' ><img width='100px' height='100px' src='" + image + "' " +
                             "title='" + image + "' /><div  class='post-thumb'><div class='inner-post-thumb'><a href='javascript:void(0);'  class='remove-pic'><i class='fa fa-times' aria-hidden='true'></i></a><div></div></div>";
 
                 $('#normal_post_area').data("emojioneArea").setText(msg);

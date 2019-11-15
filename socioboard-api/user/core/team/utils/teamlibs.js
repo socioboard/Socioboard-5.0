@@ -1251,11 +1251,18 @@ class TeamLibs {
                             // swithing to whichever network is selected by user
                             switch (network) {
                                 case "Facebook":
+                                    if (userScopeAvailableNetworks.includes('1')) {
+                                        redirectUrl = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.profile_scopes')}&state=${encryptedState}`;
+                                        resultJson = { code: 200, status: "success", message: "Navigated to facebook.", navigateUrl: redirectUrl };
+                                    }
+                                    else
+                                        throw new Error("Sorry, Requested network not available for your plan.");
+                                    break;
                                 case "FacebookPage":
                                 case "FacebookGroup":
                                     // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('1')) {
-                                        redirectUrl = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.scopes')}&state=${encryptedState}`;
+                                        redirectUrl = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.page_scopes')}&state=${encryptedState}`;
                                         resultJson = { code: 200, status: "success", message: "Navigated to facebook.", navigateUrl: redirectUrl };
                                     }
                                     else
@@ -2007,6 +2014,7 @@ class TeamLibs {
                 var teamDetails = {};
                 var addingSocialIds = [];
                 var isErrorOnNetwork = false;
+                var erroredAccountsNames = [];
                 var erroredSocialProfiles = [];
                 var ProfileCount = 0;
                 var ProfileInfo = {};
@@ -2172,7 +2180,13 @@ class TeamLibs {
                             }));
                         })
                         .then(() => {
-                            resolve({ teamDetails: teamDetails, profileDetails: ProfileInfo, errorProfileId: erroredSocialProfiles });
+                            profiles.forEach(account => {
+                                erroredSocialProfiles.forEach(accountId => {
+                                    if (account.social_id == accountId)
+                                        erroredAccountsNames.push(account.first_name);
+                                });
+                            });
+                            resolve({ teamDetails: teamDetails, profileDetails: ProfileInfo, errorProfileId: erroredAccountsNames });
                         })
                         .catch(function (error) {
                             reject(error);
@@ -2189,61 +2203,70 @@ class TeamLibs {
                 reject(new Error('Invalid Inputs'));
             } else {
                 var fetchedSocialAccount = '';
+                // Validate that the account is belongs of Facebook or no
                 // Fetching user social accounts
                 return db.sequelize.transaction((t) => {
-                    return socialAccount.findOne({
-                        where: {
-                            [Operator.and]: [{
-                                account_admin_id: userId
-                            }, {
-                                account_id: accountId
-                            }]
-                        },
-                        attributes: ['account_id', 'access_token', 'social_id', 'account_type', 'refresh_token']
-                    })
-                        .then((socialAcc) => {
-                            if (socialAcc == null)
-                                throw new Error("No such social account or Only admin that profile can delete an account!");
-                            else {
-                                fetchedSocialAccount = socialAcc;
-                                var scheduleDate = moment().add(2, 'seconds');
-                                var batchId = `${socialAcc.social_id}_${String(moment().unix())}`;
-                                this.scheduleObject = {
-                                    accountType: socialAcc.account_type,
-                                    socialId: socialAcc.social_id,
-                                    accessToken: socialAcc.access_token,
-                                    refreshToken: socialAcc.refresh_token
-                                };
-                                var time = new Date(scheduleDate);
-
-                                schedule.scheduleJob(batchId, time, () => {
-                                    logger.info(`Started network posts deleting for social id: ${this.scheduleObject.socialId}`);
-                                    // Started network posts deleting for social account
-                                    this.deleteAccountsMongoPosts(this.scheduleObject)
-                                        .then(() => {
-                                            logger.info("Deleting process completed.");
-                                        })
-                                        .catch((error) => {
-                                            logger.error(error.message);
-                                        });
-                                });
-                                return;
-                            }
-                        })
-                        .then(() => {
-                            return fetchedSocialAccount.destroy({
-                                where: { account_id: accountId }
+                    return this.getUserDetails(userId)
+                        .then((userDetails) => {
+                            return socialAccount.findOne({
+                                where: {
+                                    [Operator.and]: [{
+                                        account_admin_id: userId
+                                    }, {
+                                        account_id: accountId
+                                    }]
+                                },
+                                attributes: ['account_id', 'email', 'access_token', 'social_id', 'account_type', 'refresh_token']
                             })
-                                .catch((error) => {
-                                    throw new Error(error.message);
+                                .then((socialAcc) => {
+                                    if (socialAcc == null)
+                                        throw new Error("No such social account or Only admin that profile can delete an account!");
+                                    else if (userDetails.email == socialAcc.email) {
+                                        throw new Error("You can't delete this account. As this is your primary account, which you used to login to Socioboard.");
+                                    }
+                                    else {
+                                        fetchedSocialAccount = socialAcc;
+                                        var scheduleDate = moment().add(2, 'seconds');
+                                        var batchId = `${socialAcc.social_id}_${String(moment().unix())}`;
+                                        this.scheduleObject = {
+                                            accountType: socialAcc.account_type,
+                                            socialId: socialAcc.social_id,
+                                            accessToken: socialAcc.access_token,
+                                            refreshToken: socialAcc.refresh_token
+                                        };
+                                        var time = new Date(scheduleDate);
+
+                                        schedule.scheduleJob(batchId, time, () => {
+                                            logger.info(`Started network posts deleting for social id: ${this.scheduleObject.socialId}`);
+                                            // Started network posts deleting for social account
+                                            this.deleteAccountsMongoPosts(this.scheduleObject)
+                                                .then(() => {
+                                                    logger.info("Deleting process completed.");
+                                                })
+                                                .catch((error) => {
+                                                    logger.error(error.message);
+                                                });
+                                        });
+                                        return;
+                                    }
+                                })
+                                .then(() => {
+                                    return fetchedSocialAccount.destroy({
+                                        where: { account_id: accountId }
+                                    })
+                                        .catch((error) => {
+                                            throw new Error(error.message);
+                                        });
+                                })
+                                .then(() => {
+                                    resolve('success');
+                                })
+                                .catch(function (error) {
+                                    reject(error);
                                 });
+
                         })
-                        .then(() => {
-                            resolve('success');
-                        })
-                        .catch(function (error) {
-                            reject(error);
-                        });
+                        .catch((error) => { reject(error); })
                 });
             }
         });

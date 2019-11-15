@@ -122,7 +122,6 @@ const unauthorizedUserController = require('./controllers/usercontroller');
  */
 
 
-
 /**
  * @swagger
  * /v1/checkUserNameAvailability:
@@ -195,7 +194,6 @@ routes.get("/checkEmailAvailability", unauthorizedUserController.checkEmailAvail
  */
 routes.put("/register", unauthorizedUserController.register);
 
-
 /**
  * @swagger
  * /v1/login:
@@ -223,7 +221,6 @@ routes.put("/register", unauthorizedUserController.register);
  *         description: Not Found, Followed by ErrorMessage
  */
 routes.post("/login", unauthorizedUserController.login);
-
 
 /**
  * @swagger
@@ -254,7 +251,6 @@ routes.get("/auth/google/callback", unauthorizedUserController.googleCallback);
 
 routes.get("/paypal/successDetails/", unauthorizedUserController.paypalSuccess);
 
-
 /**
  * @swagger
  * /v1/verifyEmail:
@@ -262,6 +258,7 @@ routes.get("/paypal/successDetails/", unauthorizedUserController.paypalSuccess);
  *     tags:
  *       - Open
  *     description: To verify email with token
+ *     summary: This is automated executer with the link of Email, Here no need to test.
  *     produces:
  *       - application/json
  *     consumes:
@@ -282,8 +279,6 @@ routes.get("/paypal/successDetails/", unauthorizedUserController.paypalSuccess);
  *         description: Return Not Found or ErrorMessage
  */
 routes.get('/verifyEmail', unauthorizedUserController.verifyEmail);
-
-
 
 /**
  * @swagger
@@ -308,8 +303,6 @@ routes.get('/verifyEmail', unauthorizedUserController.verifyEmail);
  *         description: Return Not Found or ErrorMessage
  */
 routes.get('/forgotPassword', unauthorizedUserController.forgotPassword);
-
-
 
 /**
  * @swagger
@@ -338,7 +331,6 @@ routes.get('/forgotPassword', unauthorizedUserController.forgotPassword);
  *         description: Return Not Found or ErrorMessage
  */
 routes.get('/verifyPasswordToken', unauthorizedUserController.verifyPasswordToken);
-
 
 /**
  * @swagger
@@ -369,8 +361,6 @@ routes.get('/verifyPasswordToken', unauthorizedUserController.verifyPasswordToke
  */
 routes.post('/resetPassword', unauthorizedUserController.resetPassword);
 
-
-
 /**
  * @swagger
  * /v1/getMailActivationLink:
@@ -395,7 +385,6 @@ routes.get("/getMailActivationLink", unauthorizedUserController.getActivationLin
 
 routes.get('/twoStepLogin', unauthorizedUserController.twoStepLogin);
 
-
 /**
  * @swagger
  * /v1/twoStepLoginSuccess:
@@ -403,7 +392,8 @@ routes.get('/twoStepLogin', unauthorizedUserController.twoStepLogin);
  *     tags:
  *       - Open
  *     description: To request for validating 2 step
- *     summary: NOTE  It should run only when otp verified successfully
+ *     summary: NOTE  It should run only when otp verified successfully (old one)
+ *     deprecated : true
  *     produces:
  *       - application/json
  *     parameters:
@@ -453,8 +443,6 @@ routes.post('/twoStepLoginSuccess', unauthorizedUserController.twoStepLoginSucce
  *         description: Return Not Found or ErrorMessage
  */
 routes.post('/twoStepLoginValidate', unauthorizedUserController.twoStepLoginValidate);
-
-
 
 routes.post("/payuMoneySuccess", unauthorizedUserController.payuMoneySuccess);
 routes.post("/payuMoneyCancel", unauthorizedUserController.payuMoneySuccess);

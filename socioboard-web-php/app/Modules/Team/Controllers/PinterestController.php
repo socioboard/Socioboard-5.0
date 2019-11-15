@@ -3,7 +3,7 @@
 namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -75,9 +75,11 @@ class PinterestController extends Controller
 
 
         if (\Request::route()->getName() == 'socialNetworkDashboard') {
-            $boards = (array)$this->getBoards($account_id);
-
+            $boards = [];
+            $board_id = 0;
             $i = 0;
+
+            $boards = (array)$this->getBoards($account_id);
             foreach ($boards as $value) {
                 if ($i == 0) {
                     $board_id = (integer)$value->board_id;
@@ -121,6 +123,7 @@ class PinterestController extends Controller
         ];
 
         try {
+//            $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
             $response = Cache::remember('response_pinterest_' . $account_id . '_' . $board_id, 3600, function () use ($params) {
                 return $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
             });
@@ -132,7 +135,7 @@ class PinterestController extends Controller
                     return $response->data->pins->data;
                 }
             } else {
-                return 'Problem with sesponse data, code=' . $response->data->code;
+                return 'Problem with response data, code=' . $response->data->code. 'Message::'.$response->data->message;
             }
 
         } catch (\Exception $e) {
@@ -161,7 +164,6 @@ class PinterestController extends Controller
         try {
             $help = Helper::getInstance();
             $response = $help->apiCallGet('team/getProfileRedirectUrl?teamId=' . $teamId . "&network=" . $network);
-
             if ($response->code == 200 && $response->status == "success") {
 //                $data = (str_replace("state=", "state=" . $network . "_", $response->navigateUrl)); // previously state was provided in url itself now we get in seperate firld
                 $twitterReqData = array("teamId" => $teamId,
@@ -228,7 +230,6 @@ class PinterestController extends Controller
         try {
             $help = Helper::getInstance();
             $response = $help->apiCallGet('team/addSocialProfile?state=' . $state . '&code=' . $code);
-
             Session::forget('pinterestState');
             if ($response->code == 200 && $response->status == "success") {
                 //to get new team data after adding a account to a team

@@ -109,11 +109,31 @@
 @section('social')
     {{--{{ session('FBError')}}--}}
     @if (session('FBError'))
-        <h5 style="color: red;text-align: center">{{ session('FBError') }}</h5>
+        <script>
+            errorMessage = '<?php echo session('FBError'); ?>';
+            swal({
+                title: 'Oops...',
+                text: errorMessage,
+                type:"error",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+{{--        <h5 style="color: red;text-align: center">{{ session('FBError') }}</h5>--}}
     @endif
 
     @if($errors->any())
-        <h5 style="color: red;text-align: center">{{$errors->first()}}</h5>
+        <script>
+            errorMessage = '<?php echo $errors->first(); ?>';
+            swal({
+                title: 'Oops...',
+                text: errorMessage,
+                type:"error",
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+{{--        <h5 style="color: red;text-align: center">{{$errors->first()}}</h5>--}}
     @endif
 
     <h5 style="color: red;text-align: center" id="accError"></h5>
@@ -163,7 +183,7 @@
                         profiles like
                         [ Facebook,
                         Twitter,
-                        LinkedIn, Instagram, YouTube, Google Analytics ]</p>
+                         Instagram, YouTube ]</p>
                 </div>
             </div>
         </div>
@@ -312,7 +332,8 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-facebook" role="tabpanel" aria-labelledby="pills-facebook-tab">
+
+                                                <div class="tab-pane fade show active" id="pills-facebook" role="tabpanel" aria-labelledby="pills-facebook-tab">
                             <div class="text-center">
                                 <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission,
 
@@ -579,6 +600,8 @@
                                 </div>
                             @endif
                         </div>
+                        {{--                        commented temporarily--}}
+
                         <div class="tab-pane fade" id="pills-pinterest" role="tabpanel"
                              aria-labelledby="pills-pinterest-tab">
                             <div class="text-center">
@@ -928,6 +951,12 @@
 @section('script')
 
     <script>
+        function clearSession($page){
+            console.log($page);
+
+        }
+
+
         //for GA
         var eventCategory = 'User';
         var eventAction = 'Dashboard('+'{{$currentTeam['team_name']}}'+')';
@@ -1237,13 +1266,13 @@
                     }else if(response.code == 400){
                         $('#addProfileModal').modal('hide')
                         swal({text: response.message,
-                            icon: "warning",
+                            icon: "error",
                             buttons: true,
                             dangerMode: true,});
                     }else if(response.code == 500){
                         $('#addProfileModal').modal('hide')
                         swal({text: response.message,
-                            icon: "warning",
+                            icon: "error",
                             buttons: true,
                             dangerMode: true,});
                     }
@@ -1359,11 +1388,22 @@
                 beforeSend:function(){
                 },
                 success: function (response) {
-
+                    console.log("Insta==>",response);
                     /*200=>success account added
                      * 400 => access denied
                      * 500 =>exception*/
                     if(response.code == 200){
+                        if(response.errorIds.length != 0){
+                            swal({title : "Error!",
+                                text : "Could not add "+response.errorIds+"... Already added!!",
+                                icon:"error",
+                                closeOnClickOutside: false,
+                                timer: 5000
+                            }).then(()=>{
+                                $('#addProfileModal').modal('hide');
+                                document.location.href = '{{env('APP_URL')}}dashboard/'+teamId;
+                            });
+                        }
                         document.location.href = '{{env('APP_URL')}}dashboard/'+teamId;
                     }else if(response.code == 400){
                         $('#addProfileModal').modal('hide')
@@ -1404,7 +1444,6 @@
             })
         });
         $(document).ready(function(){
-
             $( "#checkedPages").click(function() {
                 var selected = [];
                 $('#checkboxes input:checked').each(function() {
@@ -1423,29 +1462,42 @@
                     beforeSend:function(){
                     },
                     success: function (response) {
+                        console.log(response);
                         /*200=>success account added
                          * 400 => access denied
                          * 500 =>exception*/
                         if(response.code == 200){
-                            document.location.href = '{{env('APP_URL')}}dashboard/'+teamId;
+                            if(response.errorIds.length != 0){
+                                swal({title : "Error!",
+                                    text : "Could not add "+response.errorIds+"... Already added!!",
+                                    icon:"error",
+                                    closeOnClickOutside: false,
+                                    timer: 3000
+                                }).then(()=>{
+                                    $('#addProfileModal').modal('hide');
+                                    document.location.href = '{{env('APP_URL')}}dashboard/'+teamId;
+                            });
+                            }
+
+                            else document.location.href = '{{env('APP_URL')}}dashboard/'+teamId;
                         }else if(response.code == 400){
                             $('#addProfileModal').modal('hide')
 
                             swal({
                                 text: response.message,
-                                icon: "warning",
+                                icon: "error",
                                 buttons: true,
                                 dangerMode: true,});
                         }else if(response.code == 500){
                             $('#addProfileModal').modal('hide')
                             swal({text: response.message,
-                                icon: "warning",
+                                icon: "error",
                                 buttons: true,
                                 dangerMode: true,});
                         }
                     },
                     error:function(error){
-                        alert("Something went wrong.. Not able to delete team")
+                        alert("Something went wrong.. Not able to add the accounts.")
 //                    $('#error').text("Something went wrong.. Not able to create team");
                     }
                 });
@@ -1629,6 +1681,12 @@
                 }
             });
         }
+
+       $(document).on('click', '#addAccountModal', function(e){
+           e.preventDefault();
+           $('#postModal').modal('hide');
+           $('#addProfileModal').modal('show');
+       })
     </script>
 
 @endsection

@@ -115,7 +115,7 @@
                                 });
                             </script>
                         @endif
-                        <form class="margin-top-30 needs-validation" novalidate action="login" method="POST">
+                        <form class="margin-top-30 needs-validation" id="login-form" novalidate action="login" method="POST">
                             <div class="form-group">
                                 <label for="email_id">Your e-mail adress<span class="text-orange-dark">*</span></label>
                                 <input type="email" class="form-control" id="email_id" placeholder="Email" required
@@ -152,13 +152,20 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 text-center">or</div>
+                                <div class="col-md-12 text-center"><strong>OR</strong></div>
                                 <div class="col-md-6">
-                                    <a href='{{env('APP_URL')}}social/facebook' class="btn btn-fb col-12">Sign in with
-                                        Facebook</a>
+                                    <a href="{{env('APP_URL')}}social/facebook">
+                                        <img class="img-fluid" id="fb-Login" src="\assets\imgs\fb_btn.png"  alt="Submit" width="200" height="70">
+                                    </a>
+
+{{--                                    <a href='{{env('APP_URL')}}social/facebook' class="btn btn-fb col-12">Sign in with--}}
+{{--                                        Facebook</a>--}}
                                 </div>
                                 <div class="col-md-6">
-                                    <a href='{{env('APP_URL')}}social/google' class="btn btn-google col-12">Sign in with Google</a>
+                                    <a href="{{env('APP_URL')}}social/google">
+                                        <img class="img-fluid" id="google-Login" src="\assets\imgs\ggl_btn.png"  alt="Submit" width="200" height="70" >
+                                    </a>
+{{--                                    <a href='{{env('APP_URL')}}social/google' class="btn btn-google col-12">Sign in with Google</a>--}}
                                 </div>
                             </div>
                             <div class="margin-top-30">
@@ -199,14 +206,97 @@
         </div>
     </div>
 
+    <!-- Modal for mobile otp -->
+    <div id="mob_otp" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <form id="mob_otp_form" method="POST" action="mob-otp-login">
+                <div class="modal-content" align="center">
+                    <div class="modal-header">
+                        <label class="custom-control-label" for="no_auth" style="color: #002752;text-align: center">Enter the otp sent to your mobile phone.</label>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" id="mobile-otp-email" name="mobile_otp_email" >
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="mobile-otp" name="mobile_otp">
+                            <label class="custom-control-label" for="mobile_otp">Mobile OTP</label>
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <button class="btn bg-orange-dark float-right col-12">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+    <!-- Modal for mobile & email otp -->
+    <div id="email_otp" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <form id="email_otp_form" method="POST" action="email-otp-login">
+                <div class="modal-content" align="center">
+                    <div class="modal-header">
+                        <label class="form-group" for="no_auth" style="color: #002752;text-align: center">Enter the otp sent to your mobile phone and email.</label>
+                        <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="hidden" id="mob-otp-email" name="mobile_otp_email" >
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-control" for="mobile_otp">Mobile OTP</label>
+                            <input type="number" id="mob-otp" name="mobile_otp">
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-control" for="email_otp">Email OTP</label>
+                            <input type="number" id="email-otp" name="email_otp">
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <button class="btn bg-orange-dark float-right col-12">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     @endsection
 
 
 @section('script')
+    //two step verification
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+        var twoWayData = '<?php echo json_encode($twoWayData) ; ?>';
+        twoWayData = JSON.parse(twoWayData);
+
+        if(twoWayData.twoWayChoice == 1){
+            document.getElementById("mobile-otp-email").value = twoWayData.email;
+            $('#mob_otp').modal('show');
+        }
+
+        else if(twoWayData.twoWayChoice == 2){
+            document.getElementById("mob-otp-email").value = twoWayData.email;
+            $('#email_otp').modal('show');
+        }
+    </script>
+
     <script>
         $(document).ready(function(){
-
             $(document).on('submit','#forgotPassword',function(e){
                 e.preventDefault();
                 var form = document.getElementById('forgotPassword');

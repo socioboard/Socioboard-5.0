@@ -133,7 +133,7 @@ class UserControllers {
     socialLogin(req, res) {
         var redirectUrl = '';
         if (req.query.network === "facebook") {
-            redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('facebook_api.redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.scopes')}`;
+            redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('facebook_api.redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.login_scopes')}`;
             res.status(200).json({ code: 200, status: "success", message: "Navigated to facebook.", navigateUrl: redirectUrl });
         }
         else if (req.query.network === "google") {
@@ -155,7 +155,6 @@ class UserControllers {
             res.status(200).json({ code: 403, status: "failed", message: "Can't able to get facebook response code!" });
         }
         else {
-
             return unauthorizedLibs.facebookSocialLogin(req.query.code)
                 .then((result) => {
                     analyticsServices.registerEvents({
@@ -172,7 +171,7 @@ class UserControllers {
                         label: configruation.user_service_events.unauthorized_event_label.facebook_login_failed
                     });
                     logger.info(error);
-                    res.status(200).json({ code: 400, status: "failed", message: "Can't able to handle facebook request!" });
+                    res.status(200).json({ code: 400, status: "failed", message: error.message });
                 });
         }
     }
@@ -213,6 +212,7 @@ class UserControllers {
         var result = {};
         var fetchedUserId = null;
         var fetchedEmail = null;
+        var twostepValue = null;
         return unauthorizedLibs.appLogin(req.body.user, req.body.password)
             .then((user) => {
                 logger.info(JSON.stringify(user));
@@ -244,6 +244,7 @@ class UserControllers {
                     return result;
                 }
                 if (user.Activations.activate_2step_verification) {
+                    twostepValue = user.Activations.activate_2step_verification;
                     result = { code: 200, status: 'success', message: 'Two step login enabled.', isTwoStepEnabled: true };
                     return result;
                 }
@@ -288,14 +289,14 @@ class UserControllers {
                                                     action: configruation.user_service_events.event_action.Open,
                                                     label: configruation.user_service_events.unauthorized_event_label.login_twostep_request
                                                 });
-                                                res.status(200).json({ code: 200, status: "success", isTwoStepEnabled: true, message: message, user: { user_id: fetchedUserId, email: fetchedEmail }, OTPToken: OTPtoken });
+                                                res.status(200).json({ code: 200, status: "success", isTwoStepEnabled: twostepValue, message: message, user: { user_id: fetchedUserId, email: fetchedEmail }, OTPToken: OTPtoken });
                                             })
                                             .catch((error) => {
-                                                throw new Error('Error while sending otp mail');
+                                                res.status(200).json({ code: 404, status: "failed", isTwoStepEnabled: twostepValue, error: error });
                                             })
                                     })
                                     .catch((error) => {
-                                        throw new Error('Error while generating OTP token');
+                                        throw error;
                                     });
                             } else {
                                 logger.info('success');
@@ -308,7 +309,7 @@ class UserControllers {
                             }
                         })
                         .catch((error) => {
-                            throw new Error(error.message);
+                            throw error;
                         });
                 }
             })
@@ -332,7 +333,12 @@ class UserControllers {
                     action: configruation.user_service_events.event_action.Open,
                     label: configruation.user_service_events.unauthorized_event_label.email_verified
                 });
-                res.redirect(config.get('app_url'));
+                if (process.env.NODE_ENV == "production")
+                    res.redirect(config.get('live_url'));
+                else if (process.env.NODE_ENV == "phpdev")
+                    res.redirect(config.get('app_url'));
+                else
+                    res.status(200).json({ code: 200, status: "success", message: "Email Successfully verified" })
             }).catch((error) => {
                 analyticsServices.registerEvents({
                     category: req.query.email,

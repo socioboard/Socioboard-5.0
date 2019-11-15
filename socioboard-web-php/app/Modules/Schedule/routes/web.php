@@ -7,6 +7,7 @@ Route::group(['module' => 'Schedule', 'middleware' => ['web'], 'namespace' => 'A
         Route::get('schedule_post','ScheduleController@schedule');
         Route::post('schedule_post','ScheduleController@schedule');
         Route::get('post_history','ScheduleController@postHistory');
+        Route::get('post_draft_history','ScheduleController@postDraftHistory');
         Route::post('get-draft-history','ScheduleController@getDraftHistory');
         Route::post('get-post-history','ScheduleController@getPostHistory');
         Route::post('schedule-action','ScheduleController@scheduleAction');

@@ -598,6 +598,10 @@ class ScheduleController extends Controller
         }
     }
 
+    public function postDraftHistory(Request $request){
+        if($request->isMethod('get')) return view('Schedule::post_draft_history');
+    }
+
     public function getPostHistory(Request $request){
         try{
             $icon="";

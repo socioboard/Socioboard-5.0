@@ -75,9 +75,10 @@
 
     </div>
 
-    <div class="card-footer bg-transparent">
-        <a href="#" class="btn btn-primary col-md-12">View Reports</a>
-    </div>
+{{--    commented temporarily--}}
+{{--    <div class="card-footer bg-transparent">--}}
+{{--        <a href="#" class="btn btn-primary col-md-12">View Reports</a>--}}
+{{--    </div>--}}
 </div>
 
 <div>
@@ -93,8 +94,7 @@
        data-boardId="{{ $board->board_id }}"
        data-accountId="{{ $account_id }}"
        data-toggle="pill" href="#v-pills-boardone" role="tab" aria-controls="v-pills-boardone"
-       aria-selected=@if ($loop->index==0) "true" @else "false" @endif >{{ $board->board_name }}
-        <span onclick="deleteBoard('{{ $account_id }}','{{$board->board_id}}')" title="Delete this board" class="float-right"><i class="far fa-times-circle"></i></span></a>
+       aria-selected=@if ($loop->index==0) "true" @else "false" @endif >{{ $board->board_name }}</a>
 
     @endforeach
 
@@ -103,4 +103,5 @@
     --}}
 
 </div>
-<a class="btn btn-sm btn-primary float-left open-createPinBoardModal" href="#" data-toggle="modal" data-target="#createPinBoardModal"> Create Pinterest Board</a>
+{{--commented temporarily--}}
+{{--<a class="btn btn-sm btn-primary float-left open-createPinBoardModal" href="#" data-toggle="modal" data-target="#createPinBoardModal"> Create Pinterest Board</a>--}}

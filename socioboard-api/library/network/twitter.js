@@ -688,7 +688,8 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
                 }))
                     .then(() => {
                         var status = {
-                            status: postDetails.message,
+                            // status: postDetails.message,
+                            status: `${postDetails.message}  \r\n Link: ${postDetails.link}`,
                             media_ids: mediaIds
                         };
                         return twitterClient.post('statuses/update', status, function (error, tweet, response) {

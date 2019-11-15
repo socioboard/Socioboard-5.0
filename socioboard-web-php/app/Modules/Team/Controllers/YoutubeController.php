@@ -3,7 +3,7 @@
 namespace App\Modules\Team\Controllers;
 
 use App\Modules\User\Helper;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -41,7 +41,7 @@ class YoutubeController extends Controller
                         "pinterestBoards"=> Session::get('pinterestBoards')
                     ]);
                 }else if($network == env('INSTAGRAMBUSINESSPAGE')){//D:\bitbuckets\socioboard-upwork\web\app\Modules\Team\Views\instagram\instagramBusinessFeeds.blade.php
-                    return view('Team::instagram.instagramBusinessFeeds')->with(["account_id"=>$account_id,
+                    return view('Team::Instagrm.instagramBusinessFeeds')->with(["account_id"=>$account_id,
                         "account_type"=>$network,
                         "socialAccount"=> Session::get('currentTeam')['SocialAccount'],
                         "profileData" => $responseForParticular->profile,
@@ -60,7 +60,6 @@ class YoutubeController extends Controller
                 return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or beongs to different team");
             }
         }catch (\Exception $e){
-
             Log::info("Get feeds profile Exception ".$e->getMessage()." in line ".$e->getLine()." in file ".$e->getFile());
             return redirect('dashboard/' .Session::get('currentTeam')['team_id'])->with('FBError', "Account not found or your account is locked or beongs to different team");
 

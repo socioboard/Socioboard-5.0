@@ -109,4 +109,3 @@ Socioboard comes up with two version. They are
 	* [Socioboard-4.0 API](https://github.com/socioboard/Socioboard-4.0/tree/master/socioboard-api)
 
 	* [Socioboard-4.0 PHP](https://github.com/socioboard/Socioboard-4.0/tree/master/socioboard-web-php)
-

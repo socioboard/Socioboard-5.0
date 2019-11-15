@@ -12,7 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('User::index');
+    $twoWayData = [
+        'email'  => "",
+        'twoWayChoice'   => 0,
+        'mobileOtpError' => "",
+        'emailOtpError' => ""
+    ];
+    return view('User::login')->with('twoWayData',$twoWayData);
 });
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');

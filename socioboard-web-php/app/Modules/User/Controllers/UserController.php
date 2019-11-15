@@ -39,8 +39,8 @@ class UserController extends Controller
             $rules = array(
 
                 "username" => 'required|max:32|min:2|regex:/([a-zA-Z]+)([0-9]*)/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/
-                "first_name" => 'required',
-                "email_id" => 'required',
+                "first_name" => 'required|regex:/([a-zA-Z]+)([0-9]*)/',
+                "email_id" => 'required|email',
 //                "passwd" => 'required|max:20|min:8|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[#$^+=!*()@%&]).*$/',
                 "passwd" => 'required|max:20|min:8|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[\/!@#$%^&*()`~\s_+\-=\[\]{};:"\\\,.<>\?\']).*$/',
 //                "passwd" => ['required'=>'regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\?]).*$/'],
@@ -51,7 +51,8 @@ class UserController extends Controller
                     'passwd.regex' => 'Password must consist atleast 1 uppercase, 1 lowercase and 1 special character',
                     'c_passwd.required_with' =>'Please confirm your password!',
                     'c_passwd.same'=>'Password missmatch',
-                    'username.regex' =>'Username should be alphanumeric'
+                    'username.regex' =>'Username should be alphanumeric',
+                    'first_name.regex' => 'First name should not contain special characters and numbers.'
                 ];
 
                 $validator = Validator::make($request->all(), $rules,$customMessage);
@@ -134,6 +135,153 @@ class UserController extends Controller
         }
     }
 
+    public function updateTwoWayAuth(Request $request){
+        $result = [];
+        if($request->customRadio == 'no_auth') $twoStepActivate = 0;
+        else if($request->customRadio == 'm_otp') $twoStepActivate = 1;
+        else if($request->customRadio == 'email_auth') $twoStepActivate = 2;
+        $helper = Helper::getInstance();
+        try{
+            $response = $helper->apiCallGet("user/changeTwoStepOptions?twoStepActivate=".$twoStepActivate);
+            if($response->code == 200 && $response->status == "success"){
+                $result['code'] = $response->code;
+                $result['message'] = $response->messag;
+
+                //update session
+            }
+            elseif ($response->code == 404 && $response->status == 'failed'){
+                $result['code'] = $response->code ;
+                $result['error'] = $response->error;
+            }
+            else{
+                $result['code'] = 201;
+                $result['error'] = $response->error;
+            }
+            return $result;
+        }catch(\Exception $e){
+
+        }
+    }
+
+    public function emailOtpLogin(Request $request){
+        $email = $request->mobile_otp_email;
+        $mobToken = $request->mobile_otp;
+        $emailToken = $request->email_otp;
+
+        $twoWayData = [];
+
+        $api_url = $this->API_URL . 'twoStepLoginValidate?email='.urlencode($email).'&emailtoken='.$emailToken.'&mobiletoken='.$mobToken;
+        $response = $this->client->post($api_url);
+        $result = json_decode($response->getBody()->getContents());
+        if ($response->getStatusCode() == 200) {
+            if ($result->code == 404 ){
+                $twoWayData = [
+                    'email'  => "",
+                    'twoWayChoice'   => 0,
+                    'mobileOtpError' => "",
+                    'emailOtpError' => $result->error
+                ];
+                return view('User::login')->with('twoWayData',$twoWayData);
+//                return redirect('login')->with('twoWayData', $twoWayData);
+            }
+            else if ($result->code == 400 && $result->status = "failure")
+                return redirect('login')->with('email_act', $result->message);
+
+
+            //TODO get ip and system address of client
+
+
+            $user = array(
+                'accessToken' => $result->accessToken,
+                'userDetails' => $result->user
+            );
+            Session::put('user', $user);
+            Session::put('twoWayAuth', $result->user->Activations->activate_2step_verification);
+            $team = Helper::getInstance()->getTeamNewSession();
+            for ($i = 0; $i < count($team['teamSocialAccountDetails']); $i++) {
+                if ($team['teamSocialAccountDetails'][$i][0]->team_admin_id == $result->user->user_id) {
+                    Session::put('ownerTeamId', $team['teamSocialAccountDetails'][$i][0]->team_id);
+                    $teamOwner = Session::get('ownerTeamId');
+                    break;
+                }
+            }
+
+            //                        Session::put('ownerTeam',)
+
+            if ($teamOwner != "") {
+                return redirect('dashboard/' . $teamOwner);
+            } else {
+                Session::forget('user');
+                Session::forget('team');
+                return redirect('login')->with('EmailOtpError', 'Default Socioboard team does not exist');
+            }
+
+
+        } else {
+            return redirect('login')->with('error', 'Something went wrong');
+        }
+    }
+
+
+    public function MobOtpLogin(Request $request){
+        $email = $request->mobile_otp_email;
+        $mobToken = $request->mobile_otp;
+        $twoWayData = [];
+
+        $api_url = $this->API_URL . 'twoStepLoginValidate?email='.urlencode($email).'&mobiletoken='.$mobToken;
+        $response = $this->client->post($api_url);
+        $result = json_decode($response->getBody()->getContents());
+        if ($response->getStatusCode() == 200) {
+            if ($result->code == 404 && $result->status = "failure"){
+                $twoWayData = [
+                    'email'  => "",
+                    'twoWayChoice'   => 0,
+                    'mobileOtpError' => $result->error,
+                    'emailOtpError' => ""
+                ];
+                return redirect('login')->with('twoWayData', $twoWayData);
+            }
+            else if ($result->code == 400 && $result->status = "failure")
+                return redirect('login')->with('email_act', $result->message);
+
+
+            //TODO get ip and system address of client
+
+
+            $user = array(
+                'accessToken' => $result->accessToken,
+                'userDetails' => $result->user
+            );
+            Session::put('user', $user);
+            Session::put('twoWayAuth', $result->user->Activations->activate_2step_verification);
+            $team = Helper::getInstance()->getTeamNewSession();
+            for ($i = 0; $i < count($team['teamSocialAccountDetails']); $i++) {
+                if ($team['teamSocialAccountDetails'][$i][0]->team_admin_id == $result->user->user_id) {
+                    Session::put('ownerTeamId', $team['teamSocialAccountDetails'][$i][0]->team_id);
+                    $teamOwner = Session::get('ownerTeamId');
+                    break;
+                }
+            }
+
+            //                        Session::put('ownerTeam',)
+
+            if ($teamOwner != "") {
+                return redirect('dashboard/' . $teamOwner);
+            } else {
+                Session::forget('user');
+                Session::forget('team');
+                return redirect('login')->with('EmailOtperror', 'Default Socioboard team does not exist');
+            }
+
+
+        } else {
+            return redirect('login')->with('error', 'Something went wrong');
+        }
+    }
+
+
+
+
     public function login(Request $request)
     {
         if (Session::has('user')) {
@@ -141,7 +289,13 @@ class UserController extends Controller
             return redirect('dashboard/' . $team['teamSocialAccountDetails'][0][0]->team_id);
         }
         if ($request->isMethod('GET')) {
-            return view('User::login');
+            $twoWayData = [
+                'email'  => "",
+                'twoWayChoice'   => 0,
+                'mobileOtpError' => "",
+                'emailOtpError' => ""
+            ];
+            return view('User::login')->with('twoWayData',$twoWayData);
         } elseif ($request->isMethod('POST')) {
             $user = [];
             $team = [];
@@ -170,8 +324,11 @@ class UserController extends Controller
                     if ($response->getStatusCode() == 200) {
                         //if not admin
                             if (isset($result->isTwoStepEnabled)) {
-                                return redirect()->route('twoStepAuth', ['email' => $result->user->email]);
-//                                return redirect(env('APP_URL').two-step-authentication);
+                                $twoWayData = [
+                                    'email'  => $result->user->email,
+                                    'twoWayChoice'   => $result->isTwoStepEnabled,
+                                ];
+                                return view('User::login')->with('twoWayData', $twoWayData);
                             }
                             if ($result->code == 404 && $result->status = "failure")
                                 return redirect('login')->with('invalid', $result->message);
@@ -187,6 +344,7 @@ class UserController extends Controller
                                 'userDetails' => $result->user
                             );
                             Session::put('user', $user);
+                            Session::put('twoWayAuth', $result->user->Activations->activate_2step_verification);
                             $team = Helper::getInstance()->getTeamNewSession();
                             for ($i = 0; $i < count($team['teamSocialAccountDetails']); $i++) {
                                 if ($team['teamSocialAccountDetails'][$i][0]->team_admin_id == $result->user->user_id) {
@@ -298,7 +456,12 @@ class UserController extends Controller
             foreach($teamSession['teamSocialAccountDetails'] as $team){
                $teamId[] = $team[0]->team_id;
             }
-
+//            $socialAccount = Session::get('currentTeam')['SocialAccount'];
+//            for($i=0;$i<count($socialAccount);$i++){
+//                if($socialAccount[$i]->account_type == env('FACEBOOK') )
+//                    if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
+//            }
+//            dd(Session::get('currentTeam')['SocialAccount']);
 
             return view('User::dashboard.dashboard',[
                 'user'=>$user,
@@ -323,6 +486,8 @@ class UserController extends Controller
 
     }
 
+
+
     public function getTeamDetails(Request $request){
         $help = Helper::getInstance();
         try {
@@ -341,7 +506,10 @@ class UserController extends Controller
 
 
     public function account(Request $request){
+        $user = [];
+        $helper = Helper::getInstance();
         if($request->isMethod('get')){
+            $helper->getNewSession();
             return view('User::dashboard.settings');
         }
     }
@@ -359,7 +527,14 @@ class UserController extends Controller
         Session::forget('youtubeChannels');
         Session::flush();
 
-        return redirect('login')->with('logout', 'Come back soon:(');
+        $twoWayData = [
+            'email'  => "",
+            'twoWayChoice'   => 0,
+            'mobileOtpError' => "",
+            'emailOtpError' => "",
+            'logout' => 'Come back soon:('
+        ];
+        return redirect('login')->with('twoWayData', $twoWayData);
     }
 
 
@@ -408,13 +583,12 @@ class UserController extends Controller
 
     public function resetPassword(Request $request){
         $email = urlencode($request['reset_email']);
-        $resetPassword = urlencode($request['reset_password']);
-        $api_url = $this->API_URL.'resetPassword?email='.$email.'&newPassword='.$resetPassword ;
+        $api_url = $this->API_URL.'resetPassword?email='.$email.'&newPassword='.md5($request['reset_password']) ;
         try {
             $response = $this->client->post($api_url);
             $resp = $response->getBody()->getContents();
             if($response->getStatusCode() == 200){
-                $resp1 = json_decode($resp);
+                $resp1  = json_decode($resp);
                 if($resp1->code == 200){
                     if($resp1->code == 200){
                         return redirect('login')->with('restPwdMsg', "Password Reset Successfull Please Login.....");
@@ -632,7 +806,7 @@ class UserController extends Controller
                         "newPassword"=>$request->new_password
                     );
                     try{
-                        $response = Helper::getInstance()->apiCallPost($user, 'user/changePassword?userId=1&currentPassword='.urlencode($user['currentPassword']).'&newPassword='.urlencode($user['newPassword']));
+                        $response = Helper::getInstance()->apiCallPost($user, 'user/changePassword?userId=1&currentPassword='.md5($user['currentPassword']).'&newPassword='.md5($user['newPassword']));
                         if($response['statusCode'] == 200){
                             if($response['data']['code']==400){
                                 Log::info('Change password exception ');

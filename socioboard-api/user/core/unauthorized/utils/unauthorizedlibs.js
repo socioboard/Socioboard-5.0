@@ -267,6 +267,8 @@ class UnAuthorizedUtils extends UserLibs {
                         if (result.user.is_account_locked) {
                             reject({ error: true, message: "Account has been locked." });
                         } else {
+                            // if we delete our main account we can't get the account data
+                            // which throw an error of problem in getting social account, 'Coz we can't able to update that profile data.
                             return socialAccount.findOne({
                                 where: {
                                     account_type: 1,
@@ -518,39 +520,39 @@ class UnAuthorizedUtils extends UserLibs {
                     .then((user) => {
                         var otpCondition = user.Activations.activate_2step_verification;
                         var userPhoneNumber = user.phone_no;
-                        var phoneCode = user.phone_code;
-                        return user.Activations.update({
-                            otp_token: String(OTP),
-                            otp_token_expire: newExpireDate
-                        })
-                            .then((result) => {
-
-                                // check condition on which it should send OTP
-                                if (otpCondition == 1) {
-
-                                    var mobileOtp = OTP.slice(6, 12);
-                                    return this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber)
-                                        .then(() => {
-                                            resolve('Mobile OTP sent successfully, Please verify it');
-                                        })
-                                        .catch((error) => {
-                                            reject("can't able to send Mobile OTP message.");
-                                        });
-                                }
-                                if (otpCondition == 2) {
-                                    var mobileOtp = OTP.slice(6, 12);
-                                    this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber);
-
-                                    // .then(() => {
-                                    var mailOtp = OTP.slice(0, 6);
-                                    return this.sendOtpToEmail(mailOtp, userInfo.email);
-                                    // })
-
-                                }
-                            }).then(() => {
-                                resolve(otpCondition == 1 ? "Mobile OTP sent successfully, Please verify it" : "Mobile & Email OTP sent successfully, Please verify it");
+                        // validating phone number
+                        if (Number(userPhoneNumber) != 0) {
+                            var phoneCode = user.phone_code;
+                            return user.Activations.update({
+                                otp_token: String(OTP),
+                                otp_token_expire: newExpireDate
                             })
-                            .catch((error) => { console.log(error); throw error; })
+                                .then((result) => {
+                                    // check condition on which it should send OTP
+                                    if (otpCondition == 1) {
+                                        var mobileOtp = OTP.slice(6, 12);
+                                        return this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber)
+                                            .then(() => {
+                                                resolve('Mobile OTP sent successfully, Please verify it');
+                                            })
+                                            .catch((error) => {
+                                                reject("can't able to send Mobile OTP message.");
+                                            });
+                                    }
+                                    if (otpCondition == 2) {
+                                        var mobileOtp = OTP.slice(6, 12);
+                                        this.sendOtpToMobile(mobileOtp, phoneCode, userPhoneNumber);
+
+                                        var mailOtp = OTP.slice(0, 6);
+                                        return this.sendOtpToEmail(mailOtp, userInfo.email);
+                                    }
+                                }).then(() => {
+                                    resolve(otpCondition == 1 ? "Mobile OTP sent successfully, Please verify it" : "Mobile & Email OTP sent successfully, Please verify it");
+                                })
+                                .catch((error) => { console.log(error); throw error; })
+                        } else {
+                            reject('Please, Update the phone Number.');
+                        }
                     })
                     .catch((error) => reject(error));
             }
@@ -641,7 +643,7 @@ class UnAuthorizedUtils extends UserLibs {
                             else {
                                 var mobOtp = user.Activations.otp_token.slice(6, 12);
                                 // validating mobile otp
-                                if (mobOtp == Number(mobOtp)) {
+                                if (mobileOtp == Number(mobOtp)) {
                                     return this.getUserAccessToken(user.user_id)
                                         .then((userInfo) => {
                                             resolve({ user: userInfo.user, accessToken: userInfo.accessToken });
@@ -694,7 +696,7 @@ class UnAuthorizedUtils extends UserLibs {
                 reject({ error: true, message: 'Invalid UserInfo' });
             } else {
                 // Creating an activation Link
-                var activationLink = `${config.get('user_socioboard.host_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
+                var activationLink = `${config.get('user_socioboard.mail_url')}/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
                 // Appending activation link in Mail content
                 var htmlContent = this.sendEmailServices.template.forgotpassword.replace('[FirstName]', `${userInfo.first_name}`).replace('[ActivationLink]', activationLink);
                 var emailDetails = {
@@ -832,7 +834,7 @@ class UnAuthorizedUtils extends UserLibs {
                                 });
                         }
                         else {
-                            var activationLink = `${config.get('user_socioboard.host_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
+                            var activationLink = `${config.get('user_socioboard.mail_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
                             return `Success! Please check your email for reset your password, New activationLink - ${activationLink} !`;
                         }
                     })
@@ -895,7 +897,7 @@ class UnAuthorizedUtils extends UserLibs {
                                                 });
                                         }
                                         else {
-                                            var activationLink = `${config.get('user_socioboard.host_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
+                                            var activationLink = `${config.get('user_socioboard.mail_url')}/v1/verifyPasswordToken?email=${userInfo.email}&activationToken=${userInfo.Activations.forgot_password_validate_token}`;
                                             return `Token expired, New activationLink - ${activationLink} ! `;
                                         }
                                     });
@@ -979,7 +981,7 @@ class UnAuthorizedUtils extends UserLibs {
                                                             .catch((error) => { throw error; });
                                                     }
                                                     else {
-                                                        var activationLink = `${config.get('user_socioboard.host_url')}/v1/verifyEmail?email=${userInfo.email}&activationToken=${userInfo.Activations.email_validate_token}`;
+                                                        var activationLink = `${config.get('user_socioboard.mail_url')}/v1/verifyEmail?email=${userInfo.email}&activationToken=${userInfo.Activations.email_validate_token}`;
                                                         reject(new Error(`Token expired on ${user.Activations.email_token_expire}, New activationLink - ${activationLink} !`));
                                                     }
                                                 }

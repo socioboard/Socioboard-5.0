@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest --maxWorkers=100 --detectOpenHandles --forceExit",
     "startdev": "pm2 start ecosystem.config.js --env=apidevelopment",
-    "startphpdev": "pm2 start ecosystem.config.js --env=phpdev"
+    "startphpdev": "pm2 start ecosystem.config.js --env=phpdev",
+    "start": "pm2 start ecosystem.config.js --env=production"
   },
   "keywords": [],
   "author": "",

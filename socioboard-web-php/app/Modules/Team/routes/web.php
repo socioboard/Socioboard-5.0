@@ -5,7 +5,6 @@ use App\Modules\Team\Controllers\TeamController;
 
 
 Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\Modules\Team\Controllers'], function () {
-
     Route::get('test', 'FacebookController@test');
     Route::group(['middleware' => ['authenticateuser:user']], function () {
         Route::post('/create-team', 'TeamController@createTeam');
@@ -65,7 +64,6 @@ Route::group(['module' => 'Team', 'middleware' => ['web'], 'namespace' => 'App\M
 
             Route::get('aaa', function ($socialNetwork) use ($c) {
                 print_r($c);
-                dd($socialNetwork);
             });
         });
 
