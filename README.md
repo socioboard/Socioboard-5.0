@@ -81,7 +81,7 @@ Open-source is a revolution in an industry which is mostly dominated by big name
 Technology :
 ============
 
-Socioboard comes up with two version. They are 
+Socioboard comes up with two versions. They are 
 
 * **[Socioboard-3.0](https://github.com/socioboard/Socioboard-4.0/tree/Socioboard-3.0)**
 
