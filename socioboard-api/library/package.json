@@ -21,7 +21,7 @@
     "feedparser": "^2.2.9",
     "feedparser-promised": "^2.0.0",
     "ffmpeg": "0.0.4",
-    "googleapis": "^36.0.0",
+    "googleapis": "^39.1.0",
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
