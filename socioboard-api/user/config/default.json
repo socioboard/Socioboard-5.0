@@ -7,6 +7,7 @@
     "perPageLimit": 12,
     "maximumTrialPeriod": 3,
     "app_url":"<<App HostUrl>>",
+    "live_url": "https://localhost.socioboard.com/login",
     "user_socioboard": {
         "title": "Socioboard - UserServices",
         "version": "1.0.0",
@@ -29,7 +30,8 @@
     "mailTitles": {
         "activation_link": "Socioboard activation link",
         "forgot_password_request": "Socioboard reset password",
-        "payment_invoice": "Socioboard payment invoice"
+        "payment_invoice": "Socioboard payment invoice",
+        "OTP_title": "Socioboard 2-way OTP"
     },
     "mailService": {
         "defaultMailOption": "<<Give the default mail services should take place (any one from => gmail,sendgridapi)>>",
@@ -44,6 +46,12 @@
             "email": "<<gmail email>>",
             "password": "<<password>>"
         }
+    },
+    "mobileOtp": {
+        "authkey": "<<auth Key>>",
+        "sender": "<<Sender TITLE >>",
+        "route": 4,
+        "port": 4
     },
     "uploadService": {
         "image_path": "",
@@ -62,12 +70,22 @@
         "business_account_scopes": "instagram_basic,instagram_manage_comments,instagram_manage_insights"
     },
     "pinterest": {
-        "scopes": "read_relationships+write_relationships+read_public+write_public"
+        "scopes": "read_public"
     },
     "jest": {
         "access_token": ""
     },
-    "mail_services_environments":["development"],
-    "profile_url_assert" : "/asserts/profiles.png",   
-    "user_base_plan": 0
+    "mail_services_environments": [
+        "production",
+        "development",
+        "apidevelopment",
+        "phpdev"
+    ],
+    "profile_url_assert": "/asserts/profiles.png",
+    "user_base_plan": 0,
+    "payment": {
+        "base_path": "../../media",
+        "payment_path": "../../media/payments",
+        "template_path": "public/template/"
+    }
 }

@@ -1271,8 +1271,7 @@ class TeamLibs {
                                 case "InstagramBusiness":
                                     // Validating that the user is having permisiion for this network or not by user plan
                                     if (userScopeAvailableNetworks.includes('12')) {
-                                        let scopes = `${config.get('facebook_api.scopes')},${config.get('instagram.business_account_scopes')}`;
-                                        redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${scopes}&state=${encryptedState}`;
+                                        redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('profile_add_redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('instagram.business_account_scopes')}&state=${encryptedState}`;
                                         resultJson = { code: 200, status: "success", message: "Navigated to facebook to add instagram account.", navigateUrl: redirectUrl };
                                     }
                                     else
@@ -2723,7 +2722,7 @@ class TeamLibs {
         });
     }
 
-    unlockProfiles(userId, body, maxAccounts) {
+    unlockProfiles(userId, body, maxAccounts, userScopeAvailableNetworks) {
         return new Promise((resolve, reject) => {
             if (!userId || !body || !maxAccounts) {
                 reject(new Error('Invalid Inputs'));
@@ -2750,8 +2749,8 @@ class TeamLibs {
                         }))
                             .then(() => {
                                 // Validating the user plan account size
-                                logger.info(`pending accounts size, OpenAccountsCount <= maxAccounts, ${OpenAccountsCount <= maxAccounts}`);
-                                if (OpenAccountsCount <= maxAccounts) {
+                                logger.info(`pending accounts size, OpenAccountsCount <= maxAccounts,${OpenAccountsCount, maxAccounts}, ${OpenAccountsCount <= maxAccounts}`);
+                                if (OpenAccountsCount < maxAccounts) {
                                     return db.sequelize.transaction(function (t) {
                                         var updatedAccounts = [];
                                         var erroredProfiles = [];
@@ -2763,7 +2762,7 @@ class TeamLibs {
                                                     account_admin_id: userId
                                                 }]
                                             },
-                                            attributes: ['account_id']
+                                            attributes: ['account_id', 'account_type']
                                         }, { transaction: t })
                                             .then((accounts) => {
                                                 if (accounts.length == 0) {
@@ -2771,7 +2770,10 @@ class TeamLibs {
                                                 }
                                                 else {
                                                     accounts.forEach(account => {
-                                                        updatedAccounts.push(String(account.account_id));
+                                                        if (userScopeAvailableNetworks.includes(account.account_type))
+                                                            updatedAccounts.push(String(account.account_id));
+                                                        else
+                                                            throw new Error("Sorry, Requested network not available for your plan to unlock.");
                                                     });
                                                     erroredProfiles = lodash.pullAll(body, updatedAccounts);
                                                     // Un-locking the social accout
@@ -2916,7 +2918,6 @@ class TeamLibs {
 
                         var teamInsightsMongoModelObject = TeamInsightsMongoModel();
                         // insertInsights(data) then addTeamInsights(teamId, updatedData)
-                        console.log('update or insert, Update status is', update);
                         if (!update || update == null || update == false)
                             return teamInsightsMongoModelObject.insertInsights(data);
                         else

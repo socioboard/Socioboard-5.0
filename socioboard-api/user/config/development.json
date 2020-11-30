@@ -1,11 +1,18 @@
 {
     "user_socioboard": {
+        "mail_url": "https://localhost.socioboard.com",
         "host_url": "http://localhost:3000",
         "port": "3000",
         "host": "localhost:3000"
     },
-    "notification_socioboard":{
+    "notification_socioboard": {
         "host_url": "http://localhost:3003"
+    },
+    "mysql": {
+        "host": "localhost",
+        "username": "<<mysql User name>>",
+        "database": "<<db name>>",
+        "password": "<<mysql Password>>"
     },
     "mongo": {
         "username": "<<Mongo User name>>",
@@ -17,23 +24,31 @@
     "facebook_api": {
         "app_id": "<<specify the facebook app id>>",
         "secret_key": "<<specify the app secret key>>",
+        "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+        "login_scopes": "email,user_birthday,instagram_basic,pages_show_list",
+        "profile_scopes": "email,instagram_basic,pages_show_list",
         "account_kit_version": "v1.1",
         "account_kit_app_secret": "<<specify the account tool kit secret>>",
-        "redirect_url": "https://localhost:3000/v1/auth/facebook/callback",
-        "fbprofile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
-        "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
         "user_subscription_fields": "feed",
         "page_subscription_fields": "feed",
-        "version": "4.0.0"
+        "version": "4.0.0",
+        "redirect_url": "https://localhost:3000/v1/auth/facebook/callback",
+        "fbprofile_add_redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
     },
     "google_api": {
         "client_id": "<<specify the google client id>>",
         "client_secrets": "<<specify the google client secret>>",
         "redirect_url": "http://localhost:3000/v1/auth/google/callback",
         "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
+        "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+        "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+        "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+        "ganalytics_activeuser_metrics": "rt:activeUsers",
+        "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
+        "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
+        "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube",
         "api_key": "<<specify the google api key>>",
-        "dynamic_link": "https://socionode.page.link",
-        "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
+        "dynamic_link": "https://socionode.page.link"
     },
     "twitter_api": {
         "api_key": "<<specify the twitter api key>>",
@@ -59,11 +74,6 @@
         "client_secret": "<<specify the pinterest client secret>>",
         "redirect_url": "https://localhost:3000/v1/team/addSocialProfile" 
     },
-    "tumblr": {
-        "api_key": "<<specify the tumblr app key>>",
-        "secret_key": "<<specify the tumblr secret key>>",
-        "redirect_url": "http://localhost:3000/v1/auth/tumblr/callback"
-    },
     "payment": {
         "paypal": {
             "paypal_url": "https://www.sandbox.paypal.com",
@@ -81,9 +91,12 @@
             "salt": "<<Pay U Money Salt>>",
             "header": "<<Pay U Money Header>>",
             "mode": "test",
-            "success_url": "http://localhost:3000/v1/payuMoneySuccess",
-            "cancel_url": "http://localhost:3000/v1/payuMoneyCancel",
-            "currency_layer_api": "<<Currency Converter API>>"
-        }
+            "success_url": "http://localhost:3000/v1/payment/paypalSuccess",
+            "cancel_url": "http://localhost:3000/v1/payment/paypalCancel",
+            "currency_layer_api": "d11e9eb499f97963ae7ddedfc3a173be"
+        },
+        "base_path": "../../media",
+        "payment_path": "../../media/payments",
+        "template": "public/template/paymentTemplate.html"
     }
 }
