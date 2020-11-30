@@ -5,24 +5,31 @@
     <title>SocioBoard | Signin</title>
     <script>
 
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-            ga('create', '{{env('GA_TRACK_ID')}}', 'auto', {
-                'name': 'login',
-                'sessionControl': 'start',
-                'alwaysSendReferrer': true
-            });
-            ga('login.send', 'pageview');
-            ga('login.send', 'event', {
-                'eventCategory': 'Open',
-                'eventAction': 'Login'
-            });
-            ga(function(){
+        ga('create', '{{env('GA_TRACK_ID')}}', 'auto', {
+            'name': 'login',
+            'sessionControl': 'start',
+            'alwaysSendReferrer': true
+        });
+        ga('login.send', 'pageview');
+        ga('login.send', 'event', {
+            'eventCategory': 'Open',
+            'eventAction': 'Login'
+        });
+        ga(function () {
 
-            });
+        });
 
 
     </script>
@@ -30,17 +37,31 @@
 @endsection
 
 @section('login')
-    <div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel"
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog"
+         aria-labelledby="resetPasswordModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content"><br/>
                 <div class="error" style="color: red; text-align: center">{{session('restPwdMsgError')}}</div>
                 <form id="resetPassword" action="/resetPassword" method="post">
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="input-group mb-3">
                             <label for="reset_password">Reset Password</label>
-                            <input type="email" class="form-control" id="reset_email_id" aria-describedby="resetemailHelp" required name="reset_email" readonly="readonly" value="{{session('resetPassword')}}"></br>
-                            <input type="password" class="form-control" id="reset_password" aria-describedby="resetpasswordHelp" placeholder="Enter new password" required name="reset_password">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" id="reset_email_id"
+                                   aria-describedby="resetemailHelp" required name="reset_email" readonly="readonly"
+                                   value="{{session('resetPassword')}}"></br>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" id="reset_password"
+                                   aria-describedby="resetpasswordHelp" placeholder="Enter new password" required
+                                   name="reset_password">
+                            <div class="input-group-append">
+                            <span toggle="#reset_password"
+                                  style="line-height: 1.5;border: 1px solid #ced4da;border-left-color: white;"
+                                  class=" btn fas fa-eye toggle-r_password"></span>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -63,10 +84,10 @@
                         <h6 id="someError" class="text-center" style="color: red; font-weight: normal;"></h6>
                         <h6 id="mailNotFound" class="text-center" style="color: red; font-weight: normal;"></h6>
 
-                    @if(session('logout'))
-                           <div style="color: green;text-align:center;">
-                               {{session('logout')}}
-                           </div>
+                        @if(session('logout'))
+                            <div style="color: green;text-align:center;">
+                                {{session('logout')}}
+                            </div>
                         @endif
                         @if (session('status'))
                             <div style="color: green">
@@ -99,8 +120,8 @@
                             </div>
                         @endif
                         @if(session('resetPassword'))
-                                <script>
-                                $(function() {
+                            <script>
+                                $(function () {
                                     $('#resetPasswordModal').modal('show');
                                 });
                             </script>
@@ -110,12 +131,13 @@
                         @endif
                         @if(session('restPwdMsgError'))
                             <script>
-                                $(function() {
+                                $(function () {
                                     $('#resetPasswordModal').modal('show');
                                 });
                             </script>
                         @endif
-                        <form class="margin-top-30 needs-validation" id="login-form" novalidate action="login" method="POST">
+                        <form class="margin-top-30 needs-validation" id="login-form" novalidate action="login"
+                              method="POST">
                             <div class="form-group">
                                 <label for="email_id">Your e-mail adress<span class="text-orange-dark">*</span></label>
                                 <input type="email" class="form-control" id="email_id" placeholder="Email" required
@@ -128,8 +150,20 @@
                             </div>
                             <div class="form-group">
                                 <label for="passwd">Your password<span class="text-orange-dark">*</span></label>
-                                <input type="password" class="form-control" id="passwd" placeholder="Password"
-                                       required name="passwd">
+
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control" placeholder="Password" id="passwd"
+                                           required name="passwd">
+                                    <div class="input-group-append">
+                                        <span toggle="#passwd"
+                                              style="line-height: 1.5;border: 1px solid #ced4da;border-left-color: white;"
+                                              class=" btn fas fa-eye toggle-password"></span>
+                                        {{--                                        <button class="btn show-pwd" style="border: 1px solid #ced4da;border-left-color: white;" type="button" id="button-addon2"><i class="fas fa-eye"></i></button>--}}
+                                    </div>
+                                </div>
+
+                                {{--                                <input type="password" class="form-control" id="passwd" placeholder="Password"--}}
+                                {{--                                       required name="passwd">--}}
                                 <div class="error" style="color: red;">{{ $errors->first('passwd') }}</div>
                                 <div class="valid-feedback">
                                     Looks good!
@@ -155,24 +189,28 @@
                                 <div class="col-md-12 text-center"><strong>OR</strong></div>
                                 <div class="col-md-6">
                                     <a href="{{env('APP_URL')}}social/facebook">
-                                        <img class="img-fluid" id="fb-Login" src="\assets\imgs\fb_btn.png"  alt="Submit" width="200" height="70">
+                                        <img class="img-fluid" id="fb-Login" src="\assets\imgs\fb_btn.png" alt="Submit"
+                                             width="200" height="70">
                                     </a>
 
-{{--                                    <a href='{{env('APP_URL')}}social/facebook' class="btn btn-fb col-12">Sign in with--}}
-{{--                                        Facebook</a>--}}
+                                    {{--                                    <a href='{{env('APP_URL')}}social/facebook' class="btn btn-fb col-12">Sign in with--}}
+                                    {{--                                        Facebook</a>--}}
                                 </div>
                                 <div class="col-md-6">
                                     <a href="{{env('APP_URL')}}social/google">
-                                        <img class="img-fluid" id="google-Login" src="\assets\imgs\ggl_btn.png"  alt="Submit" width="200" height="70" >
+                                        <img class="img-fluid" id="google-Login" src="\assets\imgs\ggl_btn.png"
+                                             alt="Submit" width="200" height="70">
                                     </a>
-{{--                                    <a href='{{env('APP_URL')}}social/google' class="btn btn-google col-12">Sign in with Google</a>--}}
+                                    {{--                                    <a href='{{env('APP_URL')}}social/google' class="btn btn-google col-12">Sign in with Google</a>--}}
                                 </div>
                             </div>
                             <div class="margin-top-30">
-                                <p class="text-gray-light">Don't have an account? <a href="/signup" class="text-gray-light"><u>Create
+                                <p class="text-gray-light">Don't have an account? <a href="/signup"
+                                                                                     class="text-gray-light"><u>Create
                                             new</u></a></p>
                                 <p class="text-gray-light"><a href="javascript:void();" class="text-gray-light"
-                                                              data-toggle="modal" data-target="#passwdRecoveryModal"><u>I forgot my password</u></a></p>
+                                                              data-toggle="modal" data-target="#passwdRecoveryModal"><u>I
+                                            forgot my password</u></a></p>
                             </div>
                         </form>
                     </div>
@@ -182,7 +220,8 @@
     </section>
 
     <!-- Passwd Recovery Modal -->
-    <div class="modal fade" id="passwdRecoveryModal" tabindex="-1" role="dialog" aria-labelledby="passwdRecoveryModalLabel"
+    <div class="modal fade" id="passwdRecoveryModal" tabindex="-1" role="dialog"
+         aria-labelledby="passwdRecoveryModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -214,12 +253,13 @@
             <form id="mob_otp_form" method="POST" action="mob-otp-login">
                 <div class="modal-content" align="center">
                     <div class="modal-header">
-                        <label class="custom-control-label" for="no_auth" style="color: #002752;text-align: center">Enter the otp sent to your mobile phone.</label>
+                        <label class="custom-control-label" for="no_auth" style="color: #002752;text-align: center">Enter
+                            the otp sent to your mobile phone.</label>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="hidden" id="mobile-otp-email" name="mobile_otp_email" >
+                            <input type="hidden" id="mobile-otp-email" name="mobile_otp_email">
                         </div>
                         <div class="form-group">
                             <input type="number" id="mobile-otp" name="mobile_otp">
@@ -246,12 +286,13 @@
             <form id="email_otp_form" method="POST" action="email-otp-login">
                 <div class="modal-content" align="center">
                     <div class="modal-header">
-                        <label class="form-group" for="no_auth" style="color: #002752;text-align: center">Enter the otp sent to your mobile phone and email.</label>
-                        <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                        <label class="form-group" for="no_auth" style="color: #002752;text-align: center">Enter the otp
+                            sent to your mobile phone and email.</label>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="hidden" id="mob-otp-email" name="mobile_otp_email" >
+                            <input type="hidden" id="mob-otp-email" name="mobile_otp_email">
                         </div>
                         <div class="form-group">
                             <label class="custom-control" for="mobile_otp">Mobile OTP</label>
@@ -272,69 +313,89 @@
     </div>
 
 
-    @endsection
+@endsection
 
 
 @section('script')
     //two step verification
     <script>
-        if ( window.history.replaceState ) {
-            window.history.replaceState( null, null, window.location.href );
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
         }
-        var twoWayData = '<?php echo json_encode($twoWayData) ; ?>';
+        var twoWayData = '<?php echo json_encode($twoWayData); ?>';
         twoWayData = JSON.parse(twoWayData);
 
-        if(twoWayData.twoWayChoice == 1){
+        if (twoWayData.twoWayChoice == 1) {
             document.getElementById("mobile-otp-email").value = twoWayData.email;
             $('#mob_otp').modal('show');
-        }
-
-        else if(twoWayData.twoWayChoice == 2){
+        } else if (twoWayData.twoWayChoice == 2) {
             document.getElementById("mob-otp-email").value = twoWayData.email;
             $('#email_otp').modal('show');
         }
     </script>
 
     <script>
-        $(document).ready(function(){
-            $(document).on('submit','#forgotPassword',function(e){
+        $(document).ready(function () {
+            $(document).on('submit', '#forgotPassword', function (e) {
                 e.preventDefault();
                 var form = document.getElementById('forgotPassword');
                 var formData = new FormData(form);
                 $.ajax({
-                url: "/forgot-password",
-                data: formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                type: 'POST',
-                beforeSend:function(){
-                    $('#mailFound').text("");
-                    $('#someError').text("");
-                    $('#mailNotFound').text("");
-                    $('#fp_email_id').val();
-                },
-                success: function (response) {
-                    document.getElementById("forgotPassword").reset();
-                    if(response.code === 200){
-                        $('#mailFound').text(response.message);
-                        $('#passwdRecoveryModal').modal('toggle');
-                    }else if(response.code === 404){
-                        $('#mailNotFound').text(response.message);
-                        $('#passwdRecoveryModal').modal('toggle');
-                    }else{
+                    url: "/forgot-password",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    beforeSend: function () {
+                        $('#mailFound').text("");
+                        $('#someError').text("");
+                        $('#mailNotFound').text("");
+                        $('#fp_email_id').val();
+                    },
+                    success: function (response) {
+                        document.getElementById("forgotPassword").reset();
+                        if (response.code === 200) {
+                            $('#mailFound').text(response.message);
+                            $('#passwdRecoveryModal').modal('toggle');
+                        } else if (response.code === 404) {
+                            $('#mailNotFound').text(response.message);
+                            $('#passwdRecoveryModal').modal('toggle');
+                        } else {
+                            $('#someError').text(response.message);
+                            $('#passwdRecoveryModal').modal('toggle');
+                        }
+                    },
+                    error: function (error) {
+                        document.getElementById("forgotPassword").reset();
+                        $('#fp_email_id').html();
                         $('#someError').text(response.message);
                         $('#passwdRecoveryModal').modal('toggle');
                     }
-                },
-                error:function(error){
-                    document.getElementById("forgotPassword").reset();
-                    $('#fp_email_id').html();
-                    $('#someError').text(response.message);
-                    $('#passwdRecoveryModal').modal('toggle');
-                }
                 })
             });
         });
+
+        //    toggle
+        $(".toggle-password").click(function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+
+        $(".toggle-r_password").click(function () {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
     </script>
-    @endsection
+@endsection

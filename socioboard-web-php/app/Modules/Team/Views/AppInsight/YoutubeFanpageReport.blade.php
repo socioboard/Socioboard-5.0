@@ -90,6 +90,9 @@
         var chartData = [];
         var filterPeriod = 3;
         var  chart = [];
+        var dd = String(firstDate.getDate()).padStart(2, '0');
+        var mm = String(firstDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = firstDate.getFullYear();
         getFacebookInsight(fbId,filterPeriod,-1,-1);
 
 
@@ -133,7 +136,7 @@
                         $('#fb_pages').css('display','none');
                     }else{
                         chartData.push({
-                            date: '07-06-2019',
+                            date: yyyy+"-"+mm+"-"+dd,
                             likes:  0,
                             dislikes: 0,
                             averageViewDuration: 0
@@ -267,7 +270,7 @@
                                 filterPeriod=1;
                                 break;
                         }
-                        getFacebookInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
+                        getFacebookInsight(fbId,filterPeriod,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
                         $('.daterangepicker').css('display','none');
                     }, 100);
 

@@ -38,9 +38,10 @@
 
         //get user notifications
         function getAllUserNotifications(pageId){
+
             $.ajax({
                 type: 'get',
-                url: "/get-all-user-notification?pageId"+pageId,
+                url: "/get-all-user-notification?pageId="+pageId,
                 cache: false,
                 processData: false,
                 contentType: false,

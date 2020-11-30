@@ -3,7 +3,11 @@
 <div class="tab-content" id="v-pills-tabContent">
 
     @if ( !is_array($feeds))
-        {{ $feeds}}
+        <div class="container">
+            <blockquote class="blockquote text-right">
+                <p class="mb-0 text-lg-left"><h3><mark>{{$feeds}}</mark></h3></p>
+            </blockquote>
+        </div>
     @else
 
     <div class="tab-pane fade show active" id="v-pills-boardone" role="tabpanel" aria-labelledby="v-pills-boardone-tab">

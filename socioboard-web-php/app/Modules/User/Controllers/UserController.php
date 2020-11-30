@@ -38,12 +38,10 @@ class UserController extends Controller
         } else if ($request->isMethod('post')) {
             $rules = array(
 
-                "username" => 'required|max:32|min:2|regex:/([a-zA-Z]+)([0-9]*)/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/
+                "username" => 'required|max:32|min:2|regex:/^[a-zA-Z0-9-_]*$/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/
                 "first_name" => 'required|regex:/([a-zA-Z]+)([0-9]*)/',
                 "email_id" => 'required|email',
-//                "passwd" => 'required|max:20|min:8|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[#$^+=!*()@%&]).*$/',
                 "passwd" => 'required|max:20|min:8|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[\/!@#$%^&*()`~\s_+\-=\[\]{};:"\\\,.<>\?\']).*$/',
-//                "passwd" => ['required'=>'regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\?]).*$/'],
                 "c_passwd" => 'required_with:passwd|same:passwd',
             );
             try {
@@ -52,7 +50,7 @@ class UserController extends Controller
                     'c_passwd.required_with' =>'Please confirm your password!',
                     'c_passwd.same'=>'Password missmatch',
                     'username.regex' =>'Username should be alphanumeric',
-                    'first_name.regex' => 'First name should not contain special characters and numbers.'
+                    'first_name.regex' => 'First name should not contain special characters.'
                 ];
 
                 $validator = Validator::make($request->all(), $rules,$customMessage);
@@ -461,7 +459,6 @@ class UserController extends Controller
 //                if($socialAccount[$i]->account_type == env('FACEBOOK') )
 //                    if($socialAccount[$i]->join_table_teams_social_accounts->is_account_locked == false)
 //            }
-//            dd(Session::get('currentTeam')['SocialAccount']);
 
             return view('User::dashboard.dashboard',[
                 'user'=>$user,
@@ -866,8 +863,7 @@ class UserController extends Controller
         $result =[];
         $rules = array(
             "firstName" => 'max:15|min:2|regex:/^[a-zA-Z]+$/', ///([0-9]*)([a-zA-Z]+)([0-9]*)/ Alphanumeeric
-            "lastName" => 'max:15|min:2|regex:/^[a-zA-Z]+$/',
-            "phone" => 'size:10',
+            "lastName" => 'max:15|min:2|regex:/^[a-zA-Z]+$/'
         );
         $customMessage =[
             'firstName' => 'Please provide valid characters as input with atleast 2 and atmost 15 characters ',

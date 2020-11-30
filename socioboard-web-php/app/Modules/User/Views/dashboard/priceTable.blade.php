@@ -29,7 +29,7 @@
 {{--                        </th>--}}
                         <th scope="col" class="text-center">Basic Plan
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 0)
-                                <button  class="btn btn-sm btn-primary plan">Current</button>
+                                <button  class="btn btn-sm btn-primary plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 0)
                                 <button  class="btn btn-sm btn-primary plan" id="{{env('BASIC')}}">Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 0)
@@ -40,7 +40,7 @@
                         <th scope="col" class="text-center">Standard
 
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 1)
-                                <button  class="btn btn-primary btn-sm plan" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 1)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('STANDARD')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 1)
@@ -52,54 +52,54 @@
                         </th>
                         <th scope="col" class="text-center">Premium
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 2)
-                                <button  class="btn btn-primary btn-sm plan" data-target="#paymentModal"  >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" data-target="#paymentModal"  disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 2)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('PREMIUM')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('PREMIUM')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 2)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('PREMIUM')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif
                         </th>
                         <th scope="col" class="text-center">Deluxe
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 3)
-                                <button  class="btn btn-primary btn-sm plan" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 3)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('DELUXE')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('DELUXE')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 3)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('DELUXE')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif
                         </th>
                         <th scope="col" class="text-center">Topaz
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 4)
-                                <button  class="btn btn-primary btn-sm plan" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 4)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('TOPAZ')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('TOPAZ')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 4)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('TOPAZ')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif
                         </th>
                         <th scope="col" class="text-center">Ruby
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 5)
-                                <button  class="btn btn-primary btn-sm plan" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 5)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('RUBY')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('RUBY')}}"  >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 5)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('RUBY')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif
                         </th>
                         <th scope="col" class="text-center">Gold
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 6)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('GOLD')}}" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('GOLD')}}" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 6)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('GOLD')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('GOLD')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 6)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('GOLD')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif
                         </th>
                         <th scope="col" class="text-center">Platinum
                             @if(Session()->get('user')['userDetails']->Activations->user_plan == 7)
-                                <button  class="btn btn-primary btn-sm plan" >Current</button>
+                                <button  class="btn btn-primary btn-sm plan" disabled>Current</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan > 7)
-                                <button  class="btn btn-primary btn-sm plan" id="{{env('PLATINUM')}}" data-toggle="modal" data-target="#paymentModal" >Downgrade</button>
+                                <button  class="btn btn-primary btn-sm plan" id="{{env('PLATINUM')}}" >Downgrade</button>
                             @elseif(Session()->get('user')['userDetails']->Activations->user_plan < 7)
                                 <button  class="btn btn-primary btn-sm plan" id="{{env('PLATINUM')}}" data-toggle="modal" data-target="#paymentModal" >Upgrade</button>
                             @endif

@@ -16,6 +16,8 @@ class ScheduleController extends Controller
 
     public function editSchedulePost(Request $request){
        if ($request->isMethod('post')) {
+
+
            $helper = Helper::getInstance();
            $accountType = [];
            $publishData = [];
@@ -223,6 +225,7 @@ class ScheduleController extends Controller
                    $array = array(json_decode($request->mediaUploaded));
                    $publishImages = array_merge($publishImages, ...$array);
                }
+
                Log::info("scheduling");
                if ($request->daywsiseChecked == 1) {
                    Log::info("Daywise scheduling");
@@ -307,6 +310,7 @@ class ScheduleController extends Controller
                 "pinterestBoards" => Session::get('pinterestBoards')
             ]);
         } else if ($request->isMethod('post')) {
+
             $helper = Helper::getInstance();
             $accountType = [];
             $publishData = [];
@@ -514,6 +518,14 @@ class ScheduleController extends Controller
                     $array = array(json_decode($request->mediaUploaded));
                     $publishImages = array_merge($publishImages, ...$array);
                 }
+                //temporary comment
+//                if(count($publishImages) > 4){
+//                    $result['code'] = 405;
+//                    $result['status'] = "failure";
+//                    $result['message'] = "Maximum 4 items can be scheduled.";
+//                    return ($result);
+//                }
+
                 Log::info("scheduling");
 
                 if($request->daywsiseChecked == 1){

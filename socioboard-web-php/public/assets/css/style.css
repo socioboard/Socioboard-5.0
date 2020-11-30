@@ -382,7 +382,7 @@ footer{
     cursor: pointer;
 }
 .profile_action_dropdown .dropleft .dropdown-toggle::before {
-    content: none;
+    content: none !important;
 }
 
 /* ribbon */

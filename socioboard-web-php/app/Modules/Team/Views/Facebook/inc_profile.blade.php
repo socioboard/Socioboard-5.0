@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="text-center">
-                    <h5>***</h5>
+                    <h5>0</h5>
                     <h6>Followers</h6>
                 </div>
             </div>

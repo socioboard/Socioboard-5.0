@@ -25,9 +25,9 @@
                 </span>
                         <div class="text-center">
                             @if($profileData->profile_pic_url == "")
-                                <img class="rounded-circle avatar_100 mb-2" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="Profile Data"/>
+                                <img class="rounded-circle avatar_100 mb-2" style="height: 100px" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="Profile Data"/>
                             @else
-                                <img class="rounded-circle avatar_100 mb-2" src="{{$profileData->profile_pic_url}}" alt="Profile Data"/>
+                                <img class="rounded-circle avatar_100 mb-2" style="height: 100px" src="{{$profileData->profile_pic_url}}" alt="Profile Data"/>
                             @endif
                             <h5 class="card-title no-space">{{$profileData->first_name}}</h5>
                             <p class="card-text"> </p>
@@ -89,7 +89,9 @@
         var  chart = [];
         getInstagramInsight(fbId,filterPeriod,-1,-1);
 
-
+        var dd = String(firstDate.getDate()).padStart(2, '0');
+        var mm = String(firstDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = firstDate.getFullYear();
 
 
         function  getInstagramInsight(accountId, filterPeriod, since, until){
@@ -135,8 +137,9 @@
                         $('#accountInactive').text(response.message).css('display','block');
                         $('#fb_pages').css('display','none');
                     }else{
+
                         chartData.push({
-                            date: '07-06-2019',
+                            date: yyyy+"-"+mm+"-"+dd,
                             follower:  0,
                             views: 0,
                             impressions: 0
@@ -269,13 +272,13 @@
                                 filterPeriod=6;
                                 break;
                             case "Custom Range":
-                                filterPeriod=6;
+                                filterPeriod=7;
                                 break;
                             default :
                                 filterPeriod=1;
                                 break;
                         }
-                        getInstagramInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
+                        getInstagramInsight(fbId,filterPeriod,start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD'));
                         $('.daterangepicker').css('display','none');
                     }, 100);
 
