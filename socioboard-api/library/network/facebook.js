@@ -758,9 +758,14 @@ Facebook.prototype.publishPost = function (postDetails, accessToken) {
                             for (let index = 0; index < mediaIds.length; index++) {
                                 attachmentDetails.push(`{"media_fbid":"${mediaIds[index]}"}`);
                             }
+                            let message = null;
+                            if (postDetails.link && postDetails.link != "")
+                                message = `${postDetails.message} \r\n Link: ${postDetails.link}`;
+                            else
+                                message = `${postDetails.message}`
                             // Setting up the parameteres - message and uploaded images information
                             let fbPostData = {
-                                'message': postDetails.message,
+                                'message': message,
                                 'attached_media': attachmentDetails,
                             };
 
@@ -896,7 +901,7 @@ Facebook.prototype.commentFacebookPost = function (pageId, postId, comment, acce
 
 Facebook.prototype.fbPageInsights = function (accessToken, socialId, since, untill, dataPreset) {
     var url = '';
-    if (since && untill) {
+    if (since && untill && since != -1 || untill != -1) {
         url = `https://graph.facebook.com/${fbversion}/me/insights?pretty=0&metric=page_fan_adds%2Cpage_fan_removes%2Cpage_impressions%2Cpage_impressions_unique%2Cpage_impressions_by_story_type%2Cpage_impressions_organic%2Cpage_impressions_viral%2Cpage_impressions_paid%2Cpage_impressions_by_age_gender_unique%2Cpage_content_activity%2Cpage_content_activity_by_action_type%2Cpage_content_activity_by_age_gender_unique&since=${since}&until=${untill}&access_token=${accessToken}`;
     }
     else if (dataPreset) {
@@ -959,8 +964,8 @@ Facebook.prototype.getFbProfileStats = function (accessToken) {
                     // Formating the body data to fetch necessary data
                     var parsedData = JSON.parse(body);
                     var updateDetail = {
-                        friendship_count: parsedData.friends.summary.total_count,
-                        page_count: 0 || parsedData.accounts.summary.total_count,
+                        friendship_count: parsedData.friends ? parsedData.friends.summary.total_count : 0,
+                        page_count: parsedData.accounts ? parsedData.accounts.summary.total_count : 0,
                         //group_count: parsedData.TotalGroups, // not getting summary data                    
                         profile_picture: `https://graph.facebook.com/${parsedData.id}/picture?type=large`
                     };

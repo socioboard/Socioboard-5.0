@@ -14,7 +14,7 @@ var notificationInfo = new Schema({
     initiatorName: { type: String, index: true }, // who did the activity
     profileType: { type: String }, // Social Profile Name
     status: { type: String }, // notification status
-
+    isRead: { type: Boolean, default: false },
     targetUserIds: { type: [Number], index: true },
     targetTeamIds: { type: [Number], index: true }
 });
@@ -50,13 +50,46 @@ notificationInfo.methods.getNotificationsDetails = function (id, teamId, userId,
         });
 };
 
-notificationInfo.methods.updateNotificationStatus = function (id, status) {
-
+notificationInfo.methods.updateNotificationStatus = function (id) {
     // Updating a particular notification status
-    var query = { _id: ObjectId(String(id)) };
-    var update = { $set: { isRead: status } }
     return this.model('Notifications')
-        .findOneAndUpdate(query, update)
+        .findOneAndUpdate({ _id: id }, { $set: { isRead: true } })
+        .then((result) => {
+            return result;
+        })
+        .catch(function (error) {
+            logger.info(error);
+        });
+}
+
+notificationInfo.methods.deleteParticularNotification = function (id) {
+    // Delete a particular Notification
+    return this.model('Notifications')
+        .deleteOne({ _id: id })
+        .then((result) => {
+            return result;
+        })
+        .catch(function (error) {
+            logger.info(error);
+        });
+}
+
+notificationInfo.methods.clearAllUserNotifications = function (userId) {
+    // Clear All user notifications
+    return this.model('Notifications')
+        .deleteMany({ targetUserIds: userId })
+        .then((result) => {
+            return result;
+        })
+        .catch(function (error) {
+            logger.info(error);
+        });
+}
+
+notificationInfo.methods.markAllUserNotificationsAsRead = function (userId) {
+    // Mark All user notifications as Read
+    return this.model('Notifications')
+        .updateMany({ targetUserIds: userId }, { $set: { isRead: true } })
         .then((result) => {
             return result;
         })
