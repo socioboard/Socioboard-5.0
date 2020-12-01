@@ -25,11 +25,45 @@ class NotifyController {
                 res.status(200).json({ code: 400, status: 'success', error: error.message });
             });
     }
-    
+
     updateNotificationStatus(req, res) {
-        notifyModel.updateNotificationStatus(req.query.mongoId, rea.query.status)
-            .then((response) => {
-                res.status(200).json({ code: 200, status: 'success', notifications: response });
+        var notifyModel = new NotificationModel();
+        notifyModel.updateNotificationStatus(req.query.mongoId)
+            .then(() => {
+                res.status(200).json({ code: 200, status: 'success', message: "Successfully updated as Read." });
+            })
+            .catch((error) => {
+                res.status(200).json({ code: 400, status: 'success', error: error.message });
+            });
+    }
+
+    markAllUserNotificationsAsRead(req, res) {
+        var notifyModel = new NotificationModel();
+        notifyModel.markAllUserNotificationsAsRead(req.query.userId)
+            .then(() => {
+                res.status(200).json({ code: 200, status: 'success', message: "Successfully marked all User Notifications as Read." });
+            })
+            .catch((error) => {
+                res.status(200).json({ code: 400, status: 'success', error: error.message });
+            });
+    }
+
+    deleteParticularNotification(req, res) {
+        var notifyModel = new NotificationModel();
+        notifyModel.deleteParticularNotification(req.query.mongoId)
+            .then(() => {
+                res.status(200).json({ code: 200, status: 'success', message: "Deleted successfully." });
+            })
+            .catch((error) => {
+                res.status(200).json({ code: 400, status: 'success', error: error.message });
+            });
+    }
+
+    clearAllUserNotifications(req, res) {
+        var notifyModel = new NotificationModel();
+        notifyModel.clearAllUserNotifications(req.query.userId)
+            .then(() => {
+                res.status(200).json({ code: 200, status: 'success', message: "Successfully deleted all User Notifications." });
             })
             .catch((error) => {
                 res.status(200).json({ code: 400, status: 'success', error: error.message });
