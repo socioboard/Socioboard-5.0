@@ -406,11 +406,13 @@
         $(function () {
             // schedule_post normal
             $('#schedule_normal_post').datetimepicker({
-                minDate:moment()
+                minDate:moment(),
+                format: 'YYYY/MM/DD - H:mm'
             });
             // day wise schedule post
             $('#day_schedule_post').datetimepicker({
-                minDate:moment()
+                minDate:moment(),
+                format: 'YYYY/MM/DD - H:mm'
             });
         });
 
@@ -529,8 +531,9 @@
                     }
                     // return array of file name
                 }
+                console.log("bfe---->",names);
             });
-
+            images = [];
             $('body').on('click', '.remove-pic', function () {
                 $(this).parent().parent().parent().remove();
                 var removeItem = $(this).attr('data-id');
@@ -540,6 +543,7 @@
                 }
                 // return array of file name
                 $('#option_upload').css("display", "block");
+                images = names;
 
             });
             $('#hint_brand').on('hide', function (e) {
@@ -581,6 +585,7 @@
             formData.append('selectedBoards',selectedBoards);
             formData.append('draftToSchedule', 0);
             formData.append('scheduleStatus', scheduleType);
+            // formData.append('med',images);
 
 
 
@@ -634,7 +639,13 @@
                         $("#hint_brand").css("display","none");
                         $("#option_upload").css("display","block");
                         window.location.href = "{{env('APP_URL')}}post_history";
-                    }else if(response.code == 500){
+                    }else if(response.code == 405) {
+                        swal({text: response.message,
+                            icon: "error",
+                            buttons: true,
+                            dangerMode: true});
+                    }
+                    else if(response.code == 500){
                         swal("Something went wrong... Please try again after sometime");
                         document.getElementById("scheduleForm").reset();
                         $(".emojionearea-editor").text("");

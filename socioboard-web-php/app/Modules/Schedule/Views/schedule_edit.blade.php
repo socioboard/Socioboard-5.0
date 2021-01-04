@@ -617,11 +617,13 @@
         $(function () {
             // schedule_post normal
             $('#schedule_normal_post').datetimepicker({
-                minDate:moment()
+                minDate:moment(),
+                autoclose: true
             });
             // day wise schedule post
             $('#day_schedule_post').datetimepicker({
-                minDate:moment()
+                minDate:moment(),
+                autoclose: true
             });
         });
 

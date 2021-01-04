@@ -530,7 +530,7 @@ class TeamController {
     }
 
     unlockProfiles(req, res) {
-        return teamLibs.unlockProfiles(req.body.userScopeId, req.body, req.body.userScopeMaxAccountCount)
+        return teamLibs.unlockProfiles(req.body.userScopeId, req.body, req.body.userScopeMaxAccountCount, req.body.userScopeAvailableNetworks)
             .then((response) => {
                 analyticsServices.registerEvents({
                     category: req.body.userScopeEmail,

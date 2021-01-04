@@ -15,7 +15,7 @@
                 <div class="text-center">
 {{--                    <h5>{{ (integer)@$userProfile->friendship_counts }}</h5>--}}
                     <h5>{{ (integer)@$userProfile->friendship_counts }}</h5>  {{-- Aishwarya --}}
-                    <h6>Follower</h6>
+                    <h6>Followers</h6>
                 </div>
             </div>
 

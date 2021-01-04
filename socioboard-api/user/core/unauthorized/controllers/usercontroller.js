@@ -133,7 +133,7 @@ class UserControllers {
     socialLogin(req, res) {
         var redirectUrl = '';
         if (req.query.network === "facebook") {
-            redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('facebook_api.redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.login_scopes')}`;
+            redirectUrl = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(config.get('facebook_api.redirect_url'))}&client_id=${config.get('facebook_api.app_id')}&scope=${config.get('facebook_api.profile_scopes')}`;
             res.status(200).json({ code: 200, status: "success", message: "Navigated to facebook.", navigateUrl: redirectUrl });
         }
         else if (req.query.network === "google") {

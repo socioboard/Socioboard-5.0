@@ -44,11 +44,11 @@
                 <!-- post input box -->
                     <div class="form-group">
                                 <textarea name="message" class="form-control border border-light" id="normal_post_area" rows="3"
-                                          placeholder="Write something !" ></textarea>
-
+                                          placeholder="Write something !" ></textarea></div>
+                        <div class="form-group"><input type="text" class="form-control border border-light" name="rsslink" id="link"></div>
 
                         <p id="messageError" style="color: red" ></p>
-                    </div>
+
                     <!-- image and video upload -->
                     <div class="row">
                         <div class="col-12" id="option_upload" style="display: none">
@@ -474,7 +474,8 @@
                             </div>
                         </div>
                     </div>
-                    <input style="display: none" id="link" name="rsslink"  />
+
+{{--                    <input style="display: none" id="link" name="rsslink"  />--}}
                     <div class="float-right">
                         {{--<button type="button" onclick="post(0)" class="btn btn-secondary"><i id="draftspinstyle" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="draftspin">Draft</span></button>--}}
                         <button type="button" onclick="post(1)" class="btn btn-primary remember"><i id="test" class="fa fa-spinner fa-spin" style="display: none"></i> <span id="testText">Post</span></button>
