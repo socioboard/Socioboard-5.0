@@ -375,6 +375,7 @@ class Helper
     public function apiCallGetFeeds($route)
     {
         $api_url = $this->API_URL_FEEDS . $route;
+
         $result = [];
         $response = null;
         try {
@@ -402,7 +403,7 @@ class Helper
                 'headers' => ['x-access-token' => $this->token],
             ]);
             $responseBody = json_decode($response->getBody()->getContents());
-            return $responseBody;
+            return ($responseBody);
 
 
         } catch (\Exception $e) {

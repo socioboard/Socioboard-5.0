@@ -13,6 +13,7 @@ class MailBase {
      *  @param {string} data.toMail - To whom need to send the email
      *  @param {string} data.subject - Subject of the mail
      *  @param {string} data.htmlContent - Use any one of above template
+     *  @API {reference}  "https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html"
      */
     sendEmailBySendGridApi(data) {
         return new Promise((resolve, reject) => {

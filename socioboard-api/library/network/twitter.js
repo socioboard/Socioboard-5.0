@@ -49,7 +49,7 @@ Twitter.prototype.addTwitterProfile = function (network, teamId, requestToken, r
                         LastName: userDetails.last_name ? userDetails.last_name : '',
                         Email: userDetails.email ? userDetails.email : '',
                         SocialId: userDetails.id,
-                        ProfilePicture: userDetails.profile_image_url_https,
+                        ProfilePicture: (userDetails.profile_image_url_https).replace('_normal', ''),
                         ProfileUrl: `https://twitter.com/intent/user?user_id=${userDetails.id}`,
                         AccessToken: twitterAccessToken.accessToken,
                         // For Twitter Refresh token is an accessSecret
@@ -687,9 +687,14 @@ Twitter.prototype.publishTweets = function (postDetails, accessToken, accessToke
                         });
                 }))
                     .then(() => {
+                        let message = null;
+                        if (postDetails.link && postDetails.link != "")
+                            message = `${postDetails.message} \r\n Link: ${postDetails.link}`;
+                        else
+                            message = `${postDetails.message}`
                         var status = {
                             // status: postDetails.message,
-                            status: `${postDetails.message}  \r\n Link: ${postDetails.link}`,
+                            status: message,
                             media_ids: mediaIds
                         };
                         return twitterClient.post('statuses/update', status, function (error, tweet, response) {
@@ -996,7 +1001,7 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
             media_id: mediaId,
             media: mediaData,
             segment_index: 0
-        }).then(data => mediaId);
+        }).then(data => mediaId).catch((error) => { logger.info(`${error}, Eror in video appendUpload`); });
 
     }
 
@@ -1011,7 +1016,7 @@ function uploadMedia(twitterClient, mediaPath, mediaType, callback) {
         return makePost('media/upload', {
             command: 'FINALIZE',
             media_id: mediaId
-        }).then(data => mediaId);
+        }).then(data => mediaId).catch((error) => { logger.info(`${error}, Eror in video finalizeUpload`); });
 
     }
 

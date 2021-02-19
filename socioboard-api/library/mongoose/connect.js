@@ -15,9 +15,9 @@ function MongoConnect() {
 MongoConnect.prototype.initialize = function () {
     return new Promise((resolve, reject) => {
         if (this.mongoConfiguration.username != '' && this.mongoConfiguration.password != '') {
-            mongoose.connect(`mongodb://${this.mongoConfiguration.username}:${this.mongoConfiguration.password}@${this.mongoConfiguration.host}/${this.mongoConfiguration.db_name}`, { useNewUrlParser: true, useFindAndModify: false });
+            mongoose.connect(`mongodb://${this.mongoConfiguration.username}:${this.mongoConfiguration.password}@${this.mongoConfiguration.host}/${this.mongoConfiguration.db_name}`, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true });
         } else {
-            mongoose.connect(`mongodb://${this.mongoConfiguration.host}/${this.mongoConfiguration.db_name}`, { useFindAndModify: false, useNewUrlParser: true });
+            mongoose.connect(`mongodb://${this.mongoConfiguration.host}/${this.mongoConfiguration.db_name}`, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true });
         }
         var db = mongoose.connection;
 

@@ -1,8 +1,5 @@
 {
-    "mysql":{
-        "password":"MYSQL_PASSWORD"
+    "mysql": {
+        "password": "MYSQL_PASSWORD"
     }
-   
-    
-    
 }

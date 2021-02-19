@@ -2,7 +2,7 @@
     "user_socioboard": {
         "host_url": "http://localhost:3000"
     },
-    "notification_socioboard":{
+    "notification_socioboard": {
         "host_url": "http://localhost:3003"
     },
     "publisher_socioboard": {
@@ -20,9 +20,15 @@
         "video_path": "../../media/videos",
         "thumbnail_path": "../../media/thumbnails",
         "library_path": "public/library",
-        "assert" : "public/asserts/play.png",
+        "assert": "public/asserts/play.png",
         "max_size": 20951670,
-        "basePath":"../../media"
+        "basePath": "../../media"
+    },
+    "mysql": {
+        "host": "localhost",
+        "username": "<<mysql User name>>",
+        "database": "<<db name>>",
+        "password": "<<mysql Password>>"
     },
     "mongo": {
         "username": "<<Mongo User name>>",
@@ -50,8 +56,8 @@
         "redirect_url": "http://localhost:3000/v1/auth/google/callback",
         "google_profile_add_redirect_url": "http://localhost:3000/v1/team/addSocialProfile",
         "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
-        "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
-        "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+        "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl",
+        "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
         "ganalytics_activeuser_metrics": "rt:activeUsers",
         "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
         "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",

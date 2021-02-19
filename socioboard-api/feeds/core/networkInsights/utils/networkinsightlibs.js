@@ -51,6 +51,8 @@ class NetworkInsightLibs {
                                     if (!since || !untill) throw new Error('Invalid Inputs');
                                     else {
                                         if (since <= untill) {
+                                            since = moment(since).subtract(1, "day").format('YYYY-MM-DD');
+                                            untill = moment(untill).add(1, "day").format('YYYY-MM-DD');
                                             break;
                                         }
                                         else throw new Error('Check range values. since should be lesserthan or equals to until');
@@ -245,6 +247,7 @@ class NetworkInsightLibs {
                             case 7:
                                 if (filterPeriod == 7) {
                                     if (!since || !untill) throw new Error('Invalid Inputs');
+                                    else if (moment(since).add(1, "month") < moment(untill)) since = '', untill = ''
                                     else {
                                         since = moment(since, 'YYYY-MM-DD').format('X');
                                         untill = moment(untill, 'YYYY-MM-DD').add(1, 'days').format('X');
@@ -255,7 +258,7 @@ class NetworkInsightLibs {
                                 throw new Error("please choose valid filter type");
                         }
 
-                        if (!since && !unitll) {
+                        if (!since && !untill) {
                             throw new Error("There cannot be more than 30 days between since and until. Rather use custom range options with maximum 30 days difference.");
                         } else if (since <= untill) {
                             since = Math.floor(Number(since));

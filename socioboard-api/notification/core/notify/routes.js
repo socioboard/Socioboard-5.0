@@ -167,38 +167,117 @@ module.exports = (io) => {
       */
     routes.get('/getTeamNotification', notificationControllers.getTeamsNotifications);
 
-    //        /**
-    //  * @swagger
-    //  * /v1/notify/updateNotificationStatus:
-    //  *   put:
-    //  *     operationId: secured_notify_updateNotificationStatus
-    //  *     summary: Secured
-    //  *     security:
-    //  *     - AccessToken: []
-    //  *     tags:
-    //  *       - Notify
-    //  *     description: To update notification status
-    //  *     produces:
-    //  *       - application/json
-    //  *     parameters:
-    //  *       - in: query
-    //  *         description: status
-    //  *         name: status
-    //  *         type: integer
-    //  *       - in: query
-    //  *         description: mongoId
-    //  *         name: mongoId
-    //  *         type: string
-    //  *     responses:
-    //  *       200:
-    //  *         description: Return success!
-    //  *       404: 
-    //  *         description: Return Not Found or ErrorMessage
-    //  *       401:
-    //  *         $ref: "#/responses/unauthorizedError"
-    //  */
-    // routes.put('/updateNotificationStatus', notificationControllers.updateNotificationStatus);
+    /**
+     * @swagger
+     * /v1/notify/updateNotificationStatus:
+     *   put:
+     *     operationId: secured_notify_updateNotificationStatus
+     *     summary: Secured
+     *     security:
+     *     - AccessToken: []
+     *     tags:
+     *       - Notify
+     *     description: To update notification status
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: query
+     *         description: mongoId
+     *         name: mongoId
+     *         type: string
+     *     responses:
+     *       200:
+     *         description: Return success!
+     *       404: 
+     *         description: Return Not Found or ErrorMessage
+     *       401:
+     *         $ref: "#/responses/unauthorizedError"
+     */
+    routes.put('/updateNotificationStatus', notificationControllers.updateNotificationStatus);
 
+    /**
+     * @swagger
+     * /v1/notify/markAllUserNotificationsAsRead:
+     *   put:
+     *     operationId: secured_notify_markAllUserNotificationsAsRead
+     *     summary: Secured
+     *     security:
+     *     - AccessToken: []
+     *     tags:
+     *       - Notify
+     *     description: To mark All User Notifications as Read
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: query
+     *         description: userId
+     *         name: userId
+     *         type: number
+     *     responses:
+     *       200:
+     *         description: Return success!
+     *       404: 
+     *         description: Return Not Found or ErrorMessage
+     *       401:
+     *         $ref: "#/responses/unauthorizedError"
+     */
+    routes.put('/markAllUserNotificationsAsRead', notificationControllers.markAllUserNotificationsAsRead);
+
+    /**
+     * @swagger
+     * /v1/notify/deleteParticularNotification:
+     *   delete:
+     *     operationId: secured_notify_deleteParticularNotification
+     *     summary: Secured (This should execute to user Notifications only)
+     *     security:
+     *     - AccessToken: []
+     *     tags:
+     *       - Notify
+     *     description: To delete Particular Notification
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: query
+     *         description: mongoId
+     *         name: mongoId
+     *         type: string
+     *     responses:
+     *       200:
+     *         description: Return success!
+     *       404: 
+     *         description: Return Not Found or ErrorMessage
+     *       401:
+     *         $ref: "#/responses/unauthorizedError"
+     */
+    routes.delete('/deleteParticularNotification', notificationControllers.deleteParticularNotification);
+
+    /**
+     * @swagger
+     * /v1/notify/clearAllUserNotifications:
+     *   delete:
+     *     operationId: secured_notify_clearAllUserNotifications
+     *     summary: Secured
+     *     security:
+     *     - AccessToken: []
+     *     tags:
+     *       - Notify
+     *     description: To clear All User Notifications
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: query
+     *         description: userId
+     *         name: userId
+     *         type: number
+     *     responses:
+     *       200:
+     *         description: Return success!
+     *       404: 
+     *         description: Return Not Found or ErrorMessage
+     *       401:
+     *         $ref: "#/responses/unauthorizedError"
+     */
+    routes.delete('/clearAllUserNotifications', notificationControllers.clearAllUserNotifications);
 
     return routes;
 };

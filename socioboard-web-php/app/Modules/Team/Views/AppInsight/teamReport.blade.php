@@ -113,7 +113,7 @@
                     <div class="card-body">
                         <div>
                             <h5>No. Of Posts published</h5>
-                            <h2>0</h2>
+                            <h2 id="post-count"></h2>
                         </div>
                     </div>
                 </div>
@@ -282,6 +282,11 @@
 
     function getTeamInsights(team, filter, since, until){
 
+        document.getElementById("team-member-count").innerHTML = "";
+        document.getElementById("inv-count").innerHTML = "";
+        document.getElementById("profile-count").innerHTML = "";
+        document.getElementById("post-count").innerHTML = "";
+
         // chartDataPush
         var chartData = [];
         var instaChartData = [];
@@ -345,6 +350,7 @@
                         document.getElementById("team-member-count").innerHTML = response.teamMemberStats.invitedList;
                         document.getElementById("inv-count").innerHTML = response.teamMemberStats.socialProfilesCount;
                         document.getElementById("profile-count").innerHTML = response.teamMemberStats.teamMembersCount;
+                        document.getElementById("post-count").innerHTML = response.teamMemberStats.publishCount;
 
                         am4core.useTheme(am4themes_animated);
                         // Increase contrast by taking evey second color

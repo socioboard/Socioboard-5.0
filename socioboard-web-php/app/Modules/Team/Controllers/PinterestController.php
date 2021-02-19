@@ -123,10 +123,10 @@ class PinterestController extends Controller
         ];
 
         try {
-//            $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
-            $response = Cache::remember('response_pinterest_' . $account_id . '_' . $board_id, 3600, function () use ($params) {
-                return $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
-            });
+            $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
+//            $response = Cache::remember('response_pinterest_' . $account_id . '_' . $board_id, 3600, function () use ($params) {
+//                return $response = Helper::getInstance()->apiCallPostFeeds(null, "feeds/getPinterestPins?" . http_build_query($params), null, "GET");
+//            });
 
             if ($response->statusCode == 200 && $response->data->code == 200 && $response->data->status == "success") {
                 if (!empty($response->data->pins->message)) {
@@ -134,10 +134,7 @@ class PinterestController extends Controller
                 } else {
                     return $response->data->pins->data;
                 }
-            } else {
-                return 'Problem with response data, code=' . $response->data->code. 'Message::'.$response->data->message;
-            }
-
+            } else return $response->data->message;
         } catch (\Exception $e) {
             return TeamController::showErrorPage($e);
         }

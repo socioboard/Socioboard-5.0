@@ -54,7 +54,7 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/"><strong><i class="fas fa-yin-yang"></i> <span class="text-orange-dark">Socio</span><span
+        <a class="navbar-brand" href="/"><strong><i></i> <span class="text-orange-dark">Socio</span><span
                         class="text-orange-light">Board</span></strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -223,6 +223,23 @@
 <!-- facebook like and share code -->
 <div id="fb-root"></div>
 <script>
+
+    //password-toggle
+    $(".show-pwd").on('click',function() {
+        // $(this).toggleClass('fa-eye fa-eye-slash ');
+        var $pwd = $("#passwd");
+        if ($pwd.attr('type') === 'password') $pwd.attr('type', 'text');
+        else $pwd.attr('type', 'password');
+    });
+
+    $(".show-cpwd").on('click',function() {
+        // $(this).toggleClass('fa-eye fa-eye-slash ');
+        var $pwd = $("#c_passwd");
+        if ($pwd.attr('type') === 'password') $pwd.attr('type', 'text');
+        else $pwd.attr('type', 'password');
+    });
+
+
     (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) return;

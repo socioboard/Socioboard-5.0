@@ -96,6 +96,9 @@ class TeamController extends Controller
 
     public function clearAddSession(){
         if(session()->has('youtubeChannels')) Session::forget('youtubeChannels');
+        if(session()->has('facebookPage')) Session::forget('facebookPage');
+        if(session()->has('InstaBusiness')) Session::forget('InstaBusiness');
+        return ;
     }
 
     public function viewTeam($id)

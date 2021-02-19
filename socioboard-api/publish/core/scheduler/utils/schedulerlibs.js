@@ -27,7 +27,7 @@ class ScheduleLibs extends ScheduleBase {
             return scheduleDetails.count({
                 where: {
                     [Operator.and]: [{
-                        schedule_status: 0
+                        schedule_status: 1
                     }, {
                         user_id: userId
                     }]

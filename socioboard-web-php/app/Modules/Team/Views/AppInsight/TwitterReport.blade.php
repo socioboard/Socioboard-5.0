@@ -25,23 +25,26 @@
                 </span>
                         <div class="text-center">
                             <img
-                                    class="rounded-circle"
-                                    src="{{$profileData->profile_pic_url}}"
-                                    alt="No profile"
-                                    />
-                            <h5 class="card-title no-space">{{$profileData->first_name}}</h5>
-                            <p class="card-text"> </p>
+                                class="rounded-circle"
+                                src="{{$profileData->profile_pic_url}}"
+                                alt="No profile" style="width: 100px"
+                            />
+                            <h5 class=" card-title no-space">{{$profileData->first_name}}</h5>
+                            <p class="card-text"></p>
                         </div>
-                        <div class="row text-center mt-1"><div class="col-md-6"> <h5>
+                        <div class="row text-center mt-1">
+                            <div class="col-md-6"><h5>
                                     {{$profileData->friendship_counts}}
-                                </h5></div> <div class="col-md-6">
+                                </h5></div>
+                            <div class="col-md-6">
                                 <h5>Friends</h5>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer bg-transparent">
                         {{--Redirect once feeds is done--}}
-                        <a href="{{env('APP_URL')}}view-twitter-feeds/{{$profileData->account_id}}" class="btn btn-outline-dark col-md-12 margin-top-10">View Feeds</a>
+                        <a href="{{env('APP_URL')}}view-twitter-feeds/{{$profileData->account_id}}"
+                           class="btn btn-outline-dark col-md-12 margin-top-10">View Feeds</a>
                     </div>
                 </div>
             </div>
@@ -78,80 +81,78 @@
             </div>
         </div>
     </div>
-    @endsection
+@endsection
 
-    @section('script')
-            <!-- facebook pages stats -->
+@section('script')
+    <!-- facebook pages stats -->
     <script>
 
-        var count =0;
-        var fbId = document.getElementById('accountidFetch').value ;
+        var count = 0;
+        var fbId = document.getElementById('accountidFetch').value;
         var firstDate = new Date();
         var chartData = [];
         var filterPeriod = 1;
-        var  chart = [];
-        getFacebookInsight(fbId,filterPeriod,-1,-1);
+        var chart = [];
+        getFacebookInsight(fbId, filterPeriod, -1, -1);
 
 
-
-
-        function  getFacebookInsight(accountId, filterPeriod, since, until){
+        function getFacebookInsight(accountId, filterPeriod, since, until) {
             var nowDate = new Date();
-            var Thisdate = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
+            var Thisdate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
             $.ajax({
                 type: "POST",
                 url: "/get-twitter-insight",
-                data:{
+                data: {
                     accountId: accountId,
                     filterPeriod: filterPeriod,
                     since: since,
                     until: until
                 },
-                beforeSend: function(){
-                    chartData =[];
+                beforeSend: function () {
+                    chartData = [];
                     chart = am4core.create("fb_pages", am4charts.XYChart);
                 },
                 cache: false,
-                success: function(response){
+                success: function (response) {
 
                     // Add data
-                    if(response.code == 200){
+                    if (response.code == 200) {
                         am4core.useTheme(am4themes_animated);
                         // Increase contrast by taking evey second color
                         chart.colors.step = 2;
-                        if(response.data.length != 0){
-                            $.each(response.data, function(key,value){
+                        if (response.data.length != 0) {
+                            $.each(response.data, function (key, value) {
                                 chartData.push({
                                     date: value.date,
-                                    follower:  value.followerCount,
+                                    follower: value.followerCount,
                                     following: value.followingCount,
                                     posts: value.postsCount
                                 });
                             });
-                        }else{
+                        } else {
                             chartData.push({
                                 date: Thisdate,
-                                follower:  0,
+                                follower: 0,
                                 following: 0,
                                 posts: 0
                             });
                         }
 
-                    }else if(response.code == 400){
+                    } else if (response.code == 400) {
                         swal(response.message);
-                    }else if(response.code == 400){
-                        $('#accountInactive').text(response.message).css('display','block');
-                        $('#fb_pages').css('display','none');
-                    }else{
+                    } else if (response.code == 400) {
+                        $('#accountInactive').text(response.message).css('display', 'block');
+                        $('#fb_pages').css('display', 'none');
+                    } else {
                         chartData.push({
                             date: Thisdate,
-                            follower:  0,
+                            follower: 0,
                             following: 0,
                             posts: 0
                         });
                     }
 
-                    chart.data =  chartData;
+                    chart.data = chartData;
                     // Create axes
                     var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
                     dateAxis.renderer.minGridDistance = 50;
@@ -174,30 +175,30 @@
                     console.log(error);
 
                     chartData.push({
-                            date: Thisdate,
-                            follower:  0,
-                            following: 0,
-                            posts: 0
-                        });
+                        date: Thisdate,
+                        follower: 0,
+                        following: 0,
+                        posts: 0
+                    });
 
 
-        chart.data =  chartData;
+                    chart.data = chartData;
 
-        // Create axes
-        var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
-        dateAxis.renderer.minGridDistance = 50;
+                    // Create axes
+                    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                    dateAxis.renderer.minGridDistance = 50;
 
-        // Create series
-
-
-        createAxisAndSeries("follower", "Follower", false, "circle");
-        createAxisAndSeries("following", "Following", true, "triangle");
-        createAxisAndSeries("posts", "Posts", true, "rectangle");
-
-        chart.legend = new am4charts.Legend();
+                    // Create series
 
 
-        chart.cursor = new am4charts.XYCursor();
+                    createAxisAndSeries("follower", "Follower", false, "circle");
+                    createAxisAndSeries("following", "Following", true, "triangle");
+                    createAxisAndSeries("posts", "Posts", true, "rectangle");
+
+                    chart.legend = new am4charts.Legend();
+
+
+                    chart.cursor = new am4charts.XYCursor();
                 }
             });
         }
@@ -224,7 +225,7 @@
 //            range.contents.fill = range.contents.stroke;
             var interfaceColors = new am4core.InterfaceColorSet();
 
-            switch(bullet) {
+            switch (bullet) {
                 case "triangle":
                     var bullet = series.bullets.push(new am4charts.Bullet());
                     bullet.width = 12;
@@ -266,6 +267,7 @@
             valueAxis.renderer.opposite = opposite;
             valueAxis.renderer.grid.template.disabled = true;
         }
+
         $(function () {
 
 //            var start = moment().subtract(29, 'days');
@@ -275,37 +277,38 @@
             function cb(start, end) {
 
                 $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                if(count>0){
-                    setTimeout(function(){ $('#reportrange').click()
+                if (count > 0) {
+                    setTimeout(function () {
+                        $('#reportrange').click()
                         var filterTpe = $($('.ranges>ul').find('.active')).attr('data-range-key');
-                        switch(filterTpe){
+                        switch (filterTpe) {
                             case "Today":
-                                filterPeriod=1;
+                                filterPeriod = 1;
                                 break;
                             case "Yesterday":
-                                filterPeriod=2;
+                                filterPeriod = 2;
                                 break;
                             case "Last Week":
-                                filterPeriod=3;
+                                filterPeriod = 3;
                                 break;
                             case "Last 30 Days":
-                                filterPeriod=4;
+                                filterPeriod = 4;
                                 break;
                             case "This Month":
-                                filterPeriod=5;
+                                filterPeriod = 5;
                                 break;
                             case "Last Month":
-                                filterPeriod=6;
+                                filterPeriod = 6;
                                 break;
                             case "Custom Range":
-                                filterPeriod=7;
+                                filterPeriod = 7;
                                 break;
                             default :
-                                filterPeriod=1;
+                                filterPeriod = 1;
                                 break;
                         }
-                        getFacebookInsight(fbId,filterPeriod,start.format('MMMM D, YYYY'),end.format('MMMM D, YYYY'));
-                        $('.daterangepicker').css('display','none');
+                        getFacebookInsight(fbId, filterPeriod, start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+                        $('.daterangepicker').css('display', 'none');
                     }, 100);
 
 //                    if()
@@ -333,8 +336,6 @@
 
 
             cb(start, end);
-
-
 
 
         });

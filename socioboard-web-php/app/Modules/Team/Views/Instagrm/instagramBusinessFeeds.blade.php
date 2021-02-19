@@ -50,9 +50,9 @@ $teamId =Session::get('currentTeam')['team_id'];
                 </span>
                         <div class="text-center">
                             @if($profileData->profile_pic_url == "")
-                                <img class="rounded-circle avatar_100 mb-2" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="Profile Data"/>
+                                <img class="rounded-circle card-avatar" src="{{env('APP_URL')}}assets/imgs/user-avatar.png" alt="Profile Data"/>
                                 @else
-                                <img class="rounded-circle avatar_100 mb-2" src="{{$profileData->profile_pic_url}}" alt="Profile Data"/>
+                                <img class="rounded-circle card-avatar  " src="{{$profileData->profile_pic_url}}" alt="Profile Data"/>
                                 @endif
 
                             <h5 class="card-title no-space">{{$profileData->first_name}}</h5>

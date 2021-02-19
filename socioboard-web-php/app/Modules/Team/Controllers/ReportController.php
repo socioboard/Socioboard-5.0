@@ -87,7 +87,7 @@ class ReportController extends Controller
             $helper = Helper::getInstance();
             $result = [];
             try{
-                $response = $helper->apiCallGetFeeds("networkinsights/getTeamInsights?teamId=".Session::get('currentTeam')['team_id']."&filterPeriod=".$request->filterPeriod."&since=".$request->since."&untill=".$request->until);
+                $response = $helper->apiCallGetFeeds("networkinsights/getTeamInsights?teamId=".Session::get('currentTeam')['team_id']."&filterPeriod=".$request->filterPeriod."&since=".$request->since."&untill=".$request->untill);
                 if($response->code == 200){
                     $result['code'] = 200;
                     $result['teamMemberStats'] = $response->result->TeamMemberStats;
@@ -118,7 +118,7 @@ class ReportController extends Controller
 
             $dayArray=[];
             $result=[];
-            $response = $helper->apiCallGetFeeds('networkinsights/getFacebookPageInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->untill);
+            $response = $helper->apiCallGetFeeds('networkinsights/getFacebookPageInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->until);
 
             if($response->code == 200 && $response->status == "success"){
 
@@ -263,7 +263,7 @@ class ReportController extends Controller
 
             $dayArray=[];
             $result=[];
-            $response = $helper->apiCallGetFeeds('networkinsights/getYoutubeInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->untill);
+            $response = $helper->apiCallGetFeeds('networkinsights/getYoutubeInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->until);
             $youtubeInsightData =[];
             if($response->code == 200 && $response->status == "success") {
 
@@ -331,7 +331,9 @@ class ReportController extends Controller
             $weekResult=[];
             $result=[];
             $weekArray=[];
-            $response = $helper->apiCallGetFeeds('networkinsights/getInstagramBusinessInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->untill);
+
+            $response = $helper->apiCallGetFeeds('networkinsights/getInstagramBusinessInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->until);
+
             $instaInsightData =[];
             if($response->code == 200 && $response->status == "success") {
                 if(isset($response->result->error)){
@@ -421,7 +423,7 @@ class ReportController extends Controller
         try{
             $team_id = Session::get('currentTeam')['team_id'];
             $helper = Helper::getInstance();
-            $response = $helper->apiCallGetFeeds('networkinsights/getTwitterInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->untill);
+            $response = $helper->apiCallGetFeeds('networkinsights/getTwitterInsights?accountId='.$request->accountId.'&teamId='.$team_id.'&filterPeriod='.$request->filterPeriod.'&since='.$request->since.'&untill='.$request->until);
             if($response->code == 200 && $response->status == "success") {
                 if(isset($response->result->error)){
                     $result['code'] = 500;

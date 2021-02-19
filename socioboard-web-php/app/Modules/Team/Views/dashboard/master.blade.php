@@ -34,6 +34,7 @@ $teamId =Session::get('currentTeam')['team_id'];
 <script>
 
 </script>
+    @include('User::dashboard.incPlanChangeJs')
     @include('User::dashboard.incNotificationJs')
             <!-- Google Analytics -->
     <script>
