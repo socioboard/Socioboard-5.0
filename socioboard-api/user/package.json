@@ -24,7 +24,7 @@
     "express-xml-bodyparser": "^0.3.0",
     "googleapis": "^39.2.0",
     "helmet": "^3.23.3",
-    "html-pdf": "^2.2.0",
+    "html-pdf": "^3.0.1",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "morgan": "^1.10.0",
