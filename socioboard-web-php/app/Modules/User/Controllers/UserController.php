@@ -127,7 +127,7 @@ class UserController extends Controller
                 Log::info("Sign up Exception ".$e->getLine()." => ".$e->getMessage());
                 $res['code'] = 400;
                 $res['error'] = 'Registration failed:(';
-                return $result;
+                return $res;
                 throw new \Exception("Exception " . $e->getMessage());
             }
         }
