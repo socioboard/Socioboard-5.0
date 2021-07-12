@@ -1,0 +1,91 @@
+{
+  "user_socioboard": {
+    "host_url": "http://localhost:1001"
+  },
+  "swagger_host_url": "localhost:1001",
+  "publish_socioboard": {
+    "mail_url": "https://localhost:1001",
+    "host_url": "http://localhost:1001",
+    "port": "1001",
+    "host": "localhost:1001"
+  },
+  "uploadService": {
+    "image_path": "../../media/images",
+    "video_path": "../../media/videos",
+    "thumbnail_path": "../../media/thumbnails",
+    "library_path": "public/library",
+    "assert": "public/asserts/play.png",
+    "max_size": 20951670,
+    "basePath": "../../media"
+  },
+  "profile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+  "facebook_api": {
+    "api_key": "<< APP KEY >>",
+    "app_id": "<< APP ID >>",
+    "secret_key": "<< SECRET KEY >>",
+    "account_kit_version": "v1.1",
+    "account_kit_app_secret": "<< ACCOUNT KIT SECRET >>",
+    "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+    "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+    "profile_scopes": "email",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "4.0.0",
+    "maximum_post_per_day": 730
+  },
+  "google_api": {
+
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secrets": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/google-callback",
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "api_key": "<< APP KEY >>",
+    "dynamic_link": "https://socionode.page.link",
+    "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "github_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secrets": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/github-callback"
+  },
+  "twitter_api": {
+    "api_key": "<< API KEY >>",
+    "secret_key": "<< SECRET KEY >>",
+    "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+    "redirect_url": "https://local.socioboard.com/twitter/callback",
+    "app_name": "<< APP NAME >>",
+    "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+    "webhook_environment": "development",
+    "version": "4.0.0",
+    "maximum_post_per_day": 730
+  },
+  "linkedIn_api": {
+    "client_id": "<< CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/linkedin/callback",
+    "maximum_post_per_day": 100
+  },
+  "instagram": {
+    "client_id": "<< CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://localhost:3000/v1/team/addSocialProfile",
+    "maximum_post_per_day": 100
+  },
+  "pinterest": {
+    "client_id": "<< CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+  },
+  "mongo": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "db_name": "SocioboardNodeV5"
+  },
+  "notifications": {
+    "status": "off"
+  }
+}

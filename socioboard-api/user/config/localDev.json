@@ -1,0 +1,89 @@
+{
+  "user_socioboard": {
+    "mail_url": "https://local.socioboard.com",
+    "host_url": "http://localhost:1000",
+    "port": "1000",
+    "host": "localhost:1000"
+  },
+  "notification_socioboard": {
+    "host_url": "http://localhost:1003"
+  },
+  "authorize": {
+    "secret": "<< RANDOM SECRET >>",
+    "token_secret": "<< RANDOM TOKEN >>",
+    "algorithm": "aes-256-cbc",
+    "encoding_typeOne": "utf8",
+    "encoding_typeTwo": "hex"
+  },
+  "swagger_host_url": "localhost:1000",
+  "TIMEZONE": "",
+  "profile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+  "profile_page_redirect_url": "https://local.socioboard.com/facebook-page/callback",
+  "facebook_api": {
+    "app_id": "730896073595509",
+    "secret_key": "6f5590e64eaa924cb08f6c883f68f7dc",
+    "account_kit_version": "v1.1",
+    "account_kit_app_secret": "66ca353267c06c89367ac5991bf7d9df",
+    "redirect_url": "https://local.socioboard.com/facebook-callback",
+    "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+    "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+    "login_scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
+    "profile_scopes": "email",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "5.0.0"
+  },
+  "google_api": {
+    "client_id": "998343218517-sv4jbq6onmf6bjfkj9h24kcekruvved7.apps.googleusercontent.com",
+    "client_secrets": "WDu5quCbCxJIpBxuACQH3lmn",
+    "redirect_url": "https://local.socioboard.com/google-callback",
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "api_key": "AIzaSyCK3QEaN-zlK3LRFjAp-ZcgcMSWowfghCU",
+    "dynamic_link": "https://socionode.page.link",
+    "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "github_api": {
+    "client_id": "455ab013399f3549424e",
+    "client_secrets": "bb91535142f373e91d9e776487e75cf942eb26ee",
+    "redirect_url": "https://local.socioboard.com/github-callback"
+  },
+  "twitter_api": {
+    "api_key": "bJqiTCKcXDYgl9PNwg5dHSJDC",
+    "secret_key": "3rEpkicZQrIKjIZ4Sv9EqH42EZ4p1tOSO9ug7mMF3XlrLHPxhZ",
+    "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+    "redirect_url": "https://local.socioboard.com/twitter/callback",
+    "app_name": "SocialNodeApi",
+    "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+    "webhook_environment": "development",
+    "version": "5.0.0"
+  },
+  "linkedIn_api": {
+    "client_id": "78in0ddzek7tcp",
+    "client_secret": "ExOKjCgO0C2zICnI",
+    "redirect_url": "https://local.socioboard.com/linkedin/callback"
+  },
+  "instagram_api": {
+    "client_id": "887494448739090",
+    "client_secret": "ae5c8be632bfdcec2adfb809ad099ec4",
+    "redirect_url": "https://local.socioboard.com/insta-callback"
+  },
+  "pinterest": {
+    "client_id": "5045727644799257973",
+    "client_secret": "cdc1a4b7d758d4815df9a80826c719ec02edf2797f7e412f15aa658368d82548",
+    "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+  },
+  "mongo": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "db_name": "SocioboardNodeV5"
+  },
+  "socioboardTwitterhandler": "@board_socio",
+  "aMember": {
+    "key": "<< aMember Key >>",
+    "domain": "https://<< DOMAIN >>/amember/api"
+  }
+}

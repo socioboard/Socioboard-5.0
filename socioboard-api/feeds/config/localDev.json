@@ -1,0 +1,117 @@
+{
+  "feed_socioboard": {
+    "host_url": "http://localhost:1002",
+    "port": "1002",
+    "host": "localhost:1002"
+  },
+  "swagger_host_url": "localhost:1002",
+  "user_socioboard": {
+    "host_url": "http://localhost:1000"
+  },
+  "notification_socioboard": {
+    "host_url": "http://localhost:1003"
+  },
+  "analytics": {
+    "tracking_id": "<< GOOGLE PROJECT TRACK ID >>"
+  },
+  "rssUrl": {
+    "max_history": 5
+  },
+  "authorize": {
+    "secret": "<< RANDOM SECRET >>",
+    "token_secret": "<< RANDOM TOKEN >>",
+    "algorithm": "aes-256-cbc",
+    "encoding_typeOne": "utf8",
+    "encoding_typeTwo": "hex"
+  },
+  "mailService": {
+    "defaultMailOption": "sendgridapi",
+    "sendgrid": {
+      "username": "",
+      "password": "",
+      "frommail": "",
+      "ccmail": "",
+      "apiKey": "<< SEND-GRID TOKEN >>"
+    },
+    "gmailServices": {
+      "email": "",
+      "password": ""
+    }
+  },
+  "mysql": {
+    "host": "localhost",
+    "username": "root",
+    "database": "SocioboardNodeV5",
+    "password": ""
+  },
+  "mongo": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "db_name": "SocioboardNodeV5"
+  },
+  "profile_add_redirect_url": "https://local.socioboardaddSocialProfile",
+  "facebook_api": {
+    "app_id": "<< APP ID >>",
+    "secret_key": "<< APP SECRET >>",
+    "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends,instagram_manage_insights",
+    "account_kit_version": "v1.1",
+    "account_kit_app_secret": "<< ACCOUNT KIT SECRET >>",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "4.0.0",
+    "redirect_url": "https://local.socioboardfacebook-callback",
+    "fbprofile_add_redirect_url": "https://local.socioboardaddSocialProfile",
+    "webhook_token": "<< WEBHOOK TOKEN >>",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "google_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secrets": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/google-callback",
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "api_key": "<< APP KEY >>",
+    "dynamic_link": "https://socionode.page.link",
+    "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "twitter_api": {
+    "api_key": "<< APP KEY >>",
+    "secret_key": "<< CLIENT SECRET >>",
+    "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+    "redirect_url": "https://local.socioboard.com/twitter/callback",
+    "app_name": "<< APP NAME >>",
+    "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+    "webhook_environment": "development",
+    "version": "4.0.0",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "linkedIn_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboardlinkedIn-callback",
+    "app_name": "<< APP NAME >>",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "instagram": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboardinstagram-callback",
+    "webhook_token": "<< APP NAME >>",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "pinterest": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboardpinterest-callback",
+    "scopes": "read_relationships+write_relationships+read_public+write_public",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  }
+}

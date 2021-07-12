@@ -50,10 +50,9 @@ Write about 1-2 paragraphs describing the purpose of your project.
 - It handles all the above listed Notification services
 
 ---
-
 ### How do I get set up?
 
-- Make sure you set the environment varaible for node
+- Make sure you set the environment variable for node ( localDev )
 - Make sure that the port you given in config is free in the service location
 - Make sure you check the code first and then follow the package.json scripts to run the project properly
 

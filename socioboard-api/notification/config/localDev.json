@@ -1,0 +1,21 @@
+{
+  "notification_socioboard": {
+    "host_url": "http://localhost:1003",
+    "port": "1003",
+    "host": "localhost:1003"
+  },
+  "swagger_host_url": "localhost:1003",
+  "user_socioboard": {
+    "host_url": "http://localhost:1000"
+  },
+  "mongo": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "db_name": "SocioboardNodeV5"
+  },
+  "twitter_api": {
+    "api_key": "<< APP KEY >>",
+    "secret_key": "<< CLIENT SECRET >>"
+  }
+}
