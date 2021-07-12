@@ -1,0 +1,15 @@
+{
+  "perPageLimit": 12,
+  "autoReport": {
+    "base_path": "../../media",
+    "autoReport": {
+      "path": "../../media/autoReport"
+    }
+  },
+  "mail_services_environments": [
+    "production",
+    "development",
+    "localDev",
+    "phpdev"
+  ]
+}

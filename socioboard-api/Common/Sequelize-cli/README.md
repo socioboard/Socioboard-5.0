@@ -23,6 +23,15 @@ What things you need to install the software and how to install them.
 Give examples
 ```
 
+---
+### How do I get set up?
+
+- Make sure you set the environment variable for node ( localDev )
+- Next make migrations `npx sequelize-cli db:migrate`
+- Next make seeders run `npx sequelize-cli db:seed seed - application info file complete name with`
+
+---
+
 ### Installing
 
 A step by step series of examples that tell you how to get a development env running.

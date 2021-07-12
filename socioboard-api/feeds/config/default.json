@@ -1,0 +1,72 @@
+{
+  "title": "SOCIOBOARD API - Feeds",
+  "version": "5.0.0",
+  "lang": "English",
+  "description": "To describe a RESTful API for EMS ",
+  "applicationName": "SocioBoard 5.0",
+  "teamDescription": "SocioBoard 5.0",
+  "perPageLimit": 12,
+  "feed_socioboard": {
+    "title": "SocioBoard 5.0",
+    "version": "5.0.0",
+    "description": "To describe a RESTful API of feed services such as network feeds, rss feeds and latest trending from Giphy, newsApi, Pixabay, Imgur, Flickr and Dailymotion",
+    "applicationName": "SocioBoard 5.0"
+  },
+  "content_studio": {
+    "basePath": "../../media",
+    "daily_motion": {
+      "api_key": "<< DAILY MOTION API KEY >>",
+      "secret_key": "<< DAILY MOTION SECRET KEY >>",
+      "version": "5.0.0",
+      "count": 100
+    },
+    "giphy": {
+      "api_key": "<< GIPHY KEY >>",
+      "count": 25,
+      "version": "5.0.0",
+      "path": "../../media/giphy"
+    },
+    "newsapi": {
+      "api_key": "<< NEWSAPI KEY >>",
+      "version": "5.0.0",
+      "count": 25
+    },
+    "pixabay": {
+      "api_key": "<< PIXABAY KEY >>",
+      "version": "5.0.0",
+      "count": 25,
+      "path": "../../media/pixabay"
+    },
+    "flickr": {
+      "api_key": "<< FLICKR KEY >>",
+      "api_secret": "<< FLICKR SECRET >>",
+      "version": "5.0.0",
+      "count": 25,
+      "path": "../../media/flickr"
+    },
+    "imgur": {
+      "client_id": "<< IMGUR ID >>",
+      "client_secret": "<< IMGUR SECRET >>",
+      "version": "5.0.0",
+      "count": 25,
+      "path": "../../media/imgur"
+    },
+    "youtube": {
+      "api_key": "<< YOUTUBE APP KEY >>",
+      "count": 15,
+      "version": "5.0.0"
+    }
+  },
+  "twitter_data": {
+    "bearer_token": "<< TWITTER TOKEN >>",
+    "access_token": "<< TWITTER ACCESS TOKEN>>",
+    "access_secret": "<< TWITTER SECRET >>",
+    "version": "5.0.0"
+  },
+  "archivedMedia": {
+    "path": "../../media/archiveMedia"
+  },
+  "customhashtagMedia": {
+    "path": "../../media/customhashtagMedia"
+  }
+}
