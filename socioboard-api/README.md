@@ -13,7 +13,7 @@ Socioboard Api's is created with Node.js, Express, MongoDB and Sequelize ORM. So
 **Configuration Setup**
 ============
 
-***Step 1: Install all dependency for microservices*** 
+***Step 1: Install all dependency for micro-services*** 
 ```shell
 socioboard-api/user> npm install
 socioboard-api/publish> npm install

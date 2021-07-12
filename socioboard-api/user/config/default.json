@@ -1,91 +1,53 @@
 {
-    "title": "Socioboard Api",
+  "lang": "en",
+  "applicationName": "SocioBoard5.0",
+  "teamDescription": "SocioBoard team has been created automatically by the application.",
+  "perPageLimit": 12,
+  "maximumTrialPeriod": 1,
+  "app_url": "https://local.socioboard.com/login",
+  "app_resetpw_url": "https://local.socioboard.com/resetUserPassword",
+  "user_socioboard": {
+    "title": "SocioBoard 5.0  - UserServices",
     "version": "1.0.0",
-    "description": "To describe a RESTful API for socioboard",
-    "applicationName": "Socioboard",
-    "teamDescription": "Socioboard team has been created automatically by the application.",
-    "perPageLimit": 12,
-    "maximumTrialPeriod": 3,
-    "app_url":"<<App HostUrl>>",
-    "live_url": "https://localhost.socioboard.com/login",
-    "user_socioboard": {
-        "title": "Socioboard - UserServices",
-        "version": "1.0.0",
-        "description": "To describe a RESTful API of user services such as unauthorized, authorized and team management",
-        "applicationName": "Socioboard"
-    },
-    "authorize": {
-        "secret": "<<Any random secret key, used in encrypting the access token>>",
-        "token_secret": "<<Any token secret key, used in encrypting the access token>>",
-        "algorithm": "aes-256-cbc",
-        "encoding_typeOne": "utf8",
-        "encoding_typeTwo": "hex"
-    },
-    "analytics": {
-        "tracking_id": "<<Google Analytics tracking Id>>",
-        "view_id": "<<Google Analytics View Id>>",
-        "ganalytics_service_email": "<<Google Service Email Id, This email should have the permission on above track id.>>",
-        "ganalytics_private_key": "<<Google Service Email's Private Key>>"
-    },
-    "mailTitles": {
-        "activation_link": "Socioboard activation link",
-        "forgot_password_request": "Socioboard reset password",
-        "payment_invoice": "Socioboard payment invoice",
-        "OTP_title": "Socioboard 2-way OTP"
-    },
-    "mailService": {
-        "defaultMailOption": "<<Give the default mail services should take place (any one from => gmail,sendgridapi)>>",
-        "sendgrid": {
-            "username": "<<sendgrid username>>",
-            "password": "<<sendgrid password>>",
-            "frommail": "<<sendgrid frommail>>",
-            "ccmail": "<<sendgrid ccmail>>",
-            "apiKey": "<<sendgrid apiKey>>"
-        },
-        "gmailServices": {
-            "email": "<<gmail email>>",
-            "password": "<<password>>"
-        }
-    },
-    "mobileOtp": {
-        "authkey": "<<auth Key>>",
-        "sender": "<<Sender TITLE >>",
-        "route": 4,
-        "port": 4
-    },
-    "uploadService": {
-        "image_path": "",
-        "video_path": ""
-    },
-    "google_api": {
-        "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
-        "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
-        "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
-        "ganalytics_activeuser_metrics": "rt:activeUsers",
-        "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
-        "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
-        "version": "4.0.0"
-    },
-    "instagram": {
-        "business_account_scopes": "instagram_basic,instagram_manage_comments,instagram_manage_insights"
-    },
-    "pinterest": {
-        "scopes": "read_public"
-    },
-    "jest": {
-        "access_token": ""
-    },
-    "mail_services_environments": [
-        "production",
-        "development",
-        "apidevelopment",
-        "phpdev"
-    ],
-    "profile_url_assert": "/asserts/profiles.png",
-    "user_base_plan": 0,
-    "payment": {
-        "base_path": "../../media",
-        "payment_path": "../../media/payments",
-        "template_path": "public/template/"
-    }
+    "description": "To describe a RESTful API of user services such as unauthorized, authorized and team management",
+    "applicationName": "SocioBoard 5.0"
+  },
+  "mailTitles": {
+    "activation_link": "Socioboard 5.0 Activation link",
+    "Invitation_user": "Invitation from SocioBoard to Add Account",
+    "forgot_password_request": "SocioBoard 5.0 Reset Password",
+    "payment_invoice": "Socioboard 5.0  Payment Invoice"
+  },
+  "uploadService": {
+    "image_path": "",
+    "video_path": ""
+  },
+  "google_api": {
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+    "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+    "ganalytics_activeuser_metrics": "rt:activeUsers",
+    "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
+    "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
+    "version": "4.0.0"
+  },
+  "instagram": {
+    "business_account_scopes": "instagram_basic,instagram_manage_comments,instagram_manage_insights"
+  },
+  "pinterest": {
+    "scopes": "read_relationships+write_relationships+read_public+write_public"
+  },
+  "jest": {
+    "access_token": "<< JEST ACCESS TOKEN >>"
+  },
+  "mail_services_environments": [
+    "production",
+    "development",
+    "apidevelopment",
+    "phpdev",
+    "localDev"
+  ],
+  "profile_url_assert": "/asserts/profiles.png",
+  "user_base_plan": 0,
+  "expire_month": 1
 }

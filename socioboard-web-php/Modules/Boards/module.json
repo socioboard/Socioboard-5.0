@@ -1,0 +1,13 @@
+{
+    "name": "Boards",
+    "alias": "boards",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Boards\\Providers\\BoardsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

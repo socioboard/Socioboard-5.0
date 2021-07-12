@@ -1,0 +1,1082 @@
+<?php
+
+namespace Modules\ContentStudio\Http\Controllers;
+
+use Faker\Provider\DateTime;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use Modules\ContentStudio\Http\Requests\PublishRequest;
+use Illuminate\Routing\Controller;
+use Modules\User\helper;
+use App\ApiConfig\ApiConfig;
+use Exception;
+
+
+class PublishContentController extends Controller
+{
+
+    private $helper;
+    private $apiUrl;
+    private $site_url;
+
+    public function __construct()
+    {
+        $this->helper = Helper::getInstance();
+        $this->apiUrl = env('API_URL_PUBLISH').env('API_VERSION');
+        $this->site_url = config("env.API_URL");
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     * @return Renderable
+     */
+    public function scheduling(Request $request)
+    {
+        $socialAccounts = $this->getTeamSocialAccounts();
+        $twitterAccountsIds = [];
+        $facebookAccountsIds = [];
+        $linkedinAccountsIds = [];
+        if(!empty($socialAccounts)){
+            foreach ($socialAccounts as $k => $v) {
+                foreach ($v as $key => $value) {
+                    foreach ($value as $val) {
+                        if ($k === 'twitter') {
+                            $twitterAccountsIds [] = $val->account_id;
+                        } else if ($k === 'facebook') {
+                            $facebookAccountsIds [] = $val->account_id;
+                        } else if ($k === 'linkedin') {
+                            $linkedinAccountsIds [] = $val->account_id;
+                        }
+                    }
+                }
+            }
+        }
+        return view('contentstudio::scheduling.index',[
+            'mediaData' => [
+                'mediaUrl' => $request->mediaUrl ? request()->get('mediaUrl') : null,
+                'sourceUrl' => $request->sourceUrl ? request()->get('sourceUrl') : null,
+                'publisherName' => $request->publisherName ? request()->get('publisherName') : null,
+                'title' => $request->title ? request()->get('title') : null,
+                'description' => $request->description ? request()->get('description') : null,
+                'type' => $request->type ? request()->get('type') : null,
+            ],
+            'downloadMedia' => true,
+            'socialAccounts' => $socialAccounts,
+            'accountIds' => [],
+            'twitterAccountsIds' => $twitterAccountsIds,
+            'facebookAccountsIds' => $facebookAccountsIds,
+            'linkedinAccountsIds' => $linkedinAccountsIds,
+            'isTwitter' => "false",
+            'isFacebook' => "false",
+            'isLinkedin' => "false",
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return Renderable
+     */
+    public function share(PublishRequest $request)
+    {
+        try {
+            $mediaArr = null;
+            $postType = 'Text';
+            $team = \Session::get('team');
+            if($request->has('mediaUrl') && !empty($request->get('mediaUrl'))){
+                $postType = 'Image';
+                $mediaArr = $request->get('mediaUrl');
+            }else if($request->has('videoUrl') && !empty($request->get('videoUrl'))){
+                $postType = 'Video';
+                $mediaArr = $request->get('videoUrl');
+            } else if (!isset($request->videoUrl)&& !isset($request->mediaUrl) && isset($request->outgoingUrl)){
+                $postType = 'Link';
+            }
+            if($request->get('status') === 'scheduling') {
+                $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request);
+            }else if($request->get('status') === 'draft_scheduling'){
+                $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request, 5);
+            }else{
+                $apiUrl = $this->apiUrl.'/publish/publishPosts?teamId=' . $team['teamid'];
+                $requestData = (object)[
+                    'postType' => $postType,
+                    'message' => $request->has('content') ? $request->get('content') : '',
+                    'mediaPaths' => $mediaArr,
+                    'link' => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                    'accountIds' => $request->get('socialAccount'),
+                    'postStatus' => $request->has('status') && intval($request->get('status')) == 1 ? 1 : 0,
+                    'pinBoards' => [
+                        'accountId' => 0,
+                        'boardId' => [],
+                    ],
+                ];
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
+                $data = $this->helper->responseHandler($response['data']);
+            }
+
+            if ($data == null)
+                return response()->json([
+                    'satus' => 'error',
+                    'message' => 'Sorry, something went wrong, please refresh the page. ',
+                ],$e->getCode());
+
+            if($data['code']){
+                switch ($data['code']) {
+                    case 200:
+                        return response()->json([
+                            'satus' => 'success',
+                            'message' => isset($data['message']) ? $data['message'] : null,
+                        ], $data['code']);
+                        break;
+
+                    default:
+                        return response()->json([
+                            'satus' => 'error',
+                            'message' => isset($data['message']) ? $data['message'] : null,
+                            'error' => isset($data['error']) ? $data['error'] : null
+                        ], $data['code']);
+                        break;
+                }
+            }
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'getSearchSessionApi() {PublishContentController}');
+            return response()->json([
+                'satus' => 'error',
+                'message' => 'Sorry, something went wrong, please refresh the page. ',
+            ],$e->getCode());
+
+        }
+    }
+
+    /**
+     * Show the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function modal(Request $request)
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+
+                    if(!empty($accounts)){
+                        foreach ($accounts as $key => $account) {
+                            switch ($account->account_type) {
+                                case 1:
+                                    $socialAccounts['facebook']['user'][] = $account;
+                                    break;
+                                case 2:
+                                    $socialAccounts['facebook']['page'][] = $account;
+                                    break;
+                                case 3:
+                                    $socialAccounts['facebook']['group'][] = $account;
+                                    break;
+                                case 4:
+                                    $socialAccounts['twitter']['account'][] = $account;
+                                    break;
+                                case 6:
+                                    $socialAccounts['linkedin']['personal account'][] = $account;
+                                    break;
+                                case 7:
+                                    $socialAccounts['linkedin']['business account'][] = $account;
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+                return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+            return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+        }
+        $html = view('contentstudio::components.publish_modal', [
+            'mediaData' => [
+                'mediaUrl' => $request->has('mediaUrl') ? $request->get('mediaUrl') : null,
+                'sourceUrl' => $request->has('sourceUrl') ? $request->get('sourceUrl') : null,
+                'publisherName' => $request->has('publisherName') ? $request->get('publisherName') : null,
+                'title' => $request->has('title') ? $request->get('title') : null,
+                'description' => $request->has('description') ? $request->get('description') : null,
+                'type' => $request->has('type') ? $request->get('type') : null,
+            ],
+            'socialAccounts' => $socialAccounts,
+        ])->render();
+
+        return response()->json(['html' => $html], 200);
+    }
+
+    public function feedsModal(Request $request)
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+
+                    if(!empty($accounts)){
+                        foreach ($accounts as $key => $account) {
+                            switch ($account->account_type) {
+                                case 1:
+                                    $socialAccounts['facebook']['user'][] = $account;
+                                    break;
+                                case 2:
+                                    $socialAccounts['facebook']['page'][] = $account;
+                                    break;
+                                case 3:
+                                    $socialAccounts['facebook']['group'][] = $account;
+                                    break;
+                                case 4:
+                                    $socialAccounts['twitter']['account'][] = $account;
+                                    break;
+                                case 6:
+                                    $socialAccounts['linkedin']['personal account'][] = $account;
+                                    break;
+                                case 7:
+                                    $socialAccounts['linkedin']['business account'][] = $account;
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+                return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+            return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+        }
+        $html = view('feeds::feeds_resocio', [
+            'mediaData' => [
+                'mediaUrl' => $request->has('mediaUrl') ? $request->get('mediaUrl') : null,
+                'sourceUrl' => $request->has('sourceUrl') ? $request->get('sourceUrl') : null,
+                'publisherName' => $request->has('publisherName') ? $request->get('publisherName') : null,
+                'title' => $request->has('title') ? $request->get('title') : null,
+                'description' => $request->has('description') ? $request->get('description') : null,
+                'type' => $request->has('type') ? $request->get('type') : null,
+                'isType' => $request->has('isType') ? $request->get('isType') : null,
+            ],
+            'socialAccounts' => $socialAccounts,
+        ])->render();
+
+        return response()->json(['html' => $html], 200);
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function draftScheduleEdit( Request $request, $id ){
+        $socialAccounts = $this->getTeamSocialAccounts();
+        $postUrl = $this->apiUrl . "/schedule/get-schedule-post-by-id?id=" . $id;
+        $postData = $this->helper->postApiCallWithAuth('post', $postUrl);
+        if($postData['code'] && $postData['code'] == 200){
+            $postData = isset($postData['data']->data[0]) && $postData['data']->data[0] ? $postData['data']->data[0] : null;
+            $postType = $postData->postType;
+
+            $accountIds = [];
+            if(isset($postData->postingSocialIds) && !empty($postData->postingSocialIds)){
+                foreach ($postData->postingSocialIds as $key => $value) {
+                    $accountIds[] = $value->accountId;
+                }
+            }
+            $daywiseScheduleTimer = null;
+            if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
+                foreach ($postData->daywiseScheduleTimer as $key => $value) {
+                    $daywiseScheduleTimer[] = $value->dayId;
+                }
+            }
+
+            $twitterAccountsIds = [];
+            $facebookAccountsIds = [];
+            $i = 0;
+            $j = 0;
+            if(!empty($socialAccounts)){
+                foreach ($socialAccounts as $k => $v) {
+                    foreach ($v as $key => $value) {
+                        foreach ($value as $val) {
+                            if ($k == 'twitter') {
+                                $twitterAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $i++;
+                            } else if ($k == 'facebook') {
+                                $facebookAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $j++;
+                            }
+                        }
+                    }
+                }
+            }
+            $isTwitter = $i > 0 ? "true" : "false";
+            $isFacebook = $j > 0 ? "true" : "false";
+
+            return view('contentstudio::scheduling.edit',[
+                'mediaData' => [
+                    'description' => isset($postData->description) ? $postData->description : null,
+                    'type' => isset($postType) ? strtolower($postType) : null,
+                    'sourceUrl' => isset($postData->shareLink) ? $postData->shareLink : null,
+                ],
+                'mediaUrl' => isset($postData->mediaUrl) ? $postData->mediaUrl : null,
+                'socialAccounts' => $socialAccounts,
+                'scheduleId' => $id,
+                'accountIds' => $accountIds,
+                'id' => $id,
+                'type' => 'draft-schedule',
+                'formAction' => route('publish_content.update', $postData->schedule_id),
+                'site_url' => $this->site_url,
+                'postType' => $postType,
+                'ownerId' => $postData->ownerId,
+                'teamId' => $postData->teamId,
+                'scheduleCategory' => $postData->scheduleCategory, //it should be either 0(daily) or 1(weekly)
+                'moduleName' => $postData->moduleName,
+                'scheduleStatus' => $postData->scheduleStatus,
+                'normalScheduleDate' => $postData->normalScheduleDate,
+                'daywiseScheduleTimer' => $daywiseScheduleTimer,
+                'createdDate' => $postData->createdDate,
+                'mediaSelectionType' => $postData->mediaSelectionType,
+                'schedule_id' => $postData->schedule_id,
+                'twitterAccountsIds' => $twitterAccountsIds,
+                'facebookAccountsIds' => $facebookAccountsIds,
+                'isTwitter' => $isTwitter,
+                'isFacebook' => $isFacebook,
+                'socioQueue' => null,
+            ]);
+        }
+    }
+
+    public function socioQueueEdit( Request $request, $id){
+        $socialAccounts = $this->getTeamSocialAccounts();
+        $postUrl = $this->apiUrl . "/schedule/get-schedule-post-by-id?id=" . $id;
+        $postData = $this->helper->postApiCallWithAuth('post', $postUrl);
+        if($postData['code'] && $postData['code'] == 200){
+            $postData = isset($postData['data']->data[0]) && $postData['data']->data[0] ? $postData['data']->data[0] : null;
+            $postType = isset($postData->postType) ? $postData->postType : null;
+
+            $accountIds = [];
+            if(isset($postData->postingSocialIds) && !empty($postData->postingSocialIds)){
+                foreach ($postData->postingSocialIds as $key => $value) {
+                    $accountIds[] = $value->accountId;
+                }
+            }
+            $daywiseScheduleTimer = null;
+            if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
+                foreach ($postData->daywiseScheduleTimer as $key => $value) {
+                    $daywiseScheduleTimer[] = $value->dayId;
+                }
+            }
+
+            $twitterAccountsIds = [];
+            $facebookAccountsIds = [];
+            $i = 0;
+            $j = 0;
+            if(!empty($socialAccounts)){
+                foreach ($socialAccounts as $k => $v) {
+                    foreach ($v as $key => $value) {
+                        foreach ($value as $val) {
+                            if ($k == 'twitter') {
+                                $twitterAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $i++;
+                            } else if ($k == 'facebook') {
+                                $facebookAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $j++;
+                            }
+                        }
+                    }
+                }
+            }
+            $isTwitter = $i > 0 ? "true" : "false";
+            $isFacebook = $j > 0 ? "true" : "false";
+
+            return view('contentstudio::scheduling.edit',[
+                'mediaData' => [
+                    'description' => isset($postData->description) ? $postData->description : null,
+                    'type' => isset($postType) ? strtolower($postType) : null,
+                    'sourceUrl' => isset($postData->shareLink) ? $postData->shareLink : null,
+                ],
+                'mediaUrl' => isset($postData->mediaUrl) ? $postData->mediaUrl : null,
+                'socialAccounts' => $socialAccounts,
+                'scheduleId' => $id,
+                'accountIds' => $accountIds,
+                'id' => $id,
+                'type' => 'schedule',
+                'formAction' => route('publish_content.update', $postData->schedule_id),
+                'site_url' => $this->site_url,
+                'postType' => $postType,
+                'ownerId' => $postData->ownerId,
+                'teamId' => $postData->teamId,
+                'scheduleCategory' => $postData->scheduleCategory, //it should be either 0(daily) or 1(weekly)
+                'moduleName' => $postData->moduleName,
+                'scheduleStatus' => $postData->scheduleStatus,
+                'normalScheduleDate' => $postData->normalScheduleDate,
+                'daywiseScheduleTimer' => $daywiseScheduleTimer,
+                'createdDate' => $postData->createdDate,
+                'mediaSelectionType' => $postData->mediaSelectionType,
+                'schedule_id' => $postData->schedule_id,
+                'twitterAccountsIds' => $twitterAccountsIds,
+                'facebookAccountsIds' => $facebookAccountsIds,
+                'isTwitter' => $isTwitter,
+                'isFacebook' => $isFacebook,
+                'socioQueue' => 'socioQueue',
+            ]);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function edit( Request $request, $id ){
+        $socialAccounts = $this->getTeamSocialAccounts();
+        $postUrl = $this->apiUrl . "/schedule/get-schedule-post-by-id?id=" . $id;
+        $postData = $this->helper->postApiCallWithAuth('post', $postUrl);
+        if($postData['code'] && $postData['code'] == 200){
+            $postData = isset($postData['data']->data[0]) && $postData['data']->data[0] ? $postData['data']->data[0] : null;
+            $postType = $postData->postType;
+            
+            $accountIds = [];
+            if(isset($postData->postingSocialIds) && !empty($postData->postingSocialIds)){
+                foreach ($postData->postingSocialIds as $key => $value) {
+                    $accountIds[] = $value->accountId;
+                }
+            }
+            $daywiseScheduleTimer = null;
+            if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
+                foreach ($postData->daywiseScheduleTimer as $key => $value) {
+                    $daywiseScheduleTimer[] = $value->dayId;
+                }
+            }
+
+            $twitterAccountsIds = [];
+            $facebookAccountsIds = [];
+            $i = 0;
+            $j = 0;
+            if(!empty($socialAccounts)){
+                foreach ($socialAccounts as $k => $v) {
+                    foreach ($v as $key => $value) {
+                        foreach ($value as $val) {
+                            if ($k == 'twitter') {
+                                $twitterAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $i++;
+                            } else if ($k == 'facebook') {
+                                $facebookAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $j++;
+                            }
+                        }
+                    }
+                }
+            }
+            $isTwitter = $i > 0 ? "true" : "false";
+            $isFacebook = $j > 0 ? "true" : "false";
+
+            return view('contentstudio::scheduling.edit',[
+                'mediaData' => [
+                    'description' => isset($postData->description) ? $postData->description : null,
+                    'type' => isset($postType) ? strtolower($postType) : null,
+                    'sourceUrl' => isset($postData->shareLink) ? $postData->shareLink : null,
+                ],
+                'mediaUrl' => isset($postData->mediaUrl) ? $postData->mediaUrl : null,
+                'socialAccounts' => $socialAccounts,
+                'scheduleId' => $id,
+                'accountIds' => $accountIds,
+                'id' => $id,
+                'type' => 'schedule',
+                'formAction' => route('publish_content.update', $postData->schedule_id),
+                'site_url' => $this->site_url,
+                'postType' => $postType,
+                'ownerId' => $postData->ownerId,
+                'teamId' => $postData->teamId,
+                'scheduleCategory' => $postData->scheduleCategory, //it should be either 0(daily) or 1(weekly)
+                'moduleName' => $postData->moduleName,
+                'scheduleStatus' => $postData->scheduleStatus,
+                'normalScheduleDate' => $postData->normalScheduleDate,
+                'daywiseScheduleTimer' => $daywiseScheduleTimer,
+                'createdDate' => $postData->createdDate,
+                'mediaSelectionType' => $postData->mediaSelectionType,
+                'schedule_id' => $postData->schedule_id,
+                'twitterAccountsIds' => $twitterAccountsIds,
+                'facebookAccountsIds' => $facebookAccountsIds,
+                'isTwitter' => $isTwitter,
+                'isFacebook' => $isFacebook,
+                'socioQueue' => null,
+            ]);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+
+    public function draftEdit(Request $request, $id){
+        $socialAccounts = $this->getTeamSocialAccounts();
+        $postUrl = $this->apiUrl . "/publish/get-draft-post-by-id?id=" . $id;
+        $postData = $this->helper->postApiCallWithAuth('get', $postUrl);
+        $twitterAccountsIds = [];
+        $facebookAccountsIds = [];
+        $i = 0;
+        $j = 0;
+        if($postData['code'] && $postData['code'] == 200){
+            $postData = isset($postData['data']->data[0]) ? $postData['data']->data[0] : null;
+            $postType = $postData->postType;
+            if(!empty($socialAccounts)){
+            foreach ($socialAccounts as $k => $v) {
+                foreach ($v as $key => $value) {
+                    foreach ($value as $val) {
+                        if ($k == 'twitter') {
+                            $twitterAccountsIds [] = $val->account_id;
+                            if(in_array($val->account_id, $postData->accountIds)) $i++;
+                        } else if ($k == 'facebook') {
+                            $facebookAccountsIds [] = $val->account_id;
+                            if(in_array($val->account_id, $postData->accountIds)) $j++;
+                        }
+                    }
+                }
+            }
+            }
+            $isTwitter = $i > 0 ? "true" : "false";
+            $isFacebook = $j > 0 ? "true" : "false";
+            return view('contentstudio::scheduling.edit',[
+                'mediaData' => [
+                    'description' => isset($postData->description) ? $postData->description : null,
+                    'type' => isset($postType) ? strtolower($postType) : null,
+                ],
+                'mediaUrl' => isset($postData->mediaUrl) ? $postData->mediaUrl : null,
+                'socialAccounts' => $socialAccounts,
+                'accountIds' => isset($postData->accountIds) && !empty($postData->accountIds) ? $postData->accountIds : [],
+                'id' => $id,
+                'type' => 'draft',
+                'formAction' => route('publish_content.update', $id),
+                'site_url' => $this->site_url,
+                'postType' => $postType,
+                'ownerId' => $postData->ownerId,
+                'teamId' => $postData->teamId,
+                'twitterAccountsIds' => $twitterAccountsIds,
+                'facebookAccountsIds' => $facebookAccountsIds,
+                'isTwitter' => $isTwitter,
+                'isFacebook' => $isFacebook,
+                'socioQueue' => null,
+            ]);
+        }
+    }
+
+
+    public function update(PublishRequest $request, $id)
+    {
+        try {
+            $mediaArr = null;
+            $postType = 'Text';
+            $team = \Session::get('team');
+
+            if($request->has('mediaUrl') && !empty($request->get('mediaUrl'))){
+                $postType = 'Image';
+                $mediaArr = $request->get('mediaUrl');
+            }else if($request->has('videoUrl') && !empty($request->get('videoUrl'))){
+                $postType = 'Video';
+                $mediaArr = $request->get('videoUrl');
+            }
+
+            if($request->get('status') == 'scheduling' && $request->type == 'schedule') {
+                $data = $this->updateSchedule($id, $team['teamid'], $postType, $mediaArr, $request);
+            } else if($request->get('status') == 'draft_scheduling' && $request->type == 'schedule'){
+                $data = $this->updateSchedule($id, $team['teamid'], $postType, $mediaArr, $request, 5);
+            }
+            else if($request->get('status') == 'scheduling' && (($request->type == 'draft')  ||  ($request->type == 'draft-schedule')) ) {
+                $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request);
+            }else if($request->get('status') == 'draft_scheduling' && (($request->type == 'draft')  ||  ($request->type == 'draft-schedule')) ){
+                $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request, 5);
+            }
+            else if($request->get('status') == '1' && $request->type == 'draft-schedule') {
+                $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request);
+            }else if($request->get('status') == '0' && $request->type == 'draft-schedule'){
+                $data = $this->updateSchedule($id, $team['teamid'], $postType, $mediaArr, $request, 5);
+            }
+            else if($request->get('status') == '1' && $request->type == 'draft'){
+                $apiUrl = $this->apiUrl.'/publish/publishPosts?teamId=' . $team['teamid'];
+                $requestData = [
+                    'postType' => $postType,
+                    'message' => $request->has('content') ? $request->get('content') : '',
+                    'mediaPaths' => $mediaArr,
+                    'link' => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                    'accountIds' => $request->get('socialAccount'),
+                    'postStatus' => $request->has('status') && intval($request->get('status')) == 1 ? 1 : 0,
+                    'pinBoards' => [
+                        'accountId' => 0,
+                        'boardId' => [],
+                    ],
+                ];
+
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
+                $data = $this->helper->responseHandler($response['data']);
+            }
+            else if($request->get('status') == '0' && $request->type == 'draft'){
+                $apiUrl = $this->apiUrl.'/publish/update-draft-post-by-id?id=' . $id;
+                $requestData = [
+                    'draftPost' => [(object)[
+                        'postType' => $postType,
+                        'description' => $request->has('content') ? $request->get('content') : '',
+                        'mediaUrl' => $mediaArr,
+                        'shareLink' => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                        'accountIds' => $request->get('socialAccount'),
+                        'ownerId' => $request->has('ownerId') ? intval($request->get('ownerId')) : null,
+                        'teamId' => $request->has('teamId') ? intval($request->get('teamId')) : null,
+                    ]
+                    ]
+                ];
+                $response = $this->helper->postApiCallWithAuth('put', $apiUrl, $requestData);
+                $data = $this->helper->responseHandler($response['data']);
+            }
+
+            if ($data == null)
+                return response()->json([
+                    'satus' => 'error',
+                    'message' => 'Sorry, something went wrong, please refresh the page. ',
+                ],$e->getCode());
+
+            if($data['code']){
+
+                switch ($data['code']) {
+                    case 200:
+                        return response()->json([
+                            'satus' => 'success',
+                            'message' => isset($data['message']) ? $data['message'] : null,
+                            'type_text' =>  (isset($request->socioQueue) && ($request->socioQueue == 'socioQueue')) ? $request->socioQueue : null,
+                            'type_value' =>  $request->has('scheduling_type') ? $request->get('scheduling_type') : null,
+                        ], $data['code']);
+                        break;
+
+                    default:
+                        return response()->json([
+                            'satus' => 'error',
+                            'message' => isset($data['message']) ? $data['message'] : null,
+                            'error' => isset($data['error']) ? $data['error'] : null
+                        ], $data['code']);
+                        break;
+                }
+            }
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'getSearchSessionApi() {PublishContentController}');
+            return response()->json([
+                'satus' => 'error',
+                'message' => 'Sorry, something went wrong, please refresh the page. ',
+            ],$e->getCode());
+
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return Renderable
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+
+    private function uploadMediaFile($file)
+    {
+        $mimeType = null;
+        $pathToStorage = public_path('media/uploads');
+        if (!file_exists($pathToStorage))
+            mkdir($pathToStorage, 0777, true);
+
+        $mime = $file->getMimeType();
+        if(strstr($mime, "video/")){
+            $mimeType = 'video';
+        }else if(strstr($mime, "image/")){
+            $mimeType = 'image';
+        }
+        if($mimeType){
+            $mediFile = $file->getClientOriginalName();
+            $direction = $pathToStorage .'/'.$mediFile;
+            file_put_contents($direction, file_get_contents($file->path()));
+
+            return ['type' => $mimeType, 'path' => $direction];
+        }
+        return false;
+    }
+
+    private function uploadMediaToApi($data)
+    {
+        $result = [];
+
+        $filedata = array("name" => $data['name'], "file" => $data['filePath']);
+        $apiUrl = $this->apiUrl. '/upload/media?title=' . $data["title"] . '&teamId=' . $data["teamId"] . '&privacy=' . $data["privacy"];
+
+        try {
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $filedata, true);
+
+            unlink($data['filePath']);
+            if ($response['code'] == 200) {
+                $result["code"] = $response["data"]->code;
+                $result["data"] = $response["data"]->data;
+                $result["message"] = $response["data"]->message;
+                $result["error"] = $response["data"]->error;
+            } else {
+                $result = $response;
+            }
+            return $result;
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), ' uploadImage() {PublishContentController}');
+            return false;
+        }
+    }
+
+    private function downloadMediaUrl($mediaUrl)
+    {
+        $pathToStorage = public_path('media/uploads');
+        if (!file_exists($pathToStorage))
+            mkdir($pathToStorage, 0777, true);
+
+        $publishimage = substr($mediaUrl, strrpos($mediaUrl, '/') + 1);
+        $direction = $pathToStorage . "/" . $publishimage;
+        file_put_contents($direction, file_get_contents($mediaUrl));
+
+        return ['type' => 'image', 'path' => $direction];
+    }
+
+    private function getTeamSocialAccounts()
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if (isset($response['code']) && $response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+
+                    if(!empty($accounts)){
+                        foreach ($accounts as $key => $account) {
+                            switch ($account->account_type) {
+                                case 1:
+                                    $socialAccounts['facebook']['user'][] = $account;
+                                    break;
+                                case 2:
+                                    $socialAccounts['facebook']['page'][] = $account;
+                                    break;
+                                case 3:
+                                    $socialAccounts['facebook']['group'][] = $account;
+                                    break;
+                                case 4:
+                                    $socialAccounts['twitter']['account'][] = $account;
+                                    break;
+                                case 6:
+                                    $socialAccounts['linkedin']['personal account'][] = $account;
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+                return false;
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+            return false;
+        }
+        return $socialAccounts;
+    }
+
+    /**
+     * TODO we've to get youtube accounts.
+     * This function is to get the youtube accounts in a particular account.
+     * @return  all youtube accounts in json format.
+     */
+    private function getTeamYoutubeAccounts()
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if (isset($response['code']) && $response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+
+                    if(!empty($accounts)){
+                        foreach ($accounts as $key => $account) {
+                            switch ($account->account_type) {
+                                case 9:
+                                    $socialAccounts['youtube']['account'][] = $account;
+                                    break;
+                            }
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+                return false;
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+            return false;
+        }
+        return $socialAccounts;
+    }
+
+    private function makeSchedule($teamId, $postType, $mediaArr, $request, $status = 1)
+    {
+        $socialAccount = [];
+        if($request->has('socialAccount') && !empty($request->get('socialAccount'))){
+            foreach ($request->get('socialAccount') as $key => $id) {
+                $socialAccount[] = ['accountId' => $id];
+            }
+        }
+
+        $daywiseScheduleTimer = null;
+        if($request->has('weekday') && !empty($request->get('weekday')) && $request->has('day_wise_datetime') )
+        {
+            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt->setTimeZone(new \DateTimeZone('UTC'));
+            $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
+            foreach ($request->get('weekday') as $key => $dayId) {
+                $daywiseScheduleTimer[] = [
+                    'dayId' => $dayId,
+                    'timings' => [$request->has('day_wise_datetime') ? $dateschedule : null],
+                ];
+            }
+        }
+
+        if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime')!== null ){
+            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt->setTimeZone(new \DateTimeZone('UTC'));
+            $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
+        } else{
+            $date = null;
+        }
+        $requestData = [
+            "postInfo" => [
+                "postType" => $postType,
+                "description" => $request->has('content') ? $request->get('content') : '',
+                "mediaUrl" => $mediaArr,
+                "mediaSelectionType" => $request->has('mediaSelectionType') ? $request->get('mediaSelectionType') : 0,
+                "shareLink" => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                "postingSocialIds" => $socialAccount,
+
+                "pinBoards" => [
+                    [
+                        "accountId" => 0,
+                        "boardId" => [
+                            "string"
+                        ]
+                    ]
+                ],
+                "scheduleCategory" => $request->has('scheduling_type') ? $request->get('scheduling_type') : 0,  //it should be either 0(daily) or 1(weekly)
+                "teamId" => $teamId,
+
+                "moduleName" => "string",
+                "moduleValues" => [
+                    "string"
+                ],
+
+                "scheduleStatus" => $status,
+
+                "normalScheduleDate" => $date,
+
+            ]
+        ];
+
+        if($request->has('scheduling_type') && $request->get('scheduling_type') == '1' && $daywiseScheduleTimer){
+            $requestData['postInfo']['daywiseScheduleTimer'] = $daywiseScheduleTimer;
+        }
+
+        $apiUrl = $this->apiUrl.'/schedule/create';
+        $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
+
+        return $this->helper->responseHandler($response['data']);
+
+    }
+
+    private function updateSchedule($id, $teamId, $postType, $mediaArr, $request, $status = 1)
+    {
+        $socialAccount = [];
+        if($request->has('socialAccount') && !empty($request->get('socialAccount'))){
+            foreach ($request->get('socialAccount') as $key => $account_id) {
+                $socialAccount[] = ['accountId' => $account_id];
+            }
+        }
+
+        $daywiseScheduleTimer = null;
+        if($request->has('weekday') && !empty($request->get('weekday')) && $request->has('day_wise_datetime') )
+        {
+            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt->setTimeZone(new \DateTimeZone('UTC'));
+            $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
+            foreach ($request->get('weekday') as $key => $dayId) {
+                $daywiseScheduleTimer[] = [
+                    'dayId' => $dayId,
+                    'timings' => [$request->has('day_wise_datetime') ? $dateschedule : null],
+                ];
+            }
+        }
+        if ($request->has('normal_schedule_datetime')){
+            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt->setTimeZone(new \DateTimeZone('UTC'));
+            $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
+        } else{
+            $date = null;
+        }
+        $requestData = [
+            "postInfo" => [
+                "postType" => $postType,
+                "description" => $request->has('content') ? $request->get('content') : '',
+                "mediaUrl" => $mediaArr,
+                "mediaSelectionType" => $request->has('mediaSelectionType') ? $request->get('mediaSelectionType') : 0,
+                "shareLink" => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                "postingSocialIds" => $socialAccount,
+
+                "pinBoards" => [
+                    [
+                        "accountId" => 0,
+                        "boardId" => [
+                            "string"
+                        ]
+                    ]
+                ],
+                "scheduleCategory" => $request->has('scheduling_type') ? $request->get('scheduling_type') : 0,  //it should be either 0(daily) or 1(weekly)
+                "teamId" => $teamId,
+
+                "moduleName" => "string",
+                "moduleValues" => [
+                    "string"
+                ],
+
+                "scheduleStatus" => $status, 
+
+                "normalScheduleDate" => $date
+            ]
+        ];
+
+        if($request->has('scheduling_type') && $request->get('scheduling_type') == '1' && $daywiseScheduleTimer){
+            $requestData['postInfo']['daywiseScheduleTimer'] = $daywiseScheduleTimer;
+        }
+        $apiUrl = (isset($request->socioQueue) && ($request->socioQueue == 'socioQueue')) ? $this->apiUrl.'/schedule/edit?scheduleId='.$id.'&teamId='.$teamId : $this->apiUrl.'/schedule/edit-draft-schedule?scheduleId='.$id.'&teamId='.$teamId;
+        $response = $this->helper->postApiCallWithAuth('PUT', $apiUrl, $requestData);
+
+        return $this->helper->responseHandler($response['data']);
+
+    }
+
+    /**
+     * TODO we've to show the youtube publish view with the accounts.
+     * This function is to get the youtube accounts and return the view.
+     * @return  youtube publish page view blade with all data required to display from controller to view.
+     */
+    public function youtubeView(){
+        $accounts= $this->getTeamYoutubeAccounts();
+        if (isset($accounts ) && isset($accounts['youtube'])){
+            $socialAccounts = $accounts['youtube'];
+        }else{
+            $socialAccounts = null;
+        }
+
+        return view('contentstudio::scheduling.youtube_publish',compact('socialAccounts'));
+    }
+
+    /**
+     * TODO we've to publish the video to youtube.
+     * * This function is used for publishing video to youtube
+     * By Requesting the /youtube/publish external NODE API from controller.
+     * @param {string} discription- discription about the video.
+     * @param {string} title-  Title of the video.
+     * @param {number} account id- id of a account to which video to be posted.
+     * !Do not change this function without referring API format getting the particular feeds from feeds servies.
+     * @return {Object} Returns publisged video data in JSON object format.
+     */
+    public function youtubeSchedule(Request $request){
+        $data = [];
+        if ($request->privacystatus === "private"){
+            $data = [
+                'account_id' => 'required',
+                'title' => 'required',
+                'discription' => 'required',
+                'datetime' => 'required',
+                'videoUrl' => 'required',
+            ];
+                $dt = new \DateTime($request->get('datetime'), new \DateTimeZone('Asia/Calcutta'));
+                $dt->setTimeZone(new \DateTimeZone('UTC'));
+                $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
+                $status = [
+                "privacyStatus" => "private",
+                "publishAt" => $date
+            ];
+        }else{
+            $data = [
+                'account_id' => 'required',
+                'title' => 'required',
+                'discription' => 'required',
+                'videoUrl' => 'required'
+            ];
+            $status = [
+                "privacyStatus" => "public",
+            ];
+        }
+        $validator = Validator::make($request->only('account_id', 'title','discription','datetime','videoUrl'), $data, [
+            'account_id.required' => 'Youtube Account is Required',
+            'datetime.required' => 'Date and Time for Publishing is Required',
+            'videoUrl.required' => 'Video for Publishing is Required',
+        ]);
+        if ($validator->fails()) {
+            $response['code'] = 201;
+            $response['msg'] = $validator->errors()->all();
+            $response['data'] = null;
+            return Response::json($response, 200);
+        }
+        $mediaUrl = $request->videoUrl;
+        $requestData = [
+            "postDetails" => [
+                "mediaUrls" => [
+                    $mediaUrl
+                ],
+                "postType" => 0,
+                "resource" => [
+                    "snippet" => [
+                        "title" => $request->title,
+                        "description" => $request->discription,
+                        "categoryId" => 24,
+                        "defaultLanguage" => "en",
+                        "defaultAudioLanguage" => "en"
+                    ],
+                    "status" => $status
+                ],
+                ]
+            ];
+        $team = \Session::get('team');
+        $apiUrl = $this->apiUrl.'/youtube/publish?accountId='.$request->account_id.'&teamId='.$team['teamid'];
+        $response = $this->helper->postApiCallWithAuth('POST', $apiUrl, $requestData);
+        return $this->helper->responseHandler($response['data']);
+    }
+}

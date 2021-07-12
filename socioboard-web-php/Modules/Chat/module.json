@@ -1,0 +1,13 @@
+{
+    "name": "Chat",
+    "alias": "chat",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Chat\\Providers\\ChatServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -1,5 +1,8 @@
 <?php
 
+ use Illuminate\Support\Facades\Route;
+ use \App\Http\Controllers\FileController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,14 +14,13 @@
 |
 */
 
+Route::post('file/create', [FileController::class,'store']);
+Route::post('file/destroy', [FileController::class,'destroy']);
+
 Route::get('/', function () {
-    $twoWayData = [
-        'email'  => "",
-        'twoWayChoice'   => 0,
-        'mobileOtpError' => "",
-        'emailOtpError' => ""
-    ];
-    return view('User::login')->with('twoWayData',$twoWayData);
+    return redirect('/login');
 });
 
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+Route::any('amember/member', function (){
+    return redirect('/login');
+});

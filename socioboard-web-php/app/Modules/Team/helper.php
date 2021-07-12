@@ -1,5 +1,0 @@
-<?php
-
-/**
- *	Team Helper  
- */

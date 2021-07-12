@@ -1,0 +1,13 @@
+{
+    "name": "Home",
+    "alias": "home",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Home\\Providers\\HomeServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

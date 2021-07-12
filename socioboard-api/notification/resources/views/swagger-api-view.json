@@ -1,0 +1,36 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "5.0",
+    "title": "SB Notification Service",
+    "description": "Documentation"
+  },
+  "host": "localhost:9001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Notification",
+      "description": "Endpoints"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "AccessToken": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token",
+      "description": "Please provide the valid access token, if you dont have please login and get the token as response!"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {},
+  "definitions": {}
+}

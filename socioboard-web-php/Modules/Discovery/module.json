@@ -1,0 +1,13 @@
+{
+    "name": "Discovery",
+    "alias": "discovery",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Discovery\\Providers\\DiscoveryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
