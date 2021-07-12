@@ -1,8 +1,8 @@
-const logger = require('../../utils/logger');
+import logger from '../../resources/Log/logger.log.js'
 
 
-module.exports = (io) => {
-    var helper = {};
+export default (io) => {
+    let helper = {};
     helper.handleSocket = function (socket) {
 
         logger.info('A User is Subscribed.');

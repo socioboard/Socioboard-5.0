@@ -1,0 +1,13 @@
+{
+    "name": "ImageLibary",
+    "alias": "imagelibary",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ImageLibary\\Providers\\ImageLibaryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

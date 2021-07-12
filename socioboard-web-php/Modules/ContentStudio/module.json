@@ -1,0 +1,13 @@
+{
+    "name": "ContentStudio",
+    "alias": "contentstudio",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ContentStudio\\Providers\\ContentStudioServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

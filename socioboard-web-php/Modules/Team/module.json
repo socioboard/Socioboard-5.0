@@ -1,0 +1,13 @@
+{
+    "name": "Team",
+    "alias": "team",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Team\\Providers\\TeamServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

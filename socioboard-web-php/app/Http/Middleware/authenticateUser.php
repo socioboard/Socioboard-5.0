@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
+use App\Classes\AuthUsers;
 
 class authenticateUser
 {
@@ -15,13 +16,12 @@ class authenticateUser
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $module)
+    public function handle(Request $request, Closure $next)
     {
-        if($module == 'user'){
-            if(!Session::has($module)){
-                return redirect('login');
-            }
+        if (AuthUsers::has()) {
             return $next($request);
+        } else {
+            return redirect()->to('/login');
         }
     }
 }

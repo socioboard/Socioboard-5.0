@@ -1,0 +1,76 @@
+/* light-theme.css */
+:root {
+  --dark-grey: #191a1b;
+  --grey: #232626;
+  --white: #fff;
+}
+
+body {
+  color: #191a1b;
+  background: #eff2f5;
+}
+
+body a {
+  color: var(--white);
+}
+
+.card{
+  background-color:inherit;
+}
+
+
+.card-body {
+  border: 0px solid transparent;
+  background-image: linear-gradient(ffffff, transparent 0% 50%, #ffffff 50%, #f1ebeb 100%), linear-gradient(ffffff, #f1ebeb 0%, #f1ebeb 50%, #fff 50%, #ffffff 100%);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;}
+
+.btn {
+  background-image: linear-gradient(145deg, transparent 0% 50%, #ffffff 50%, #e6e6e6 100%), linear-gradient(145deg, #ffffff 0%, #f1ebeb 50%, #e6e6e6 50%, #ffffff 100%);
+  background-position: 0% 0%, 100% 100%;
+  background-size: 200% 200%;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  color: var(--dark-grey);
+  text-shadow: inherit;
+  box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+  transition: 0.5s ease-in-out;
+}
+
+
+.btn:hover, .btn.hover, .btn:active, .btn.active {
+  text-decoration: none;
+  background-position: 100% 100%, 0% 0%;
+  color: var(--dark-grey);
+  box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+}
+
+.btn:focus, .btn.focus {
+  outline: 0;
+  box-shadow:  20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+}
+
+.btn.disabled, .btn:disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+
+
+/* Sb_login */
+
+#Sb_login{
+  background-color: #191a1b;
+}
+
+.form-control {
+  background-color: #3a3b3c;
+  color: #F3F6F9;
+  border: 1px solid #3a3b3c;
+}
+.form-control.form-control-solid {
+  background-color: #3a3b3c;
+  border-color: #3a3b3c;
+  color: #F3F6F9;
+}

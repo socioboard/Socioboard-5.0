@@ -1,0 +1,37 @@
+# List all the excludes for committing the code to Bitbucket ( version controller )
+# -------------------------------------------------------------------------------
+# Node Modules
+
+Chat/node_modules/*
+Common/node_modules/*
+Feeds/node_modules/*
+Publish/node_modules/*
+Update/node_modules/*
+User/node_modules/*
+
+# Package-lock.json files
+
+Chat/package-lock.json
+Common/package-lock.json
+Feeds/package-lock.json
+Publish/package-lock.json
+Update/package-lock.json
+User/package-lock.json
+
+# Log files
+
+Chat/Log/*
+Common/Log/*
+Feeds/Log/*
+Publish/Log/*
+Update/Log/*
+User/Log/*
+
+# Swagger view files
+
+Chat/resources/views/swagger-api-view.json
+Common/resources/views/swagger-api-view.json
+Feeds/resources/views/swagger-api-view.json
+Publish/resources/views/swagger-api-view.json
+Update/resources/views/swagger-api-view.json
+User/resources/views/swagger-api-view.json

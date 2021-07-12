@@ -1,0 +1,13 @@
+{
+    "Blog": true,
+    "User": true,
+    "Discovery": true,
+    "Reports": true,
+    "Boards": true,
+    "ImageLibary": true,
+    "Chat": true,
+    "Home": true,
+    "Team": true,
+    "Feeds": true,
+    "ContentStudio": true
+}
