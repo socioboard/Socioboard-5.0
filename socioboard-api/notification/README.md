@@ -50,9 +50,10 @@ This Micro Service is useful to handle all the requests related to Users and Adm
 - It handles all the above listed User related Moduls
 
 ---
+
 ### How do I get set up?
 
-- Make sure you set the environment variable for node ( localDev )
+- Make sure you set the environment varaible for node
 - Make sure that the port you given in config is free in the service location
 - Make sure you check the code first and then follow the package.json scripts to run the project properly
 
