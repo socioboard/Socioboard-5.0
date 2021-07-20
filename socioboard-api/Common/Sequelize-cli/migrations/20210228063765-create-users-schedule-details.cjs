@@ -6,13 +6,13 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       schedule_type: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        comment: '0- Onetime Schedule, 1- Daywise Schedule',
+        comment: "0- Onetime Schedule, 1- Daywise Schedule"
         // 0- Onetime Schedule, 1- Daywise Schedule
       },
       module_name: {
@@ -23,17 +23,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
-        comment:
-          '1- ready Queue, 2-wait(pause), 3-approvalpending, 4-rejected, 5-draft, 6-done',
-        // 0-Active, 1-Pause, 2-Completed
+        comment: "1- ready Queue, 2-wait(pause), 3-approvalpending, 4-rejected, 5-draft, 6-done"
+        // 0-Active, 1-Pause, 2-Completed 
       },
       mongo_schedule_id: {
         type: Sequelize.STRING(64),
-        allowNull: false,
+        allowNull: false
       },
       one_time_schedule_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
       /**
        * 0- sunday
@@ -48,37 +47,36 @@ module.exports = {
         type: Sequelize.STRING(32),
         allowNull: false,
         defaultValue: '0-1-2-3-4-5-6',
-        comment:
-          '0- sunday, 1-monday, 2-tuesday, 3-wednesday, 4-thursday, 5-fri-day, 6-saturday',
+        comment: "0- sunday, 1-monday, 2-tuesday, 3-wednesday, 4-thursday, 5-fri-day, 6-saturday"
       },
       created_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
       end_date: {
         type: Sequelize.DATE,
-        allowNull: false,
+        allowNull: false
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'user_details',
-          key: 'user_id',
+          key: 'user_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       team_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'team_informations',
-          key: 'team_id',
+          key: 'team_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -94,5 +92,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('users_schedule_details');
-  },
+  }
 };

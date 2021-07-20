@@ -198,12 +198,6 @@
                                         <h6>Sorry some error ,occurred please reload page</h6>
                                     </div>
                                 @endif
-                                    <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
-                                        <span node-id="ss-accountsDiv_md12" class="ss addtcartclose"></span>
-                                    </div>
-                                    <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md12" style="
-    display: none;"></span>
                             </div>
                             <!--end::Profile-->
                         </div>
@@ -211,14 +205,17 @@
                     </div>
                     <div class="col-xl-8">
                         <!--begin::feeds-->
-                        <div class="card card-custom gutter-b card-stretch">
+                        <div class="card card-custom gutter-b card-stretch" id="ss-feedsDiv">
                             <!--begin::Header-->
-                            <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                 title="Add to custom Reports">+
-                                <span node-id="ss-accountsDiv_md8" class="ss addtcartclose"></span>
-                            </div>
-                            <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md8" style="
+                            <div class="card-header border-0 py-5">
+                                <h3 class="card-title font-weight-bolder">Feeds</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
     display: none;"></span>
+                            </div>
                             <div class="card-body" id="facebookFeeds">
                             @if(count($accounts)>0)
                                 <!--begin::Text-->

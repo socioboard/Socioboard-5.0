@@ -14,6 +14,14 @@ $(document.body).on('click', '#addToCart', function () {
     }
 });
 
+/**
+ * TODO We have to convert the particular div to screen shot.
+ * This function is used for converting the  particular div into the  Screen shots.
+ * @param {string} id-id of of particular div .
+ * @param {string} title- title of the div.
+ * @param {string} spanid of the particular span  div inside div.
+ * ! Do not change this function without referring API format of upload Screen shot.
+ */
 function uploadScreenShots(id, title,spanid) {
     html2canvas(document.getElementById(id), {
         scrollY: -window.scrollY,

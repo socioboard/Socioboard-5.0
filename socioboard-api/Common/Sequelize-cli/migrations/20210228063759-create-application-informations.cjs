@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       plan_id: {
         type: Sequelize.INTEGER(2),
@@ -107,13 +107,13 @@ module.exports = {
       maximum_referal_count: {
         type: Sequelize.INTEGER(3),
         allowNull: false,
-        defaultValue: 3,
+        defaultValue: 3
       },
       maximum_schedule: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
-        defaultValue: 20,
-      },
+        defaultValue: 20
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -129,5 +129,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('application_informations');
-  },
+  }
 };

@@ -1,15 +1,20 @@
 $(document).ready(function() {
+    // To get the cookies by name
+    window.getCookie = function(name) {
+        let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+    };
 
     let validCss = {"color": "#1BC5BD", "margin-top": "0.25rem", "width": "100%" ,"font-size": "0.9rem"};
     let invalidCss = {"color": "#F64E60", "margin-top": "0.25rem", "width": "100%" ,"font-size": "0.9rem"};
     // new passwd
     $("#new_password a").on('click', function(event) {
         event.preventDefault();
-        if($('#new_password input').attr("type") == "text"){
+        if($('#new_password input').attr("type") === "text"){
             $('#new_password input').attr('type', 'password');
             $('#new_password i').addClass( "fa-eye-slash" );
             $('#new_password i').removeClass( "fa-eye" );
-        }else if($('#new_password input').attr("type") == "password"){
+        }else if($('#new_password input').attr("type") === "password"){
             $('#new_password input').attr('type', 'text');
             $('#new_password i').removeClass( "fa-eye-slash" );
             $('#new_password i').addClass( "fa-eye" );
@@ -18,11 +23,11 @@ $(document).ready(function() {
     // confirm new passwd
     $("#confirm_password a").on('click', function(event) {
         event.preventDefault();
-        if($('#confirm_password input').attr("type") == "text"){
+        if($('#confirm_password input').attr("type") === "text"){
             $('#confirm_password input').attr('type', 'password');
             $('#confirm_password i').addClass( "fa-eye-slash" );
             $('#confirm_password i').removeClass( "fa-eye" );
-        }else if($('#confirm_password input').attr("type") == "password"){
+        }else if($('#confirm_password input').attr("type") === "password"){
             $('#confirm_password input').attr('type', 'text');
             $('#confirm_password i').removeClass( "fa-eye-slash" );
             $('#confirm_password i').addClass( "fa-eye" );
@@ -32,8 +37,14 @@ $(document).ready(function() {
     let apiUrl = $('meta[name="api-url"]').attr("content");
     $(document).on('submit', '#sign_up_form', function (e) {
         e.preventDefault();
+        let code = $("#phone").prev().children().attr('title').split("+")[1];
         let form = document.getElementById('sign_up_form');
         let formData = new FormData(form);
+        formData.append('code', code);
+        formData.append('rfd', window.getCookie('sbrfd') ?? '');
+        formData.append('kwd', window.getCookie('sbkwd') ?? '');
+        formData.append('med', window.getCookie('sbmed') ?? '');
+        formData.append('src', window.getCookie('sbsrc') ?? '');
         $.ajax({
             url: "/register",
             data: formData,
@@ -45,9 +56,17 @@ $(document).ready(function() {
                 if (response['code'] === 200) {
                     document.getElementById("sign_up_form").reset();
                     toastr.success(response.message, "Registered Successfully!");
-                    setTimeout(function () {
+
+                    // Append the Function of Google
+                    let callback = function () {
                         window.location = '/';
-                    }, 1000);
+                    };
+                    gtag('event', 'conversion', {
+                        send_to: 'AW-339310646/Xlb-CNmO6NECELbw5aEB',
+                        event_callback: callback,
+                    });
+                    return false;
+                    // End of the Function of Google
                 } else {
                     toastr.error(`${response['error']}`);
                 }
@@ -120,10 +139,19 @@ $(document).ready(function() {
     //Checking last name valid or not
     $(document).on('keyup','#lastName',function () {
         let $regex = /^[a-zA-Z]*$/;
-        if ($regex.test($(this).val()) && $(this).val().length >= 3) {
+        if ($regex.test($(this).val()) && $(this).val().length >= 1) {
             $('#lastNameError').html('✅ Valid').css(validCss)
         } else {
-            $('#lastNameError').html('❌ Invalid (last name should not contain numeric and spaces,should contain min 3 characters)').css(invalidCss)
+            $('#lastNameError').html('❌ Invalid (last name should not contain numeric and spaces,should contain min 1 character)').css(invalidCss)
+        }
+    });
+
+    //checking phone number valid or not
+    $(document).on('keyup','#phone',function () {
+        if ($(this).val().length < 1) {
+            $('#phoneError').html('❌ Invalid (Phone Number is Required)').css(invalidCss)
+        } else {
+            $('#phoneError').empty();
         }
     });
 
@@ -141,7 +169,7 @@ $(document).ready(function() {
                         $('#userNameError').html('<div>Success! You\'ve done it.</div>').css(validCss);
                     }
                     if (response['code'] === 400) {
-                        $('#userNameError').html('<div>Invalid Username(Should contain minimum 3 charecters)</div>').css(invalidCss);
+                        $('#userNameError').html('<div>'+response.error+'</div>').css(invalidCss);
                     }
                 },
                 error: function (error) {
@@ -185,6 +213,7 @@ $(document).ready(function() {
         if (data['userName'] === undefined) document.getElementById('userNameError').innerHTML = '';
         if (data['email'] === undefined) document.getElementById('emailError').innerHTML = '';
         if (data['password'] === undefined) document.getElementById('passwordError').innerHTML = '';
+        if (data['phone'] === undefined) document.getElementById('phoneError').innerHTML = '';
         if (data['passwordConfirmation'] === undefined) document.getElementById('passwordConfirmationError').innerHTML = '';
     }
 });

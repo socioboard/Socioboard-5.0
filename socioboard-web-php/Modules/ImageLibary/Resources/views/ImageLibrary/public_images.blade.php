@@ -61,9 +61,9 @@
                             </div>
                         @endforeach
                     @elseif($images["code"] == 200 && isset($images["data"]->data) && empty($images["data"]->data))
-                        <div class="card-body text-danger">No Data Found</div>
+                        <div class="card-body text-danger" id="privateImagesError1">No Data Found</div>
                     @elseif($images["code"] && !empty($images["code"]))
-                        <div class="card-body text-danger">{{$images["message"]}}</div>
+                        <div class="card-body text-danger" id="privateImagesError2">{{$images["message"]}}</div>
                     @else
                         <div class="card-body text-danger">Some error occurred while fetching data Please reload it... </div>
                     @endif

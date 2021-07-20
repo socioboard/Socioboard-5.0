@@ -7,7 +7,7 @@
     <div id="error" hidden style="color: red;text-align:center;">
 
     </div>
-    <div class="login-form py-11">
+    <div class="login-form">
         <!--begin::Form-->
         <div class="form">
             <!--begin::Title-->
@@ -40,7 +40,7 @@
                             <label for="emailOrUsername" style="display: none"></label>
                             <input class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6"
                                    type="text"
-                                   name="emailOrUsername" id="emailOrUsername" autocomplete="off" placeholder="Email"/>
+                                   name="emailOrUsername" id="emailOrUsername" autocomplete="off" placeholder="Email Or User Name"/>
                             <span><i class="far fa-user"></i></span>
                         </div>
                         <span id="validEmail" style="color: red;font-size: medium;" role="alert">
@@ -125,7 +125,6 @@
                                     </div>
                                     <!--end::Form group-->
                                 </div>
-
                                 <div class="modal-footer" style="padding: 8px 21px 20px 21px">
                                     <button type="button" class="btn font-weight-bolder "
                                             onclick="emailLogin()">Submit
@@ -158,8 +157,7 @@
                         Sign in with Google
                     </button>
                 </div>
-                <!-- end:Google login button -->
-
+                <!-- end:Google background-color: #eee;login button -->
                 <!-- Twitter login button -->
                 <div>
                     <button type="button" class="btn bg-twitter font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
@@ -193,24 +191,16 @@
     <script>
         sessionStorage.clear();//destroying session.
         /**
-         * TODO We have to switch theme from dark to white and vice versa based on day or night time , if its day time then white and if its night time the dark theme.
-         * This function is used for switching theme of dark and night based on day or night time on every 15 minutes it will check and run code.
+         * TODO We have to switch theme to white theme by default.
+         * This function is switch theme to white theme by default.
          * ! Do not change this function without checking script code of changing theme.
          */
-        function changeThemeByTime() {
-            let date = new Date();
-            let hours = date.getHours();
-            if (hours >= 7 && hours < 18) {
+        function changeThemeWhiteDefault() {
                 document.documentElement.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-
         }
         $(document).ready(function () {//calling function on onload of the page to determine the theme change
-            changeThemeByTime();
+            changeThemeWhiteDefault();
         });
         localStorage.setItem('isLoggedIn', '0');
     </script>

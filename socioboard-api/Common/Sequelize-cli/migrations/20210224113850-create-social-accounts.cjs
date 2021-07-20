@@ -6,18 +6,18 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
       },
       /**
        * 1-Facebook user,
-       * 2-Facebook page,
+       * 2-Facebook page, 
        * 3-Facebook group,
-       * 4-Twitter,
+       * 4-Twitter, 
        * 5-Instagram,
        * 6-Linkedin Personal,
        * 7-Linkedin Business,
-       * 8-Google Plus,
-       * 9-Youtube,
+       * 8-Google Plus, 
+       * 9-Youtube, 
        * 10-Google analytics,
        * 11-Dailymotion
        */
@@ -25,58 +25,57 @@ module.exports = {
         type: Sequelize.INTEGER(1),
         allowNull: false,
         defaultValue: 0,
-        comment:
-          '1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion',
+        comment: '1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion'
       },
       user_name: {
         type: Sequelize.STRING(64),
-        allowNull: false,
+        allowNull: false
       },
       first_name: {
         type: Sequelize.STRING(64),
-        allowNull: true,
+        allowNull: true
       },
       last_name: {
         type: Sequelize.STRING(64),
-        allowNull: true,
+        allowNull: true
       },
       email: {
         type: Sequelize.STRING(64),
-        allowNull: true,
+        allowNull: true
       },
       social_id: {
         type: Sequelize.STRING(64),
-        allowNull: true,
+        allowNull: true
       },
       profile_pic_url: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true
       },
       cover_pic_url: {
         type: Sequelize.TEXT,
         allowNull: true,
-        defaultValue: 'NA',
+        defaultValue: 'NA'
       },
       profile_url: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true
       },
       access_token: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true
       },
       refresh_token: {
         type: Sequelize.TEXT,
         allowNull: true,
-        defaultValue: 'NA',
+        defaultValue: 'NA'
       },
       friendship_counts: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true
       },
       info: {
         type: Sequelize.TEXT,
-        allowNull: true,
+        allowNull: true
       },
       // category1: {
       //   type: Sequelize.STRING(64),
@@ -89,7 +88,7 @@ module.exports = {
       //   allowNull: true,
       //   defaultValue: 'NA'
       // },
-
+      
       // create_on: {
       //   type: Sequelize.DATE,
       //   defaultValue: Sequelize.NOW,
@@ -99,11 +98,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'user_details',
-          key: 'user_id',
+          key: 'user_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // archived_status: {
       //   type: Sequelize.INTEGER,
@@ -146,5 +145,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('social_accounts');
-  },
+  }
 };

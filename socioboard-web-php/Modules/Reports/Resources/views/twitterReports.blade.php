@@ -68,17 +68,17 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-8">
-                        <!--begin::Mixed Widget 2-->
+                    <div class="col-xl-8" id="ss-twitter">
                         <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Follow Stats</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-twitter_md8" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-twitter_md8" style="
+    display: none;"></span>
                             </div>
-                            <!--end::Header-->
-
-
-                            <!--begin::Body-->
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -155,7 +155,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-4">
+                    <div class="col-xl-4" id="ss-twitterPublish">
                         <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
                             <!--begin::Header-->
@@ -165,6 +165,12 @@
                                         <div class="font-weight-bolder">Stats</div>
                                     </div>
                                 </div>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-twitterPublish_md4" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-twitterPublish_md4" style="
+    display: none;"></span>
                             </div>
                             <!--end::Header-->
 

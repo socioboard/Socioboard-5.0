@@ -19,12 +19,19 @@ class ReportsController extends Controller
 {
     protected $helper;
 
+
     public function __construct()
     {
         $this->helper = Helper::getInstance();
         $this->API_URL = env('API_URL');
         $this->API_URL_FEEDS = env('API_URL_FEEDS');
         $this->API_URL_PUBLISH = env('API_URL_PUBLISH');
+        $this->twitterAccounts = [];
+        $this->youtubeAccounts = [];
+        $this->teamdetails = [];
+        $this->i = 0;
+        $this->j = 0;
+        $this->k = 0;
     }
 
     public function getTeamReports()
@@ -356,37 +363,34 @@ class ReportsController extends Controller
             return $this->helper->callingErrorHandler($e, 'getReportImagesOnload() {ReportsController}');
 
         }
-    }    /**
+    }
+
+     /**
      * TODO we've to get the details to send the email reports automatically.
      * ! Do not change function without referring the API format of the updating comapny logo and company name.
      */
+
     public function autoEmailReports()
     {
-        try {
-            $twitterAccounts = [];
-            $youtubeAccounts = [];
-            $teamdetails = [];
-            $i = 0;
-            $j = 0;
-            $k = 0;
+//        try {
             $apiUrl = ApiConfig::get('/team/get-details');
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             $responseData = $this->helper->responseHandler($response['data']);
             foreach ($responseData['data']->socialAccounts as $social) {
                 if ($social->account_type === 4) {
-                    $twitterAccounts[$i] = $social;
-                    $i++;
+                    $twitterAccounts[$this->i] = $social;
+                    $this->i++;
                 }
             }
             foreach ($responseData['data']->socialAccounts as $social) {
                 if ($social->account_type === 9) {
-                    $youtubeAccounts[$j] = $social;
-                    $j++;
+                    $youtubeAccounts[$this->j] = $social;
+                    $this->j++;
                 }
             }
             foreach ($responseData['data']->teamSocialAccountDetails as $team) {
-                $teamdetails[$k] = $team[0];
-                $k++;
+                $teamdetails[$this->k] = $team[0];
+                $this->k++;
             }
             $apiUrl = env('API_URL_UPDATE').env('API_VERSION').'/report/get-reports?pageId=1';
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -400,15 +404,60 @@ class ReportsController extends Controller
                 $data[$x][0]['frequency'] = $report->frequency;
                 $content = json_decode($report->content);
                 $data[$x][0]['emails'] = $content->email;
-                $data[$x][0]['teamReport'] = isset($content->teamReport) ? $content->teamReport : null;
-                $data[$x][0]['youTube'] = isset($content->youTube) ? $content->youTube : null;
-                $data[$x][0]['twitterReport'] = isset($content->twitterReport) ? $content->twitterReport : null;
+                $data[$x][0]['teamReport'] = isset($content->teamReport) ? $content->teamReport : [];
+                $data[$x][0]['youTube'] = isset($content->youTube) ? $content->youTube : [];
+                $data[$x][0]['twitterReport'] = isset($content->twitterReport) ? $content->twitterReport : [];
                 $x++;
             }
             return view('reports::autoEmailReports', compact('twitterAccounts', 'youtubeAccounts', 'teamdetails','data'));
+//        }catch (Exception $e) {
+//            return $this->helper->callingErrorHandler($e, 'autoEmailReports() {ReportsController}');
+//        }
+    }
+
+    public function getNextReports($value){
+        try {
+            $apiUrl = ApiConfig::get('/team/get-details');
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $responseData = $this->helper->responseHandler($response['data']);
+            foreach ($responseData['data']->socialAccounts as $social) {
+                if ($social->account_type === 4) {
+                    $twitterAccounts[$this->i] = $social;
+                    $this->i++;
+                }
+            }
+            foreach ($responseData['data']->socialAccounts as $social) {
+                if ($social->account_type === 9) {
+                    $youtubeAccounts[$this->j] = $social;
+                    $this->j++;
+                }
+            }
+            foreach ($responseData['data']->teamSocialAccountDetails as $team) {
+                $teamdetails[$this->k] = $team[0];
+                $this->k++;
+            }
+            $apiUrl = env('API_URL_UPDATE') . env('API_VERSION') . '/report/get-reports?pageId='.$value;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $reports = $this->helper->responseHandler($response['data']);
+            $data = [];
+            $x = 0;
+            foreach ($reports['data'] as $report) {
+                $data[$x][0]['id'] = $report->id;
+                $data[$x][0]['report_title'] = $report->report_title;
+                $data[$x][0]['report_type'] = $report->report_type;
+                $data[$x][0]['frequency'] = $report->frequency;
+                $content = json_decode($report->content);
+                $data[$x][0]['emails'] = $content->email;
+                $data[$x][0]['teamReport'] = isset($content->teamReport) ? $content->teamReport : [];
+                $data[$x][0]['youTube'] = isset($content->youTube) ? $content->youTube : [];
+                $data[$x][0]['twitterReport'] = isset($content->twitterReport) ? $content->twitterReport : [];
+                $x++;
+            }
+            return $data;
         } catch (Exception $e) {
-            return $this->helper->callingErrorHandler($e, 'autoEmailReports() {ReportsController}');
+            return $this->helper->callingErrorHandler($e, 'getNextReports() {ReportsController}');
         }
+
     }
     /**
      * TODO we've to  the save the reports  settings for sending reports automatically to the emails.
@@ -440,28 +489,37 @@ class ReportsController extends Controller
                 $response['data'] = null;
                 return Response::json($response, 200);
             }
-            $reportstitle = isset($request->reportstitle) ? $request->reportstitle : null;
-            $frequency =  isset($request->frequency) ? $request->frequency : null;
-            $recipient_emails = isset($request->recipient_emails) ? $request->recipient_emails : null;
-            $teams = isset($request->teams) ? $request->teams : null;
-            $twitter =  isset($request->twitter) ? $request->twitter : null;
-            $youtube = isset($request->youtube) ? $request->youtube : null;
-            $type =  isset($request->type) ? $request->type : null;
 
-            $apiUrl = env('API_URL_UPDATE').env('API_VERSION').'/report/create?reportTitle='.$reportstitle.'&frequency='.$frequency.'&report='.$type.'&testMail='.$request->submit_type;
+            if (isset($request->teams) || isset($request->twitter) || isset($request->youtube)) {
+                $reportstitle = isset($request->reportstitle) ? $request->reportstitle : null;
+                $frequency = isset($request->frequency) ? $request->frequency : null;
+                $recipient_emails = isset($request->recipient_emails) ? $request->recipient_emails : null;
+                $teams = isset($request->teams) ? $request->teams : [];
+                $twitter = isset($request->twitter) ? $request->twitter : [];
+                $youtube = isset($request->youtube) ? $request->youtube : [];
+                $type = isset($request->type) && count($request->type ) === 2  ? 0 : $request->type[0];
 
-            $requestData = [
-                "autoReport" => [
-                    "email" => $recipient_emails,
-                    "teamReport" => $teams,
-                    "twitterReport" => $twitter,
-                    "facebookPageReport" => [],
-                    "youTube" => $youtube
-                ]
-            ];
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl,$requestData);
+                $apiUrl = env('API_URL_UPDATE') . env('API_VERSION') . '/report/create?reportTitle=' . $reportstitle . '&frequency=' . $frequency . '&report=' . $type . '&testMail=' . $request->submit_type;
 
-            return $this->helper->responseHandler($response['data']);
+                $requestData = [
+                    "autoReport" => [
+                        "email" => $recipient_emails,
+                        "teamReport" => $teams,
+                        "twitterReport" => $twitter,
+                        "facebookPageReport" => [],
+                        "youTube" => $youtube
+                    ]
+                ];
+
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
+
+                return $this->helper->responseHandler($response['data']);
+            }else{
+                $response['code'] = 201;
+                $response['msg'] = ['0' =>'Atleast one report content is required'];
+                $response['data'] = null;
+                return Response::json($response, 200);
+            }
         } catch (Exception $e) {
             return $this->helper->callingErrorHandler($e, 'saveAutoEmailReports() {ReportsController}');
         }
@@ -524,10 +582,10 @@ class ReportsController extends Controller
                 $reportstitle = isset($request->update_reportstitle) ? $request->update_reportstitle : null;
                 $frequency =  isset($request->update_frequency) ? $request->update_frequency : null;
                 $recipient_emails = isset($emails) ? $emails : null;
-                $teams = isset($request->update_teams) ? $request->update_teams : null;
-                $twitter =  isset($request->update_twitter) ? $request->update_twitter : null;
-                $youtube = isset($request->update_youtube) ? $request->update_youtube : null;
-                $type =  isset($request->update_type) ? $request->update_type : null;
+                $teams = isset($request->update_teams) ? $request->update_teams : [];
+                $twitter =  isset($request->update_twitter) ? $request->update_twitter : [];
+                $youtube = isset($request->update_youtube) ? $request->update_youtube : [];
+                $type = isset($request->update_type) && count($request->update_type ) === 2  ? 0 : $request->update_type[0];
 
                 $apiUrl = env('API_URL_UPDATE').env('API_VERSION').'/report/edit?id='.$request->id.'&reportTitle='.$reportstitle.'&frequency='.$frequency.'&report='.$type.'&testMail=1';
                 $requestData = [
@@ -544,4 +602,55 @@ class ReportsController extends Controller
             return $this->helper->callingErrorHandler($e, 'saveAutoEmailReports() {ReportsController}');
         }
     }
+    public function getPerticularReports($id){
+        try {
+            $apiUrl = env('API_URL_UPDATE') . env('API_VERSION') . '/report/get-reports-by-id?id=' . $id;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $reports = $this->helper->responseHandler($response['data']);
+            if ($reports['code'] === 200 && $reports['data'] !== null) {
+                $apiUrl = ApiConfig::get('/team/get-details');
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                $responseData = $this->helper->responseHandler($response['data']);
+                foreach ($responseData['data']->socialAccounts as $social) {
+                    if ($social->account_type === 4) {
+                        $twitterAccounts[$this->i] = $social;
+                        $this->i++;
+                    }
+                }
+                foreach ($responseData['data']->socialAccounts as $social) {
+                    if ($social->account_type === 9) {
+                        $youtubeAccounts[$this->j] = $social;
+                        $this->j++;
+                    }
+                }
+                foreach ($responseData['data']->teamSocialAccountDetails as $team) {
+                    $teamdetails[$this->k] = $team[0];
+                    $this->k++;
+                }
+
+                $report = $reports['data'];
+                $data = [];
+
+                $data[0]['id'] = $report->id;
+                $data[0]['report_title'] = $report->report_title;
+                $data[0]['report_type'] = $report->report_type;
+                $data[0]['frequency'] = $report->frequency;
+                $content = json_decode($report->content);
+                $data[0]['emails'] = $content->email;
+                $data[0]['teamReport'] = isset($content->teamReport) ? $content->teamReport : [];
+                $data[0]['youTubeReport'] = isset($content->youTube) ? $content->youTube : [];
+                $data[0]['twitterReport'] = isset($content->twitterReport) ? $content->twitterReport : [];
+                $data[0]['twitter'] = $twitterAccounts;
+                $data[0]['youtube'] = $youtubeAccounts;
+                $data[0]['team'] = $teamdetails;
+                return $data;
+
+            }else{
+                return null;
+            }
+        } catch (Exception $e) {
+            return $this->helper->callingErrorHandler($e, 'getNextReports() {ReportsController}');
+        }
+    }
+
 }

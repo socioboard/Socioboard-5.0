@@ -136,10 +136,17 @@ class LoginController extends Controller
     {
         $apiUrl = ApiConfig::get('/login');
         $response = null;
-        $parameters = array(
-            "email" => $request['emailOrUsername'],
-            "password" => md5($request['password'])
-        );
+        if (str_contains($request['emailOrUsername'], '@')){
+            $parameters = array(
+                "email" => $request['emailOrUsername'],
+                "password" => md5($request['password'])
+            );
+        }else{
+            $parameters = array(
+                "username" => $request['emailOrUsername'],
+                "password" => md5($request['password'])
+            );
+        }
 
         try {
             $response = $this->helper->postApiCall('post', $apiUrl, $parameters);

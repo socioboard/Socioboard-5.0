@@ -6,7 +6,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
       },
       team_name: {
         type: Sequelize.STRING(64),
@@ -14,13 +14,13 @@ module.exports = {
         validate: {
           notEmpty: {
             args: true,
-            msg: 'team_name is mandatory field.',
+            msg: "team_name is mandatory field."
           },
           len: {
             args: [4, 64],
-            msg: 'team_name should have 4 to 10 characters.',
-          },
-        },
+            msg: "team_name should have 4 to 10 characters."
+          }
+        }
       },
       team_logo: {
         type: Sequelize.TEXT,
@@ -29,14 +29,14 @@ module.exports = {
         validate: {
           isUrl: {
             args: true,
-            msg: 'team_logo is not in valid url.',
-          },
-        },
+            msg: "team_logo is not in valid url."
+          }
+        }
       },
       team_description: {
         type: Sequelize.TEXT,
         allowNull: false,
-        defaultValue: 'NA',
+        defaultValue: 'NA'
       },
       team_admin_id: {
         type: Sequelize.INTEGER,
@@ -46,7 +46,7 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-      },
+      }
       // ,
       // is_team_locked: {
       //   type: Sequelize.BOOLEAN,
@@ -67,5 +67,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('team_informations');
-  },
+  }
 };

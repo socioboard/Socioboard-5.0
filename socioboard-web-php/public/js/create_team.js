@@ -146,6 +146,7 @@ let SBKanbanBoard = function () {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
+                    $('#create_button').empty().append('Create Team');
                     if (response['code'] === 200) {
                         $("#teamCreateModal").modal('hide');
                         let name = response['data']['team_name'];
@@ -186,6 +187,7 @@ let SBKanbanBoard = function () {
                     }
                 },
                 error: function (error) {
+                    $('#create_button').empty().append('Create Team');
                     toastr.error(error.error)
                 }
 

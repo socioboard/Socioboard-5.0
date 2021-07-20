@@ -63568,7 +63568,7 @@ body {
         width: 100%;
         max-width: 600px; }
     .login.login-2 .content .content-img {
-        min-height: 600px !important; }
+        /*min-height: 600px !important; }*/
     .login.login-2 .login-form {
         width: 100%;
         max-width: 450px; } }

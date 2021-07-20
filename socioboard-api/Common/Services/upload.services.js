@@ -3,88 +3,91 @@ import moment from 'moment';
 import fs from 'fs';
 
 class UpdloadMedia {
-  constructor(uploadService) {
-    this.uploadService = uploadService;
 
-    this.imageStorage = multer.diskStorage({
-      destination: (req, file, cb) => {
-        if (!fs.existsSync(this.uploadService.image_path)) {
-          fs.mkdirSync(this.uploadService.image_path);
-        }
-        cb(null, this.uploadService.image_path);
-      },
-      filename: (req, file, cb) => {
-        var fileArray = file.originalname.split('.');
-        var extension = fileArray.pop();
-        var fileName = `${moment().unix()}.${extension}`;
+    constructor(uploadService) {
 
-        cb(null, fileName);
+        this.uploadService = uploadService;
 
-        // cb(null, `${file.originalname}`);
-      },
-    });
+        this.imageStorage = multer.diskStorage({
+            destination: (req, file, cb) => {
+                if (!fs.existsSync(this.uploadService.image_path)) {
+                    fs.mkdirSync(this.uploadService.image_path);
+                }
+                cb(null, this.uploadService.image_path);
+            },
+            filename: (req, file, cb) => {
 
-    this.videoStorage = multer.diskStorage({
-      destination: (req, file, cb) => {
-        if (!fs.existsSync(this.uploadService.video_path)) {
-          fs.mkdirSync(this.uploadService.video_path);
-        }
-        cb(null, this.uploadService.video_path);
-      },
-      filename: (req, file, cb) => {
-        var fileArray = file.originalname.split('.');
-        var extension = fileArray.pop();
-        var fileName = `${moment().unix()}.${extension}`;
+                var fileArray = file.originalname.split('.');
+                var extension = fileArray.pop();
+                var fileName = `${moment().unix()}.${extension}`;
 
-        cb(null, fileName);
-      },
-    });
+                cb(null, fileName);
 
-    this.mediaStorage = multer.diskStorage({
-      destination: (req, file, cb) => {
-        if (file.mimetype.includes('image')) {
-          if (!fs.existsSync(this.uploadService.image_path)) {
-            fs.mkdirSync(this.uploadService.image_path);
-          }
-          cb(null, this.uploadService.image_path);
-        } else {
-          if (!fs.existsSync(this.uploadService.video_path)) {
-            fs.mkdirSync(this.uploadService.video_path);
-          }
-          cb(null, this.uploadService.video_path);
-        }
-      },
-      filename: (req, file, cb) => {
-        var fileArray = file.originalname.split('.');
-        var extension = fileArray.pop();
-        var fileName = `${moment().unix()}.${extension}`;
+                // cb(null, `${file.originalname}`);
+            }
+        });
 
-        cb(null, fileName);
-      },
-    });
+        this.videoStorage = multer.diskStorage({
+            destination: (req, file, cb) => {
+                if (!fs.existsSync(this.uploadService.video_path)) {
+                    fs.mkdirSync(this.uploadService.video_path);
+                }
+                cb(null, this.uploadService.video_path);
+            },
+            filename: (req, file, cb) => {
+                var fileArray = file.originalname.split('.');
+                var extension = fileArray.pop();
+                var fileName = `${moment().unix()}.${extension}`;
 
-    this.uploadSSTemplate = multer.diskStorage({
-      destination: (req, file, cb) => {
-        if (file.mimetype.includes('image')) {
-          if (!fs.existsSync(this.uploadService.ss_template_path)) {
-            fs.mkdirSync(this.uploadService.ss_template_path);
-          }
-          cb(null, this.uploadService.ss_template_path);
-        }
-      },
-      filename: (req, file, cb) => {
-        var fileArray = file.originalname.split('.');
-        var extension = fileArray.pop();
-        var fileName = `${moment().unix()}.${extension}`;
-        cb(null, fileName);
-      },
-    });
+                cb(null, fileName);
+            }
+        });
 
-    this.imageUpload = multer({storage: this.imageStorage});
-    this.videoUpload = multer({storage: this.videoStorage});
-    this.mediaUpload = multer({storage: this.mediaStorage});
-    this.uploadSSTemplate = multer({storage: this.uploadSSTemplate});
-  }
+        this.mediaStorage = multer.diskStorage({
+            destination: (req, file, cb) => {
+                if (file.mimetype.includes('image')) {
+                    if (!fs.existsSync(this.uploadService.image_path)) {
+                        fs.mkdirSync(this.uploadService.image_path);
+                    }
+                    cb(null, this.uploadService.image_path);
+                } else {
+                    if (!fs.existsSync(this.uploadService.video_path)) {
+                        fs.mkdirSync(this.uploadService.video_path);
+                    }
+                    cb(null, this.uploadService.video_path);
+                }
+            },
+            filename: (req, file, cb) => {
+                var fileArray = file.originalname.split('.');
+                var extension = fileArray.pop();
+                var fileName = `${moment().unix()}.${extension}`;
+
+                cb(null, fileName);
+            }
+        });
+
+        this.uploadSSTemplate = multer.diskStorage({
+            destination: (req, file, cb) => {
+                if (file.mimetype.includes('image')) {
+                    if (!fs.existsSync(this.uploadService.ss_template_path)) {
+                        fs.mkdirSync(this.uploadService.ss_template_path);
+                    }
+                    cb(null, this.uploadService.ss_template_path);
+                }
+            },
+            filename: (req, file, cb) => {
+                var fileArray = file.originalname.split('.');
+                var extension = fileArray.pop();
+                var fileName = `${moment().unix()}.${extension}`;
+                cb(null, fileName);
+            }
+        });
+
+        this.imageUpload = multer({ storage: this.imageStorage });
+        this.videoUpload = multer({ storage: this.videoStorage });
+        this.mediaUpload = multer({ storage: this.mediaStorage });
+        this.uploadSSTemplate = multer({ storage: this.uploadSSTemplate });
+    }
 }
 
 export default UpdloadMedia;

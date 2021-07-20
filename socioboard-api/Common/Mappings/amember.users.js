@@ -125,6 +125,11 @@ class aMember {
         name_f: user?.firstName,
         name_l: user?.lastName,
         email: user?.email,
+        phone: user?.phone ?? '',
+        src: user?.src ?? '',
+        cmp: user?.med ?? '',
+        rfd: user?.rfd ?? '',
+        kwd: user?.kwd ?? '',
       });
       const userBasicConfig = {
         method: 'post',
@@ -168,6 +173,131 @@ class aMember {
         });
     });
   }
+
+  /**
+   * To delete the particular user from aMember if they delete the account from SocioBoard.
+   * TODO delete the Details from aMember
+   * * Get the plan details ( especially plan number & expiry date )
+   * @param {number} userId
+   * NOTE Call at deleting the user permanently from the Application
+   */
+  deleteUserFromAMember(userId = 0) {
+    return new Promise((resolve, reject) => {
+      if (!userId) {
+        reject(new Error('Invalid data!'));
+      } else {
+        // Call the Amember Rout and delete the user details from aMember
+        const data = qs.stringify({
+          _key: this.aMemberKey,
+        });
+        const userBasicConfig = {
+          method: 'delete',
+          url: `${this.aMemberDomain}/users/${userId}`,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          data: data,
+        };
+        axios(userBasicConfig)
+          .then(({data: aMemberUser}) => {
+            //  Get Plans from here only
+            logger.info(
+              `aMember user Deleted and Deleted User Details: ${JSON.stringify(
+                aMemberUser
+              )} & ${moment().format('YYYY-MM-DD hh:mm:ss A')}`
+            );
+
+            resolve('Successfully Deleted the User');
+          })
+          .catch(error => {
+            //  Log error to know the status
+            reject(error.message);
+          });
+      }
+    });
+  }
+
+    /**
+   * TODO Update User Mail  to amember
+   * @param {number} userId - user Id
+   * @param {string} email - User email
+   */
+  updateUserEmailToAMember(user = {}) {
+     return new Promise((resolve, reject) => {
+      const data = qs.stringify({
+        _key: this.aMemberKey,
+        email: user?.email,
+      });
+      const userBasicConfig = {
+        method: 'put',
+        url: `${this.aMemberDomain}/users/${user?.userId}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: data,
+      };
+
+      axios(userBasicConfig)
+        .then(response => {
+          logger.info(
+            `User Details from aMember after update in Email: ${JSON.stringify(
+              response?.data
+            )} & Id ${response?.data[0]?.user_id} & Email Id: ${
+              response?.data[0]?.email
+            } `
+          );
+          resolve(`Email updated Successfully`);
+        })
+        .catch(error => {
+          logger.error(
+            `Error while  updating Email in Amember;`,
+            error.message
+          );
+          reject(error);
+        });
+    });
+  }
+
+     /**
+   * TODO Update User password  to amember
+   * @param {number} userId - User Id
+   * @param {string} password - User Password
+   */
+  updateUserPasswordToAMember(user = {}) {
+     return new Promise((resolve, reject) => {
+      const data = qs.stringify({
+        _key: this.aMemberKey,
+        pass: user?.password,
+      });
+      const userBasicConfig = {
+        method: 'put',
+        url: `${this.aMemberDomain}/users/${user?.userId}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: data,
+      };
+
+      axios(userBasicConfig)
+        .then(response => {
+          logger.info(
+            `User Details from aMember after update in Password: ${JSON.stringify(
+              response?.data
+            )} & Id ${response?.data[0]}`
+          );
+          resolve(`Password  updated Successfully`);
+        })
+        .catch(error => {
+          logger.error(
+            `Error while  updating Pasword  in Amember;`,
+            error.message
+          );
+          reject(error);
+        });
+    });
+  }
+
+
 }
 
 export default aMember;

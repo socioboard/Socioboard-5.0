@@ -22,6 +22,21 @@
             );
         </script>
     @endif
+    <script>
+        window.getCookie = function(name) {
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            if (match) return match[2];
+        };
+        //aMemberData for autoLogin
+        localStorage.setItem('browser_id', '<?php echo(session()->get('user')['userDetails']['user_name']);?>');
+        localStorage.setItem('random_key', '<?php echo(session()->get('user')['userDetails']['password']);?>');
+
+        if(window.getCookie('SBPlan')) {
+            document.cookie = 'SBPlan=; Path=/;path=/;domain=socioboard.com; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            window.location.href = "https://appv5.socioboard.com/amember/member";
+        }
+    //    Check if plan is clicked or not
+    </script>
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
 
         <!--begin::Entry-->
@@ -380,7 +395,8 @@
                                          title="Add to custom Reports">+
                                         <span node-id="ss-viewAccountsDiv_md4" class="ss addtcartclose"></span>
                                     </div>
-                                    <span class="spinner spinner-primary spinner-center" id="ss-viewAccountsDiv_md4" style="
+                                    <span class="spinner spinner-primary spinner-center" id="ss-viewAccountsDiv_md4"
+                                          style="
     display: none;"></span>
                                 </div>
                             </div>
@@ -743,11 +759,11 @@
                                                                            disabled
                                                                         >{{$account->first_name}}{{$account->last_name}}  </a>
                                                                     @else
-                                                                        <a href="{{$account->profile_url}}" id="name"
+                                                                        <a id="name"
                                                                            class="font-weight-bold font-size-lg mb-1 truncate"
-                                                                           data-toggle="tooltip" target="_blank"
+                                                                           data-toggle="tooltip"
                                                                            title="{{$account->first_name}}{{$account->last_name}}"
-                                                                        >{{$account->first_name}}{{$account->last_name}}</a>
+                                                                        >{{$account->first_name}}{{$account->last_name}}</a  id="name">
                                                                     @endif
                                                                     @if($account->account_type === 1 || $account->account_type === 3)
                                                                         <span
@@ -777,12 +793,17 @@
                                                                     @endif
                                                                 </div>
                                                                 <!--end::Text-->
-                                                                <a href="{{$account->profile_url}}" target="_blank"
-                                                                   id="connectedButton" title="View Profile"
-                                                                   class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                    Connected</a>
-
-                                                                <!--begin::Account Dropdown-->
+                                                                @if($account->join_table_teams_social_accounts->is_account_locked === false)
+                                                                    <a href="{{$account->profile_url}}" target="_blank"
+                                                                       id="connectedButton" title="View Profile"
+                                                                       class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                        Connected</a>
+                                                                @else
+                                                                    <a
+                                                                            class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                        Not Connected</a>
+                                                            @endif
+                                                            <!--begin::Account Dropdown-->
                                                                 <div class="dropdown dropdown-inline ml-2"
                                                                      id="quick_actions"
                                                                      title="Quick actions"
@@ -996,7 +1017,8 @@
                                          title="Add to custom Reports">+
                                         <span node-id="ss-publishHistoryDiv_md8" class="ss addtcartclose"></span>
                                     </div>
-                                    <span class="spinner spinner-primary spinner-center" id="ss-publishHistoryDiv_md8" style="
+                                    <span class="spinner spinner-primary spinner-center" id="ss-publishHistoryDiv_md8"
+                                          style="
     display: none;"></span>
                                 </div>
                                 <!--end::Header-->
@@ -1123,10 +1145,6 @@
         let secondDate = new Date(user_expire_date);
         let diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
         $('#account_expire_date_id').empty().append((plan_name == "Basic") ? "Free" : diffDays + ' Days remaining!!');
-
-        //aMemberData for autoLogin
-        localStorage.setItem('browser_id', '<?php echo(session()->get('user')['userDetails']['user_name']);?>');
-        localStorage.setItem('random_key', '<?php echo(session()->get('user')['userDetails']['password']);?>');
 
         //  Plan Details End ****
 

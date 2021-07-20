@@ -14,7 +14,7 @@
                 <!--begin::Row-->
                 <div class="row">
                     <div class="col-xl-12 card-stretch" id="ss-accountsDiv">
-                        <div class="card card-custom gutter-b card-stretch" >
+                        <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Accounts</h3>
                                 <div class="card-toolbar">
@@ -26,7 +26,8 @@
                                          title="Add to custom Reports">+
                                         <span node-id="ss-accountsDiv_md12" class="ss addtcartclose"></span>
                                     </div>
-                                    <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md12" style="
+                                    <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md12"
+                                          style="
     display: none;"></span>
                                 </div>
                             </div>
@@ -247,18 +248,25 @@
                                                             @endif
                                                         </div>
                                                         <div>
-                                                            @if($account->account_type === 2)
-                                                                <a href="https://www.facebook.com/{{$account->user_name}}"
-                                                                   target="_blank">
-                                                                    {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                </a>
-                                                            @elseif($account->account_type === 1)
-                                                                <a>
-                                                                    {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                </a>
+                                                            @if($account->join_table_teams_social_accounts->is_account_locked === false)
+                                                                @if($account->account_type === 2)
+                                                                    <a href="https://www.facebook.com/{{$account->user_name}}"
+                                                                       target="_blank">
+                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                    </a>
+                                                                @elseif($account->account_type === 1)
+                                                                    <a>
+                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                    </a>
+                                                                @else
+                                                                    <a href="{{$account->profile_url}}"
+                                                                       target="_blank">
+                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                    </a>
+                                                                @endif
                                                             @else
-                                                                <a href="{{$account->profile_url}}"
-                                                                   target="_blank">
+                                                                <a
+                                                                >
                                                                     {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                 </a>
                                                             @endif
@@ -689,8 +697,8 @@
                                                             <span></span>
                                                         </label>
                                                     </div>
-                                            @endif
-                                           </div>
+                                                @endif
+                                            </div>
                                             @endfor
 
                                         </div>
@@ -730,15 +738,16 @@
                                  id="instagram-add-accounts"
                                  role="tabpanel"
                                  aria-labelledby="instagram-tab-accounts">
-                                                                                            <p>To allow Socioboard access to your Instagram account, you
-                                                                                                must first give authorization from the Instagram website.</p>                                                                                            <div class="d-flex justify-content-center">
-                                                                                                <a href="/add-accounts/Instagram" type="button"
-                                                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                                                    a Instagram Profile</a>
-{{--                                                                                                <a href="#" type="button"--}}
-{{--                                                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-{{--                                                                                                    a Business Account</a>--}}
-                                                                                            </div>
+                                <p>To allow Socioboard access to your Instagram account, you
+                                    must first give authorization from the Instagram website.</p>
+                                <div class="d-flex justify-content-center">
+                                    <a href="/add-accounts/Instagram" type="button"
+                                       class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                        a Instagram Profile</a>
+                                    {{--                                                                                                <a href="#" type="button"--}}
+                                    {{--                                                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
+                                    {{--                                                                                                    a Business Account</a>--}}
+                                </div>
 
                             </div>
                             <div class="tab-pane fade"

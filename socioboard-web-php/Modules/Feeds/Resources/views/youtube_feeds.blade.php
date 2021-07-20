@@ -342,7 +342,6 @@
 
         $(document).ready(function () {
             $("#discovery").trigger("click");
-            $('#addToCart').tooltip();
         });
 
 

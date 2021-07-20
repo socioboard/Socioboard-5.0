@@ -184,16 +184,16 @@
 
                     <div class="col-xl-8">
                         <!--begin::feeds-->
-                        <div class="card card-custom gutter-b">
-                            <!--begin::Header-->
+                        <div class="card card-custom gutter-b card-stretch" id="ss-feedsDiv">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <button id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                        title="Add to custom Reports">+
-                                </button>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
+    display: none;"></span>
                             </div>
-                            <!--end::Header-->
-                            <!--begin::Body-->
                             <div class="card-body" id="twitterFeeds">
                             @if($message=== 'success')
                                 @if(count($accounts)>0)

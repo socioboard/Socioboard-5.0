@@ -7,7 +7,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        comment: 'PrimayKey',
+        comment: 'PrimayKey'
       },
       user_name: {
         type: Sequelize.STRING(64),
@@ -15,62 +15,62 @@ module.exports = {
         validate: {
           notEmpty: {
             args: true,
-            msg: 'user_name is mandatory field.',
+            msg: "user_name is mandatory field."
           },
           isAlphanumeric: {
             args: true,
-            msg: 'user_name should be alphanumeric character.',
+            msg: "user_name should be alphanumeric character."
           },
           len: {
             args: [4, 32],
-            msg: 'user_name should have 4 to 64 characters.',
-          },
-        },
+            msg: "user_name should have 4 to 64 characters."
+          }
+        }
       },
       email: {
         type: Sequelize.STRING(64),
         validate: {
           notEmpty: {
             args: true,
-            msg: 'email is mandatory field.',
+            msg: "email is mandatory field."
           },
           isEmail: {
             args: true,
-            msg: 'email is not valid format.',
-          },
-        },
+            msg: "email is not valid format."
+          }
+        }
       },
       password: {
         type: Sequelize.STRING(100),
         validate: {
           notEmpty: {
             args: true,
-            msg: 'password is mandatory field.',
-          },
-        },
+            msg: "password is mandatory field."
+          }
+        }
       },
       first_name: {
         type: Sequelize.STRING(32),
         validate: {
           notEmpty: {
             args: true,
-            msg: 'first_name is mandatory field.',
+            msg: "first_name is mandatory field."
           },
           is: {
             args: /^[a-z ,.'0-9]+$/i,
-            msg: 'first_name should have valid characters.',
+            msg: "first_name should have valid characters."
           },
           len: {
             args: [2, 32],
-            msg: 'first_name should have 2 to 32 characters.',
-          },
-        },
+            msg: "first_name should have 2 to 32 characters."
+          }
+        }
       },
 
       last_name: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        defaultValue: 'NA',
+        defaultValue: "NA"
       },
 
       date_of_birth: {
@@ -79,15 +79,15 @@ module.exports = {
         validate: {
           isDate: {
             args: true,
-            msg: 'date_of_birth is not in valid format.',
-          },
-        },
+            msg: "date_of_birth is not in valid format."
+          }
+        }
       },
 
       profile_picture: {
         type: Sequelize.TEXT,
         allowNull: false,
-        defaultValue: 'www.anyprofileurl.com',
+        defaultValue: "www.anyprofileurl.com",
         // validate: {
         //   isUrl: {
         //     args: false,
@@ -109,9 +109,9 @@ module.exports = {
         validate: {
           is: {
             args: /^[+0-9]+$/i,
-            msg: 'Phone code should have valid characters.',
+            msg: "Phone code should have valid characters."
           },
-        },
+        }
       },
 
       phone_no: {
@@ -139,13 +139,13 @@ module.exports = {
       country: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 0
       },
 
       time_zone: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        defaultValue: 'NA',
+        defaultValue: "NA"
       },
 
       is_admin_user: {
@@ -185,6 +185,7 @@ module.exports = {
       about_me: {
         type: Sequelize.TEXT('tiny'),
         allowNull: true,
+
       },
       // language: {
       //   type: Sequelize.STRING(10),
@@ -205,23 +206,23 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'user_rewards',
-          key: 'id',
+          key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       user_activation_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'user_activations',
-          key: 'id',
+          key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('user_details');
-  },
+  }
 };

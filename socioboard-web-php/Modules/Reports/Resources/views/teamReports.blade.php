@@ -221,39 +221,24 @@
                 <!--begin::Row-->
                 <div class="row">
                     <div class="col-xl-8" id="ss-scheduled">
-                        <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Stats</h3>
-                            </div>
-
-                            <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                 title="Add to custom Reports">+
-                                <span node-id="ss-scheduled_md8" class="ss addtcartclose"></span>
-                            </div>
-                            <span class="spinner spinner-primary spinner-center" id="ss-scheduled_md8" style="
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-scheduled_md8" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-scheduled_md8" style="
     display: none;"></span>
-
-                            <!--end::Header-->
-
-
-                            <!--begin::Body-->
+                            </div>
                             <div class="card-body d-flex flex-column">
-                                <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="line-adwords" class="card-rounded-bottom " style="height: 200px"></div>
                                 </div>
-                                <!--end::Chart-->
-
-                                <!--begin::Stats-->
                                 <div class="mt-10 mb-5">
-                                    <!--begin::Row-->
                                     <div class="row row-paddingless mb-10">
-                                        <!--begin::Item-->
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
-                                                <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-warning">
@@ -261,21 +246,14 @@
                                                                     </span>
                                                     </div>
                                                 </div>
-                                                <!--end::Symbol-->
-
-                                                <!--begin::Title-->
                                                 <div>
                                                     <div class="font-size-h4 font-weight-bolder" id="scheduled"></div>
 
 
                                                     <div class="font-size-sm font-weight-bold mt-1">Scheduled</div>
                                                 </div>
-                                                <!--end::Title-->
                                             </div>
                                         </div>
-                                        <!--end::Item-->
-
-                                        <!--begin::Item-->
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
@@ -286,21 +264,14 @@
                                                                     </span>
                                                     </div>
                                                 </div>
-                                                <!--end::Symbol-->
-
-                                                <!--begin::Title-->
                                                 <div>
                                                     <div class="font-size-h4 font-weight-bolder" id="published"></div>
 
 
                                                     <div class="font-size-sm font-weight-bold mt-1">Published</div>
                                                 </div>
-                                                <!--end::Title-->
                                             </div>
                                         </div>
-                                        <!--end::Item-->
-
-                                        <!--begin::Item-->
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
@@ -334,25 +305,20 @@
                         <!--end::Mixed Widget 2-->
                     </div>
                     <div class="col-xl-4" id="ss-published">
-                        <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
-                            <!--begin::Header-->
                             <div class="card-header border-0 pt-5">
                                 <div class="card-title">
                                     <div class="card-label">
                                         <div class="font-weight-bolder">Publish Report</div>
                                     </div>
                                 </div>
-                            </div>
-                            <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                 title="Add to custom Reports">+
-                                <span node-id="ss-published_md4" class="ss addtcartclose"></span>
-                            </div>
-                            <span class="spinner spinner-primary spinner-center" id="ss-published_md4" style="
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-published_md4" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-published_md4" style="
     display: none;"></span>
-                            <!--end::Header-->
-
-                            <!--begin::Body-->
+                            </div>
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -519,15 +485,15 @@
                                 <!-- end:Account list -->
                                 <div class="card-toolbar">
                                 </div>
-                            </div>
-                            <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                 title="Add to custom Reports">+
-                                <span node-id="ss-twitter_md6" class="ss addtcartclose"></span>
-                            </div>
-                            <span class="spinner spinner-primary spinner-center" id="ss-twitter_md6" style="
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-twitter_md6" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-twitter_md6" style="
     display: none;"></span>
+                            </div>
                             <div class="card-body p-0 position-relative overflow-hidden">
-                                <div id="twt_stats_chart" class="card-rounded-bottom " style="height: 200px"></div>
+                                <div id="twt_stats_chart" class="card-rounded-bottom " style="height: 200px" ></div>
                             </div>
                             <!--end::Body-->
                         </div>
@@ -541,8 +507,6 @@
                             </div>
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <!-- <h3 class="card-title font-weight-bolder">Twitter Stats</h3> -->
-                                <!-- begin:Account list -->
                                 <script>
                                     var fbvalue = false;
                                 </script>
@@ -574,17 +538,17 @@
                                 </div>
                                 <div class="card-toolbar">
                                 </div>
-                            </div>
-                            <!--end::Header-->
-
-                            <!--begin::Body-->
-                            <div class="card-body p-0 position-relative overflow-hidden">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports">+
                                     <span node-id="ss-facebook_md6" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-facebook_md6" style="
     display: none;"></span>
+                            </div>
+                            <!--end::Header-->
+
+                            <!--begin::Body-->
+                            <div class="card-body p-0 position-relative overflow-hidden">
                                 <div id="fb_stats_chart" class="card-rounded-bottom " style="height: 200px"></div>
                             </div>
                             <!--end::Body-->

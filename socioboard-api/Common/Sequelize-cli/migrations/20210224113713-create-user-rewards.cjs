@@ -6,7 +6,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
+        allowNull: false
       },
       eWallet: {
         type: Sequelize.FLOAT,
@@ -15,13 +15,13 @@ module.exports = {
         validate: {
           notEmpty: {
             args: true,
-            msg: 'eWallet is mandatory field.',
+            msg: "eWallet is mandatory field."
           },
           isFloat: {
             args: true,
-            msg: 'eWallet should be a float value.',
-          },
-        },
+            msg: "eWallet should be a float value."
+          }
+        }
       },
       /**
        * true - ads are enabled : 1
@@ -31,17 +31,17 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-        comment: 'true - ads are enabled, false - ads are not enabled',
+        comment: "true - ads are enabled, false - ads are not enabled"
       },
       refered_by: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        defaultValue: 'NA',
+        defaultValue: "NA"
       },
       referal_code: {
         type: Sequelize.UUID,
         allowNull: false,
-        defaultValue: Sequelize.UUIDV1,
+        defaultValue: Sequelize.UUIDV1
       },
       // 0: inactive : false
       // 1: active : true
@@ -49,8 +49,8 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-        comment: '0: inactive : false, 1: active : true',
-      },
+        comment: "0: inactive : false, 1: active : true"
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -62,9 +62,10 @@ module.exports = {
       //   type: Sequelize.DATE,
       //   defaultValue: Sequelize.NOW
       // },
+
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('user_rewards');
-  },
+  }
 };

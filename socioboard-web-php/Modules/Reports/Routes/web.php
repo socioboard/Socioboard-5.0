@@ -27,6 +27,7 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser']], functio
     Route::get('reports-settings', 'ReportsController@getReportsSettings');
     Route::get('auto-email-reports', 'ReportsController@autoEmailReports')->name('auto-email-reports');
     Route::post('save-auto-email-reports', 'ReportsController@saveAutoEmailReports')->name('save-auto-email-reports');
+    Route::get('get-next-email-reports/{id}', 'ReportsController@getNextReports')->name('get-next-email-reports');
     Route::get('get-auto-email-reports', 'ReportsController@getAutoEmailReports')->name('get-auto-email-reports');
     Route::delete('delete-auto-email-reports/{id}', 'ReportsController@deleteAutoEmailReports')->name('delete-auto-email-reports');
     Route::post('update-auto-email-reports', 'ReportsController@updateAutoEmailReports')->name('update-auto-email-reports');

@@ -5,38 +5,39 @@ const Schema = mongoose.Schema;
 mongoose.set('useCreateIndex', true);
 
 const hashtaggroup = new Schema({
-  hashtaggroupId: {type: String, index: true, unique: true},
-  hashtaggroupId: {type: Number, index: true},
-  groupname: {type: String},
-  userId: {type: String},
-  teamId: {type: String},
-  created: {type: Date, default: Date.now},
+    hashtaggroupId: { type: String, index: true, unique: true },
+    hashtaggroupId:{ type: Number,index:true},
+    groupname: { type: String },
+    userId: { type: String },
+    teamId: { type: String },
+    created: {type: Date, default: Date.now}
+
 });
 
 hashtaggroup.methods.insertHashTagGroup = function (posts) {
-  return this.model('HashtagGroup')
-    .insertMany(posts)
-    .then(postdetails => {
-      return postdetails.length;
-    })
-    .catch(error => {
-      console.log('error :', error);
-      return 0;
-    });
+    return this.model('HashtagGroup')
+        .insertMany(posts)
+        .then((postdetails) => {
+            return postdetails.length;
+        })
+        .catch((error) => {
+            console.log("error :",error)
+            return 0;
+        });
 };
 
 hashtaggroup.methods.getHashTagDetails = function (hashtaggroupId) {
-  var query = {
-    hashtaggroupId: hashtaggroupId,
-  };
-  return this.model('HashtagGroup')
-    .find(query)
-    .then(function (result) {
-      return result;
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    var query = {
+        hashtaggroupId: hashtaggroupId
+    };
+    return this.model('HashtagGroup')
+        .find(query)
+        .then(function (result) {
+            return result;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 };
 
 // hashtaggroup.methods.getPreviousPost = function (keyword, skip, limit) {

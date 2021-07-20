@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       is_account_locked: {
         type: Sequelize.BOOLEAN,
@@ -17,20 +17,20 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'team_informations',
-          key: 'team_id',
+          key: 'team_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       account_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'social_accounts',
-          key: 'account_id',
+          key: 'account_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -46,5 +46,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('join_table_teams_social_accounts');
-  },
+  }
 };

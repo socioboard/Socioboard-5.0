@@ -18,6 +18,7 @@ import InstagramMongoPostModel from '../../Common/Mongoose/models/instagramposts
 import sequelize from 'sequelize';
 import UserTeamAccountLibs from './../Shared/userTeamAccountsLibs.shared.js';
 import UserTeamAccount from './../Shared/userTeamAccounts.shared.js';
+import NotificationServices from '../../Common/Shared/notifyServices.js'
 
 const userDetails = db.user_details;
 const Operator = db.Sequelize.Op;
@@ -47,16 +48,16 @@ class TeamLibs {
 
   async getSocialProfiles(userId) {
     let res = await socialAccount.findAll({
-      where: {account_admin_id: userId},
+      where: { account_admin_id: userId },
     });
     return res;
   }
   async getSocialProfilesById(userId, accountId) {
-    var socialAccounts = {};
+    let socialAccounts = {};
     let socialAccDetails = await socialAccount.findOne({
-      where: {account_admin_id: userId, account_id: accountId},
+      where: { account_admin_id: userId, account_id: accountId },
     });
-    var fields = [];
+    let fields = [];
     if (!accountId) throw new error('Invalid account Id');
     switch (Number(socialAccDetails.account_type)) {
       case 1:
@@ -109,7 +110,7 @@ class TeamLibs {
     }
     if (fields) {
       let resultData = await updateFriendsTable.findOne({
-        where: {account_id: socialAccDetails.account_id},
+        where: { account_id: socialAccDetails.account_id },
         attributes: fields,
       });
       socialAccDetails.dataValues.updatedDetails = JSON.parse(
@@ -134,7 +135,7 @@ class TeamLibs {
         rating: rating,
       },
       {
-        where: {account_id: accountId},
+        where: { account_id: accountId },
         returning: true,
         plain: true,
       }
@@ -148,7 +149,7 @@ class TeamLibs {
         rating: data.rating,
       },
       {
-        where: {account_id: data.accountId},
+        where: { account_id: data.accountId },
         returning: true,
         plain: true,
       }
@@ -169,8 +170,8 @@ class TeamLibs {
   }
   async getTeamSocialAccount(account_id, account_type) {
     let query = {};
-    query.account_id = {[Operator.in]: account_id};
-    if (account_type != 0) query = {...query, account_type};
+    query.account_id = { [Operator.in]: account_id };
+    if (account_type != 0) query = { ...query, account_type };
     let accounts = await socialAccount.findAll({
       where: query,
       raw: true,
@@ -179,7 +180,7 @@ class TeamLibs {
   }
   async getTeamSocialAccountCount(account_id) {
     let query = {};
-    query.account_id = {[Operator.in]: account_id};
+    query.account_id = { [Operator.in]: account_id };
     let res = await socialAccount.findAll({
       where: query,
       attributes: [
@@ -198,7 +199,7 @@ class TeamLibs {
       {
         is_account_locked: 1,
       },
-      {where: {account_id: accounts.map(t => t.account_id)}}
+      { where: { account_id: accounts.map(t => t.account_id) } }
     );
     return result;
   }
@@ -208,7 +209,7 @@ class TeamLibs {
       {
         is_account_locked: 0,
       },
-      {where: {account_id: accounts.map(t => t.account_id)}}
+      { where: { account_id: accounts.map(t => t.account_id) } }
     );
     return result;
   }
@@ -239,7 +240,7 @@ class TeamLibs {
               },
               attributes: ['team_id'],
             },
-            {transaction: t}
+            { transaction: t }
           )
 
           .then(team => {
@@ -516,7 +517,7 @@ class TeamLibs {
               },
               attributes: ['team_id'],
             },
-            {transaction: t}
+            { transaction: t }
           )
 
           .then(team => {
@@ -561,9 +562,9 @@ class TeamLibs {
         return socialAccount
           .count(
             {
-              where: {account_admin_id: userId},
+              where: { account_admin_id: userId },
             },
-            {transaction: t}
+            { transaction: t }
           )
 
           .then(count => {
@@ -934,7 +935,7 @@ class TeamLibs {
                 },
                 attributes: ['team_id'],
               },
-              {transaction: t}
+              { transaction: t }
             )
             .then(team => {
               if (team == null)
@@ -998,7 +999,7 @@ class TeamLibs {
                 });
                 if (!isErrorOnNetwork) {
                   return socialAccount.findAll({
-                    where: {social_id: addingSocialIds},
+                    where: { social_id: addingSocialIds },
                     attributes: ['account_id', 'social_id'],
                   });
                 } else {
@@ -1015,9 +1016,9 @@ class TeamLibs {
               });
               return socialAccount.count(
                 {
-                  where: {account_admin_id: userId},
+                  where: { account_admin_id: userId },
                 },
-                {transaction: t}
+                { transaction: t }
               );
             })
             .then(count => {
@@ -1046,7 +1047,7 @@ class TeamLibs {
               ProfileInfo = profileDetails;
               return teamDetails.addSocialAccount(profileDetails, {
                 transaction: t,
-                through: {is_account_locked: false},
+                through: { is_account_locked: false },
               });
             })
             .then(() => {
@@ -1245,7 +1246,7 @@ class TeamLibs {
                   },
                   attributes: ['team_id', 'team_name'],
                 },
-                {transaction: t}
+                { transaction: t }
               )
               .then(team => {
                 if (team == null)
@@ -1290,7 +1291,7 @@ class TeamLibs {
                       info: profile.Info,
                       account_admin_id: userId,
                     },
-                    {transaction: t}
+                    { transaction: t }
                   );
                 }
               })
@@ -1298,7 +1299,7 @@ class TeamLibs {
                 ProfileInfo = profileDetails;
                 return profileDetails.setTeam(teamDetails, {
                   transaction: t,
-                  through: {is_account_locked: false},
+                  through: { is_account_locked: false },
                 });
               })
               .then(() => {
@@ -1324,28 +1325,19 @@ class TeamLibs {
                     });
                 }
               })
-              // .then(() => {
-              //     let targetTeamsId = [];
-              //     targetTeamsId.push(profile.TeamId);
-
-              //     // Sending notification to the Team members saying, an account is added to the Team
-              //     var notification = new NotificationServices(config.get('notification_socioboard.host_url'));
-              //     notification.notificationMessage = `${userName} added the social profiles to a ${teamDetails.team_name} team.`;
-              //     notification.teamName = teamDetails.team_name;
-              //     notification.notifyType = 'team_addProfile';
-              //     notification.initiatorName = userName;
-              //     notification.status = 'success';
-              //     notification.targetTeamsId = targetTeamsId;
-
-              //     return notification.saveNotifications()
-              //         .then((savedObject) => {
-              //             var encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
-              //             return notification.sendTeamNotification(profile.TeamId, encryptedNotifications);
-              //         })
-              //         .catch((error) => {
-              //             //logger.info(`Notification not sent, ${error.message}`);
-              //         });
-              // })
+              .then(() => {
+                let targetTeamsId = [];
+                targetTeamsId.push(profile.TeamId);
+                if (config.get('notification_socioboard.status') == "on")
+                  return this.sendTeamNotifications(`${userName} added the social profiles to a ${teamDetails.team_name} team.`,
+                    teamDetails.team_name,
+                    'team_addProfile',
+                    userName,
+                    'success',
+                    targetTeamsId,
+                    profile.TeamId
+                  )
+              })
               .then(() => {
                 resolve({
                   teamDetails: teamDetails,
@@ -1362,7 +1354,7 @@ class TeamLibs {
     });
   }
 
-  async deleteSocialProfile(userId, accountId) {
+  async deleteSocialProfile(userId, accountId, teamId, userName) {
     return new Promise((resolve, reject) => {
       let fetchedSocialAccount = '';
       return db.sequelize.transaction(t => {
@@ -1426,9 +1418,32 @@ class TeamLibs {
                 }
               })
               .then(() => {
+                if (teamId)
+                  return teamInfo.findOne({
+                    where: {
+                      team_id: teamId,
+                    },
+                    attributes: ['team_id', 'team_name'],
+                  })
+              })
+              .then((teamDetails) => {
+                let targetTeamsId = [];
+                targetTeamsId.push(teamId);
+                if (config.get('notification_socioboard.status') == "on" && teamId)
+                  return this.sendTeamNotifications(
+                    `${userName} removed one profile from Team.`,
+                    teamDetails.team_name,
+                    'team_deleteTeamSocialProfile',
+                    userName,
+                    'success',
+                    targetTeamsId,
+                    teamId
+                  )
+              })
+              .then(() => {
                 return fetchedSocialAccount
                   .destroy({
-                    where: {account_id: accountId},
+                    where: { account_id: accountId },
                   })
                   .catch(error => {
                     throw new Error(error.message);
@@ -1450,7 +1465,7 @@ class TeamLibs {
   async getUserDetails(userId) {
     return new Promise((resolve, reject) => {
       if (!userId) {
-        reject({error: true, message: 'Invalid userId'});
+        reject({ error: true, message: 'Invalid userId' });
       } else {
         return userDetails
           .findOne({
@@ -1474,7 +1489,7 @@ class TeamLibs {
               {
                 model: userActivation,
                 as: 'Activations',
-                where: {id: db.Sequelize.col('user_activation_id')},
+                where: { id: db.Sequelize.col('user_activation_id') },
                 attributes: [
                   'id',
                   'last_login',
@@ -1495,7 +1510,7 @@ class TeamLibs {
             ],
           })
           .then(userDetails => {
-            if (!userDetails) reject({error: true, message: 'User not found!'});
+            if (!userDetails) reject({ error: true, message: 'User not found!' });
             else resolve(userDetails);
           })
           .catch(error => {
@@ -1524,7 +1539,6 @@ class TeamLibs {
             //    return;
             // })
             .then(() => {
-              console.log('came hereee');
               resolve();
             })
             .catch(error => {
@@ -1585,7 +1599,7 @@ class TeamLibs {
         refresh_feeds: cronvalue,
       },
       {
-        where: {account_id: accountId},
+        where: { account_id: accountId },
         returning: true,
         plain: true,
       }
@@ -1620,7 +1634,7 @@ class TeamLibs {
 
   async teamForUser(userId) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: ['user_id'],
       include: [
         {
@@ -1647,13 +1661,13 @@ class TeamLibs {
 
   async teamForUserSearch(userId, teamName) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: {team_name: {[Operator.like]: `%${teamName}%`}},
+          where: { team_name: { [Operator.like]: `%${teamName}%` } },
           attributes: ['team_id'],
           through: {
             where: {
@@ -1675,13 +1689,13 @@ class TeamLibs {
 
   async teamForUserSpecific(user_id, team_id) {
     let res = await userDetails.findOne({
-      where: {user_id},
+      where: { user_id },
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: {team_id},
+          where: { team_id },
           attributes: ['team_id'],
           through: {
             where: {
@@ -1763,13 +1777,13 @@ class TeamLibs {
       teamInformation.Team.map(function (teamResponse) {
         let innerQuery = {};
         if (SocialAccountInfo.rating.length != 0)
-          innerQuery.rating = {[Operator.or]: SocialAccountInfo.rating};
+          innerQuery.rating = { [Operator.or]: SocialAccountInfo.rating };
         if (SocialAccountInfo.accountType.length != 0)
           innerQuery.account_type = {
             [Operator.or]: SocialAccountInfo.accountType,
           };
         return teamInfo.findAll({
-          where: {team_id: teamResponse.dataValues.team_id},
+          where: { team_id: teamResponse.dataValues.team_id },
           include: [
             {
               model: socialAccount,
@@ -1814,7 +1828,7 @@ class TeamLibs {
   async teamInfoForSearch(teamId) {
     let res = await teamInfo.findAll({
       where: {
-        team_id: {[Operator.in]: teamId},
+        team_id: { [Operator.in]: teamId },
       },
       group: ['team_id'],
     });
@@ -1853,7 +1867,7 @@ class TeamLibs {
       {
         is_team_locked: 1,
       },
-      {where: {team_id: accounts.map(t => t.team_id)}}
+      { where: { team_id: accounts.map(t => t.team_id) } }
     );
     return result;
   }
@@ -1863,7 +1877,7 @@ class TeamLibs {
       {
         is_team_locked: 0,
       },
-      {where: {team_id: accounts.map(t => t.team_id)}}
+      { where: { team_id: accounts.map(t => t.team_id) } }
     );
     return result;
   }
@@ -1879,15 +1893,15 @@ class TeamLibs {
           team_admin_id: userId,
           is_default_team: false,
         },
-        {transaction}
+        { transaction }
       );
 
       let user = await userDetails.findOne(
         {
-          where: {user_id: userId},
+          where: { user_id: userId },
           attributes: ['user_id'],
         },
-        {transaction}
+        { transaction }
       );
 
       await teamDetails.setUser(user, {
@@ -1955,7 +1969,7 @@ class TeamLibs {
           team_id: teamId,
         },
       },
-      {transaction}
+      { transaction }
     );
     return res;
   }
@@ -2001,19 +2015,19 @@ class TeamLibs {
 
   async deleteSocialAccount(filteredDeleteAccounts) {
     let res = socialAccount.destroy({
-      where: {account_id: filteredDeleteAccounts},
+      where: { account_id: filteredDeleteAccounts },
     });
     return res;
   }
 
   async isUserRegistered(invitingUserEmail) {
     let res = await userDetails.findOne({
-      where: {email: invitingUserEmail},
+      where: { email: invitingUserEmail },
       include: [
         {
           model: userActivation,
           as: 'Activations',
-          where: {activation_status: 1},
+          where: { activation_status: 1 },
         },
       ],
       attributes: ['user_id'],
@@ -2064,7 +2078,7 @@ class TeamLibs {
   }
   async teamInformation(userId) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: ['user_id'],
       include: [
         {
@@ -2072,7 +2086,7 @@ class TeamLibs {
           as: 'Team',
           attributes: ['team_id'],
           through: {
-            where: {invitation_accepted: false, left_from_team: false},
+            where: { invitation_accepted: false, left_from_team: false },
             attributes: ['invitation_accepted', 'permission'],
           },
         },
@@ -2118,7 +2132,7 @@ class TeamLibs {
 
   async teamUser(team_admin_id, details) {
     let res = await userDetails.findOne({
-      where: {user_id: team_admin_id},
+      where: { user_id: team_admin_id },
       raw: true,
       attributes: ['first_name'],
     });
@@ -2160,7 +2174,7 @@ class TeamLibs {
             team_id: teamId,
           },
           {
-            invited_by: {[Operator.ne]: [userId]},
+            invited_by: { [Operator.ne]: [userId] },
           },
           {
             invitation_accepted: false,
@@ -2185,7 +2199,7 @@ class TeamLibs {
         invitation_accepted: true,
         left_from_team: false,
       },
-      {where: {[Operator.and]: [{user_id: userId}, {team_id: teamId}]}}
+      { where: { [Operator.and]: [{ user_id: userId }, { team_id: teamId }] } }
     );
     return result;
   }
@@ -2228,7 +2242,7 @@ class TeamLibs {
     return Promise.all(
       filteredTeams.Team.map(function (teamResponse) {
         return userTeamJoinTable.findAll({
-          where: {team_id: teamResponse.dataValues.team_id},
+          where: { team_id: teamResponse.dataValues.team_id },
           attributes: [
             'id',
             'team_id',
@@ -2272,7 +2286,7 @@ class TeamLibs {
 
   async memberTeam(team_id) {
     return userTeamJoinTable.findAll({
-      where: {team_id},
+      where: { team_id },
       attributes: [
         'id',
         'team_id',
@@ -2290,7 +2304,7 @@ class TeamLibs {
         return Promise.all(
           teamResponse.map(function (userIdentifier) {
             return userDetails.findOne({
-              where: {user_id: userIdentifier.user_id},
+              where: { user_id: userIdentifier.user_id },
               attributes: [
                 'user_id',
                 'email',
@@ -2326,7 +2340,7 @@ class TeamLibs {
 
   async memberProfileDetails(userId) {
     return socialAccount.findAll({
-      where: {account_admin_id: userId},
+      where: { account_admin_id: userId },
       attributes: [
         'account_id',
         'first_name',
@@ -2338,7 +2352,7 @@ class TeamLibs {
 
   async socialAccountStats(userId) {
     let accounts = await socialAccount.findAll({
-      where: {account_admin_id: userId},
+      where: { account_admin_id: userId },
       attributes: [
         'account_id',
         'first_name',
@@ -2427,7 +2441,7 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: {account_id: account.account_id},
+              where: { account_id: account.account_id },
               attributes: fields,
             })
             .then(resultData => {
@@ -2450,7 +2464,7 @@ class TeamLibs {
         account_ids.push(x.account_id);
       });
     let accounts = await socialAccount.findAll({
-      where: {account_id: account_ids},
+      where: { account_id: account_ids },
       attributes: [
         'account_id',
         'first_name',
@@ -2539,7 +2553,7 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: {account_id: account.account_id},
+              where: { account_id: account.account_id },
               attributes: fields,
             })
             .then(resultData => {
@@ -2557,7 +2571,7 @@ class TeamLibs {
 
   async socialAccountStatsForTeam(userId, account_ids) {
     let accounts = await socialAccount.findAll({
-      where: {account_id: account_ids},
+      where: { account_id: account_ids },
       attributes: [
         'account_id',
         'first_name',
@@ -2646,7 +2660,7 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: {account_id: account.account_id},
+              where: { account_id: account.account_id },
               attributes: fields,
             })
             .then(resultData => {
@@ -2664,7 +2678,7 @@ class TeamLibs {
 
   async getLockedAccountsForTeam(account_id) {
     let res = await teamSocialAccountJoinTable.findAll({
-      where: {is_account_locked: true, account_id: account_id},
+      where: { is_account_locked: true, account_id: account_id },
       attributes: ['account_id'],
     });
     return res;
@@ -2673,7 +2687,7 @@ class TeamLibs {
   async socialAccountStatsTeam(accountId) {
     let accounts = await socialAccount.findAll({
       where: {
-        account_id: {[Operator.in]: accountId},
+        account_id: { [Operator.in]: accountId },
       },
       attributes: [
         'account_id',
@@ -2763,7 +2777,7 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: {account_id: account.account_id},
+              where: { account_id: account.account_id },
               attributes: fields,
             })
             .then(resultData => {
@@ -2781,13 +2795,13 @@ class TeamLibs {
 
   async UserTeam(userId, teamId) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: {team_id: teamId},
+          where: { team_id: teamId },
           attributes: ['team_id'],
           through: {
             where: {
@@ -2880,7 +2894,7 @@ class TeamLibs {
 
   async getUser(memberId) {
     return userDetails.findOne({
-      where: {user_id: memberId},
+      where: { user_id: memberId },
       attributes: ['user_id', 'first_name'],
     });
   }
@@ -2906,7 +2920,7 @@ class TeamLibs {
 
   async teamInfoResponse(teamId) {
     let res = await teamInfo.findOne({
-      where: {team_id: teamId},
+      where: { team_id: teamId },
       attributes: ['team_id', 'team_name', 'team_admin_id'],
     });
     return res;
@@ -2914,8 +2928,8 @@ class TeamLibs {
 
   async leaveFromTeam(teamId, userId) {
     return userTeamJoinTable.update(
-      {left_from_team: true},
-      {where: {team_id: teamId, user_id: userId}}
+      { left_from_team: true },
+      { where: { team_id: teamId, user_id: userId } }
     );
   }
 
@@ -2924,7 +2938,7 @@ class TeamLibs {
       {
         permission: permission,
       },
-      {where: {team_id: teamId, user_id: memberId}}
+      { where: { team_id: teamId, user_id: memberId } }
     );
     return res;
   }
@@ -3201,7 +3215,6 @@ class TeamLibs {
                         return;
                       })
                       .catch(result => {
-                        console.log('err ', result);
                         logger.error(
                           `Error on saving post details : ${result}`
                         );
@@ -3361,5 +3374,64 @@ class TeamLibs {
     let userTeamAccountsLibs = new UserTeamAccountLibs();
     userTeamAccountsLibs.createOrUpdateFriendsList(account_id, updateDetails);
   }
+
+  /**
+   * TODO To send notification to particular team
+   * Function To send notification to particular team
+   * @param  {string} notificationMessage -Notification message
+   * @param  {string} team_name -Team name
+   * @param  {string} notifyType -Notification type
+   * @param  {string} userName -User name
+   * @param  {string} status -Status success or failed
+   * @param  {Array} targetTeamsId -Targeted team id
+   * @param  {Array} invitingUserId -User id
+   */
+  async sendTeamNotifications(notificationMessage, team_name, notifyType, userName, status, targetTeamsId, teamId) {
+    // Sending notification to the Team members saying, an account is added to the Team
+    let notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+    notification.notificationMessage = notificationMessage;
+    notification.teamName = team_name;
+    notification.notifyType = notifyType;
+    notification.initiatorName = userName;
+    notification.status = status;
+    notification.targetTeamsId = targetTeamsId;
+    try {
+      let savedObject = await notification.saveNotifications()
+      let encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
+      return await notification.sendTeamNotification(teamId, encryptedNotifications);
+    } catch (error) { logger.info(`Notification not sent, ${error.message}`) }
+
+  }
+
+  /**
+   * TODO To send notification to particular team
+   * Function To send notification to particular team
+   * @param  {} notificationMessage
+   * @param  {} team_name
+   * @param  {} notifyType
+   * @param  {} userName
+   * @param  {} status
+   * @param  {} targetTeamsId
+   * @param  {} invitingUserId
+   */
+  async sendUserNotification(notificationMessage, team_name, notifyType, userName, status, targetTeamsId, invitingUserId) {
+    let targetUserId = [];
+    targetUserId.push(invitingUserId);
+    // Sending notification to the Team members saying, an account is added to the Team
+    let notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+    notification.notificationMessage = notificationMessage;
+    notification.teamName = team_name;
+    notification.notifyType = notifyType;
+    notification.initiatorName = userName;
+    notification.status = status;
+    notification.targetUserId = targetUserId;
+    try {
+      let savedObject = await notification.saveNotifications()
+      let encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
+      return notification.sendUserNotification(invitingUserId, encryptedNotifications);
+    } catch (error) { logger.info(`Notification not sent, ${error.message}`) }
+
+  }
+
 }
 export default TeamLibs;
