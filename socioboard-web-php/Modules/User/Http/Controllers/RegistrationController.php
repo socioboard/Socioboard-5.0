@@ -27,12 +27,19 @@ class RegistrationController extends Controller
     {
         $apiUrl = ApiConfig::get('/register');
         try {
+            $phone = explode("-",$requestFields['phone']);
             $parameters = array(
                     'username' => $requestFields['userName'],
                     'email' => $requestFields['email'],
                     'password' => md5($requestFields['password']),
                     'firstName' => $requestFields['firstName'],
                     'lastName' => $requestFields['lastName'],
+                    'phoneNo' => $requestFields['phone'],
+                    'phoneCode' => $requestFields['code'],
+                    'rfd' => $requestFields['rfd'],
+                    'kwd' => $requestFields['kwd'],
+                    'med' => $requestFields['med'],
+                    'src' => $requestFields['src'],
             );
             try {
                 $response = $this->helper->postApiCall('post', $apiUrl, $parameters);

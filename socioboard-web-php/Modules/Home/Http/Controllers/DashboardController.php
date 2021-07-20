@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\Home\Http\Controllers;
-
+use App\Classes\AuthUsers;
 use App\ApiConfig\ApiConfig;
 use App\Exceptions\AppException;
 use Exception;
@@ -125,7 +125,8 @@ class DashboardController extends Controller
         }
     }
 
-    public function calendarView(){
+    public function calendarView()
+    {
         return view('home::calendar_view');
     }
 
@@ -134,28 +135,29 @@ class DashboardController extends Controller
      * This function is used for displaying the  all the publishing and scheduling events on the calendar by requesting /calenderView/schedule-details NODE API .
      * @return  calendar page view blade with all data required to display from controller to view.
      */
-    public function getCalendarData(Request $request){
-       try{
-           $url = env('API_URL_PUBLISH').env('API_VERSION');
-           switch ($request->id){
-               case '1':
-                   $apiUrl = $url.'/calenderView/schedule-details?scheduleStatus=1&scheduleCategory=1';
-                   break;
-               case '0':
-                   $apiUrl = $url.'/calenderView/schedule-details?scheduleStatus=1&scheduleCategory=0';
-                   break;
-               case '6':
-                   $apiUrl = $url.'/calenderView/schedule-details?scheduleStatus=6';
-                   break;
-               default:
-                   $apiUrl = $url.'/calenderView/schedule-details';
-           }
-           $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
-           return $this->helper->responseHandler($response['data']);
-       }catch (Exception $e){
-           $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getCalendarData() {DashboardController}');
-           return view('home::calendar_view')->with(["ErrorMessage" => 'Can not fetch data, please reload page']);
-       }
+    public function getCalendarData(Request $request)
+    {
+        try {
+            $url = env('API_URL_PUBLISH') . env('API_VERSION');
+            switch ($request->id) {
+                case '1':
+                    $apiUrl = $url . '/calenderView/schedule-details?scheduleStatus=1&scheduleCategory=1';
+                    break;
+                case '0':
+                    $apiUrl = $url . '/calenderView/schedule-details?scheduleStatus=1&scheduleCategory=0';
+                    break;
+                case '6':
+                    $apiUrl = $url . '/calenderView/schedule-details?scheduleStatus=6';
+                    break;
+                default:
+                    $apiUrl = $url . '/calenderView/schedule-details';
+            }
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+            return $this->helper->responseHandler($response['data']);
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getCalendarData() {DashboardController}');
+            return view('home::calendar_view')->with(["ErrorMessage" => 'Can not fetch data, please reload page']);
+        }
     }
 
     /**
@@ -394,7 +396,7 @@ class DashboardController extends Controller
      * TODO we've to update Crons for social account.
      * This function is updating the star Crons of social Accounts  in accounts from front end and hit API to store in socioboard database.
      * @return {object} Returns if updated the Crons of social accounts with message in json object format.
-    */
+     */
     public function updateCron(Request $request)
     {
         $api_url = ApiConfig::get('/team/update-feed-cron?accountId=' . $request['accountId'] . '&cronvalue=' . $request['cronvalue']);
@@ -410,7 +412,7 @@ class DashboardController extends Controller
      * TODO we've to get the invitation sent by other teams to join.
      * This function is to get the invitations sent by the other teams to join.
      * @return {object} Returns all the invitations in json object format.
-    */
+     */
     public function getInvitations()
     {
         $apiUrl = ApiConfig::get('/team/get-team-invitations');
@@ -427,7 +429,7 @@ class DashboardController extends Controller
      * TODO we've to accept the invitation sent by other teams to join.
      * This function is to accept the invitations sent by the other teams to join.
      * @return {object} Returns if accepted the invitations in json object format.
-    */
+     */
     public function acceptInvitations(Request $request)
     {
 
@@ -446,7 +448,7 @@ class DashboardController extends Controller
      * TODO we've to reject the invitation sent by other teams to join.
      * This function is to reject the invitations sent by the other teams to join.
      * @return {object} Returns if rejected the invitations in json object format.
-    */
+     */
     public function rejectInvitations(Request $request)
     {
         $apiUrl = ApiConfig::get('/team/decline-team-invitation?teamId=');
@@ -465,7 +467,7 @@ class DashboardController extends Controller
      * TODO we've to delete particular social account.
      * @param(integer) The  Account id of the social account to be deleted.
      * @return {object} Returns if particular social acccount has been deleted or not with message in json object format.
-    */
+     */
     public function deleteSocialAccount(Request $request)
     {
 
@@ -483,7 +485,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to get all recently visited modules.
      * @return {object} Returns all recently visited modules data in json format.
-    */
+     */
     public function recentActivities()
     {
         try {
@@ -520,10 +522,9 @@ class DashboardController extends Controller
     }
 
     /**
-
      * TODO we've get all team details and counts.
      * @return {object} Returns all teams data in json format.
-    */
+     */
     public function getTeamCounts()
     {
         try {
@@ -628,7 +629,7 @@ class DashboardController extends Controller
             $username = $request->username;
             $acctypes = $request->selectedAccountTypes;
             if ($selected_star === null) {
-                $selected_star =[];
+                $selected_star = [];
             } else {
                 $selected_star = [$request->selected_star];
             }
@@ -656,8 +657,51 @@ class DashboardController extends Controller
             $result['data'] = $this->helper->responseHandler($response['data']);
             return $result;
         } catch (Exception $e) {
-            $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'searchAccountsFilter() {DashboardController}');
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'searchAccountsFilter() {DashboardController}');
         }
     }
 
+    function checkTheEmailUser()
+    {
+        try {
+            $userDetails = Session::get('user');
+            $email = $userDetails['userDetails']['email'];
+            $result['code'] = 200;
+            $result['email'] = $email;
+            return $result;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'searchAccountsFilter() {DashboardController}');
+        }
+    }
+
+    function updateEmailUser(Request $request)
+    {
+        try {
+            $data['email'] = $request->emailID;
+            $apiUrl = ApiConfig::get('/user/update-profile-details');
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $data);
+            $userDetails = $this->helper->responseHandler($response['data']);
+            $session=  Session::get('user');
+            $session['userDetails']['email']=$userDetails['data']->user->email;
+            session()->put('user', $session);
+            Session::save();
+            return $userDetails;
+        }
+        catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'updateEmailUser() {DashboardController}');
+        }
+    }
+
+    function getPlanDetails(Request $request)
+    {
+        try {
+            $apiUrl = ApiConfig::get('/get-plan-details?planId='.$request->id);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $responseData = $this->helper->responseHandler($response['data']);
+            return $responseData;
+        }
+        catch (Exception $e) {
+
+        }
+    }
 }

@@ -970,8 +970,9 @@ html[data-theme='light'] .mobile-preview {
 
 .reports-btn .badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -15px;
+    right: -15px;
+    font-size: 65%;
 }
 
 .floating-circle-menu {
@@ -1050,18 +1051,13 @@ html[data-theme='light'] .mobile-preview {
 .reports-header .logo img {
     width: 80px;
 }
-
-.draggable .draggable-btn {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-}
 .card-custom.draggable img {
     width: 100%;
     border-radius: 0.5rem;
 }
 .card-custom.draggable .button-block {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    transform: translate(-50%);
+    left: 50%;
+    top: 5px;
 }

@@ -21,22 +21,22 @@ mongoose.set('useCreateIndex', true);
  * @param  {{type:Date}} createdDate -Created date of record
  */
 const youTubeUploadPosts = new Schema({
-  postType: {type: String},
-  description: {type: String},
-  ownerId: {type: Number},
-  teamId: {type: Number},
-  // To specify the collection of media url
-  mediaUrl: [{type: String}],
-  // To specify the targeting social profiles
-  postingSocialIds: [{type: Number}],
-  title: {type: String},
-  privacy: {type: String},
-  publishAt: {type: Date},
-  tags: {type: [String]},
-  categoryId: {type: Number},
-  defaultLanguage: {type: String},
-  defaultAudioLanguage: {type: String},
-  createdDate: {type: Date, default: Date.now},
+    postType: { type: String },
+    description: { type: String },
+    ownerId: { type: Number },
+    teamId: { type: Number },
+    // To specify the collection of media url
+    mediaUrl: [{ type: String }],
+    // To specify the targeting social profiles
+    postingSocialIds: [{ type: Number }],
+    title: { type: String },
+    privacy: { type: String },
+    publishAt: { type: Date },
+    tags: { type: [String] },
+    categoryId: { type: Number },
+    defaultLanguage: { type: String },
+    defaultAudioLanguage: { type: String },
+    createdDate: { type: Date, default: Date.now }
 });
 
 /**
@@ -45,18 +45,19 @@ const youTubeUploadPosts = new Schema({
  * @param  {Array} postIds -Array of ids
  * @return {object} Returns set of records matches post ids
  */
-youTubeUploadPosts.methods.getPostsById = postIds => {
-  let query = {_id: {$in: postIds}};
-  return this.model('youTubeUploadPosts')
-    .find(query)
-    .sort({createdDate: -1})
-    .then(function (result) {
-      return result;
-    })
-    .catch(function (error) {
-      throw error;
-    });
+youTubeUploadPosts.methods.getPostsById = (postIds) => {
+    let query = { _id: { $in: postIds } };
+    return this.model('youTubeUploadPosts')
+        .find(query)
+        .sort({ createdDate: -1 })
+        .then(function (result) {
+            return result;
+        })
+        .catch(function (error) {
+            throw error;
+        });
 };
+
 
 /**
  * TODO To update records
@@ -66,24 +67,21 @@ youTubeUploadPosts.methods.getPostsById = postIds => {
  * @return {object} Returns updated records
  */
 youTubeUploadPosts.methods.updateDraft = function (post_id, post) {
-  let query = {
-    _id: String(post_id),
-  };
-  let updateObject = {};
-  updateObject = post;
-  return this.model('youTubeUploadPosts')
-    .updateOne(query, updateObject)
-    .then(function (result) {
-      return result;
-    })
-    .catch(function (error) {
-      throw error;
-    });
+    let query = {
+        _id: String(post_id)
+    };
+    let updateObject = {};
+    updateObject = post;
+    return this.model('youTubeUploadPosts')
+        .updateOne(query, updateObject)
+        .then(function (result) {
+            return result;
+        })
+        .catch(function (error) {
+            throw error;
+        });
 };
 
-const YouTubeUploadPosts = mongoose.model(
-  'youTubeUploadPosts',
-  youTubeUploadPosts
-);
+const YouTubeUploadPosts = mongoose.model('youTubeUploadPosts', youTubeUploadPosts);
 
 export default YouTubeUploadPosts;

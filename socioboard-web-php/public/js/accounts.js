@@ -78,7 +78,13 @@ function lock(id, type) {
                     $("#status" + data).empty();
                     append += '<div class="ribbon-target" style="top: 12px;" onclick="lock(' + data + ',0 );"><span class="ribbon-inner bg-danger"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Un-Lock </div>';
                     $("#status" + data).append(append);
-                    toastr.success("Account Locked Successfully!", "");
+                    toastr.success("Account Locked Successfully!", "", {
+                        timeOut: 1000,
+                        fadeOut: 1000,
+                        onHidden: function () {
+                            window.location.reload();
+                        }
+                    });
                 } else if (response.code === 400) {
                     toastr.error(response.message, "Locking Error!");
                 } else if (response.code === 401) {
@@ -103,7 +109,13 @@ function lock(id, type) {
                     $("#status" + data).empty();
                     append += '<div class="ribbon-target" style="top: 80px;" onclick="lock(' + data + ',1 );"><span class="ribbon-inner bg-info"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Lock </div>';
                     $("#status" + data).append(append);
-                    toastr.success("Account Un-Locked Successfully!", "");
+                    toastr.success("Account Un-Locked Successfully!", "", {
+                        timeOut: 1000,
+                        fadeOut: 1000,
+                        onHidden: function () {
+                            window.location.reload();
+                        }
+                    });
                 } else if (response.code === 400) {
                     toastr.error(response.message, "Account Un-Locked Successfully!");
                 } else if (response.code === 401) {

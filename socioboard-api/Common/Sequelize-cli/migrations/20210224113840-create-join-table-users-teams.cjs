@@ -6,7 +6,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
+        allowNull: false
       },
       invitation_accepted: {
         type: Sequelize.BOOLEAN,
@@ -30,28 +30,28 @@ module.exports = {
         validate: {
           max: {
             args: 2,
-            msg: 'permission should be less than or equal to 2',
-          },
-        },
+            msg: "permission should be less than or equal to 2"
+          }
+        }
       },
       team_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'team_informations',
-          key: 'team_id',
+          key: 'team_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'user_details',
-          key: 'user_id',
+          key: 'user_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -67,5 +67,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('join_table_users_teams');
-  },
+  }
 };

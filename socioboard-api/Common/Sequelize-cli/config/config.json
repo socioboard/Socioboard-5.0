@@ -1,0 +1,37 @@
+{
+  "development": {
+    "database": "devSocioBoard",
+    "username": "SocioBoard",
+    "password": null,
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "",
+    "password": "",
+    "database": "",
+    "host": "",
+    "dialect": "",
+    "logging": false,
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    }
+  }
+}

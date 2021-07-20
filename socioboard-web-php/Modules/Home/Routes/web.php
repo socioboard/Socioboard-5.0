@@ -49,7 +49,9 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
         Route::get('/get-scheduled-reports-dashboard', [DashboardController::class, 'getScheduledReportsDashboard']);
         Route::post('facebookPageAdd', [DashboardController::class, 'addFacebookPageBulk']);
         Route::post('search-Accounts-filter', [DashboardController::class, 'searchAccountsFilter']);
-
+        Route::get('check-email-user', [DashboardController::class, 'checkTheEmailUser']);
+        Route::post('update-email-user', [DashboardController::class, 'updateEmailUser']);
+        Route::get('get-plan-details', [DashboardController::class, 'getPlanDetails']);
     });
 
 });

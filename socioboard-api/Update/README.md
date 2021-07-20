@@ -18,14 +18,6 @@
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
----
-### How do I get set up?
-
-- Make sure you set the environment variable for node ( localDev )
-- Make sure that the port you given in config is free in the service location
-- Make sure you check the code first and then follow the package.json scripts to run the project properly
-
----
 ### Prerequisites
 
 What things you need to install the software and how to install them.

@@ -10,20 +10,43 @@ const applicationInfo = db.application_informations;
 const userActivation = db.user_activations;
 const teamInfo = db.team_informations;
 
+import aMember from '../Mappings/amember.users.js';
+
 class AuthorizeLibs {
   constructor() {
     this.authorizeServices = new AuthorizeServices(config.get('authorize'));
   }
 
-  async changePassword(userID, newPassword) {
-    return await userDetails.update(
+    /**
+   * TODO To update the User  Password 
+   * Function to Update User Password 
+   * @param  {number} user_id - User id
+   * @param  {string} newPassword - User Password
+   * @return {object} Returns Update User details
+   */
+
+  async changePassword(user_id, newPassword) {
+    let res = await userDetails.update(
       {password: newPassword},
-      {where: {user_id: userID}}
-    );
+      {
+        where: {
+          user_id: user_id,
+        },
+      });
+       //update in Amember as well
+       let aMemberData = {
+        password: newPassword,
+        userId: user_id,
+      }
+      new aMember(config.get('aMember')).updateUserPasswordToAMember(
+        aMemberData
+      )
+    return res;
+     
   }
   async getUserDetails(userId) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: ['user_id', 'email', 'password'],
     });
     return res;
@@ -31,8 +54,8 @@ class AuthorizeLibs {
 
   async holdUser(userId) {
     let res = await userDetails.update(
-      {is_account_locked: 1},
-      {where: {user_id: userId}}
+      { is_account_locked: 1 },
+      { where: { user_id: userId } }
     );
     return res;
   }
@@ -93,7 +116,7 @@ class AuthorizeLibs {
 
   async UserProfiles(userId) {
     let res = await userDetails.findOne({
-      where: {user_id: userId},
+      where: { user_id: userId },
       attributes: [
         'user_id',
         'email',
@@ -133,7 +156,7 @@ class AuthorizeLibs {
       {
         last_login: moment(),
       },
-      {where: {id: user_activation_id}}
+      { where: { id: user_activation_id } }
     );
     return res;
   }
@@ -153,24 +176,24 @@ class AuthorizeLibs {
     try {
       transaction = await db.sequelize.transaction();
       let user = await userDetails.findOne(
-        {where: {user_id: userId}},
-        {transaction}
+        { where: { user_id: userId } },
+        { transaction }
       );
       let removeUserActivation = await userActivation.destroy(
-        {where: {id: user.user_activation_id}},
-        {transaction}
+        { where: { id: user.user_activation_id } },
+        { transaction }
       );
       let removeReward = await userRewardsModel.destroy(
-        {where: {id: user.user_rewards_id}},
-        {transaction}
+        { where: { id: user.user_rewards_id } },
+        { transaction }
       );
       let remove = await userDetails.destroy(
-        {where: {user_id: userId}},
-        {transaction}
+        { where: { user_id: userId } },
+        { transaction }
       );
       usersTeam = await teamInfo.destroy(
-        {where: {team_admin_id: userId}},
-        {transaction}
+        { where: { team_admin_id: userId } },
+        { transaction }
       );
       await transaction.commit();
       return user;
@@ -181,35 +204,57 @@ class AuthorizeLibs {
     }
   }
 
+
+  /**
+   * To delete the particular user from aMember if they delete the account from SocioBoard.
+   * TODO delete the Details from aMember
+   * @param {number} userId
+   */
+  async deleteUserAmember(userId) {
+    let deleteUser = await new aMember(config.get('aMember')).deleteUserFromAMember(userId);
+    return deleteUser
+  }
+
   /**
    * TODO To update the User  details in mysql table
    * Function to Update User details in mysql table
-   * @param  {object} postDetails -User details to update
-   * @param  {number} user_id - User id
-   * @return {string} Returns Update User Details information
+   * @param  {object} profileDetails -User details to update
+   * @param  {number} userId - User id
+   * @return {object} Returns Update User Details information
    */
   async updateUser(profileDetails, userId) {
     let res = '';
     try {
       res = await userDetails.update(
         {
-          user_name: profileDetails.username,
-          first_name: profileDetails.firstName,
-          last_name: profileDetails.lastName,
-          profile_picture: profileDetails.profilePicture,
-          working_at: profileDetails.company,
-          language: profileDetails.language,
-          time_zone: profileDetails.timezone,
-          country: profileDetails.country,
-          phone_code: profileDetails.phoneCode,
-          phone_no: profileDetails.phoneNo,
-          company_name: profileDetails.company_name,
-          company_logo: profileDetails.company_logo,
+          user_name: profileDetails?.username,
+          first_name: profileDetails?.firstName,
+          last_name: profileDetails?.lastName,
+          email:profileDetails?.email,
+          profile_picture: profileDetails?.profilePicture,
+          working_at: profileDetails?.company,
+          language: profileDetails?.language,
+          time_zone: profileDetails?.timezone,
+          country: profileDetails?.country,
+          phone_code: profileDetails?.phoneCode,
+          phone_no: profileDetails?.phoneNo,
+          company_name: profileDetails?.company_name,
+          company_logo: profileDetails?.company_logo,
         },
-        {where: {user_id: userId}}
+        { where: { user_id: userId } }
       );
+       // Update User Email  in aMember as well
+        if (profileDetails?.email) {
+          let aMemberData = {
+            email: profileDetails?.email,
+            userId,
+          };
+          new aMember(config.get('aMember')).updateUserEmailToAMember(
+            aMemberData
+          );
+        }
       return res;
-    } catch (error) {
+} catch (error) {
       throw new Error(error);
     }
   }
@@ -263,7 +308,7 @@ class AuthorizeLibs {
       {
         user_plan: newplan,
       },
-      {where: {id: user_activation_id}}
+      { where: { id: user_activation_id } }
     );
     if (newplan == 0) {
       let extendDate = await userActivation.update(
@@ -272,7 +317,7 @@ class AuthorizeLibs {
           user_plan: newPlan,
           account_expire_date: moment.utc().add(1, 'months'),
         },
-        {where: {id: user_activation_id}}
+        { where: { id: user_activation_id } }
       );
     }
     return res;

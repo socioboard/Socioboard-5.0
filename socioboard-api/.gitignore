@@ -36,7 +36,10 @@ Publish/resources/views/swagger-api-view.json
 Update/resources/views/swagger-api-view.json
 User/resources/views/swagger-api-view.json
 
+# For Config remover
+*/config/*.json
+User/config/*.json
 
 # For SQL Db config 
 
-Common/Sequelize-cli/config/config.json
+# Common/Sequelize-cli/config/config.json

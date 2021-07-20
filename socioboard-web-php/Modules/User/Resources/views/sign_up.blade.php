@@ -77,6 +77,20 @@
             </div>
             <!--end::Form group-->
 
+            <!--begin::phone number input-->
+            <div class="form-group">
+                <div class="input-group input-group-lg">
+
+                    <input id="phone" type="tel" name="phone" class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6" placeholder="Phone Number"
+                           value="" />
+                </div>
+                <span id="valid-msg" class="hide"></span>
+                <span id='phoneError' style="font-size: medium"></span>
+                <span id="error-msg" style="font-size: 0.9rem; color: rgb(246, 78, 96); margin-top: 0.25rem; width: 100%;"></span>
+            </div>
+            <!--end::phone number input-->
+
+
             <!--begin::Form group-->
             <div class="form-group">
                 <div class="input-icon input-icon-right" id="new_password">
@@ -134,57 +148,57 @@
     </div>
 
     <!--begin: Aside footer for desktop-->
-    <div class="text-center">
-        <!-- Facebook login button -->
-        <div>
-            <button type="button" class="btn bg-facebook font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
-                    onclick="location.href='/social/Facebook'">
+{{--    <div class="text-center">--}}
+{{--        <!-- Facebook login button -->--}}
+{{--        <div>--}}
+{{--            <button type="button" class="btn bg-facebook font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"--}}
+{{--                    onclick="location.href='/social/Facebook'">--}}
 
 
-                                    <span class="svg-icon svg-icon-md">
-                                        <i class="fab fa-facebook"></i>
-                                    </span>
-                Sign in with Facebook
-            </button>
-        </div>
-        <!-- end:Facebook login button -->
-        <!-- Google login button -->
-        <div>
-            <button type="button" class="btn bg-google font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"  onclick="location.href='/social/Google'">
-                                    <span class="svg-icon svg-icon-md">
-                                        <i class="fab fa-google"></i>
-                                    </span>
-                Sign in with Google
-            </button>
-        </div>
-        <!-- end:Google login button -->
+{{--                                    <span class="svg-icon svg-icon-md">--}}
+{{--                                        <i class="fab fa-facebook"></i>--}}
+{{--                                    </span>--}}
+{{--                Sign in with Facebook--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--        <!-- end:Facebook login button -->--}}
+{{--        <!-- Google login button -->--}}
+{{--        <div>--}}
+{{--            <button type="button" class="btn bg-google font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"  onclick="location.href='/social/Google'">--}}
+{{--                                    <span class="svg-icon svg-icon-md">--}}
+{{--                                        <i class="fab fa-google"></i>--}}
+{{--                                    </span>--}}
+{{--                Sign in with Google--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--        <!-- end:Google login button -->--}}
 
-        <!-- Twitter login button -->
-        <div>
-            <button type="button" class="btn bg-twitter font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
-                    onclick="location.href='/social/Twitter'">
-
-
-                                    <span class="svg-icon svg-icon-md">
-                                        <i class="fab fa-twitter"></i>
-                                    </span>
-                Sign in with Twitter
-            </button>
-        </div>
-        <!-- end:Twitter login button -->
-        <!-- Git-hub login button -->
-        <div>
-            <button type="button" class="btn bg-github font-weight-bolder pl-20 pr-20 mt-5 font-size-h6" onclick="location.href='/social/GitHub'">
-                                    <span class="svg-icon svg-icon-md">
-                                        <i class="fab fa-github" ></i>
+{{--        <!-- Twitter login button -->--}}
+{{--        <div>--}}
+{{--            <button type="button" class="btn bg-twitter font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"--}}
+{{--                    onclick="location.href='/social/Twitter'">--}}
 
 
-                                    </span>
-                Sign in with Github
-            </button>
-        </div>
-        <!-- end:Git-hub login button -->
-    </div>
+{{--                                    <span class="svg-icon svg-icon-md">--}}
+{{--                                        <i class="fab fa-twitter"></i>--}}
+{{--                                    </span>--}}
+{{--                Sign in with Twitter--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--        <!-- end:Twitter login button -->--}}
+{{--        <!-- Git-hub login button -->--}}
+{{--        <div>--}}
+{{--            <button type="button" class="btn bg-github font-weight-bolder pl-20 pr-20 mt-5 font-size-h6" onclick="location.href='/social/GitHub'">--}}
+{{--                                    <span class="svg-icon svg-icon-md">--}}
+{{--                                        <i class="fab fa-github" ></i>--}}
+
+
+{{--                                    </span>--}}
+{{--                Sign in with Github--}}
+{{--            </button>--}}
+{{--        </div>--}}
+{{--        <!-- end:Git-hub login button -->--}}
+{{--    </div>--}}
     <!--end: Aside footer for desktop-->
 
     <!--end::SignUp-->
@@ -202,5 +216,51 @@
 
 @section('script')
     <script src="{{ asset('../js/IncJsFiles/sign_up.js') }}"></script>
+    <script src="{{asset('/plugins/custom/intl-tel-input/build/js/intlTelInput.js')}}"></script>
+
+    <script>
+        let PHONE_CODE = $("#phone").val() != "nil"? $("#phone").val(): "in";
+        let input = document.querySelector("#phone"),
+            errorMsg = document.querySelector("#error-msg"),
+            validMsg = document.querySelector("#valid-msg");
+
+        // here, the index maps to the error code returned from getValidationError - see readme
+        let errorMap = ["❌ Invalid number", "❌ Invalid country code", "❌ Too short", "❌ Too long", "❌ Invalid number"];
+
+        // initialise plugin
+        let iti = window.intlTelInput(input, {
+            utilsScript: "../plugins/custom/intl-tel-input/build/js/utils.js?1613236686837",
+            initialCountry: PHONE_CODE,
+        });
+
+        let reset = function () {
+            input.classList.remove("error");
+            errorMsg.innerHTML = "";
+            errorMsg.classList.add("hide");
+            validMsg.classList.add("hide");
+        };
+
+        // on blur: validate
+        input.addEventListener('blur', function () {
+            reset();
+            if (input.value.trim()) {
+                if (iti.isValidNumber()) {
+                    validMsg.classList.remove("hide");
+                } else {
+                    input.classList.add("error");
+                    let errorCode = iti.getValidationError();
+                    errorMsg.innerHTML = errorMap[errorCode];
+                    errorMsg.classList.remove("hide");
+                }
+            }
+        });
+
+        // on keyup / change flag: reset
+        input.addEventListener('change', reset);
+        input.addEventListener('keyup', reset);
+
+    </script>
+
+
 @endsection
 

@@ -5,7 +5,7 @@ let plan_types = ["free_plan", "standerd_plan", "premium_plan", "deluxe_plan", "
 let plan_color = ["primary", "success", "danger", "warning", "primary", "success", "danger", "warning"];
 
 $(document).ready(function () {
-        $("#home_tab").trigger('click');
+    $("#home_tab").trigger('click');
     if (GET_ALL_PLANS_DATA.code === 200) {
         let x;
         let k = 0;
@@ -67,7 +67,7 @@ $(document).ready(function () {
                     selectedPlanType = plan_types[3];
                     selectedPlanColor = plan_color[3];
                     append += '<span class="svg-icon svg-icon-5x svg-icon-' + plan_color[3] + '">' +
-                        '<i class="fas fa-gem fa-5x ' + plan_types[33] + '"></i>' +
+                        '<i class="fas fa-gem fa-5x ' + plan_types[3] + '"></i>' +
                         '</span>' +
                         '</div>' +
                         '<span class="font-size-h1 d-block font-weight-boldest py-2">';
@@ -128,12 +128,12 @@ $(document).ready(function () {
             if (x.plan_name == "Basic") append += '<span>Team Member - <b>' + x.member_count + '</b></span>';
             else append += '<span>Team Members - <b>' + x.member_count + '</b></span>';
             append += '<span class="mt-3">';
-           append += '<a href="javascript:;"  data-toggle="modal" data-target="#plan_details_modal" onclick="morePlaneDetails( ' + k + ', \'' + selectedPlanType + '\' , \'' + selectedPlanColor + '\')"><span class="text-warning text-hover-primary"><i class="fas fa-info-circle fa-fw text-warning text-hover-primary"></i> Plan Details</span></a>';
+            append += '<a href="javascript:;"  data-toggle="modal" data-target="#plan_details_modal" onclick="morePlaneDetails( \'' + selectedPlanType + '\' , \'' + selectedPlanColor + '\',' + x.plan_id + ')"><span class="text-warning text-hover-primary"><i class="fas fa-info-circle fa-fw text-warning text-hover-primary"></i> Plan Details</span></a>';
 
             append += '</span>' +
                 '</p>' +
                 '<div class="d-flex justify-content-center">' +
-                '<input type="hidden" id="plan_details' + k + '" value="' + JSON.stringify(x).replaceAll('"', "'") + '">' ;
+                '<input type="hidden" id="plan_details' + k + '" value="' + JSON.stringify(x).replaceAll('"', "'") + '">';
             if (x.plan_id == GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="plan' + x.plan_id + '" class="btn bg-red text-uppercase font-weight-bolder px-15 py-3"> Current </button>';
             else if (x.plan_id > GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="plan' + x.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Upgrade </button>';
             else if (x.plan_id < GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="plan' + x.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Downgrade </button>';
@@ -149,52 +149,73 @@ $(document).ready(function () {
     }
 });
 
-function morePlaneDetails(k, selectedPlanType, selectedPlanColor) {
-    let value = JSON.parse($("#plan_details" + k).val().replaceAll("'", '"'));
-    let append = "";
-    $('#selected_plan_Details_id').empty();
-    append += '<div class="col-md-6 col-sm-12 text-center">' +
-        '<div class="d-flex flex-center position-relative m-20">' +
-        '<span class="svg svg-fill-primary opacity-4 position-absolute">' +
-        '<svg width="175" height="200">' +
-        '<polyline points="87,0 174,50 174,150 87,200 0,150 0,50 87,0" />' +
-        '</svg>' +
-        '</span>' +
-        '<span class="svg-icon svg-icon-5x svg-icon-' + selectedPlanColor + '">';
-    if (value.plan_name === "Basic") append += '<i class="fas fa-paper-plane fa-5x ' + selectedPlanType + '"></i>';
-    else append += '<i class="fas fa-gem fa-5x ' + selectedPlanType + '"></i>';
-    append += '</span>' +
-        '</div>' +
-        '<span class="font-size-h1 d-block font-weight-boldest py-2" id="plan_price_id">';
-    if (value.plan_name === "Basic") append += 'FREE <sup class="font-size-h3 font-weight-normal pl-1"></sup></span>';
-    else append += value.plan_price + '<sup class="font-size-h3 font-weight-normal pl-1">$</sup></span>';
-    append += '<h4 class="font-size-h6 d-block font-weight-bold mb-7 ' + selectedPlanType + '" id="plan_name_id"> ' + value.plan_name + '</h4>';
-    if (value.plan_id == GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" class="btn bg-red text-uppercase font-weight-bolder px-15 py-3"> Current </button>';
-    else if(value.plan_id > GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Upgrade </button>';
-    else if(value.plan_id < GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Downgrade </button>';
-    append += '</div>' +
-        '<div class="col-md-6 col-sm-12">' +
-        '<p class="mb-15 d-flex flex-column">';
-    if (value.plan_name === "Basic") append += '<span id="team_members_id">Team Member - ' + value.member_count + '</span>';
-    else append += '<span id="team_members_id">Team Members - ' + value.member_count + '</span>';
-    append += '<span>Social Networks - ' + socialNetworksFunction(value.available_network) + '</span>' +
-        '<span>Total Profiles - <b>' + value.account_count + '</b></span>' +
-        '<span>Browser extension - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Scheduling & Posting - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>World Class 24*7 Training & Support - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>RSS Feed - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Social Report - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Discovery - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Content Studio - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Board Me - ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Custom Report -  ' + planBoolenFunction(value.custom_report) + '</span>' +
-        '<span>Maximum Referral Count - <b>' + value.maximum_referal_count + '</b></span>' +
-        '<span>Maximum Schedule count - <b>' + value.maximum_schedule + '</b></span>' +
-        '</p>' +
-        '</div>';
+function morePlaneDetails(selectedPlanType, selectedPlanColor, id) {
+    $.ajax({
+        url: '/get-plan-details',
+        type: 'get',
+        data: {id: id},
+        beforeSend: function () {
+            $('#selected_plan_Details_id').empty();
+        },
+        success: function (response) {
+            if (response.code === 200) {
+                let value = response.data;
+                let append = "";
+                $('#selected_plan_Details_id').empty();
+                append += '<div class="col-md-6 col-sm-12 text-center">' +
+                    '<div class="d-flex flex-center position-relative m-20">' +
+                    '<span class="svg svg-fill-primary opacity-4 position-absolute">' +
+                    '<svg width="175" height="200">' +
+                    '<polyline points="87,0 174,50 174,150 87,200 0,150 0,50 87,0" />' + '</svg>' + '</span>' +
+                    '<span class="svg-icon svg-icon-5x svg-icon-' + selectedPlanColor + '">';
+                if (value.plan_name === "Basic") append += '<i class="fas fa-paper-plane fa-5x ' + selectedPlanType + '"></i>';
+                else append += '<i class="fas fa-gem fa-5x ' + selectedPlanType + '"></i>';
+                append += '</span>' +
+                    '</div>' +
+                    '<span class="font-size-h1 d-block font-weight-boldest py-2" id="plan_price_id">';
+                if (value.plan_name === "Basic") append += 'FREE <sup class="font-size-h3 font-weight-normal pl-1"></sup></span>';
+                else append += value.plan_price + '<sup class="font-size-h3 font-weight-normal pl-1">$</sup></span>';
+                append += '<h4 class="font-size-h6 d-block font-weight-bold mb-7 ' + selectedPlanType + '" id="plan_name_id"> ' + value.plan_name + '</h4>';
+                if (value.plan_id == GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" class="btn bg-red text-uppercase font-weight-bolder px-15 py-3"> Current </button>';
+                else if (value.plan_id > GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Upgrade </button>';
+                else if (value.plan_id < GET_USER_PLANS_DATA.plan_id) append += '<button type="button" id="selected_plan_id' + value.plan_id + '" title="Click to update the plan details" class="btn bg-blue text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Downgrade </button>';
+                append += '</div>' +
+                    '<div class="col-md-6 col-sm-12">' +
+                    '<p class="mb-15 d-flex flex-column">';
+                if (value.plan_name === "Basic") append += '<span id="team_members_id">Team Member - ' + value.member_count + '</span>';
+                else append += '<span id="team_members_id">Team Members - ' + value.member_count + '</span>';
+                append += '<span>Social Networks - ' + socialNetworksFunction(value.available_network) + '</span>' +
+                    '<span>Total Profiles - <b>' + value.account_count + '</b></span>' +
+                    '<span>Browser extension - ' + planBoolenFunction(value.custom_report) + '</span>' +
+                    '<span>Scheduling & Posting - ' + planBoolenFunction(value.custom_report) + '</span>' +
+                    '<span>World Class 24*7 Training & Support - ' + planBoolenFunction(value.custom_report) + '</span>' +
+                    '<span>RSS Feed - ' + planBoolenFunction(value.rss_feeds) + '</span>' +
+                    '<span>Calendar - ' + planBoolenFunction(value.calendar) + '</span>' +
+                    '<span>Social Media based CRM - ' + planBoolenFunction(value.crm) + '</span>' +
+                    '<span>Social Report - ' + planBoolenFunction(value.social_report) + '</span>' +
+                    '<span>Discovery - ' + planBoolenFunction(value.discovery) + '</span>' +
+                    '<span>Content Studio - ' + planBoolenFunction(value.content_studio) + '</span>' +
+                    '<span>Board Me - ' + planBoolenFunction(value.board_me) + '</span>' +
+                    '<span>Share Libraray - ' + planBoolenFunction(value.share_library) + '</span>' +
+                    '<span>Sharathon - ' + planBoolenFunction(value.shareathon) + '</span>' +
+                    '<span>Team Report - ' + planBoolenFunction(value.team_report) + '</span>' +
+                    '<span>Custom Report -  ' + planBoolenFunction(value.custom_report) + '</span>' +
+                    '<span>Link Shortening -  ' + planBoolenFunction(value.link_shortening) + '</span>' +
+                    '<span>Twitter Engagement -  ' + planBoolenFunction(value.twitter_engagement) + '</span>' +
+                    '<span>Maximum Referral Count - <b>' + value.maximum_referal_count + '</b></span>' +
+                    '<span>Maximum Schedule count - <b>' + value.maximum_schedule + '</b></span>' +
+                    '</p>' +
+                    '</div>';
 
-    $('#selected_plan_Details_id').append(append);
-    $('#selected_plan_id' + value.plan_id + '').tooltip();
+                $('#selected_plan_Details_id').append(append);
+                $('#selected_plan_id' + value.plan_id + '').tooltip();
+            } else if (response.code === 400) {
+                toastr.error(response.error);
+            } else {
+                toastr.error('Some error occured can not get plan details');
+            }
+        }
+    });
 }
 
 function planBoolenFunction(data) {
@@ -202,7 +223,7 @@ function planBoolenFunction(data) {
     else return '<b><i class="far fa-times-circle"></i></b>';
 }
 
-function socialNetworksFunction(socialData){
+function socialNetworksFunction(socialData) {
     let available_networks = [];
     let social_networks = "";
     available_networks = socialData.split("-");
@@ -243,9 +264,54 @@ function socialNetworksFunction(socialData){
                 break;
         }
     })
-  return social_networks;
+    return social_networks;
 }
 
 function openPackagesPage() {
-    window.location.href = "https://appv5.socioboard.com/amember/member"
+    $.ajax({
+        url: 'check-email-user',
+        type: 'GET',
+        processData: false,
+        cache: false,
+        success: function (response) {
+            if (response.code === 200) {
+                if (response.email !== null) {
+                    window.location.href = "https://appv5.socioboard.com/amember/member/index"
+                } else {
+                    $('#emailModal').modal('show');
+                }
+
+            } else {
+                toastr.error('Some error occured, can not perform operation');
+            }
+        }
+    })
+
+}
+
+function submitEmail() {
+    let emailID = $('#emailLoginId').val();
+    let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    $.ajax({
+        url: 'update-email-user',
+        type: 'post',
+        data: {
+            emailID: emailID
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (response.code === 200) {
+                toastr.success("Email updated Successfully", "", {
+                    timeOut: 1000,
+                    fadeOut: 1000,
+                    onHidden: function () {
+                        window.location.href = "https://appv5.socioboard.com/amember/member/index"
+                    }
+                });
+            }
+        }
+    })
 }

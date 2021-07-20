@@ -9,6 +9,8 @@
 <meta name="author" content="Socioboard Technologies">
 <meta name="designer" content="Chanchal Santra">
 <meta name="csrf-token" content="{{ csrf_token() }}"/>
+<link href="{{asset('/plugins/custom/intl-tel-input/build/css/intlTelInput.css')}}" rel="stylesheet"
+      type="text/css"/>
 @include('user::Layouts._common_styles_links')
 <script>
     const currentTheme = localStorage.getItem('theme');

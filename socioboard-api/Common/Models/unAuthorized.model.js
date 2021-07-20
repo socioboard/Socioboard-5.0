@@ -3,6 +3,7 @@ import SendEmailServices from '../Services/mailBase.services.js';
 import moment from 'moment';
 import config from 'config';
 import TwtConnect from '../Cluster/twitter.cluster.js';
+import aMember from '../Mappings/amember.users.js';
 
 // const db = require('../Sequelize-cli/models/index')
 // const SendEmailServices = require('../Services/mailServices')
@@ -98,6 +99,7 @@ class userLibs {
           'email',
           'phone_no',
           'first_name',
+          'user_name',
           'last_name',
           'profile_picture',
           'is_account_locked',
@@ -173,7 +175,7 @@ class userLibs {
       paymentStatus: 0,
       IsTwoStepVerify: false,
       signupType: 0,
-      userPlan: 7,
+      userPlan: config.get('user_base_plan'),
       expireDate: moment.utc().add(1, 'months'),
     };
     let info = requestBody;
@@ -422,6 +424,8 @@ class userLibs {
         'email',
         'user_activation_id',
         'is_account_locked',
+        'phone_code',
+        'phone_no',
       ],
       include: [
         {
@@ -613,8 +617,18 @@ class userLibs {
     });
     return res;
   }
+ /**
+   * TODO To Fecth the Plan details
+   * Function to Fecth the Plan details
+   * @param  {number} planId - Plan Id
+   * @return {object} Returns User Plan details
+   */
+
   async getFullPlanDetails(planId) {
-    let res = await applicationInfo.findAll({});
+    if(planId){
+      return this.getPlanDetails(planId)
+    }
+    let res = await applicationInfo.findAll();
     return res;
   }
 
@@ -700,15 +714,29 @@ class userLibs {
     return res;
   }
 
-  async updatePassword(user_id, newPassword) {
+   /**
+   * TODO To update the User  Password 
+   * Function to Update User Password 
+   * @param  {number} user_id - User id
+   * @param  {string} newPassword - User Password
+   * @return {object} Returns Update User details
+   */
+   async updatePassword(user_id, newPassword) {
     let res = await userDetails.update(
       {password: newPassword},
       {
         where: {
           user_id: user_id,
         },
+      });
+       //update in Amember as well
+       let aMemberData = {
+        email: profileDetails?.email,
+        userId: userId,
       }
-    );
+      new aMember(config.get('aMember')).updateUserPasswordToAMember(
+        aMemberData
+      )
     return res;
   }
 
@@ -734,8 +762,8 @@ class userLibs {
         paymentStatus: 0,
         IsTwoStepVerify: false,
         signupType: 2,
-        userPlan: 1,
-        // expireDate:
+        userPlan: config.get('user_base_plan'),
+        expireDate: moment.utc().add(1, 'months'),
       },
       isSocialLogin: true,
       network: '1', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
@@ -771,8 +799,8 @@ class userLibs {
         paymentStatus: 0,
         IsTwoStepVerify: false,
         signupType: 1,
-        userPlan: 1,
-        // expireDate:
+        userPlan: config.get('user_base_plan'),
+        expireDate: moment.utc().add(1, 'months'),
       },
       isSocialLogin: true,
       network: '8', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
@@ -806,8 +834,8 @@ class userLibs {
         paymentStatus: 0,
         IsTwoStepVerify: false,
         signupType: 4,
-        userPlan: 1,
-        // expireDate:
+        userPlan: config.get('user_base_plan'),
+        expireDate: moment.utc().add(1, 'months'),
       },
       // isSocialLogin: true,
       // network: "12", //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion 12,github
@@ -843,8 +871,8 @@ class userLibs {
           paymentStatus: 0,
           IsTwoStepVerify: false,
           signupType: 3,
-          userPlan: 1,
-          // expireDate:
+          userPlan: config.get('user_base_plan'),
+          expireDate: moment.utc().add(1, 'months'),
         },
         isSocialLogin: true,
         network: '4', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion 12,github
@@ -946,7 +974,7 @@ class userLibs {
           payment_status: info.activations.paymentStatus,
           activate_2step_verification: info.activations.IsTwoStepVerify,
           signup_type: info.activations.signupType,
-          // account_expire_date: info.activations.expireDate,
+          account_expire_date: moment.utc().add(15, 'days'),
           user_plan: info.activations.userPlan,
           //  payment_type: info.activations.paymentType
         },

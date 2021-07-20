@@ -10,9 +10,9 @@ module.exports = {
         {
           type: Sequelize.STRING(64),
           allowNull: true,
-          defaultValue: 'NA',
+          defaultValue: 'NA'
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -20,9 +20,9 @@ module.exports = {
         {
           type: Sequelize.STRING(64),
           allowNull: true,
-          defaultValue: 'NA',
+          defaultValue: 'NA'
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -30,9 +30,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           defaultValue: Sequelize.fn('NOW'),
-          allowNull: false,
+          allowNull: false
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -40,36 +40,36 @@ module.exports = {
         {
           type: Sequelize.INTEGER,
           defaultValue: 1,
-          allowNull: false,
+          allowNull: false
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
         'account_name',
         {
           type: Sequelize.STRING(64),
-          allowNull: true,
+          allowNull: true
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
         'subaccount_type',
         {
           type: Sequelize.STRING(64),
-          allowNull: true,
+          allowNull: true
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
         'is_invite',
         {
           type: Sequelize.INTEGER,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -77,9 +77,9 @@ module.exports = {
         {
           type: Sequelize.INTEGER,
           defaultValue: 1,
-          allowNull: false,
+          allowNull: false
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -87,9 +87,9 @@ module.exports = {
         {
           type: Sequelize.INTEGER,
           defaultValue: 1,
-          allowNull: false,
+          allowNull: false
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'team_informations',
@@ -97,9 +97,9 @@ module.exports = {
         {
           type: Sequelize.BOOLEAN,
           allowNull: false,
-          defaultValue: false,
+          defaultValue: false
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -107,9 +107,9 @@ module.exports = {
         {
           type: Sequelize.UUID,
           allowNull: false,
-          defaultValue: Sequelize.UUIDV1,
+          defaultValue: Sequelize.UUIDV1
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -120,11 +120,11 @@ module.exports = {
           validate: {
             isDate: {
               args: true,
-              msg: 'direct_login_token_expire should be a valid date format.',
-            },
-          },
+              msg: "direct_login_token_expire should be a valid date format."
+            }
+          }
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -133,9 +133,9 @@ module.exports = {
           type: Sequelize.INTEGER,
           defaultValue: 1,
           allowNull: false,
-          comments: '0-Not active, 1-active',
+          comments: '0-Not active, 1-active'
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -144,9 +144,9 @@ module.exports = {
           type: Sequelize.INTEGER,
           defaultValue: 1,
           allowNull: false,
-          comments: '0-Not active, 1-active',
+          comments: '0-Not active, 1-active'
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -155,9 +155,9 @@ module.exports = {
           type: Sequelize.INTEGER,
           defaultValue: 0,
           allowNull: false,
-          comments: '0-Mail not sent, 1-mail sent',
+          comments: '0-Mail not sent, 1-mail sent'
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -165,9 +165,9 @@ module.exports = {
         {
           type: Sequelize.TEXT,
           allowNull: true,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -175,9 +175,9 @@ module.exports = {
         {
           type: Sequelize.STRING(64),
           allowNull: false,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -185,9 +185,9 @@ module.exports = {
         {
           type: Sequelize.STRING(30),
           allowNull: false,
-          defaultValue: 'nil',
+          defaultValue: "nil"
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -195,9 +195,9 @@ module.exports = {
         {
           type: Sequelize.STRING(30),
           allowNull: true,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -205,9 +205,9 @@ module.exports = {
         {
           type: Sequelize.STRING(30),
           allowNull: true,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -215,9 +215,9 @@ module.exports = {
         {
           type: Sequelize.STRING(30),
           allowNull: true,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -225,19 +225,19 @@ module.exports = {
         {
           type: Sequelize.STRING(30),
           allowNull: true,
-          defaultValue: 0,
+          defaultValue: 0
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
         'language',
         {
           type: Sequelize.STRING(10),
-          defaultValue: 'en',
-          allowNull: false,
+          defaultValue: "en",
+          allowNull: false
         },
-        {transaction}
+        { transaction }
       );
 
       //#endregion
@@ -249,9 +249,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'application_informations',
@@ -261,7 +261,7 @@ module.exports = {
           allowNull: false,
           defaultValue: Sequelize.fn('NOW'),
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'boards',
@@ -269,9 +269,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'boards',
@@ -279,9 +279,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'join_table_teams_social_accounts',
@@ -289,9 +289,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'join_table_teams_social_accounts',
@@ -299,9 +299,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'join_table_users_teams',
@@ -309,9 +309,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'join_table_users_teams',
@@ -319,9 +319,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'scheduled_informations',
@@ -329,9 +329,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'scheduled_informations',
@@ -339,9 +339,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -349,9 +349,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_accounts',
@@ -359,9 +359,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_account_feeds_updates',
@@ -369,9 +369,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_account_feeds_updates',
@@ -379,9 +379,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_account_friends_counts',
@@ -389,9 +389,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'social_account_friends_counts',
@@ -399,9 +399,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'team_informations',
@@ -411,7 +411,7 @@ module.exports = {
           allowNull: false,
           defaultValue: Sequelize.fn('NOW'),
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'team_informations',
@@ -421,7 +421,7 @@ module.exports = {
           allowNull: false,
           defaultValue: Sequelize.fn('NOW'),
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'users_schedule_details',
@@ -429,9 +429,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'users_schedule_details',
@@ -439,9 +439,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -449,9 +449,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_activations',
@@ -459,9 +459,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -469,9 +469,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_details',
@@ -479,9 +479,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_media_details',
@@ -489,9 +489,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_media_details',
@@ -499,9 +499,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_payments',
@@ -509,9 +509,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_payments',
@@ -519,9 +519,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_rewards',
@@ -529,9 +529,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'user_rewards',
@@ -539,9 +539,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'pinterest_boards',
@@ -549,9 +549,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'pinterest_boards',
@@ -559,9 +559,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'coupons',
@@ -569,9 +569,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       await queryInterface.addColumn(
         'coupons',
@@ -579,9 +579,9 @@ module.exports = {
         {
           type: Sequelize.DATE,
           allowNull: false,
-          defaultValue: Sequelize.fn('NOW'),
+          defaultValue: Sequelize.fn('NOW')
         },
-        {transaction}
+        { transaction }
       );
       //#endregion
       await transaction.commit();
@@ -589,5 +589,6 @@ module.exports = {
       await transaction.rollback();
       throw err;
     }
-  },
+  }
+
 };

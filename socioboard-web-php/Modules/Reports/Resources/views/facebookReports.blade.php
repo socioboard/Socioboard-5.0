@@ -69,26 +69,23 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-6">
-                        <!--begin::Mixed Widget 2-->
+                    <div class="col-xl-6" id="ss-page">
                         <div class="card card-custom gutter-b card-stretch">
-                            <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Page Fan</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-scheduled_md6" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-scheduled_md6" style="
+    display: none;"></span>
                             </div>
-                            <!--end::Header-->
-
-
-                            <!--begin::Body-->
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="like_unlike_chart" class="card-rounded-bottom "
                                          style="height: 200px"></div>
                                 </div>
-                                <!--end::Chart-->
-
-                                <!--begin::Stats-->
                                 <div class="mt-10 mb-5">
                                     <!--begin::Row-->
                                     <div class="row row-paddingless mb-10">
@@ -148,17 +145,18 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6">
-                        <!--begin::Mixed Widget 2-->
+                    <div class="col-xl-6" id="ss-page-impressions">
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Page Impressions</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-page-impressions_md6" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-page-impressions_md6" style="
+    display: none;"></span>
                             </div>
-                            <!--end::Header-->
-
-
-                            <!--begin::Body-->
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -256,12 +254,18 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-6" id="ss-page-organic">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Page Organic & Paid Impressions</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-page-organic_md6" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-page-organic_md6" style="
+    display: none;"></span>
                             </div>
                             <!--end::Header-->
 
@@ -340,17 +344,19 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-6"  id="ss-page-stories">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Page Stories</h3>
+                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                     title="Add to custom Reports">+
+                                    <span node-id="ss-page-stories_md6" class="ss addtcartclose"></span>
+                                </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-page-stories_md6" style="
+    display: none;"></span>
                             </div>
-                            <!--end::Header-->
-
-
-                            <!--begin::Body-->
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">

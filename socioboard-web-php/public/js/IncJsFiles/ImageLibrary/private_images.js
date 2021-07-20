@@ -97,6 +97,7 @@ function imageUpload(privacy) {
         },
              success: function (response) {
                     if (response.code === 200) {
+                        $("#privateImagesError1, #privateImagesError2").html("");
                         let append = "";
                         $(".modal-backdrop").remove();
                         $('#uploadImageModal').hide().removeClass("hide");

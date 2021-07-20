@@ -6,12 +6,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: true
       },
       email_validate_token: {
         type: Sequelize.UUID,
         allowNull: false,
-        defaultValue: Sequelize.UUIDV1,
+        defaultValue: Sequelize.UUIDV1
       },
       email_token_expire: {
         type: Sequelize.DATE,
@@ -19,14 +19,14 @@ module.exports = {
         validate: {
           isDate: {
             args: true,
-            msg: 'email_token_expire should be a valid date format.',
-          },
-        },
+            msg: "email_token_expire should be a valid date format."
+          }
+        }
       },
       forgot_password_validate_token: {
         type: Sequelize.UUID,
         allowNull: false,
-        defaultValue: Sequelize.UUIDV1,
+        defaultValue: Sequelize.UUIDV1
       },
       forgot_password_token_expire: {
         type: Sequelize.DATE,
@@ -34,9 +34,9 @@ module.exports = {
         validate: {
           isDate: {
             args: true,
-            msg: 'forgot_password_token_expire should be a valid date format.',
-          },
-        },
+            msg: "forgot_password_token_expire should be a valid date format."
+          }
+        }
       },
       // direct_login_validate_token: {
       //   type: Sequelize.UUID,
@@ -65,19 +65,19 @@ module.exports = {
         validate: {
           max: {
             args: 1,
-            msg: 'activation_status should be less than or equal to 1',
-          },
-        },
+            msg: "activation_status should be less than or equal to 1"
+          }
+        }
       },
       /*
-       * 0 - Paypal
-       * 1 - PayUMoney
-       */
+      * 0 - Paypal
+      * 1 - PayUMoney
+      */
       payment_type: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         defaultValue: 0,
-        comment: '0-Paypal, 1-PayUmoney',
+        comment: "0-Paypal, 1-PayUmoney"
       },
 
       last_payment_id: {
@@ -97,24 +97,24 @@ module.exports = {
         validate: {
           max: {
             args: 1,
-            msg: 'payment_status should be less than or equal to 1',
-          },
-        },
+            msg: "payment_status should be less than or equal to 1"
+          }
+        }
       },
       activate_2step_verification: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false,
+        defaultValue: false
       },
       /*
-       * 0-normal
-       * 1-firebase
-       */
+      * 0-normal
+      * 1-firebase
+      */
       shortenStatus: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         defaultValue: 0,
-        comment: '0-normal, 1-firebase',
+        comment: "0-normal, 1-firebase"
       },
       /*
        * 0 - Manually
@@ -130,9 +130,9 @@ module.exports = {
         validate: {
           max: {
             args: 2,
-            msg: 'signup_type should be less than or equal to 2',
-          },
-        },
+            msg: "signup_type should be less than or equal to 2"
+          }
+        }
       },
       /*
        * 0 - Basic
@@ -148,8 +148,7 @@ module.exports = {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         defaultValue: 0,
-        comment:
-          '0-Basic, 1-Standard, 2-Premium, 3-Deluxe, 4-Topaz, 5-Ruby, 6-Gold, 7-Platinum',
+        comment: "0-Basic, 1-Standard, 2-Premium, 3-Deluxe, 4-Topaz, 5-Ruby, 6-Gold, 7-Platinum"
       },
       created_date: {
         type: Sequelize.DATE,
@@ -158,9 +157,9 @@ module.exports = {
         validate: {
           max: {
             args: 2,
-            msg: 'user_plan should be less than or equal to 7',
-          },
-        },
+            msg: "user_plan should be less than or equal to 7"
+          }
+        }
       },
       // updated_at: {
       //   allowNull: false,
@@ -178,9 +177,9 @@ module.exports = {
         validate: {
           isDate: {
             args: true,
-            msg: 'account_expire_date should be a valid date format.',
-          },
-        },
+            msg: "account_expire_date should be a valid date format."
+          }
+        }
       },
       last_login: {
         type: Sequelize.DATE,
@@ -188,29 +187,27 @@ module.exports = {
         validate: {
           isDate: {
             args: true,
-            msg: 'last_login should be a valid date format.',
-          },
-        },
+            msg: "last_login should be a valid date format."
+          }
+        }
       },
       otp_token: {
         type: Sequelize.STRING(32),
         allowNull: true,
-        comment: 'first half for email, next half for phone',
+        comment: 'first half for email, next half for phone'
       },
       otp_token_expire: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        validate: {
+        type: Sequelize.DATE, allowNull: true, validate: {
           isDate: {
             args: true,
-            msg: 'otp_token_expire should be a valid date format.',
-          },
-        },
-        comment: 'expires in 10 minutes',
-      },
+            msg: "otp_token_expire should be a valid date format."
+          }
+        }, comment: 'expires in 10 minutes'
+      }
+
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('user_activations');
-  },
+  }
 };

@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-
 mongoose.set('useCreateIndex', true);
 
 /**
  * TODO To create schema for store Instagram Post Details
- * Schema for store youTube upload details.
+ * Schema for store Instagram Post Details
  * @param  {{type:String}} postId -Post Id
  * @param  {{type:String}} socialId -User Unique SocialId
  * @param  {{type:String}} userName -User Name

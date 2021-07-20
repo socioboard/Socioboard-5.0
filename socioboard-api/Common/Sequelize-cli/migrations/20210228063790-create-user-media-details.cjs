@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.INTEGER(3),
         allowNull: false,
         defaultValue: 0,
-        comment: '0-Image, 1-Video',
+        comment: "0-Image, 1-Video"
       },
       title: {
         allowNull: false,
@@ -24,11 +24,11 @@ module.exports = {
       },
       media_url: {
         allowNull: false,
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT
       },
       thumbnail_url: {
         allowNull: false,
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT
       },
       /**
        * 0- public
@@ -38,12 +38,12 @@ module.exports = {
         type: Sequelize.INTEGER(3),
         allowNull: false,
         defaultValue: 0,
-        comment: '0-public, 1-private, 3-publish',
+        comment: "0-public, 1-private, 3-publish"
       },
       media_size: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: 0
       },
       mime_type: {
         type: Sequelize.STRING(64),
@@ -55,28 +55,28 @@ module.exports = {
       },
       file_name: {
         allowNull: false,
-        type: Sequelize.TEXT,
+        type: Sequelize.TEXT
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'user_details',
-          key: 'user_id',
+          key: 'user_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       team_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: 'team_informations',
-          key: 'team_id',
+          key: 'team_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -92,5 +92,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('user_media_details');
-  },
+  }
 };

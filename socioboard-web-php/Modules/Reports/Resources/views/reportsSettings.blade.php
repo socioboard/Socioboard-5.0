@@ -86,7 +86,9 @@
                                             <span class="font-weight-bold font-size-sm mt-1">Update your report settings</span>
                                         </div>
                                         <div class="card-toolbar">
-                                            <button type="reset" class="btn mr-2" onclick="updateReportsSettings()">Save
+                                            <button type="reset" class="btn mr-2"
+                                                    onclick="updateReportsSettings()">
+                                                Save
                                                 Changes
                                             </button>
                                             <button type="reset" class="btn mr-2" data-toggle="tooltip"
@@ -106,7 +108,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Company Name</label>
                                                 <div class="col-lg-9 col-xl-6">
                                                     <input class="form-control form-control-lg form-control-solid"
-                                                           type="text" id="companyName"
+                                                           type="text" id="companyName" onkeyup="checkKeyUp()"
                                                            value="{{$userDetails->data->user->company_name}}"/>
                                                 </div>
                                             </div>
@@ -251,6 +253,12 @@
 
         });
 
+        var checkKeyUpValue = false;
+
+        function checkKeyUp() {
+            checkKeyUpValue = true;
+        }
+
         let remove_avatar_value = 0;
 
         /**
@@ -269,52 +277,57 @@
          * ! Do not change this function without referring UI and API for passing reports logo and name and update those.
          */
         function updateReportsSettings() {
-            let file_data = $('#profile_avatar').prop('files')[0];
-            let company_name = $('#companyName').val();
-            let form_data = new FormData();
-            let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-            if (company_name === '') {
-                toastr.error('Company Name can not be empty');
-
+            if (checkKeyUpValue === false) {
+                toastr.error('No changes detected , please edit and save changes');
             } else {
-                if (format.test(company_name)) {
-                    toastr.error('Special characters are not allowed for company name,only alphanumeric characters allowed.');
+                let file_data = $('#profile_avatar').prop('files')[0];
+                let company_name = $('#companyName').val();
+                let form_data = new FormData();
+                let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+                if (company_name === '') {
+                    toastr.error('Company Name can not be empty');
 
                 } else {
-                    if (company_name.length >= 3 && company_name.length <= 20) {
-                        form_data.append('file', file_data);
-                        form_data.append('companyName', company_name);
-                        form_data.append('remove_avatar_value', remove_avatar_value);
-                        $.ajax({
-                            type: "post",
-                            url: "/update-reports-settings",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            data: form_data,
-                            enctype: 'multipart/form-data',
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-                            },
-                            success: function (response) {
-                                remove_avatar_value = 0;
-                                if (response.code === 200) {
-                                    toastr.success('Successfully Updated');
+                    if (format.test(company_name)) {
+                        toastr.error('Special characters are not allowed for company name,only alphanumeric characters allowed.');
 
-                                } else if (response.code === 400) {
-                                    toastr.error(response.error);
-                                } else {
-                                    toastr.error('Some error occured, can not update settings of Reports');
-                                }
-                            }
-                        });
                     } else {
-                        toastr.error('Minimum 3 characters are allowed,and Maximun 20 charcters are allowed');
+                        if (company_name.length >= 3 && company_name.length <= 20) {
+                            form_data.append('file', file_data);
+                            form_data.append('companyName', company_name);
+                            form_data.append('remove_avatar_value', remove_avatar_value);
+                            $.ajax({
+                                type: "post",
+                                url: "/update-reports-settings",
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                data: form_data,
+                                enctype: 'multipart/form-data',
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                beforeSend: function () {
+                                },
+                                success: function (response) {
+                                    remove_avatar_value = 0;
+                                    if (response.code === 200) {
+                                        toastr.success('Successfully Updated');
+
+                                    } else if (response.code === 400) {
+                                        toastr.error(response.error);
+                                    } else {
+                                        toastr.error('Some error occured, can not update settings of Reports');
+                                    }
+                                }
+                            });
+                        } else {
+                            toastr.error('Minimum 3 characters are allowed,and Maximun 20 charcters are allowed');
+                        }
                     }
                 }
             }
+
         }
 
         /**

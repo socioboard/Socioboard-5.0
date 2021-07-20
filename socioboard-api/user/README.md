@@ -53,7 +53,7 @@ This Micro Service is useful to handle all the requests related to Users and Adm
 
 ### How do I get set up?
 
-- Make sure you set the environment variable for node ( localDev )
+- Make sure you set the environment variable for node
 - Make sure that the port you given in config is free in the service location
 - Make sure you check the code first and then follow the package.json scripts to run the project properly
 
@@ -61,7 +61,7 @@ This Micro Service is useful to handle all the requests related to Users and Adm
 
 ## 🎈 Usage
 
-This Micro service is used for the User services
+This Microservice is used for the User services
 
 - Here you can get all the API calls which are related to the user services.
 

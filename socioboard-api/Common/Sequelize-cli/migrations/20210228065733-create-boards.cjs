@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       board_name: {
         type: Sequelize.STRING(64),
@@ -21,21 +21,21 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'user_details',
-          key: 'user_id',
+          key: 'user_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
+        onDelete: 'cascade'
       },
       team_id: {
         type: Sequelize.INTEGER,
         allowNull: true,
         references: {
           model: 'team_informations',
-          key: 'team_id',
+          key: 'team_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -51,5 +51,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('boards');
-  },
+  }
 };

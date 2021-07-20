@@ -4,7 +4,7 @@
 @endsection
 @section('content')
 
-    <!--begin::Content-->
+    <!--begin::Contentt-->
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
@@ -55,6 +55,37 @@
     <div style="display: none;">
         <input type="hidden" id="all_plans_data" data-list="{{json_encode($getPlanDetails) }}">
         <input type="hidden" id="user_plan_data" data-list="{{json_encode($userPlanData) }}">
+    </div>
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog"
+         aria-labelledby="emailModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModal">Please configure email to purchase a plan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <label for="emailLoginId" style="display: none"></label>
+                            <input
+                                    class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
+                                    type="text" name="emailLoginName" id="emailLoginId"
+                                    autocomplete="off"
+                                    placeholder="Email"/>
+                            <div class="error text-danger" id="emailLoginError1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 8px 21px 20px 21px">
+                    <button type="button" class="btn font-weight-bolder "
+                            onclick="submitEmail()">Submit
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 @section('scripts')

@@ -418,7 +418,10 @@
         function deleteIt(id) {
             $.ajax({
                 url: "/boards/board-delete/"+id,
-                type: "get",
+                type: "delete",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function (response) {
                     if (response['code'] === 200) {
                         toastr.success("Board Deleted Successfully!");

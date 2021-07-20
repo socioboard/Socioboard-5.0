@@ -6,47 +6,47 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       friendship_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       follower_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       following_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       page_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       group_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       board_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       subscription_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       total_like_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       total_post_count: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       bio_text: {
         type: Sequelize.TEXT('tiny'),
-        allowNull: true,
+        allowNull: true
       },
       profile_picture: {
         type: Sequelize.TEXT,
@@ -60,11 +60,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'social_accounts',
-          key: 'account_id',
+          key: 'account_id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade',
-      },
+        onDelete: 'cascade'
+      }
       // ,
       // updated_at: {
       //   allowNull: false,
@@ -80,5 +80,5 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('social_account_friends_counts');
-  },
+  }
 };

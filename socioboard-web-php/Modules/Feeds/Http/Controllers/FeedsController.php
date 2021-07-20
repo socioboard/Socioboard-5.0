@@ -614,10 +614,10 @@ class FeedsController extends Controller
         $team = Session::get('team');
         $teamID = $team['teamid'];
         $accID = $request->accid;
-        $pageId = $request->pageId;
+        $pageId = $request->pageid;
         $result = [];
         try {
-            $apiurl = $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-youtube-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-youtube-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             if ($response['data']->code === 200) {
                 $result['code'] = 200;
