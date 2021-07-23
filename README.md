@@ -30,7 +30,7 @@ And a lot more other features which make Socioboard an exceptional social media 
 ## A culture of creativity and trust
 Customers always come first in our company. Our expert team is committed to giving users the finest social media management and content marketing experience possible. To win you over, we're depending on honesty, sincerity, and openness in our pricing and relationships.
 
-## Make Your Business Social With Socioboard Or Social Media Simplified With Socioboard
+## Make Your Business Social With Socioboard
 
 Socioboard is a user-friendly social media management and content marketing tool that will help you and your team save time. It will be a lot easier to manage various social channels, monitor how your social media effort is doing, schedule your posts seamlessly, auto Email reports, curate content, and a lot more. Visit https://socioboard.com/ for more information about Socioboard, including features, price, and all you need to know about using or signing up for Socioboard.
 
