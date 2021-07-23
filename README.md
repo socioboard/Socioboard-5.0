@@ -1,4 +1,4 @@
- ![Socioboard](http://i.imgur.com/aKbFCOy.png "Your Open-source Social Media Dashboard")
+ ![Socioboard](https://socioboard.com/wp-content/uploads/2021/07/SocioBoard-v5-logo.png "Social Publishing Simplified")
 ==========
 **Socioboard** is a **powerful social media management and content marketing platform**. Using this software users can streamline their social media operations and content marketing. We help brands and businesses better manage their social media presence and be successful and leading companies in this ever-evolving digital space. Our vision is to provide a full-fledged and strong platform for users to enhance their social media management and get results with Socioboard.
 
