@@ -97,5 +97,7 @@ Refer this document for explained and elaborated documentation for SOCIOBOARD 4.
 * **[Socioboard-4.0 DOC](https://docs.google.com/document/d/10G0fhDcxmOLtxa0rWWS78JfMVdqMn7oAn-85O-ev0q8)**
 
 ```diff
-! For the Version-5.0 ( Latest Release ) will be added soon with Granular Details.
++ Please follow the steps of INSTALLATION.md file
 ```
+
+[INSTALLATION of SocioBoard5.0](https://github.com/socioboard/Socioboard-5.0/blob/Socioboard-5.0.2/INSTALLATION.md) file
