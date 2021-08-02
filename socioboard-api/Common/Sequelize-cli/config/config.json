@@ -32,6 +32,20 @@
       "min": 0,
       "acquire": 1000000,
       "idle": 200000
-    }
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "seederStorage": "sequelize"
   }
 }

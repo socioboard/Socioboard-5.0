@@ -43,8 +43,6 @@
   "mail_services_environments": [
     "production",
     "development",
-    "apidevelopment",
-    "phpdev",
     "localDev"
   ],
   "profile_url_assert": "/asserts/profiles.png",
