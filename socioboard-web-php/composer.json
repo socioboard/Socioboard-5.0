@@ -1,10 +1,14 @@
 {
-    "name": "laravel/laravel",
-    "type": "project",
-    "description": "The Laravel Framework.",
+    "name": "laravel/socioboard5.0",
+    "type": "Project",
+    "description": "The Laravel Framework for Socioboard5.0",
     "keywords": [
-        "framework",
-        "laravel"
+        "Framework",
+        "Laravel",
+        "^8.0",
+        "Modules",
+        "Social",
+        "neomorphic design"
     ],
     "license": "MIT",
     "require": {
