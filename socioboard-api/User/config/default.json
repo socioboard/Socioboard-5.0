@@ -1,0 +1,51 @@
+{
+  "lang": "en",
+  "applicationName": "SocioBoard5.0",
+  "teamDescription": "SocioBoard team has been created automatically by the application.",
+  "perPageLimit": 12,
+  "maximumTrialPeriod": 1,
+  "app_url": "https://local.socioboard.com/login",
+  "app_resetpw_url": "https://local.socioboard.com/resetUserPassword",
+  "user_socioboard": {
+    "title": "SocioBoard 5.0  - UserServices",
+    "version": "1.0.0",
+    "description": "To describe a RESTful API of user services such as unauthorized, authorized and team management",
+    "applicationName": "SocioBoard 5.0"
+  },
+  "mailTitles": {
+    "activation_link": "Socioboard 5.0 Activation link",
+    "Invitation_user": "Invitation from SocioBoard to Add Account",
+    "forgot_password_request": "SocioBoard 5.0 Reset Password",
+    "payment_invoice": "Socioboard 5.0  Payment Invoice"
+  },
+  "uploadService": {
+    "image_path": "",
+    "video_path": ""
+  },
+  "google_api": {
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+    "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+    "ganalytics_activeuser_metrics": "rt:activeUsers",
+    "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
+    "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
+    "version": "4.0.0"
+  },
+  "instagram": {
+    "business_account_scopes": "instagram_basic,instagram_manage_comments,instagram_manage_insights"
+  },
+  "pinterest": {
+    "scopes": "read_relationships+write_relationships+read_public+write_public"
+  },
+  "jest": {
+    "access_token": "<< JEST ACCESS TOKEN >>"
+  },
+  "mail_services_environments": [
+    "production",
+    "development",
+    "localDev"
+  ],
+  "profile_url_assert": "/asserts/profiles.png",
+  "user_base_plan": 0,
+  "expire_month": 1
+}
