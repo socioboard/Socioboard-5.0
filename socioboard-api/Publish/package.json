@@ -1,0 +1,59 @@
+{
+  "name": "suresh-babu-g",
+  "version": "1.0.0",
+  "description": "Socioboard 5.0 user services",
+  "main": "publish.server.js",
+  "type": "module",
+  "scripts": {
+    "prestart": "node ./resources/views/swagger.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./resources/views/swagger.config.js && nodemon publish.server.js",
+    "live": "node ./resources/views/swagger.config.js && nodemon publish.server.js",
+    "swagger": "node ./resources/views/swagger.config.js"
+  },
+  "keywords": [
+    "User",
+    "Sociboard",
+    "5.0",
+    "Suresh",
+    "express",
+    "security",
+    "languages"
+  ],
+  "author": "Suresh Babu G",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.0",
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "compression": "^1.7.4",
+    "config": "^3.3.6",
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "csurf": "^1.11.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-rate-limit": "^5.2.6",
+    "fb": "^2.0.0",
+    "file-stream-rotator": "^0.5.7",
+    "helmet": "^4.4.1",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment-timezone": "^0.5.33",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
+    "node-schedule": "^2.0.0",
+    "node-twitter-api": "^1.8.0",
+    "sequelize": "^6.5.1",
+    "socket.io": "^4.0.0",
+    "swagger-ui-express": "^4.1.6",
+    "uuidv1": "^1.6.14",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.35",
+    "sequelize-cli": "^6.2.0",
+    "swagger-autogen": "^2.7.2"
+  }
+}

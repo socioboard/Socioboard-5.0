@@ -1,0 +1,89 @@
+{
+  "user_socioboard": {
+    "mail_url": "https://local.socioboard.com",
+    "host_url": "http://localhost:1000",
+    "port": "1000",
+    "host": "localhost:1000"
+  },
+  "notification_socioboard": {
+    "host_url": "http://localhost:1003"
+  },
+  "authorize": {
+    "secret": "<< RANDOM SECRET >>",
+    "token_secret": "<< RANDOM TOKEN >>",
+    "algorithm": "aes-256-cbc",
+    "encoding_typeOne": "utf8",
+    "encoding_typeTwo": "hex"
+  },
+  "swagger_host_url": "localhost:1000",
+  "TIMEZONE": "",
+  "profile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+  "profile_page_redirect_url": "https://local.socioboard.com/facebook-page/callback",
+  "facebook_api": {
+    "app_id": "<< APP ID >>",
+    "secret_key": "<< APP SECRET >>",
+    "account_kit_version": "v1.1",
+    "account_kit_app_secret": "<< ACCOUNT KIT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/facebook-callback",
+    "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+    "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+    "login_scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
+    "profile_scopes": "email",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "5.0.0"
+  },
+  "google_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secrets": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/google-callback",
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "api_key": "<< APP KEY >>",
+    "dynamic_link": "https://socionode.page.link",
+    "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "github_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/github-callback"
+  },
+  "twitter_api": {
+    "api_key": "<< APP KEY >>",
+    "secret_key": "<< CLIENT SECRET >>",
+    "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+    "redirect_url": "https://local.socioboard.com/twitter/callback",
+    "app_name": "<< APP NAME >>",
+    "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+    "webhook_environment": "development",
+    "version": "5.0.0"
+  },
+  "linkedIn_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/linkedin/callback"
+  },
+  "instagram_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/insta-callback"
+  },
+  "pinterest": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secret": "<< CLIENT SECRET >>",
+    "redirect_url": "https://localhost:3000/v1/team/addSocialProfile"
+  },
+  "mongo": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "db_name": "SocioboardNodeV5"
+  },
+  "socioboardTwitterhandler": "@board_socio",
+  "aMember": {
+    "key": "<< aMember Key >>",
+    "domain": "https://<< DOMAIN >>/amember/api"
+  }
+}
