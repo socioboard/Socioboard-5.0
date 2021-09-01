@@ -1,5 +1,3 @@
-('use strict');
-if (process.env.IS_DEBUGGING) console.log(__filename);
 import express from 'express';
 // require('express-async-errors');
 import morgan from 'morgan';
@@ -10,34 +8,39 @@ import session from 'cookie-session';
 import config from 'config';
 import path from 'path';
 import fs from 'fs';
-import Routes from './resources/routes/public.routes.js';
 import swaggerUi from 'swagger-ui-express';
 import bodyParser from 'body-parser';
 
-import DbConnect from './resources/database/mysql.database.js';
-import MongoConnect from './resources/database/mongo.database.js'
-
 import cookieParser from 'cookie-parser';
-const swaggerFile = JSON.parse(
-  fs.readFileSync('./resources/views/swagger-api-view.json', 'utf-8')
-);
+
 import csrf from 'csurf';
 import Server from 'http';
 import * as io from 'socket.io';
-const __dirname = path.resolve();
+
 import fileStreamRotator from 'file-stream-rotator';
-const logDir = __dirname + '/log/ResponseLog';
+import MongoConnect from './resources/database/mongo.database.js';
+import DbConnect from './resources/database/mysql.database.js';
+import Routes from './resources/routes/public.routes.js';
 
 import Logger from './resources/log/logger.log.js';
+
+if (process.env.IS_DEBUGGING) console.log(__filename);
+const swaggerFile = JSON.parse(
+  fs.readFileSync('./resources/views/swagger-api-view.json', 'utf-8'),
+);
+const __dirname = path.resolve();
+const logDir = `${__dirname}/log/ResponseLog`;
+
 const app = express();
 const server = Server.Server(app);
+
 io.Server;
 
 // Timezone setting
-//moment.tz.setDefault(process.env.TIMEZONE);
+// moment.tz.setDefault(process.env.TIMEZONE);
 
 app.use(Helmet(), Compression());
-//app.use(ExpressRateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+// app.use(ExpressRateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: '100mb' }));
@@ -50,11 +53,12 @@ app.use(bodyParser.json());
 // app.enableCors();
 
 // now add csrf and other middle wares, after the "/api" was mounted
-//app.use(csrf({ cookie: true }));
+// app.use(csrf({ cookie: true }));
 
 //  app.use('/api', api);
 
 const expiryDate = new Date(Date.now() + 60 * 60 * 1000 * 12); // 1/2 day
+
 app.use(
   session({
     name: 'session_name_from_config',
@@ -66,11 +70,11 @@ app.use(
       httpOnly: true,
       expires: expiryDate,
     },
-  })
+  }),
 );
 
 // Stream information for log name and frequency
-let stream = fileStreamRotator.getStream({
+const stream = fileStreamRotator.getStream({
   filename: path.join(logDir, '%DATE%-logs.log'),
   frequency: 'daily',
   verbose: false,
@@ -85,8 +89,8 @@ if (app.get('env') !== 'local') {
   app.use(morgan('dev'));
   app.use(
     morgan(':method :url :status :res[content-length] :response-time ms', {
-      stream: stream,
-    })
+      stream,
+    }),
   );
 }
 
@@ -97,11 +101,11 @@ app.use(
     limit: '50mb',
     urlencoded: false,
     extended: true,
-  })
+  }),
 );
 
-//Set response header
-app.use(function (req, res, next) {
+// Set response header
+app.use((req, res, next) => {
   res.set({
     compress: true,
     Conenction: 'keep-alive',
@@ -110,23 +114,23 @@ app.use(function (req, res, next) {
   next();
 });
 
-//For exception handling for runtime
+// For exception handling for runtime
 process
   .on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection: ', reason, 'Promise', promise);
     Logger.error(
-      `: ---- : unhandledRejection : ---- : ${reason} : ---- : Unhandled Rejection at Promise : ---- : ${promise} : ---- :`
+      `: ---- : unhandledRejection : ---- : ${reason} : ---- : Unhandled Rejection at Promise : ---- : ${promise} : ---- :`,
     );
   })
   .on('warning', (reason, promise) => {
     Logger.error(
-      `: ---- :warning : ---- : ${reason} : ---- : warning message : ---- : ${promise} : ---- :`
+      `: ---- :warning : ---- : ${reason} : ---- : warning message : ---- : ${promise} : ---- :`,
     );
   })
-  .on('uncaughtException', err => {
+  .on('uncaughtException', (err) => {
     console.log('Uncaught Exception:', err);
     Logger.error(
-      `: ---- : uncaughtException : ---- : ${err} : ---- : Uncaught Exception thrown : ---- :`
+      `: ---- : uncaughtException : ---- : ${err} : ---- : Uncaught Exception thrown : ---- :`,
     );
     process.exit(1);
   });
@@ -134,68 +138,60 @@ process
 app.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.get('/', (req, res) => res.redirect('/explorer'));
 
+const createFolders = () => new Promise((resolve, reject) => {
+  if (!fs.existsSync(config.get('content_studio.basePath'))) {
+    fs.mkdirSync(config.get('content_studio.basePath'));
+  }
+  if (!fs.existsSync(config.get('content_studio.giphy.path'))) {
+    fs.mkdirSync(config.get('content_studio.giphy.path'));
+  }
+  if (!fs.existsSync(config.get('content_studio.pixabay.path'))) {
+    fs.mkdirSync(config.get('content_studio.pixabay.path'));
+  }
+  if (!fs.existsSync(config.get('content_studio.flickr.path'))) {
+    fs.mkdirSync(config.get('content_studio.flickr.path'));
+  }
+  if (!fs.existsSync(config.get('content_studio.imgur.path'))) {
+    fs.mkdirSync(config.get('content_studio.imgur.path'));
+  }
+  if (!fs.existsSync(config.get('archivedMedia.path'))) {
+    fs.mkdirSync(config.get('archivedMedia.path'));
+  }
+  if (!fs.existsSync(config.get('customhashtagMedia.path'))) {
+    fs.mkdirSync(config.get('customhashtagMedia.path'));
+  }
+  resolve(true);
+});
 
-let createFolders = () => {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(config.get('content_studio.basePath'))) {
-      fs.mkdirSync(config.get('content_studio.basePath'));
-    }
-    if (!fs.existsSync(config.get('content_studio.giphy.path'))) {
-      fs.mkdirSync(config.get('content_studio.giphy.path'));
-    }
-    if (!fs.existsSync(config.get('content_studio.pixabay.path'))) {
-      fs.mkdirSync(config.get('content_studio.pixabay.path'));
-    }
-    if (!fs.existsSync(config.get('content_studio.flickr.path'))) {
-      fs.mkdirSync(config.get('content_studio.flickr.path'));
-    }
-    if (!fs.existsSync(config.get('content_studio.imgur.path'))) {
-      fs.mkdirSync(config.get('content_studio.imgur.path'));
-    }
-    if (!fs.existsSync(config.get('archivedMedia.path'))) {
-      fs.mkdirSync(config.get('archivedMedia.path'));
-    }
-    if (!fs.existsSync(config.get('customhashtagMedia.path'))) {
-      fs.mkdirSync(config.get('customhashtagMedia.path'));
-    }
-    resolve(true);
+const startServer = () => new Promise((resolve, reject) => {
+  const port = config.get('feed_socioboard.port');
+
+  server.listen(port, () => {
+    Logger.info(
+      `service listening on ${config.get('feed_socioboard.host_url')} with ${process.env.NODE_ENV
+      } Environment!`,
+    );
+    console.log(
+      `service listening on ${config.get('feed_socioboard.host_url')} with ${process.env.NODE_ENV
+      } Environment!`,
+    );
   });
-};
+  resolve(true);
+});
 
-let startServer = () => {
-  return new Promise((resolve, reject) => {
-    let port = config.get('feed_socioboard.port');
-    server.listen(port, () => {
-      Logger.info(
-        `service listening on ${config.get('feed_socioboard.host_url')} with ${process.env.NODE_ENV
-        } Environment!`
-      );
-      console.log(
-        `service listening on ${config.get('feed_socioboard.host_url')} with ${process.env.NODE_ENV
-        } Environment!`
-      );
-    });
-    resolve(true);
-  });
-};
+const dbConnect = new DbConnect();
+const mongoConnect = new MongoConnect();
 
-var dbConnect = new DbConnect();
-var mongoConnect = new MongoConnect();
 dbConnect
   .initialize()
+  .then(() => mongoConnect.initialize())
   .then(() => {
-    return mongoConnect.initialize()
-  })
-  .then(() => {
-    var routes = new Routes(app);
+    const routes = new Routes(app);
+
     return routes;
   })
-  .then(() => {
-    return createFolders();
-  })
-  .then(() => {
-    return startServer();
-  })
-  .catch(error => {
+  .then(() => createFolders())
+  .then(() => startServer())
+  .catch((error) => {
     Logger.error(error.message);
   });

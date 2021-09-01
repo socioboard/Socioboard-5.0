@@ -1,15 +1,19 @@
-import { createRequire } from "module";
+import { createRequire } from 'module';
+import fs from 'fs';
+
 const require = createRequire(import.meta.url);
 const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, prettyPrint } = format;
-import fs from 'fs';
-require('winston-daily-rotate-file');
 
+const {
+  combine, timestamp, label, prettyPrint,
+} = format;
+
+require('winston-daily-rotate-file');
 
 if (!fs.existsSync('resources/Log/ResponseLog')) {
   fs.mkdirSync('resources/Log/ResponseLog');
 }
-let transportsLogger = [];
+const transportsLogger = [];
 
 transportsLogger.push(
   new transports.DailyRotateFile({
@@ -20,22 +24,22 @@ transportsLogger.push(
     json: true,
     maxSize: '1g',
     maxFiles: '3d',
-  })
+  }),
 );
 
-var logger = createLogger({
+const logger = createLogger({
   format: combine(
     timestamp(),
-    prettyPrint()
+    prettyPrint(),
   ),
   transports: transportsLogger,
-  exitOnError: false
+  exitOnError: false,
 });
 
 logger.stream = {
-  write: function (message, encoding) {
+  write(message, encoding) {
     logger.info(message);
-  }
+  },
 };
 
 export default logger;

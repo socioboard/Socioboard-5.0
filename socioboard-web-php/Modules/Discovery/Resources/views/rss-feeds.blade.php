@@ -16,7 +16,7 @@
                 <!--begin::Row-->
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4" >
-                        <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="180px" data-sticky-for="1023" data-sticky-class="kt-sticky">
+                        <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023" style="overflow-y: auto; height: calc(100vh - 200px); position: fixed; width: 606px; left: 26px; top: 220px;">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">RSS</h3>
                             </div>
@@ -257,15 +257,15 @@
                                 let chaneltitle;
                                 response.data.map(element => {
                                     url = "'" + element.mediaUrl + "'";
-                                    chaneltitle = element.title;
-                                    let title = chaneltitle.replace("'","");
+                                    let title = element.title.replace("'","");
+                                    chaneltitle = "'"+title+"'";
                                     appendData = '<div class="card">' +
                                         '<div class="card-body">' +
                                         '<a href="'+element.mediaUrl+'"><h5 class="card-title mb-1 mt-2">'+element.title+'</h5></a>'+
                                         '<p class="card-text">'+element.description+'</p>'+
                                         '<hr>'+
                                         '<div class="d-flex justify-content-center">'+
-                                        '<a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('+url+','+title+')"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>'+
+                                        '<a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('+url+','+chaneltitle+')"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>'+
                                         '</div>'+
                                         '</div>'+
                                         '</div>'
@@ -277,7 +277,7 @@
                                 {
                                     toastr.error('RSS Url is not allowed to be empty')
                                 }else if(response.error ==="\"rssUrl\" must be a valid uri"){
-                                    toastr.error('RSS Url must be a vali uri');
+                                    toastr.error('The url must be a valid RSS url.');
                                 }else{
                                     toastr.error(response.error);
                                 }
@@ -417,9 +417,10 @@
                     });
                 }
 
+
                 function openModel(id, cheaneltitle ) {
-                            $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+cheaneltitle +'</textarea>');
-                            $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id +'"/><span><i class="fas fa-link"></i></span>');
+                    $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+cheaneltitle +'</textarea>');
+                    $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id +'"/><span><i class="fas fa-link"></i></span>');
                 }
             </script>
 @endsection

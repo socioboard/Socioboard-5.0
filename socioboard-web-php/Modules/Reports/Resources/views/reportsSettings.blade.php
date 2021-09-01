@@ -223,8 +223,12 @@
 
     <!-- begin:password show toggle -->
     <script>
+        let logoclicked = 'false';
         $(document).ready(function () {
             $('#personal_info_note, #change_Logo, #remove_Logo').tooltip();
+            $("#change_Logo").click(function () {
+                logoclicked = 'true';
+            });
 
             /**
              * TODO we've to update  the company logo on clicking on add logo  button.
@@ -278,56 +282,63 @@
          */
         function updateReportsSettings() {
             if (checkKeyUpValue === false) {
-                toastr.error('No changes detected , please edit and save changes');
+                if (logoclicked === 'false') {
+                    toastr.error('No changes detected , please edit and save changes');
+                } else {
+                    updateSettingsReports();
+                }
+
             } else {
-                let file_data = $('#profile_avatar').prop('files')[0];
-                let company_name = $('#companyName').val();
-                let form_data = new FormData();
-                let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-                if (company_name === '') {
-                    toastr.error('Company Name can not be empty');
+                updateSettingsReports();
+            }
+        }
+
+        function updateSettingsReports() {
+            let file_data = $('#profile_avatar').prop('files')[0];
+            let company_name = $('#companyName').val();
+            let form_data = new FormData();
+            let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            if (company_name === '') {
+                toastr.error('Company Name can not be empty');
+            } else {
+                if (format.test(company_name)) {
+                    toastr.error('Special characters are not allowed for company name,only alphanumeric characters allowed.');
 
                 } else {
-                    if (format.test(company_name)) {
-                        toastr.error('Special characters are not allowed for company name,only alphanumeric characters allowed.');
+                    if (company_name.length >= 3 && company_name.length <= 20) {
+                        form_data.append('file', file_data);
+                        form_data.append('companyName', company_name);
+                        form_data.append('remove_avatar_value', remove_avatar_value);
+                        $.ajax({
+                            type: "post",
+                            url: "/update-reports-settings",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: form_data,
+                            enctype: 'multipart/form-data',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+                                remove_avatar_value = 0;
+                                if (response.code === 200) {
+                                    toastr.success('Successfully Updated');
 
-                    } else {
-                        if (company_name.length >= 3 && company_name.length <= 20) {
-                            form_data.append('file', file_data);
-                            form_data.append('companyName', company_name);
-                            form_data.append('remove_avatar_value', remove_avatar_value);
-                            $.ajax({
-                                type: "post",
-                                url: "/update-reports-settings",
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                data: form_data,
-                                enctype: 'multipart/form-data',
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                beforeSend: function () {
-                                },
-                                success: function (response) {
-                                    remove_avatar_value = 0;
-                                    if (response.code === 200) {
-                                        toastr.success('Successfully Updated');
-
-                                    } else if (response.code === 400) {
-                                        toastr.error(response.error);
-                                    } else {
-                                        toastr.error('Some error occured, can not update settings of Reports');
-                                    }
+                                } else if (response.code === 400) {
+                                    toastr.error(response.error);
+                                } else {
+                                    toastr.error('Some error occured, can not update settings of Reports');
                                 }
-                            });
-                        } else {
-                            toastr.error('Minimum 3 characters are allowed,and Maximun 20 charcters are allowed');
-                        }
+                            }
+                        });
+                    } else {
+                        toastr.error('Minimum 3 characters are allowed,and Maximun 20 charcters are allowed');
                     }
                 }
             }
-
         }
 
         /**

@@ -47,7 +47,7 @@
                                         {{$email}} <br>
                                     @endforeach
                                 </td>
-                                <td>{{($report[0]['teamReport'] !== null)? "Team Report," : ""}} {{($report[0]['youTube'] !== null)? "Youtube Report," : ""}} {{($report[0]['twitterReport'] !== null)? "Twitter Report" : ""}}</td>
+                                <td>{{($report[0]['teamReport'] !== [])? "Team Report," : ""}} {{($report[0]['youTube'] !== [])? "Youtube Report," : ""}} {{($report[0]['twitterReport'] !== [ ])? "Twitter Report" : ""}}</td>
                                 <td class="pr-0">
                                     <button href="" class="btn btn-icon text-hover-info btn-sm" data-toggle="modal"
                                             data-target="#editautoEmailReport{{$report[0]['id']}}"

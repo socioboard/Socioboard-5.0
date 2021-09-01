@@ -101,7 +101,8 @@ class TeamController extends Controller
                     $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $filedata, true);
                     $responseData = $this->helper->responseHandler($response['data']);
                     if ($responseData['code'] == 200) {
-                        $mediaUrl = env('API_URL_FEEDS') . $responseData['data'][0]->media_url;
+                        $str=substr(env('APP_URL'), 0, 30);
+                        $mediaUrl = $str . "media/uploads/".$publishimage;;
                         $data['TeamInfo'] = array(
                             "name" => $request->team_name,
                             "description" => "Short note about the team activity",
@@ -137,7 +138,7 @@ class TeamController extends Controller
                         'team_id' => $responseData['data']->team_id,
                     );
                     $user = Session::get('user');
-                    $responseData['admin'] = $user['userDetails']['first_name'];
+                    $responseData['admin'] = $user['userDetails']['first_name']." ". $user['userDetails']['last_name'];
                     $responseData['admin_profile'] = $user['userDetails']['profile_picture'];
                     $responseData['admin_id'] = $user['userDetails']['user_id'];
                     $responseData['email'] = $user['userDetails']['email'];
@@ -324,34 +325,34 @@ class TeamController extends Controller
             return $result;
 
         } else if ($sourcevalue === '_teamSocialAccounts' && $targetValue === '_teamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not Move Social Accounts to here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not Move Social Accounts to Team members';
             return $result;
         } else if ($sourcevalue === '_allSocialAccounts' && $targetValue === '_teamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not Move Social Accounts to here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not Move Social Accounts to Team members';
             return $result;
         } else if ($sourcevalue === '_allSocialAccounts' && $targetValue === '_pendingTeamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not Move Social Accounts to here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not Move Social Accounts to Pending Team members';
             return $result;
         } else if ($sourcevalue === '_teamSocialAccounts' && $targetValue === '_pendingTeamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not Move Social Accounts to here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not Move Social Accounts to Pending Team members';
             return $result;
         } else if ($sourcevalue === '_teamSocialAccounts' && $targetValue === '_leftTeamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not Move Social Accounts to here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not Move Social Accounts to Left Team members';
             return $result;
         } else if ($sourcevalue === '_admin') {
             if (($targetValue === '_allSocialAccounts' || $targetValue === '_teamSocialAccounts')) {
-                $result['code'] = 500;
+                $result['code'] = 501;
                 $result['message'] = 'We can not move the Admin to Accounts';
                 return $result;
             } else {
                 if ($targetValue === '_teamMembers') {
                     if ($accid === $currentUserid) {
-                        $result['code'] = 500;
+                        $result['code'] = 501;
                         $result['message'] = 'We can not Move Main admin';
                         return $result;
                     } else {
@@ -374,12 +375,12 @@ class TeamController extends Controller
                         }
                     }
                 } else if ($targetValue === '_pendingTeamMembers') {
-                    $result['code'] = 500;
-                    $result['message'] = 'We can not perform operations Here';
+                    $result['code'] = 501;
+                    $result['message'] = 'We can not perform operations from Pending Team members';
                     return $result;
                 } else {
                     if ($accid === $currentUserid) {
-                        $result['code'] = 500;
+                        $result['code'] = 501;
                         $result['message'] = 'We can not Move Main admin';
                         return $result;
                     } else {
@@ -406,12 +407,12 @@ class TeamController extends Controller
 
 
         } else if ($sourcevalue === '_leftTeamMembers') {
-            $result['code'] = 500;
+            $result['code'] = 501;
             $result['message'] = 'We can not move the Left/removed Members';
             return $result;
         } else if ($sourcevalue === '_teamMembers') {
             if (($targetValue === '_allSocialAccounts' || $targetValue === '_teamSocialAccounts')) {
-                $result['code'] = 500;
+                $result['code'] = 501;
                 $result['message'] = 'We can not add Team members to Social accounts';
                 return $result;
             } else if ($targetValue === '_admin') {
@@ -434,12 +435,12 @@ class TeamController extends Controller
                 }
 
             } else if ($targetValue === '_pendingTeamMembers') {
-                $result['code'] = 500;
+                $result['code'] = 501;
                 $result['message'] = 'We can not add Team members to Pending Members';
                 return $result;
             } else {
                 if ($accid === $currentUserid) {
-                    $result['code'] = 500;
+                    $result['code'] = 501;
                     $result['message'] = 'We can not remove  Main admin';
                     return $result;
                 } else {
@@ -463,24 +464,24 @@ class TeamController extends Controller
                 }
             }
         } else if ($sourcevalue === '_pendingTeamMembers') {
-            $result['code'] = 500;
-            $result['message'] = 'We can not perform opration from here';
+            $result['code'] = 501;
+            $result['message'] = 'We can not perform oprations from Pending Team members';
             return $result;
 
         } else if ($sourcevalue === '_teamSocialAccounts' || $sourcevalue === '_allSocialAccounts') {
             if ($targetValue === '_admin') {
-                $result['code'] = 500;
+                $result['code'] = 501;
                 $result['message'] = 'We can not add Social Accounts to the Admin';
                 return $result;
             }
         } else {
             if (($targetValue === '_allSocialAccounts' || $targetValue === '_teamSocialAccounts')) {
-                $result['code'] = 500;
-                $result['message'] = 'We can not add Team members to Social accounts';
+                $result['code'] = 501;
+                $result['message'] = 'We can not add Team Members to Social accounts';
                 return $result;
             } else if ($targetValue === '_leftTeamMembers') {
                 if ($accid === $currentUserid) {
-                    $result['code'] = 500;
+                    $result['code'] = 501;
                     $result['message'] = 'We can not Move Main admin';
                     return $result;
                 } else {

@@ -5,6 +5,7 @@
 @section('links')
     <link rel="stylesheet" type="text/css" href="/plugins/custom/dropify/dist/css/dropify.min.css"/>
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/emojionearea/css/emojionearea.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="/css/images-grid.css"/>
 @endsection
 @section('content')
     <!--begin::Content-->
@@ -16,6 +17,7 @@
             <div class=" container-fluid ">
                 <!--begin::Profile-->
                 <!--begin::Row-->
+                <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@"; ?>
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class=" sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
@@ -121,34 +123,38 @@
 
                                                         <div class="mt-2">
                                                             <button href="javascript:;"
-                                                               class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                               onclick="return false" id="chatID" title="Coming soon">Chat</button>
+                                                                    class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
+                                                                    onclick="return false" id="chatID"
+                                                                    title="Coming soon">Chat
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <!--end::User-->
 
                                                 <!--begin::Contact-->
-                                                <div class="py-9">
-                                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                                        <span class="font-weight-bold mr-2">Following:</span>
-                                                        <a href="#"
-                                                           class="text-hover-primary"
-                                                           id="following_count">{{$feeds['data']->SocialAccountStats->following_count}}</a>
+                                                @if($feeds['data']->SocialAccountStats !== null)
+                                                    <div class="py-9">
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="font-weight-bold mr-2">Following:</span>
+                                                            <a href="#"
+                                                               class="text-hover-primary"
+                                                               id="following_count">{{$feeds['data']->SocialAccountStats->following_count}}</a>
+                                                        </div>
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                            <a href="#"
+                                                               class="text-hover-primary"
+                                                               id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>
+                                                        </div>
+                                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                                            <span class="font-weight-bold mr-2">Feeds:</span>
+                                                            <a href="#"
+                                                               class="text-hover-primary"
+                                                               id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>
+                                                        </div>
                                                     </div>
-                                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                                        <span class="font-weight-bold mr-2">Followers:</span>
-                                                        <a href="#"
-                                                           class="text-hover-primary"
-                                                           id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>
-                                                    </div>
-                                                    <div class="d-flex align-items-center justify-content-between mb-2">
-                                                        <span class="font-weight-bold mr-2">Feeds:</span>
-                                                        <a href="#"
-                                                           class="text-hover-primary"
-                                                           id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>
-                                                    </div>
-                                                </div>
+                                                @endif
                                             </div>
                                         @else
                                             <div style="color: Red;text-align:center;">
@@ -249,13 +255,13 @@
                                                                 @endforeach
                                                             <!--begin::Text-->
                                                                 <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                    {{$data->descritpion}}
+                                                                    <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
                                                                 </p>
                                                                 @else
                                                                     <div>
                                                                         <!--begin::Text-->
                                                                         <p class="font-size-lg font-weight-normal">
-                                                                            {{$data->descritpion}}
+                                                                            <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
                                                                         </p>
                                                                     @endif
                                                                     <!--end::Text-->
@@ -314,10 +320,10 @@
                                                                                 @endif
                                                                                 <a id="reSocioButton"
                                                                                    href="javascript:;"
-                                                                                   value="{{$data->descritpion}}"
+                                                                                   value="<?php echo preg_replace($regex, ' ', $data->descritpion); ?>"
                                                                                    imageSrc="#"
                                                                                    class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('{{$data->descritpion}}','{{$data->mediaUrls[0]->url}}','{{$type}}',null,null)">
+                                                                                   onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->descritpion); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,null)">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                         <i class="fas fa-pencil-alt"></i>
@@ -326,10 +332,10 @@
                                                                             @else
                                                                                 <a id="reSocioButton"
                                                                                    href="javascript:;"
-                                                                                   value="{{$data->descritpion}}"
+                                                                                   value="<?php echo preg_replace($regex, ' ', $data->descritpion); ?>"
                                                                                    imageSrc="#"
                                                                                    class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('{{$data->descritpion}}',null,null,null,null)">
+                                                                                   onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->descritpion); ?>',null,null,null,null)">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                         <i class="fas fa-pencil-alt"></i>
@@ -419,8 +425,9 @@
 
         @endsection
         @section('scripts')
-{{--            <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
+            {{--            <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
             <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+            <script src="{{asset('js/images-grid.js')}}"></script>
             <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
             <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
             <script>
@@ -440,45 +447,19 @@
 
                 $(document).ready(function () {
                     $("#discovery").trigger("click");
-                    $('#addToCart').tooltip();
                 });
 
-                function getScrollXY() {
-                    var scrOfX = 0, scrOfY = 0;
-                    if (typeof (window.pageYOffset) == 'number') {
-                        //Netscape compliant
-                        scrOfY = window.pageYOffset;
-                        scrOfX = window.pageXOffset;
-                    } else if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
-                        //DOM compliant
-                        scrOfY = document.body.scrollTop;
-                        scrOfX = document.body.scrollLeft;
-                    } else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-                        //IE6 standards compliant mode
-                        scrOfY = document.documentElement.scrollTop;
-                        scrOfX = document.documentElement.scrollLeft;
-                    }
-                    return [scrOfX, scrOfY];
-                }
 
-                function getDocHeight() {
-                    var D = document;
-                    return Math.max(
-                        D.body.scrollHeight, D.documentElement.scrollHeight,
-                        D.body.offsetHeight, D.documentElement.offsetHeight,
-                        D.body.clientHeight, D.documentElement.clientHeight
-                    );
-                }
-
-                var pageid = 2;
-                document.addEventListener("scroll", function (event) {
-                    if (feedsLength >= 12) {
-                        if (getDocHeight() === getScrollXY()[1] + window.innerHeight) {
-                            getNextTwitterFeeds(accounId, pageid);
-                            pageid++;
+                let pageId = 2;
+                $(window).scroll(function () {
+                    if (Math.ceil($(window).scrollTop()) === Math.ceil(($(document).height() - $(window).height()))) {
+                        if (feedsLength >= 12) {
+                            getNextTwitterFeeds(accounId, pageId);
+                            pageId++;
                         }
                     }
                 });
+
 
                 /**
                  * TODO we've to dislike the particular feed of twitter.
@@ -627,107 +608,104 @@
                 function getNextTwitterFeeds(accid, pageId) {
                     $.ajax({
                         type: 'get',
-                        url: '/get-Next-Twitter-feeds',
+                        url: '/get-next-twitter-feeds',
                         data: {
                             accid, pageId
                         },
                         dataType: 'json',
                         beforeSend: function () {
                             $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                '        <div class="spinner-border" role="status"  style="display: none;">\n' +
-                                '            <span class="sr-only">Loading...</span>\n' +
-                                '        </div>\n' +
-                                '\n' +
-                                '        </div>');
+                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                                '<span class="sr-only">Loading...</span>\n' +
+                                '</div></div>');
                             $(".spinner-border").css("display", "block");
                         },
                         success: function (response) {
                             if (response.data.code === 200) {
-                                let appendData = '',createdDate = new Date(element.publishedDate),published = String(createdDate).substring(0, 25);
+                                let appendData = '';
+                                let num = 1;
+                                let arrayImages = [];
                                 $(".spinner-border").css("display", "none");
                                 feedsLength = response.data.data.feeds.length;
                                 response.data.data.feeds.map(element => {
-                                    var type = '';
+                                    let type = '';
+                                    let createdDate = new Date(element.publishedDate),
+                                        published = String(createdDate).substring(0, 25);
                                     appendData = '<div class="mb-5">\n' +
-                                        '                                            <div>\n' +
-                                        '                                                <div class="d-flex align-items-center pb-4">\n' +
-                                        '                                                    <!--begin::Symbol-->\n' +
-                                        '                                                    <div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                        '                                                            <span class="symbol-label">\n' +
-                                        '                                                                <img\n' +
-                                        '                                                                    src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
-                                        '                                                                    class="h-75 align-self-end" alt=""/>\n' +
-                                        '                                                            </span>' +
-                                        '                                                    </div>\n' +
-                                        '                                                    <div class="d-flex flex-column flex-grow-1">\n' +
-                                        '                                                        <a href="' + element.tweetUrl + '"\n' +
-                                        '                                                            target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                        '                                                        <span\n' +
-                                        '                                                            class="font-weight-bold">' + published + '</span>\n' +
-                                        '                                                    </div>\n' +
-                                        '                                                </div>\n' ;
-                                    if (element.mediaUrls.length > 0) {
+                                        '<div><div class="d-flex align-items-center pb-4">\n' +
+                                        '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
+                                        '<span class="symbol-label">\n' +
+                                        '<img src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
+                                        'class="h-75 align-self-end" alt=""/>\n' +
+                                        '</span>' +
+                                        '</div><div class="d-flex flex-column flex-grow-1">\n' +
+                                        '<a href="' + element.tweetUrl + '"\n' +
+                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                        '<span class="font-weight-bold">' + published + '</span>\n' +
+                                        '</div></div>\n';
+                                    if (element.mediaUrls.length === 1) {
                                         appendData += '<div class="pt-4">';
                                         element.mediaUrls.map(data => {
                                             if (data.type === 'photo') {
                                                 appendData += '<div class="">\n' +
-                                                    '                                                                            <img src="' + data.url + '"\n' +
-                                                    '                                                                                 class="img-fluid"/>\n' +
-                                                    '                                                                        </div>';
+                                                    '<img src="' + data.url + '"\n' +
+                                                    'class="img-fluid"/>\n' +
+                                                    '</div>';
                                             } else {
                                                 appendData += '<div\n' +
-                                                    '                                                                                class="embed-responsive embed-responsive-16by9">\n' +
-                                                    '                                                                            <iframe class="embed-responsive-item rounded"\n' +
-                                                    '                                                                                    src="' + data.url + '"\n' +
-                                                    '                                                                                    allowfullscreen=""></iframe>\n' +
-                                                    '                                                                        </div>';
+                                                    'class="embed-responsive embed-responsive-16by9">\n' +
+                                                    '<iframe class="embed-responsive-item rounded"\n' +
+                                                    'src="' + data.url + '"\n' +
+                                                    'allowfullscreen=""></iframe>\n' +
+                                                    '</div>';
                                             }
                                         });
-                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion +
-                                            '                                                                </p>';
+                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                            '</p>';
+                                    } else if (element.mediaUrls.length > 1) {
+                                        appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                        element.mediaUrls.map(data => {
+                                            arrayImages.push(data.url);
+                                        });
                                     } else {
                                         appendData += '<div>\n' +
-                                            '                                                    <p class="font-size-lg font-weight-normal">\n' + element.descritpion +
-                                            '                                                    </p>\n';
+                                            '<p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                            '</p>\n';
                                     }
                                     appendData += '<div class="d-flex align-items-center">\n' +
-                                        '                                                        <a href="javascript:;"\n' +
-                                        '                                                           class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                        '                                                                <span\n' +
-                                        '                                                                    class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                        '                                                                        <i class="fas fa-comments"></i>\n' +
-                                        '                                                                </span>\n' +
-                                        '                                                        </a>\n';
+                                        '<a href="javascript:;"\n' +
+                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
+                                        '<span\n' +
+                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
+                                        '<i class="fas fa-comments"></i>\n' +
+                                        '</span></a>\n';
                                     if (element.isLiked === false) {
-                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                            '                                                               onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
-                                            '                                                                <span data-value="' + element.tweetId + '"\n' +
-                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                            '                                                                      like-count="' + element.favoriteCount + '">\n' +
-                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.favoriteCount +
-                                            '                                                                </span>\n' +
-                                            '                                                            </a>\n';
+                                        appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
+                                            '<span data-value="' + element.tweetId + '"\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                            'like-count="' + element.favoriteCount + '">\n' +
+                                            '<i class="fas fa-heart"></i>' + element.favoriteCount +
+                                            '</span></a>\n';
                                     } else {
-                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                            '                                                               onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
-                                            '                                                                <span data-value="' + element.tweetId + '"\n' +
-                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                            '                                                                      like-count="' + element.favoriteCount + '">\n' +
-                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.favoriteCount +
-                                            '                                                                </span>\n' +
-                                            '                                                            </a>\n';
+                                        appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
+                                            '<span data-value="' + element.tweetId + '"\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                            'like-count="' + element.favoriteCount + '">\n' +
+                                            '<i class="fas fa-heart"></i>' + element.favoriteCount +
+                                            '</span></a>\n';
                                     }
                                     appendData += '<a href="javascript:;" data-value2="' + element.tweetId + '"\n' +
-                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                        '                                                           onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
-                                        '                                                                <span data-value2="' + element.tweetId + '"\n' +
-                                        '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
-                                        '                                                                      retweet-count="' + element.retweetCount + '">\n' +
-                                        '                                                                        <i class="fas fa-retweet"></i>\n' + element.retweetCount +
-                                        '                                                                </span>\n' +
-                                        '                                                        </a>\n';
+                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                        'onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
+                                        '<span data-value2="' + element.tweetId + '"\n' +
+                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
+                                        'retweet-count="' + element.retweetCount + '">\n' +
+                                        '<i class="fas fa-retweet"></i>' + element.retweetCount +
+                                        '</span></a>\n';
                                     if (element.mediaUrls.length > 0) {
                                         let type;
                                         if (element.mediaUrls[0].type === 'photo') {
@@ -735,43 +713,38 @@
                                         } else {
                                             type = 'video'
                                         }
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
-                                            '                                                                <span\n' +
-                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                            '                                                                </span>Re-socio\n' +
-                                            '                                                        </a>\n';
+                                        appendData += '<a id="reSocioButton" value="' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
                                     } else {
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
-                                            '                                                                <span\n' +
-                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                            '                                                                </span>Re-socio\n' +
-                                            '                                                        </a>\n';
+                                        appendData += '<a id="reSocioButton" value="' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
                                     }
-                                    appendData += '                                                    </div>\n' +
-                                        '                                                </div>\n' +
-                                        '                                            </div>\n' +
-                                        '                                            <div class="fb_cmt_div mt-5">\n' +
-                                        '                                                <form class="position-relative">\n' +
-                                        '                                                    <textarea class="form-control border-0 pr-10 resize-none"\n' +
-                                        '                                                              rows="1" placeholder="Reply..."\n' +
-                                        '                                                              name="' + element.tweetId + '"></textarea>\n' +
-                                        '                                                    <div name="' + element.tweetId + '"\n' +
-                                        '                                                         value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                        '                                                         id="commentButton"\n' +
-                                        '                                                         class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
-                                        '                                                            <span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
-                                        '                                                                    <i class="fas fa-paper-plane"></i>\n' +
-                                        '                                                            </span>\n' +
-                                        '                                                    </div>\n' +
-                                        '                                                </form>\n' +
-                                        '                                            </div>\n' +
-                                        '                                        </div>\n' +
-                                        '                                        <hr>';
+                                    appendData += '</div></div></div>\n' +
+                                        '<div class="fb_cmt_div mt-5">\n' +
+                                        '<form class="position-relative">\n' +
+                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                        'rows="1" placeholder="Reply..."\n' +
+                                        'name="' + element.tweetId + '"></textarea>\n' +
+                                        '<div name="' + element.tweetId + '"\n' +
+                                        'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                        'id="commentButton"\n' +
+                                        'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
+                                        '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
+                                        '<i class="fas fa-paper-plane"></i></span></div>\n' +
+                                        '</form></div></div><hr>';
                                     $('#twitterFeeds').append(appendData);
+                                    $('div#image-gallery' + num).imagesGrid({
+                                        images: arrayImages
+                                    });
+                                    num++;
                                 });
                             } else if (response.data.code === 400) {
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
@@ -779,20 +752,18 @@
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
-                                    '                                                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                                                    </div>\n' + '\n' +
-                                    '                                                                               </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div></div>');
                             } else {
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
-                                    '                                                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                                                    </div>\n' + '\n' +
-                                    '                                                                               </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div></div>');
                             }
                         }
                     });
@@ -807,45 +778,42 @@
                 function getTwitterFeeds(accid, pageId) {
                     $.ajax({
                         type: 'get',
-                        url: '/get-Next-Twitter-feeds',
+                        url: '/get-next-twitter-feeds',
                         data: {
-                          accid, pageId
+                            accid, pageId
                         },
                         dataType: 'json',
                         beforeSend: function () {
                             $('#twitterFeeds,#twitterProfileDiv').empty();
                             $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                '        <div class="spinner-border" role="status"  style="display: none;">\n' +
-                                '            <span class="sr-only">Loading...</span>\n' +
-                                '        </div>\n' +
-                                '\n' +
-                                '        </div>');
+                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                                '<span class="sr-only">Loading...</span>\n' +
+                                '</div></div>');
                             $('#twitterProfileDiv').append('<div class="d-flex justify-content-center" >\n' +
-                                '        <div class="spinner-border" role="status"  style="display: none;">\n' +
-                                '            <span class="sr-only">Loading...</span>\n' +
-                                '        </div>\n' +
-                                '        </div>');
+                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                                '<span class="sr-only">Loading...</span>\n' +
+                                '</div></div>');
                             $(".spinner-border").css("display", "block");
                         },
                         success: function (response) {
                             $(".spinner-border").css("display", "none");
+                            let arrayImages = [];
+                            let num = 0;
                             if (response.data.code === 200) {
                                 $('#feeds_count,#following_count,#follower_count').empty();
                                 $('#twitterProfileDiv').append('<div\n' +
-                                    '                                            class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
-                                    '                                            <div class="symbol-label"\n' +
-                                    '                                                 style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
-                                    '                                            <i class="symbol-badge bg-success"></i>\n' +
-                                    '                                        </div>\n' +
-                                    '                                        <div>\n' +
-                                    '                                            <a href="' + response.data.data.socialAccountDetails.profile_url + '"\n' +
-                                    '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
-                                    '                                               target="_blank">\n' + response.data.data.socialAccountDetails.first_name +
-                                    '                                                <i\n' +
-                                    '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
-                                    '                                            </a>\n' +
-                                    '                                            <div class="rating-css">\n' +
-                                    '                                                <div class="star-icon">\n' +
+                                    'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
+                                    '<div class="symbol-label"\n' +
+                                    'style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
+                                    '<i class="symbol-badge bg-success"></i>\n' +
+                                    '</div><div>\n' +
+                                    '<a href="' + response.data.data.socialAccountDetails.profile_url + '"\n' +
+                                    'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                                    'target="_blank">\n' + response.data.data.socialAccountDetails.first_name +
+                                    '<i\n' +
+                                    'class="flaticon2-correct text-primary icon-md ml-2"></i></a>\n' +
+                                    '<div class="rating-css">\n' +
+                                    '<div class="star-icon">\n' +
                                     (
                                         response.data.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
                                             '<label for="rating1" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
@@ -871,99 +839,82 @@
                                             '<label for="rating5" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
                                             '<label for="rating5" class="fas fa-star"></label>\n'
                                     ) +
-                                    '                                                </div>\n' +
-                                    '                                            </div>\n' +
-                                    '                                            <div class="mt-2">\n' +
-                                    '                                                <a href="#"\n' +
-                                    '                                                   class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
-                                    '                                            </div>\n' +
-                                    '                                        </div>');
+                                    '</div></div>\n' +
+                                    '<div class="mt-2"><a href="#"class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
+                                    '</div>\</div>');
                                 let appendData = '';
                                 $(".spinner-border").css("display", "none");
                                 feedsLength = response.data.data.feeds.length;
                                 response.data.data.feeds.map(element => {
-                                    let createdDate = new Date(element.publishedDate),published = String(createdDate).substring(0, 25);
-                                    appendData = '<div class="mb-5">\n' +
-                                        '                                            <div>\n' +
-                                        '                                                <div class="d-flex align-items-center pb-4">\n' +
-                                        '                                                    <!--begin::Symbol-->\n' +
-                                        '                                                    <div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                        '                                                            <span class="symbol-label">\n' +
-                                        '                                                                <img\n' +
-                                        '                                                                    src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
-                                        '                                                                    class="h-75 align-self-end" alt=""/>\n' +
-                                        '                                                            </span>\n' +
-                                        '                                                    </div>\n' +
-                                        '                                                    <div class="d-flex flex-column flex-grow-1">\n' +
-                                        '                                                        <a href="' + element.tweetUrl + '"\n' +
-                                        '                                                           class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                        '                                                        <span\n' +
-                                        '                                                            class="font-weight-bold">' + published + '</span>\n' +
-                                        '                                                    </div>\n' +
-                                        '                                                </div>\n' ;
-                                    if (element.mediaUrls.length > 0) {
+                                    let createdDate = new Date(element.publishedDate),
+                                        published = String(createdDate).substring(0, 25);
+                                    appendData = '<div class="mb-5"><div>\n' +
+                                        '<div class="d-flex align-items-center pb-4">\n' +
+                                        '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
+                                        '<span class="symbol-label"><img\n' +
+                                        'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
+                                        'class="h-75 align-self-end" alt=""/>\n' +
+                                        '</span></div>\n' +
+                                        '<div class="d-flex flex-column flex-grow-1">\n' +
+                                        '<a href="' + element.tweetUrl + '"\n' +
+                                        'class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                        '<span class="font-weight-bold">' + published + '</span></div></div>\n';
+                                    if (element.mediaUrls.length === 1) {
                                         appendData += '<div class="pt-4">';
                                         element.mediaUrls.map(data => {
                                             if (data.type === 'photo') {
                                                 appendData += '<div class="">\n' +
-                                                    '                                                                            <img src="' + data.url + '"\n' +
-                                                    '                                                                                 class="img-fluid"/>\n' +
-                                                    '                                                                        </div>';
+                                                    '<img src="' + data.url + '" class="img-fluid"/>\n' +
+                                                    '</div>';
                                             } else {
-                                                appendData += '<div\n' +
-                                                    '                                                                                class="embed-responsive embed-responsive-16by9">\n' +
-                                                    '                                                                            <iframe class="embed-responsive-item rounded"\n' +
-                                                    '                                                                                    src="' + data.url + '"\n' +
-                                                    '                                                                                    allowfullscreen=""></iframe>\n' +
-                                                    '                                                                        </div>';
+                                                appendData += '<div class="embed-responsive embed-responsive-16by9">\n' +
+                                                    '<iframe class="embed-responsive-item rounded" src="' + data.url + '"</div>';
                                             }
                                         });
-                                        appendData += '  <p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion +
-                                            '                                                                </p>';
+                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                            '</p>';
+                                    } else if (element.mediaUrls.length > 1) {
+                                        appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                        element.mediaUrls.map(data => {
+                                            arrayImages.push(data.url);
+                                        });
                                     } else {
-                                        appendData += '                                                <div>\n' +
-                                            '                                                    <p class="font-size-lg font-weight-normal">\n' + element.descritpion +
-                                            '                                                    </p>\n' ;
+                                        appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
                                     }
-                                    appendData += '                                                    <!--begin::Action-->\n' +
-                                        '                                                    <div class="d-flex align-items-center">\n' +
-                                        '                                                        <a href="#"\n' +
-                                        '                                                           class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                        '                                                                <span\n' +
-                                        '                                                                    class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                        '                                                                        <i class="fas fa-comments"></i>\n' +
-                                        '                                                                </span>\n' +
-                                        '                                                        </a>\n';
+                                    appendData += '<div class="d-flex align-items-center">\n' +
+                                        '<a href="#"\n' +
+                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
+                                        '<span\n' +
+                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
+                                        '<i class="fas fa-comments"></i>\n' +
+                                        '</span></a>\n';
                                     if (element.isLiked === false) {
-                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                            '                                                               onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
-                                            '                                                                <span data-value="' + element.tweetId + '"\n' +
-                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                            '                                                                      like-count="' + element.favoriteCount + '">\n' +
-                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.favoriteCount +
-                                            '                                                                </span>\n' +
-                                            '                                                            </a>\n';
+                                        appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
+                                            '<span data-value="' + element.tweetId + '"\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                            'like-count="' + element.favoriteCount + '">\n' +
+                                            '<i class="fas fa-heart"></i>' + element.favoriteCount +
+                                            '</span></a>\n';
                                     } else {
-                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            '                                                               class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                            '                                                               onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
-                                            '                                                                <span data-value="' + element.tweetId + '"\n' +
-                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                            '                                                                      like-count="' + element.favoriteCount + '">\n' +
-                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.favoriteCount +
-                                            '                                                                </span>\n' +
-                                            '                                                            </a>\n';
+                                        appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
+                                            'class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
+                                            '<span data-value="' + element.tweetId + '"\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                            'like-count="' + element.favoriteCount + '">\n' +
+                                            '<i class="fas fa-heart"></i>' + element.favoriteCount +
+                                            '</span></a>\n';
                                     }
-                                    appendData += '                                                        <a href="javascript:;" data-value2="' + element.tweetId + '"\n' +
-                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                        '                                                           onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
-                                        '                                                                <span data-value2="' + element.tweetId + '"\n' +
-                                        '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
-                                        '                                                                      retweet-count="' + element.retweetCount + '">\n' +
-                                        '                                                                        <i class="fas fa-retweet"></i>\n' + element.retweetCount +
-                                        '                                                                </span>\n' +
-                                        '                                                        </a>\n';
+                                    appendData += '<a href="javascript:;" data-value2="' + element.tweetId + '"\n' +
+                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                        'onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
+                                        '<span data-value2="' + element.tweetId + '"\n' +
+                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
+                                        'retweet-count="' + element.retweetCount + '">\n' +
+                                        '<i class="fas fa-retweet"></i>\n' + element.retweetCount +
+                                        '</span></a>\n';
                                     if (element.mediaUrls.length > 0) {
                                         let type
                                         if (element.mediaUrls[0].type === 'photo') {
@@ -972,42 +923,35 @@
                                             type = 'video'
                                         }
                                         appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
-                                            '                                                                <span\n' +
-                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                            '                                                                </span>Re-socio\n' +
-                                            '                                                        </a>\n';
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
                                     } else {
                                         appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
-                                            '                                                                <span\n' +
-                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                            '                                                                </span>Re-socio\n' +
-                                            '                                                        </a>\n';
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
                                     }
-                                    appendData += '                                                    </div>\n' +
-                                        '                                                </div>\n' +
-                                        '                                            </div>\n' +
-                                        '                                            <div class="fb_cmt_div mt-5">\n' +
-                                        '                                                <form class="position-relative">\n' +
-                                        '                                                    <textarea class="form-control border-0 pr-10 resize-none"\n' +
-                                        '                                                              rows="1" placeholder="Reply..."\n' +
-                                        '                                                              name="' + element.tweetId + '"></textarea>\n' +
-                                        '                                                    <div name="' + element.tweetId + '"\n' +
-                                        '                                                         value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                        '                                                         id="commentButton"\n' +
-                                        '                                                         class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
-                                        '                                                            <span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
-                                        '                                                                    <i class="fas fa-paper-plane"></i>\n' +
-                                        '                                                            </span>\n' +
-                                        '                                                    </div>\n' +
-                                        '                                                </form>\n' +
-                                        '                                            </div>\n' +
-                                        '                                        </div>\n' +
-                                        '                                        <hr>';
+                                    appendData += '</div></div></div>\n' +
+                                        '<div class="fb_cmt_div mt-5">\n' +
+                                        '<form class="position-relative">\n' +
+                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                        'rows="1" placeholder="Reply..."\n' +
+                                        'name="' + element.tweetId + '"></textarea>\n' +
+                                        '<div name="' + element.tweetId + '"\n' +
+                                        'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                        'id="commentButton"\n' +
+                                        'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
+                                        '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
+                                        '<i class="fas fa-paper-plane"></i>\n' +
+                                        '</span></div></form></div></div><hr>';
                                     $('#twitterFeeds').append(appendData);
+                                    $('div#image-gallery' + num).imagesGrid({
+                                        images: arrayImages
+                                    });
+                                    num++;
                                 });
                                 $('#follower_count').append(response.data.data.SocialAccountStats.follower_count);
                                 $('#following_count').append(response.data.data.SocialAccountStats.following_count);
@@ -1019,10 +963,9 @@
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
-                                    '                                                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                                                    </div>\n' + '\n' +
-                                    '                                                                               </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div></div>');
 
                             } else {
                                 $('#twitterFeeds,#twitterProfileDiv').empty();
@@ -1031,10 +974,9 @@
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
-                                    '                                                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                                                    </div>\n' + '\n' +
-                                    '                                                                               </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div></div>');
                             }
                         }
                     });
@@ -1047,7 +989,8 @@
                  */
                 $(document).on("click", "#commentButton", function (e) {
                     e.preventDefault();
-                    let twitterID = $(this).attr('name'),comment = $("textarea[name='" + twitterID + "']").val(),userName = $(this).attr('value');
+                    let twitterID = $(this).attr('name'), comment = $("textarea[name='" + twitterID + "']").val(),
+                        userName = $(this).attr('value');
                     if (comment === '') {
                         toastr.error('Comment can not be empty', "");
                     } else {
@@ -1086,7 +1029,6 @@
                  * ! Do not change this function without referring API format of getting the twitter feeds.
                  */
                 function call(data) {
-                    pageid = 2;
                     accounId = data.value;//accountid of particular twitter account from dropdown
                     getTwitterFeeds(data.value, 1);
                 }
@@ -1137,6 +1079,7 @@
                  * ! Do not change this function without referring API format of resocio.
                  */
                 function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+                    publishOrFeeds = 1;
                     $('body').find('#resocioModal').remove();
                     let action = '/discovery/content_studio/publish-content/feeds-modal';
                     let isType = (type == null) ? 'no media' : type;
@@ -1158,7 +1101,9 @@
                                 pickerPosition: "right",
                                 tonesStyle: "bullet"
                             });
-                            downloadMediaUrl();
+                            setTimeout(function () {
+                                downloadMediaUrl();
+                            }, 500);
                         },
                         error: function (error) {
                             if (error.responseJSON.message) {

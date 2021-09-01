@@ -19,7 +19,7 @@ class AuthorizedController {
 
   async deleteUser(req, res, next) {
     /* 	#swagger.tags = ['User']
-                 #swagger.description = 'Delete a user account'  
+                 #swagger.description = 'Delete a user account'
                  #swagger.auto = false */
     /* #swagger.security = [{
                "AccessToken": []
@@ -27,9 +27,10 @@ class AuthorizedController {
 
     return await AuthorizedService.deleteUser(req, res, next);
   }
+
   async holdUser(req, res, next) {
     /* 	#swagger.tags = ['User']
-            #swagger.description = 'Hold the account' 
+            #swagger.description = 'Hold the account'
             #swagger.auto = false */
     /*  #swagger.security = [{
                "AccessToken": []
@@ -47,7 +48,7 @@ class AuthorizedController {
    */
   async getUserInfo(req, res, next) {
     /* 	#swagger.tags = ['User']
-                #swagger.description = 'get updated access token' 
+                #swagger.description = 'get updated access token'
                 #swagger.auto = false */
     /* #swagger.security = [{
                "AccessToken": []
@@ -65,7 +66,7 @@ class AuthorizedController {
    */
   async updateProfileDetails(req, res, next) {
     /* 	   #swagger.tags = ['User']
-               #swagger.description = 'Update the Profile Details'  
+               #swagger.description = 'Update the Profile Details'
                #swagger.auto = false */
     /*     #swagger.security = [{
                "AccessToken": []
@@ -77,9 +78,10 @@ class AuthorizedController {
         } */
     return await AuthorizedService.updateProfileDetails(req, res, next);
   }
+
   async changePlan(req, res, next) {
     /* 	   #swagger.tags = ['User']
-               #swagger.description = 'change the Plan'  
+               #swagger.description = 'change the Plan'
                #swagger.auto = false */
     /*     #swagger.security = [{
                "AccessToken": []
@@ -94,7 +96,7 @@ class AuthorizedController {
            description: 'NewPlan',
            required: false,
            }
-           
+
            */
     return await AuthorizedService.changePlan(req, res, next);
   }

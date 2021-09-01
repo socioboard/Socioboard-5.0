@@ -90,6 +90,16 @@
             </div>
             <!--end::phone number input-->
 
+            <div class="form-group d-flex align-items-center ">
+                <button type="button" id="Sb_login_signup_cancel"
+                        class="btn font-weight-bolder font-size-h6 px-8 otp-button" onclick="sendOTP()">Send OTP</button>
+                <div class="input-icon ml-3">
+                    <input class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6" type="text"
+                           name="otp" id="otp"  placeholder="Enter OTP"/>
+                </div>
+            </div>
+            <span id='otpError' style="font-size: medium"></span>
+
 
             <!--begin::Form group-->
             <div class="form-group">
@@ -97,7 +107,7 @@
                     <label for="password" style="display: none"></label>
                     <input class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6" type="password"
                            placeholder="Password" name="password" id="password" value="{{old('password')}}"/>
-                    <span><a href="javascript:;"><i class="fas fa-eye-slash toggle-password"></i></a></span>
+                    <span><a href="#"><i class="fas fa-eye-slash toggle-password"></i></a></span>
 
                 </div>
                 <span id='passwordError' style="font-size: medium"></span>
@@ -125,7 +135,7 @@
             <!--begin::Form group-->
             <div class="form-group">
                 <label class="checkbox mb-0">
-                    <input type="checkbox" name="agree" id="agree"/>
+                    <input type="checkbox" checked name="agree" id="agree"/>
                     <span class="mr-2"></span>
                     I Agree The &nbsp;<a href="#" class="text-primary"> Terms and Conditions</a>.
                 </label>
@@ -227,7 +237,7 @@
         // here, the index maps to the error code returned from getValidationError - see readme
         let errorMap = ["❌ Invalid number", "❌ Invalid country code", "❌ Too short", "❌ Too long", "❌ Invalid number"];
 
-        // initialise plugin
+        // initialize plugin
         let iti = window.intlTelInput(input, {
             utilsScript: "../plugins/custom/intl-tel-input/build/js/utils.js?1613236686837",
             initialCountry: PHONE_CODE,
@@ -259,8 +269,37 @@
         input.addEventListener('change', reset);
         input.addEventListener('keyup', reset);
 
+        function sendOTP()
+        {
+            let countrycoder = $('.iti__selected-flag').attr('title');
+            let phoneno = $('#phone').val();
+            let mob = /^[1-9]{1}[0-9]{9}$/;
+            let code = countrycoder.match(/\d+/)[0];
+            if (mob.test(phoneno) === false) {
+                toastr.error("Please enter valid mobile number.");
+                phoneno.focus();
+                return false;
+            } else if (phoneno === '') {
+                toastr.error('Please Enter the mobile number first');
+            } else {
+                $.ajax({
+                    url: 'send-mobile-otp',
+                    data: {phoneno, code},
+                    type: 'get',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.code === 200) {
+                            toastr.success('Have sent OTP to mobile number successfully,please check');
+                        } else if (response.code === 400) {
+                            toastr.error(response.error);
+                        } else {
+                            toastr.error('Some error occured, Can not send the OTP');
+
+                        }
+                    }
+                });
+            }
+        }
     </script>
-
-
 @endsection
 

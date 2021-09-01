@@ -64,11 +64,27 @@ class LoginController extends Controller
                     'userDetails' => $response['data']['user'],
                     'accessToken' => $response['data']['accessToken']
                 );
-                AuthUsers::login($user);
-                $this->helper->getTeamNewSession();
-                return redirect()->route('dashboard');
+                session()->put('socialUser', $user);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    AuthUsers::login($user);
+                    return redirect('plan-details-view');
+                } else {
+                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === '')|| $user['userDetails']['phone_code'] === 'nil' || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''|| $user['userDetails']['phone_no'] === 'nil')) {
+                        return redirect('login')->with('NocontactNumber', 'NO');
+                    } else {
+                        AuthUsers::login($user);
+                        $result = $this->checkPlanExpiry();
+                        if ($result === "true") {
+                            return redirect('plan-details-view');
+                        } else {
+                            $this->helper->getTeamNewSession();
+                            return redirect('dashboard');
+                        }
+                    }
+                }
             } else if ($response['code'] === 400) {
-                return redirect('login')->with('invalidSocial', $response['data']->message);
+                return redirect('login')->with('invalidSocial', $response['error']);
             } else {
                 return redirect('login')->with('invalidSocial', 'Sorry some Error occurred , Please reload the page');
             }
@@ -88,9 +104,26 @@ class LoginController extends Controller
                     'userDetails' => $response['data']['user'],
                     'accessToken' => $response['data']['accessToken']
                 );
-                AuthUsers::login($user);
-                $this->helper->getTeamNewSession();
-                return redirect('dashboard');
+                session()->put('socialUser', $user);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    AuthUsers::login($user);
+                    return redirect('plan-details-view');
+                } else {
+                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
+                            $user['userDetails']['phone_no'] === 'nil')) {
+                        return redirect('login')->with('NocontactNumber', 'NO');
+                    } else {
+                        AuthUsers::login($user);
+                        $result = $this->checkPlanExpiry();
+                        if ($result === "true") {
+                            return redirect('plan-details-view');
+                        } else {
+                            $this->helper->getTeamNewSession();
+                            return redirect('dashboard');
+                        }
+                    }
+                }
             } else if ($response['code'] === 400) {
                 return redirect('login')->with('invalidSocial', $response['error']);
             } else {
@@ -113,9 +146,26 @@ class LoginController extends Controller
                     'userDetails' => $response['data']['user'],
                     'accessToken' => $response['data']['accessToken']
                 );
-                AuthUsers::login($user);
-                $this->helper->getTeamNewSession();
-                return redirect('dashboard');
+                session()->put('socialUser', $user);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    AuthUsers::login($user);
+                    return redirect('plan-details-view');
+                } else {
+                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
+                            $user['userDetails']['phone_no'] === 'nil')) {
+                        return redirect('login')->with('NocontactNumber', 'NO');
+                    } else {
+                        AuthUsers::login($user);
+                        $result = $this->checkPlanExpiry();
+                        if ($result === "true") {
+                            return redirect('plan-details-view');
+                        } else {
+                            $this->helper->getTeamNewSession();
+                            return redirect('dashboard');
+                        }
+                    }
+                }
             } else if ($response['data']->code === 400) {
                 return redirect('login')->with('invalidSocial', $response['data']->message);
             } else {
@@ -136,35 +186,61 @@ class LoginController extends Controller
     {
         $apiUrl = ApiConfig::get('/login');
         $response = null;
-        if (str_contains($request['emailOrUsername'], '@')){
+        $result = null;
+        if (str_contains($request['emailOrUsername'], '@')) {
             $parameters = array(
                 "email" => $request['emailOrUsername'],
                 "password" => md5($request['password'])
             );
-        }else{
+        } else {
             $parameters = array(
                 "username" => $request['emailOrUsername'],
                 "password" => md5($request['password'])
             );
         }
-
         try {
             $response = $this->helper->postApiCall('post', $apiUrl, $parameters);
+            if ($response['code'] == 200) {
+                $data = array(
+                    'userDetails' => $response['data']['user'],
+                    'accessToken' => $response['data']['accessToken']
+                );
+                session()->put('socialUser', $data);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    AuthUsers::login($data);
+                    $result['code'] = 403;
+                    return $result;
+                } else {
+                    if (($data['userDetails']['phone_code'] === '0' || $data['userDetails']['phone_code'] === null || $data['userDetails']['phone_code'] === ''||$data['userDetails']['phone_code'] === 'nil') || ($data['userDetails']['phone_no'] === '0' || $data['userDetails']['phone_no'] === null || $data['userDetails']['phone_no'] === ''||$data['userDetails']['phone_no'] === 'nil')) {
+                        $result['code'] = 501;
+                        return $result;
+                    } else {
+                        AuthUsers::login($data);
+                        $expiry_date = $response['data']['user']['Activations']['account_expire_date'];
+                        $today = date('d-m-Y');
+                        $exp = date('d-m-Y', strtotime($expiry_date));
+                        $expDate = date_create($exp);
+                        $todayDate = date_create($today);
+                        $diff = date_diff($todayDate, $expDate);
+                        if ($diff->format("%R%a") <= 0) {
+                            $responses['code'] = 403;
+                            Session::put('expired', 'true');
+                            return $responses;
+                        } else {
+                            $this->helper->getTeamNewSession();
+                            Session::put('expired', 'false');
+                            return $response;
+                        }
+                    }
+                }
+            } else if ($response['code'] == 400 || $response['code'] == 401) {
+                return $response;
+            } else {
+                return $this->helper->errorHandler('166', $response['code'], 'Response Code Mismatch ', 'checkLogin() {LoginController}');
+            }
         } catch (Exception $e) {
             return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), ' checkLogin() {LoginController}');
-        }
-        if ($response['code'] == 200) {
-            $data = array(
-                'userDetails' => $response['data']['user'],
-                'accessToken' => $response['data']['accessToken']
-            );
-            AuthUsers::login($data);
-            $this->helper->getTeamNewSession();
-            return $response;
-        } else if ($response['code'] == 400 || $response['code'] == 401) {
-            return $response;
-        } else {
-            return $this->helper->errorHandler('166', $response['code'], 'Response Code Mismatch ', 'checkLogin() {LoginController}');
         }
     }
 
@@ -180,22 +256,76 @@ class LoginController extends Controller
                     'userDetails' => $response['data']['user'],
                     'accessToken' => $response['data']['accessToken']
                 );
-                AuthUsers::login($user);
-                $this->helper->getTeamNewSession();
-                return redirect('dashboard');
-            } else if ($response->code === 400) {
-                return redirect('login')->with('invalidSocial', $response['data']->message);
+                session()->put('socialUser', $user);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    AuthUsers::login($user);
+                    return redirect('plan-details-view');
+                } else {
+                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||$user['userDetails']['phone_no'] === 'nil')) {
+                        return redirect('login')->with('NocontactNumber', 'NO');
+                    } else {
+                        AuthUsers::login($user);
+                        $result = $this->checkPlanExpiry();
+                        if ($result === "true") {
+                            return redirect('plan-details-view');
+                        } else {
+                            $this->helper->getTeamNewSession();
+                            return redirect('dashboard');
+                        }
+                    }
+                }
+            } else if ($response['code'] === 400) {
+                return redirect('login')->with('invalidSocial', $response['data']->error);
             } else {
                 return redirect('login')->with('invalidSocial', 'Sorry some Error occurred , Please reload the page');
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), ' twitterCallBack() {LoginController}');
-            return redirect('login')->with('twitterCallBack', 'Sorry some Error occurred , Please reload the page');
+            return redirect('login')->with('invalidSocial', 'Sorry some Error occurred , Please reload the page');
         }
+    }
+
+    public function checkPlanExpiry()
+    {
+        $response = Session::get('user');
+        $expiry_date = $response['userDetails']['Activations']['account_expire_date'];
+        $today = date('d-m-Y');
+        $exp = date('d-m-Y', strtotime($expiry_date));
+        $expDate = date_create($exp);
+        $todayDate = date_create($today);
+        $diff = date_diff($todayDate, $expDate);
+        if ($diff->format("%R%a") <= 0) {
+            Session::put('expired', 'true');
+            $success = "true";
+            return $success;
+        } else {
+            $success = "false";
+            return $success;
+        }
+    }
+
+    public function checkPlanExpirySocial()
+    {
+        $response = session()->get('socialUser');
+        $expiry_date = $response['userDetails']['Activations']['account_expire_date'];
+        $today = date('d-m-Y');
+        $exp = date('d-m-Y', strtotime($expiry_date));
+        $expDate = date_create($exp);
+        $todayDate = date_create($today);
+        $diff = date_diff($todayDate, $expDate);
+        if ($diff->format("%R%a") <= 0) {
+            Session::put('expired', 'true');
+            $success = "true";
+        } else {
+            $success = "false";
+        }
+        return $success;
     }
 
     public function logout(): RedirectResponse
     {
+        Session::forget('user');
         authUser()->logout();
         if (env('APP_ENV') === 'main') {
             return redirect(env('APP_URL') . "amember/logout");
@@ -215,7 +345,7 @@ class LoginController extends Controller
 
     public function forgotPasswordEmail(ForgotPasswordEmail $request): array
     {
-        $apiUrl = ApiConfig::get('/forgot-password?email=' . $request->input("emailID"));
+        $apiUrl = ApiConfig::get('/forgot-password?email=' . $request->emailId);
         try {
             $response = $this->helper->postApiCall('get', $apiUrl);
             return $this->helper->responseHandlerWithArrayIfElse($response);
@@ -296,6 +426,33 @@ class LoginController extends Controller
         }
     }
 
+    public function getEmailActivationLink(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+            ], [
+                'email.required' => 'Email is required',
+                'email.email' => 'Invalid Email',
+            ]);
+            if ($validator->fails()) {
+                $response['code'] = 201;
+                $response['message'] = $validator->errors()->all();
+                $response['data'] = null;
+                return Response::json($response, 200);
+            }
+            $apiUrl = ApiConfig::get('/get-mail-activation-link?email=' . $request->input("email"));
+            try {
+                $response = $this->helper->postApiCall('get', $apiUrl);
+                return $this->helper->responseHandlerWithArrayIfElse($response);
+            } catch (Exception $e) {
+                return $this->helper->guzzleErrorHandler($e->getMessage(), ' LoginController => getEmailActivationLink => Method-get ');
+            }
+        } catch (\Exception $e) {
+            return $this->helper->callingErrorHandler($e, ' LoginController => getEmailActivationLink => Method-post ');
+        }
+    }
+
     public function verifyDirectLogin(VrifyDirectLogin $request)
     {
         $apiUrl = ApiConfig::get('/verify-direct-login-token?email=' . $request->input("email") . '&activationToken=' . $request->input("activationToken"));
@@ -345,6 +502,70 @@ class LoginController extends Controller
             return view('user::login', ['result' => 'Sorry some Error occurred , Please reload the page', 'code' => 500]);
         }
     }
+
+    function sendMobileOtp(Request $request)
+    {
+        try {
+            $mobileno = $request->phoneno;
+            $mobileCode = "%2B" . $request->code;
+            $apiUrl = ApiConfig::get('/otp/get-otp-phone-number?countryCode=' . $mobileCode . '&phoneNumber=' . $mobileno);
+            $response = $this->helper->postApiCall('get', $apiUrl);
+            return $this->helper->responseHandlerWithArray($response);
+        } catch (\Exception $e) {
+            return $this->helper->callingErrorHandler($e, ' LoginController => sendMobileOtp => Method-get ');
+        }
+
+    }
+
+    public function verifyMobileOtp(Request $request)
+    {
+        try {
+            $mobileno = $request->phoneno;
+            $mobileCode = "%2B" . $request->code;
+            $OTP = $request->otp;
+            $apiUrl = ApiConfig::get('/otp/verify-otp-phone-number?countryCode=' . $mobileCode . '&phoneNumber=' . $mobileno . '&otp=' . $OTP);
+            $response = $this->helper->postApiCall('post', $apiUrl);
+            return $this->helper->responseHandlerWithArray($response);
+        } catch (\Exception $e) {
+            return $this->helper->callingErrorHandler($e, ' LoginController => sendMobileOtp => Method-get ');
+        }
+    }
+
+    public function updateUserSession(Request $request)
+    {
+        try {
+            $session_var = session()->get('socialUser');
+            $session_var['userDetails']['phone_code'] = '+' . $request->code;
+            $session_var['userDetails']['phone_no'] = $request->phoneno;
+            $session_var['userDetails']['country'] = $request->countryName;
+            session()->put('user', $session_var);
+            session()->save();
+            $this->helper->getTeamNewSession();
+            $data['phoneNo'] = $request->phoneno;
+            $data['phoneCode'] = '+' . $request->code;
+            $data['country'] =  $request->countryName;
+            $data2 = (object)$data;
+            $apiUrl = ApiConfig::get('/user/update-profile-details');
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $data2);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = 'success';
+            } else if ($response['data']->code === 400) {
+                Session::flush();
+                $result['code'] = 400;
+                $result['data'] = $response['data']->error;
+            } else {
+                Session::flush();
+                $result['code'] = 500;
+                $result['data'] = 'Some error occured , please reload the page';
+            }
+            return $result;
+        } catch (\Exception $e) {
+            Session::flush();
+            return $this->helper->callingErrorHandler($e, ' LoginController => updateUserSession => Method-get ');
+        }
+    }
+
 
 }
 

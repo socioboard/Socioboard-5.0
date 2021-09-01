@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
-const Schema = mongoose.Schema;
 import logger from '../../../Publish/resources/Log/logger.log.js';
+
+const { Schema } = mongoose;
 
 mongoose.set('useCreateIndex', true);
 
@@ -30,7 +31,7 @@ const notificationInfo = new Schema({
   isRead: { type: Boolean, default: false },
   targetUserIds: { type: [Number], index: true },
   targetTeamIds: { type: [Number], index: true },
-})
+});
 
 /**
  * TODO To Fetch Particular User Notification
@@ -47,26 +48,28 @@ notificationInfo.methods.getNotificationsDetails = function (
   teamId,
   userId,
   skip,
-  limit
+  limit,
 ) {
-  let query = {
+  const query = {
     dateTime: {
       $gte: moment().add('-15', 'days').startOf('day'),
       $lt: moment().endOf('day'),
     },
   };
+
   if (id) query._id = id;
   if (userId) query.targetUserIds = userId;
   if (teamId) query.targetTeamIds = teamId;
 
   return this.model('Notifications')
     .find(query)
-    .sort({ publishedDate: -1 })
+    .sort({ dateTime: -1 })
     .skip(skip)
     .limit(limit)
-    .then(result => result)
-    .catch(error => {
+    .then((result) => result)
+    .catch((error) => {
       logger.error('GetNotificationsDetails Error:', error.message);
+
       return error.message;
     });
 };
@@ -80,9 +83,10 @@ notificationInfo.methods.getNotificationsDetails = function (
 notificationInfo.methods.updateNotificationStatus = function (id) {
   return this.model('Notifications')
     .findOneAndUpdate({ _id: id }, { $set: { isRead: true } })
-    .then(result => result)
-    .catch(error => {
+    .then((result) => result)
+    .catch((error) => {
       logger.error('updateNotificationStatus Error:', error.message);
+
       return error.message;
     });
 };
@@ -96,9 +100,10 @@ notificationInfo.methods.updateNotificationStatus = function (id) {
 notificationInfo.methods.deleteParticularNotification = function (id) {
   return this.model('Notifications')
     .deleteOne({ _id: id })
-    .then(result => result)
-    .catch(error => {
+    .then((result) => result)
+    .catch((error) => {
       logger.error('DeleteParticularNotification Error:', error.message);
+
       return error.message;
     });
 };
@@ -109,7 +114,7 @@ notificationInfo.methods.deleteParticularNotification = function (id) {
  * @param {Number} userId - User Id
  * @return {object} Returns Deleted Notification Data
  */
-notificationInfo.methods.clearAllUserNotifications = userId => {
+notificationInfo.methods.clearAllUserNotifications = function (userId) {
   return this.model('Notifications')
     .deleteMany({ targetUserIds: userId })
     .then(result => result)
@@ -120,12 +125,28 @@ notificationInfo.methods.clearAllUserNotifications = userId => {
 };
 
 /**
+ * TODO Delete All Notification of Particular Team
+ * Function To Delete Particular  Notification for a team
+ * @param {Number} teamId - Team Id
+ * @return {object} Returns Deleted Notification Data
+ */
+notificationInfo.methods.clearAllTeamNotifications = function (teamId) {
+  return this.model('Notifications')
+    .deleteMany({ targetTeamIds: teamId })
+    .then(result => result)
+    .catch(error => {
+      logger.error('Clear All Team Notifications Error:', error.message);
+      return error.message;
+    });
+};
+
+/**
  * TODO Update All Notification Status of Particular User
  * Function Update All Notification Status of Particular User
  * @param {Number} userId - User Id
  * @return {object} Returns Updated Notification Data
  */
-notificationInfo.methods.markAllUserNotificationsAsRead = userId => {
+notificationInfo.methods.markAllUserNotificationsAsRead = function (userId) {
   return this.model('Notifications')
     .updateMany({ targetUserIds: userId }, { $set: { isRead: true } })
     .then(result => result)
@@ -134,6 +155,99 @@ notificationInfo.methods.markAllUserNotificationsAsRead = userId => {
       return error.message;
     });
 };
+
+/**
+ * TODO Update All Notification Status of Particular User
+ * Function Update All Notification Status of Particular User
+ * @param {Number} userId - User Id
+ * @return {object} Returns Updated Notification Data
+ */
+notificationInfo.methods.markAllTeamNotificationsAsRead = function (teamId) {
+  return this.model('Notifications')
+    .updateMany({ targetTeamIds: teamId }, { $set: { isRead: true } })
+    .then(result => result)
+    .catch(error => {
+      logger.error('Mark All Team Notifications As Read Error:', error.message);
+      return error.message;
+    });
+};
+
+/**
+ * TODO To get user unread notification status
+ * Function To get user unread notification status
+ * @param {Array} userId - User Id
+ * @return {object} Returns Notification Data Status
+ */
+notificationInfo.methods.getUserUnreadNotification = function (userId) {
+  let query = getQueryCondition(userId, "targetUserIds")
+  return this.model('Notifications')
+    .aggregate(query)
+    .then(result => result)
+    .catch(error => {
+      logger.error('getUserUnreadNotification:', error.message);
+      return error.message;
+    });
+};
+
+/**
+ * TODO To get team unread notification status
+ * Function To get team unread notification status
+ * @param {Array} teamIds - Team Ids
+ * @return {object} Returns Notification Data Status
+ */
+notificationInfo.methods.getTeamUnreadNotification = function (teamIds) {
+  let query = getQueryCondition(teamIds, "targetTeamIds")
+  return this.model('Notifications')
+    .aggregate(query)
+    .then(result => result)
+    .catch(error => {
+      logger.error('getTeamUnreadNotification:', error.message);
+      return error.message;
+    });
+};
+
+/**
+ * TODO To get user or team unread notification status executable query
+ * Function To get user or team unread notification status executable query
+ * @param {Array} Ids - User id or team ids
+ * @param {string} target - User or team
+ * @return {object} Returns Notification Data Status
+ */
+const getQueryCondition = (Ids, target) => {
+  return [{
+    $match: {
+      [target]: { $in: Ids },
+      dateTime: {
+        $gte: new Date(moment().add('-15', 'days').startOf('day')),
+        $lt: new Date(moment().endOf('day'))
+      }
+    }
+  },
+  {
+    $project: {
+      id: "_id",
+      unReadNotificationCount: { $cond: [{ $eq: ['$isRead', false] }, 1, 0] },
+      readNotificationCount: { $cond: [{ $ne: ['$isRead', false] }, 1, 0] },
+    }
+  },
+  {
+    "$group": {
+      _id: "$isRead",
+      unReadNotificationCount: { $sum: "$unReadNotificationCount" },
+      readNotificationCount: { $sum: "$readNotificationCount" },
+      totalNotificationCount: { $sum: 1 },
+    }
+  },
+  {
+    $project: {
+      _id: 0, unReadNotificationCount: "$unReadNotificationCount",
+      readNotificationCount: "$readNotificationCount",
+      totalNotificationCount: "$totalNotificationCount",
+      unReadNotificationStatus: { $cond: [{ $ne: ['$unReadNotificationCount', 0] }, true, false] }
+    }
+  }
+  ]
+}
 
 let Notifications = mongoose.model('Notifications', notificationInfo);
 

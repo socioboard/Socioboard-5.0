@@ -134,7 +134,7 @@
                 </div>
                 <!--end::Entry-->
             </div>
-            <!--end::Content-->
+
 
         </div>
         <!--end::Wrapper-->
@@ -149,7 +149,7 @@
         <i class="fa fa-plus"></i>
     </button>
     <div class="items-wrapper">
-        <button class="btn btn-icon text-hover-info px-5" title="print" data-toggle="tooltip" data-placement="top"
+        <button class="btn btn-icon text-hover-info px-5" title="Print" data-toggle="tooltip" data-placement="top"
                 onclick="window.print()">
             <i class="fas fa-print"></i>
         </button>
@@ -161,7 +161,7 @@
            title="Back to site">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <button class="btn btn-icon text-hover-info px-5" title="Clear ALL" data-toggle="tooltip" data-placement="top">
+        <button class="btn btn-icon text-hover-info px-5" title="Clear All" data-toggle="tooltip" data-placement="top">
             <i class="fas fa-broom" data-toggle="modal"  data-target="#accountDeleteModal2"></i>
         </button>
     </div>
@@ -264,9 +264,6 @@
             $('#draggableButton').tooltip();
         });
         getReportImages();
-        if (sessionStorage.getItem("SessionName") !== 'clicked') {
-            changeThemeByTime();
-        }
     });
 
     function getReportImages() {
@@ -285,12 +282,12 @@
                     $('#rep-loader').remove();
                     if (response.data === 'No Data found') {
                         $('div#html-sec').append('<div class="text-center">\n' +
-                            '                                                                <div class="symbol symbol-150">\n' +
-                            '                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                                </div>\n' +
-                            '                                                                <h6>\n' +
-                            '                                                                    Currently no reports have been added to the cart</h6>\n' +
-                            '                                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>\n' +
+                            'Currently no reports have been added to the cart</h6>\n' +
+                            '</div>');
                     } else {
                         let appendData = '';
                         response.data.map(element => {
@@ -353,11 +350,7 @@
                                 'class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"\n' +
                                 'data-dismiss="modal">No\n' +
                                 'thanks.</a>\n' +
-                                '</div>\n' +
-                                '</div>\n' +
-                                '</div>\n' +
-                                '</div>\n' +
-                                '</div>';
+                                '</div></div></div></div></div>';
 
                         });
                         $('div#html-sec').append(appendData);
@@ -381,10 +374,8 @@
             },
             success: function (response) {
                 if (response.code === 200) {
+                    $('div[data-id="'+id+'"]').remove();
                     toastr.success('The reports has deleted from cart');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
                 } else if (response.code === 400) {
                     toastr.error(response.error);
                 } else {
@@ -404,9 +395,13 @@
                     success: function (response) {
                         if (response.code === 200) {
                             toastr.success('Deleted all the reports from cart');
-                            setTimeout(() => {
-                                location.reload();
-                            }, 2000);
+                            $('div#html-sec').empty();
+                            $('div#html-sec').append('<div class="text-center">\n' +
+                                '<div class="symbol symbol-150">\n' +
+                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                '</div><h6>\n' +
+                                'Currently no reports have been added to the cart</h6>\n' +
+                                '</div>');
                         } else if (response.code === 400) {
                             toastr.error(response.error);
                         } else {
@@ -416,17 +411,6 @@
                 });
     }
 
-    function changeThemeByTime() {
-        let date = new Date();
-        let hours = date.getHours();
-        if (hours >= 7 && hours < 18) {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    }
 </script>
 </body>
 <!--end::Body-->

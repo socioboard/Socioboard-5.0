@@ -1,0 +1,30 @@
+{
+  "perPageLimit": 12,
+  "autoReport": {
+    "base_path": "../../media",
+    "autoReport": {
+      "path": "../../media/autoReport"
+    }
+  },
+  "mail_services_environments": [
+    "production",
+    "development"
+  ],
+  "mail_subscription_group":{
+    "expired":17623,
+    "expiring":17624,
+    "auto_report":17625
+  },
+  "facebook_api": {
+    "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends,instagram_manage_insights",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "4.0.0",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "google_api": {
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  }
+}

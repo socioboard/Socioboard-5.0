@@ -69,7 +69,7 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-6" id="ss-page">
+                    <div class="col-xl-6" id="ss-scheduled">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Page Fan</h3>
@@ -332,8 +332,6 @@
                                                 <!--end::Title-->
                                             </div>
                                         </div>
-                                        <!--end::Item-->
-
 
                                     </div>
                                     <!--end::Row-->
@@ -453,7 +451,9 @@
             }, 2000);
         });
         // team date ranges
-        var start = moment().subtract(29, 'days');
+        var start = moment().subtract(6, 'days');
+        $("li[data-range-key='Last 30 Days']").removeAttr('class');
+        $("li[data-range-key='Last 7 Days']").attr("class", "active");
         var end = moment();
 
         $('#twt-daterange').daterangepicker({
@@ -517,6 +517,16 @@
 
         let dates = [];
 
+        /**
+         * TODO We have get the reports of the facebook accounts added.
+         * This function is used getting reports of the facebook accounts added based on dates filter.
+         * @param {integer} teamid- current teamid of the particular User.
+         * @param {string} accid- link of image or video in the facebook.
+         * @param {string} filterPeriod- time value of range.
+         * @param {string} startDate- Start date of the filter range.
+         * @param {sourceUrl} endDate  end  date of the filter range.
+         * ! Do not change this function without referring API format of getting the youtube reports.
+         */
         function getFacebookReports(teamid, accid, filterPeriod, startDate, endDate) {
             $.ajax({
                 type: 'post',
@@ -531,29 +541,25 @@
                 beforeSend: function () {
                     $('#page_unique_viral_chart, #like_unlike_chart, #page_organic_paid_chart, #page_stories_chart').empty();
                     $('#page_unique_viral_chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $('#like_unlike_chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $('#page_organic_paid_chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $('#page_stories_chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                     $('#newLikes, #unLikes, #totalImpressions, #uniqueImpressions,#viralImpressions,#viralImpressionsStories,#organicImpressions,#paidImpressions,#paidImpressions,#pageStories,#pagesStoriesByType').empty();
                 },
@@ -642,34 +648,41 @@
                         getPageStoriesGraph(pageStoriesByStoryType, viralImpressions);
                     } else if (response.code === 400) {
                         $('#page_unique_viral_chart').append('<div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + response.error + '</h6>\n' +
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + response.error + '</h6>\n' +
                             '                                            </div>');
                         $('#like_unlike_chart').append('<div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + response.error + '</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + response.error + '</h6>\n' +
+                            '</div>');
                         $('#page_organic_paid_chart').append('<div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + response.error + '</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + response.error + '</h6>\n' +
+                            '</div>');
                         $('#page_stories_chart').append('<div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + response.error + '</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + response.error + '</h6>\n' +
+                            '</div>');
                     }
                 }
             });
         }
 
+        /**
+         * TODO We have get the reports facebook impressions graph of the facebook accounts added.
+         * @param {integer} totalImpressions- current totalImpressions of the facebook accounts.
+         * @param {integer} uniqueImpressions- uniqueImpressions  video in the facebook accounts.
+         * @param {integer} viralImpressions- viralImpressions  of range.
+         * ! Do not change this function without referring API format of getting the facebook reports.
+         */
         function impressionsGraph(totalImpressions, uniqueImpressions, viralImpressions) {
             var optionsLine = {
                 chart: {
@@ -693,7 +706,6 @@
                     curve: 'smooth',
                     width: 2
                 },
-                //colors: ["#3F51B5", '#2196F3'],
                 series: [{
                     name: "Total Impressions",
                     data: totalImpressions
@@ -744,10 +756,15 @@
             }
 
             var chartLine = new ApexCharts(document.querySelector('#page_unique_viral_chart'), optionsLine);
-
             chartLine.render();
         }
 
+        /**
+         * TODO We have get the reports facebook like unlike graph of the facebook accounts added.
+         * @param {integer} newLikes- current newLikes of the facebook accounts.
+         * @param {integer} newUnlikes- newUnlikes   of  the facebook accounts.
+         * ! Do not change this function without referring API format of getting the facebook reports.
+         */
         function likeUnlikeGraph(newLikes, newUnlikes) {
             // Like Count Stats
             var optionsLine = {
@@ -822,6 +839,12 @@
             chartLine.render();
         }
 
+        /**
+         * TODO We have get the reports facebook like unlike graph of the facebook accounts added.
+         * @param {integer} organicData- current organicData of the facebook accounts.
+         * @param {integer} paidImpressions- current paidImpressions   of  the facebook accounts.
+         * ! Do not change this function without referring API format of getting the facebook reports.
+         */
         function pageOrganicImpressionsGraph(organicData, paidImpressions) {
             var optionsLine = {
                 chart: {
@@ -895,6 +918,12 @@
             chartLine.render();
         }
 
+        /**
+         * TODO We have get the reports facebook page stories graph of the facebook accounts added.
+         * @param {integer} pagestories- current pagestories of the facebook accounts.
+         * @param {integer} viralImpressions- current viralImpressions   of  the facebook accounts.
+         * ! Do not change this function without referring API format of getting the facebook PageStories.
+         */
         function getPageStoriesGraph(pagestories, viralImpressions) {
             var optionsLine = {
                 chart: {
@@ -918,7 +947,6 @@
                     curve: 'smooth',
                     width: 2
                 },
-                // colors: ["#3F51B5", '#2196F3'],
                 series: [{
                     name: "Page Impressions By Story Type",
                     data: pagestories
@@ -969,6 +997,9 @@
             chartLine.render();
         }
 
+        /**
+         * TODO We have get the reports facebook page stories graph of the facebook accounts added.
+         */
         function formatDate(date) {
             let d = new Date(date),
                 month = '' + (d.getMonth() + 1),
@@ -1000,11 +1031,11 @@
         }
 
         let noFacebookPage = ' <div class="text-center">\n' +
-            '                                                <div class="symbol symbol-150">\n' +
-            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-            '                                                </div>\n' +
-            '                                                <h6>Currently, no facebook page added to this team.</h6>\n' +
-            '                                            </div>';
+            '<div class="symbol symbol-150">\n' +
+            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+            '</div>\n' +
+            '<h6>Currently, no facebook page added to this team.</h6>\n' +
+            '</div>';
 
         $(document).ready(function () {
             $("#reportsButton").trigger("click");

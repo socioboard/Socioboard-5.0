@@ -55,10 +55,11 @@ var SBKanbanBoard = function () {
                 if (response.code === 200) {
                     if (response.adminData.length > 0) {
                         adminData = response.adminData.map(element => {
+                            profilepic = element.profile_picture;
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic = '../' + element.profile_picture;
+                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -88,13 +89,19 @@ var SBKanbanBoard = function () {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
-                            } else if (element.account_type === 6 || element.account_type === 7) {
+                            } else if (element.account_type === 6 ) {
                                 acctype = 'LinkedIn';
                             } else if (element.account_type === 8 || element.account_type === 10) {
                                 acctype = 'Google';
                             } else if (element.account_type === 9) {
                                 acctype = 'Youtube';
-                            } else {
+                            } else if (element.account_type === 12) {
+                                acctype = 'Instagram Business';
+                            }else if(element.account_type === 7)
+                            {
+                                acctype = 'LinkedIn Page';
+                            }
+                            else {
                                 acctype = 'Pinterest';
                             }
                             return {
@@ -113,11 +120,13 @@ var SBKanbanBoard = function () {
                         });
                     }
                     if (response.teamMembersAcceptedDatas.length > 0) {
+                        let profilepic;
                         teamMembersAcceptedDatas = response.teamMembersAcceptedDatas.map(element => {
+                            profilepic = element.user.profile_picture;
                             if (isValidURL(element.user.profile_picture) === true) {
                                 profilepic = element.user.profile_picture;
                             } else {
-                                profilepic = '../' + element.user.profile_picture;
+                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.user.profile_picture);
                             }
                             return {
                                 'id': element.user.user_id,
@@ -135,11 +144,13 @@ var SBKanbanBoard = function () {
                         });
                     }
                     if (response.teamMembersPendingDatas.length > 0) {
+                        let profilepic;
                         teamMembersPendingDatas = response.teamMembersPendingDatas.map(element => {
+                            profilepic = element.profile_picture;
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic = '../' + element.profile_picture;
+                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -158,11 +169,13 @@ var SBKanbanBoard = function () {
                         });
                     }
                     if (response.availableSocialAccounts.length > 0) {
+                        let profilepic;
                         availableSocialAccounts = response.availableSocialAccounts.map(element => {
+                            profilepic = element.profile_picture;
                             if (isValidURL(element.profile_pic_url) === true) {
                                 profilepic = element.profile_pic_url;
                             } else {
-                                profilepic = '../' + element.profile_pic_url;
+                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_pic_url);
                             }
                             if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
                                 acctype = 'Facebook';
@@ -170,13 +183,20 @@ var SBKanbanBoard = function () {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
-                            } else if (element.account_type === 6 || element.account_type === 7) {
+                            } else if (element.account_type === 6) {
                                 acctype = 'LinkedIn';
                             } else if (element.account_type === 8 || element.account_type === 10) {
                                 acctype = 'Google';
                             } else if (element.account_type === 9) {
                                 acctype = 'Youtube';
-                            } else {
+                            }
+                            else if (element.account_type === 7) {
+                                acctype = 'LinkedIn page';
+                            }
+                            else if (element.account_type === 12) {
+                                acctype = 'Instagram Business';
+                            }
+                            else {
                                 acctype = 'Pinterest';
                             }
                             return {
@@ -195,11 +215,13 @@ var SBKanbanBoard = function () {
                         });
                     }
                     if (response.leftFromTeamDatas.length > 0) {
+                        let profilepic;
                         leftFromTeamDatas = response.leftFromTeamDatas.map(element => {
+                            profilepic = element.profile_picture;
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic = '../' + element.profile_picture;
+                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -294,7 +316,17 @@ var SBKanbanBoard = function () {
                                     window.location.reload();
                                 }
                             });
-                        } else if (response.code === 500) {
+                        }
+                        else if (response.code === 501) {
+                            toastr.info(response.message, 'warning', {
+                                timeOut: 2000,
+                                fadeOut: 2000,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            });
+                        }
+                        else if (response.code === 500) {
                             toastr.error(response.message, '!!error', {
                                 timeOut: 2000,
                                 fadeOut: 2000,

@@ -49,6 +49,7 @@ class HistoryController extends Controller
         $twitterAccountsIds = [];
         $facebookAccountsIds = [];
         $linkedInAccountsIds = [];
+        $instagramAccountsIds = [];
         if(!empty($socialAccounts)){
             foreach ($socialAccounts as $k => $v) {
                 foreach ($v as $key => $value) {
@@ -59,6 +60,8 @@ class HistoryController extends Controller
                             $facebookAccountsIds [] = $val->account_id;
                         } else if ($k == 'linkedin') {
                             $linkedInAccountsIds [] = $val->account_id;
+                        }else if ($k === 'instagram') {
+                            $instagramAccountsIds [] = $val->account_id;
                         }
                     }
                 }
@@ -131,6 +134,8 @@ class HistoryController extends Controller
                                 'twitterAccountsIds' => $twitterAccountsIds,
                                 'facebookAccountsIds' => $facebookAccountsIds,
                                 'linkedInAccountsIds' => $linkedInAccountsIds,
+                                'instagramAccountsIds' => $instagramAccountsIds,
+                                'page_title' => $request->slug
                             ])->render();
                     return response()->json([
                         'html' => $html,
@@ -177,10 +182,11 @@ class HistoryController extends Controller
                                     $socialAccounts['twitter']['account'][] = $account;
                                     break;
                                 case 6:
-                                    $socialAccounts['linkedin']['personal account'][] = $account;
-                                    break;
                                 case 7:
-                                    $socialAccounts['linkedin']['business account'][] = $account;
+                                    $socialAccounts['linkedin']['account'][] = $account;
+                                    break;
+                                case 12:
+                                    $socialAccounts['instagram']['business account'][] = $account;
                                     break;
                             }
                         }

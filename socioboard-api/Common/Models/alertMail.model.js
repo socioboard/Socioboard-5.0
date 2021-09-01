@@ -21,6 +21,7 @@ class AlertMailLibs {
                     [Operator.and]: [{
                         account_expire_date: {
                             [Operator.lt]: moment().add(3, 'days').startOf('day'),
+                            [Operator.gt]: moment.now()
                         }
                     }]
                 },

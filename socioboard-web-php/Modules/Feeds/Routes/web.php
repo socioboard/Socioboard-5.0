@@ -13,11 +13,12 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Feeds\Http\Controllers\FeedsController;
 
-Route::group(['module' => 'team', 'middleware' => ['authenticateUser']], function () {
+Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPlanExpiry']], function () {
     Route::get('feeds/{network}', 'FeedsController@getFeedsSocialAccounts');
-    Route::get('get-Next-Twitter-feeds', 'FeedsController@getNextTwitterFeeds');
-    Route::get('get-Next-youtube-feeds', 'FeedsController@getNextYoutubeFeeds');
-    Route::get('get-Next-instgram-feeds', 'FeedsController@getNextInstagramFeeds');
+    Route::get('get-next-twitter-feeds', 'FeedsController@getNextTwitterFeeds');
+    Route::get('get-next-youtube-feeds', 'FeedsController@getNextYoutubeFeeds');
+    Route::get('get-next-instgram-feeds', 'FeedsController@getNextInstagramFeeds');
+    Route::get('get-next-linkedIn-feeds', 'FeedsController@getNextLinkedInFeeds');
     Route::post('dislike-tweet', 'FeedsController@disLikeTheTweet');
     Route::post('like-tweet', 'FeedsController@LikeTheTweet');
     Route::post('comment-on-tweet', 'FeedsController@commentOnTweet');
@@ -28,5 +29,5 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser']], functio
     Route::post('dislike-fb-feed', 'FeedsController@disLikeFbFeed');
     Route::post('like-fb-feed', 'FeedsController@likeFbFeed');
     Route::post('comment-fb-feed', 'FeedsController@commentFbFeed');
-    Route::get('get-Next-facebook-feeds', 'FeedsController@getNextFacebookFeeds');
+    Route::get('get-next-facebook-feeds', 'FeedsController@getNextFacebookFeeds');
 });

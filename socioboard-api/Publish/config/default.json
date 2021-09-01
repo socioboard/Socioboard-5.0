@@ -1,0 +1,66 @@
+{
+  "title": "SocioBoard 5.0 Dev",
+  "version": "1.0.0",
+  "lang": "en",
+  "description": "To describe a RESTful API for SocioBoard",
+  "applicationName": "SocioBoard",
+  "teamDescription": "SocioBoard team has been created automatically by the application.",
+  "perPageLimit": 12,
+  "maximumTrialPeriod": 1,
+  "app_url": "https://app.socioboard.globusdemos.com/user-login",
+  "app_resetpw_url": "https://app.socioboard.globusdemos.com/resetUserPassword",
+  "user_socioboard": {
+    "title": "SocioBoard - User Services",
+    "version": "1.0.0",
+    "description": "To describe a RESTful API of user services such as unauthorized, authorized and team management",
+    "applicationName": "SocioBoard"
+  },
+  "uploadService": {
+    "image_path": "../../media/images",
+    "video_path": "../../media/videos",
+    "thumbnail_path": "../../media/thumbnails",
+    "library_path": "public/library",
+    "ss_template_path": "../../media/ssTemplates",
+    "assert": "public/asserts/play.png",
+    "max_size": 20971520,
+    "max_size_private": 20971520,
+    "max_size_public": 20971520,
+    "basePath": "../../media"
+  },
+  "insta_media_url": "https://localhost:3002",
+  "insta_image_url": "https://localhost:3002/images/",
+  "insta_base_path": "../../media",
+  "insta_store_path": "../../media/images/",
+  "facebook_api": {
+    "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+    "profile_scopes": "email",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "4.0.0",
+    "maximum_post_per_day": 730
+  },
+  "google_api": {
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+    "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
+    "ganalytics_activeuser_metrics": "rt:activeUsers",
+    "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
+    "ganalytics_page_detail_metrics": "ga:sessions,ga:pageviews",
+    "version": "4.0.0",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "linkedIn_api" : {
+    "maximum_post_per_day": 100
+  },
+  "instagram": {
+    "business_account_scopes": "instagram_basic,instagram_manage_comments,instagram_manage_insights"
+  },
+  "pinterest": {
+    "scopes": "read_relationships+write_relationships+read_public+write_public"
+  },
+  "mail_services_environments": ["production", "development"],
+  "profile_url_assert": "/asserts/profiles.png",
+  "user_base_plan": 0,
+  "expire_month": 1,
+  "youTube_upload_count_per_24hrs": 5
+}

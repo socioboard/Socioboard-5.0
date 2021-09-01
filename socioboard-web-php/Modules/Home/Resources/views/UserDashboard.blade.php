@@ -23,7 +23,7 @@
         </script>
     @endif
     <script>
-        window.getCookie = function(name) {
+        window.getCookie = function (name) {
             let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
             if (match) return match[2];
         };
@@ -31,11 +31,11 @@
         localStorage.setItem('browser_id', '<?php echo(session()->get('user')['userDetails']['user_name']);?>');
         localStorage.setItem('random_key', '<?php echo(session()->get('user')['userDetails']['password']);?>');
 
-        if(window.getCookie('SBPlan')) {
+        if (window.getCookie('SBPlan')) {
             document.cookie = 'SBPlan=; Path=/;path=/;domain=socioboard.com; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             window.location.href = "https://appv5.socioboard.com/amember/member";
         }
-    //    Check if plan is clicked or not
+        //    Check if plan is clicked or not
     </script>
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
 
@@ -94,7 +94,7 @@
                             <!--begin::Body-->
                             <div class="card-body position-relative overflow-hidden">
                                 <i class="far fa-clock fa-3x"></i>
-                                <h4 class="mt-3 font-weight-bolder"><?php if (isset(session()->get('user')['userDetails']['userPlanDetails']['plan_name'])) echo session()->get('user')['userDetails']['userPlanDetails']['plan_name']; else  echo 'N/A' ?>
+                                <h4 class="mt-3 font-weight-bolder"><?php if (isset(session()->get('user')['userDetails']['userPlanDetails']['plan_name'])) echo session()->get('user')['userDetails']['userPlanDetails']['plan_name']; else  echo '-' ?>
                                     Plan</h4>
                                 <p id="account_expire_date_id"></p>
                             </div>
@@ -403,7 +403,7 @@
                             <!--end::Header-->
 
                             <!--begin::Body-->
-                            <div class="card-body pt-2 position-relative overflow-hidden">
+                            <div class="card-body pt-2 position-relative">
                                 <button data-toggle="modal" data-target="#addAccountsModal"
                                         class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12">
                                     Add Accounts
@@ -433,7 +433,7 @@
                                                         id="AddAccountsTab"
                                                         role="tablist">
                                                         <li class="nav-item">
-                                                            <a class="nav-link active"
+                                                            <a class="nav-link"
                                                                id="facebook-tab-accounts"
                                                                data-toggle="tab"
                                                                href="#facebook-add-accounts">
@@ -599,7 +599,6 @@
 
                                                                 </div>
                                                             @endif
-
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="twitter-add-accounts"
@@ -634,10 +633,75 @@
                                                                 <a href="/add-accounts/Instagram" type="button"
                                                                    class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
                                                                     a Instagram Profile</a>
-                                                                {{--                                                                                                                            <a href="#" type="button"--}}
-                                                                {{--                                                                                                                               class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                                                {{--                                                                                                                                a Business Account</a>--}}
+                                                                <a href="/add-accounts/InstagramBusiness" type="button"
+                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                    a Business Account</a>
                                                             </div>
+                                                            @if($instagrampages === 1)
+                                                                <div class="mt-3 insta_page_div" style="display: none;">
+                                                                    <span>Choose Instagram business accounts for posting</span>
+                                                                    <div class="scroll scroll-pull" data-scroll="true"
+                                                                         data-wheel-propagation="true"
+                                                                         style="height: 200px; overflow-y: scroll;">
+                                                                    @for($i=0; $i<count(session()->get('instagramPages')); $i++)                                                                        <!--begin::Page-->
+                                                                        <div class="d-flex align-items-center flex-grow-1">
+                                                                            <!--begin::Facebook Fanpage Profile picture-->
+                                                                            <div class="symbol symbol-45 symbol-light mr-5">
+
+
+                                                <span class="symbol-label">
+                                                    <img src="{{session()->get('instagramPages')[$i]->profile_pic}}"
+                                                         class="h-50 align-self-center" alt=""/>
+                                                </span>
+                                                                            </div>
+                                                                            <!--end::Facebook Fanpage Profile picture-->
+                                                                            <!--begin::Section-->
+                                                                            <div
+                                                                                    class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                                                                <!--begin::Info-->
+                                                                                <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                                                                    <!--begin::Title-->
+                                                                                    <a href="https://www.instagram.com/{{session()->get('instagramPages')[$i]->userName}}"
+                                                                                       class="font-weight-bold text-hover-primary font-size-lg mb-1">
+                                                                                        {{session()->get('instagramPages')[$i]->userName}}
+                                                                                    </a>
+                                                                                    <!--end::Title-->
+
+                                                                                    <!--begin::Data-->
+                                                                                    <span class="text-muted font-weight-bold">
+                                                        {{session()->get('instagramPages')[$i]->fanCount}} followers
+                                                    </span>
+                                                                                    <!--end::Data-->
+                                                                                </div>
+                                                                                <!--end::Info-->
+                                                                            </div>
+                                                                            <!--end::Section-->
+                                                                            <!--begin::Checkbox-->
+                                                                            @if(session()->get('instagramPages')[$i]->isAlreadyAdded===false)
+                                                                                <div
+                                                                                        class="custom-control custom-checkbox"
+                                                                                        id="checkboxes3">
+                                                                                    <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4"
+                                                                                           for="{{session()->get('instagramPages')[$i]->social_id}}">
+                                                                                        <input type="checkbox"
+                                                                                               id="{{session()->get('instagramPages')[$i]->social_id}}"
+                                                                                               name="{{session()->get('instagramPages')[$i]->userName}}">
+                                                                                        <span></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        @endfor
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <a href="javascript:;" type="button"
+                                                                           id="checkedPages2"
+                                                                           class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Submit
+                                                                            for adding Instgram Business accounts</a>
+                                                                    </div>
+
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="linkedin-add-accounts"
@@ -651,12 +715,69 @@
                                                                    type="button"
                                                                    class="btn btn-linkedin font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
                                                                     a LinkedIn Profile</a>
-                                                                {{--                                                                <a href="#" type="button"--}}
-                                                                {{--                                                                   class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                                                {{--                                                                    a Company Profile</a>--}}
-
+                                                                <a href="/add-accounts/LinkedInCompany" type="button"
+                                                                   class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                    a LinkedIn page</a>
                                                             </div>
+                                                            @if($LinkedInpages === 1)
+                                                                <div class="mt-3 linkedIn_Pages_div" style="display: none;">
+                                                                    <span>Choose LinkedIN pages accounts for posting</span>
+                                                                    <div class="scroll scroll-pull" data-scroll="true"
+                                                                         data-wheel-propagation="true"
+                                                                         style="height: 200px; overflow-y: scroll;">
+                                                                    @for($i=0; $i<count(session()->get('LinkedInpages')); $i++)                                                                        <!--begin::Page-->
+                                                                        <div class="d-flex align-items-center flex-grow-1">
+                                                                            <!--begin::Facebook Fanpage Profile picture-->
+                                                                            <div class="symbol symbol-45 symbol-light mr-5">
 
+
+                                                <span class="symbol-label">
+                                                    <img src="{{session()->get('LinkedInpages')[$i]->profilePicture}}"
+                                                         class="h-50 align-self-center" alt=""/>
+                                                </span>
+                                                                            </div>
+                                                                            <!--end::Facebook Fanpage Profile picture-->
+                                                                            <!--begin::Section-->
+                                                                            <div
+                                                                                    class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                                                                <!--begin::Info-->
+                                                                                <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                                                                    <!--begin::Title-->
+                                                                                    <a href="{{session()->get('LinkedInpages')[$i]->profileUrl}}"
+                                                                                       class="font-weight-bold text-hover-primary font-size-lg mb-1">
+                                                                                        {{session()->get('LinkedInpages')[$i]->companyName}}
+                                                                                    </a>
+                                                                                    <!--end::Title-->
+                                                                                </div>
+                                                                                <!--end::Info-->
+                                                                            </div>
+                                                                            <!--end::Section-->
+                                                                            <!--begin::Checkbox-->
+                                                                            @if(session()->get('LinkedInpages')[$i]->isAlreadyAdded === false)
+                                                                                <div
+                                                                                        class="custom-control custom-checkbox"
+                                                                                        id="checkboxes4">
+                                                                                    <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4"
+                                                                                           for="{{session()->get('LinkedInpages')[$i]->companyId}}">
+                                                                                        <input type="checkbox"
+                                                                                               id="{{session()->get('LinkedInpages')[$i]->companyId}}"
+                                                                                               name="{{session()->get('LinkedInpages')[$i]->companyName}}">
+                                                                                        <span></span>
+                                                                                    </label>
+                                                                                </div>
+                                                                            @endif
+                                                                        </div>
+                                                                        @endfor
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-center">
+                                                                        <a href="javascript:;" type="button"
+                                                                           id="checkedPages3"
+                                                                           class="btn btn-linkedin font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Submit
+                                                                            for adding LinkedIN pages</a>
+                                                                    </div>
+
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="youtube-add-accounts"
@@ -733,19 +854,14 @@
                                                             locked
                                                         </div>
                                                         @else
-                                                            <div class="d-flex align-items-center flex-wrap mb-5 mt-5">
+                                                            <div class="d-flex align-items-center flex-wrap mb-5 mt-5" id="accountsSection{{$account->account_id}}">
                                                             @endif
                                                             <!--begin::profile pic-->
                                                                 <div class="symbol symbol-50 symbol-light mr-5">
 
                                                     <span class="symbol-label">
-                                                        @if($account->account_type === 5 )
-                                                            <img src="https://cdn2.vectorstock.com/i/thumb-large/11/11/man-avatar-flat-style-icon-vector-30501111.jpg"
-                                                                 class="h-100 align-self-center" alt="avatar name"/>
-                                                        @else
                                                             <img src="{{$account->profile_pic_url}}"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
-                                                        @endif
                                                     </span>
                                                                 </div>
                                                                 <!--end::profile pic-->
@@ -777,27 +893,57 @@
                                                                     @elseif($account->account_type === 5 )
                                                                         <span
                                                                                 class="text-muted font-weight-bold">Instagram</span>
-                                                                    @elseif($account->account_type === 6 || $account->account_type === 7 )
+                                                                    @elseif($account->account_type === 6 )
                                                                         <span
-                                                                                class="text-muted font-weight-bold">LinkedIN</span>
+                                                                                class="text-muted font-weight-bold">LinkedIn</span>
+                                                                        @elseif($account->account_type === 7 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">LinkedIn page</span>
                                                                     @elseif($account->account_type === 9 )
                                                                         <span
                                                                                 class="text-muted font-weight-bold">Youtube</span>
                                                                     @elseif($account->account_type === 8 || $account->account_type === 10 )
                                                                         <span
                                                                                 class="text-muted font-weight-bold">Google</span>
-                                                                    @else
+                                                                    @elseif( $account->account_type === 12 )
                                                                         <span
-                                                                                class="text-muted font-weight-bold">Pinterest</span>
+                                                                                class="text-muted font-weight-bold">Instagram Business</span>
 
                                                                     @endif
                                                                 </div>
                                                                 <!--end::Text-->
                                                                 @if($account->join_table_teams_social_accounts->is_account_locked === false)
-                                                                    <a href="{{$account->profile_url}}" target="_blank"
-                                                                       id="connectedButton" title="View Profile"
-                                                                       class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                        Connected</a>
+                                                                    @if($account->account_type === 2 || $account->account_type === 1)
+                                                                        <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
+                                                                           target="_blank"
+                                                                           id="connectedButton" title="View Profile"
+                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Connected</a>
+                                                                    @elseif($account->account_type === 9)
+                                                                        <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
+                                                                           target="_blank"
+                                                                           id="connectedButton" title="View Profile"
+                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Connected</a>
+                                                                    @elseif($account->account_type === 4)
+                                                                        <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
+                                                                           target="_blank"
+                                                                           id="connectedButton" title="View Profile"
+                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Connected</a>
+                                                                    @elseif($account->account_type === 5)
+                                                                        <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
+                                                                           target="_blank"
+                                                                           id="connectedButton" title="View Profile"
+                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Connected</a>
+                                                                    @else
+                                                                        <a href="{{$account->profile_url}}"
+                                                                           target="_blank"
+                                                                           id="connectedButton" title="View Profile"
+                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Connected</a>
+                                                                    @endif
                                                                 @else
                                                                     <a
                                                                             class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
@@ -1030,7 +1176,7 @@
                                         <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true"
                                              style="max-height: 320px;overflow-y: scroll;">
                                             <div class="table-responsive">
-                                                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                                                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center history_publishing_mobile">
                                                     <tbody>
                                                     @foreach($scheduleHistory['data']->postContents as $item)
                                                         <tr>
@@ -1038,11 +1184,11 @@
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="symbol symbol-50 flex-shrink-0 mr-4">
                                                                         <div class="symbol-label">
-                                                                            @if($item->postType == "Image")
+                                                                            @if($item->postType == "Image" && $item->mediaUrl !== [])
                                                                                 <img src="{{env('API_URL_PUBLISH').$item->mediaUrl[0]}}"
                                                                                      alt=""
                                                                                      style="height: inherit; width: inherit; object-fit: contain;">
-                                                                            @elseif($item->postType == "Video")
+                                                                            @elseif($item->postType == "Video" && $item->mediaUrl !== [])
                                                                                 <video style="object-fit: contain;height: inherit; width: inherit;"
                                                                                        autoplay muted>
                                                                                     <source src="{{env('API_URL_PUBLISH').$item->mediaUrl[0]}}">
@@ -1053,9 +1199,10 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
-                                                                    <div>
+                                                                    <div class="history_publishing">
                                                                         <a href="#"
                                                                            class="font-weight-bolder text-hover-primary mb-1 font-size-lg">Post
+                                                                            :
                                                                             {{$item->description}}</a>
                                                                     </div>
                                                                 </div>
@@ -1129,25 +1276,7 @@
 
 @section('scripts')
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="../plugins/daterangepicker/moment.min.js"></script>
-    <script src="../plugins/daterangepicker/moment-timezone-with-data.js"></script>
     <script>
-
-        //  Plan Details Start ****
-        let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        let expire_date = '<?php echo(session()->get('user')['userDetails']['Activations']['account_expire_date']);?>';
-        let plan_name = '<?php echo(session()->get('user')['userDetails']['userPlanDetails']['plan_name']);?>';
-        let current_date = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
-        let user_expire_date = moment(expire_date).tz(timezone).format('YYYY-MM-DD');
-
-        let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
-        let firstDate = new Date(current_date);
-        let secondDate = new Date(user_expire_date);
-        let diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-        $('#account_expire_date_id').empty().append((plan_name == "Basic") ? "Free" : diffDays + ' Days remaining!!');
-
-        //  Plan Details End ****
-
         function lock(id, type, acctype) {
             var data = id;
             if (type == 1) {
@@ -1227,9 +1356,19 @@
             }
         }
 
+        //  Plan Details Start ****
+        let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        let expire_date = '<?php echo(session()->get('user')['userDetails']['Activations']['account_expire_date']);?>';
+        let plan_name = '<?php echo(session()->get('user')['userDetails']['userPlanDetails']['plan_name']);?>';
+        let current_date = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+        let user_expire_date = moment(expire_date).tz(timezone).format('YYYY-MM-DD');
+        let oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        let firstDate = new Date(current_date);
+        let secondDate = new Date(user_expire_date);
+        let diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+        $('#account_expire_date_id').empty().append(diffDays + ' Days remaining');
 
-        // delete account
-
+        //  Plan Details End ****
 
         function getScheduledReports(timeInterval) {
             $.ajax({
@@ -1327,6 +1466,11 @@
                             xaxis: {
                                 tooltip: {
                                     enabled: false
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '8px'
+                                    }
                                 }
                             },
                             legend: {
@@ -1438,6 +1582,17 @@
 
         function displayFacebookPages() {
             $(".fb_page_div").css("display", "block");
+            $("#facebook-tab-accounts").trigger("click");
+        }
+
+        function displayInstagramPages() {
+            $(".insta_page_div").css("display", "block");
+            $("#instagram-tab-accounts").trigger("click");
+        }
+
+        function displayLinkedInPages() {
+            $(".linkedIn_Pages_div").css("display", "block");
+            $("#linkedin-tab-accounts").trigger("click");
         }
 
         function selectDateStats(data) {
@@ -1504,6 +1659,92 @@
                     }
                 });
             });
+            $("#checkedPages2").click(function () {
+                var selected = [];
+                $('#checkboxes3 input:checked').each(function () {
+                    selected.push($(this).attr('name'));
+                });
+                $.ajax({
+                    url: "/instagramPageAdd",
+                    type: 'POST',
+                    data: {
+                        "pages": selected,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if (response.code === 200) {
+                            if (response.errorIds.length !== 0) {
+                                $('#addAccountsModal').modal('hide')
+                                Swal.fire({
+                                    icon: 'warning',
+                                    text: "Could not add Instagram Business as " + response.errorIds + "... Already added!!",
+                                });
+                            } else {
+                                toastr.success("Instagram Business accounts added successfully!");
+                                $('#addAccountsModal').modal('hide')
+                                document.location.href = '{{env('APP_URL')}}dashboard';
+                            }
+                        } else if (response.code == 400) {
+                            $('#addAccountsModal').modal('hide')
+                            toastr.error(response.message);
+                        } else if (response.code == 500) {
+                            $('#addAccountsModal').modal('hide')
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        toastr.error("Something went wrong.. Not able to add the accounts.")
+//                    $('#error').text("Something went wrong.. Not able to create team");
+                    }
+                });
+            });
+            $("#checkedPages3").click(function () {
+                var selected = [];
+                $('#checkboxes4 input:checked').each(function () {
+                    selected.push($(this).attr('name'));
+                });
+                $.ajax({
+                    url: "/linkedInPageAdd",
+                    type: 'POST',
+                    data: {
+                        "pages": selected,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if (response.code === 200) {
+                            if (response.errorIds.length !== 0) {
+                                $('#addAccountsModal').modal('hide')
+                                Swal.fire({
+                                    icon: 'warning',
+                                    text: "Could not add LinkedIn pages as " + response.errorIds + "... Already added!!",
+                                });
+                            } else {
+                                toastr.success("LinkedIn pages added successfully!");
+                                $('#addAccountsModal').modal('hide')
+                                document.location.href = '{{env('APP_URL')}}dashboard';
+                            }
+                        } else if (response.code == 400) {
+                            $('#addAccountsModal').modal('hide')
+                            toastr.error(response.message);
+                        } else if (response.code == 500) {
+                            $('#addAccountsModal').modal('hide')
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function (error) {
+                        toastr.error("Something went wrong.. Not able to add the accounts.")
+//                    $('#error').text("Something went wrong.. Not able to create team");
+                    }
+                });
+            });
         });
 
         $('#calendarPost,#scheduledPost,#name,#connectedButton,#quick_actions').tooltip();
@@ -1516,37 +1757,35 @@
                 dataType: 'json',
                 success: function (response) {
                     if (response.code === 200) {
+                        $('div#accountsSection' + id).remove();
                         if (type === '2') {
-                            toastr.success("Page Deleted Successfully", "", {
-                                timeOut: 2000,
-                                fadeOut: 3000,
-                                onHidden: function () {
-                                    window.location.reload();
-                                }
-                            });
+                            toastr.success("Page Deleted Successfully");
                         } else {
-                            toastr.success("Account Deleted Successfully", "", {
-                                timeOut: 2000,
-                                fadeOut: 3000,
-                                onHidden: function () {
-                                    window.location.reload();
-                                }
-                            });
+                            toastr.success("Account Deleted Successfully");
                         }
                     } else if (response.code === 400) {
                         toastr.error(response.message, "Unable to delete Account");
                     } else {
-                        toastr.error('Some error occured', "Unable to delete Account");
+                        toastr.error('Some error occurred', "Unable to delete Account");
                     }
                 }
             });
         }
 
-        $fbp =
-        {{$facebookpages}}
+        $fbp = {{$facebookpages}}
+            $inp = {{$instagrampages}}
+            $linp = {{$LinkedInpages}}
         if ($fbp === 1) {
             $('#addAccountsModal').modal('show');
             displayFacebookPages();
+        }
+        if ($inp === 1) {
+            $('#addAccountsModal').modal('show');
+            displayInstagramPages();
+        }
+        if ($linp === 1) {
+            $('#addAccountsModal').modal('show');
+            displayLinkedInPages();
         }
         $('#calendarPost,#scheduledPost').tooltip();
 
@@ -1554,4 +1793,3 @@
 
 
 @endsection
-

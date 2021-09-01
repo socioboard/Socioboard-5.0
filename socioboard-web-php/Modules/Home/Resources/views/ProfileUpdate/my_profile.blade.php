@@ -45,9 +45,14 @@
                                         <i class="symbol-badge bg-success"></i>
                                     </div>
                                     <div>
-                                        <a class="font-weight-bolder font-size-h5" id="user_name_append">
+                                        <a id="user_name_append" class="text-truncate font-weight-bolder font-size-h5 text-hover-primary">
                                             <?php if (isset($getProfileData['data']->user->first_name)) {
                                                 echo $getProfileData['data']->user->first_name;
+                                            }?>
+                                        </a>
+                                                <a id="last_name_append" class="text-truncate font-weight-bolder font-size-h5 text-hover-primary">
+                                            <?php if ((isset($getProfileData['data']->user->last_name)) && ($getProfileData['data']->user->last_name != "nil")) {
+                                                echo $getProfileData['data']->user->last_name;
                                             }?>
                                         </a>
                                         <div class="">
@@ -110,6 +115,8 @@
                                                             </span>
                                             </a>
                                         </li>
+                                        <?php if (isset($getProfileData['data']->user->Activations->signup_type) && ($getProfileData['data']->user->Activations->signup_type === 0)) {
+                                        ?>
                                         <li class="nav-item">
                                             <a class="nav-link py-4" id="change-passwd-tab" data-toggle="tab"
                                                href="#change-passwd" aria-controls="change-passwd">
@@ -119,10 +126,11 @@
                                                                 </span>
                                                             </span>
                                                 <span class="navi-text font-size-lg">
-                                                                Change Passwort
+                                                                Change Password
                                                             </span>
                                             </a>
                                         </li>
+                                        <?php } ?>
                                         {{--                                        upcoming feature--}}
                                         {{--                                        <li class="nav-item">--}}
                                         {{--                                            <a class="nav-link py-4" id="email-settings-tab" data-toggle="tab" href="#email-settings"  aria-controls="email-settings" >--}}
@@ -517,9 +525,9 @@
                                                         <span><a href="javascript:;"
                                                                  onclick="currentPasswordHideShow();"><i
                                                                     class="fas fa-eye-slash toggle-password"></i></a></span>
-                                                        <div class="error text-danger"
-                                                             id="current_password_Error"></div>
                                                     </div>
+                                                    <div class="error text-danger"
+                                                         id="current_password_Error"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -533,8 +541,8 @@
                                                                placeholder="New password"/>
                                                         <span><a href="javascript:;" onclick="newPasswordHideShow();"><i
                                                                     class="fas fa-eye-slash toggle-password"></i></a></span>
-                                                        <div class="error text-danger" id="new_password_Error"></div>
                                                     </div>
+                                                    <div class="error text-danger" id="new_password_Error"></div>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -549,9 +557,9 @@
                                                         <span><a href="javascript:;"
                                                                  onclick="conformPasswordHideShow();"><i
                                                                     class="fas fa-eye-slash toggle-password"></i></a></span>
-                                                        <div class="error text-danger"
-                                                             id="conform_password_Error"></div>
                                                     </div>
+                                                    <div class="error text-danger"
+                                                         id="conform_password_Error"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -793,7 +801,6 @@
 <script src="../plugins/custom/intl-tel-input/build/js/intlTelInput.js"></script>
 
 <script>
-
         <?php
         function SquareProfilePicAppend($pic)
         {

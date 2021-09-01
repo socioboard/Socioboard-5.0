@@ -46,7 +46,7 @@
                         @if(count($accounts['data']) !== 0)
                             @foreach ($accounts['data'] as $account )
 
-                                <div class="col-xl-3">
+                                <div class="col-xl-3" id="board{{$account->id}}">
                                     <!--begin::Borad-->
                                     <div class="card card-custom p-2 mb-8 mb-lg-0">
                                         <div class="card-body">
@@ -324,13 +324,8 @@
                 },
                 success: function (response) {
                     if (response['code'] === 200) {
-                        toastr.success("", "Board Deleted Successfully!", {
-                            timeOut: 1000,
-                            fadeOut: 1000,
-                            onHidden: function () {
-                                window.location.reload();
-                            }
-                        })
+                        toastr.success("", "Board Deleted Successfully!");
+                        $('#board'+id).remove();
                     } else if (response['code'] === 400) {
                         toastr.error(response.error);
                     } else {

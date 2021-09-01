@@ -1,0 +1,103 @@
+{
+    "user_socioboard": {
+      "host_url": "http://localhost:3000"
+    },
+    "swagger_host_url": "localhost:3002",
+    "publish_socioboard": {
+      "mail_url": "https://localhost:3002",
+      "host_url": "http://localhost:3002",
+      "port": "3002",
+      "host": "localhost:3002"
+    },
+    "profile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+    "facebook_api": {
+      "app_id": "<< APP ID >>",
+      "secret_key": "<< APP SECRET >>",
+      "redirect_url": "https://local.socioboard.com/facebook-callback",
+      "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback"
+    },
+    "google_api": {
+      "client_id": "<< APP CLIENT ID >>",
+      "client_secrets": "<< CLIENT SECRET >>",
+      "redirect_url": "https://local.socioboard.com/google-callback",
+      "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+      "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+      "api_key": "<< API KEY >>",
+      "dynamic_link": "https://socionode.page.link",
+      "youtube_webhook_url": "http://localhost:6002/v1/webhooks/youtube"
+    },
+    "github_api": {
+      "client_id": "<< APP CLIENT ID >>",
+      "client_secret": "<< CLIENT SECRET >>",
+      "redirect_url": "https://local.socioboard.com/github-callback"
+    },
+    "twitter_api": {
+      "api_key": "<< APP KEY >>",
+      "secret_key": "<< CLIENT SECRET >>",
+      "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+      "redirect_url": "https://local.socioboard.com/twitter/callback",
+      "app_name": "<< App Name >>",
+      "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+      "webhook_environment": "development",
+      "version": "5.0.0",
+      "maximum_post_per_day": 730
+    },
+    "linkedIn_api": {
+      "client_id": "<< APP CLIENT ID >>",
+      "client_secret": "<< CLIENT SECRET >>",
+      "redirect_url": "https://local.socioboard.com/linkedin/callback"
+    },
+    "jest": {
+      "access_token": "<< JEST ACCESS TOKEN >>"
+    },
+    "authorize": {
+      "secret": "<< RANDOM SECRET >>",
+      "token_secret": "<< RANDOM TOKEN >>",
+      "algorithm": "aes-256-cbc",
+      "encoding_typeOne": "utf8",
+      "encoding_typeTwo": "hex"
+    },
+    "analytics": {
+      "tracking_id": "<< Google Analytics ID >>",
+      "view_id": "<< google View ID >>",
+      "ganalytics_service_email": "<< Google services email >>",
+      "ganalytics_private_key": "<< Google Private Key >>"
+    },
+    "mailTitles": {
+      "activation_link": "Dev - Activation link",
+      "Invitation_user": "Dev - Invitation from SocioBoard to Add Account",
+      "forgot_password_request": "Dev - Reset Password",
+      "payment_invoice": "Dev - Payment Invoice"
+    },
+    "mailService": {
+      "defaultMailOption": "sendgridapi",
+      "sendgrid": {
+        "username": "<< Sendgrid username >>",
+        "password": "<< Sendgrid Password >>",
+        "frommail": "<< From Mail >>",
+        "ccmail": "<< Any CC Mail >>",
+        "apiKey": "<< SEND-GRID TOKEN >>"
+      },
+      "gmailServices": {
+        "email": "<< Google email >>",
+        "password": "<< Google email Password >>"
+      }
+    },
+    "mysql": {
+      "host": "localhost",
+      "username": "<< username >>",
+      "database": "<< Database name >>",
+      "password": "<< Database password >>"
+    },
+    "mongo": {
+      "username": "<< username >>",
+      "password": "<< Database password >>",
+      "host": "<< host >>",
+      "db_name": "<< Database name >>"
+    },
+     "notification_socioboard": {
+      "status": "on",
+      "host_url": "https://localhost:3003"
+    }
+  }
+  

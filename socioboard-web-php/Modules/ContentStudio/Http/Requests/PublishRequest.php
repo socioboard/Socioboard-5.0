@@ -14,7 +14,8 @@ class PublishRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => 'required|string|max:140',
+//            'content' => 'required|string|max:140',
+            'content' => 'required|string',
             'outgoingUrl' => 'nullable|url',
             'socialAccount' => 'required', 
         ];

@@ -115,11 +115,11 @@
 
 <table style="border:none">
   <tr>
-  <td style="border:none;text-align:left;font-size:14px;font-weight:bold"> •	User Micro Service – NODE PORT 3001 <br/>
-  •	Feeds Micro Service – NODE PORT 3002 <br/>
-  •	Publish Micro Service – NODE PORT 3003 <br/>
-  •	Update Micro Service – NODE PORT 3004 <br/>
-  •	Notification Micro Service – NODE PORT 3005 
+  <td style="border:none;text-align:left;font-size:14px;font-weight:bold"> •	User Micro Service – NODE PORT 3000 <br/>
+  •	Feeds Micro Service – NODE PORT 3001 <br/>
+  •	Publish Micro Service – NODE PORT 3002 <br/>
+  •	Update Micro Service – NODE PORT 3003 <br/>
+  •	Notification Micro Service – NODE PORT 3004 
     </td> 
     <td style="border:none;text-align:left;margin-top:0px;font-size:14px;font-weight:bold"> •	Web Application SERVICEs Types <br/>
     •	http://local.socioboard.com/ <span style="background-color:yellow">by v-host</span> <br/>

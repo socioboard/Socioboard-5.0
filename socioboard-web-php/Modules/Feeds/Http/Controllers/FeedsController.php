@@ -43,7 +43,9 @@ class FeedsController extends Controller
         $fbAccs = [];
         $fballAccs = [];
         $youtubeAccounts = [];
+        $linkedInAccounts = [];
         $instagramAccounts = [];
+        $instagramBusinessAccounts = [];
         if (strpos($network, 'twitter') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
@@ -66,10 +68,7 @@ class FeedsController extends Controller
                             }
                             if (count($twitterAccounts) > 0) {
                                 foreach ($twitterAccounts as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                             $feedsData = $this->getTwitterFeeds($accId);
@@ -119,10 +118,7 @@ class FeedsController extends Controller
                             }
                             if (count($fbPages) > 0) {
                                 foreach ($fbPages as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                         } else {
@@ -143,10 +139,7 @@ class FeedsController extends Controller
                             }
                             if (count($fbAccs) > 0) {
                                 foreach ($fbAccs as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                         } else {
@@ -168,10 +161,7 @@ class FeedsController extends Controller
                             }
                             if (count($fballAccs) > 0) {
                                 foreach ($fballAccs as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                         } else {
@@ -215,10 +205,7 @@ class FeedsController extends Controller
                             }
                             if (count($youtubeAccounts) > 0) {
                                 foreach ($youtubeAccounts as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                         } else {
@@ -239,8 +226,7 @@ class FeedsController extends Controller
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
                 return view('feeds::youtube_feeds')->with(['message' => 'failed']);
             }
-        }
-        else if (strpos($network, 'instagram') !== false) {
+        } else if (strpos($network, 'instagram') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -251,7 +237,7 @@ class FeedsController extends Controller
                         }
                     }
                     if (count($instagramAccounts) > 0) {
-                        if (preg_match('~[0-9]+~', $network)) {//it will check if the network variable has numeric digits or not
+                        if (preg_match('~[0-9]+~', $network)) {
                             $accId = (integer)substr($network, 9, strlen($network));
                             for ($i = 0; $i < count($instagramAccounts); $i++) {
                                 if ($instagramAccounts[$i]->account_id === $accId) {
@@ -262,30 +248,111 @@ class FeedsController extends Controller
                             }
                             if (count($instagramAccounts) > 0) {
                                 foreach ($instagramAccounts as $data) {
-                                    array_push($updatedAccounts, $data);
-                                }
-                                for ($j = 0; $j < count($updatedAccounts); $j++) {
-                                    array_push($accounts, $updatedAccounts[$j]);
+                                    array_push($accounts, $data);
                                 }
                             }
                         } else {
-                            $accounts = $instagramAccounts;
                             $accId = $instagramAccounts[0]->account_id;
+                            $accounts = $instagramAccounts;
                         }
-                        $feedsData = $this->getInstagramFeeds($accId);
-//                        dd($feedsData);
-                        return view('feeds::instagram_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'followersData' => $response['data']]);
+                        $feedsData = $this->getInstgramAndBusinessFeeds($accId, 5, 1);
+                        return view('feeds::instagram_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
                     } else {
                         return view('feeds::instagram_Feeds')->with(["accounts" => $accounts, 'message' => 'No Instagram account has been added yet!']);
-
                     }
                 } else if ($response['data']->code === 400) {
-                    return view('feeds::instagram_Feeds')->with(["accounts" => $instagramAccounts, 'message' => 'failed']);
+                    return view('feeds::instagram_Feeds')->with(["accounts" => $accounts, 'message' => 'failed']);
                 }
 
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
-                return view('feeds::youtube_feeds')->with(['message' => 'failed']);
+                return view('feeds::instagram_Feeds')->with(['message' => 'failed']);
+            }
+        } else if (strpos($network, 'Business') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 12 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($instagramBusinessAccounts, $data);
+                        }
+                    }
+                    if (count($instagramBusinessAccounts) > 0) {
+                        if (preg_match('~[0-9]+~', $network)) {
+                            $accId = (integer)substr($network, 8, strlen($network));
+                            for ($i = 0; $i < count($instagramBusinessAccounts); $i++) {
+                                if ($instagramBusinessAccounts[$i]->account_id === $accId) {
+                                    array_push($accounts, $instagramBusinessAccounts[$i]);
+                                    unset($instagramBusinessAccounts[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($instagramBusinessAccounts) > 0) {
+                                foreach ($instagramBusinessAccounts as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accId = $instagramBusinessAccounts[0]->account_id;
+                            $accounts = $instagramBusinessAccounts;
+                        }
+                        $feedsData = $this->getInstgramAndBusinessFeeds($accId, 12, 1);
+                        //   dd($feedsData);
+                        return view('feeds::InstaBusiness')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
+                    } else {
+                        return view('feeds::InstaBusiness')->with(["accounts" => $accounts, 'message' => 'No Instagram business Pages added yet!']);
+                    }
+                } else if ($response['data']->code === 400) {
+                    return view('feeds::InstaBusiness')->with(["accounts" => $accounts, 'message' => 'failed']);
+                }
+
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::instagram_Feeds')->with(['message' => 'failed']);
+            }
+        } else if (strpos($network, 'linkedIn') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 7 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($linkedInAccounts, $data);
+                        }
+                    }
+                    if (count($linkedInAccounts) > 0) {
+                        if (preg_match('~[0-9]+~', $network)) {//it will check if the network variable has numeric digits or not
+                            $accId = (integer)substr($network, 8, strlen($network));
+                            for ($i = 0; $i < count($linkedInAccounts); $i++) {
+                                if ($linkedInAccounts[$i]->account_id === $accId) {
+                                    array_push($accounts, $linkedInAccounts[$i]);
+                                    unset($linkedInAccounts[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($linkedInAccounts) > 0) {
+                                foreach ($linkedInAccounts as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accounts = $linkedInAccounts;
+                            $accId = $linkedInAccounts[0]->account_id;
+                        }
+                        $feedsData = $this->getLinkedInFeeds($accId,1);
+                        return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'followersData' => $response['data']]);
+                    } else {
+                        return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'No LinkedIn Pages account has been added yet!']);
+
+                    }
+                } else if ($response['data']->code === 400) {
+                    return view('feeds::linkedIn_Feeds')->with(["accounts" => $linkedInAccounts, 'message' => 'failed']);
+                }
+
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
             }
         }
     }
@@ -453,14 +520,18 @@ class FeedsController extends Controller
         }
     }
 
-    public function getInstagramFeeds($accID)
+    public function getInstgramAndBusinessFeeds($accID, $type, $pageId)
     {
+
         $team = Session::get('team');
         $teamID = $team['teamid'];
-        $pageId = 1;
         $result = [];
         try {
-            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-insta-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+            if ($type === 5) {
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-insta-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+            } else {
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-insta-business-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+            }
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             if ($response['data']->code === 200) {
                 $result['code'] = 200;
@@ -482,6 +553,7 @@ class FeedsController extends Controller
             return $result;
         }
     }
+
 
     /**
      * TODO we've to get  the next  feeds of twitter account on pagination.
@@ -681,7 +753,7 @@ class FeedsController extends Controller
         $team = Session::get('team');
         $teamID = $team['teamid'];
         try {
-             $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/youtube-like-dislike?accountId=' . $accounId . '&teamId=' . $teamID . '&videoId=' . $tweetId . '&rating=dislike';
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/youtube-like-dislike?accountId=' . $accounId . '&teamId=' . $teamID . '&videoId=' . $tweetId . '&rating=dislike';
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             return $this->helper->responseHandler($response['data']);
         } catch (Exception $e) {
@@ -805,6 +877,7 @@ class FeedsController extends Controller
             return $result;
         }
     }
+
     /**
      * TODO we've to get  the next  feeds of instagram account on pagination.
      * This function is used for getting next feeds from particular instagram,on pagination.
@@ -815,13 +888,25 @@ class FeedsController extends Controller
      */
     function getNextInstagramFeeds(Request $request)
     {
+        $accID = (int)$request->accid;
+        $pageId = (int)$request->pageid;
+        $accountType =(int) $request->accounType;
+        return  $this->getInstgramAndBusinessFeeds($accID, $accountType, $pageId);
+    }
+
+    function getNextLinkedInFeeds(Request $request)
+    {
+        $accID = (int)$request->accid;
+        $pageId = (int)$request->pageid;
+        return  $this->getLinkedInFeeds($accID, $pageId);
+    }
+    function getLinkedInFeeds($accID,$pageId)
+    {
         $team = Session::get('team');
         $teamID = $team['teamid'];
-        $accID = $request->accid;
-        $pageId = $request->pageid;
         $result = [];
         try {
-            $apiurl = $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-insta-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-linkedIn-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             if ($response['data']->code === 200) {
                 $result['code'] = 200;
@@ -837,7 +922,7 @@ class FeedsController extends Controller
                 return $result;
             }
         } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getLinkedInFeeds() {FeedsController}');
             $result['code'] = 500;
             $result['message'] = 'Some error occured cant get feeds';
             return $result;

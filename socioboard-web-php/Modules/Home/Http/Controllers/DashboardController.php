@@ -1,6 +1,7 @@
 <?php
 
 namespace Modules\Home\Http\Controllers;
+
 use App\Classes\AuthUsers;
 use App\ApiConfig\ApiConfig;
 use App\Exceptions\AppException;
@@ -17,6 +18,7 @@ class DashboardController extends Controller
     public function __construct()
     {
         $this->helper = Helper::getInstance();
+        $this->API_URL_NOTIFICATION = env('API_URL_NOTIFICATION');
     }
 
     /**
@@ -31,11 +33,19 @@ class DashboardController extends Controller
             $team = Session::get('team');
             $teamID = $team['teamid'];
             $fbp = 0;
+            $inp = 0;
+            $linp = 0;
             $apiUrls = ApiConfig::getFeeds('/feeds/get-recent-rssurls');
             $apiReports = (env('API_URL_PUBLISH') . env('API_VERSION') . '/schedule/get-filtered-schedule-details?fetchPageId=1&scheduleStatus=6');
             try {
                 if (Session::has('pages')) {
                     $fbp = 1;
+                }
+                if (Session::has('instagramPages')) {
+                    $inp = 1;
+                }
+                if (Session::has('LinkedInpages')) {
+                    $linp = 1;
                 }
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -45,7 +55,7 @@ class DashboardController extends Controller
                 $responseDatas = $this->helper->responseHandler($rssurls['data']);
                 if ($response['code'] === 200) {
                     $responseData = $this->helper->responseHandler($response['data']);
-                    return view('home::UserDashboard')->with(["accounts" => $responseData, "rssurls" => $responseDatas, 'scheduleHistory' => $scheduleHistory, 'facebookpages' => $fbp]);
+                    return view('home::UserDashboard')->with(["accounts" => $responseData, "rssurls" => $responseDatas, 'scheduleHistory' => $scheduleHistory, 'facebookpages' => $fbp, 'instagrampages' => $inp, 'LinkedInpages' => $linp]);
                 } else {
                     return view('home::UserDashboard')->with(["ErrorMessage" => 'Can not fetch accounts, please reload page']);
                 }
@@ -202,29 +212,34 @@ class DashboardController extends Controller
      */
     public function addTwitterCallback(Request $request)
     {
-        try {
-            if (Session::has('twitterChecked')) {
-                $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['oauth_verifier'] . '&flag=1');
-            } else {
-                $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['oauth_verifier'] . '&flag=0');
+        if (isset($request['denied'])) {
+            return redirect('dashboard');
+        } else {
+            try {
+                if (Session::has('twitterChecked')) {
+                    $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['oauth_verifier'] . '&flag=1');
+                } else {
+                    $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['oauth_verifier'] . '&flag=0');
 
+                }
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    Session::forget('twitterChecked');
+                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                } else if ($response['data']->code === 400) {
+                    Session::forget('twitterChecked');
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else {
+                    Session::forget('twitterChecked');
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                }
+            } catch (Exception $e) {
+                Session::forget('twitterChecked');
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addTwitterCallback() {DashboardController}');
+                return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
             }
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
-            if ($response['data']->code === 200) {
-                Session::forget('twitterChecked');
-                return redirect('dashboard')->with("success", 'Added Account Successfully');
-            } else if ($response['data']->code === 400) {
-                Session::forget('twitterChecked');
-                return redirect('dashboard')->with("failed", $response['data']->error);
-            } else {
-                Session::forget('twitterChecked');
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
-            }
-        } catch (Exception $e) {
-            Session::forget('twitterChecked');
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addTwitterCallback() {DashboardController}');
-            return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
         }
+
 
     }
 
@@ -235,20 +250,26 @@ class DashboardController extends Controller
      */
     public function addFacebookCallback(Request $request)
     {
-        try {
-            $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
-            if ($response['data']->code === 200) {
-                return redirect('dashboard')->with("success", 'Added Account Successfully');
-            } else if ($response['data']->code === 400) {
-                return redirect('dashboard')->with("failed", $response['data']->error);
-            } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+
+        if ($request['error_reason'] === 'user_denied') {
+            return redirect('dashboard');
+        } else {
+            try {
+                $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                } else if ($response['data']->code === 400) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else {
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookCallback() {DashboardController}');
+                return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
             }
-        } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookCallback() {DashboardController}');
-            return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
         }
+
     }
 
     /**
@@ -258,20 +279,27 @@ class DashboardController extends Controller
      */
     public function addLinkedInCallback(Request $request)
     {
-        try {
-            $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
-            if ($response['data']->code === 200) {
-                return redirect('dashboard')->with("success", 'Added Account Successfully');
-            } else if ($response['data']->code === 403) {
-                return redirect('dashboard')->with("failed", $response['data']->error);
-            } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+        if ($request['error'] === 'user_cancelled_login') {
+            return redirect('dashboard');
+        } else {
+            try {
+                $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                } else if ($response['data']->code === 400) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else if ($response['data']->code === 403) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else {
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
+                return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
             }
-        } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
         }
+
     }
 
     /**
@@ -281,28 +309,30 @@ class DashboardController extends Controller
      */
     public function addFacebookPageCallBack(Request $request)
     {
-        try {
-            $teamid = 0;
-            $team = Session::get('team');
-            $teamID = $team['teamid'];
-            $apiUrl = ApiConfig::get('/socialaccount/get-own-facebookpages?code=' . $request['code']);
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
-            if ($response['data']->code === 200) {
-                if (count($response['data']->pages) === count($response['data']->availablePages)) {
-                    return redirect('dashboard')->with("failed", "Facebook Pages have Already added!");
+        if ($request['error_reason'] === 'user_denied') {
+            return redirect('dashboard');
+        } else {
+            try {
+                $apiUrl = ApiConfig::get('/socialaccount/get-own-facebookpages?code=' . $request['code']);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    if (count($response['data']->pages) === count($response['data']->availablePages)) {
+                        return redirect('dashboard')->with("failed", "Facebook Pages have Already added!");
+                    } else {
+                        Session::put('pages', $response['data']->pages);
+                        return redirect('dashboard');
+                    }
+                } else if ($response['data']->code === 400) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    Session::put('pages', $response['data']->pages);
-                    return redirect('dashboard');
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
                 }
-            } else if ($response['data']->code === 400) {
-                return redirect('dashboard')->with("failed", $response['data']->error);
-            } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookPageCallBack() {DashboardController}');
+                return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
             }
-        } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookPageCallBack() {DashboardController}');
-            return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
         }
+
     }
 
     /**
@@ -338,14 +368,18 @@ class DashboardController extends Controller
                 $apiUrl2 = ApiConfig::get('/socialaccount/add-bulk-social-profile?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl2, $dataToPass);
                 if ($response['data']->code === 200) {
-                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                    if (count($response['data']->profileDetails) > 0) {
+                        return redirect('dashboard')->with("success", 'Youtube channel added Successfully');
+                    } else {
+                        return redirect('dashboard')->with("failed", 'Youtube channel has already added');
+                    }
                 } else if ($response['data']->code === 400) {
-                    return redirect('dashboard')->with("failed", $response['data']->message);
+                    return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
                     return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
                 }
             } else if ($response['data']->code === 400) {
-                return redirect('dashboard')->with("failed", $response['data']->message);
+                return redirect('dashboard')->with("failed", $response['data']->error);
             } else {
                 return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
             }
@@ -371,6 +405,71 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
             return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+        }
+    }
+
+    public function addInstagramBusinessCallback(Request $request)
+    {
+        if ($request['error_reason'] === 'user_denied') {
+            return redirect('dashboard');
+        } else {
+            try {
+                $apiUrl = ApiConfig::get('/socialaccount/get-instagram-business-profile?code=' . $request['code']);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    if (count($response['data']->pages) > 0) {
+                        if (count($response['data']->pages) === count($response['data']->availablePages)) {
+                            return redirect('dashboard')->with("failed", "Instagram businees accounts have Already added!");
+                        } else {
+                            Session::put('instagramPages', $response['data']->pages);
+                            return redirect('dashboard');
+                        }
+                    } else {
+                        return redirect('dashboard')->with("failed", 'No Instagram businees pages found for this account');
+                    }
+                } else if ($response['data']->code === 400) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else {
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addInstagramBusinessCallback() {DashboardController}');
+                return redirect('dashboard')->with("failed", 'Some Error Occured please,reload the page');
+            }
+        }
+
+    }
+
+    function addLinkedInPagesCallback(Request $request)
+    {
+        if ($request['error'] === 'user_cancelled_login') {
+            return redirect('dashboard');
+        } else {
+            try {
+                $apiUrl = ApiConfig::get('/socialaccount/get-LinkedInCompany-Profiles?code=' . $request['code']);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+                if ($response['data']->code === 200) {
+                    if (count($response['data']->company) > 0) {
+                        if (count($response['data']->company) === count($response['data']->availablePages)) {
+                            return redirect('dashboard')->with("failed", "LinkedIn Pages have Already added!");
+                        } else {
+                            Session::put('LinkedInpages', $response['data']->company);
+                            return redirect('dashboard');
+                        }
+                    } else {
+                        return redirect('dashboard')->with("failed", 'No LinkedIn Pages found for this account');
+                    }
+                } else if ($response['data']->code === 400) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else if ($response['data']->code === 403) {
+                    return redirect('dashboard')->with("failed", $response['data']->error);
+                } else {
+                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
+                return redirect('dashboard')->with(["failed" => 'Some Error Occurred please,reload the page']);
+            }
         }
     }
 
@@ -473,7 +572,9 @@ class DashboardController extends Controller
 
         try {
             $accountId = $request->accid;
-            $apiUrl = ApiConfig::get('/socialaccount/delete-social-profile?AccId=' . $accountId);
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl = ApiConfig::get('/socialaccount/delete-social-profile?AccId=' . $accountId . '&teamId=' . $teamID);
             $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
             return $this->helper->responseHandler($response['data']);
         } catch (Exception $e) {
@@ -558,6 +659,7 @@ class DashboardController extends Controller
 
     function addFacebookPageBulk(Request $request)
     {
+
         $team = Session::get('team');
         $teamID = $team['teamid'];
         $pages = [];
@@ -616,9 +718,145 @@ class DashboardController extends Controller
         } else {
             $result['code'] = 400;
             $result['status'] = "failure";
-            $result['message'] = "Please select atleast 1 acc";
+            $result['message'] = "Please select at least 1 account";
             return $result;
             // ask user to select a page
+        }
+    }
+
+    function addInstagramPageBulk(Request $request)
+    {
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $pages = [];
+        $k = 0;
+        $pages = $request->pages;
+        $dataToPass = [];
+        $pageSession = Session::get('instagramPages');
+        $SocialAccounts = [];
+        if ($request->pages != null && $pageSession != null) {
+            for ($i = 0; $i < count($pages); $i++) {
+                /*account_type=2,user_name,last_name="",email="",social_id,profile_pic_url,cover_pic_url,access_token,refresh_token,friendship_counts,info=""*/
+                for ($j = 0; $j < count($pageSession); $j++) {
+                    if ($pageSession[$j]->userName == $pages[$i]) {
+                        //construct bulk facebook account
+                        $SocialAccounts[$k] = (object)array(
+                            "account_type" => "12",//fixed
+                            "user_name" => $pageSession[$j]->social_id,
+                            "first_name" => $pageSession[$j]->userName,
+                            "last_name" => "",
+                            "email" => "",
+                            "social_id" => $pageSession[$j]->social_id,
+                            "profile_pic_url" => $pageSession[$j]->profile_pic,
+                            "cover_pic_url" => $pageSession[$j]->profile_pic,
+                            "profile_url" => 'https://www.instagram.com/' . $pageSession[$j]->userName,
+                            "access_token" => $pageSession[$j]->accessToken,
+                            "refresh_token" => $pageSession[$j]->accessToken,
+                            "friendship_counts" => $pageSession[$j]->fanCount,
+                            "info" => ""
+                        );
+                        $k++;
+                    }
+                }
+            }
+            try {
+                $apiUrl2 = ApiConfig::get('/socialaccount/add-bulk-social-profile?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl2, $SocialAccounts);
+                Session::forget('instagramPages');
+                if ($response['data']->code === 200) {
+                    $result['code'] = 200;
+                    if (isset($response['data']->errorProfileId)) $result['errorIds'] = $response['data']->errorProfileId;
+                    else $response['errorIds'] = "";
+                    return $result;
+                } else if ($response['data']->code == 400) {
+                    $result['code'] = 400;
+                    $result['status'] = "failure";
+                    $result['message'] = $response['data']->error;
+                    return $result;
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addInstagramPageBulk() {DashboardController}');
+                $result['code'] = 500;
+                $result['status'] = "failure";
+                return $result;
+            }
+        } else {
+            $result['code'] = 400;
+            $result['status'] = "failure";
+            $result['message'] = "Please select at least 1 account";
+            return $result;
+
+        }
+    }
+
+    function addLinkedInPageBulk(Request $request)
+    {
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $pages = [];
+        $k = 0;
+        $pages = $request->pages;
+        $dataToPass = [];
+        $pageSession = Session::get('LinkedInpages');
+        $SocialAccounts = [];
+        $profilePic = [];
+        if ($request->pages != null && $pageSession != null) {
+            for ($i = 0; $i < count($pages); $i++) {
+                /*account_type=2,user_name,last_name="",email="",social_id,profile_pic_url,cover_pic_url,access_token,refresh_token,friendship_counts,info=""*/
+                for ($j = 0; $j < count($pageSession); $j++) {
+                    if ($pageSession[$j]->companyName == $pages[$i]) {
+                        //construct bulk facebook account
+                        if ($pageSession[$j]->profilePicture === '' || $pageSession[$j]->profilePicture === null) {
+                            $profilePic = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqkMttlQe6c9S_nTREIcq5AUfgkOfdg0HEVA&usqp=CAU';
+                        } else {
+                            $profilePic = $pageSession[$j]->profilePicture;
+                        }
+                        $SocialAccounts[$k] = (object)array(
+                            "account_type" => "7",//fixed
+                            "user_name" => $pageSession[$j]->companyId,
+                            "first_name" => $pageSession[$j]->companyName,
+                            "last_name" => "",
+                            "email" => "",
+                            "social_id" => $pageSession[$j]->companyId,
+                            "profile_pic_url" => $profilePic,
+                            "cover_pic_url" => $profilePic,
+                            "profile_url" => $pageSession[$j]->profileUrl,
+                            "access_token" => $pageSession[$j]->accessToken,
+                            "refresh_token" => $pageSession[$j]->refresh_token,
+                            "friendship_counts" => "",
+                            "info" => ""
+                        );
+                        $k++;
+                    }
+                }
+            }
+            try {
+                $apiUrl2 = ApiConfig::get('/socialaccount/add-bulk-social-profile?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('post', $apiUrl2, $SocialAccounts);
+                Session::forget('LinkedInpages');
+                if ($response['data']->code === 200) {
+                    $result['code'] = 200;
+                    if (isset($response['data']->errorProfileId)) $result['errorIds'] = $response['data']->errorProfileId;
+                    else $response['errorIds'] = "";
+                    return $result;
+                } else if ($response['data']->code == 400) {
+                    $result['code'] = 400;
+                    $result['status'] = "failure";
+                    $result['message'] = $response['data']->error;
+                    return $result;
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInPageBulk() {DashboardController}');
+                $result['code'] = 500;
+                $result['status'] = "failure";
+                return $result;
+            }
+        } else {
+            $result['code'] = 400;
+            $result['status'] = "failure";
+            $result['message'] = "Please select at least 1 account";
+            return $result;
+
         }
     }
 
@@ -679,15 +917,14 @@ class DashboardController extends Controller
         try {
             $data['email'] = $request->emailID;
             $apiUrl = ApiConfig::get('/user/update-profile-details');
-            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $data);
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, (object)$data);
             $userDetails = $this->helper->responseHandler($response['data']);
-            $session=  Session::get('user');
-            $session['userDetails']['email']=$userDetails['data']->user->email;
+            $session = Session::get('user');
+            $session['userDetails']['email'] = $userDetails['data']->user->email;
             session()->put('user', $session);
             Session::save();
             return $userDetails;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'updateEmailUser() {DashboardController}');
         }
     }
@@ -695,12 +932,136 @@ class DashboardController extends Controller
     function getPlanDetails(Request $request)
     {
         try {
-            $apiUrl = ApiConfig::get('/get-plan-details?planId='.$request->id);
+            $apiUrl = ApiConfig::get('/get-plan-details?planId=' . $request->id);
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             $responseData = $this->helper->responseHandler($response['data']);
             return $responseData;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getPlanDetails() {DashboardController}');
+
         }
-        catch (Exception $e) {
+    }
+
+    /**
+     * TODO we've to get all team id and user id of the User to use in socket connections.
+     * This function is used for getting all team id and user id  of particular user to get socket connections.
+     * by hitting API from controller.
+     * @return {object} Returns data from APIS in JSON object format.
+     */
+    function getUserDatas()
+    {
+        try {
+            $userSession = Session::get('user');
+            $teamIDs = [];
+            $teamIdValues = [];
+            $userid = $userSession['userDetails']['user_id'];
+            $apiUrl = ApiConfig::get('/team/get-details');
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $responseData = $this->helper->responseHandler($response['data']);
+            if ($responseData['code'] === 200) {
+                $teamIDs = $responseData['data']->teamMembers;
+                foreach ($teamIDs as $data) {
+                    array_push($teamIdValues, (string)$data[0]->team_id);
+                }
+                $result['code'] = 200;
+                $result['teamIds'] = $teamIdValues;
+                $result['userId'] = $userid;
+                return $result;
+            } else if ($responseData['code'] === 400) {
+                $result['code'] = 400;
+                $result['error'] = $responseData['error'];
+                return $result;
+            } else {
+                $result['code'] = 500;
+                $result['error'] = 'some error occured';
+                return $result;
+            }
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getUserDatas() {DashboardController}');
+
+        }
+    }
+
+    /**
+     * TODO we've to get all notificationsof the teams onload and also on scroll.
+     * @param {string) pageid for getting the first 12 nortifications passing in controller.
+     * @return {object} Returns getNotifications from  in JSON object format.
+     */
+    function getAllNotificationsTeams(Request $request)
+    {
+        try {
+            $pageid = $request->pageid;
+            $teamID = 0;
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl2 = $this->API_URL_NOTIFICATION . '/v1/notify/get-team-notification?teamId=' . $teamID . '&pageId=' . $pageid;
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl2);
+            $responseData = $this->helper->responseHandler($response['data']);
+            return $responseData;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getUserDatas() {DashboardController}');
+
+        }
+    }
+
+    /**
+     * TODO we've to get all notificationsof the users onload and also on scroll.
+     * @param {string) pageid for getting the first 12 nortifications passing in controller.
+     * @return {object} Returns getNotifications from  in JSON object format.
+     */
+    function getAllNotificationsUsers(Request $request)
+    {
+        try {
+            $pageid = $request->pageid;
+            $userSession = Session::get('user');
+            $userid = $userSession['userDetails']['user_id'];
+            $apiUrl2 = $this->API_URL_NOTIFICATION . '/v1/notify/get-user-notification?userId=' . $userid . '&pageId=' . $pageid;
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl2);
+            $responseData = $this->helper->responseHandler($response['data']);
+            return $responseData;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getUserDatas() {DashboardController}');
+
+        }
+    }
+
+    /**
+     * TODO we've to make read all Users notifications on check box click.
+     * This function makes read all Users notificaations on checked of checkboxes.
+     * @return {object} Returns getNotifications from  in JSON object format.
+     */
+    function markAllNotificationsUserRead()
+    {
+        try {
+            $userSession = Session::get('user');
+            $userid = $userSession['userDetails']['user_id'];
+            $apiUrl2 = $this->API_URL_NOTIFICATION . 'v1/notify/mark-all-user-notifications-as-read?userId=' . $userid;
+            $response = $this->helper->postApiCallWithAuth('put', $apiUrl2);
+            $responseData = $this->helper->responseHandler($response['data']);
+            return $responseData;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getUserDatas() {DashboardController}');
+
+        }
+    }
+
+    /**
+     * TODO we've to make read all teams notifications on check box click.
+     * This function makes read all teams notificaations on checked of checkboxes.
+     * @return {object} Returns getNotifications from  in JSON object format.
+     */
+    function markAllNotificationsTeamRead()
+    {
+        try {
+            $teamID = 0;
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl2 = $this->API_URL_NOTIFICATION . 'v1/notify/mark-all-team-notifications-as-read?teamId=' . $teamID;
+            $response = $this->helper->postApiCallWithAuth('put', $apiUrl2);
+            $responseData = $this->helper->responseHandler($response['data']);
+            return $responseData;
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'getUserDatas() {DashboardController}');
 
         }
     }

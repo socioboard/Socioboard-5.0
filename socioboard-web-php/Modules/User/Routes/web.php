@@ -48,6 +48,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
 
 //  Email Login
     Route::post('/email-login', [LoginController::class, 'emailLogin']);
+    Route::post('/get-activation-link', [LoginController::class, 'getEmailActivationLink']);
     Route::get('/verify-direct-login', [LoginController::class, 'verifyDirectLogin']);
-
+    Route::get('/send-mobile-otp', [LoginController::class, 'sendMobileOtp']);
+    Route::post('/verify-mobile-otp', [LoginController::class, 'verifyMobileOtp']);
+    Route::post('/update-session', [LoginController::class, 'updateUserSession']);
+    Route::get('/get-session', [LoginController::class, 'getSession']);
 });

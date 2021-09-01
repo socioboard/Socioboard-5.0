@@ -34,7 +34,7 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Schedule Post</h3>
+                                <h3 class="card-title font-weight-bolder">Create Post</h3>
                             </div>
                             <!--end::Header-->
 
@@ -47,12 +47,14 @@
                                         @include('contentstudio::components.draft_social_accounts')
                                     </div>
                                     <!-- end:Accounts list -->
+                                    <span id="errorText1" class="text-danger"></span>
                                     <div class="form-group">
-                                        <textarea oninput="function textinput()" name="content"
+                                        <textarea name="content"
                                                   class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
                                                   id="normal_post_area" rows="3" placeholder="Write Something !"
                                                   required>{{ $content  }}</textarea>
                                     </div>
+                                    <p class="text-right">Charecters Remaining : <span id="errorText3" class="text-danger"></span></p>
                                     <div class="form-group">
                                         <div class="input-icon">
                                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
@@ -92,7 +94,13 @@
                                                     </span>
                                                             </li>
                                                         </ul>
+
                                                     </div>
+                                                <div class="col-12" id="next_upload">
+
+                                                </div>
+                                                    <div id="insta_type" style="padding-left: 10px; color: red"></div>
+                                                    <input type="hidden" id="accounttypes" name="accountTypes">
                                                     @if(isset($mediaData['type']) && $mediaData['type'] == 'image' && isset($mediaData['mediaUrl']))
                                                         <div class="col-12 d-block" id="hint_brand">
                                                             @else
@@ -134,6 +142,7 @@
                                                         <input type="hidden"  id="twitterAccountsIds" data-list="{{json_encode($twitterAccountsIds) }}">
                                                         <input type="hidden" id="facebookAccountsIds" data-list="{{json_encode($facebookAccountsIds) }}">
                                                         <input type="hidden" id="linkedinAccountsIds" data-list="{{json_encode($linkedinAccountsIds) }}">
+                                                        <input type="hidden" id="instagramAccountsIds" data-list="{{json_encode($instagramAccountsIds) }}">
                                                         <input type="hidden" id="selectedAccountIds" data-list="{{json_encode($accountIds) }}">
                                     {{-- End checking if the media has to been downloaded and then downloaded or not--}}
                                     <!-- end of image and video upload -->

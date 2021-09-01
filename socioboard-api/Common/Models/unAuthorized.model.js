@@ -1,9 +1,16 @@
-import db from '../Sequelize-cli/models/index.js';
-import SendEmailServices from '../Services/mailBase.services.js';
 import moment from 'moment';
 import config from 'config';
+import twitterApi from 'node-twitter-api';
+import db from '../Sequelize-cli/models/index.js';
+import SendEmailServices from '../Services/mail-base.services.js';
 import TwtConnect from '../Cluster/twitter.cluster.js';
 import aMember from '../Mappings/amember.users.js';
+
+// import config from 'config';
+
+import AuthorizeServices from '../Services/authorize.services.js';
+// const AuthorizeServices = require('../Services/authorizeServices.js')
+// const twitterApi = require('node-twitter-api')
 
 // const db = require('../Sequelize-cli/models/index')
 // const SendEmailServices = require('../Services/mailServices')
@@ -12,7 +19,7 @@ import aMember from '../Mappings/amember.users.js';
 // const config = require('config')
 // const TwtConnect = require('../Cluster/twitter.js')
 
-//import userDetails from '../../Common/Sequelize-cli/models/user_details.js'
+// import userDetails from '../../Common/Sequelize-cli/models/user_details.js'
 const Operator = db.Sequelize.Op;
 const userRewardsModel = db.user_rewards;
 const applicationInfo = db.application_informations;
@@ -20,14 +27,6 @@ const userActivation = db.user_activations;
 const teamInfo = db.team_informations;
 const socialAccount = db.social_accounts;
 const userDetails = db.user_details;
-
-//import config from 'config';
-
-import AuthorizeServices from '../Services/authorize.services.js';
-// const AuthorizeServices = require('../Services/authorizeServices.js')
-// const twitterApi = require('node-twitter-api')
-
-import twitterApi from 'node-twitter-api';
 
 class userLibs {
   constructor() {
@@ -37,7 +36,7 @@ class userLibs {
   }
 
   async checkUserNameAvailability(username) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
         user_name: username,
       },
@@ -45,13 +44,24 @@ class userLibs {
     return response;
   }
 
+  async checkPhoneNumberAvailability(phone_no) {
+    const response = await userDetails.findOne({
+      where: {
+        phone_no,
+      },
+    });
+
+    return response;
+  }
+
   async getUserDetails(email, user_name, password) {
     let query = {};
+
     if (password) query = {...query, password};
     if (user_name) query = {...query, user_name};
     if (email) query = {...query, email};
 
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: query,
       attributes: [
         'user_id',
@@ -83,16 +93,18 @@ class userLibs {
         },
       ],
     });
+
     return response;
   }
 
   async getSocialAccDetail(email, user_name) {
     let query = {};
+
     if (user_name) query = {...query, user_name};
     if (email) query = {...query, email};
 
     if (email || user_name) {
-      let response = await userDetails.findOne({
+      const response = await userDetails.findOne({
         where: query,
         attributes: [
           'user_id',
@@ -123,46 +135,52 @@ class userLibs {
           },
         ],
       });
+
       return response;
-    } else return null;
+    }
+
+    return null;
   }
 
   async checkEmailAvailability(email) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
-        email: email,
+        email,
       },
     });
+
     return response;
   }
 
   async isUserRegister(userName, email) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
         [Operator.or]: [
           {
             user_name: userName,
           },
           {
-            email: email,
+            email,
           },
         ],
       },
       attributes: ['user_id'],
     });
+
     return response;
   }
 
   async registerUser(body) {
-    let requestBody = body;
+    const requestBody = body;
 
     // if (!requestBody.user.profilePicture || requestBody.user.profilePicture == '') {
     //     requestBody.user.profilePicture = `${config.get("user_socioboard.host_url")}${config.get('profile_url_assert')}`;
     //     requestBody.user.profilePicture = requestBody.user.profilePicture.replace("http", "https");
     // }
-    var userInfo = {};
-    var fetchedUserId = null;
-    var team = null;
+    const userInfo = {};
+    let fetchedUserId = null;
+    let team = null;
+
     requestBody.isAdminUser = false;
     requestBody.rewards = {
       eWalletValue: 0,
@@ -176,40 +194,44 @@ class userLibs {
       IsTwoStepVerify: false,
       signupType: 0,
       userPlan: config.get('user_base_plan'),
-      expireDate: moment.utc().add(1, 'months'),
+      expireDate: moment
+        .utc()
+        .add(config.get('user_base_plan_expiry_days') ?? 14, 'days'),
     };
-    let info = requestBody;
+    const info = requestBody;
 
     let transaction;
     let user;
     let rewards;
     let socialNetworkDetails;
+
     try {
       // start a new transaction
       transaction = await db.sequelize.transaction();
 
-      let createdUser = await userDetails.create(
-          {
-            user_name: info.username,
-            email: info.email,
-            profile_url: info.profileUrl,
-            password: info.password,
-            first_name: info.firstName,
-            last_name: info.lastName,
-            date_of_birth: info.dateOfBirth,
-            profile_picture: info.profilePicture,
-            phone_code: info.phoneCode,
-            phone_no: info.phoneNo,
-            country: info.country,
-            time_zone: info.timeZone,
-            about_me: info.aboutMe,
-            is_admin_user: info.isAdminUser,
-            is_account_locked: false,
-          },
-          {transaction}
-        ),
-        // if (createdUser) {
-        user = createdUser;
+      const createdUser = await userDetails.create(
+        {
+          user_name: info.username,
+          email: info.email,
+          profile_url: info.profileUrl,
+          password: info.password,
+          first_name: info.firstName,
+          last_name: info.lastName,
+          date_of_birth: info.dateOfBirth,
+          profile_picture: info.profilePicture,
+          phone_code: info.phoneCode,
+          phone_no: info.phoneNo,
+          country: info.country,
+          time_zone: info.timeZone,
+          about_me: info.aboutMe,
+          is_admin_user: info.isAdminUser,
+          is_account_locked: false,
+        },
+        {transaction}
+      );
+      // if (createdUser) {
+      const user = createdUser;
+
       userInfo.user = createdUser;
       fetchedUserId = user.user_id;
       rewards = await userRewardsModel.create(
@@ -226,7 +248,7 @@ class userLibs {
       if (rewards) {
         await user.setRewards(rewards, {transaction});
       }
-      let activationDetails = await userActivation.create(
+      const activationDetails = await userActivation.create(
         {
           activation_status: info.activations.activationStatus,
           payment_status: info.activations.paymentStatus,
@@ -244,9 +266,9 @@ class userLibs {
         await user.setActivations(activationDetails, {transaction});
       }
 
-      let teamDetails = await teamInfo.create(
+      const teamDetails = await teamInfo.create(
         {
-          team_name: 'socioboard',
+          team_name: 'SocioBoard',
           team_description: 'Default team',
           team_admin_id: user.user_id,
           is_default_team: true,
@@ -309,7 +331,8 @@ class userLibs {
       }
 
       await transaction.commit();
-      return {userId: fetchedUserId, userInfo: userInfo};
+
+      return {userId: fetchedUserId, userInfo};
     } catch (err) {
       // console.log(err)
       // if we got an error and we created the transaction, roll it back
@@ -325,18 +348,41 @@ class userLibs {
     // if()
     // this.sendEmailServices
 
-    var activationLink = `${config.get(
+    const activationLink = `${config.get(
       'user_socioboard.mail_url'
     )}/verifyEmails?email=${data.email}&activationToken=${
       data.Activations.email_validate_token
     }`;
-    var htmlContent = this.sendEmailServices.template.registration
+    const htmlContent = this.sendEmailServices.template.registration
       .replace('[FirstName]', `${data.first_name}`)
-      .replace('[AccountType]', planName)
       .replace('[ActivationLink]', activationLink);
     var emailDetails = {
-      subject: 'Activation Mail',
+      subject: 'SocioBoard Activation Mail',
       toMail: data.email,
+      htmlContent,
+    };
+    const mailData = await this.sendEmailServices.sendMails(
+      config.get('mailService.defaultMailOption'),
+      emailDetails
+    );
+
+    return mailData.response ? mailData.response : mailData;
+  }
+
+  /**
+   * TODO Sent the Welcome Mail to User
+   * Function To Sent the Welcome Mail to User If mail Verified
+   * @param  {object} userInfo - User details
+   * @return {object} Returns Sent Mail Status
+   */
+  async sendWelcomeMail(userInfo) {
+    let htmlContent = this.sendEmailServices.template.welcomeMailLink.replace(
+      '[FirstName]',
+      `${userInfo.first_name}`
+    );
+    let emailDetails = {
+      subject: 'Welcome To SocioBoard',
+      toMail: userInfo.email,
       htmlContent: htmlContent,
     };
     let mailData = await this.sendEmailServices.sendMails(
@@ -345,18 +391,19 @@ class userLibs {
     );
     return mailData.response ? mailData.response : mailData;
   }
-  async sendForgotPasswordMail(userInfo) {
-    var activationLink = `${config.get(
-      'user_socioboard.mail_url'
-    )}/verify-password-token?email=${userInfo.email}&activationToken=${
-      userInfo.Activations.forgot_password_validate_token
-    }`;
-    // Appending activation link in Mail content
-    var htmlContent = this.sendEmailServices.template.forgotpassword
-      .replace('[FirstName]', `${userInfo.first_name}`)
-      .replace('[ActivationLink]', activationLink);
-    var emailDetails = {
-      subject: 'Socioboard reset password',
+  /**
+   * TODO Sent User Account Delete Mail
+   * Function to sent User Account Delete Mail
+   * @param  {object} userInfo - User details
+   * @return {object} Returns Sent Mail Status
+   */
+  async sendDeleteUserMail(userInfo) {
+    let htmlContent = this.sendEmailServices.template.deleteUserLink.replace(
+      '[FirstName]',
+      `${userInfo.first_name}`
+    );
+    let emailDetails = {
+      subject: 'SocioBoard Account Deleted',
       toMail: userInfo.email,
       htmlContent: htmlContent,
     };
@@ -367,25 +414,49 @@ class userLibs {
     return mailData.response ? mailData.response : mailData;
   }
 
+  async sendForgotPasswordMail(userInfo) {
+    const activationLink = `${config.get(
+      'user_socioboard.mail_url'
+    )}/verify-password-token?email=${userInfo.email}&activationToken=${
+      userInfo.Activations.forgot_password_validate_token
+    }`;
+    // Appending activation link in Mail content
+    const htmlContent = this.sendEmailServices.template.forgotpassword
+      .replace('[FirstName]', `${userInfo.first_name}`)
+      .replace('[ActivationLink]', activationLink);
+    var emailDetails = {
+      subject: 'SocioBoard Reset Password',
+      toMail: userInfo.email,
+      htmlContent,
+    };
+    const mailData = await this.sendEmailServices.sendMails(
+      config.get('mailService.defaultMailOption'),
+      emailDetails
+    );
+
+    return mailData.response ? mailData.response : mailData;
+  }
+
   async sendDirectLoginMail(userInfo) {
-    var activationLink = `${config.get(
+    const activationLink = `${config.get(
       'user_socioboard.mail_url'
     )}/verify-direct-login?email=${userInfo.email}&activationToken=${
       userInfo.Activations.direct_login_validate_token
     }`;
     // Appending activation link in Mail content
-    var htmlContent = this.sendEmailServices.template.directLogin
+    const htmlContent = this.sendEmailServices.template.directLogin
       .replace('[FirstName]', `${userInfo.first_name}`)
       .replace('[ActivationLink]', activationLink);
     var emailDetails = {
-      subject: 'Socioboard Direct Login',
+      subject: 'SocioBoard Direct Login',
       toMail: userInfo.email,
-      htmlContent: htmlContent,
+      htmlContent,
     };
-    let mailData = await this.sendEmailServices.sendMails(
+    const mailData = await this.sendEmailServices.sendMails(
       config.get('mailService.defaultMailOption'),
       emailDetails
     );
+
     return mailData.response ? mailData.response : mailData;
   }
 
@@ -394,13 +465,14 @@ class userLibs {
     newExpireDate,
     user_activation_id
   ) {
-    let response = await userActivation.update(
+    const response = await userActivation.update(
       {
         email_validate_token: newEmailVerificationToken,
         email_token_expire: newExpireDate,
       },
       {where: {id: user_activation_id}}
     );
+
     return response;
   }
 
@@ -411,9 +483,9 @@ class userLibs {
   }
 
   async checkUserDetails(email) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
-        email: email,
+        email,
       },
       attributes: [
         'user_id',
@@ -444,22 +516,25 @@ class userLibs {
         },
       ],
     });
+
     return response?.dataValues;
   }
 
   async userVerified(userId) {
-    let response = await userActivation.update(
+    const response = await userActivation.update(
       {activation_status: 1},
       {where: {id: userId}}
     );
+
     return response;
   }
 
   async userUnholded(email) {
-    let response = await userDetails.update(
+    const response = await userDetails.update(
       {is_account_locked: 0},
-      {where: {email: email}}
+      {where: {email}}
     );
+
     return response;
   }
 
@@ -472,22 +547,26 @@ class userLibs {
    */
 
   async getUserAccessToken(userId, activationID) {
-    let res = await this.updateUserLoginTime(activationID);
+    const res = await this.updateUserLoginTime(activationID);
+
     if (res) {
       let userInfo = {};
-      let userDetails = await this.getUserDetailswithId(userId);
+      const userDetails = await this.getUserDetailswithId(userId);
+
       userInfo = userDetails;
-      let planDetails = await this.getPlanDetails(
+      const planDetails = await this.getPlanDetails(
         userDetails.Activations.user_plan
       );
+
       userInfo.userPlanDetails = planDetails;
-      let accessToken = await this.authorizeServices.createToken(userInfo);
-      return {user: userInfo, accessToken: accessToken};
+      const accessToken = await this.authorizeServices.createToken(userInfo);
+
+      return {user: userInfo, accessToken};
     }
   }
 
   async getUserDetailswithId(userId) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
         user_id: Number(userId),
       },
@@ -502,11 +581,12 @@ class userLibs {
         },
       ],
     });
+
     return response.dataValues;
   }
 
   async getUserDetailswithIdForgetPassword(userId) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
         user_id: Number(userId),
       },
@@ -549,11 +629,12 @@ class userLibs {
         },
       ],
     });
+
     return response;
   }
 
   async getUserDetailswithDirectLogin(userId) {
-    let response = await userDetails.findOne({
+    const response = await userDetails.findOne({
       where: {
         user_id: Number(userId),
       },
@@ -596,28 +677,31 @@ class userLibs {
         },
       ],
     });
+
     return response;
   }
 
   async updateUserLoginTime(user_activation_id) {
-    let res = await userActivation.update(
+    const res = await userActivation.update(
       {
         last_login: moment(),
       },
       {where: {id: user_activation_id}}
     );
+
     return res;
   }
 
   async getPlanDetails(planId) {
-    let res = await applicationInfo.findOne({
+    const res = await applicationInfo.findOne({
       where: {
         plan_id: planId,
       },
     });
+
     return res;
   }
- /**
+  /**
    * TODO To Fecth the Plan details
    * Function to Fecth the Plan details
    * @param  {number} planId - Plan Id
@@ -625,17 +709,18 @@ class userLibs {
    */
 
   async getFullPlanDetails(planId) {
-    if(planId){
-      return this.getPlanDetails(planId)
+    if (planId) {
+      return this.getPlanDetails(planId);
     }
-    let res = await applicationInfo.findAll();
+    const res = await applicationInfo.findAll();
+
     return res;
   }
 
   async userDetailsForForgotPassword(email) {
-    let res = await userDetails.findOne({
+    const res = await userDetails.findOne({
       where: {
-        email: email,
+        email,
       },
       attributes: ['user_id', 'first_name', 'email', 'user_activation_id'],
       include: [
@@ -651,13 +736,14 @@ class userLibs {
         },
       ],
     });
+
     return res;
   }
 
   async userDetailsForDirectLogin(email) {
-    let res = await userDetails.findOne({
+    const res = await userDetails.findOne({
       where: {
-        email: email,
+        email,
       },
       attributes: ['user_id', 'first_name', 'email', 'user_activation_id'],
       include: [
@@ -673,6 +759,7 @@ class userLibs {
         },
       ],
     });
+
     return res;
   }
 
@@ -681,7 +768,7 @@ class userLibs {
     newExpireDate,
     newForgotVerificationToken
   ) {
-    let res = await userActivation.update(
+    const res = await userActivation.update(
       {
         forgot_password_validate_token: newForgotVerificationToken,
         forgot_password_token_expire: newExpireDate,
@@ -692,6 +779,7 @@ class userLibs {
         },
       }
     );
+
     return res;
   }
 
@@ -700,7 +788,7 @@ class userLibs {
     newExpireDate,
     newDirectLoginToken
   ) {
-    let res = await userActivation.update(
+    const res = await userActivation.update(
       {
         direct_login_validate_token: newDirectLoginToken,
         direct_login_token_expire: newExpireDate,
@@ -711,37 +799,37 @@ class userLibs {
         },
       }
     );
+
     return res;
   }
 
-   /**
-   * TODO To update the User  Password 
-   * Function to Update User Password 
+  /**
+   * TODO To update the User  Password
+   * Function to Update User Password
    * @param  {number} user_id - User id
    * @param  {string} newPassword - User Password
    * @return {object} Returns Update User details
    */
-   async updatePassword(user_id, newPassword) {
+  async updatePassword(user_id, userName, newPassword) {
     let res = await userDetails.update(
       {password: newPassword},
       {
         where: {
-          user_id: user_id,
+          user_id,
         },
-      });
-       //update in Amember as well
-       let aMemberData = {
-        email: profileDetails?.email,
-        userId: userId,
       }
-      new aMember(config.get('aMember')).updateUserPasswordToAMember(
-        aMemberData
-      )
+    );
+    //update in Amember as well
+    let aMemberData = {
+      password: newPassword,
+      userName,
+    };
+    new aMember(config.get('aMember')).updateUserPasswordToAMember(aMemberData);
     return res;
   }
 
   async parseDataFacebook(data, access_token) {
-    let fbUserDeatils = {
+    const fbUserDeatils = {
       user: {
         username: data.user_id,
         email: data.email,
@@ -766,17 +854,19 @@ class userLibs {
         expireDate: moment.utc().add(1, 'months'),
       },
       isSocialLogin: true,
-      network: '1', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
+      network: '1', // 1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
       accessToken: access_token,
       refreshToken: access_token,
 
       // phoneNo: "1324575248",
     };
+
     return fbUserDeatils;
   }
+
   async parsedataGoogle(data, tokens) {
     //   let birthday = data.birthday ? moment(profileDetails.birthday, ["MM-DD-YYYY", "YYYY-MM-DD"]) : moment("01-01-1970", ["MM-DD-YYYY", "YYYY-MM-DD"]);
-    let googleUserDeatils = {
+    const googleUserDeatils = {
       user: {
         username: data.id,
         email: data.email,
@@ -803,23 +893,25 @@ class userLibs {
         expireDate: moment.utc().add(1, 'months'),
       },
       isSocialLogin: true,
-      network: '8', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
+      network: '8', // 1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
 
       // phoneNo: "1324575248",
     };
+
     return googleUserDeatils;
   }
+
   async parsedatagitHub(data) {
-    let userEmail = data.login + '@github.com';
-    let githubUserDeatils = {
+    const userEmail = `${data.login}@github.com`;
+    const githubUserDeatils = {
       user: {
         username: data.id,
         email: userEmail,
         password: 'github@@123',
         firstName: data.login,
-        //lastName: data.family_name,
+        // lastName: data.family_name,
         dateOfBirth: moment('01-01-1970', ['MM-DD-YYYY', 'YYYY-MM-DD']),
         profilePicture: data.avatar_url,
       },
@@ -844,19 +936,20 @@ class userLibs {
 
       // phoneNo: "1324575248",
     };
+
     return githubUserDeatils;
   }
 
   async parseTwitter(data, tokens) {
     try {
-      let userEmail = data.screen_name + '@twitter.com';
-      let githubUserDeatils = {
+      const userEmail = `${data.screen_name}@twitter.com`;
+      const githubUserDeatils = {
         user: {
           username: data.screen_name,
           email: userEmail,
           password: 'Twitter@@123',
           firstName: data.name,
-          //lastName: data.family_name,
+          // lastName: data.family_name,
           dateOfBirth: moment('01-01-1970', ['MM-DD-YYYY', 'YYYY-MM-DD']),
           profilePicture: data.profile_image_url,
         },
@@ -875,12 +968,13 @@ class userLibs {
           expireDate: moment.utc().add(1, 'months'),
         },
         isSocialLogin: true,
-        network: '4', //1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion 12,github
+        network: '4', // 1-Facebook user, 2-Facebook page, 3-Facebook group, 4-Twitter, 5-Instagram, 6-Linkedin Personal, 7-Linkedin Business, 8-Google Plus, 9-Youtube, 10-Google analytics, 11-Dailymotion 12,github
         accessToken: tokens.accessToken,
         refreshToken: tokens.accessSecret,
 
         // phoneNo: "1324575248",
       };
+
       return githubUserDeatils;
     } catch (error) {
       return error;
@@ -888,7 +982,7 @@ class userLibs {
   }
 
   async getTwitterAccessToken(token, secret, verifier) {
-    let twitterObject = new twitterApi({
+    const twitterObject = new twitterApi({
       consumerKey: process.env.Twitter_App_Id,
       consumerSecret: process.env.Twitter_Secret,
       callback: process.env.Twitter_Redirect_url,
@@ -900,58 +994,59 @@ class userLibs {
       verifier,
       (error, accessToken, accessSecret) => {
         if (error) return error;
-        else {
-          var response = {
-            accessToken: accessToken,
-            accessSecret: accessSecret,
-          };
-          return response;
-        }
+
+        const response = {
+          accessToken,
+          accessSecret,
+        };
+
+        return response;
       }
     );
   }
 
   async registerSocialUser(info) {
-    var userInfo = {}; //used
-    var fetchedUserId = null; //used
-    var team = null; //used
-    var AccountDetails = {};
-    let user; //used
-    let transaction; //used
-    let rewards; //used
+    const userInfo = {}; // used
+    let fetchedUserId = null; // used
+    let team = null; // used
+    let AccountDetails = {};
+    let user; // used
+    let transaction; // used
+    let rewards; // used
     let socialNetworkDetails;
 
     try {
       // start a new transaction
       transaction = await db.sequelize.transaction();
 
-      let createdUser = await userDetails.create(
-          {
-            user_name: info.user.username,
-            email: info.user.email,
-            //   profile_url: info.user.profilePicture,
-            password: info.user.password,
-            first_name: info.user.firstName,
-            last_name: info.user.lastName,
-            date_of_birth: info.user.dateOfBirth
-              ? moment(info.user.dateOfBirth, ['MM-DD-YYYY', 'YYYY-MM-DD']) ||
-                moment('01-01-1970', ['MM-DD-YYYY', 'YYYY-MM-DD'])
-              : '1970-01-01',
+      const createdUser = await userDetails.create(
+        {
+          user_name: info.user.username,
+          email: info.user.email,
+          //   profile_url: info.user.profilePicture,
+          password: info.user.password,
+          first_name: info.user.firstName,
+          last_name: info.user.lastName,
+          date_of_birth: info.user.dateOfBirth
+            ? moment(info.user.dateOfBirth, ['MM-DD-YYYY', 'YYYY-MM-DD']) ||
+              moment('01-01-1970', ['MM-DD-YYYY', 'YYYY-MM-DD'])
+            : '1970-01-01',
 
-            profile_picture: info.user.profilePicture,
-            phone_code: info.user.phoneCode, //default value starts
-            phone_no: info.user.phoneNo,
-            country: info.user.country,
-            time_zone: info.timeZone,
-            about_me: info.aboutMe,
-            is_admin_user: false,
-            is_account_locked: false,
-          },
-          {transaction}
-        ),
-        //#region
-        // if (createdUser) {
-        user = createdUser;
+          profile_picture: info.user.profilePicture,
+          phone_code: info.user.phoneCode, // default value starts
+          phone_no: info.user.phoneNo,
+          country: info.user.country,
+          time_zone: info.timeZone,
+          about_me: info.aboutMe,
+          is_admin_user: false,
+          is_account_locked: false,
+        },
+        {transaction}
+      );
+      // #region
+      // if (createdUser) {
+      const user = createdUser;
+
       userInfo.user = createdUser;
       fetchedUserId = user.user_id;
       rewards = await userRewardsModel.create(
@@ -968,13 +1063,15 @@ class userLibs {
       if (rewards) {
         await user.setRewards(rewards, {transaction});
       }
-      let activationDetails = await userActivation.create(
+      const activationDetails = await userActivation.create(
         {
           activation_status: info.activations.activationStatus,
           payment_status: info.activations.paymentStatus,
           activate_2step_verification: info.activations.IsTwoStepVerify,
           signup_type: info.activations.signupType,
-          account_expire_date: moment.utc().add(15, 'days'),
+          account_expire_date: moment
+            .utc()
+            .add(config.get('user_base_plan_expiry_days') ?? 14, 'days'),
           user_plan: info.activations.userPlan,
           //  payment_type: info.activations.paymentType
         },
@@ -986,9 +1083,9 @@ class userLibs {
         await user.setActivations(activationDetails, {transaction});
       }
 
-      let teamDetails = await teamInfo.create(
+      const teamDetails = await teamInfo.create(
         {
-          team_name: 'socioboard',
+          team_name: 'SocioBoard',
           team_description: 'Default team',
           team_admin_id: user.user_id,
           is_default_team: true,
@@ -1024,7 +1121,7 @@ class userLibs {
             access_token: info.accessToken,
             refresh_token: info.refreshToken,
             friendship_counts: 0,
-            //info: info.user.aboutMe,
+            // info: info.user.aboutMe,
             account_admin_id: user.user_id,
           },
           {transaction}
@@ -1045,7 +1142,7 @@ class userLibs {
             access_token: info.accessToken,
             refresh_token: info.refreshToken,
             friendship_counts: 0,
-            //info: info.user.aboutMe,
+            // info: info.user.aboutMe,
             account_admin_id: user.user_id,
           },
           {transaction}
@@ -1053,7 +1150,7 @@ class userLibs {
       }
 
       if (socialNetworkDetails) {
-        //if (info.isSocialLogin && info.network == 1) {
+        // if (info.isSocialLogin && info.network == 1) {
         AccountDetails = socialNetworkDetails;
         await socialNetworkDetails.setTeam(team, {
           transaction,
@@ -1071,7 +1168,8 @@ class userLibs {
       }
 
       await transaction.commit();
-      return {userId: fetchedUserId, userInfo: userInfo, socialNetworkDetails};
+
+      return {userId: fetchedUserId, userInfo, socialNetworkDetails};
     } catch (err) {
       // if we got an error and we created the transaction, roll it back
       if (transaction) {
@@ -1085,39 +1183,39 @@ class userLibs {
     return this.twtConnect
       .addTwitterProfilebyLogin(requestToken, requestSecret, verifier)
       .then(profile => {
-        let parseddata = this.parseTwitter(
+        const parseddata = this.parseTwitter(
           profile.profile_deatils,
           profile.token
         );
+
         return parseddata;
       })
-      .catch(error => {
-        return error;
-      });
+      .catch(error => error);
   }
 
   async sendMailForUnhold(data) {
     // let response = await getPlanDetails(data.userId)
     // if()
     // this.sendEmailServices
-    var activationLink = `${config.get(
+    const activationLink = `${config.get(
       'user_socioboard.mail_url'
     )}/verify-unhold-token?email=${data.email}&activationToken=${
       data.Activations.email_validate_token
     }`;
-    var htmlContent = this.sendEmailServices.template.unlock
+    const htmlContent = this.sendEmailServices.template.unlock
       .replace('[FirstName]', `${data.first_name}`)
       .replace('[AccountType]', data.Activations.plan_name)
       .replace('[ActivationLink]', activationLink);
-    var emailDetails = {
+    const emailDetails = {
       subject: 'Activation Mail',
       toMail: data.email,
-      htmlContent: htmlContent,
+      htmlContent,
     };
-    let mailData = await this.sendEmailServices.sendMails(
+    const mailData = await this.sendEmailServices.sendMails(
       config.get('mailService.defaultMailOption'),
       emailDetails
     );
+
     return mailData.response ? mailData.response : mailData;
   }
 }

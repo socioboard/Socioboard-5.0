@@ -20,6 +20,7 @@ class SignUp extends FormRequest
             "email" => 'required|email',
             "phone" => 'required',
             "code" => 'required',
+            "otp" => 'required',
             "password" => 'required|max:20|min:6|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[\/!@#$%^&*()`~\s_+\-=\[\]{};:"\\\,.<>\?\']).*$/',
             "passwordConfirmation" => 'required_with:password|same:password',
             "agree" => 'required'

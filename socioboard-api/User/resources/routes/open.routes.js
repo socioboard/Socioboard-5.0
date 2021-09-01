@@ -1,5 +1,5 @@
-import unauthorized from '../../core/unAuthorized/unAuthorized.routes.js';
-import socialCallback from '../../core/socialCallback/socialCallback.routes.js';
+import unauthorized from '../../core/unauthorized/unauthorized.routes.js';
+import socialCallback from '../../core/social-callback/social-callback.routes.js';
 
 class OpenRoutes {
   constructor(routeVersion, app) {

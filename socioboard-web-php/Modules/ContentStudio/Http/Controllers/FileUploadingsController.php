@@ -17,7 +17,7 @@ class FileUploadingsController extends Controller
     public function __construct()
     {
         $this->helper = Helper::getInstance();
-        $this->apiUrl = env('API_URL_PUBLISH').env('API_VERSION');
+        $this->apiUrl = env('API_URL_PUBLISH') . env('API_VERSION');
         $this->url = env("API_URL");
     }
 
@@ -30,7 +30,7 @@ class FileUploadingsController extends Controller
         $file = $request['file'];
         $mediaFile = $this->uploadMediaFile($file);
         $team = \Session::get('team');
-        if($mediaFile && \File::exists($mediaFile['path'])){
+        if ($mediaFile && \File::exists($mediaFile['path'])) {
             $rand = md5(time());
             $media = $this->uploadMediaToApi([
                 'name' => 'media',
@@ -39,8 +39,8 @@ class FileUploadingsController extends Controller
                 'privacy' => 3,
                 'teamId' => $team['teamid'],
             ]);
-            if( isset($media) && $media['code'] == 200 && !empty($media['data']) ){
-                if(strstr($media['data'][0]->mime_type, "image/")){
+            if (isset($media) && $media['code'] == 200 && !empty($media['data'])) {
+                if (strstr($media['data'][0]->mime_type, "image/")) {
                     return [
                         'mdia_path' => $media['data'][0]->media_url,
                         'type' => 'image',
@@ -48,7 +48,7 @@ class FileUploadingsController extends Controller
                     ];
                     return $media;
 
-                }elseif(strstr($media['data'][0]->mime_type, "video/")){
+                } elseif (strstr($media['data'][0]->mime_type, "video/")) {
                     return [
                         'mdia_path' => $media['data'][0]->media_url,
                         'type' => 'video',
@@ -61,10 +61,10 @@ class FileUploadingsController extends Controller
 
     public function downloadMediFromURL()
     {
-        if(request()->has('mediaUrl') && !empty(request()->get('mediaUrl'))){
-            $mediaFile = $this->downloadMediaUrl(request()->get('mediaUrl'));
+        if (request()->has('mediaUrl') && !empty(request()->get('mediaUrl'))) {
+            $mediaFile = $this->downloadMediaUrl(request()->get('mediaUrl'), request()->get('feedtype'));
             $team = \Session::get('team');
-            if($mediaFile && \File::exists($mediaFile['path'])){
+            if ($mediaFile && \File::exists($mediaFile['path'])) {
                 $rand = md5(time());
                 $media = $this->uploadMediaToApi([
                     'name' => 'media',
@@ -74,14 +74,14 @@ class FileUploadingsController extends Controller
                     'teamId' => $team['teamid'],
                 ]);
 
-                if( isset($media) && $media['code'] == 200 && !empty($media['data']) ){
-                    if(strstr($media['data'][0]->mime_type, "image/")){
+                if (isset($media) && $media['code'] == 200 && !empty($media['data'])) {
+                    if (strstr($media['data'][0]->mime_type, "image/")) {
                         return [
                             'mdia_path' => $media['data'][0]->media_url,
                             'type' => 'image',
                             'media_url' => $this->url . $media['data'][0]->media_url
                         ];
-                    }elseif(strstr($media['data'][0]->mime_type, "video/")){
+                    } elseif (strstr($media['data'][0]->mime_type, "video/")) {
                         return [
                             'mdia_path' => $media['data'][0]->media_url,
                             'type' => 'video',
@@ -98,7 +98,7 @@ class FileUploadingsController extends Controller
         $result = [];
 
         $filedata = array("name" => $data['name'], "file" => $data['filePath']);
-        $apiUrl = $this->apiUrl.'/upload/media?title=' . $data["title"] . '&teamId=' . $data["teamId"] . '&privacy=' . $data["privacy"];
+        $apiUrl = $this->apiUrl . '/upload/media?title=' . $data["title"] . '&teamId=' . $data["teamId"] . '&privacy=' . $data["privacy"];
 
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $filedata, true);
@@ -108,7 +108,7 @@ class FileUploadingsController extends Controller
                 $result["code"] = $response["data"]->code;
                 $result["data"] = $response["data"]->data;
                 $result["message"] = $response["data"]->message;
-                $result["error"] = $response["data"]->error;                
+                $result["error"] = $response["data"]->error;
             } else {
                 $result = $response;
             }
@@ -128,14 +128,14 @@ class FileUploadingsController extends Controller
             mkdir($pathToStorage, 0777, true);
 
         $mime = $file->getMimeType();
-        if(strstr($mime, "video/")){
+        if (strstr($mime, "video/")) {
             $mimeType = 'video';
-        }else if(strstr($mime, "image/")){
+        } else if (strstr($mime, "image/")) {
             $mimeType = 'image';
         }
-        if($mimeType){
+        if ($mimeType) {
             $mediFile = $file->getClientOriginalName();
-            $direction = $pathToStorage .'/'.$mediFile;
+            $direction = $pathToStorage . '/' . $mediFile;
             file_put_contents($direction, file_get_contents($file->path()));
 
             return ['type' => $mimeType, 'path' => $direction];
@@ -144,16 +144,19 @@ class FileUploadingsController extends Controller
     }
 
 
-    private function downloadMediaUrl($mediaUrl)
+    private function downloadMediaUrl($mediaUrl, $feedtype)
     {
+        if ($feedtype === 'fb') {
+            $mediaUrl2 = strtok($mediaUrl, '?');
+        } else {
+            $mediaUrl2 = $mediaUrl;
+        }
         $pathToStorage = public_path('media/uploads');
         if (!file_exists($pathToStorage))
             mkdir($pathToStorage, 0777, true);
-
-        $publishimage = substr($mediaUrl, strrpos($mediaUrl, '/') + 1);
+        $publishimage = substr($mediaUrl2, strrpos($mediaUrl2, '/') + 1);
         $direction = $pathToStorage . "/" . $publishimage;
         file_put_contents($direction, file_get_contents($mediaUrl));
-
         return ['type' => 'image', 'path' => $direction];
     }
 

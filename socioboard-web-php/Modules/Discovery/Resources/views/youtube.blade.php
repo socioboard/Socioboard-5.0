@@ -307,7 +307,6 @@
             to: 5000
         });
 
-        var pageid = 2;
         function getScrollXY() {
             var scrOfX = 0, scrOfY = 0;
             if (typeof (window.pageYOffset) == 'number') {
@@ -335,7 +334,6 @@
             );
         }
 
-        var pageid = 2;
         document.addEventListener("scroll", function (event) {
             if (feedsLength >= 15) {
                 if (getDocHeight() == getScrollXY()[1] + window.innerHeight) {
@@ -415,6 +413,7 @@
                 $('#search_button').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
             })
         //
+
         function openModel(id, cheaneltitle, title ) {
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+title +'</textarea>');
                     $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id+'"/><span><i class="fas fa-link"></i></span>');

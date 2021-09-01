@@ -1,14 +1,13 @@
 import UploadService from './upload.service.js';
 
 class UploadController {
-
-    async uploadMedia(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async uploadMedia(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request for uploading images/videos' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	#swagger.parameters['title'] = {
+    /*	#swagger.parameters['title'] = {
                 in: 'query',
                 description: 'title'
                 }
@@ -28,16 +27,16 @@ class UploadController {
                  default:'0',
                 enum: [0,1,3]
                 }*/
-        return await UploadService.uploadMedia(req, res, next);
-    }
+    return await UploadService.uploadMedia(req, res, next);
+  }
 
-    async getUserMediaDetails(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async getUserMediaDetails(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'Get media details of users' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	    #swagger.parameters['teamId'] = {
+    /*	    #swagger.parameters['teamId'] = {
                 in: 'query',
                 description: 'Enter Team Id',
                 }
@@ -51,29 +50,29 @@ class UploadController {
                 in: 'query',
                 description: 'Pagination Id'
                 }*/
-        return await UploadService.getUserMediaDetails(req, res, next);
-    }
+    return await UploadService.getUserMediaDetails(req, res, next);
+  }
 
-    async getSocialGallery(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async getSocialGallery(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'Get media details of all users' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	  #swagger.parameters['pageId'] = {
+    /*	  #swagger.parameters['pageId'] = {
                 in: 'query',
                 description: 'Pagination Id'
                 }*/
-        return await UploadService.getSocialGallery(req, res, next);
-    }
+    return await UploadService.getSocialGallery(req, res, next);
+  }
 
-    async uploadSSTemplate(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async uploadSSTemplate(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request for uploading SS Templates '  */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	  #swagger.parameters['title'] = {
+    /*	  #swagger.parameters['title'] = {
                 in: 'query',
                 description: 'Title of image'
                 }
@@ -84,48 +83,48 @@ class UploadController {
                  schema: { $ref: "#/definitions/mediaDetails" }
                  }
                 */
-        return await UploadService.uploadSSTemplate(req, res, next);
-    }
+    return await UploadService.uploadSSTemplate(req, res, next);
+  }
 
-    async getSSTemplates(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async getSSTemplates(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request for uploading SS Templates '  */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        return await UploadService.getSSTemplates(req, res, next);
-    }
+    return await UploadService.getSSTemplates(req, res, next);
+  }
 
-    async deleteSSTemplates(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async deleteSSTemplates(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request for uploading SS Templates '  */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        return await UploadService.deleteSSTemplates(req, res, next);
-    }
+    return await UploadService.deleteSSTemplates(req, res, next);
+  }
 
-    async deleteParticularTemplate(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async deleteParticularTemplate(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request to delete Particular Template'  */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	  #swagger.parameters['templateId'] = {
+    /*	  #swagger.parameters['templateId'] = {
               in: 'query',
               description: 'Title of image'
               }
               */
-        return await UploadService.deleteParticularTemplate(req, res, next);
-    }
+    return await UploadService.deleteParticularTemplate(req, res, next);
+  }
 
-    async deleteUserMedia(req, res, next) {
-        /* 	#swagger.tags = ['Upload']
+  async deleteUserMedia(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
             #swagger.description = 'To request to delete media from server' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*	    #swagger.parameters['mediaId'] = {
+    /*	    #swagger.parameters['mediaId'] = {
                 in: 'query',
                 description: 'Enter mediaId',
                 }
@@ -135,10 +134,58 @@ class UploadController {
                 default:'0',
                 enum: [0,1]
                 }}*/
-        return await UploadService.deleteUserMedia(req, res, next);
-    }
+    return await UploadService.deleteUserMedia(req, res, next);
+  }
 
-
-
+  /**
+   * TODO To search user media with all filtration
+   * Route To search user media with all filtration
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns user media details
+   */
+  async searchUserMediaDetails(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
+            #swagger.description = 'Get media details of users' */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+    /*	    #swagger.parameters['teamId'] = {
+                in: 'query',
+                description: 'Enter Team Id',
+                }
+                #swagger.parameters['criteria'] = {
+                in: 'body',
+                description: 'User team to edit',
+                required: true,
+                schema: { $ref: "#/definitions/searchImage" }
+                } 
+                #swagger.parameters['filterPeriod'] = {
+                in: 'query',
+                description: 'Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range',
+                default: 1,
+                enum: [1,2,3,4,5,6,7]
+                }
+                #swagger.parameters['since'] = {
+                in: 'query',
+                description: 'Custom since range in YYYY-MM-DD format'
+                }
+                #swagger.parameters['until'] = {
+                in: 'query',
+                description: 'Custom untill range in YYYY-MM-DD format'
+                } 
+                #swagger.parameters['sortBy'] = {
+                in: 'query',
+                description: 'Sort by Asc or Desc',
+                default: 'desc',
+                enum: ['asc','desc']
+                }
+                #swagger.parameters['pageId'] = {
+                in: 'query',
+                description: 'Pagination Id'
+                }*/
+    return await UploadService.searchUserMediaDetails(req, res, next);
+  }
 }
 export default new UploadController();

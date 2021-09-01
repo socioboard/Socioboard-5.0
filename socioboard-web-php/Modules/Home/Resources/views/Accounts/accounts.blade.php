@@ -36,7 +36,7 @@
                             <!--begin::Body-->
                             <div class="card-body pt-2 position-relative overflow-hidden">
                                 <div class="row d-flex justify-content-center">
-                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $pinterest = $facebookpage = 0;
+                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $pinterest = $facebookpage = $linkedinBusiness = $instagramPages = 0;
                                     ?>
                                     @if(isset($accountsCount))
                                         @if($accountsCount->code === 200)
@@ -59,6 +59,12 @@
                                                     @break
                                                     @case(2)
                                                     <?php $facebookpage = $data->count  ?>
+                                                    @break
+                                                    @case(7)
+                                                    <?php $linkedinBusiness = $data->count  ?>
+                                                    @break
+                                                    @case(12)
+                                                    <?php $instagramPages = $data->count  ?>
                                                     @break
                                                 @endswitch
                                             @endforeach
@@ -83,14 +89,14 @@
                                             class="col-md-1 col-sm-12 card bg-instagram border-0 px-6 py-8 rounded-xl mr-4 mb-7">
                                                     <span class="svg-icon svg-icon-3x d-block my-2">
                                                             <i class="fab fa-instagram fa-2x"></i>
-                                                        <b class="font-weight-bold font-size-h2 float-right">{{$instagram}}</b>
+                                                        <b class="font-weight-bold font-size-h2 float-right">{{$instagram+$instagramPages}}</b>
                                                     </span>
                                     </div>
                                     <div
                                             class="col-md-1 col-sm-12 card bg-linkedin border-0 px-6 py-8 rounded-xl mr-4 mb-7">
                                                     <span class="svg-icon svg-icon-3x d-block my-2">
                                                             <i class="fab fa-linkedin fa-2x"></i>
-                                                        <b class="font-weight-bold font-size-h2 float-right">{{$linkedin}}</b>
+                                                        <b class="font-weight-bold font-size-h2 float-right">{{$linkedin+$linkedinBusiness}}</b>
                                                     </span>
                                     </div>
                                     <div
@@ -152,7 +158,9 @@
                                 <option value="2">Facebook Pages</option>
                                 <option value="4">Twitter</option>
                                 <option value="5">Instagram</option>
+                                <option value="12">Instagram Business</option>
                                 <option value="6">Linkedin</option>
+                                <option value="7">Linkedin Pages</option>
                                 <option value="9">Youtube</option>
                             </select>
                         </div>
@@ -184,7 +192,7 @@
                             @if($accounts->code  === 200 )
                                 @if(count($accounts->data->teamSocialAccountDetails[0]->SocialAccount)!==0)
                                     @foreach($accounts->data->teamSocialAccountDetails[0]->SocialAccount as $account)
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-3" id="accountsSection{{$account->account_id}}">
                                             <div class="card card-custom gutter-b card-stretch">
                                                 <div
                                                         class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
@@ -197,7 +205,7 @@
                                                         <div class="ribbon-target" style="top: -2px; right: 20px;">
                                                             <i class="fab fa-twitter"></i>
                                                         </div>
-                                                    @elseif($account->account_type === 5)
+                                                    @elseif($account->account_type === 5 || $account->account_type === 12)
                                                         <div class="ribbon-target bg-instagram"
                                                              style="top: -2px; right: 20px;">
                                                             <i class="fab fa-instagram"></i>
@@ -237,15 +245,9 @@
                                                         </div>
                                                         <div
                                                                 class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
-                                                            @if($account->account_type !== 5)
-                                                                <div class="symbol-label"
-                                                                     style="background-image:url({{$account->profile_pic_url}})"></div>
-                                                                <i class="symbol-badge bg-success"></i>
-                                                            @else
-                                                                <div class="symbol-label"
-                                                                     style="background-image:url('https://cdn2.vectorstock.com/i/thumb-large/11/11/man-avatar-flat-style-icon-vector-30501111.jpg')"></div>
-                                                                <i class="symbol-badge bg-success"></i>
-                                                            @endif
+                                                            <div class="symbol-label"
+                                                                 style="background-image:url({{$account->profile_pic_url}})"></div>
+                                                            <i class="symbol-badge bg-success"></i>
                                                         </div>
                                                         <div>
                                                             @if($account->join_table_teams_social_accounts->is_account_locked === false)
@@ -371,6 +373,11 @@
                                                                         <a href="#"
                                                                            class="text-hover-primary">{{$stats->page_count}}</a>
                                                                         @break
+                                                                        @case(2)
+                                                                        <span class="font-weight-bold mr-2">Like counts:</span>
+                                                                        <a href="#"
+                                                                           class="text-hover-primary">{{$stats->total_like_count}}</a>
+                                                                        @break
                                                                     @endswitch
                                                                 @endif
                                                             @endforeach
@@ -436,10 +443,16 @@
                                                         </div>
                                                     </div>
                                                     @switch($account->account_type)
-                                                        @case(5)
-                                                        <br><br><br>
-                                                        @break
                                                         @case(6)
+                                                        <br><br><br><br>
+                                                        @break
+                                                        @case(5)
+                                                        <br><br><br><br>
+                                                        @break
+                                                        @case(12)
+                                                        <br><br><br><br>
+                                                        @break
+                                                        @case(7)
                                                         <br><br><br>
                                                         @break
                                                         @case(2)
@@ -447,7 +460,7 @@
                                                         @break
                                                         @case(9)<br><br>
                                                         @break
-                                                        @case(1)<br>
+                                                        @case(1)<br><br>
                                                         @break
                                                     @endswitch
                                                     <div>
@@ -536,7 +549,7 @@
             <!--end::Container-->
         </div>
         <!--end::Entry-->
-    </div>Accounts
+    </div>
     <!--end::Content-->
     <!-- begin:Add Accounts Modal-->
     <div class="modal fade" id="addAccountsModal" tabindex="-1"
@@ -744,11 +757,10 @@
                                     <a href="/add-accounts/Instagram" type="button"
                                        class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
                                         a Instagram Profile</a>
-                                    {{--                                                                                                <a href="#" type="button"--}}
-                                    {{--                                                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                    {{--                                                                                                    a Business Account</a>--}}
+                                    <a href="/add-accounts/InstagramBusiness" type="button"
+                                       class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                        a Business Account</a>
                                 </div>
-
                             </div>
                             <div class="tab-pane fade"
                                  id="linkedin-add-accounts"
@@ -762,10 +774,9 @@
                                        type="button"
                                        class="btn btn-linkedin font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
                                         a LinkedIn Profile</a>
-                                    {{--                                                                <a href="#" type="button"--}}
-                                    {{--                                                                   class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                    {{--                                                                    a Company Profile</a>--}}
-
+                                    <a href="/add-accounts/LinkedInCompany" type="button"
+                                       class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                        a LinkedIn page</a>
                                 </div>
 
                             </div>
@@ -872,22 +883,11 @@
                 dataType: 'json',
                 success: function (response) {
                     if (response.code === 200) {
+                        $('div#accountsSection' + id).remove();
                         if (type === '2') {
-                            toastr.success("Page Deleted Successfully", "", {
-                                timeOut: 2000,
-                                fadeOut: 3000,
-                                onHidden: function () {
-                                    window.location.reload();
-                                }
-                            });
+                            toastr.success("Page Deleted Successfully");
                         } else {
-                            toastr.success("Account Deleted Successfully", "", {
-                                timeOut: 2000,
-                                fadeOut: 3000,
-                                onHidden: function () {
-                                    window.location.reload();
-                                }
-                            });
+                            toastr.success("Account Deleted Successfully");
                         }
                     } else if (response.code === 400) {
                         toastr.error(response.message, "Unable To Delete Account");
@@ -1002,10 +1002,10 @@
                     },
                     beforeSend: function () {
                         $('#accountsDIv').empty().append('<div class="d-flex justify-content-center" >\n' +
-                            '        <div class="spinner-border" role="status"  style="display: none;">\n' +
-                            '            <span class="sr-only">Loading...</span>\n' +
-                            '        </div>\n' +
-                            '        </div>');
+                            '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                            '<span class="sr-only">Loading...</span>\n' +
+                            '</div>\n' +
+                            '</div>');
                         $(".spinner-border").css("display", "block");
                     },
                     success: function (response) {
@@ -1015,139 +1015,134 @@
                             if (response.data.data.teamSocialAccountDetails.length > 0) {
                                 response.data.data.teamSocialAccountDetails[0].SocialAccount.map(element => {
                                         appendData += '<div class="col-xl-3">\n' +
-                                            '                                    <div class="card card-custom gutter-b card-stretch">\n' +
-                                            '                                    <div\n' +
-                                            '                            class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">';
+                                            '<div class="card card-custom gutter-b card-stretch">\n' +
+                                            '<div\n' +
+                                            'class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">';
                                         if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
-                                            appendData += '  <div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
-                                                '                                                            <i class="fab fa-facebook-f"></i>\n' +
-                                                '                                                        </div>';
+                                            appendData += '<div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-facebook-f"></i>\n' +
+                                                '</div>';
                                         } else if (element.account_type === 4) {
-                                            appendData += '  <div class="ribbon-target" style="top: -2px; right: 20px;">\n' +
-                                                '                                                            <i class="fab fa-twitter"></i>\n' +
-                                                '                                                        </div>';
-                                        } else if (element.account_type === 5) {
-                                            appendData += '  <div class="ribbon-target bg-instagram" style="top: -2px; right: 20px;">\n' +
-                                                '                                                            <i class="fab fa-instagram"></i>\n' +
-                                                '                                                        </div>';
+                                            appendData += '<div class="ribbon-target" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-twitter"></i>\n' +
+                                                '</div>';
+                                        } else if (element.account_type === 5 || element.account_type === 12) {
+                                            appendData += '<div class="ribbon-target bg-instagram" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-instagram"></i>\n' +
+                                                '</div>';
                                         } else if (element.account_type === 6 || element.account_type === 7) {
-                                            appendData += '  <div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
-                                                '                                                            <i class="fab fa-linkedin"></i>\n' +
-                                                '                                                        </div>';
+                                            appendData += '<div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-linkedin"></i>\n' +
+                                                '</div>';
                                         } else if (element.account_type === 9) {
-                                            appendData += '  <div class="ribbon-target bg-youtube" style="top: -2px; right: 20px;">\n' +
-                                                '                                                            <i class="fab fa-youtube"></i>\n' +
-                                                '                                                        </div>';
+                                            appendData += '<div class="ribbon-target bg-youtube" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-youtube"></i>\n' +
+                                                '</div>';
                                         }
                                         appendData += '<div\n' +
-                                            '                                                                    class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">\n' +
-                                            '                                                                <div id="status' + element.account_id + '">';
+                                            'class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">\n' +
+                                            '<div id="status' + element.account_id + '">';
                                         if (element.join_table_teams_social_accounts.is_account_locked === true) {
                                             appendData += ' <div class="ribbon-target" style="top: 12px;"\n' +
-                                                '                                                                             onclick="lock(' + element.account_id + ',0 )">\n' +
-                                                '                                                                            <span class="ribbon-inner bg-danger"></span>\n' +
-                                                '                                                                            <i\n' +
-                                                '                                                                                    class="fas fa-user-lock fa-fw mr-2 text-white"></i>\n' +
-                                                '                                                                            Un-Lock\n' +
-                                                '                                                                        </div>';
+                                                'onclick="lock(' + element.account_id + ',0 )">\n' +
+                                                '<span class="ribbon-inner bg-danger"></span>\n' +
+                                                '<i\n' +
+                                                'class="fas fa-user-lock fa-fw mr-2 text-white"></i>\n' +
+                                                'Un-Lock\n' +
+                                                '</div>';
                                         } else {
                                             appendData += '<div class="ribbon-target" style="top: 80px;"\n' +
-                                                '                                                                             onclick="lock(' + element.account_id + ',1 )">\n' +
-                                                '                                                                            <span class="ribbon-inner bg-info"></span>\n' +
-                                                '                                                                            <i\n' +
-                                                '                                                                                    class="fas fa-lock-open fa-fw mr-2 text-white"></i>\n' +
-                                                '                                                                            Lock\n' +
-                                                '                                                                        </div>';
+                                                'onclick="lock(' + element.account_id + ',1 )">\n' +
+                                                '<span class="ribbon-inner bg-info"></span>\n' +
+                                                '<i\n' +
+                                                'class="fas fa-lock-open fa-fw mr-2 text-white"></i>\n' +
+                                                'Lock\n' +
+                                                '</div>';
                                         }
-                                        appendData += '</div>';
-                                        if (element.account_type === 5) {
-                                            appendData += '<div\n' +
-                                                '                                                                        class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
-                                                '                                                                    <div class="symbol-label"\n' +
-                                                '                                                                         style="background-image:url(' + "media/svg/avatars/001-boy.svg" + ')"></div>\n' +
-                                                '                                                                    <i class="symbol-badge bg-success"></i>\n' +
-                                                '                                                                </div>';
-                                        } else {
-                                            appendData += '<div\n' +
-                                                '                                                                        class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
-                                                '                                                                    <div class="symbol-label"\n' +
-                                                '                                                                         style="background-image:url(' + element.profile_pic_url + ')"></div>\n' +
-                                                '                                                                    <i class="symbol-badge bg-success"></i>\n' +
-                                                '                                                                </div>';
-                                        }
+                                        appendData += '</div><div\n' +
+                                            'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
+                                            '<div class="symbol-label"\n' +
+                                            'style="background-image:url(' + element.profile_pic_url + ')"></div>\n' +
+                                            '<i class="symbol-badge bg-success"></i>\n' +
+                                            '</div>';
                                         appendData += '<div>\n' +
-                                            '                                                                    <a href="' + element.profile_pic_url + '"\n' +
-                                            '                                                                       target="_blank">\n' +
-                                            '                                                                        ' + element.first_name + " " + element.last_name + '\n' +
-                                            '                                                                    </a>\n' +
-                                            '                                                                    <div class="text-muted">\n' +
-                                            '                                                                        ' + element.user_name +
-                                            '                                                                    </div>';
+                                            '<a href="' + element.profile_url + '"\n' +
+                                            'target="_blank">\n' +
+                                            '' + element.first_name + " " + element.last_name + '\n' +
+                                            '</a>\n' +
+                                            '<div class="text-muted">\n' +
+                                            '' + element.user_name +
+                                            '</div>';
                                         appendData += ' <div class="rating-css">\n' +
-                                            '                                                                        <div class="star-icon">\n' +
-                                            '                                                                            <input type="radio"';
+                                            '<div class="star-icon">\n' +
+                                            '<input type="radio"';
                                         if (element.rating === 1) appendData += ' checked ';
-                                        appendData += ' name="rating1' + element.account_id + '" id="rating1' + element.account_id + '"\n' +
-                                            '                                                                                   onclick="ratingUpdate(\'1\', \'' + element.account_id + '\');">\n' +
-                                            '                                                                            <label\n' +
-                                            '                                                                                    for="rating1' + element.account_id + '"\n' +
-                                            '                                                                                    class="fas fa-star"></label>\n' +
-                                            '                                                                            <input type="radio"';
+                                        appendData += 'name="rating1' + element.account_id + '" id="rating1' + element.account_id + '"\n' +
+                                            'onclick="ratingUpdate(\'1\', \'' + element.account_id + '\');">\n' +
+                                            '<label\n' +
+                                            'for="rating1' + element.account_id + '"\n' +
+                                            'class="fas fa-star"></label>\n' +
+                                            '<input type="radio"';
                                         if (element.rating === 2) appendData += ' checked ';
                                         appendData += ' name="rating2' + element.account_id + '" id="rating2' + element.account_id + '"\n' +
-                                            '                                                                                   onclick="ratingUpdate(\'2\', \'' + element.account_id + '\');">\n' +
-                                            '                                                                            <label\n' +
-                                            '                                                                                    for="rating2' + element.account_id + '"\n' +
-                                            '                                                                                    class="fas fa-star"></label>\n' +
-                                            '                                                                            <input type="radio"';
+                                            'onclick="ratingUpdate(\'2\', \'' + element.account_id + '\');">\n' +
+                                            '<label\n' +
+                                            'for="rating2' + element.account_id + '"\n' +
+                                            'class="fas fa-star"></label>\n' +
+                                            '<input type="radio"';
                                         if (element.rating === 3) appendData += ' checked ';
                                         appendData += ' name="rating3' + element.account_id + '" id="rating3' + element.account_id + '"\n' +
-                                            '                                                                                   onclick="ratingUpdate(\'3\', \'' + element.account_id + '\');">\n' +
-                                            '                                                                            <label\n' +
-                                            '                                                                                    for="rating3' + element.account_id + '"\n' +
-                                            '                                                                                    class="fas fa-star"></label>\n' +
-                                            '                                                                            <input type="radio"';
+                                            'onclick="ratingUpdate(\'3\', \'' + element.account_id + '\');">\n' +
+                                            '<label\n' +
+                                            'for="rating3' + element.account_id + '"\n' +
+                                            'class="fas fa-star"></label>\n' +
+                                            '<input type="radio"';
                                         if (element.rating === 4) appendData += ' checked ';
                                         appendData += ' name="rating4' + element.account_id + '" id="rating4' + element.account_id + '"\n' +
-                                            '                                                                                   onclick="ratingUpdate(\'4\', \'' + element.account_id + '\');">\n' +
-                                            '                                                                            <label\n' +
-                                            '                                                                                    for="rating4' + element.account_id + '"\n' +
-                                            '                                                                                    class="fas fa-star"></label>\n' +
-                                            '                                                                            <input type="radio"';
+                                            'onclick="ratingUpdate(\'4\', \'' + element.account_id + '\');">\n' +
+                                            '<label\n' +
+                                            'for="rating4' + element.account_id + '"\n' +
+                                            'class="fas fa-star"></label>\n' +
+                                            '<input type="radio"';
                                         if (element.rating === 5) appendData += ' checked ';
                                         appendData += ' name="rating5' + element.account_id + '" id="rating5' + element.account_id + '"\n' +
-                                            '                                                                                   onclick="ratingUpdate(\'5\', \'' + element.account_id + '\');">\n' +
-                                            '                                                                            <label\n' +
-                                            '                                                                                    for="rating5' + element.account_id + '"\n' +
-                                            '                                                                                    class="fas fa-star"></label>\n' +
-                                            '                                                                        </div>\n' +
-                                            '                                                                    </div>';
+                                            'onclick="ratingUpdate(\'5\', \'' + element.account_id + '\');">\n' +
+                                            '<label\n' +
+                                            'for="rating5' + element.account_id + '"\n' +
+                                            'class="fas fa-star"></label>\n' +
+                                            '</div>\n' +
+                                            '</div>';
                                         appendData += '<div class="mt-2">\n' +
-                                            '                                                                        <a href="' + element.profile_url + '"\n' +
-                                            '                                                                           target="_blank"\n' +
-                                            '                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n' +
-                                            '                                                                        <a href="#"\n' +
-                                            '                                                                           class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"\n' +
-                                            '                                                                           onclick="return false"\n' +
-                                            '                                                                           id="chatDivButton"\n' +
-                                            '                                                                           title="Coming soon">Chat</a>\n' +
-                                            '                                                                    </div>\n' +
-                                            '                                                                </div>\n' +
-                                            '                                                            </div>';
-                                        appendData += '                                  <div class="py-9">\n' +
-                                            '                                                <div class="d-flex align-items-center justify-content-between mb-2">\n';
+                                            '<a href="' + element.profile_url + '"\n' +
+                                            'target="_blank"\n' +
+                                            'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n' +
+                                            '<a href="#"\n' +
+                                            'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"\n' +
+                                            'onclick="return false"\n' +
+                                            'id="chatDivButton"\n' +
+                                            'title="Coming soon">Chat</a>\n' +
+                                            '</div>\n' +
+                                            '</div>\n' +
+                                            '</div>';
+                                        appendData += '<div class="py-9">\n' +
+                                            '<div class="d-flex align-items-center justify-content-between mb-2">\n';
                                         response.data.data.SocialAccountStats.map(data => {
                                             if (element.account_id === data.account_id) {
                                                 switch (element.account_type) {
                                                     case 4:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Following:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.following_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Following:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.following_count + '</a>';
                                                         break;
                                                     case 1:
                                                         appendData += '<span class="font-weight-bold mr-2">Page Count:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.page_count + '</a>';
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.page_count + '</a>';
+                                                        break;
+                                                    case 2:
+                                                        appendData += '<span class="font-weight-bold mr-2">Like Count:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.total_like_count + '</a>';
                                                         break;
                                                     default:
                                                 }
@@ -1160,24 +1155,24 @@
                                             if (element.account_id === data.account_id) {
                                                 switch (element.account_type) {
                                                     case 4:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Followers:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.follower_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Followers:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.follower_count + '</a>';
                                                         break;
                                                     case 1:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Followers:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.friendship_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Followers:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.friendship_count + '</a>';
                                                         break;
                                                     case 2:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Followers:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.follower_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Followers:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.follower_count + '</a>';
                                                         break;
                                                     case 9:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Subscription Counts:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.subscription_count
+                                                        appendData += '<span class="font-weight-bold mr-2">Subscription Counts:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.subscription_count
                                                         break;
                                                 }
                                             }
@@ -1189,41 +1184,41 @@
                                             if (element.account_id === data.account_id) {
                                                 switch (element.account_type) {
                                                     case 4:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Feeds:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.total_post_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Feeds:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.total_post_count + '</a>';
                                                         break;
                                                     case 1:
-                                                        appendData += '  <span class="font-weight-bold mr-2">Feeds:</span>\n' +
-                                                            '                                                                                <a href="#"\n' +
-                                                            '                                                                                   class="text-hover-primary">' + data.friendship_count + '</a>';
+                                                        appendData += '<span class="font-weight-bold mr-2">Feeds:</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.friendship_count + '</a>';
                                                         break;
                                                 }
                                             }
                                         });
                                         appendData += '</div>\n';
-                                        appendData += '      <div\n' +
-                                            '                                                                        class="d-flex align-items-center justify-content-between">\n' +
-                                            '                                                                    <span\n' +
-                                            '                                                                            class="font-weight-bold mr-2">Cron Update:</span>\n' +
-                                            '                                                                    <span class="switch switch-sm switch-icon"\n' +
-                                            '                                                                          id="cronModify' + element.account_id + '">\n' +
-                                            '                                                        <label>\n' +
-                                            '                                                          <input type="checkbox" id="cronUpdate' + element.account_id + '"\n';
+                                        appendData += '<div\n' +
+                                            'class="d-flex align-items-center justify-content-between">\n' +
+                                            '<span\n' +
+                                            'class="font-weight-bold mr-2">Cron Update:</span>\n' +
+                                            '<span class="switch switch-sm switch-icon"\n' +
+                                            'id="cronModify' + element.account_id + '">\n' +
+                                            '<label>\n' +
+                                            '<input type="checkbox" id="cronUpdate' + element.account_id + '"\n';
                                         if (element.refresh_feeds === 2) appendData += 'checked ';
                                         appendData += 'name="select"\n'
-                                        appendData += '                                                                 onclick="cronUpdate(' + element.account_id + ', ' + element.refresh_feeds + ');">\n' +
-                                            '                                                            <span></span>\n' +
-                                            '                                                        </label>\n' +
-                                            '                                                    </span>\n' +
-                                            '                                                                </div>' +
-                                            '                                            </div>';
+                                        appendData += 'onclick="cronUpdate(' + element.account_id + ', ' + element.refresh_feeds + ');">\n' +
+                                            '<span></span>\n' +
+                                            '</label>\n' +
+                                            '</span>\n' +
+                                            '</div>' +
+                                            '</div>';
                                         appendData += '<div>\n' +
-                                            '                                                <a href="javascript:;" class="btn text-danger font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12" data-toggle="modal" data-target="#accountDeleteModal' + element.account_id + '" >Delete account</a> \n' +
-                                            '                                            </div>';
+                                            '<a href="javascript:;" class="btn text-danger font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12" data-toggle="modal" data-target="#accountDeleteModal' + element.account_id + '" >Delete account</a> \n' +
+                                            '</div>';
                                         appendData += '</div>\n' +
-                                            '                                    </div>\n' +
-                                            '                                </div>';
+                                            '</div>\n' +
+                                            '</div>';
                                         switch (element.account_type) {
                                             case 2:
                                                 appendData += '<br><br>';
@@ -1233,54 +1228,54 @@
                                                 break;
                                         }
                                         appendData += '<div class="modal fade" id="accountDeleteModal' + element.account_id + '"\n' +
-                                            '                                                 tabindex="-1"\n' +
-                                            '                                                 role="dialog"\n' +
-                                            '                                                 aria-labelledby="teamDeleteModalLabel"\n' +
-                                            '                                                 aria-hidden="true">\n' +
-                                            '                                                <div class="modal-dialog modal-dialog-centered modal-lg"\n' +
-                                            '                                                     role="document">\n' +
-                                            '                                                    <div class="modal-content">\n' +
-                                            '                                                        <div class="modal-header">\n' +
-                                            '                                                            <h5 class="modal-title" id="teamDeleteModalLabel">Delete\n' +
-                                            '                                                                This Account</h5>\n' +
-                                            '                                                            <button type="button" class="close" data-dismiss="modal"\n' +
-                                            '                                                                    aria-label="Close">\n' +
-                                            '                                                                <i aria-hidden="true" class="ki ki-close"></i>\n' +
-                                            '                                                            </button>\n' +
-                                            '                                                        </div>\n' +
-                                            '                                                        <div class="modal-body">\n' +
-                                            '                                                            <div class="text-center">\n' +
-                                            '                                                                <img\n' +
-                                            '                                                                        src="/media/svg/icons/Communication/Delete-user.svg"/><br>\n' +
-                                            '                                                                <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>\n' +
-                                            '                                                            </div>\n' +
-                                            '                                                            <div class="d-flex justify-content-center">\n' +
-                                            '                                                                <button type="submit"\n' +
-                                            '                                                                        onclick="deleteSocialAcc(' + element.account_id + ')"\n' +
-                                            '                                                                        class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"\n' +
-                                            '                                                                        id="' + element.account_id + '"\n' +
-                                            '                                                                        data-dismiss="modal">\n' +
-                                            '                                                                    Delete it\n' +
-                                            '                                                                </button>\n' +
-                                            '                                                                <a href="javascript:;" type="button"\n' +
-                                            '                                                                   class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"\n' +
-                                            '                                                                   data-dismiss="modal">No\n' +
-                                            '                                                                    thanks.</a>\n' +
-                                            '                                                            </div>\n' +
-                                            '                                                        </div>\n' +
-                                            '                                                    </div>\n' +
-                                            '                                                </div>\n' +
-                                            '                                            </div>';
+                                            'tabindex="-1"\n' +
+                                            'role="dialog"\n' +
+                                            'aria-labelledby="teamDeleteModalLabel"\n' +
+                                            'aria-hidden="true">\n' +
+                                            '<div class="modal-dialog modal-dialog-centered modal-lg"\n' +
+                                            'role="document">\n' +
+                                            '<div class="modal-content">\n' +
+                                            '<div class="modal-header">\n' +
+                                            '<h5 class="modal-title" id="teamDeleteModalLabel">Delete\n' +
+                                            'This Account</h5>\n' +
+                                            '<button type="button" class="close" data-dismiss="modal"\n' +
+                                            'aria-label="Close">\n' +
+                                            '<i aria-hidden="true" class="ki ki-close"></i>\n' +
+                                            '</button>\n' +
+                                            '</div>\n' +
+                                            '<div class="modal-body">\n' +
+                                            '<div class="text-center">\n' +
+                                            '<img\n' +
+                                            'src="/media/svg/icons/Communication/Delete-user.svg"/><br>\n' +
+                                            '<span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>\n' +
+                                            '</div>\n' +
+                                            '<div class="d-flex justify-content-center">\n' +
+                                            '<button type="submit"\n' +
+                                            'onclick="deleteSocialAcc(' + element.account_id + ')"\n' +
+                                            'class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"\n' +
+                                            'id="' + element.account_id + '"\n' +
+                                            'data-dismiss="modal">\n' +
+                                            'Delete it\n' +
+                                            '</button>\n' +
+                                            '<a href="javascript:;" type="button"\n' +
+                                            'class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"\n' +
+                                            'data-dismiss="modal">No\n' +
+                                            'thanks.</a>\n' +
+                                            '</div>\n' +
+                                            '</div>\n' +
+                                            '</div>\n' +
+                                            '</div>\n' +
+                                            '</div>';
                                     }
                                 );
                                 $('#accountsDIv').append(appendData);
                             } else {
                                 $('#accountsDIv').append('<div class="text-center">\n' +
-                                    '                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                    </div>\n' +
-                                    '                                                    <h6>No Social Account has been found for this search filter</h6>\n' +
-                                    '                                                </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div>\n' +
+                                    '<h6>No Social Account has been found for this search filter</h6>\n' +
+                                    '</div>');
                             }
                         }
                     }

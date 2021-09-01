@@ -1,32 +1,10 @@
 {
-  "development": {
-    "database": "devSocioBoard",
-    "username": "SocioBoard",
-    "password": null,
+  "localDev": {
+    "username": "root",
+    "password": "socioV5devPassword",
+    "database": "socioV5dev",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "logging": false,
-    "pool": {
-      "max": 100,
-      "min": 0,
-      "acquire": 1000000,
-      "idle": 200000
-    }
-  },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "production": {
-    "username": "",
-    "password": "",
-    "database": "",
-    "host": "",
-    "dialect": "",
-    "logging": false,
     "pool": {
       "max": 100,
       "min": 0,
@@ -39,13 +17,49 @@
     },
     "define": {
       "freezeTableName": true,
-      "charset": "utf8",
+      "charset": "utf8mb4",
       "dialectOptions": {
-        "collate": "utf8_general_ci"
+        "collate": "utf8mb4_unicode_ci"
       },
       "timestamps": false
     },
     "timezone": "+00:00",
+    "logging": false,
+    "seederStorage": "sequelize"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "development": {
+    "username": "<< DB USER NAME >>",
+    "database": "<< Database name >>",
+    "password": "<< password >>",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "pool": {
+      "max": 100,
+      "min": 0,
+      "acquire": 1000000,
+      "idle": 200000
+    },
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true
+    },
+    "define": {
+      "freezeTableName": true,
+      "charset": "utf8mb4",
+      "dialectOptions": {
+        "collate": "utf8mb4_unicode_ci"
+      },
+      "timestamps": false
+    },
+    "timezone": "+00:00",
+    "logging": false,
     "seederStorage": "sequelize"
   }
 }

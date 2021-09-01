@@ -51,6 +51,7 @@
                              @if(in_array($v->accountId, $twitterAccountsIds)) <i class="fab fa-twitter fa-fw " data-toggle="tooltip" data-placement="top" title="Twitter"></i></i>
                                  @elseif(in_array($v->accountId, $facebookAccountsIds)) <i class="fab fa-facebook-f fa-fw " data-toggle="tooltip" data-placement="top" title="Facebook"></i>
                                  @elseif(in_array($v->accountId, $linkedInAccountsIds)) <i class="fab fa-facebook-f fa-linkedin fa-fw " data-toggle="tooltip" data-placement="top" title="LinkedIn"></i>
+                                  @elseif(in_array($v->accountId, $instagramAccountsIds)) <i class="fab fa-facebook-f fa-instagram fa-fw " data-toggle="tooltip" data-placement="top" title="instagram"></i>
                                     @endif
 
 {{--                            <i class="fab fa-instagram fa-fw " data-toggle="tooltip" data-placement="top" title="Instagram"></i>--}}
@@ -119,6 +120,7 @@
                     @endif
                 </span>
             </td>
+            @if($page_title !== "history")
             <td class="pr-0">
                 <a  href="{{ $action }}" class="btn btn-icon text-hover-info btn-sm">
                     <span class="svg-icon svg-icon-md svg-icon-info">
@@ -126,6 +128,7 @@
                     </span>
                 </a>
             </td>
+                @endif
         </tr>
     @endforeach
 @endif

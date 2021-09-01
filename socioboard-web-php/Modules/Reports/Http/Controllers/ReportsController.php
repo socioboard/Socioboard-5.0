@@ -56,7 +56,6 @@ class ReportsController extends Controller
         }
     }
 
-
     public function getScheduleReports(Request $request)
     {
         try {
@@ -260,7 +259,6 @@ class ReportsController extends Controller
      */
     public function updateReportsSettings(Request $request)
     {
-
         try {
             $data['company_name'] = $request->companyName;
             if ($request->remove_avatar_value == "1") $data['company_logo'] = "media/logos/sb-icon.svg";
@@ -372,7 +370,10 @@ class ReportsController extends Controller
 
     public function autoEmailReports()
     {
-//        try {
+        try {
+            $youtubeAccounts=[];
+            $twitterAccounts=[];
+            $teamdetails=[];
             $apiUrl = ApiConfig::get('/team/get-details');
             $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
             $responseData = $this->helper->responseHandler($response['data']);
@@ -409,10 +410,10 @@ class ReportsController extends Controller
                 $data[$x][0]['twitterReport'] = isset($content->twitterReport) ? $content->twitterReport : [];
                 $x++;
             }
-            return view('reports::autoEmailReports', compact('twitterAccounts', 'youtubeAccounts', 'teamdetails','data'));
-//        }catch (Exception $e) {
-//            return $this->helper->callingErrorHandler($e, 'autoEmailReports() {ReportsController}');
-//        }
+            return view('reports::autoEmailReports', compact('twitterAccounts','youtubeAccounts', 'teamdetails','data'));
+        }catch (Exception $e) {
+            return $this->helper->callingErrorHandler($e, 'autoEmailReports() {ReportsController}');
+        }
     }
 
     public function getNextReports($value){

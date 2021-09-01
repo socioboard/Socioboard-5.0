@@ -71,7 +71,11 @@ class ProfileUpdateController extends Controller
             $apiUrl = $this->API_URL . env('API_VERSION') . '/user/change-password';
             try {
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $data);
-                return $this->helper->responseHandlerWithIfElse($response);
+
+                $result = $this->helper->responseHandlerWithIfElse($response);
+                $result['new_password'] = $data['newPassword'];
+                Session::put('user.userDetails.password', $result['new_password']);
+                return $result;
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 return $this->helper->guzzleErrorHandler($e, ' ProfileUpdateController => changePassword => Method-post ');
             }

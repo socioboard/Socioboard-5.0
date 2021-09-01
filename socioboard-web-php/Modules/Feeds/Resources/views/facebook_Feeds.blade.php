@@ -5,6 +5,7 @@
 @section('links')
     <link rel="stylesheet" type="text/css" href="/plugins/custom/dropify/dist/css/dropify.min.css"/>
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/emojionearea/css/emojionearea.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="/css/images-grid.css"/>
 @endsection
 @section('content')
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
@@ -16,7 +17,7 @@
                 <!--begin::Profile-->
                 <!--begin::Row-->
                 <div class="row" data-sticky-container>
-                    <div class="col-xl-4" >
+                    <div class="col-xl-4">
                         <div class="sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
                              data-sticky-class="kt-sticky">
                             <div class="form-group">
@@ -137,7 +138,7 @@
                                             <!--end::User-->
 
                                             <!--begin::Contact-->
-                                            <div class="py-9">
+                                            <div class="py-9" id="follower_counts-div">
                                                 @if($feeds['code'] === 200)
                                                     @if($accounts[0]->account_type === 2)
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
@@ -164,20 +165,6 @@
                                                                   id="page_count">{{$feeds['data']->SocialAccountStats->page_count}}</span>
                                                         </div>
                                                     @endif
-                                                @elseif($feeds['code'] === 400)
-                                                    <div class="text-center">
-                                                        <div class="symbol symbol-150">
-                                                            <img src="/media/svg/illustrations/no-accounts.svg"/>
-                                                        </div>
-                                                        <h6> Error Occured : {{$feeds['message']}}</h6>
-                                                    </div>
-                                                @else
-                                                    <div class="text-center">
-                                                        <div class="symbol symbol-150">
-                                                            <img src="/media/svg/illustrations/no-accounts.svg"/>
-                                                        </div>
-                                                        <h6>Some error occured , Can not get feeds</h6>
-                                                    </div>
                                                 @endif
                                             </div>
                                             <!--end::Contact-->
@@ -226,11 +213,8 @@
                                         @if((count($feeds['data']->feeds))>0)
                                             @foreach($feeds['data']->feeds as $data)
                                                 <div class="mb-5">
-                                                    <!--begin::Container-->
                                                     <div>
-                                                        <!--begin::Header-->
                                                         <div class="d-flex align-items-center pb-4">
-                                                            <!--begin::Symbol-->
                                                             <div class="symbol symbol-40 symbol-light-success mr-5">
                                                             <span class="symbol-label">
                                                                 <img
@@ -238,19 +222,13 @@
                                                                         class="h-75 align-self-end" alt=""/>
                                                             </span>
                                                             </div>
-                                                            <!--end::Symbol-->
-                                                            <!--begin::Info-->
                                                             <div class="d-flex flex-column flex-grow-1">
                                                                 <a href="javascript:;"
                                                                    class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                                 <span
                                                                         class="font-weight-bold"></span>
                                                             </div>
-                                                            <!--end::Info-->
                                                         </div>
-                                                        <!--end::Header-->
-
-                                                        <!--begin::Body-->
                                                         @if(count($data->mediaUrls)>0)
                                                             @if($data->postType === 'photo')
                                                                 <div class="pt-4">
@@ -466,8 +444,9 @@
 
             @endsection
             @section('scripts')
-                <script src="{{asset('js/contentStudio/search.js')}}"></script>
+                {{--                <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
                 <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+                <script src="{{asset('js/images-grid.js')}}"></script>
                 <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
                 <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
                 <script>
@@ -486,7 +465,6 @@
 
                     $(document).ready(function () {
                         $("#discovery").trigger("click");
-                        $('#addToCart').tooltip();
                     });
 
                     // begin:normal post emoji
@@ -494,43 +472,18 @@
                         pickerPosition: "right",
                         tonesStyle: "bullet"
                     });
-                    // end:normal post emoji
-                    function getScrollXY() {
-                        var scrOfX = 0, scrOfY = 0;
-                        if (typeof (window.pageYOffset) == 'number') {
-                            //Netscape compliant
-                            scrOfY = window.pageYOffset;
-                            scrOfX = window.pageXOffset;
-                        } else if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
-                            //DOM compliant
-                            scrOfY = document.body.scrollTop;
-                            scrOfX = document.body.scrollLeft;
-                        } else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-                            //IE6 standards compliant mode
-                            scrOfY = document.documentElement.scrollTop;
-                            scrOfX = document.documentElement.scrollLeft;
-                        }
-                        return [scrOfX, scrOfY];
-                    }
 
-                    var pageid = 2;
-                    document.addEventListener("scroll", function (event) {
-                        if (feedsLength >= 12) {
-                            if (getDocHeight() == getScrollXY()[1] + window.innerHeight) {
-                                getNextFacebookFeeds(accounId, pageid, accountType);
-                                pageid++;
+
+                    let pageId = 2;
+                    $(window).scroll(function () {
+                        if (Math.ceil($(window).scrollTop()) === Math.ceil(($(document).height() - $(window).height()))) {
+                            if (feedsLength >= 12) {
+                                getNextFacebookFeeds(accounId, pageId, accountType);
+                                pageId++;
                             }
                         }
                     });
 
-                    function getDocHeight() {
-                        var D = document;
-                        return Math.max(
-                            D.body.scrollHeight, D.documentElement.scrollHeight,
-                            D.body.offsetHeight, D.documentElement.offsetHeight,
-                            D.body.clientHeight, D.documentElement.clientHeight
-                        );
-                    }
 
                     /**
                      * TODO we've to get  the next  feeds of facebook account on change of accounts from dropdown.
@@ -541,12 +494,14 @@
                     function getfacebookFeeds(accid, pageId, acctype) {
                         $.ajax({
                             type: 'get',
-                            url: '/get-Next-facebook-feeds',
+                            url: '/get-next-facebook-feeds',
                             data: {
                                 accid, pageId, acctype,
                             },
                             dataType: 'json',
                             beforeSend: function () {
+                                $('#follower_counts-div').empty();
+                                $('#facebookProfileDiv').empty();
                                 $('#facebookFeeds').empty().append('<div class="d-flex justify-content-center" >\n' +
                                     '        <div class="spinner-border" role="status"  style="display: none;">\n' +
                                     '            <span class="sr-only">Loading...</span>\n' +
@@ -555,53 +510,47 @@
                                 $(".spinner-border").css("display", "block");
                             },
                             success: function (response) {
+                                if ($('#errorDIv').length) {
+                                    $('#errorDIv').empty();
+                                }
                                 $(".spinner-border").css("display", "none");
                                 let append = '';
+                                let appendData2 = '';
                                 if (response.data.code === 200) {
-                                    $('#facebookProfileDiv,#follower_count,#like_count,#page_count').empty();
-                                    if (response.data.data.socialAccountDetails.account_type === 1) {
-                                        $('#follower_count').append(response.data.data.SocialAccountStats.friendship_count);
-                                        $('#like_count').append(0);
-                                        $('#page_count').append(response.data.data.SocialAccountStats.page_count);
-                                    } else if (response.data.data.socialAccountDetails.account_type === 2) {
-                                        $('#like_count').append(response.data.data.SocialAccountStats.total_like_count);
-                                        $('#like_count').append(0);
-                                        $('#follower_count').append(response.data.data.SocialAccountStats.follower_count);
-                                    }
                                     append += ' <div\n' +
-                                        '                                            class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
-                                        '                                            <div class="symbol-label"\n' +
-                                        '                                                 style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
-                                        '                                            <i class="symbol-badge bg-success"></i>\n' +
-                                        '                                        </div>\n' +
-                                        '                                        <div>\n';
+                                        'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
+                                        '<div class="symbol-label"\n' +
+                                        'style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
+                                        '<i class="symbol-badge bg-success"></i>\n' +
+                                        '</div>\n' +
+                                        '<div>\n';
                                     if (response.data.data.socialAccountDetails.account_type === 2) {
-                                        append += '                                            <a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"  target="_blank"\n' +
-                                            '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
-                                            '                                               >\n' + response.data.data.socialAccountDetails.first_name +
-                                            '                                                <i\n' +
-                                            '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
-                                            '                                            </a>\n';
+                                        append += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"  target="_blank"\n' +
+                                            'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                                            '>\n' + response.data.data.socialAccountDetails.first_name +
+                                            '<i\n' +
+                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
+                                            '</a>\n';
                                     } else if (response.data.data.socialAccountDetails.account_type === 1) {
-                                        append += '                                            <a \n' +
-                                            '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
-                                            '                                               >\n' + response.data.data.socialAccountDetails.first_name +
-                                            '                                                <i\n' +
-                                            '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
-                                            '                                            </a>\n';
+                                        append += '<a \n' +
+                                            'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                                            '>\n' + response.data.data.socialAccountDetails.first_name +
+                                            '<i\n' +
+                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
+                                            '</a>\n';
 
                                     } else {
-                                        append += '                                            <a href="' + response.data.data.socialAccountDetails.profile_url + '"  target="_blank"\n' +
-                                            '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
-                                            '                                               >\n' + response.data.data.socialAccountDetails.first_name +
-                                            '                                                <i\n' +
-                                            '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
-                                            '                                            </a>\n';
+                                        append += '<a href="' + response.data.data.socialAccountDetails.profile_url + '"  target="_blank"\n' +
+                                            'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                                            '>\n' + response.data.data.socialAccountDetails.first_name +
+                                            '<i\n' +
+                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
+                                            '</a>\n';
                                     }
-                                    append += '                                            <div class="text-muted">\n' + response.data.data.socialAccountDetails.user_name +
-                                        '                                            </div>\n' +
-                                        '                                            <div class="rating-css">\n' +
-                                        '                                                <div class="star-icon">\n' +
+                                    append += '<div class="text-muted">\n' + response.data.data.socialAccountDetails.user_name +
+                                        '</div>\n' +
+                                        '<div class="rating-css">\n' +
+                                        '<div class="star-icon">\n' +
                                         (
                                             response.data.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
                                                 '<input type="radio" name="rating1" id="rating1">\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
@@ -627,97 +576,123 @@
                                                 '<input type="radio" name="rating5" id="rating5">\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
                                                 '<input type="radio" name="rating5" id="rating5">\n'
                                         ) +
-                                        '                                                </div>\n' +
-                                        '                                            </div>\n' +
-                                        '                                            <div class="mt-2">\n';
-                                    append += '                                                <a href="javascript:;"\n' +
-                                        '                                                   class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
-                                        '                                            </div>\n' +
-                                        '                                        </div>'
+                                        '</div>\n' +
+                                        '</div>\n' +
+                                        '<div class="mt-2">\n';
+                                    append += '<a href="javascript:;"\n' +
+                                        'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
+                                        '</div>\n' +
+                                        '</div>'
                                     $('#facebookProfileDiv').append(append);
+                                    if (response.data.data.socialAccountDetails.account_type === 1) {
+                                        appendData2 = '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
+                                            '<span class="font-weight-bold mr-2">Followers :</span>\n' +
+                                            '<a href="javascript:;" class=" text-hover-primary"\n' +
+                                            'id="follower_count">' + response.data.data.SocialAccountStats.friendship_count + '</a>\n' +
+                                            '</div>\n' +
+                                            '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
+                                            '<span class="font-weight-bold mr-2">Page Count:</span>\n' +
+                                            '<span class=""\n' +
+                                            'id="page_count">' + response.data.data.SocialAccountStats.page_count + '</span>\n' +
+                                            '</div>';
+                                        $('#follower_counts-div').append(appendData2);
+                                    } else if (response.data.data.socialAccountDetails.account_type === 2) {
+                                        appendData2 = '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
+                                            '<span class="font-weight-bold mr-2">like Counts:</span>\n' +
+                                            '<a href="javascript:;"\n' +
+                                            'class=" text-hover-primary"\n' +
+                                            'id="like_count">' + response.data.data.SocialAccountStats.total_like_count + '</a>\n' +
+                                            '</div>\n' +
+                                            '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
+                                            '<span class="font-weight-bold mr-2">Followers:</span>\n' +
+                                            '<span class=""\n' +
+                                            'id="follower_count">' + response.data.data.SocialAccountStats.follower_count + '</span>\n' +
+                                            '</div>';
+                                        $('#follower_counts-div').append(appendData2);
+                                    }
                                     $(".spinner-border").css("display", "none");
                                     if (response.data.code === 200) {
                                         let appendData = '';
+                                        let num = 1;
                                         $(".spinner-border").css("display", "none");
                                         feedsLength = response.data.data.feeds.length;
                                         if (feedsLength > 0) {
-                                            response.data.data.feeds.map(element=> {
+                                            response.data.data.feeds.map(element => {
                                                 appendData = '<div class="mb-5">\n' +
-                                                    '                                            <div>\n' +
-                                                    '                                                <div class="d-flex align-items-center pb-4">\n' +
-                                                    '                                                    <div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                                    '                                                            <span class="symbol-label">\n' +
-                                                    '                                                                <img\n' +
-                                                    '                                                                    src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
-                                                    '                                                                    class="h-75 align-self-end" alt=""/>\n' +
-                                                    '                                                            </span>\n' +
-                                                    '                                                    </div>\n' +
-                                                    '                                                    <div class="d-flex flex-column flex-grow-1">\n' +
-                                                    '                                                        <a href="' + element.tweetUrl + '"\n' +
-                                                    '                                                            target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                                    '                                                    </div>\n' +
-                                                    '                                                </div>\n' ;
+                                                    '<div>\n' +
+                                                    '<div class="d-flex align-items-center pb-4">\n' +
+                                                    '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
+                                                    '<span class="symbol-label">\n' +
+                                                    '<img\n' +
+                                                    'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
+                                                    'class="h-75 align-self-end" alt=""/>\n' +
+                                                    '</span></div>\n' +
+                                                    '<div class="d-flex flex-column flex-grow-1">\n' +
+                                                    '<a href="' + element.tweetUrl + '"\n' +
+                                                    'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                                    '</div></div>\n';
                                                 if (element.mediaUrls.length > 0) {
-                                                    if (element.postType === 'photo' || element.postType === 'album') {
+                                                    if (element.postType === 'photo') {
                                                         appendData += '<div class="pt-4">';
                                                         element.mediaUrls.map(image => {
                                                             appendData += '<div class="">\n' +
-                                                                '                                                                        <img src="' + image + '"\n' +
-                                                                '                                                                             class="img-fluid"/>\n' +
-                                                                '                                                                    </div>'
+                                                                '<img src="' + image + '"\n' +
+                                                                'class="img-fluid"/>\n' +
+                                                                '</div>'
                                                         });
-                                                        appendData += ' <p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                            '                                                                </p>';
+                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                            '</p>';
+                                                    } else if (element.postType === 'album') {
+                                                        appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                            '</p>';
                                                     } else {
                                                         appendData += '<div class="pt-4">';
                                                         element.mediaUrls.map(video => {
                                                             appendData += ' <div\n' +
-                                                                '                                                                                    class="embed-responsive embed-responsive-16by9">\n' +
-                                                                '                                                                                <iframe class="embed-responsive-item rounded"\n' +
-                                                                '                                                                                        src="' + video + '"\n' +
-                                                                '                                                                                        allowfullscreen=""></iframe>\n' +
-                                                                '                                                                            </div>';
+                                                                'class="embed-responsive embed-responsive-16by9">\n' +
+                                                                '<iframe class="embed-responsive-item rounded"\n' +
+                                                                'src="' + video + '"\n' +
+                                                                'allowfullscreen=""></iframe>\n' +
+                                                                '</div>';
 
                                                         });
-                                                        appendData += ' <p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                            '                                                                </p>';
+                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                            '</p>';
                                                     }
                                                 } else {
-                                                    appendData += '                                                <div>\n' +
-                                                        '                                                    <p class="font-size-lg font-weight-normal">\n' + element.description +
-                                                        '                                                    </p>\n' ;
+                                                    appendData += '<div>\n' +
+                                                        '<p class="font-size-lg font-weight-normal">\n' + element.description +
+                                                        '</p>\n';
                                                 }
                                                 appendData += '                                                    <!--begin::Action-->\n' +
                                                     '                                                    <div class="d-flex align-items-center">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
-                                                    appendData += '                                                        <a href="javascript:;"\n' +
-                                                        '                                                           class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                                        '                                                                <span\n' +
-                                                        '                                                                    class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                                        '                                                                        <i class="fas fa-comments"></i>\n' +
+                                                    appendData += '<a href="javascript:;"\n' +
+                                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
+                                                        '<span\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
+                                                        '<i class="fas fa-comments"></i>\n' +
                                                         element.commentCount +
-                                                        '                                                                </span>\n' +
-                                                        '                                                        </a>\n';
+                                                        '</span></a>\n';
                                                     if (element.isLiked === false) {
-                                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                            '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                            '                                                               onclick="likeFeed(\'' + element.postId + '\')">\n' +
-                                                            '                                                                <span data-value="' + element.postId + '"\n' +
-                                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                            '                                                                      like-count="' + element.likeCount + '">\n' +
-                                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                            '                                                                </span>\n' +
-                                                            '                                                            </a>\n';
+                                                        appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                            'onclick="likeFeed(\'' + element.postId + '\')">\n' +
+                                                            '<span data-value="' + element.postId + '"\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                            'like-count="' + element.likeCount + '">\n' +
+                                                            '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                            '</span></a>\n';
                                                     } else {
-                                                        appendData += '                                                            <a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                            '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                            '                                                               onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
-                                                            '                                                                <span data-value="' + element.postId + '"\n' +
-                                                            '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                            '                                                                      like-count="' + element.likeCount + '">\n' +
-                                                            '                                                                        <i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                            '                                                                </span>\n' +
-                                                            '                                                            </a>\n';
+                                                        appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                            'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
+                                                            '<span data-value="' + element.postId + '"\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                            'like-count="' + element.likeCount + '">\n' +
+                                                            '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                            '</span></a>\n';
                                                     }
                                                     if (element.mediaUrls.length > 0) {
                                                         let type = '';
@@ -727,40 +702,34 @@
                                                             type = 'video';
                                                         }
                                                         appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
-                                                            '                                                                <span\n' +
-                                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                            '                                                                </span>Re-socio\n' +
-                                                            '                                                        </a>\n';
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
                                                     } else {
                                                         appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                            '                                                                <span\n' +
-                                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                            '                                                                </span>Re-socio\n' +
-                                                            '                                                        </a>\n';
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
                                                     }
-                                                    appendData += '                                                    </div>\n' +
-                                                        '                                                </div>\n' +
-                                                        '                                            </div>\n' +
-                                                        '                                            <div class="fb_cmt_div">\n' +
-                                                        '                                                <form class="position-relative">\n' +
-                                                        '                                                    <textarea class="form-control border-0 pr-10 resize-none"\n' +
-                                                        '                                                              rows="1" placeholder="Reply..."\n' +
-                                                        '                                                              name="' + element.postId + '"></textarea>\n' +
-                                                        '\n' +
-                                                        '                                                    <div name="' + element.postId + '"\n' +
-                                                        '                                                         value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                                        '                                                         id="commentButton"\n' +
-                                                        '                                                         class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
-                                                        '                                                            <span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
-                                                        '                                                                    <i class="fas fa-paper-plane"></i>\n' +
-                                                        '                                                            </span>\n' +
-                                                        '                                                    </div>\n' +
-                                                        '                                                </form>\n' +
-                                                        '                                            </div>\n';
+                                                    appendData += '</div>\n' +
+                                                        '</div>\n' +
+                                                        '</div>\n' +
+                                                        '<div class="fb_cmt_div">\n' +
+                                                        '<form class="position-relative">\n' +
+                                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                                        'rows="1" placeholder="Reply..."\n' +
+                                                        'name="' + element.postId + '"></textarea>\n' +
+                                                        '<div name="' + element.postId + '"\n' +
+                                                        'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                                        'id="commentButton"\n' +
+                                                        'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
+                                                        '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
+                                                        '<i class="fas fa-paper-plane"></i>\n' +
+                                                        '</span></div></form></div>\n';
                                                 } else {
                                                     if (element.mediaUrls.length > 0) {
                                                         let type = '';
@@ -770,64 +739,62 @@
                                                             type = 'video';
                                                         }
                                                         appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
-                                                            '                                                                <span\n' +
-                                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                            '                                                                </span>Re-socio\n' +
-                                                            '                                                        </a>\n';
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
                                                     } else {
                                                         appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                            '                                                                <span\n' +
-                                                            '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                            '                                                                </span>Re-socio\n' +
-                                                            '                                                        </a>\n';
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
                                                     }
 
                                                 }
-                                                appendData += '                                        </div>\n' +
-                                                    '                                        <hr>';
+                                                appendData += '</div><hr>\n';
                                                 $('#facebookFeeds').append(appendData);
+                                                $('div#image-gallery' + num).imagesGrid({
+                                                    images: element?.mediaUrls
+                                                });
+                                                num++;
                                             });
                                         } else {
                                             $('#facebookFeeds').append('<div class="text-center">\n' +
-                                                '                                                                <div class="symbol symbol-150">\n' +
-                                                '                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                                '                                                                </div>\n' +
-                                                '                                                                <h6>\n' +
-                                                '                                                                    Currently no Facebook Feeds has been found for\n' +
-                                                '                                                                    this\n' +
-                                                '                                                                    Account</h6>\n' +
-                                                '                                                            </div>');
+                                                '<div class="symbol symbol-150">\n' +
+                                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                                '</div>\n' +
+                                                '<h6>\n' +
+                                                'Currently no Facebook Feeds has been found for\n' +
+                                                'this\n' +
+                                                'Account</h6>\n' +
+                                                '</div>');
                                         }
-
                                     } else if (response.data.code === 400) {
                                         $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
                                             response.data.error +
-                                            '                                                        </div>');
+                                            '</div>');
                                     } else {
                                         $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
                                             "Some error occured can get feeds" +
-                                            '                                                        </div>');
+                                            '</div>');
                                     }
                                 } else if (response.data.code === 400) {
                                     $('#facebookFeeds').append('<div class="text-center">\n' +
-                                        '                                                                <div class="symbol symbol-150">\n' +
-                                        '                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                        '                                                                </div>\n' +
-                                        '                                                                <h6>\n' + "Can not get feeds, Error occured : " + response.data.error +
-                                        '                                                                   </h6>\n' +
-                                        '                                                            </div>');
+                                        '<div class="symbol symbol-150">\n' +
+                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                        '</div>\n' +
+                                        '<h6>\n' + "Can not get feeds, Error occured : " + response.data.error +
+                                        '</h6></div>');
                                 } else {
                                     $('#facebookFeeds').append('<div class="text-center">\n' +
-                                        '                                                                <div class="symbol symbol-150">\n' +
-                                        '                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                        '                                                                </div>\n' +
-                                        '                                                                <h6>\n' + "Can not get feeds, Some error occured ,can not get Feeds" +
-                                        '                                                                   </h6>\n' +
-                                        '                                                            </div>');
+                                        '<div class="symbol symbol-150">\n' +
+                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                        '</div>\n' +
+                                        '<h6>\n' + "Can not get feeds, Some error occured ,can not get Feeds" +
+                                        '</h6></div>');
                                 }
                             }
                         });
@@ -842,18 +809,15 @@
                     function getNextFacebookFeeds(accid, pageId, acctype) {
                         $.ajax({
                             type: 'get',
-                            url: '/get-Next-facebook-feeds',
+                            url: '/get-next-facebook-feeds',
                             data: {
-                                 accid, pageId, acctype,
+                                accid, pageId, acctype,
                             },
                             dataType: 'json',
                             beforeSend: function () {
                                 $('#facebookFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                    '        <div class="spinner-border" role="status"  style="display: none;">\n' +
-                                    '            <span class="sr-only">Loading...</span>\n' +
-                                    '        </div>\n' +
-                                    '\n' +
-                                    '        </div>');
+                                    '                       <div class="spinner-border" role="status"  style="display: none;">\n' +
+                                    '                       <span class="sr-only">Loading...</span></div></div>');
                                 $(".spinner-border").css("display", "block");
                             },
                             success: function (response) {
@@ -861,84 +825,79 @@
                                     $(".spinner-border").css("display", "none");
                                     if (response.data.code === 200) {
                                         let appendData = '';
+                                        let num = 1;
                                         $(".spinner-border").css("display", "none");
                                         feedsLength = response.data.data.feeds.length;
                                         response.data.data.feeds.map(element => {
-                                            appendData = '<div class="mb-5">\n' +
-                                                '                                            <div>\n' +
-                                                '                                                <div class="d-flex align-items-center pb-4">\n' +
-                                                '                                                    <div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                                '                                                            <span class="symbol-label">\n' +
-                                                '                                                                <img\n' +
-                                                '                                                                    src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
-                                                '                                                                    class="h-75 align-self-end" alt=""/>\n' +
-                                                '                                                            </span>\n' +
-                                                '                                                    </div>\n' +
-                                                '                                                    <div class="d-flex flex-column flex-grow-1">\n' +
-                                                '                                                        <a href="' + element.tweetUrl + '"\n' +
-                                                '                                                            target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                                '                                                    </div>\n' +
-                                                '                                                </div>\n';
+                                            appendData = '<div class="mb-5"><div>\n' +
+                                                '<div class="d-flex align-items-center pb-4">\n' +
+                                                '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
+                                                '<span class="symbol-label"><img\n' +
+                                                'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
+                                                'class="h-75 align-self-end" alt=""/>\n' +
+                                                '</span></div>\n' +
+                                                '<div class="d-flex flex-column flex-grow-1">\n' +
+                                                '<a href="' + element.tweetUrl + '"\n' +
+                                                'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                                '</div></div>\n';
                                             if (element.mediaUrls.length > 0) {
                                                 if (element.postType === 'photo') {
                                                     appendData += '<div class="pt-4">';
                                                     element.mediaUrls.map(image => {
-                                                        appendData += '<div class="">\n' +
-                                                            '                                                                        <img src="' + image + '"\n' +
-                                                            '                                                                             class="img-fluid"/>\n' +
-                                                            '                                                                    </div>'
+                                                        appendData += '<div class=""><img src="' + image + '" class="img-fluid"/></div>'
                                                     });
-                                                    appendData += ' <p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
                                                         '                                                                </p>';
+                                                } else if (element.postType === 'album') {
+                                                    appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                        '</p>';
                                                 } else {
                                                     appendData += '<div class="pt-4">';
                                                     element.mediaUrls.map(video => {
                                                         appendData += ' <div\n' +
-                                                            '                                                                                    class="embed-responsive embed-responsive-16by9">\n' +
-                                                            '                                                                                <iframe class="embed-responsive-item rounded"\n' +
-                                                            '                                                                                        src="' + video + '"\n' +
-                                                            '                                                                                        allowfullscreen=""></iframe>\n' +
-                                                            '                                                                            </div>';
+                                                            'class="embed-responsive embed-responsive-16by9">\n' +
+                                                            '<iframe class="embed-responsive-item rounded"\n' +
+                                                            'src="' + video + '"\n' +
+                                                            'allowfullscreen=""></iframe>\n' +
+                                                            '</div>';
 
                                                     });
-                                                    appendData += ' <p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                        '                                                                </p>';
+                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                        '</p>';
                                                 }
                                             } else {
-                                                appendData += '                                                <div>\n' +
-                                                    '                                                    <p class="font-size-lg font-weight-normal">\n' + element.description +
-                                                    '                                                    </p>\n';
+                                                appendData += '<div>\n' +
+                                                    '<p class="font-size-lg font-weight-normal">\n' + element.description +
+                                                    '</p>\n';
                                             }
                                             appendData += '<div class="d-flex align-items-center">\n';
                                             if (response.data.data.socialAccountDetails.account_type === 2) {
-                                                appendData += '                                                        <a href="javascript:;"\n' +
-                                                    '                                                           class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                                    '                                                                <span\n' +
-                                                    '                                                                    class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                                    '                                                                        <i class="fas fa-comments"></i>\n' +
+                                                appendData += '<a href="javascript:;"\n' +
+                                                    'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
+                                                    '<span\n' +
+                                                    'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
+                                                    '<i class="fas fa-comments"></i>\n' +
                                                     element.commentCount +
-                                                    '                                                                </span>\n' +
-                                                    '                                                        </a>\n';
+                                                    '</span></a>\n';
                                                 if (element.isLiked === false) {
-                                                    appendData += '                                                            <a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                        '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                        '                                                               onclick="likeFeed(\'' + element.postId + '\')">\n' +
-                                                        '                                                                <span data-value="' + element.postId + '"\n' +
-                                                        '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                        '                                                                      like-count="' + element.likeCount + '">\n' +
-                                                        '                                                                        <i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                        '                                                                </span>\n' +
-                                                        '                                                            </a>\n';
+                                                    appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                        'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                        'onclick="likeFeed(\'' + element.postId + '\')">\n' +
+                                                        '<span data-value="' + element.postId + '"\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                        'like-count="' + element.likeCount + '">\n' +
+                                                        '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                        '</span></a>\n';
                                                 } else {
-                                                    appendData += '                                                            <a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                        '                                                               class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                        '                                                               onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
-                                                        '                                                                <span data-value="' + element.postId + '"\n' +
-                                                        '                                                                      class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                        '                                                                      like-count="' + element.likeCount + '">\n' +
-                                                        '                                                                        <i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                        '                                                                </span>\n' +
-                                                        '                                                            </a>\n';
+                                                    appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                        'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                        'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
+                                                        '<span data-value="' + element.postId + '"\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                        'like-count="' + element.likeCount + '">\n' +
+                                                        '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                        '</span></a>\n';
                                                 }
                                                 if (element.mediaUrls.length > 0) {
                                                     let postType = '';
@@ -948,40 +907,34 @@
                                                         postType = 'video'
                                                     }
                                                     appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null)"\n' +
-                                                        '                                                                <span\n' +
-                                                        '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                        '                                                                </span>Re-socio\n' +
-                                                        '                                                        </a>\n';
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null)"\n' +
+                                                        '<span\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
                                                 } else {
                                                     appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                        '                                                                <span\n' +
-                                                        '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                        '                                                                </span>Re-socio\n' +
-                                                        '                                                        </a>\n';
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
+                                                        '<span\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
                                                 }
 
-                                                appendData += '                                                    </div>\n' +
-                                                    '                                                </div>\n' +
-                                                    '                                            </div>\n' +
-                                                    '                                            <div class="fb_cmt_div">\n' +
-                                                    '                                                <form class="position-relative">\n' +
-                                                    '                                                    <textarea class="form-control border-0 pr-10 resize-none"\n' +
-                                                    '                                                              rows="1" placeholder="Reply..."\n' +
-                                                    '                                                              name="' + element.postId + '"></textarea>\n' +
-                                                    '                                                    <div name="' + element.postId + '"\n' +
-                                                    '                                                         value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                                    '                                                         id="commentButton"\n' +
-                                                    '                                                         class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
-                                                    '                                                            <span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
-                                                    '                                                                    <i class="fas fa-paper-plane"></i>\n' +
-                                                    '                                                            </span>\n' +
-                                                    '                                                    </div>\n' +
-                                                    '                                                </form>\n' +
-                                                    '                                            </div>\n';
+                                                appendData += '</div>\n' +
+                                                    '</div></div>\n' +
+                                                    '<div class="fb_cmt_div">\n' +
+                                                    '<form class="position-relative">\n' +
+                                                    '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                                    'rows="1" placeholder="Reply..."\n' +
+                                                    'name="' + element.postId + '"></textarea>\n' +
+                                                    '<div name="' + element.postId + '"\n' +
+                                                    'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                                    'id="commentButton"\n' +
+                                                    'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
+                                                    '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
+                                                    '<i class="fas fa-paper-plane"></i>\n' +
+                                                    '</span></div></form></div>\n';
                                             } else {
                                                 if (element.mediaUrls.length > 0) {
                                                     let type2 = '';
@@ -991,37 +944,36 @@
                                                         type2 = 'video'
                                                     }
                                                     appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null)"\n' +
-                                                        '                                                                <span\n' +
-                                                        '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                        '                                                                </span>Re-socio\n' +
-                                                        '                                                        </a>\n';
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null)"\n' +
+                                                        '<span\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
                                                 } else {
                                                     appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        '                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                        '                                                                <span\n' +
-                                                        '                                                                    class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '                                                                        <i class="fas fa-pencil-alt"></i>\n' +
-                                                        '                                                                </span>Re-socio\n' +
-                                                        '                                                        </a>\n';
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
+                                                        '<span\n' +
+                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
                                                 }
                                             }
 
-                                            appendData += '                                        </div>\n' +
-                                                '                                        <hr>';
+                                            appendData += '</div><hr>\n';
                                             $('#facebookFeeds').append(appendData);
+                                            $('div#image-gallery' + num).imagesGrid({
+                                                images: element?.mediaUrls
+                                            });
+                                            num++;
                                         });
                                     }
 
                                 } else if (response.data.code === 400) {
-                                    $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
+                                    $('#facebookFeeds').append('<div style="color: Green;text-align:center;">\n' +
                                         response.data.error +
-                                        '                                                        </div>');
+                                        '</div>');
                                 } else {
-                                    $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
-                                        "Some error occured can get feeds" +
-                                        '                                                        </div>');
+                                    $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">Some error occured can get feeds</div>');
                                 }
                             }
                         });
@@ -1039,7 +991,8 @@
                                 type: 'post',
                                 url: '/like-fb-feed',
                                 data: {
-                                    postID, accounId                               },
+                                    postID, accounId
+                                },
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
@@ -1089,7 +1042,8 @@
                             $.ajax({
                                 type: 'post',
                                 url: '/like-fb-feed',
-                                data: {postID, accounId
+                                data: {
+                                    postID, accounId
                                 },
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1123,7 +1077,7 @@
                      * ! Do not change this function without referring API format of getting the faecbook feeds.
                      */
                     function call(data) {
-                        pageid = 2,accounId = data.value,accountType = data.accounttype;
+                        accounId = data.value, accountType = data.accounttype;
                         getfacebookFeeds(data.value, 1, accountType);
                     }
 
@@ -1134,7 +1088,7 @@
                      */
                     $(document).on("click", "#commentButton", function (e) {
                         e.preventDefault();
-                        let postID = $(this).attr('name'),comment = $("textarea[name='" + postID + "']").val();
+                        let postID = $(this).attr('name'), comment = $("textarea[name='" + postID + "']").val();
                         if (comment === '') {
                             toastr.error('Comment can not be empty', "");
                         } else {
@@ -1177,8 +1131,10 @@
                      * ! Do not change this function without referring API format of resocio.
                      */
                     function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+                        publishOrFeeds = 1;
                         $('body').find('#resocioModal').remove();
-                        let action = '/discovery/content_studio/publish-content/feeds-modal',isType = (type == null) ? 'no media' : type;
+                        let action = '/discovery/content_studio/publish-content/feeds-modal',
+                            isType = (type == null) ? 'no media' : type;
                         $.ajax({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1196,7 +1152,9 @@
                                     pickerPosition: "right",
                                     tonesStyle: "bullet"
                                 });
-                                downloadMediaUrl();
+                                setTimeout(function () {
+                                    downloadMediaUrl('fb');
+                                }, 3000);
                             },
                             error: function (error) {
                                 btn.removeAttr('disabled');
@@ -1207,6 +1165,5 @@
                             },
                         });
                     };
-                    $('#chatDivButton').tootip();
                 </script>
 @endsection

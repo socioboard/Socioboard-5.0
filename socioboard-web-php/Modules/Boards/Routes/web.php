@@ -1,12 +1,9 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use Modules\Boards\Http\Controllers\BoardsController;
-use Modules\Discovery\Http\Middleware\CheckUser;
 
-
-Route::group(['module' => 'Boards', 'middleware' => 'authenticateUser','namespace' => 'App\Modules\Boards\Controllers'], function () {
+Route::group(['module' => 'Boards', 'middleware' => ['authenticateUser', 'checkPlanExpiry', 'checkPlanAccesses:board_me'],'namespace' => 'App\Modules\Boards\Controllers'], function () {
     Route::prefix('boards')->group(function() {
         Route::get('/', [BoardsController::class,'index']);
         Route::get('/view-boards', [BoardsController::class, 'show'])->name('view-boards');

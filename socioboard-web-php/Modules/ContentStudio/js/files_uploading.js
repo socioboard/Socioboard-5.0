@@ -32,14 +32,12 @@ $(function () {
         var files = event.target.files;
         var output = document.getElementById("media-list");
         var z = 0;
-        if (getAttr == 'img-video-option') {
-            $('#media-list').html('');
-            $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept="video/*,.jpg, .png, .jpeg" style="width: 100px"></span></li></div>');
-        }
+
         if (getAttr == 'img-video-option' || getAttr == 'img-video-upload'){
             // $('#hint_brand').css("display", "block");
             $('#option_upload').css("display", "none");
-            
+            $('#next_upload').empty();
+
             for (var fileKey = 0; fileKey < files.length; fileKey++) {
                 var checkIsUploaded = false;
                 var fileItem = files[fileKey];
@@ -66,6 +64,10 @@ $(function () {
 
                             if(response.type == 'image'){
                                 $("body").find('.imageShow').prepend(`<img src='${response.media_url}' class='img-fluid image${iterator}' style="object-fit:contain;">`);
+                                if (getAttr == 'img-video-option') {
+                                    $('#media-list').html('');
+                                    $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept=".jpg, .png, .jpeg" style="width: 100px"></span></li></div>');
+                                }
 
                                 $("body").find("#media-list").prepend(`
                                     <li>
@@ -107,6 +109,10 @@ $(function () {
 
                             if(response.type == 'video'){
                                 $("body").find('.imageShow').prepend(`<video style="width:100%; height:auto" controls class='video${iterator}'><source src="${response.media_url}"></source></video>`);
+                                if (getAttr == 'img-video-option') {
+                                    $('#media-list').html('');
+                                    $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept="video/*" style="width: 100px"></span></li></div>');
+                                }
                                 
                                 $("body").find("#media-list").prepend(`
                                     <li>
@@ -136,11 +142,34 @@ $(function () {
 
     $('body').on('click', '.remove-pic', function () {
         $(this).parent().parent().parent().remove();
-        var removeItem = $(this).attr('data-id');
-        var yet = names.indexOf(removeItem);
+        let removeItem = $(this).attr('data-id');
+        let lists = $('#media-list li').length;
+        if (lists == 1){
+            $('.myupload').remove();
+            $('#next_upload').empty().append('<small>Note: Add only 4 items at a single time.</small>\n' +
+                '                                                    <ul class="btn-nav">\n' +
+                '                                                        <li>\n' +
+                '                                                            <span>\n' +
+                '                                                                <i class="far fa-image fa-2x"></i>\n' +
+                '                                                                <input type="file" name="" click-type="img-video-option" class="picupload"\n' +
+                '                                                                    multiple accept=".jpg, .jpeg" />\n' +
+                '                                                            </span>\n' +
+                '                                                        </li>\n' +
+                '                                                        <li>\n' +
+                '                                                            <span>\n' +
+                '                                                                <i class="fas fa-video fa-2x"></i>\n' +
+                '                                                                <input type="file" name="" click-type="img-video-option" class="picupload"\n' +
+                '                                                                    multiple accept="video/*" />\n' +
+                '                                                            </span>\n' +
+                '                                                        </li>\n' +
+                '                                                    </ul>');
+        }
+
+        let yet = names.indexOf(removeItem);
         if (yet != -1) {
             names.splice(yet, 1);
         }
+
         // return array of file name
     });
     $('#hint_brand').on('hide', function (e) {

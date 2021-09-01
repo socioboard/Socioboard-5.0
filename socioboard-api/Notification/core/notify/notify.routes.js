@@ -1,79 +1,137 @@
+/** Express router providing youTube upload related routes
+ * @module Router
+ * @type {import('express')}
+ */
 import Router from 'express';
-import config from 'config';
-import Helper from '../../../Common/Services/authorize.services.js'
-import NotifyController from './notify.controller.js'
-const helper = new Helper(config.get('authorize'));
-import Logger from '../../resources/Log/Logger.log.js';
+/**
+ * @typedef {import('./notify.controller.js')}
+ */
+import NotifyController from './notify.controller.js';
+/**
+ * Express router to mount calender view related on.
+ * @type {import('express').Router}
+ * @const
+ * @namespace router
+ */
 const router = Router();
 
-function notifyServer(io) {
-    router.post('/sendTeamNotification', (req, res, next) => {
-        /* 	#swagger.tags = ['Notification']
-            #swagger.description = ' To notify to entire team' */
-        /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-        /*	#swagger.parameters['teamId'] = {
-                in: 'query',
-                required:true
-            }
-            #swagger.parameters['notificationDetails'] = {
-                in: 'query',
-                required:true
-            }
-     }*/
-        try {
-            console.log(`req ${req.query}`)
-            //   let decryptredMessage = JSON.parse(helper.decrypt(req.query.notificationDetails));
-            io.sockets.to(req.query.teamId).emit('notification', req.query.notificationDetails);
-            Logger.info(`\n${JSON.stringify(req.query.notificationDetails)}\n`);
-        } catch (error) {
-            Logger.info(`\n${error}\n`);
-            res.status(200).json({ code: 400, status: 'success', ErrMsg: error });
-        }
-        res.status(200).json({ code: 200, status: 'success' });
+/**
+ * TODO To Fetch particular User notification
+ * Get the Notification for particular User
+ * @name post/get-user-notification
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {object}  Returns User Object
+ */
+router.post('/get-user-notification', NotifyController.getUserNotification);
 
-    })
+/**
+ * TODO To Fetch particular Team notification
+ * Get the Notification for Team
+ * @name post/get-team-notification
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {object}  Returns Team Object
+ */
+router.post('/get-team-notification', NotifyController.getTeamNotification);
+
+/**
+ * TODO Update Notification status
+ * Update Notification status
+ * @name put/update-notification-status
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string}  Updated Notification Message
+ */
+router.put(
+  '/update-notification-status',
+  NotifyController.updateNotificationStatus,
+);
+
+/**
+ * TODO Update All Notification status for Particular User
+ * Update All Notification status for Particular User
+ * @name put/mark-all-user-notifications-as-read
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string}  Updated  Notification Message of all notification
+ */
+router.put(
+  '/mark-all-user-notifications-as-read',
+  NotifyController.markAllUserNotificationsAsRead,
+);
+
+/**
+ * TODO Update All Notification status for Particular Team
+ * Update All Notification status for Particular Team
+ * @name put/mark-all-team-notifications-as-read
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string}  Updated  Notification Message of all notification
+ */
+router.put(
+  '/mark-all-team-notifications-as-read',
+  NotifyController.markAllTeamNotificationsAsRead
+);
+
+/**
+ * TODO Remove the Notification
+ * Function to Remove the Notification
+ * @name delete/delete-particular-notification
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string} Deleted Notification status
+ */
+router.delete(
+  '/delete-particular-notification',
+  NotifyController.deleteParticularNotification,
+);
+
+/**
+ * TODO Remove the All Notification for Particular User
+ * Function to Remove the All Notification for Particular User
+ * @name delete/clear-all-user-notifications
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string} Deleted Notification status
+ */
+router.delete(
+  '/clear-all-user-notifications',
+  NotifyController.clearAllUserNotifications,
+);
+
+/**
+ * TODO Remove the All Notification for Particular team
+ * Function to Remove the All Notification for Particular team
+ * @name delete/clear-all-team-notifications
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {string} Deleted Notification status
+ */
+router.delete(
+  '/clear-all-team-notifications',
+  NotifyController.clearAllTeamNotifications
+);
+
+/**
+ * TODO To get user have unread notification
+ * Get user have unread notification
+ * @name post/get-user-unread-notification
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {object}  Returns User Object
+ */
+router.post('/get-user-notification-status', NotifyController.getUserUnreadNotification);
 
 
-    router.post('/sendUserNotification', (req, res, next) => {
-        /* 	#swagger.tags = ['Notification']
-                #swagger.description = ' To notify to entire team' */
-        /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-        /*	#swagger.parameters['userId'] = {
-                in: 'query',
-                required:true
-            }
-            #swagger.parameters['notificationDetails'] = {
-                in: 'query',
-                required:true
-            }
-     }*/
-        var data = {};
-        try {
-            Logger.info("Started ...");
-            Logger.info(`Message : \n ${req.query.notificationDetails}`);
-            var decryptedMessage = helper.decrypt(req.query.notificationDetails);
-            Logger.info(`decryptedMessage : \n ${decryptedMessage}`);
-            var decryptredMessage = JSON.parse(helper.decrypt(req.query.notificationDetails));
-            Logger.info(`\n${JSON.stringify(decryptredMessage)}\n`);
+/**
+ * TODO To get team unread notification status
+ * Get team unread notification status
+ * @name post/get-team-notification-status
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @return {object}  Returns User Object
+ */
+router.post('/get-team-notification-status', NotifyController.getTeamUnreadNotification);
 
-            io.sockets.in(req.query.userId).emit('notification', decryptredMessage);
-            data.message = { code: 200, status: 'success' };
-            data.code = 200;
-        } catch (error) {
-            Logger.info(`\n${error.message}\n`);
-            data.message = { code: 400, status: 'failed', message: error.message };
-            data.code = 400;
-        }
-        res.status(data.code).json(data.message);
-    })
-
-    router.post('/get-user-notification', NotifyController.getUserNotification)
-
-}
-
-export { notifyServer }
-
+export default router;

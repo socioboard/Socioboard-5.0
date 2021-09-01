@@ -1,0 +1,62 @@
+{
+  "update_socioboard": {
+    "mail_url": "https://localhost:3003",
+    "host_url": "http://localhost:3003",
+    "port": "3003",
+    "host": "localhost:3003"
+  },
+  "swagger_host_url": "localhost:3003",
+  "user_socioboard": {
+    "host_url": "http://localhost:3000"
+  },
+  "facebook_api": {
+    "app_id": "<< APP ID >>",
+    "secret_key": "<< APP SECRET >>",
+    "redirect_url": "https://local.socioboard.com/facebook-callback",
+    "fbprofile_add_redirect_url": "https://local.socioboard.com/addSocialProfile",
+    "webhook_token": "<< webhook_token >>"
+  },
+  "google_api": {
+    "client_id": "<< APP CLIENT ID >>",
+    "client_secrets": "<< CLIENT SECRET >>",
+    "redirect_url": "https://local.socioboard.com/google-callback",
+    "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+    "api_key": "<< APP KEY >>",
+    "dynamic_link": "https://socionode.page.link",
+    "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
+  },
+  "authorize": {
+    "secret": "<< RANDOM SECRET >>",
+    "token_secret": "<< RANDOM TOKEN >>",
+    "algorithm": "aes-256-cbc",
+    "encoding_typeOne": "utf8",
+    "encoding_typeTwo": "hex"
+  },
+  "mailService": {
+    "defaultMailOption": "sendgridapi",
+    "sendgrid": {
+      "username": "<< Sendgrid username >>",
+      "password": "<< Sendgrid Password >>",
+      "frommail": "<< From Mail >>",
+      "ccmail": "<< Any CC Mail >>",
+      "apiKey": "<< SEND-GRID TOKEN >>"
+    },
+    "gmailServices": {
+      "email": "<< Google email >>",
+      "password": "<< Google email Password >>"
+    }
+  },
+  "mysql": {
+    "host": "localhost",
+    "username": "<< username >>",
+    "database": "<< Database name >>",
+    "password": "<< Database password >>"
+  },
+  "mongo": {
+    "username": "<< username >>",
+    "password": "<< Database password >>",
+    "host": "<< host >>",
+    "db_name": "<< Database name >>"
+  }
+}

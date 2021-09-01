@@ -5,6 +5,7 @@
 @section('links')
     <link rel="stylesheet" type="text/css" href="/plugins/custom/dropify/dist/css/dropify.min.css"/>
     <link rel="stylesheet" type="text/css" href="/plugins/custom/emojionearea/css/emojionearea.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/images-grid.css"/>
 @endsection
 @section('content')
     <!--begin::Content-->
@@ -160,6 +161,8 @@
                                         </script>
                                         @if(sizeof($feeds['data']->feeds) !== 0 )
                                             @foreach($feeds['data']->feeds as $data)
+                                        <?php $count=0;?>
+                                        <?php $arrayImages=[];?>
                                                 <div class="mb-5">
                                                     <!--begin::Top-->
                                                     <div class="d-flex align-items-center">
@@ -201,6 +204,7 @@
                                                                 </div>
                                                             @endforeach
                                                         @elseif($data->type === 'CAROUSEL_ALBUM')
+                                                            <div class="pt-4"><div id="image-gallery{{$count}}"></div>
                                                             @foreach($data->mediaUrl as $data2)
                                                                 @if($data2->media_type === 'IMAGE')
                                                                     <div class="">
@@ -215,6 +219,7 @@
                                                                                 allowfullscreen=""></iframe>
                                                                     </div>
                                                             @endif
+                                                                    <?php $count++;?>;
                                                         @endforeach
                                                     @endif
                                                     <!--begin::Text-->
@@ -299,8 +304,8 @@
 @endsection
 
 @section('scripts')
-    {{--    <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
     <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+    <script src="{{asset('js/images-grid.js')}}"></script>
     <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
     <script>
@@ -320,41 +325,16 @@
 
         $(document).ready(function () {
             $("#discovery").trigger("click");
+            $('#addToCart').tooltip();
         });
 
-        function getScrollXY() {
-            var scrOfX = 0, scrOfY = 0;
-            if (typeof (window.pageYOffset) == 'number') {
-                //Netscape compliant
-                scrOfY = window.pageYOffset;
-                scrOfX = window.pageXOffset;
-            } else if (document.body && (document.body.scrollLeft || document.body.scrollTop)) {
-                //DOM compliant
-                scrOfY = document.body.scrollTop;
-                scrOfX = document.body.scrollLeft;
-            } else if (document.documentElement && (document.documentElement.scrollLeft || document.documentElement.scrollTop)) {
-                //IE6 standards compliant mode
-                scrOfY = document.documentElement.scrollTop;
-                scrOfX = document.documentElement.scrollLeft;
-            }
-            return [scrOfX, scrOfY];
-        }
 
-        function getDocHeight() {
-            var D = document;
-            return Math.max(
-                D.body.scrollHeight, D.documentElement.scrollHeight,
-                D.body.offsetHeight, D.documentElement.offsetHeight,
-                D.body.clientHeight, D.documentElement.clientHeight
-            );
-        }
-
-        var pageid = 2;
-        document.addEventListener("scroll", function (event) {
-            if (feedsLength >= 12) {
-                if (getDocHeight() === getScrollXY()[1] + window.innerHeight) {
-                    getNextInstagramFeeds(accounId, pageid);
-                    pageid++;
+        let pageId = 2;
+        $(window).scroll(function () {
+            if (Math.ceil($(window).scrollTop()) === Math.ceil(($(document).height() - $(window).height()))) {
+                if (feedsLength >= 12) {
+                    getNextInstagramFeeds(accounId, pageId);
+                    pageId++;
                 }
             }
         });
@@ -366,7 +346,7 @@
          * ! Do not change this function without referring API format of getting the twitter feeds.
          */
         function call(data) {
-            pageid = 2;
+            pageId = 2;
             accounId = data.value;//accountid of particular twitter account from dropdown
             getInstagramFeeds(data.value, 1);
         }
@@ -379,11 +359,12 @@
          * ! Do not change this function without referring API format of getting the Instagram feeds.
          */
         function getInstagramFeeds(accid, pageid) {
+            let accounType=5;
             $.ajax({
                 type: 'get',
-                url: '/get-Next-instgram-feeds',
+                url: '/get-next-instgram-feeds',
                 data: {
-                    accid, pageid
+                    accid, pageid,accounType
                 },
                 dataType: 'json',
                 beforeSend: function () {
@@ -451,6 +432,8 @@
                         feedsLength = response.data.feeds.length;
                         $('#instagramFeeds').empty();
                         let appendData = '';
+                        let arrayImages=[];
+                        let num = 0;
                         if (response.data.feeds.length > 0) {
                             response.data.feeds.map(element => {
                                 appendData = '<div class="mb-5">\n' +
@@ -469,7 +452,7 @@
                                     'class="text-muted font-weight-bold">' + element.publishedDate + '</span>\n' +
                                     '</div>\n' +
                                     '</div>\n' +
-                                    '<div class="pt-4">\n';
+                                    '<div class="pt-4">';
                                 if (element.type === 'IMAGE') {
                                     element.mediaUrl.map(data => {
                                         appendData += '<div class="">\n' +
@@ -487,12 +470,10 @@
                                             '</div>\n';
                                     });
                                 } else if (element.type === 'CAROUSEL_ALBUM') {
+                                    appendData += '<div class="pt-4"><div id="image-gallery'+num+'"></div>';
                                     element.mediaUrl.map(data => {
                                         if (data.media_type ==='IMAGE') {
-                                            appendData += '<div class="">\n' +
-                                                '<img src="' + data.media_url + '"\n' +
-                                                'class="img-fluid"/>\n' +
-                                                '</div>';
+                                            arrayImages.push(data.media_url);
                                         } else if (data.media_type === 'VIDEO') {
                                             appendData += ' <div\n' +
                                                 'class="embed-responsive embed-responsive-16by9">\n' +
@@ -501,9 +482,9 @@
                                                 'allowfullscreen=""></iframe>\n' +
                                                 '</div>';
                                         }
-
                                     });
                                 }
+                                appendData +='</div>';
                                 appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
                                     '' + element.captionText + '\n' +
                                     '</p>\n' +
@@ -538,6 +519,10 @@
                                     '</div>\n' +
                                     '</div>\n';
                                 $('#instagramFeeds').append(appendData);
+                                $('div#image-gallery' + num).imagesGrid({
+                                    images: arrayImages
+                                });
+                                num++;
                             });
                         } else {
                             $('#instagramFeeds').append('<div class="text-center">\n' +
@@ -561,11 +546,12 @@
          * ! Do not change this function without referring API format of getting the Instagram feeds.
          */
         function getNextInstagramFeeds(accid, pageId) {
+            let accounType=5;
             $.ajax({
                 type: 'get',
-                url: '/get-Next-instgram-feeds',
+                url: '/get-next-instgram-feeds',
                 data: {
-                    accid, pageId
+                    accid, pageId,accounType
                 },
                 dataType: 'json',
                 beforeSend: function () {
@@ -698,6 +684,7 @@
          * ! Do not change this function without referring API format of resocio.
          */
         function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+            publishOrFeeds=1;
             $('body').find('#resocioModal').remove();
             let action = '/discovery/content_studio/publish-content/feeds-modal';
             let isType = (type == null) ? 'no media' : type;

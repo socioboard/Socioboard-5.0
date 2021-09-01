@@ -27,10 +27,23 @@ class PlanDetailsController extends Controller
     {
         $userPlanData = "";
         $getPlanDetails = $this->getPlanDetails();
+        $response = \session()->get('user');
+        $expiry_date = $response['userDetails']['Activations']['account_expire_date'];
+        $today = date('d-m-Y');
+
+        $exp = date('d-m-Y', strtotime($expiry_date));
+        $expDate = date_create($exp);
+        $todayDate = date_create($today);
+        $diff = date_diff($todayDate, $expDate);
+        if ($diff->format("%R%a") <= 0) {
+          $success = $expiry_date;
+        } else {
+            $success = false;
+        }
         if (isset($getPlanDetails['code']) && $getPlanDetails['code'] == 200) {
             $userPlanData = Session::get('user')['userDetails']['userPlanDetails'];
         }
-        return view("home::PlanDetails.plan_details")->with(array("getPlanDetails" => $getPlanDetails, "userPlanData" => $userPlanData));
+        return view("home::PlanDetails.plan_details")->with(array("getPlanDetails" => $getPlanDetails, "userPlanData" => $userPlanData, "expired_date" => $success));
     }
 
     public function getPlanDetails()

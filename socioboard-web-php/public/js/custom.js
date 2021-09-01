@@ -1,6 +1,5 @@
 // begin:switch dark/light theme 
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-let time;
 
 function switchTheme(e) {
     if (e.target.checked) {

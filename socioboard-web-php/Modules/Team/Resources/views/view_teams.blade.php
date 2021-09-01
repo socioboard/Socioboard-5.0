@@ -57,13 +57,13 @@
         <div class=" container-fluid ">
             <!--begin::Teams-->
             <div class="card card-custom gutter-b card-stretch" id="ss-viewTeamsDiv">
-                <div class="card-body">
-                    <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                         title="Add to custom Reports">+
-                        <span node-id="ss-viewTeamsDiv_d-flex" class="ss addtcartclose"></span>
-                    </div>
-                    <span class="spinner spinner-primary spinner-center" id="ss-viewTeamsDiv_d-flex" style="
+                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                     title="Add to custom Reports">+
+                    <span node-id="ss-viewTeamsDiv_card-custom" class="ss addtcartclose"></span>
+                </div>
+                <span class="spinner spinner-primary spinner-center" id="ss-viewTeamsDiv_card-custom" style="
     display: none;"></span>
+                <div class="card-body">
                     @if(session()->has('message-success') != "")
                         @if(session()->has('message-success'))
                             <script>
@@ -86,6 +86,7 @@
                                 @endphp
                                 @foreach($accounts['data']->teamSocialAccountDetails as $account)
                                     @foreach($account as $data)
+                                        <div id="team{{$data->team_id}}">
                                         <div class="d-flex">
                                             <!--begin::Pic-->
                                             @if($data->team_logo === 'www.socioboard.com' || $data->team_logo === "www.NA.com" )
@@ -468,6 +469,7 @@
 
                                         </div>
                                         <div class="separator separator-solid my-7"></div>
+                                        </div>
                                     @endforeach
                                 @endforeach
                             @else
@@ -599,10 +601,8 @@
                         toastr.success("", "Team Deleted Successfully!", {
                             timeOut: 1000,
                             fadeOut: 1000,
-                            onHidden: function () {
-                                window.location.reload();
-                            }
-                        })
+                        });
+                        $('#team'+id).remove();
                     } else if (response['code'] === 400) {
                         toastr.error(response.error);
                     } else if(response.code === 500) {
