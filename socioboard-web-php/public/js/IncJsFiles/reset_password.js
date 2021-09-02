@@ -15,7 +15,10 @@ let newPasswordSubmit = function () {
         },
         success: function (response) {
             if (response.code === 200) {
-                window.location.href = '' + APP_URL + 'login'
+                toastr.success(response.message);
+                setTimeout(function () {
+                    window.location = '/login';
+                }, 1000);
             } else if (response.code === 201) {
                 let i;
                 for (i of response.message) {

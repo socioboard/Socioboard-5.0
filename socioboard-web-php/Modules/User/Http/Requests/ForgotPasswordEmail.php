@@ -14,7 +14,7 @@ class ForgotPasswordEmail extends FormRequest
     public function rules()
     {
         return [
-            'emailID' => ['required','email']
+            'emailId' => 'required|email'
         ];
     }
 
@@ -31,9 +31,6 @@ class ForgotPasswordEmail extends FormRequest
 
     public function messages()
     {
-        return [
-            'emailID.required' => 'Email is required',
-            'emailID.email' => 'Email invalid',
-        ];
+        return [];
     }
 }

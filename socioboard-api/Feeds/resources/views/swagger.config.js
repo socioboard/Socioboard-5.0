@@ -71,6 +71,7 @@ const doc = {
       rating: 5
     }],
     lockProfile: ["1", "2"],
+    publishlimit: ["1", "2"],
     teamDetails: {
       TeamInfo: {
         name: "socioboard",

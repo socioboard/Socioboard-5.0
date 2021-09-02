@@ -383,12 +383,12 @@
             );
         }
 
-        var pageid = 2;
+        let pageId = 2;
         document.addEventListener("scroll", function (event) {
             if (feedsLength >= 12) {
                 if (getDocHeight() == getScrollXY()[1] + window.innerHeight) {
-                    getNextYoutubeFeeds(accounId, pageid);
-                    pageid++;
+                    getNextYoutubeFeeds(accounId, pageId);
+                    pageId++;
                 }
             }
         });
@@ -400,7 +400,6 @@
          * ! Do not change this function without referring API format of getting the outube channel feeds.
          */
         function call(data) {
-            pageid = 2;
             accounId = data.value;
             getYoutubeFeeds(data.value, 1);
         }
@@ -408,7 +407,7 @@
         function getYoutubeFeeds(accid, pageid) {
             $.ajax({
                 type: 'get',
-                url: '/get-Next-youtube-feeds',
+                url: '/get-next-youtube-feeds',
                 data: {
                     accid, pageid
                 },
@@ -561,7 +560,7 @@
         function getNextYoutubeFeeds(accid, pageid) {
             $.ajax({
                 type: 'get',
-                url: '/get-Next-youtube-feeds',
+                url: '/get-next-youtube-feeds',
                 data: {
                     accid, pageid
                 },
@@ -831,6 +830,7 @@
          * ! Do not change this function without referring API format of resocio.
          */
         function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+            publishOrFeeds=1;
             $('body').find('#resocioModal').remove();
             let action = '/discovery/content_studio/publish-content/feeds-modal';
             let isType = (type == null) ? 'no media' : type

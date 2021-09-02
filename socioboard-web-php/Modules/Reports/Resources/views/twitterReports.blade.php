@@ -310,9 +310,10 @@
             }, 2000);
         });
         // team date ranges
-        var start = moment().subtract(29, 'days');
+        var start = moment().subtract(6, 'days');
         var end = moment();
-
+        $("li[data-range-key='Last 30 Days']").removeAttr('class');
+        $("li[data-range-key='Last 7 Days']").attr("class", "active");
         $('#twt-daterange').daterangepicker({
             buttonClasses: ' btn',
             applyClass: 'btn-primary',
@@ -334,7 +335,6 @@
             $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
         });
 
-        // delete account
         $('#account-delete').click(function (event) {
             toastr.options = {
                 "closeButton": true,
@@ -376,11 +376,10 @@
                 beforeSend: function () {
                     $('#follow_count_chart,#following_count,#follower_count').empty();
                     $('#follow_count_chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
@@ -461,6 +460,11 @@
                             xaxis: {
                                 tooltip: {
                                     enabled: false
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '10px'
+                                    }
                                 }
                             },
                             legend: {
@@ -492,11 +496,10 @@
                 beforeSend: function () {
                     $('#stats-chart').empty();
                     $('#stats-chart').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
@@ -603,11 +606,11 @@
         }
 
         let noTwitter = ' <div class="text-center">\n' +
-            '                                                <div class="symbol symbol-150">\n' +
-            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-            '                                                </div>\n' +
-            '                                                <h6>Currently, no Twitter account added to this team.</h6>\n' +
-            '                                            </div>';
+            '<div class="symbol symbol-150">\n' +
+            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+            '</div>\n' +
+            '<h6>Currently, no Twitter account added to this team.</h6>\n' +
+            '</div>';
 
         $(document).ready(function () {
             $("#reportsButton").trigger("click");

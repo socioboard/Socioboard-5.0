@@ -9,7 +9,7 @@
 	<!--end::Page Vendors Styles-->
 	<link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/dropify/dist/css/dropify.min.css') }}" />
 	<link rel="stylesheet"  type="text/css" href="{{asset('plugins/custom/emojionearea/css/emojionearea.min.css') }}">
-    
+
 {{--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/eonasdan-bootstrap-datetimepicker/4.17.49/css/bootstrap-datetimepicker-standalone.css">--}}
 
 @endsection
@@ -129,6 +129,9 @@
                                                 </li>
                                             </ul>
                                         </div>
+                                       <div class="col-12" id="next_upload">
+
+                                      </div>
                                     </div>
                                     <!-- end of image and video upload -->
 

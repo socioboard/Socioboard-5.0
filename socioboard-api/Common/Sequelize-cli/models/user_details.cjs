@@ -88,10 +88,10 @@ module.exports = (sequelize, Sequelize) => {
             args: true,
             msg: 'first_name is mandatory field.',
           },
-          is: {
-            args: /^[a-z ,.'0-9]+$/i,
-            msg: 'first_name should have valid characters.',
-          },
+          // is: {
+          //   args: /^[a-z ,.'0-9]+$/i,
+          //   msg: 'first_name should have valid characters.',
+          // },
           len: {
             args: [2, 32],
             msg: 'first_name should have 2 to 32 characters.',
@@ -102,7 +102,7 @@ module.exports = (sequelize, Sequelize) => {
       last_name: {
         type: Sequelize.STRING(32),
         allowNull: false,
-        defaultValue: 'NA',
+        defaultValue: 'nil',
       },
 
       date_of_birth: {

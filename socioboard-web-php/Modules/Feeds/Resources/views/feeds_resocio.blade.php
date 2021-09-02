@@ -98,7 +98,7 @@
                                         <div class="mt-3">
                                             <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="height: 180px;overflow-y: scroll;">
                                                 @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                                                    @if(($group == "account") || ($group == "page") || ($group === "personal account"))
+                                                    @if(($group === "account") || ($group === "page") || ($group === "business account"))
                                                         <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                                                         @foreach($socialAccountArray as $group_key => $socialAccount)
                                                         <!--begin::Page-->

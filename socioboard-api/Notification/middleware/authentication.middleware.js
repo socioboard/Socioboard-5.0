@@ -1,11 +1,11 @@
 import config from 'config';
-import AuthorizeServices from '../../Common/Services/authorize.services.js';
 import moment from 'moment';
+import AuthorizeServices from '../../Common/Services/authorize.services.js';
 
 export default (req, res, next) => {
-  /*#swagger.ignore = true*/
+  /* #swagger.ignore = true */
   const authorizeService = new AuthorizeServices(config.get('authorize'));
-  let state = req.query.state;
+  const { state } = req.query;
   let token;
 
   if (state == null || state == undefined) {
@@ -13,51 +13,48 @@ export default (req, res, next) => {
   }
 
   if (token) {
-    let decodedToken = authorizeService.verifyToken(token);
+    const decodedToken = authorizeService.verifyToken(token);
 
-    if (decodedToken.auth === false)
-      return res.status(401).send('Access token is missing or invalid');
+    if (decodedToken.auth === false) return res.status(401).send('Access token is missing or invalid');
 
     if (decodedToken) {
-      let parsedToken = JSON.parse(decodedToken);
-      let expireDate = parsedToken.Activations.account_expire_date;
-      let remindingDays = moment(expireDate).diff(moment(), 'days');
+      const parsedToken = JSON.parse(decodedToken);
+      const expireDate = parsedToken.Activations.account_expire_date;
+      const remindingDays = moment(expireDate).diff(moment(), 'days');
+
       req.body.userScopeId = parsedToken.user_id;
       req.body.userScopeEmail = parsedToken.email;
       req.body.userScopeName = parsedToken.first_name;
       req.query.userScopeName = parsedToken.first_name;
-      req.body.userScopeMaxAccountCount =
-        parsedToken.userPlanDetails.account_count;
-      req.body.userScopeMaxMemberCount =
-        parsedToken.userPlanDetails.member_count;
-      req.body.userScopeAvailableNetworks =
-        parsedToken.userPlanDetails.available_network;
-      req.body.userScopeMaxScheduleCount =
-        parsedToken.userPlanDetails.maximum_schedule;
+      req.body.userScopeMaxAccountCount = parsedToken.userPlanDetails.account_count;
+      req.body.userScopeMaxMemberCount = parsedToken.userPlanDetails.member_count;
+      req.body.userScopeAvailableNetworks = parsedToken.userPlanDetails.available_network;
+      req.body.userScopeMaxScheduleCount = parsedToken.userPlanDetails.maximum_schedule;
       req.body.userScopeIsAdmin = parsedToken.is_admin_user;
 
       if (remindingDays < 0) {
         var redirectValueFromRequest = req.query.redirectToken;
+
         if (redirectValueFromRequest) {
           var decryptredRedirectToken = JSON.parse(
-            authorizeService.decrypt(redirectValueFromRequest)
+            authorizeService.decrypt(redirectValueFromRequest),
           );
 
           var expiredDays = moment(decryptredRedirectToken.expire_date).diff(
             moment(),
-            'days'
+            'days',
           );
 
           if (expiredDays >= 0 && decryptredRedirectToken.isChangePlan) {
-            req.body.AppScopedRedirectUrl =
-              decryptredRedirectToken.redirect_url;
+            req.body.AppScopedRedirectUrl = decryptredRedirectToken.redirect_url;
             next();
-          } else
+          } else {
             res.status(200).json({
               code: 401,
               status: 'failed',
               message: 'Something went wrong!',
             });
+          }
         } else {
           var redirectTokenValue = {
             isChangePlan: true,
@@ -65,13 +62,14 @@ export default (req, res, next) => {
             redirect_url: req.originalUrl,
           };
           var redirectToken = authorizeService.encrypt(
-            JSON.stringify(redirectTokenValue)
+            JSON.stringify(redirectTokenValue),
           );
+
           res.redirect(
             `${config.get(
-              'user_socioboard.host_url'
+              'user_socioboard.host_url',
             )}/v1/user/change-plan/?userId=${parsedToken.user_id}&currentPlan=${parsedToken.Activations.user_plan
-            }&newPlan=0&redirectToken=${redirectToken}`
+            }&newPlan=0&redirectToken=${redirectToken}`,
           );
         }
       } else {
@@ -83,7 +81,8 @@ export default (req, res, next) => {
         .json({ code: 400, status: 'failed', message: 'Bad request!' });
     }
   } else if (state) {
-    var decryptedMessage = authorizeService.decrypt(state);
+    let decryptedMessage = authorizeService.decrypt(state);
+
     decryptedMessage = JSON.parse(decryptedMessage);
     req.query.teamId = decryptedMessage.teamId;
     req.query.network = decryptedMessage.network;
@@ -99,51 +98,49 @@ export default (req, res, next) => {
       // logger.info("Twitter state has an issues.");
     }
 
-    var decodedToken = authorizeService.verifyToken(
-      decryptedMessage.accessToken
+    const decodedToken = authorizeService.verifyToken(
+      decryptedMessage.accessToken,
     );
-    if (decodedToken.auth === false)
-      return res.status(401).send('Accesstoken is missing or invalid');
+
+    if (decodedToken.auth === false) return res.status(401).send('Accesstoken is missing or invalid');
 
     if (decodedToken) {
-      var parsedToken = JSON.parse(decodedToken);
-      var expireDate = parsedToken.Activations.account_expire_date;
-      var remindingDays = moment(expireDate).diff(moment(), 'days');
+      const parsedToken = JSON.parse(decodedToken);
+      const expireDate = parsedToken.Activations.account_expire_date;
+      const remindingDays = moment(expireDate).diff(moment(), 'days');
+
       req.body.userScopeId = parsedToken.user_id;
       req.body.userScopeEmail = parsedToken.email;
       req.body.userScopeName = parsedToken.first_name;
       req.query.userScopeName = parsedToken.first_name;
-      req.body.userScopeMaxAccountCount =
-        parsedToken.userPlanDetails.account_count;
-      req.body.userScopeMaxMemberCount =
-        parsedToken.userPlanDetails.member_count;
-      req.body.userScopeAvailableNetworks =
-        parsedToken.userPlanDetails.available_network;
-      req.body.userScopeMaxScheduleCount =
-        parsedToken.userPlanDetails.maximum_schedule;
+      req.body.userScopeMaxAccountCount = parsedToken.userPlanDetails.account_count;
+      req.body.userScopeMaxMemberCount = parsedToken.userPlanDetails.member_count;
+      req.body.userScopeAvailableNetworks = parsedToken.userPlanDetails.available_network;
+      req.body.userScopeMaxScheduleCount = parsedToken.userPlanDetails.maximum_schedule;
       req.body.userScopeIsAdmin = parsedToken.is_admin_user;
 
       if (remindingDays < 0) {
         var redirectValueFromRequest = req.query.redirectToken;
+
         if (redirectValueFromRequest) {
           var decryptredRedirectToken = JSON.parse(
-            authorizeService.decrypt(redirectValueFromRequest)
+            authorizeService.decrypt(redirectValueFromRequest),
           );
           var expiredDays = moment(decryptredRedirectToken.expire_date).diff(
             moment(),
-            'days'
+            'days',
           );
 
           if (expiredDays >= 0 && decryptredRedirectToken.isChangePlan) {
-            req.body.AppScopedRedirectUrl =
-              decryptredRedirectToken.redirect_url;
+            req.body.AppScopedRedirectUrl = decryptredRedirectToken.redirect_url;
             next();
-          } else
+          } else {
             res.status(200).json({
               code: 401,
               status: 'failed',
               message: 'Something went wrong!',
             });
+          }
         } else {
           var redirectTokenValue = {
             isChangePlan: true,
@@ -151,26 +148,29 @@ export default (req, res, next) => {
             redirect_url: req.originalUrl,
           };
           var redirectToken = authorizeService.encrypt(
-            JSON.stringify(redirectTokenValue)
+            JSON.stringify(redirectTokenValue),
           );
+
           res.redirect(
             `${config.get(
-              'user_socioboard.host_url'
+              'user_socioboard.host_url',
             )}/v1/user/change-plan/?userId=${parsedToken.user_id}&currentPlan=${parsedToken.Activations.user_plan
-            }&newPlan=0&redirectToken=${redirectToken}`
+            }&newPlan=0&redirectToken=${redirectToken}`,
           );
         }
       } else {
         next();
       }
-    } else
+    } else {
       res
         .status(200)
         .json({ code: 400, status: 'failed', message: 'Bad request!' });
-  } else
+    }
+  } else {
     res.status(200).json({
       code: 401,
       status: 'failed',
       message: 'Accesstoken is missing or invalid!',
     });
+  }
 };

@@ -347,7 +347,7 @@
 
     <script>
         // team date ranges
-        var start = moment().subtract(29, 'days');
+        var start = moment().subtract(6, 'days');
         var end = moment();
 
         $('#twt-daterange').daterangepicker({
@@ -367,7 +367,7 @@
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
         }, function (start, end, label) {
-            changeTeamResponseCalendar(start, end);
+            changeTeamResponseCalendar(start, end);//get data from onchange calendar.
             $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
         });
 
@@ -405,6 +405,11 @@
             }
         });
 
+        /**
+         * TODO We have get the reports of the youtube account added based on the date ranges values.
+         * when we changes the date ranges values from calendar filter.
+         */
+
         function changeTeamResponseCalendar(a, b) {
             let startDate = formatDate(a);
             let endDate = formatDate(b);
@@ -434,6 +439,17 @@
             '\n' +
             '        </div>';
 
+
+        /**
+         * TODO We have get the reports of the youtube account added.
+         * This function is used getting reports of the youtube accounts added based on dates filter.
+         * @param {integer} teamid- current teamid of the particular User.
+         * @param {string} accid- link of image or video in the twitter post.
+         * @param {string} filterPeriod- time value of range.
+         * @param {string} startDate- Start date of the filter range.
+         * @param {sourceUrl} endDate  end  date of the filter range.
+         * ! Do not change this function without referring API format of getting the youtube reports.
+         */
 
         function getYouTubeReports(teamid, accid, filterPeriod, startDate, endDate) {
             $.ajax({
@@ -537,6 +553,11 @@
                             xaxis: {
                                 tooltip: {
                                     enabled: false
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '10px'
+                                    }
                                 }
                             },
                             legend: {
@@ -572,36 +593,40 @@
                         chart.render();
                     } else if (response.code === 400) {
                         $('#like_count_chart, #stats-chart').append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + response.error + '</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + response.error + '</h6>\n' +
+                            '</div>');
                     } else {
                         $('#like_count_chart, #stats-chart').append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6>' + "Some error occured , can not get Data" + '</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' + "Some error occured , can not get Data" + '</h6>\n' +
+                            '</div>');
                     }
                 }
             });
         }
 
+        /**
+         * TODO We have get the reports of the youtube account when we change the accounts from select dropdown .
+         * when change the account id of the youtube accounts.
+         */
         function changeYoutubeData(data) {
             let accid = data.value;
             youtubeID = data.value;
-            getYouTubeReports(teamid, accid, 7, 0, 0);
+            getYouTubeReports(teamid, accid, 3, 0, 0);
         }
 
 
         let noYoutube = ' <div class="text-center">\n' +
-            '                                                <div class="symbol symbol-150">\n' +
-            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-            '                                                </div>\n' +
-            '                                                <h6>Currently, no Youtube account added to this team.</h6>\n' +
-            '                                            </div>';
+            '<div class="symbol symbol-150">\n' +
+            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+            '</div>\n' +
+            '<h6>Currently, no Youtube account added to this team.</h6>\n' +
+            '</div>';
 
         $(document).ready(function () {
             $("#reportsButton").trigger("click");

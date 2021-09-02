@@ -3,7 +3,7 @@
     <link href="{{asset('plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css"/>
 </head>
 @section('title')
-    <title>{{env('WEBSITE_TITLE')}} | Dashboard</title>
+    <title>{{env('WEBSITE_TITLE')}} | Calendar View</title>
 @endsection
 @section('content')
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
@@ -30,11 +30,16 @@
                                 <div class="row">
                                     <div class="col-md-4 col-lg-3">
                                         <select class="form-control selectpicker" id="categories">
-                                            <option value="">Select Category</option>
+                                            <option value="">All Categories</option>
                                             <option value="0" >SocioQueue</option>
                                             <option value="1">DayWise-Socioqueue</option>
                                             <option value="6">history</option>
                                         </select>
+                                    </div>
+                                    <div class="d-flex color-descriptive col-md-4 ml-auto">
+                                        <div class="red-color d-flex"><span></span>Normal Publish</div>
+                                        <div class="yellow-color d-flex"><span></span>Day Wise Publish</div>
+                                        <div class="blue-color d-flex"><span></span>History</div>
                                     </div>
                                 </div>
                             </div>

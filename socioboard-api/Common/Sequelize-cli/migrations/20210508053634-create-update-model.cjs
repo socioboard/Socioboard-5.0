@@ -384,6 +384,24 @@ module.exports = {
         { transaction }
       );
       await queryInterface.addColumn(
+        'social_account_feeds_updates',
+        'updated_date',
+        {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        { transaction }
+      );
+      await queryInterface.addColumn(
+        'social_account_friends_counts',
+        'updated_date',
+        {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        { transaction }
+      );
+      await queryInterface.addColumn(
         'social_account_friends_counts',
         'updated_at',
         {

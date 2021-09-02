@@ -127,6 +127,7 @@ class DiscoveryController extends Controller
     public function searchTwitter(Twitter $request)
     {
         $apiUrl = ApiConfig::getFeeds('/trends/get-Twitter');
+        $socialAccounts = $this->getSocialAccounts();
             $apiUrl = $apiUrl . '?keyword=' . $request->keyword;
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
@@ -135,7 +136,7 @@ class DiscoveryController extends Controller
                 $responseData = $this->helper->responseHandler($response['data']);
                 $keyword= $request->keyword;
 
-                return view('discovery::twitter',compact('responseData','keyword'));
+                return view('discovery::twitter',compact('responseData','keyword','socialAccounts'));
             } else {
                 return view('discovery::twitter')->with(["ErrorMessage" => 'Can not fetch accounts, please reload page']);
             }

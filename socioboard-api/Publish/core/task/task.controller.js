@@ -1,31 +1,30 @@
 import TaskService from './task.service.js';
 
 class TaskController {
-
-    async getTasks(req, res, next) {
-        /* 	#swagger.tags = ['task']
+  async getTasks(req, res, next) {
+    /* 	#swagger.tags = ['task']
             #swagger.description = 'To get the task list for providing an approval to other requested user inside the particular team' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*   #swagger.parameters['teamId'] = {
+    /*   #swagger.parameters['teamId'] = {
                 in: 'query',
                 description: 'Enter team id',
                 }
              #swagger.parameters['pageId'] = {
                 in: 'query',
                 description: 'Pagination Id'
-                }*/
-        return await TaskService.getTasks(req, res, next);
-    }
+                } */
+    return await TaskService.getTasks(req, res, next);
+  }
 
-    async assignTask(req, res, next) {
-        /* 	#swagger.tags = ['task']
+  async assignTask(req, res, next) {
+    /* 	#swagger.tags = ['task']
             #swagger.description = 'To assign the task to other team member' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*   #swagger.parameters['taskId'] = {
+    /*   #swagger.parameters['taskId'] = {
                 in: 'query',
                 description: 'Enter task id ',
                 }
@@ -36,17 +35,17 @@ class TaskController {
             #swagger.parameters['teamId'] = {
                 in: 'query',
                 description: ' team id'
-                }*/
-        return await TaskService.assignTask(req, res, next);
-    }
+                } */
+    return await TaskService.assignTask(req, res, next);
+  }
 
-    async updateTaskStatus(req, res, next) {
-        /* 	#swagger.tags = ['task']
+  async updateTaskStatus(req, res, next) {
+    /* 	#swagger.tags = ['task']
             #swagger.description = 'To assign the task to other team member' */
-        /* #swagger.security = [{
+    /* #swagger.security = [{
                "AccessToken": []
         }] */
-        /*   #swagger.parameters['taskId'] = {
+    /*   #swagger.parameters['taskId'] = {
                 in: 'query',
                 description: 'Enter task id ',
                 }
@@ -59,9 +58,8 @@ class TaskController {
             #swagger.parameters['teamId'] = {
                 in: 'query',
                 description: ' team id'
-                }*/
-        return await TaskService.updateTaskStatus(req, res, next);
-    }
-
+                } */
+    return await TaskService.updateTaskStatus(req, res, next);
+  }
 }
 export default new TaskController();

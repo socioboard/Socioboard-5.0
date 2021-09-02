@@ -1,0 +1,49 @@
+{
+  "title": "SB5.0 API",
+  "version": "5.0.0",
+  "lang": "arabic",
+  "description": "To describe a RESTful API for SB5.0 API",
+  "applicationName": "SocioBoard 5.0 Dev",
+  "teamDescription": "SocioBoard 5.0 Dev",
+  "perPageLimit": 12,
+  "feed_socioboard": {
+    "title": "SocioBoard 5.0 Dev",
+    "version": "5.0.0",
+    "description": "To describe a RESTful API of feed services such as network feeds, rss feeds and latest trending from Giphy, newsApi, Pixabay, Imgur, Flickr and DailyMotion",
+    "applicationName": "SocioBoard 5.0 Dev"
+  },
+  "facebook_api": {
+    "scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends,instagram_manage_insights",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "4.0.0",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "google_api": {
+    "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
+    "youtube_insights_metrics": "averageViewDuration,likes,dislikes,comments,shares,subscribersGained,subscribersLost,views"
+  },
+  "twitter_api": {
+    "version": "5.0.0",
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "linkedIn_api": {
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "instagram_api": {
+    "update_time_frequency_value": 20,
+    "update_time_frequency_factor": "minutes"
+  },
+  "archivedMedia": {
+    "path": "../../media/archiveMedia"
+  },
+  "customhashtagMedia": {
+    "path": "../../media/customhashtagMedia"
+  },
+  "rssUrl": {
+    "max_history": 5
+  }
+}

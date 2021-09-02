@@ -20,12 +20,14 @@ class PublishContentController extends Controller
 
     private $helper;
     private $apiUrl;
+    private $feedsUrl;
     private $site_url;
 
     public function __construct()
     {
         $this->helper = Helper::getInstance();
         $this->apiUrl = env('API_URL_PUBLISH').env('API_VERSION');
+        $this->feedsUrl = env('API_URL_FEEDS').env('API_VERSION');
         $this->site_url = config("env.API_URL");
     }
 
@@ -39,6 +41,7 @@ class PublishContentController extends Controller
         $twitterAccountsIds = [];
         $facebookAccountsIds = [];
         $linkedinAccountsIds = [];
+        $instagramAccountsIds = [];
         if(!empty($socialAccounts)){
             foreach ($socialAccounts as $k => $v) {
                 foreach ($v as $key => $value) {
@@ -49,6 +52,8 @@ class PublishContentController extends Controller
                             $facebookAccountsIds [] = $val->account_id;
                         } else if ($k === 'linkedin') {
                             $linkedinAccountsIds [] = $val->account_id;
+                        } else if ($k === 'instagram') {
+                            $instagramAccountsIds [] = $val->account_id;
                         }
                     }
                 }
@@ -69,9 +74,11 @@ class PublishContentController extends Controller
             'twitterAccountsIds' => $twitterAccountsIds,
             'facebookAccountsIds' => $facebookAccountsIds,
             'linkedinAccountsIds' => $linkedinAccountsIds,
+            'instagramAccountsIds' => $instagramAccountsIds,
             'isTwitter' => "false",
             'isFacebook' => "false",
             'isLinkedin' => "false",
+            'isInstagram' => "false",
         ]);
     }
 
@@ -83,9 +90,40 @@ class PublishContentController extends Controller
     public function share(PublishRequest $request)
     {
         try {
+            if ($request->get('accountTypes') === "true"  && (!isset($request->mediaUrl) && !isset($request->videoUrl))){
+                $result = [];
+                $result['code'] = 422;
+                $result['message'] = "Please select any media for posting";
+                return $result;
+            }
+            $team = \Session::get('team');
+            if ($request->get('accountTypes') === "true"){
+                $apiUrl = $apiUrl = $this->feedsUrl.'/feeds/get-insta-business-publish-limit?teamId=' . $team['teamid'];
+                $apidata = $request->get('socialAccount');
+                $responsed = $this->helper->postApiCallWithAuth('post', $apiUrl, $apidata);
+                $datass = $this->helper->responseHandler($responsed['data']);
+                $validity = [];
+                $c = 0;
+               if ( $datass['code'] === 200){
+                   foreach ($datass['data'] as $data){
+                       if ($data->limit == 0){
+                           $validity[$c] = $data;
+                           $c++;
+                       }
+                   }
+               }
+
+                if (sizeof($validity)>0){
+                    $result = [];
+                    $result['code'] = 423;
+                    $result['message'] = "invalid";
+                    $result['data'] = $validity;
+                    return  $result;
+                }
+            }
+
             $mediaArr = null;
             $postType = 'Text';
-            $team = \Session::get('team');
             if($request->has('mediaUrl') && !empty($request->get('mediaUrl'))){
                 $postType = 'Image';
                 $mediaArr = $request->get('mediaUrl');
@@ -96,6 +134,21 @@ class PublishContentController extends Controller
                 $postType = 'Link';
             }
             if($request->get('status') === 'scheduling') {
+                date_default_timezone_set($request->timezone);
+                $currentTime = date('Y-m-d\TH:i:s.ms\Z');
+                if ($request->has('normal_schedule_datetime')){
+                    $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
+                    $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
+                }else if ($request->has('day_wise_datetime')){
+                    $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone($request->timezone));
+                    $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
+                }
+                if ($currentTime > $dateschedule){
+                    $result = [];
+                    $result['code'] = 422;
+                    $result['message'] = "Please check your Scheduled Time";
+                    return $result;
+                }
                 $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request);
             }else if($request->get('status') === 'draft_scheduling'){
                 $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request, 5);
@@ -185,10 +238,11 @@ class PublishContentController extends Controller
                                     $socialAccounts['twitter']['account'][] = $account;
                                     break;
                                 case 6:
-                                    $socialAccounts['linkedin']['personal account'][] = $account;
-                                    break;
                                 case 7:
-                                    $socialAccounts['linkedin']['business account'][] = $account;
+                                    $socialAccounts['linkedin']['account'][] = $account;
+                                    break;
+                                case 12:
+                                    $socialAccounts['instagram']['business account'][] = $account;
                                     break;
                             }
                         }
@@ -230,7 +284,6 @@ class PublishContentController extends Controller
                 if ($response['code'] === 200) {
                     $responseData = $this->helper->responseHandler($response['data']);
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
-
                     if(!empty($accounts)){
                         foreach ($accounts as $key => $account) {
                             switch ($account->account_type) {
@@ -469,8 +522,10 @@ class PublishContentController extends Controller
 
             $twitterAccountsIds = [];
             $facebookAccountsIds = [];
+            $linkedInAccountsIds = [];
             $i = 0;
             $j = 0;
+            $x = 0;
             if(!empty($socialAccounts)){
                 foreach ($socialAccounts as $k => $v) {
                     foreach ($v as $key => $value) {
@@ -481,6 +536,9 @@ class PublishContentController extends Controller
                             } else if ($k == 'facebook') {
                                 $facebookAccountsIds [] = $val->account_id;
                                 if(in_array($val->account_id, $accountIds)) $j++;
+                            }else if ($k == 'linkedin') {
+                                $linkedInAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $x++;
                             }
                         }
                     }
@@ -488,6 +546,7 @@ class PublishContentController extends Controller
             }
             $isTwitter = $i > 0 ? "true" : "false";
             $isFacebook = $j > 0 ? "true" : "false";
+            $isLinkedin = $x > 0 ? "true" : "false";
 
             return view('contentstudio::scheduling.edit',[
                 'mediaData' => [
@@ -512,12 +571,13 @@ class PublishContentController extends Controller
                 'normalScheduleDate' => $postData->normalScheduleDate,
                 'daywiseScheduleTimer' => $daywiseScheduleTimer,
                 'createdDate' => $postData->createdDate,
-                'mediaSelectionType' => $postData->mediaSelectionType,
+                'mediaSelectionType' => isset($postData->mediaSelectionType) ? $postData->mediaSelectionType : "",
                 'schedule_id' => $postData->schedule_id,
                 'twitterAccountsIds' => $twitterAccountsIds,
                 'facebookAccountsIds' => $facebookAccountsIds,
                 'isTwitter' => $isTwitter,
                 'isFacebook' => $isFacebook,
+                'isLinkedin' => $isLinkedin,
                 'socioQueue' => null,
             ]);
         }
@@ -762,6 +822,7 @@ class PublishContentController extends Controller
 
     private function getTeamSocialAccounts()
     {
+        $user_id = session()->get('user')['userDetails']['user_id'];
         $socialAccounts = [];
         try {
             $team = \Session::get('team');
@@ -771,25 +832,30 @@ class PublishContentController extends Controller
                 if (isset($response['code']) && $response['code'] === 200) {
                     $responseData = $this->helper->responseHandler($response['data']);
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
-
                     if(!empty($accounts)){
                         foreach ($accounts as $key => $account) {
-                            switch ($account->account_type) {
-                                case 1:
-                                    $socialAccounts['facebook']['user'][] = $account;
-                                    break;
-                                case 2:
-                                    $socialAccounts['facebook']['page'][] = $account;
-                                    break;
-                                case 3:
-                                    $socialAccounts['facebook']['group'][] = $account;
-                                    break;
-                                case 4:
-                                    $socialAccounts['twitter']['account'][] = $account;
-                                    break;
-                                case 6:
-                                    $socialAccounts['linkedin']['personal account'][] = $account;
-                                    break;
+                            if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                switch ($account->account_type) {
+                                    case 1:
+                                        $socialAccounts['facebook']['user'][] = $account;
+                                        break;
+                                    case 2:
+                                        $socialAccounts['facebook']['page'][] = $account;
+                                        break;
+                                    case 3:
+                                        $socialAccounts['facebook']['group'][] = $account;
+                                        break;
+                                    case 4:
+                                        $socialAccounts['twitter']['account'][] = $account;
+                                        break;
+                                    case 6:
+                                    case 7:
+                                        $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 12:
+                                        $socialAccounts['instagram']['business account'][] = $account;
+                                        break;
+                                }
                             }
                         }
                     }
@@ -859,7 +925,7 @@ class PublishContentController extends Controller
         $daywiseScheduleTimer = null;
         if($request->has('weekday') && !empty($request->get('weekday')) && $request->has('day_wise_datetime') )
         {
-            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
             foreach ($request->get('weekday') as $key => $dayId) {
@@ -871,7 +937,7 @@ class PublishContentController extends Controller
         }
 
         if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime')!== null ){
-            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
         } else{
@@ -932,7 +998,7 @@ class PublishContentController extends Controller
         $daywiseScheduleTimer = null;
         if($request->has('weekday') && !empty($request->get('weekday')) && $request->has('day_wise_datetime') )
         {
-            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
             foreach ($request->get('weekday') as $key => $dayId) {
@@ -943,7 +1009,7 @@ class PublishContentController extends Controller
             }
         }
         if ($request->has('normal_schedule_datetime')){
-            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone('Asia/Calcutta'));
+            $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
         } else{

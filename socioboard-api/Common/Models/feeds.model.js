@@ -1,18 +1,19 @@
+import config from 'config';
+import moment from 'moment';
 import FacebookHelper from '../Cluster/facebook.cluster.js';
 import TwitterLikeComment from '../Cluster/twitter.cluster.js';
 import YoutubeLikeComment from '../Cluster/google.cluster.js';
-import UserTeamAccount from '../Shared/userTeamAccounts.shared.js';
-import config from 'config';
-import TwitterMongoPostModel from '../Mongoose/models/twitterposts.js';
-import YoutubeMongoPostModel from '../Mongoose/models/youtubepost.js';
-import FacebookMongoPostModel from '../Mongoose/models/facebookposts.js';
-import RssSearchedUrls from '../Mongoose/models/rsssearchedurls.js';
-import moment from 'moment';
+import UserTeamAccount from '../Shared/user-team-accounts.shared.js';
+import TwitterMongoPostModel from '../Mongoose/models/twitter-posts.js';
+import YoutubeMongoPostModel from '../Mongoose/models/youtube-post.js';
+import FacebookMongoPostModel from '../Mongoose/models/facebook-posts.js';
+import RssSearchedUrls from '../Mongoose/models/rss-searched-urls.js';
 import db from '../Sequelize-cli/models/index.js';
+import logger from '../../Feeds/resources/log/logger.log.js';
+
 const accountUpdateTable = db.social_account_feeds_updates;
 const socialAccount = db.social_accounts;
 const updateFriendsTable = db.social_account_friends_counts;
-import logger from '../../Feeds/resources/log/logger.log.js';
 
 class FeedModel {
   constructor() {
@@ -27,10 +28,12 @@ class FeedModel {
       if (!accountId || !tweetId) {
         reject(new Error(getMessage(4, lang)));
       } else {
-        var socialAccounts;
+        let socialAccounts;
+
         return this.getSocialAccount(4, accountId, userId, teamId)
           .then(socialAccount => {
             socialAccounts = socialAccount;
+
             return this.twitterLikeComment.likeTwitterPost(
               tweetId,
               socialAccount.access_token,
@@ -39,8 +42,9 @@ class FeedModel {
           })
           .then(response => {
             if (response.statusCode == 200) {
-              //this.updateLikeCount(tweetId, 'increment')
-              let twitterMongoPostModelObject = new TwitterMongoPostModel();
+              // this.updateLikeCount(tweetId, 'increment')
+              const twitterMongoPostModelObject = new TwitterMongoPostModel();
+
               twitterMongoPostModelObject
                 .updateLike(tweetId, true)
                 .then(() => {
@@ -71,10 +75,12 @@ class FeedModel {
       if (!accountId || !tweetId) {
         reject(new Error('Invalid Inputs'));
       } else {
-        var socialAccounts;
+        let socialAccounts;
+
         return this.getSocialAccount(4, accountId, userId, teamId).then(
           socialAccount => {
             socialAccounts = socialAccount;
+
             return this.twitterLikeComment
               .unlikeTwitterPost(
                 tweetId,
@@ -85,7 +91,9 @@ class FeedModel {
                 if (response.statusCode == 200) {
                   // this.updateLikeCount(tweetId)
                   //  this.updateLikeedAccount(tweetId, socialAccounts, false)
-                  var twitterMongoPostModelObject = new TwitterMongoPostModel();
+                  const twitterMongoPostModelObject =
+                    new TwitterMongoPostModel();
+
                   twitterMongoPostModelObject
                     .updateLike(tweetId, false)
                     .then(() => {
@@ -114,8 +122,8 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount(4, accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.twitterLikeComment
+          .then(socialAccount =>
+            this.twitterLikeComment
               .commentTwitterPost(
                 tweetId,
                 comment,
@@ -125,21 +133,21 @@ class FeedModel {
               )
               .then(response => {
                 if (response.body) {
-                  var parsedBody = JSON.parse(response.body);
+                  const parsedBody = JSON.parse(response.body);
+
                   logger.info(
                     'Success in parsing for twitter Id',
                     parsedBody.id_str
                   );
-                  var result =
-                    'Successfully posted and posted tweet id is ' +
-                    parsedBody.id_str;
+                  const result = `Successfully posted and posted tweet id is ${parsedBody.id_str}`;
+
                   resolve(result);
                 } else reject(new Error('Invalid Inputs'));
               })
               .catch(error => {
                 reject(error);
-              });
-          })
+              })
+          )
           .catch(error => {
             logger.ingo('Error while twt Comment', error);
             reject(error);
@@ -154,8 +162,8 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount(4, accountId, userId, teamId).then(
-          socialAccount => {
-            return this.twitterLikeComment
+          socialAccount =>
+            this.twitterLikeComment
               .deleteTwitterPostOrComment(
                 tweetId,
                 socialAccount.access_token,
@@ -163,7 +171,9 @@ class FeedModel {
               )
               .then(response => {
                 if (response.body) {
-                  var twitterMongoPostModelObject = new TwitterMongoPostModel();
+                  const twitterMongoPostModelObject =
+                    new TwitterMongoPostModel();
+
                   twitterMongoPostModelObject
                     .deletecomments(tweetId)
                     .then(response => {
@@ -178,8 +188,7 @@ class FeedModel {
               })
               .catch(error => {
                 reject(error);
-              });
-          }
+              })
         );
       }
     });
@@ -190,10 +199,12 @@ class FeedModel {
       if (!accountId || !tweetId) {
         reject(new Error('Invalid Input'));
       } else {
-        var socialAccounts;
+        let socialAccounts;
+
         return this.getSocialAccount(4, accountId, userId, teamId)
           .then(socialAccount => {
             socialAccounts = socialAccount;
+
             return this.twitterLikeComment.retweetsPost(
               tweetId,
               socialAccount.access_token,
@@ -220,10 +231,12 @@ class FeedModel {
       if (!accountId || !tweetId) {
         reject(new Error('Invalid Inputs'));
       } else {
-        var socialAccounts;
+        let socialAccounts;
+
         return this.getSocialAccount(4, accountId, userId, teamId)
           .then(socialAccount => {
             socialAccounts = socialAccount;
+
             return this.twitterLikeComment.unretweetPost(
               tweetId,
               socialAccount.access_token,
@@ -246,7 +259,8 @@ class FeedModel {
 
   updateCommentCount(tweetId, method) {
     try {
-      var twitterMongoPostModelObject = new TwitterMongoPostModel();
+      const twitterMongoPostModelObject = new TwitterMongoPostModel();
+
       twitterMongoPostModelObject.updateCommentCount(tweetId, method);
       method
         ? twitterMongoPostModelObject.updateretweeted(tweetId, true)
@@ -268,15 +282,15 @@ class FeedModel {
         reject(new Error(getMessage(4, lang)));
       } else {
         return this.getSocialAccount(4, accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.twitterLikeComment.twtRetweetWithComment(
+          .then(socialAccount =>
+            this.twitterLikeComment.twtRetweetWithComment(
               tweetId,
               socialAccount.access_token,
               socialAccount.refresh_token,
               comment,
               username
-            );
-          })
+            )
+          )
           .then(response => {
             if (response) {
               this.updateCommentCount(tweetId, 'increment');
@@ -291,20 +305,23 @@ class FeedModel {
   }
 
   async fetchAllTweets(userId, accountId, teamId, lang) {
-    var max_id;
+    let max_id;
     let previousMaxid;
-    var i = 1;
+    const i = 1;
+
     do {
-      let result = await this.fetchAllTweetsinloop(
+      const result = await this.fetchAllTweetsinloop(
         userId,
         accountId,
         teamId,
         max_id,
         lang
       );
+
       previousMaxid = max_id;
       max_id = result.max_id;
     } while (max_id != previousMaxid);
+
     return 'Successfully fetched all tweets';
   }
 
@@ -313,12 +330,14 @@ class FeedModel {
       if (!accountId) {
         reject(new Error(getMessage(4, lang)));
       } else {
-        var max_id = 0;
-        var socialAccountInfo = {};
-        var twitterMongoPostModelObject = new TwitterMongoPostModel();
+        let max_id = 0;
+        let socialAccountInfo = {};
+        const twitterMongoPostModelObject = new TwitterMongoPostModel();
+
         return this.getSocialAccount(4, accountId, userId, teamId)
           .then(socialAccountDetails => {
             socialAccountInfo = socialAccountDetails;
+
             return this.twitterLikeComment.getAllTweets(
               socialAccountDetails.access_token,
               socialAccountDetails.refresh_token,
@@ -327,12 +346,14 @@ class FeedModel {
             );
           })
           .then(timelineTweets => {
-            var size = 0;
-            for (var count in timelineTweets) {
+            let size = 0;
+
+            for (const count in timelineTweets) {
               if (timelineTweets.hasOwnProperty(count)) size += 1;
             }
             if (timelineTweets[timelineTweets.length - 1])
               max_id = timelineTweets[timelineTweets.length - 1].id_str;
+
             return this.twitterLikeComment.parseTweetDetails(
               timelineTweets,
               socialAccountInfo.social_id,
@@ -341,14 +362,15 @@ class FeedModel {
               socialAccountInfo.archived_status
             );
           })
-          .then(tweets => {
-            return twitterMongoPostModelObject.insertManyPosts(tweets.tweets);
-          })
+          .then(tweets =>
+            twitterMongoPostModelObject.insertManyPosts(tweets.tweets)
+          )
           .then(insertedData => {
-            var data = {
-              max_id: max_id,
+            const data = {
+              max_id,
               data: insertedData,
             };
+
             resolve(data);
           })
           .catch(error => {
@@ -364,13 +386,13 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount([2], accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.facebookHelper.likeFacebookPost(
+          .then(socialAccount =>
+            this.facebookHelper.likeFacebookPost(
               socialAccount.social_id,
               postId,
               socialAccount.access_token
-            );
-          })
+            )
+          )
           .then(response => {
             resolve(response);
           })
@@ -387,14 +409,14 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.facebookHelper.commentFacebookPost(
+          .then(socialAccount =>
+            this.facebookHelper.commentFacebookPost(
               socialAccount.social_id,
               postId,
               comment,
               socialAccount.access_token
-            );
-          })
+            )
+          )
           .then(response => {
             resolve(response);
           })
@@ -407,7 +429,7 @@ class FeedModel {
 
   getRecentFbFeeds(userId, accountId, teamId, pageId) {
     return new Promise((resolve, reject) => {
-      if (!Boolean(pageId)) {
+      if (!pageId) {
         reject(new Error('Please validate the page id!'));
       } else {
         return this.isNeedToFetchRecentPost(
@@ -417,11 +439,13 @@ class FeedModel {
         )
           .then(isRunRecentPost => {
             if (isRunRecentPost) {
-              var socialAccountInfo = {};
-              var feeds = [];
+              let socialAccountInfo = {};
+              let feeds = [];
+
               return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
                 .then(socialAccountDetails => {
                   socialAccountInfo = socialAccountDetails;
+
                   return accountUpdateTable
                     .findOne({
                       where: {account_id: accountId},
@@ -429,7 +453,7 @@ class FeedModel {
                       raw: true,
                     })
                     .then(updatedAccountData => {
-                      if (updatedAccountData && updatedAccountData.updated_at)
+                      if (updatedAccountData && updatedAccountData.updated_at) {
                         return this.facebookHelper.getRecentFacebookFeeds(
                           socialAccountInfo.access_token,
                           socialAccountInfo.social_id,
@@ -437,13 +461,14 @@ class FeedModel {
                           config.get('facebook_api.app_id'),
                           config.get('facebook_api.version')
                         );
-                      else
-                        return this.facebookHelper.getFacebookPosts(
-                          socialAccountInfo.access_token,
-                          socialAccountInfo.social_id,
-                          config.get('facebook_api.app_id'),
-                          config.get('facebook_api.version')
-                        );
+                      }
+
+                      return this.facebookHelper.getFacebookPosts(
+                        socialAccountInfo.access_token,
+                        socialAccountInfo.social_id,
+                        config.get('facebook_api.app_id'),
+                        config.get('facebook_api.version')
+                      );
                     });
                 })
                 .then(postDetails => {
@@ -453,33 +478,32 @@ class FeedModel {
                     postDetails.feeds.length > 0
                   ) {
                     feeds = postDetails.feeds;
-                    var facebookMongoPostModelObject =
+                    const facebookMongoPostModelObject =
                       new FacebookMongoPostModel();
+
                     return facebookMongoPostModelObject.insertManyPosts(
                       postDetails.feeds
                     );
-                  } else return [];
+                  }
+
+                  return [];
                 })
-                .then(() => {
-                  return this.createOrEditLastUpdateTime(
+                .then(() =>
+                  this.createOrEditLastUpdateTime(
                     accountId,
                     socialAccountInfo.social_id
                   )
-                    .then(() => {
-                      return feeds;
-                    })
+                    .then(() => feeds)
                     .catch(error => {
                       throw error;
-                    });
-                })
+                    })
+                )
                 .catch(error => {
                   throw error;
                 });
             }
           })
-          .then(() => {
-            return this.getFacebookFeeds(userId, accountId, teamId, pageId);
-          })
+          .then(() => this.getFacebookFeeds(userId, accountId, teamId, pageId))
           .then(feeds => resolve(feeds))
           .catch(error => {
             reject(error);
@@ -490,7 +514,7 @@ class FeedModel {
 
   getRecentFbPageFeeds(userId, accountId, teamId, pageId) {
     return new Promise((resolve, reject) => {
-      if (!Boolean(pageId)) {
+      if (!pageId) {
         reject(new Error('Please validate the page id!'));
       } else {
         return this.isNeedToFetchRecentPost(
@@ -500,11 +524,13 @@ class FeedModel {
         )
           .then(isRunRecentPost => {
             if (isRunRecentPost) {
-              var socialAccountInfo = {};
-              var feeds = [];
+              let socialAccountInfo = {};
+              let feeds = [];
+
               return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
                 .then(socialAccountDetails => {
                   socialAccountInfo = socialAccountDetails;
+
                   return accountUpdateTable
                     .findOne({
                       where: {account_id: accountId},
@@ -512,7 +538,7 @@ class FeedModel {
                       raw: true,
                     })
                     .then(updatedAccountData => {
-                      if (updatedAccountData && updatedAccountData.updated_at)
+                      if (updatedAccountData && updatedAccountData.updated_at) {
                         return this.facebookHelper.getRecentFacebookPageFeeds(
                           socialAccountInfo.access_token,
                           socialAccountInfo.social_id,
@@ -520,13 +546,14 @@ class FeedModel {
                           config.get('facebook_api.app_id'),
                           config.get('facebook_api.version')
                         );
-                      else
-                        return this.facebookHelper.getFacebookPagePosts(
-                          socialAccountInfo.access_token,
-                          socialAccountInfo.social_id,
-                          config.get('facebook_api.app_id'),
-                          config.get('facebook_api.version')
-                        );
+                      }
+
+                      return this.facebookHelper.getFacebookPagePosts(
+                        socialAccountInfo.access_token,
+                        socialAccountInfo.social_id,
+                        config.get('facebook_api.app_id'),
+                        config.get('facebook_api.version')
+                      );
                     });
                 })
                 .then(postDetails => {
@@ -536,33 +563,32 @@ class FeedModel {
                     postDetails.feeds.length > 0
                   ) {
                     feeds = postDetails.feeds;
-                    var facebookMongoPostModelObject =
+                    const facebookMongoPostModelObject =
                       new FacebookMongoPostModel();
+
                     return facebookMongoPostModelObject.insertManyPosts(
                       postDetails.feeds
                     );
-                  } else return [];
+                  }
+
+                  return [];
                 })
-                .then(() => {
-                  return this.createOrEditLastUpdateTime(
+                .then(() =>
+                  this.createOrEditLastUpdateTime(
                     accountId,
                     socialAccountInfo.social_id
                   )
-                    .then(() => {
-                      return feeds;
-                    })
+                    .then(() => feeds)
                     .catch(error => {
                       throw error;
-                    });
-                })
+                    })
+                )
                 .catch(error => {
                   throw error;
                 });
             }
           })
-          .then(() => {
-            return this.getFacebookFeeds(userId, accountId, teamId, pageId);
-          })
+          .then(() => this.getFacebookFeeds(userId, accountId, teamId, pageId))
           .then(feeds => resolve(feeds))
           .catch(error => {
             reject(error);
@@ -573,13 +599,14 @@ class FeedModel {
 
   getFacebookFeeds(userId, accountId, teamId, pageId) {
     return new Promise((resolve, reject) => {
-      if (!Boolean(pageId)) {
+      if (!pageId) {
         reject(new Error('Please validate the page id!'));
       } else {
         return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
           .then(socialAccountDetails => {
-            var offset = (pageId - 1) * config.get('perPageLimit');
-            var facebookMongoPostModelObject = new FacebookMongoPostModel();
+            const offset = (pageId - 1) * config.get('perPageLimit');
+            const facebookMongoPostModelObject = new FacebookMongoPostModel();
+
             return facebookMongoPostModelObject.getSocialAccountPosts(
               socialAccountDetails.social_id,
               offset,
@@ -601,18 +628,20 @@ class FeedModel {
       if (!accountId || !videoId || !rating) {
         reject(new Error('Invalid Inputs'));
       } else {
-        var data = {videoId: videoId, rating: rating};
+        const data = {videoId, rating};
+
         return this.getSocialAccount(9, accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.youtubeLikeComment.youtubeVideoLike(
+          .then(socialAccount =>
+            this.youtubeLikeComment.youtubeVideoLike(
               videoId,
               rating,
               socialAccount.refresh_token
-            );
-          })
+            )
+          )
           .then(response => {
             if (response.statusCode == 204) {
-              var youtubeMongoPostModelObject = new YoutubeMongoPostModel();
+              const youtubeMongoPostModelObject = new YoutubeMongoPostModel();
+
               return youtubeMongoPostModelObject
                 .updateIsLike(data)
                 .then(() => {
@@ -621,10 +650,10 @@ class FeedModel {
                 .catch(error => {
                   reject(error);
                 });
-            } else
-              throw new Error(
-                `Sorry, Already ${rating}d by the specified account.`
-              );
+            }
+            throw new Error(
+              `Sorry, Already ${rating}d by the specified account.`
+            );
           })
           .catch(error => {
             reject(error);
@@ -639,20 +668,21 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount(9, accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.youtubeLikeComment.youtubeVideoComment(
+          .then(socialAccount =>
+            this.youtubeLikeComment.youtubeVideoComment(
               videoId,
               comment,
               socialAccount.refresh_token
-            );
-          })
+            )
+          )
           .then(response => {
-            var parsedData = JSON.parse(response);
-            if (parsedData.id)
+            const parsedData = JSON.parse(response);
+
+            if (parsedData.id) {
               resolve(
                 `Successfully commented and comment id is ${parsedData.id}`
               );
-            else throw new Error('Sorry! Something went wrong.');
+            } else throw new Error('Sorry! Something went wrong.');
           })
           .catch(error => {
             reject(error);
@@ -667,20 +697,21 @@ class FeedModel {
         reject(new Error('Invalid Inputs'));
       } else {
         return this.getSocialAccount(9, accountId, userId, teamId)
-          .then(socialAccount => {
-            return this.youtubeLikeComment.youtubeCommentReply(
+          .then(socialAccount =>
+            this.youtubeLikeComment.youtubeCommentReply(
               commentId,
               comment,
               socialAccount.refresh_token
-            );
-          })
+            )
+          )
           .then(response => {
-            var parsedData = JSON.parse(response);
-            if (parsedData.id)
+            const parsedData = JSON.parse(response);
+
+            if (parsedData.id) {
               resolve(
                 `Successfully replied to a specified comment and comment id is ${parsedData.id}`
               );
-            else throw new Error('Sorry! Something went wrong.');
+            } else throw new Error('Sorry! Something went wrong.');
           })
           .catch(error => {
             reject(error);
@@ -690,18 +721,21 @@ class FeedModel {
   }
 
   async youtubeRecentFeeds(socialAccount) {
-    var youtubeMongoPostModelObject = new YoutubeMongoPostModel();
-    let response = await this.youtubeLikeComment.getYoutubeChannelsInfo(
+    const youtubeMongoPostModelObject = new YoutubeMongoPostModel();
+    const response = await this.youtubeLikeComment.getYoutubeChannelsInfo(
       socialAccount.social_id,
       socialAccount.refresh_token
     );
+
     if (response) youtubeMongoPostModelObject.insertManyPosts(response);
+
     return response;
   }
 
   async addRssSearchUrls(userId, rssUrl, title, discription) {
     let dummyTitle;
-    let rssSearchedUrls = new RssSearchedUrls();
+    const rssSearchedUrls = new RssSearchedUrls();
+
     try {
       if (!title) {
         dummyTitle = rssUrl.split('https://');
@@ -710,21 +744,23 @@ class FeedModel {
         title = dummyTitle;
       }
     } catch (e) {}
-    let posts = [];
-    let post = {
+    const posts = [];
+    const post = {
       // title: dummyTitle || "",
       description: discription || '',
       rssUrl,
       updatedDate: moment.now(),
     };
+
     posts.push(post);
-    let inserData = await rssSearchedUrls.insertManyPosts(posts, userId);
-    let titles = await rssSearchedUrls.updateTitle(post, userId, title);
+    const inserData = await rssSearchedUrls.insertManyPosts(posts, userId);
+    const titles = await rssSearchedUrls.updateTitle(post, userId, title);
+
     return inserData;
   }
 
   async socialAccountStats(account_id) {
-    let accounts = await socialAccount.findOne({
+    const accounts = await socialAccount.findOne({
       where: {account_id},
       attributes: [
         'account_id',
@@ -734,8 +770,9 @@ class FeedModel {
       ],
       raw: true,
     });
-    let SocialAccountStats = [];
-    var fields = [];
+    const SocialAccountStats = [];
+    let fields = [];
+
     switch (Number(accounts.account_type)) {
       case 1:
         fields = [
@@ -773,6 +810,9 @@ class FeedModel {
           'total_post_count',
           'profile_picture',
         ];
+        break;
+      case 7:
+        fields = ['account_id', 'follower_count'];
         break;
       case 9:
         fields = [
@@ -816,13 +856,12 @@ class FeedModel {
           attributes: fields,
           raw: true,
         })
-        .then(resultData => {
-          return resultData;
-        })
+        .then(resultData => resultData)
         .catch(error => {
           logger.error(error.message);
         });
     }
+
     return SocialAccountStats;
   }
 }

@@ -1,30 +1,35 @@
 {
+  "title": "SocioBoard 5.0 - dev",
+  "version": "5.0",
   "lang": "en",
-  "applicationName": "SocioBoard5.0",
+  "description": "To describe a RESTful API for SocioBoard-5.0",
+  "applicationName": "SocioBoard5.0 - dev",
   "teamDescription": "SocioBoard team has been created automatically by the application.",
   "perPageLimit": 12,
   "maximumTrialPeriod": 1,
-  "app_url": "https://local.socioboard.com/login",
-  "app_resetpw_url": "https://local.socioboard.com/resetUserPassword",
+  "app_url": "https://app.socioboard.globusdemos.com/user-login",
+  "app_resetpw_url": "https://app.socioboard.globusdemos.com/resetUserPassword",
   "user_socioboard": {
-    "title": "SocioBoard 5.0  - UserServices",
+    "title": "5.0Dev - UserServices",
     "version": "1.0.0",
     "description": "To describe a RESTful API of user services such as unauthorized, authorized and team management",
-    "applicationName": "SocioBoard 5.0"
-  },
-  "mailTitles": {
-    "activation_link": "Socioboard 5.0 Activation link",
-    "Invitation_user": "Invitation from SocioBoard to Add Account",
-    "forgot_password_request": "SocioBoard 5.0 Reset Password",
-    "payment_invoice": "Socioboard 5.0  Payment Invoice"
+    "applicationName": ""
   },
   "uploadService": {
     "image_path": "",
     "video_path": ""
   },
+  "facebook_api" : {
+    "page_scopes": "user_posts,publish_pages,manage_pages,read_insights",
+    "login_scopes": "email,user_posts,user_birthday,publish_pages,manage_pages,publish_to_groups,user_friends",
+    "profile_scopes": "email",
+    "user_subscription_fields": "feed",
+    "page_subscription_fields": "feed",
+    "version": "5.0.0"
+  },
   "google_api": {
     "login_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile",
-    "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl%2B%0Ahttps%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
+    "youtube_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutubepartner-channel-audit+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyt-analytics.readonly",
     "ganalytics_scopes": "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit",
     "ganalytics_activeuser_metrics": "rt:activeUsers",
     "ganalytics_activeuser_dimensions": "rt:deviceCategory,rt:operatingSystem,rt:pagePath,rt:country,rt:trafficType,rt:minutesAgo,rt:userType",
@@ -37,15 +42,19 @@
   "pinterest": {
     "scopes": "read_relationships+write_relationships+read_public+write_public"
   },
-  "jest": {
-    "access_token": "<< JEST ACCESS TOKEN >>"
+  "linkedIn_api":{
+    "scope":"r_emailaddress%20w_organization_social%20r_basicprofile%20r_liteprofile%20r_organization_social%20rw_organization_admin%20w_member_social"
+  },
+  "instagram_business_api": {
+    "business_account_scopes":"instagram_basic,pages_show_list,instagram_content_publish,pages_read_engagement",
+    "maximum_post_per_day":25
   },
   "mail_services_environments": [
     "production",
-    "development",
-    "localDev"
+    "development"
   ],
   "profile_url_assert": "/asserts/profiles.png",
   "user_base_plan": 0,
-  "expire_month": 1
+  "expire_month": 1,
+  "user_base_plan_expiry_days": 14
 }

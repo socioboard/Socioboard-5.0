@@ -23,7 +23,7 @@
             <ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">
 
 
-                @if(isset($isFacebook) &&  isset($isTwitter) && ($isFacebook === "true") && ($isTwitter === "true") && ($isLinkedin === "true"))
+                @if(isset($isFacebook) &&  isset($isTwitter) && isset($isLinkedin) &&(isset($isInstagram)) && ($isFacebook === "true") && ($isTwitter === "true") && ($isLinkedin === "true") && ($isInstagram === "true"))
                     <li class="nav-item">
                         <a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview"
                            aria-controls="Twitter">
@@ -37,10 +37,15 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
                         </a>
                     </li>
-                @elseif(isset($isTwitter) && ($isTwitter === "true") && ($isFacebook === "false") && ($isLinkedin === "false"))
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">
+                            <span class="nav-text">Instagram</span>
+                        </a>
+                    </li>
+                @elseif(isset($isTwitter) &&isset($isLinkedin) && isset($isInstagram) && ($isTwitter === "true") && ($isFacebook === "false") && ($isLinkedin === "false") && ($isInstagram === "false"))
                     <li class="nav-item">
                         <a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview"
                            aria-controls="Twitter">
@@ -54,10 +59,15 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " id="linkedin-tab-preview" title="please select Linked in account to enable the Preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
                         </a>
                     </li>
-                @elseif(isset($isFacebook) &&  ($isFacebook === "true") && ($isTwitter === "false") && ($isLinkedin === "false"))
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" title="please select Instagram account to enable the Preview">
+                            <span class="nav-text">Instagram</span>
+                        </a>
+                    </li>
+                @elseif(isset($isFacebook) && isset($isLinkedin) && isset($isInstagram) &&  ($isFacebook === "true") && ($isTwitter === "false") && ($isLinkedin === "false") && ($isInstagram === "false"))
                     <li class="nav-item">
                         <a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="please select Twitter account to enable the Preview">
                             <span class="nav-text">Twitter</span>
@@ -70,10 +80,15 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " id="linkedin-tab-preview" title="please select Linked in account to enable the Preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
                         </a>
                     </li>
-                @elseif(($isFacebook === "false") && ($isTwitter === "false") && isset($isLinkedin ) && ($isLinkedin === "false"))
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" title="please select Linked in account to enable the Preview">
+                            <span class="nav-text">Instagram</span>
+                        </a>
+                    </li>
+                @elseif(($isFacebook === "false") && ($isTwitter === "false") && isset($isInstagram) && isset($isLinkedin ) && ($isLinkedin === "false"))
                     <li class="nav-item">
                         <a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="please select any account to enable the Preview">
                             <span class="nav-text">Twitter</span>
@@ -87,7 +102,12 @@
 
                     <li class="nav-item">
                         <a class="nav-link" id="linkedin-tab-preview" title="please select any account to enable the Preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">
+                            <span class="nav-text">Instagram</span>
                         </a>
                     </li>
                 @elseif(isset($isLinkedin) &&  ($isLinkedin === "true") && ($isTwitter === "false") && ($isFacebook === "false"))
@@ -103,7 +123,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">
+                            <span class="nav-text">Instagram</span>
                         </a>
                     </li>
                 @elseif(isset($isLinkedin) && isset($isFacebook) &&  ($isLinkedin === "true") && ($isFacebook === "true") && ($isTwitter === "false"))
@@ -119,7 +144,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">
+                            <span class="nav-text">Instagram</span>
                         </a>
                     </li>
                 @elseif(isset($isLinkedin) && isset($isTwitter) &&  ($isLinkedin === "true") && ($isTwitter === "true") && ($isFacebook === "false"))
@@ -136,7 +166,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">
-                            <span class="nav-text">Linkedin</span>
+                            <span class="nav-text">LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">
+                            <span class="nav-text">Instagram</span>
                         </a>
                     </li>
                 @endif

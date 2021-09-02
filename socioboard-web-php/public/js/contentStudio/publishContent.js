@@ -15,24 +15,31 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut",
 };
-
 iterator = 0;
-
+$('#account_name').tooltip();
 $('#twitter-tab-preview, #facebook-tab-preview, #linkedin-tab-preview').tooltip();
 let twitterAccountsIds = $("#twitterAccountsIds").data('list');
 let facebookAccountsIds = $("#facebookAccountsIds").data('list');
 let linkedinAccountsIds = $("#linkedinAccountsIds").data('list');
+let instagramAccountsIds = $("#instagramAccountsIds").data('list');
 let selectedAccountIds = ($("#selectedAccountIds").data('list')) ? $("#selectedAccountIds").data('list') : [];
 selectedAccountIds = selectedAccountIds.map(x => +x);
+let twitter = 0;
+let facebook = 0;
+let linkedin = 0;
 $(document.body).on('click', '.check_social_account', function (e) {
     let append = '';
-    let twitter = 0;
-    let facebook = 0;
-    let linkedin = 0;
+    twitter = 0;
+    facebook = 0;
+    linkedin = 0;
+    instagram = 0;
+    SelectedId = "";
     if ($(this).is(':checked')) {
         selectedAccountIds.push(Number($(this).attr('acc_id')));
+        SelectedId = Number($(this).attr('acc_id'));
     } else {
         let index = selectedAccountIds.indexOf(Number($(this).attr('acc_id')));
+        SelectedId = Number($(this).attr('acc_id'));
         if (index > -1) {
             selectedAccountIds.splice(index, 1);
         }
@@ -41,236 +48,121 @@ $(document.body).on('click', '.check_social_account', function (e) {
         if ((selectedAccountIds.length > 0) && (twitterAccountsIds.includes(Number(ids)))) twitter++;
         if ((selectedAccountIds.length > 0) && (facebookAccountsIds.includes(Number(ids)))) facebook++;
         if ((selectedAccountIds.length > 0) && (linkedinAccountsIds.includes(Number(ids)))) linkedin++;
+        if ((selectedAccountIds.length > 0) && (instagramAccountsIds.includes(Number(ids)))) instagram++;
     });
+    if (instagram > 0) {
+        $('#insta_type').empty().append('Media is required for Instagram and multi-media posts are not supported for instagram');
+        document.getElementById("accounttypes").value = "true";
+    } else {
+        $('#insta_type').empty();
+        document.getElementById("accounttypes").value = "false";
+    }
+    textCountData();
     $('#facebook_preview_ids').show();
-    if ((selectedAccountIds.length > 0) && (twitter > 0) || (facebook > 0) || (linkedin > 0)) {
-        if((twitter > 0) && (facebook === 0) && (linkedin === 0)) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">'+
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-                    '<span class="nav-text">Linkedin</span></a></li></ul>';
 
-        } else if((facebook > 0) && (twitter === 0) && (linkedin === 0)) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" title="please select Twitter account to enable the Preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
+    if ((selectedAccountIds.length > 0)) {
+        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">';
+        if (twitter > 0) {
+            ((twitterAccountsIds.includes(Number(SelectedId)))) ?
                 append += '<li class="nav-item">' +
-                    '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-                    '<span class="nav-text">Linkedin</span></a></li></ul>';
-        } else if((linkedin > 0) && (twitter === 0) && (facebook === 0)) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" title="please select Twitter account to enable the Preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li></ul>';
-        }
-        else if((twitter > 0) && (facebook > 0) && (linkedin === 0)) {
-          if (facebookAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-                    '<span class="nav-text">Linkedin</span></a></li></ul>';
-            } else {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
                     '<a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
+                    '<span class="nav-text">Twitter</span></a></li>' :
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
                     '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-                    '<span class="nav-text">Linkedin</span></a></li></ul>';
-            }
+        } else {
+            append += '<li class="nav-item">' +
+                '<a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="Please select Twitter account to enable the Preview">' +
+                '<span class="nav-text">Twitter</span></a></li>';
+            if (twitterAccountsIds.includes(Number(SelectedId))) deselectIds();
         }
-        else if((twitter > 0) && (linkedin > 0) && (facebook === 0)) {
-           if (linkedinAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
-                    '<span class="nav-text">Facebook</span></a></li></ul>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview"  aria-controls="contact>' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li>';
-            } else {
-                   append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                       '<li class="nav-item">' +
-                       '<a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
-                       '<span class="nav-text">Twitter</span></a></li>';
-                   append += '<li class="nav-item">' +
-                       '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                       '<span class="nav-text">Facebook</span></a></li>';
-                   append += '<li class="nav-item">' +
-                       '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-                       '<span class="nav-text">Linkedin</span></a></li></ul>';
-                   }
-        }
-        else if((facebook > 0) && (linkedin > 0) && (twitter === 0)) {
-             if (linkedinAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" title="please select any account to enable the Preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact>' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li></ul>';
-            } else {
-                     append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                         '<li class="nav-item">' +
-                         '<a class="nav-link" id="twitter-tab-preview" title="please select any account to enable the Preview">' +
-                         '<span class="nav-text">Twitter</span></a></li>';
-                     append += '<li class="nav-item">' +
-                         '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                         '<span class="nav-text">Facebook</span></a></li>';
-                     append +='<li class="nav-item">' +
-                         '<a class="nav-link" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">' +
-                         '<span class="nav-text">Linkedin</span>' +
-                         '</a></li></ul>';
-             }
-        } else if((facebook > 0) && (linkedin > 0) && (twitter > 0)) {
-            if (twitterAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link " id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li></ul>';
-            } else if (facebookAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link " id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li></ul>';
-            } else if (linkedinAccountsIds.includes(Number($(this).attr('acc_id')))) {
-                append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-                    '<li class="nav-item">' +
-                    '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview">' +
-                    '<span class="nav-text">Twitter</span></a></li>';
-                append += '<li class="nav-item">' +
-                    '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-                    '<span class="nav-text">Facebook</span></a></li>';
-                append +='<li class="nav-item">' +
-                    '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview">' +
-                    '<span class="nav-text">Linkedin</span>' +
-                    '</a></li></ul>';
-            }
-        }
-    }
 
-    else if ((selectedAccountIds.length > 0) && (twitter > 0) && (facebook === 0) && (linkedin === 0)) {
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-            '<li class="nav-item">' +
-            '<a class="nav-link active" id="twitter-tab-preview" data-toggle="tab" href="#twitter-preview" aria-controls="Twitter">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
-    } else if ((selectedAccountIds.length > 0) && (facebook > 0) && (twitter === 0) && (linkedin === 0)) {
+        if (facebook > 0) {
+            ((facebookAccountsIds.includes(Number(SelectedId)))) ?
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
+                    '<span class="nav-text">Facebook</span></a></li>' :
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
+                    '<span class="nav-text">Facebook</span></a></li>';
+        } else {
+            append += '<li class="nav-item">' +
+                '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
+                '<span class="nav-text">Facebook</span></a></li>';
+            if (facebookAccountsIds.includes(Number(SelectedId))) deselectIds();
+        }
+
+        if (linkedin > 0) {
+            ((linkedinAccountsIds.includes(Number(SelectedId)))) ?
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact">' +
+                    '<span class="nav-text">Linkedin</span></a></li>' :
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact">' +
+                    '<span class="nav-text">Linkedin</span></a></li>';
+        } else {
+            append += '<li class="nav-item">' +
+                '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
+                '<span class="nav-text">Linkedin</span></a></li>';
+            if (linkedinAccountsIds.includes(Number(SelectedId))) deselectIds();
+        }
+
+        if (instagram > 0) {
+            ((instagramAccountsIds.includes(Number(SelectedId)))) ?
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link active" id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">' +
+                    '<span class="nav-text">Instagram</span></a></li>' :
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link " id="instagram-tab-preview" data-toggle="tab" href="#instagram-preview">' +
+                    '<span class="nav-text">Instagram</span></a></li>';
+        } else {
+            append += '<li class="nav-item">' +
+                '<a class="nav-link" id="instagram-tab-preview" title="please select instagram account to enable the Preview">' +
+                '<span class="nav-text">Instagram</span></a></li>';
+            if (instagramAccountsIds.includes(Number(SelectedId))) deselectIds();
+        }
+
+        append += '</ul>';
+    } else {
         append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
             '<li class="nav-item">' +
             '<a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="Please select Twitter account to enable the Preview">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
-    } else if ((selectedAccountIds.length >= 0) && (facebook === 0) && (twitter === 0) && (linkedin === 0)) {
-        $('#facebook_preview_ids').hide();
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
+            '<span class="nav-text">Twitter</span></a></li>' +
             '<li class="nav-item">' +
-            '<a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="please select any account to enable the Preview">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="facebook-tab-preview" title="please select any account to enable the Preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
-    } else if ((selectedAccountIds.length > 0) && (linkedin > 0) && (facebook === 0) && (twitter === 0)) {
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="twitter-tab-preview" title="please select Twitter account to enable the Preview">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
             '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
+            '<span class="nav-text">Facebook</span></a></li>' +
             '<li class="nav-item">' +
-            '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
-    }  else if ((selectedAccountIds.length > 0) && (facebook > 0)  && (linkedin > 0) && (twitter === 0)) {
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
+            '<a class="nav-link" id="linkedin-tab-preview" title="please select Linkedin account to enable the Preview">' +
+            '<span class="nav-text">Linkedin</span></a></li>' +
             '<li class="nav-item">' +
-            '<a class="nav-link" id="twitter-tab-preview" aria-controls="Twitter" title="Please select Twitter account to enable the Preview">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link active" id="facebook-tab-preview" data-toggle="tab" href="#facebook-preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-            '<li class="nav-item">' +
-            '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
-    } else if ((selectedAccountIds.length > 0) && (twitter > 0) && (linkedin > 0) && (facebook === 0)) {
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-            '<li class="nav-item">' +
-            '<a class="nav-link" id="twitter-tab-preview" data-toggle="tab" aria-controls="Twitter">' +
-            '<span class="nav-text">Twitter</span></a></li>';
-        append += '<li class="nav-item">' +
-            '<a class="nav-link" id="facebook-tab-preview" title="please select Facebook account to enable the Preview">' +
-            '<span class="nav-text">Facebook</span></a></li>';
-        append += '<ul class="nav nav-light-warning nav-pills" id="social-preview-tabs" role="tablist">' +
-            '<li class="nav-item">' +
-            '<a class="nav-link active" id="linkedin-tab-preview" data-toggle="tab" href="#linkedin-preview" aria-controls="contact">' +
-            '<span class="nav-text">Linkedin</span></a></li></ul>';
+            '<a class="nav-link" id="instagram-tab-preview" title="please select instagram account to enable the Preview">' +
+            '<span class="nav-text">Instagram</span></a></li></ul>';
     }
+
+
+    function deselectIds() {
+        if ((twitter > 0)) {
+            setTimeout(function () {
+                $("#twitter-tab-preview").addClass(" active");
+            }, 50);
+        } else if (facebook > 0) {
+            setTimeout(function () {
+                $("#facebook-tab-preview").addClass(" active");
+            }, 50);
+        } else if (linkedin > 0) {
+            setTimeout(function () {
+                $("#linkedin-tab-preview").addClass(" active");
+            }, 50);
+        } else if (instagram > 0) {
+            setTimeout(function () {
+                $("#instagram-tab-preview").addClass(" active");
+            }, 50);
+        }
+    }
+
 
     $('#social-preview-tabs').empty().append(append);
-    $('#twitter-tab-preview, #facebook-tab-preview, #linkedin-tab-preview').tooltip();
+    $('#twitter-tab-preview, #facebook-tab-preview, #linkedin-tab-preview', '#instagram-tab-preview').tooltip();
 });
 
 
@@ -317,7 +209,7 @@ $(document).ready(function () {
                     pickerPosition: "right",
                     tonesStyle: "bullet"
                 });
-                downloadMediaUrl();
+                downloadMediaUrl('publishtype');
             },
             error: function (error) {
                 btn.removeAttr('disabled');
@@ -333,16 +225,16 @@ $(document).ready(function () {
         e.preventDefault();
         let btn = $(this);
         let btnText = btn.text()
-
+        let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         btn.html("<i class='fa fa-spinner fa-spin'></i> Processing");
         btn.attr('disabled', 1);
 
         let form = $(this).parents('form'); //#publishContentForm
         let formData = new FormData($(form)[0]);
         formData.append('status', btn.val());
+        formData.append('timezone', timezone);
         let method = $(form).attr('method');
         let action = $(form).attr('action');
-
         $('body').find('.error-message').html('');
         $.ajax({
             headers: {
@@ -356,11 +248,20 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data) {
+
                 btn.html(btnText);
                 btn.removeAttr('disabled');
                 $("#resocioModal").modal('hide');
-                toastr.success(data.message);
-                if(data.type_text == "socioQueue") {
+                if (data.code === 422) {
+                    toastr.error(data.message);
+                } else if (data.code === 423) {
+                    data.data.map(element => {
+                        toastr.error('Daily limit of posting for account ' + element.first_name + ' is exceeded');
+                    })
+                } else {
+                    toastr.success(data.message);
+                }
+                if (data.type_text == "socioQueue") {
                     (data.type_value == 0 || data.type_value == "0") ? location.replace('' + APP_URL + 'home/publishing/schedule/ready-queue') : location.replace('' + APP_URL + 'home/publishing/schedule/day-wise-socioqueue');
                 }
             },
@@ -379,9 +280,9 @@ $(document).ready(function () {
                         }
                     });
                 } else if (error.responseJSON.message && error.responseJSON.message.length > 0) {
-                    if (error.responseJSON.error === "Cannot read property 'dayId' of null" || error.responseJSON.error ==="Cannot read property 'length' of undefined"){
+                    if (error.responseJSON.error === "Cannot read property 'dayId' of null" || error.responseJSON.error === "Cannot read property 'length' of undefined") {
                         toastr.error("Schedule Type And Respective Date or Day, Timings fields required ");
-                    }else {
+                    } else {
                         toastr.error(error.responseJSON.error);
                     }
 
@@ -389,7 +290,44 @@ $(document).ready(function () {
             },
         });
     });
+
 });
+
+let descriptionText = "";
+$(document).on('keyup', '.emojionearea', function (e) {
+    e.preventDefault();
+    if (publishOrFeeds !== 1) {
+        textCountData();
+    }
+});
+
+
+function textCountData() {
+    if (selectedAccountIds.length > 0) {
+        $("#errorText1").text('');
+        let count = "";
+        if (twitter > 0 && facebook === 0 && linkedin === 0 && instagram === 0) count = 140;
+        else if (facebook > 0 && twitter === 0 && linkedin === 0) count = 5000;
+        else if (linkedin > 0 && twitter === 0 && facebook === 0) count = 700;
+        else if (twitter > 0 && facebook > 0 && linkedin === 0) count = 140;
+        else if (twitter > 0 && linkedin > 0 && facebook === 0) count = 140;
+        else if (facebook > 0 && linkedin > 0 && twitter === 0) count = 700;
+        else if (twitter > 0 && facebook > 0 && linkedin > 0) count = 140;
+        else if (twitter === 0 && facebook === 0 && linkedin === 0 && instagram > 0) count = 5000;
+        if (Number($(".emojionearea-editor").text().length) <= count) {
+            descriptionText = $(".emojionearea-editor").text();
+        } else {
+            $(".emojionearea-editor").text(descriptionText.substring(0, count));
+        }
+        let charCount = $(".emojionearea-editor").text().length;
+        $("#errorText3").text(charCount + "/" + count);
+    } else {
+        $("#errorText3").text('');
+        $(".emojionearea-editor").text(descriptionText);
+        $(".emojionearea-editor").text('');
+        $("#errorText1").text('please select atleast one social account .');
+    }
+}
 
 
 // begin::sticky
@@ -514,7 +452,7 @@ $(function () {
                             </li>
                         `)
 
-                                $("body").find( "#publishContentForm").append(`
+                                $("body").find("#publishContentForm").append(`
                             <input type='hidden' name='mediaUrl[]' class='image${iterator}' value="${response.mdia_path}">
                         `);
 
@@ -570,6 +508,27 @@ $(function () {
     $("body").on("click", ".remove-pic", function () {
         $(this).parent().parent().parent().remove();
         let removeItem = $(this).attr('data-id');
+        let lists = $('#media-list li').length;
+        if (lists == 1){
+            $('.myupload').remove();
+            $('#next_upload').empty().append('<small>Note: Add only 4 items at a single time.</small>\n' +
+                '                                                    <ul class="btn-nav">\n' +
+                '                                                        <li>\n' +
+                '                                                            <span>\n' +
+                '                                                                <i class="far fa-image fa-2x"></i>\n' +
+                '                                                                <input type="file" name="" click-type="img-video-option" class="picupload"\n' +
+                '                                                                    multiple accept=".jpg, .jpeg" />\n' +
+                '                                                            </span>\n' +
+                '                                                        </li>\n' +
+                '                                                        <li>\n' +
+                '                                                            <span>\n' +
+                '                                                                <i class="fas fa-video fa-2x"></i>\n' +
+                '                                                                <input type="file" name="" click-type="img-video-option" class="picupload"\n' +
+                '                                                                    multiple accept="video/*" />\n' +
+                '                                                            </span>\n' +
+                '                                                        </li>\n' +
+                '                                                    </ul>');
+        }
         let image = `.image${+removeItem}`;
         let video = `.video${+removeItem}`;
         $("body").find(image).remove()
@@ -585,19 +544,18 @@ $(function () {
 });
 // end:images and videos upload
 
-downloadMediaUrl = function () {
+downloadMediaUrl = function (feedtype) {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
     let passedMediaUrl = $('body').find('input#media_url');
-
     if (passedMediaUrl.length) {
         $.ajax({
             url: '/discovery/content_studio/media/download', // point to server-side PHP script 
             dataType: 'json',  // what to expect back from the PHP script, if anything
-            data: {'mediaUrl': passedMediaUrl.val()},
+            data: {'mediaUrl': passedMediaUrl.val(),'feedtype':feedtype},
             type: 'post',
             success: (response) => {
                 $("body").find('.defaultImage').remove();

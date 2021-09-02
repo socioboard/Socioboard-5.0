@@ -205,7 +205,8 @@
                                                      id="members_name"
                                                      title="{{$data->first_name}} {{$data->last_name}}"
                                                 >
-                                                    <img alt="Pic" src="{{$data->profile_picture}}"/>
+                                                    <img alt="Pic" src="<?php echo teamProfilePic($data->profile_picture); ?>"
+                                                         id="team_image_out" >
                                                 </div>
                                             @endforeach
                                         @endif
@@ -593,14 +594,14 @@
 
     <script>
         // team date ranges
-        var start = moment().subtract(29, 'days');
+        var start = moment().subtract(6, 'days');
         var end = moment();
-
+        $("li[data-range-key='Last 30 Days']").removeAttr('class');
+        $("li[data-range-key='Last 7 Days']").attr("class", "active");
         $('#team-daterange').daterangepicker({
                 buttonClasses: ' btn',
                 applyClass: 'btn-primary',
                 cancelClass: 'btn-secondary',
-
                 startDate: start,
                 endDate: end,
                 maxDate: new Date(),
@@ -647,8 +648,20 @@
     <!-- charts -->
 
     <script>
-
-
+        <?php
+        function teamProfilePic($data)
+        {
+            if (file_exists(public_path($data))) {
+                return env('APP_URL') . $data;
+            } else {
+                if (filter_var($data, FILTER_VALIDATE_URL) === FALSE) {
+                    return env('APP_URL') . "media/svg/avatars/001-boy.svg";
+                } else {
+                    return $data;
+                }
+            }
+        }
+        ?>
         function changeTeamResponse(data) {
             teamid = data.value;
             $.ajax({
@@ -671,10 +684,10 @@
                         if (response.teamsData.data.memberProfileDetails.length > 0) {
                             response.teamsData.data.memberProfileDetails.map(element => {
                                 $('#memberProfileDetails').append('<div class="symbol symbol-30 symbol-circle"\n' +
-                                    '                                                     title="' + element.first_name + " " + element.last_name + '" onclick="return false"\n' +
-                                    '                                                     id="members_name">\n' +
-                                    '                                                    <img alt="Pic" src="' + element.profile_picture + '"/>\n' +
-                                    '                                                </div>');
+                                    'title="' + element.first_name + " " + element.last_name + '" onclick="return false"\n' +
+                                    'id="members_name">\n' +
+                                    '<img alt="Pic" src="' + element.profile_picture + '"/>\n' +
+                                    '</div>');
                                 $("#members_name").tooltip();
                             });
                             setTimeout(function () {
@@ -687,8 +700,8 @@
                                 $('#twitterReportsDiv').empty();
                                 $("#selectDropdownTwitter").empty();
                                 $('#twitterReportsDiv').append(' <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"\n' +
-                                    '                                            onchange="changeTwitterData(this)" id="selectDropdownTwitter">\n' +
-                                    '                                        <option disabled id="selectDropdown2">Select Account</option>');
+                                    'onchange="changeTwitterData(this)" id="selectDropdownTwitter">\n' +
+                                    '<option disabled id="selectDropdown2">Select Account</option>');
                                 response.twitterAccs.map(element => {
                                     $('#selectDropdownTwitter').append(' <option\n' +
                                         '                                                        value="' + element.account_id + '">' + element.first_name + '</option>');
@@ -699,11 +712,11 @@
                                 $('#twitterReportsDiv').empty();
                                 $('#twt_stats_chart').empty();
                                 $('#twt_stats_chart').append('<div class="text-center">\n' +
-                                    '                                                                                    <div class="symbol symbol-150">\n' +
-                                    '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                    '                                                                                    </div>\n' +
-                                    ' <h6>Currently no twitter accounts added for this team</h6>' +
-                                    '                                                                               </div>');
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div>\n' +
+                                    '<h6>Currently no twitter accounts added for this team</h6>' +
+                                    '</div>');
                             }
                             if (response.fbaccs.length > 0) {
                                 var facebookid = response.fbaccs[0].account_id;
@@ -732,11 +745,11 @@
                             $('#twitterReportsDiv').empty();
                             $('#twt_stats_chart').empty();
                             $('#twt_stats_chart').append('<div class="text-center">\n' +
-                                '                                                                                    <div class="symbol symbol-150">\n' +
-                                '                                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                '                                                                                    </div>\n' +
+                                '<div class="symbol symbol-150">\n' +
+                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                '</div>\n' +
                                 ' <h6>Currently no twitter accounts added for this team</h6>' +
-                                '                                                                               </div>');
+                                '</div>');
                             $('#facebookReportsDiv').empty();
                             $('#fb_stats_chart').empty();
                             $('#fb_stats_chart').append('<div class="text-center">\n' +
@@ -773,16 +786,16 @@
                 beforeSend: function () {
                     $('#line-adwords, #team-report, #scheduled, #published, #failed, #scheduledPublished, #totalPostCount, #totalpostFailed').empty();
                     $('#team-report').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '        </div>');
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
+                        '</div>');
                     $('#line-adwords').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
                         '\n' +
-                        '        </div>');
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
@@ -869,6 +882,11 @@
                             xaxis: {
                                 tooltip: {
                                     enabled: false
+                                },
+                                labels: {
+                                    style: {
+                                        fontSize: '10px'
+                                    }
                                 }
                             },
                             legend: {
@@ -909,30 +927,30 @@
                         $('#totalPostCount').append(0);
                         $('#totalpostFailed').append(0);
                         $("#team-report").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> ' + response.error + ' </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> ' + response.error + ' </h6>\n' +
+                            '</div>');
                         $("#line-adwords").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> ' + response.error + ' </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> ' + response.error + ' </h6>\n' +
+                            '</div>');
                     } else {
                         $("#team-report").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> Some error occured , can not get Team reports data  data for tea</h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> Some error occured , can not get Team reports data  data for tea</h6>\n' +
+                            '</div>');
                         $("#line-adwords").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> ' + "Some error occured , can not get Publish reports data for team" + ' </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> ' + "Some error occured , can not get Publish reports data for team" + ' </h6>\n' +
+                            '</div>');
                     }
                 }
             });
@@ -954,11 +972,11 @@
                     $('#twt_stats_chart').empty();
                     $('.loader-class').remove();
                     $('#twt_stats_chart').append('<div class="d-flex justify-content-center loader-class" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
                         '\n' +
-                        '        </div>');
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
@@ -1066,18 +1084,18 @@
                         chart.render();
                     } else if (response.code === 400) {
                         $("#twt_stats_chart").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> ' + response.error + ' </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> ' + response.error + ' </h6>\n' +
+                            '</div>');
                     } else {
                         $("#twt_stats_chart").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> Some error occured , can not get Twitter reports data </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> Some error occured , can not get Twitter reports data </h6>\n' +
+                            '</div>');
                     }
                 }
             });
@@ -1098,11 +1116,11 @@
                     $('#fb_stats_chart').empty();
                     $('.loader-class').remove();
                     $('#fb_stats_chart').append('<div class="d-flex justify-content-center loader-class" >\n' +
-                        '        <div class="spinner-border" role="status" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
+                        '<div class="spinner-border" role="status" style="display: none;">\n' +
+                        '<span class="sr-only">Loading...</span>\n' +
+                        '</div>\n' +
                         '\n' +
-                        '        </div>');
+                        '</div>');
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
@@ -1212,18 +1230,18 @@
                         chart.render();
                     } else if (response.code === 400) {
                         $("#fb_stats_chart").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> ' + response.error + ' </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> ' + response.error + ' </h6>\n' +
+                            '</div>');
                     } else if (response.code === 500) {
                         $("#fb_stats_chart").append(' <div class="text-center">\n' +
-                            '                                                <div class="symbol symbol-150">\n' +
-                            '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                            '                                                </div>\n' +
-                            '                                                <h6> Some error occured,Can not get facebook Reports  </h6>\n' +
-                            '                                            </div>');
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6> Some error occured,Can not get facebook Reports  </h6>\n' +
+                            '</div>');
                     }
                 }
             });
@@ -1269,17 +1287,19 @@
 
         $(document).ready(function () {
             $('#quick_actions').tooltip();
+            $("li[data-range-key='Last 30 Days']").removeAttr('class');
+            $("li[data-range-key='Last 7 Days']").attr("class", "active");
             $("#reportsButton").trigger("click");
             if (fbvalue === false) {
                 $("#selectDropdown").remove();
                 $('#facebookReportsDiv').empty();
                 $('#fb_stats_chart').empty();
                 $("#fb_stats_chart").append(' <div class="text-center">\n' +
-                    '                                                <div class="symbol symbol-150">\n' +
-                    '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                    '                                                </div>\n' +
-                    '                                                <h6>Currently, no facebook pages added to this team.</h6>\n' +
-                    '                                            </div>');
+                    '<div class="symbol symbol-150">\n' +
+                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                    '</div>\n' +
+                    '<h6>Currently, no facebook pages added to this team.</h6>\n' +
+                    '</div>');
             } else {
                 setTimeout(function () {
                     getFacebookReports(teamid, accid, 3, 0, 0);
@@ -1290,11 +1310,11 @@
                 $('#twitterReportsDiv').empty();
                 $('#twt_stats_chart').empty();
                 $("#twt_stats_chart").append(' <div class="text-center">\n' +
-                    '                                                <div class="symbol symbol-150">\n' +
-                    '                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                    '                                                </div>\n' +
-                    '                                                <h6>Currently, no Twitter account added to this team.</h6>\n' +
-                    '                                            </div>');
+                    '<div class="symbol symbol-150">\n' +
+                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                    '</div>\n' +
+                    '<h6>Currently, no Twitter account added to this team.</h6>\n' +
+                    '</div>');
 
             } else {
                 setTimeout(function () {

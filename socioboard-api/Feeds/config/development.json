@@ -1,0 +1,138 @@
+{
+    "feed_socioboard": {
+      "host_url": "http://localhost:3001",
+      "port": "3001",
+      "host": "localhost:3001"
+    },
+    "swagger_host_url": "localhost:3001",
+    "user_socioboard": {
+      "host_url": "http://localhost:3000"
+    },
+    "notification_socioboard": {
+      "host_url": "http://localhost:3004"
+    },
+    "authorize": {
+      "secret": "<< RANDOM SECRET >>",
+      "token_secret": "<< RANDOM TOKEN >>",
+      "algorithm": "aes-256-cbc",
+      "encoding_typeOne": "utf8",
+      "encoding_typeTwo": "hex"
+    },
+    "analytics": {
+      "tracking_id": "<< Google Analytics ID >>",
+      "view_id": "<< google View ID >>",
+      "ganalytics_service_email": "<< Google services email >>",
+      "ganalytics_private_key": "<< Google Private Key >>"
+    },
+    "mailService": {
+      "defaultMailOption": "sendgridapi",
+      "sendgrid": {
+        "username": "<< Sendgrid username >>",
+        "password": "<< Sendgrid Password >>",
+        "frommail": "<< From Mail >>",
+        "ccmail": "<< Any CC Mail >>",
+        "apiKey": "<< SEND-GRID TOKEN >>"
+      },
+      "gmailServices": {
+        "email": "<< Google email >>",
+        "password": "<< Google email Password >>"
+      }
+    },
+    "mysql": {
+      "host": "<< host >>",
+      "username": "<< username >>",
+      "database": "<< Database name >>",
+      "password": "<< Database password >>"
+    },
+    "mongo": {
+      "username": "<< username >>",
+      "password": "<< Database password >>",
+      "host": "<< host >>",
+      "db_name": "<< Database name >>"
+    },
+    "profile_add_redirect_url": "https://local.socioboard.com/addSocialProfile",
+    "facebook_api": {
+      "app_id": "<< APP ID >>",
+      "secret_key": "<< APP SECRET >>",
+      "redirect_url": "https://local.socioboard.com/facebook-callback",
+      "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+      "webhook_token": "<< WebhookToken >>"
+    },
+    "google_api": {
+      "client_id": "<< APP CLIENT ID >>",
+      "client_secrets": "<< CLIENT SECRET >>",
+      "redirect_url": "https://local.socioboard.com/google-callback",
+      "youtube_redirect_url": "https://local.socioboard.com/youtube/callback",
+      "google_profile_add_redirect_url": "https://local.socioboard.com/youtube/callback",
+      "api_key": "<< API Key>>",
+      "dynamic_link": "https://socionode.page.link",
+      "youtube_webhook_url": "http://localhost:3002/v1/webhooks/youtube"
+    },
+    "twitter_api": {
+      "api_key": "<< APP KEY >>",
+      "secret_key": "<< CLIENT SECRET >>",
+      "login_redirect_url": "https://local.socioboard.com/twitter-callback",
+      "redirect_url": "https://local.socioboard.com/twitter/callback",
+      "app_name": "<< App Name >>",
+      "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
+      "webhook_environment": "development"
+    },
+    "twitter_data": {
+      "bearer_token": "<< Twitter Bearer Token >>",
+      "access_token": "<< Twitter Access Token >>",
+      "access_secret": "<< Twitter Access Secret >>",
+      "version": "5.0.0"
+    },
+    "linkedIn_api": {
+      "client_id": "<< APP CLIENT ID >>",
+      "client_secret": "<< CLIENT SECRET >>",
+      "redirect_url": "https://local.socioboard.com/linkedin/callback",
+      "app_name": "<< App Name >>"
+    },
+    "content_studio": {
+      "basePath": "../../media",
+      "daily_motion": {
+        "api_key": "<< API KEY >>",
+        "secret_key": "<< Secret Key >>",
+        "version": "5.0.0",
+        "count": 100
+      },
+      "giphy": {
+        "api_key": "<< API KEY >>",
+        "count": 25,
+        "version": "5.0.0",
+        "path": "../../media/giphy"
+      },
+      "newsapi": {
+        "api_key": "<< API KEY >>",
+        "version": "5.0.0",
+        "count": 25
+      },
+      "pixabay": {
+        "api_key": "<< API KEY >>",
+        "version": "5.0.0",
+        "count": 25,
+        "path": "../../media/pixabay"
+      },
+      "flickr": {
+        "api_key": "<< API KEY >>",
+        "api_secret": "<< API SECRET >>",
+        "version": "5.0.0",
+        "count": 25,
+        "path": "../../media/flickr"
+      },
+      "imgur": {
+        "client_id": "<< CLIENT ID >>",
+        "client_secret": "<< CLIENT SECRET >>",
+        "version": "5.0.0",
+        "count": 25,
+        "path": "../../media/imgur"
+      },
+      "youtube": {
+        "api_key": "<< API KEY >>",
+        "count": 15,
+        "version": "5.0.0"
+      }
+    }
+  }
+  

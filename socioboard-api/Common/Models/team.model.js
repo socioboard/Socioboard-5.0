@@ -1,25 +1,26 @@
-import db from '../Sequelize-cli/models/index.js';
-import AuthorizeServices from '../Services/authorize.services.js';
 import config from 'config';
-import TwtConnect from '../Cluster/twitter.cluster.js';
-import CoreServices from '../Services/core.services.js';
 import schedule from 'node-schedule';
 import moment from 'moment';
+import sequelize from 'sequelize';
+import db from '../Sequelize-cli/models/index.js';
+import AuthorizeServices from '../Services/authorize.services.js';
+import TwtConnect from '../Cluster/twitter.cluster.js';
+import CoreServices from '../Services/core.services.js';
 import logger from '../../User/resources/Log/logger.log.js';
 import FbConnect from '../Cluster/facebook.cluster.js';
 import PinterestConnect from '../Cluster/pinterest.cluster.js';
 import LinkedInConnect from '../Cluster/linkedin.cluster.js';
 import GoogleConnect from '../Cluster/google.cluster.js';
 import InstaConnect from '../Cluster/instagram.cluster.js';
-import TwitterMongoPostModel from '../../Common/Mongoose/models/twitterposts.js';
-import FacebookMongoPostModel from '../../Common/Mongoose/models/facebookposts.js';
-import YoutubeMongoPostModel from '../../Common/Mongoose/models/youtubepost.js';
-import InstagramMongoPostModel from '../../Common/Mongoose/models/instagramposts.js';
-import sequelize from 'sequelize';
-import UserTeamAccountLibs from './../Shared/userTeamAccountsLibs.shared.js';
-import UserTeamAccount from './../Shared/userTeamAccounts.shared.js';
-import NotificationServices from '../../Common/Shared/notifyServices.js'
-
+import TwitterMongoPostModel from '../Mongoose/models/twitter-posts.js';
+import FacebookMongoPostModel from '../Mongoose/models/facebook-posts.js';
+import YoutubeMongoPostModel from '../Mongoose/models/youtube-post.js';
+import InstagramMongoPostModel from '../Mongoose/models/instagram-posts.js';
+import UserTeamAccountLibs from '../Shared/user-team-accounts-libs.shared.js';
+import UserTeamAccount from '../Shared/user-team-accounts.shared.js';
+import NotificationServices from '../Shared/notify-services.js';
+import LinkedInPostMongoModels from '../Mongoose/models/linkedIn-post.js';
+import InstagramBusinessMongoPostModel from '../Mongoose/models/instagram-business-posts.js';
 const userDetails = db.user_details;
 const Operator = db.Sequelize.Op;
 const userRewardsModel = db.user_rewards;
@@ -47,17 +48,20 @@ class TeamLibs {
   }
 
   async getSocialProfiles(userId) {
-    let res = await socialAccount.findAll({
-      where: { account_admin_id: userId },
+    const res = await socialAccount.findAll({
+      where: {account_admin_id: userId},
     });
+
     return res;
   }
+
   async getSocialProfilesById(userId, accountId) {
     let socialAccounts = {};
-    let socialAccDetails = await socialAccount.findOne({
-      where: { account_admin_id: userId, account_id: accountId },
+    const socialAccDetails = await socialAccount.findOne({
+      where: {account_admin_id: userId, account_id: accountId},
     });
     let fields = [];
+
     if (!accountId) throw new error('Invalid account Id');
     switch (Number(socialAccDetails.account_type)) {
       case 1:
@@ -109,16 +113,20 @@ class TeamLibs {
         break;
     }
     if (fields) {
-      let resultData = await updateFriendsTable.findOne({
-        where: { account_id: socialAccDetails.account_id },
+      const resultData = await updateFriendsTable.findOne({
+        where: {account_id: socialAccDetails.account_id},
         attributes: fields,
       });
+
       socialAccDetails.dataValues.updatedDetails = JSON.parse(
         JSON.stringify(resultData)
       );
       socialAccounts = socialAccDetails.dataValues;
+
       return socialAccounts;
-    } else socialAccounts = socialAccDetails.dataValues;
+    }
+    socialAccounts = socialAccDetails.dataValues;
+
     return socialAccounts;
   }
 
@@ -130,35 +138,37 @@ class TeamLibs {
     // let promises = await data.map(async itr => await this.updateRating(itr))
     // const res = await Promise.all(promises)
     // return res
-    let response = await socialAccount.update(
+    const response = await socialAccount.update(
       {
-        rating: rating,
+        rating,
       },
       {
-        where: { account_id: accountId },
+        where: {account_id: accountId},
         returning: true,
         plain: true,
       }
     );
+
     return response;
   }
 
   async updateRating(data) {
-    let response = await socialAccount.update(
+    const response = await socialAccount.update(
       {
         rating: data.rating,
       },
       {
-        where: { account_id: data.accountId },
+        where: {account_id: data.accountId},
         returning: true,
         plain: true,
       }
     );
+
     return response;
   }
 
   async getSocialAccount(userId, accountId) {
-    let accounts = await socialAccount.findAll({
+    const accounts = await socialAccount.findAll({
       where: {
         account_id: accountId,
         account_admin_id: userId,
@@ -166,22 +176,28 @@ class TeamLibs {
       raw: true,
       attributes: ['account_id'],
     });
+
     return accounts;
   }
+
   async getTeamSocialAccount(account_id, account_type) {
     let query = {};
-    query.account_id = { [Operator.in]: account_id };
-    if (account_type != 0) query = { ...query, account_type };
-    let accounts = await socialAccount.findAll({
+
+    query.account_id = {[Operator.in]: account_id};
+    if (account_type != 0) query = {...query, account_type};
+    const accounts = await socialAccount.findAll({
       where: query,
       raw: true,
     });
+
     return accounts;
   }
+
   async getTeamSocialAccountCount(account_id) {
-    let query = {};
-    query.account_id = { [Operator.in]: account_id };
-    let res = await socialAccount.findAll({
+    const query = {};
+
+    query.account_id = {[Operator.in]: account_id};
+    const res = await socialAccount.findAll({
       where: query,
       attributes: [
         'account_type',
@@ -191,26 +207,29 @@ class TeamLibs {
       raw: true,
       order: sequelize.literal('count ASC'),
     });
+
     return res;
   }
 
   async lockProfile(accounts) {
-    let result = await teamSocialAccountJoinTable.update(
+    const result = await teamSocialAccountJoinTable.update(
       {
         is_account_locked: 1,
       },
-      { where: { account_id: accounts.map(t => t.account_id) } }
+      {where: {account_id: accounts.map(t => t.account_id)}}
     );
+
     return result;
   }
 
   async unlockProfiles(accounts) {
-    let result = await teamSocialAccountJoinTable.update(
+    const result = await teamSocialAccountJoinTable.update(
       {
         is_account_locked: 0,
       },
-      { where: { account_id: accounts.map(t => t.account_id) } }
+      {where: {account_id: accounts.map(t => t.account_id)}}
     );
+
     return result;
   }
 
@@ -221,11 +240,12 @@ class TeamLibs {
     accessToken,
     userScopeAvailableNetworks
   ) {
-    var resultJson = null;
-    return new Promise((resolve, reject) => {
+    let resultJson = null;
+
+    return new Promise((resolve, reject) =>
       // Checking user is belongs to the team or not
-      return db.sequelize.transaction(t => {
-        return teamInfo
+      db.sequelize.transaction(t =>
+        teamInfo
           .findOne(
             {
               where: {
@@ -240,19 +260,19 @@ class TeamLibs {
               },
               attributes: ['team_id'],
             },
-            { transaction: t }
+            {transaction: t}
           )
 
           .then(team => {
-            var state = {
-              teamId: teamId,
-              network: network,
-              accessToken: accessToken,
+            const state = {
+              teamId,
+              network,
+              accessToken,
             };
-            var encryptedState = this.authorizeServices.encrypt(
+            const encryptedState = this.authorizeServices.encrypt(
               JSON.stringify(state)
             );
-            var redirectUrl = '';
+            let redirectUrl = '';
 
             if (team == null) {
               throw new Error(
@@ -277,10 +297,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 case 'FacebookPage':
                 case 'FacebookGroup':
@@ -298,10 +319,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 case 'InstagramBusiness':
                   // Validating that the user is having permisiion for this network or not by user plan
@@ -320,10 +342,11 @@ class TeamLibs {
                         'Navigated to facebook to add instagram account.',
                       navigateUrl: redirectUrl,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 case 'Twitter':
                   // Validating that the user is having permisiion for this network or not by user plan
@@ -331,16 +354,17 @@ class TeamLibs {
                     return this.twtConnect
                       .requestToken()
                       .then(response => {
-                        var state = {
-                          teamId: teamId,
-                          network: network,
-                          accessToken: accessToken,
+                        const state = {
+                          teamId,
+                          network,
+                          accessToken,
                           requestToken: response.requestToken,
                           requestSecret: response.requestSecret,
                         };
-                        var encryptedState = this.authorizeServices.encrypt(
+                        const encryptedState = this.authorizeServices.encrypt(
                           JSON.stringify(state)
                         );
+
                         resultJson = {
                           code: 200,
                           status: 'success',
@@ -356,10 +380,10 @@ class TeamLibs {
                           error: error.message,
                         };
                       });
-                  } else
-                    throw new Error(
-                      'Sorry, Requested network not available for your plan.'
-                    );
+                  }
+                  throw new Error(
+                    'Sorry, Requested network not available for your plan.'
+                  );
                   break;
                 case 'LinkedIn':
                   // Validating that the user is having permisiion for this network or not by user plan
@@ -373,10 +397,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
 
                   break;
                 case 'LinkedInCompany':
@@ -391,10 +416,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
 
                   break;
                 case 'Youtube':
@@ -427,10 +453,11 @@ class TeamLibs {
                       message: 'Navigated to google analytics.',
                       navigateUrl: redirectUrl,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 case 'Instagram':
                   // Validating that the user is having permisiion for this network or not by user plan
@@ -447,10 +474,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 case 'Pinterest':
                   // Validating that the user is having permisiion for this network or not by user plan
@@ -467,10 +495,11 @@ class TeamLibs {
                       navigateUrl: redirectUrl,
                       state: encryptedState,
                     };
-                  } else
+                  } else {
                     throw new Error(
                       'Sorry, Requested network not available for your plan.'
                     );
+                  }
                   break;
                 default:
                   throw new Error(
@@ -484,11 +513,11 @@ class TeamLibs {
           .then(() => {
             resolve(resultJson);
           })
-          .catch(function (error) {
+          .catch(error => {
             reject(error);
-          });
-      });
-    });
+          })
+      )
+    );
   }
 
   async getProfileRedirectUrlNew(
@@ -498,11 +527,12 @@ class TeamLibs {
     accessToken,
     userScopeAvailableNetworks
   ) {
-    var resultJson = null;
-    return new Promise((resolve, reject) => {
+    const resultJson = null;
+
+    return new Promise((resolve, reject) =>
       // Checking user is belongs to the team or not
-      return db.sequelize.transaction(t => {
-        return teamInfo
+      db.sequelize.transaction(t =>
+        teamInfo
           .findOne(
             {
               where: {
@@ -517,19 +547,19 @@ class TeamLibs {
               },
               attributes: ['team_id'],
             },
-            { transaction: t }
+            {transaction: t}
           )
 
           .then(team => {
-            var state = {
-              teamId: teamId,
-              network: network,
-              accessToken: accessToken,
+            const state = {
+              teamId,
+              network,
+              accessToken,
             };
-            var encryptedState = this.authorizeServices.encrypt(
+            const encryptedState = this.authorizeServices.encrypt(
               JSON.stringify(state)
             );
-            var redirectUrl = '';
+            const redirectUrl = '';
 
             if (team == null) {
               throw new Error(
@@ -540,11 +570,11 @@ class TeamLibs {
           .then(() => {
             resolve(resultJson);
           })
-          .catch(function (error) {
+          .catch(error => {
             reject(error);
-          });
-      });
-    });
+          })
+      )
+    );
   }
 
   async addSocialProfile(
@@ -555,26 +585,29 @@ class TeamLibs {
     userScopeAvailableNetworks
   ) {
     //  logger.info(`userId : ${userId}, queryInputs: ${queryInputs},userScopeMaxAccountCount:${userScopeMaxAccountCount}, userScopeAvailableNetworks:${userScopeAvailableNetworks} `);
-    var ProfileCount = null;
-    return new Promise((resolve, reject) => {
+    let ProfileCount = null;
+
+    return new Promise((resolve, reject) =>
       // Checking the number of accounts added by the user
-      return db.sequelize.transaction(t => {
-        return socialAccount
+      db.sequelize.transaction(t =>
+        socialAccount
           .count(
             {
-              where: { account_admin_id: userId },
+              where: {account_admin_id: userId},
             },
-            { transaction: t }
+            {transaction: t}
           )
 
           .then(count => {
             ProfileCount = count;
-            var planCount = 100000;
+            const planCount = 100000;
             // Calculating how may accounts user can add by user plan
-            var availableAccounts = planCount - ProfileCount;
+            const availableAccounts = planCount - ProfileCount;
+
             if (availableAccounts > 0) {
               return availableAccounts;
             }
+
             return 0;
           })
           .then(availableCount => {
@@ -583,7 +616,7 @@ class TeamLibs {
             if (availableCount == 0) {
               reject(
                 new Error(
-                  `Sorry, As per your plan, you can't add any more account.`
+                  "Sorry, As per your plan, you can't add any more account."
                 )
               );
             } else if (availableCount < 1) {
@@ -593,7 +626,7 @@ class TeamLibs {
                 )
               );
             } else {
-              var networkId = this.coreServices.networks[queryInputs.network];
+              const networkId = this.coreServices.networks[queryInputs.network];
               // logger.info(`networkId: ${networkId}`);
 
               // Adding account and updating Friends stats
@@ -607,9 +640,9 @@ class TeamLibs {
                           queryInputs.teamId,
                           queryInputs.code
                         )
-                        .then(profile => {
-                          return this.addProfiles(userId, userName, profile);
-                        })
+                        .then(profile =>
+                          this.addProfiles(userId, userName, profile)
+                        )
                         // .then((response) => {
                         //     result = response;
                         //     return this.fbConnect.getFbProfileStats(result.profileDetails.access_token);
@@ -630,11 +663,11 @@ class TeamLibs {
                           reject(error);
                         })
                     );
-                  } else {
-                    reject(new Error('Not available.'));
                   }
+                  reject(new Error('Not available.'));
+
                   break;
-                //#region old Facebook Pages
+                // #region old Facebook Pages
                 // case "FacebookPage":
                 //     if (userScopeAvailableNetworks.includes('2')) {
                 //         return this.fbConnect.getOwnFacebookPages(queryInputs.code)
@@ -662,12 +695,13 @@ class TeamLibs {
                 //         reject(new Error("Not available."));
                 //     }
                 //     break;
-                //#endregion
+                // #endregion
                 case 'Twitter':
                   //   logger.info(`Entered inside twitter!`);
                   if (userScopeAvailableNetworks.includes('4')) {
                     var result = {};
-                    var updatedProfileDetails = {};
+                    let updatedProfileDetails = {};
+
                     return (
                       this.twtConnect
                         .addTwitterProfile(
@@ -677,11 +711,12 @@ class TeamLibs {
                           queryInputs.requestSecret,
                           queryInputs.code
                         )
-                        .then(profile => {
-                          return this.addProfiles(userId, userName, profile);
-                        })
+                        .then(profile =>
+                          this.addProfiles(userId, userName, profile)
+                        )
                         .then(response => {
                           result = response;
+
                           return this.twtConnect.getLookupList(
                             result.profileDetails.access_token,
                             result.profileDetails.refresh_token,
@@ -690,7 +725,7 @@ class TeamLibs {
                         })
                         .then(updateDetails => {
                           updatedProfileDetails = updateDetails;
-                          var data = {
+                          const data = {
                             accountId: result.profileDetails.account_id,
                             insights: {
                               followerCount: updateDetails.follower_count,
@@ -719,9 +754,9 @@ class TeamLibs {
                           reject(error);
                         })
                     );
-                  } else {
-                    reject(new Error('Not available.'));
                   }
+                  reject(new Error('Not available.'));
+
                   break;
                 case 'LinkedIn':
                   if (userScopeAvailableNetworks.includes('6')) {
@@ -732,9 +767,9 @@ class TeamLibs {
                           queryInputs.teamId,
                           queryInputs.code
                         )
-                        .then(profile => {
-                          return this.addProfiles(userId, userName, profile);
-                        })
+                        .then(profile =>
+                          this.addProfiles(userId, userName, profile)
+                        )
                         // .then((response) => {
                         //     result = response;
                         //     return this.linkedInConnect.getProfileDetails(result.profileDetails.access_token);
@@ -755,7 +790,8 @@ class TeamLibs {
                           reject(error);
                         })
                     );
-                  } else reject(new Error('Not available.'));
+                  }
+                  reject(new Error('Not available.'));
                   break;
                 case 'Instagram':
                   if (userScopeAvailableNetworks.includes('5')) {
@@ -765,25 +801,27 @@ class TeamLibs {
                         queryInputs.teamId,
                         queryInputs.code
                       )
-                      .then(profile => {
+                      .then(profile =>
                         //  logger.info(`Profile details : ${JSON.stringify(profile)} `);
-                        return this.addProfiles(userId, userName, profile);
-                      })
+                        this.addProfiles(userId, userName, profile)
+                      )
                       .then(response => {
                         result = response;
+
                         return this.instagramConnect.getInstagramProfileInformation(
                           result.profileDetails.access_token
                         );
                       })
                       .then(response => {
-                        var parsedData = JSON.parse(response.Info);
-                        var updateDetails = {
+                        const parsedData = JSON.parse(response.Info);
+                        const updateDetails = {
                           friendship_count: response.FriendCount,
                           follower_count: parsedData.followed_by,
                           following_count: parsedData.follows,
                           total_post_count: parsedData.media,
                           profile_picture: response.ProfilePicture,
                         };
+
                         return this.createOrUpdateFriendsList(
                           result.profileDetails.account_id,
                           updateDetails
@@ -800,7 +838,8 @@ class TeamLibs {
                       .catch(error => {
                         reject(error);
                       });
-                  } else reject(new Error('Not available.'));
+                  }
+                  reject(new Error('Not available.'));
                   break;
                 case 'Pinterest':
                   if (userScopeAvailableNetworks.includes('11')) {
@@ -810,11 +849,12 @@ class TeamLibs {
                         queryInputs.teamId,
                         queryInputs.code
                       )
-                      .then(profile => {
-                        return this.addProfiles(userId, userName, profile);
-                      })
+                      .then(profile =>
+                        this.addProfiles(userId, userName, profile)
+                      )
                       .then(response => {
                         result = response;
+
                         return this.pinterestConnect.userDetails(
                           result.profileDetails.user_name,
                           result.profileDetails.access_token
@@ -849,9 +889,9 @@ class TeamLibs {
                   return (
                     this.googleConnect
                       .getYoutubeChannels(queryInputs.code)
-                      .then(profile => {
-                        return this.addProfiles(userId, userName, profile);
-                      })
+                      .then(profile =>
+                        this.addProfiles(userId, userName, profile)
+                      )
                       // .then((response) => {
                       //     result = response;
                       //     return this.fbConnect.getFbProfileStats(result.profileDetails.access_token);
@@ -887,9 +927,9 @@ class TeamLibs {
                   break;
               }
             }
-          });
-      });
-    });
+          })
+      )
+    );
   }
 
   async addBulkSocialProfiles(
@@ -909,18 +949,18 @@ class TeamLibs {
       ) {
         reject(new Error('Invalid Inputs'));
       } else {
-        var subscribeAccountsAccessTokens = [];
-        var insertedAccountIdsWithType = [];
-        var teamDetails = {};
-        var addingSocialIds = [];
-        var isErrorOnNetwork = false;
-        var erroredAccountsNames = [];
-        var erroredSocialProfiles = [];
-        var ProfileCount = 0;
-        var ProfileInfo = {};
+        const subscribeAccountsAccessTokens = [];
+        const insertedAccountIdsWithType = [];
+        let teamDetails = {};
+        let addingSocialIds = [];
+        let isErrorOnNetwork = false;
+        const erroredAccountsNames = [];
+        let erroredSocialProfiles = [];
+        let ProfileCount = 0;
+        let ProfileInfo = {};
 
-        return db.sequelize.transaction(t => {
-          return teamInfo
+        return db.sequelize.transaction(t =>
+          teamInfo
             .findOne(
               {
                 where: {
@@ -935,31 +975,32 @@ class TeamLibs {
                 },
                 attributes: ['team_id'],
               },
-              { transaction: t }
+              {transaction: t}
             )
             .then(team => {
-              if (team == null)
+              if (team == null) {
                 throw new Error(
                   "You don't have access to add the profile to the team"
                 );
-              else {
+              } else {
                 teamDetails = team;
                 addingSocialIds = [];
                 isErrorOnNetwork = false;
 
-                profiles.forEach(profile => {
+                profiles.map(profile => {
                   if (!isErrorOnNetwork) {
                     if (
                       this.coreServices.webhooksSupportedAccountType.includes(
                         String(profile.account_type)
                       )
                     ) {
-                      var accountSubscribeDetails = {
+                      const accountSubscribeDetails = {
                         AccountType: profile.account_type,
                         AccessToken: profile.access_token,
                         RefreshToken: profile.refresh_token,
                         SocialId: profile.social_id,
                       };
+
                       subscribeAccountsAccessTokens.push(
                         accountSubscribeDetails
                       );
@@ -999,68 +1040,74 @@ class TeamLibs {
                 });
                 if (!isErrorOnNetwork) {
                   return socialAccount.findAll({
-                    where: { social_id: addingSocialIds },
+                    where: {social_id: addingSocialIds},
                     attributes: ['account_id', 'social_id'],
                   });
-                } else {
-                  throw new Error(
-                    'Sorry, you are trying to add some invalid type of account with respect to your plan.'
-                  );
                 }
+                throw new Error(
+                  'Sorry, you are trying to add some invalid type of account with respect to your plan.'
+                );
               }
             })
             .then(socialAcc => {
               erroredSocialProfiles = [];
-              socialAcc.forEach(account => {
+              socialAcc.map(account => {
                 erroredSocialProfiles.push(account.social_id);
               });
+
               return socialAccount.count(
                 {
-                  where: { account_admin_id: userId },
+                  where: {account_admin_id: userId},
                 },
-                { transaction: t }
+                {transaction: t}
               );
             })
             .then(count => {
               ProfileCount = count;
-              var planCount = userScopeMaxAccountCount;
-              var availableAccounts = planCount - ProfileCount;
-              if (availableAccounts == 0)
+              const planCount = userScopeMaxAccountCount;
+              const availableAccounts = planCount - ProfileCount;
+
+              if (availableAccounts == 0) {
                 throw new Error(
-                  `Sorry, As per your plan, you can't add any more account.`
+                  "Sorry, As per your plan, you can't add any more account."
                 );
-              else if (availableAccounts < addingSocialIds.length)
+              } else if (availableAccounts < addingSocialIds.length) {
                 throw new Error(
                   `Sorry, As per your plan, you can now add only ${availableAccounts}`
                 );
-              return;
+              }
             })
             .then(() => {
-              var filteredProfiles = profiles.filter(
+              const filteredProfiles = profiles.filter(
                 profile => !erroredSocialProfiles.includes(profile.social_id)
               );
+
               return socialAccount.bulkCreate(filteredProfiles, {
                 returning: true,
               });
             })
             .then(profileDetails => {
               ProfileInfo = profileDetails;
+
               return teamDetails.addSocialAccount(profileDetails, {
                 transaction: t,
-                through: { is_account_locked: false },
+                through: {is_account_locked: false},
               });
             })
             .then(() => {
-              var insertedAccountIds = [];
-              ProfileInfo.forEach(element => {
+              const insertedAccountIds = [];
+
+              ProfileInfo.map(element => {
                 insertedAccountIds.push(element.account_id);
                 insertedAccountIdsWithType.push({
                   account_id: element.account_id,
                   account_type: element.account_type,
                   access_token: element.access_token,
                   refresh_token: element.refresh_token,
+                  social_id: element.social_id,
                 });
               });
+
               return this.scheduleMulitNetworkPostFetching(
                 insertedAccountIds
               ).catch(error => {
@@ -1079,15 +1126,14 @@ class TeamLibs {
                         logger.info(
                           `Subscription processing for ${accountDetails.AccountType}`
                         );
+
                         return this.fbConnect
                           .subscribeWebhooks(
                             accountDetails.AccessToken,
                             accountDetails.SocialId,
                             config.get('facebook_api.page_subscription_fields')
                           )
-                          .catch(() => {
-                            return;
-                          });
+                          .catch(() => {});
                       case '4':
                         return this.twtConnect
                           .updateSubscriptions(
@@ -1095,15 +1141,11 @@ class TeamLibs {
                             accountDetails.RefreshToken,
                             true
                           )
-                          .catch(() => {
-                            return;
-                          });
+                          .catch(() => {});
                       case '9':
                         return this.googleConnect
                           .updateSubscriptions(accountDetails.SocialId, true)
-                          .catch(() => {
-                            return;
-                          });
+                          .catch(() => {});
                       case '12':
                         return this.fbConnect
                           .subscribeWebhooks(
@@ -1111,78 +1153,83 @@ class TeamLibs {
                             accountDetails.SocialId,
                             config.get('instagram.business_subscription_fields')
                           )
-                          .catch(() => {
-                            return;
-                          });
+                          .catch(() => {});
                       default:
                         break;
                     }
                   })
                 );
               }
-              return;
             })
-            .then(() => {
-              return Promise.all(
+            .then(() =>
+              Promise.all(
                 insertedAccountIdsWithType.map(element => {
                   switch (String(element.account_type)) {
                     case '2':
                       return this.fbConnect
                         .getFbPageStats(element.access_token)
+                        .then(updateDetails =>
+                          this.createOrUpdateFriendsList(
+                            element.account_id,
+                            updateDetails
+                          )
+                        )
+                        .catch(() => {});
+                    case '7':
+                      return this.linkedInConnect
+                        .linkedInPageStats(
+                          element.social_id,
+                          element.access_token
+                        )
                         .then(updateDetails => {
-                          return this.createOrUpdateFriendsList(
+                          this.createOrUpdateFriendsList(
                             element.account_id,
                             updateDetails
                           );
                         })
-                        .catch(() => {
-                          return;
-                        });
+                        .catch(() => {});
                     case '9':
                       return this.googleConnect
                         .getYtbChannelDetails('', element.refresh_token)
-                        .then(updateDetails => {
-                          return this.createOrUpdateFriendsList(
+                        .then(updateDetails =>
+                          this.createOrUpdateFriendsList(
                             element.account_id,
                             updateDetails
-                          );
-                        })
-                        .catch(() => {
-                          return;
-                        });
+                          )
+                        )
+                        .catch(() => {});
+
                     case '12':
                       return this.fbConnect
                         .getInstaBusinessStats(element.access_token)
-                        .then(updateDetails => {
-                          return this.createOrUpdateFriendsList(
+                        .then(updateDetails =>
+                          this.createOrUpdateFriendsList(
                             element.account_id,
                             updateDetails
-                          );
-                        })
-                        .catch(() => {
-                          return;
-                        });
+                          )
+                        )
+                        .catch(() => {});
                   }
                 })
-              );
-            })
+              )
+            )
             .then(() => {
-              profiles.forEach(account => {
+              profiles.map(account => {
                 erroredSocialProfiles.forEach(accountId => {
                   if (account.social_id == accountId)
                     erroredAccountsNames.push(account.first_name);
                 });
               });
               resolve({
-                teamDetails: teamDetails,
+                teamDetails,
                 profileDetails: ProfileInfo,
                 errorProfileId: erroredAccountsNames,
               });
             })
-            .catch(function (error) {
+            .catch(error => {
               reject(error);
-            });
-        });
+            })
+        );
       }
     });
   }
@@ -1191,12 +1238,13 @@ class TeamLibs {
     return new Promise((resolve, reject) => {
       if (accountIds.length > 0) {
         accountIds.forEach(id => {
-          var scheduleDate = moment().add(2, 'seconds');
-          var batchId = `${id}_${String(moment().unix())}`;
-          var scheduleObject = {
+          const scheduleDate = moment().add(2, 'seconds');
+          const batchId = `${id}_${String(moment().unix())}`;
+          const scheduleObject = {
             accountId: id,
           };
-          var time = new Date(scheduleDate);
+          const time = new Date(scheduleDate);
+
           schedule.scheduleJob(
             batchId,
             time,
@@ -1223,133 +1271,128 @@ class TeamLibs {
    * @return {object} Returns object contains Team and Profile details
    */
   addProfiles(userId, userName, profile) {
-    var ProfileInfo = null;
-    var teamDetails = null;
+    let ProfileInfo = null;
+    let teamDetails = null;
+
     return new Promise((resolve, reject) => {
       if (!profile) {
         reject(new Error('Invalid Inputs'));
       } else {
-        return db.sequelize.transaction(t => {
-          return (
-            teamInfo
-              .findOne(
-                {
-                  where: {
-                    [Operator.and]: [
-                      {
-                        team_admin_id: userId,
-                      },
-                      {
-                        team_id: profile.TeamId,
-                      },
-                    ],
-                  },
-                  attributes: ['team_id', 'team_name'],
-                },
-                { transaction: t }
-              )
-              .then(team => {
-                if (team == null)
-                  throw new Error(
-                    "You don't have access to add the profile to team"
-                  );
-                else {
-                  teamDetails = team;
-                  return socialAccount.findOne({
-                    where: {
-                      [Operator.and]: [
-                        {
-                          account_type: profile.Network,
-                        },
-                        {
-                          social_id: profile.SocialId,
-                        },
-                      ],
-                    },
-                    attributes: ['account_id'],
-                  });
-                }
-              })
-              .then(socialAcc => {
-                if (socialAcc) {
-                  throw new Error('Account has been added already!');
-                } else {
-                  return socialAccount.create(
+        return db.sequelize.transaction(t =>
+          teamInfo
+            .findOne(
+              {
+                where: {
+                  [Operator.and]: [
                     {
-                      account_type: profile.Network,
-                      user_name: profile.UserName,
-                      first_name: profile.FirstName,
-                      last_name: profile.LastName,
-                      email: profile.Email,
-                      social_id: profile.SocialId,
-                      profile_pic_url: profile.ProfilePicture,
-                      cover_pic_url: profile.ProfilePicture,
-                      profile_url: profile.ProfileUrl,
-                      access_token: profile.AccessToken,
-                      refresh_token: profile.RefreshToken,
-                      friendship_counts: profile.FriendCount,
-                      info: profile.Info,
-                      account_admin_id: userId,
+                      team_admin_id: userId,
                     },
-                    { transaction: t }
-                  );
-                }
-              })
-              .then(profileDetails => {
-                ProfileInfo = profileDetails;
-                return profileDetails.setTeam(teamDetails, {
-                  transaction: t,
-                  through: { is_account_locked: false },
+                    {
+                      team_id: profile.TeamId,
+                    },
+                  ],
+                },
+                attributes: ['team_id', 'team_name'],
+              },
+              {transaction: t}
+            )
+            .then(team => {
+              if (team == null) {
+                throw new Error(
+                  "You don't have access to add the profile to team"
+                );
+              } else {
+                teamDetails = team;
+
+                return socialAccount.findOne({
+                  where: {
+                       social_id: profile.SocialId,
+                      },
+                  attributes: ['account_id'],
                 });
-              })
-              .then(() => {
-                return this.scheduleNetworkPostFetching(
-                  ProfileInfo.account_id
-                ).catch(error => {
+              }
+            })
+            .then(socialAcc => {
+              if (socialAcc) {
+                throw new Error('Account has been added already!');
+              } else {
+                return socialAccount.create(
+                  {
+                    account_type: profile.Network,
+                    user_name: profile.UserName,
+                    first_name: profile.FirstName,
+                    last_name: profile.LastName,
+                    email: profile.Email,
+                    social_id: profile.SocialId,
+                    profile_pic_url: profile.ProfilePicture,
+                    cover_pic_url: profile.ProfilePicture,
+                    profile_url: profile.ProfileUrl,
+                    access_token: profile.AccessToken,
+                    refresh_token: profile.RefreshToken,
+                    friendship_counts: profile.FriendCount,
+                    info: profile.Info,
+                    account_admin_id: userId,
+                  },
+                  {transaction: t}
+                );
+              }
+            })
+            .then(profileDetails => {
+              ProfileInfo = profileDetails;
+
+              return profileDetails.setTeam(teamDetails, {
+                transaction: t,
+                through: {is_account_locked: false},
+              });
+            })
+            .then(() =>
+              this.scheduleNetworkPostFetching(ProfileInfo.account_id).catch(
+                error => {
                   logger.error(error.message);
-                });
-              })
-              .then(() => {
-                if (
-                  ProfileInfo.account_type == '4' ||
-                  ProfileInfo.account_type == 4
-                ) {
-                  return this.twtConnect
-                    .updateSubscriptions(
-                      ProfileInfo.access_token,
-                      ProfileInfo.refresh_token,
-                      true
-                    )
-                    .catch(error => {
-                      return;
-                    });
                 }
-              })
-              .then(() => {
-                let targetTeamsId = [];
-                targetTeamsId.push(profile.TeamId);
-                if (config.get('notification_socioboard.status') == "on")
-                  return this.sendTeamNotifications(`${userName} added the social profiles to a ${teamDetails.team_name} team.`,
-                    teamDetails.team_name,
-                    'team_addProfile',
-                    userName,
-                    'success',
-                    targetTeamsId,
-                    profile.TeamId
+              )
+            )
+            .then(() => {
+              if (
+                ProfileInfo.account_type == '4' ||
+                ProfileInfo.account_type == 4
+              ) {
+                return this.twtConnect
+                  .updateSubscriptions(
+                    ProfileInfo.access_token,
+                    ProfileInfo.refresh_token,
+                    true
                   )
-              })
-              .then(() => {
-                resolve({
-                  teamDetails: teamDetails,
-                  profileDetails: ProfileInfo,
-                });
-              })
-              .catch(function (error) {
-                console.error(`Error adding account inside ${error}`);
-                reject(error);
-              })
-          );
-        });
+                  .catch(error => {});
+              }
+            })
+            .then(() => {
+              const targetTeamsId = [];
+
+              targetTeamsId.push(profile.TeamId);
+              if (config.get('notification_socioboard.status') == 'on') {
+                return this.sendTeamNotifications(
+                  `${userName} added the social profiles to a ${teamDetails.team_name} team.`,
+                  teamDetails.team_name,
+                  'team_addProfile',
+                  userName,
+                  'success',
+                  targetTeamsId,
+                  profile.TeamId
+                );
+              }
+            })
+            .then(() => {
+              resolve({
+                teamDetails,
+                profileDetails: ProfileInfo,
+              });
+            })
+            .catch(error => {
+              console.error(`Error adding account inside ${error}`);
+              reject(error);
+            })
+        );
       }
     });
   }
@@ -1357,10 +1400,11 @@ class TeamLibs {
   async deleteSocialProfile(userId, accountId, teamId, userName) {
     return new Promise((resolve, reject) => {
       let fetchedSocialAccount = '';
-      return db.sequelize.transaction(t => {
-        return this.getUserDetails(userId)
-          .then(userDetails => {
-            return socialAccount
+
+      return db.sequelize.transaction(t =>
+        this.getUserDetails(userId)
+          .then(userDetails =>
+            socialAccount
               .findOne({
                 where: {
                   [Operator.and]: [
@@ -1382,54 +1426,60 @@ class TeamLibs {
                 ],
               })
               .then(socialAcc => {
-                if (socialAcc == null)
+                if (socialAcc == null) {
                   throw new Error(
                     'No such social account or Only admin that profile can delete an account!'
                   );
+                }
                 // else if (userDetails.email == socialAcc.email) {
                 //     throw new Error("You can't delete this account. As this is your primary account, which you used to login to Socioboard.");
                 // }
                 else {
                   fetchedSocialAccount = socialAcc;
-                  let scheduleDate = moment().add(2, 'seconds');
-                  let batchId = `${socialAcc.social_id}_${String(
+                  const scheduleDate = moment().add(2, 'seconds');
+                  const batchId = `${socialAcc.social_id}_${String(
                     moment().unix()
                   )}`;
+
                   this.scheduleObject = {
                     accountType: socialAcc.account_type,
                     socialId: socialAcc.social_id,
                     accessToken: socialAcc.access_token,
                     refreshToken: socialAcc.refresh_token,
                   };
-                  let time = new Date(scheduleDate);
+                  const time = new Date(scheduleDate);
 
                   schedule.scheduleJob(batchId, time, () => {
                     // logger.info(`Started network posts deleting for social id: ${this.scheduleObject.socialId}`);
                     // Started network posts deleting for social account
                     this.deleteAccountsMongoPosts(this.scheduleObject)
                       .then(() => {
-                        //logger.info("Deleting process completed.");
+                        // logger.info("Deleting process completed.");
                       })
                       .catch(error => {
                         //  logger.error(error.message);
                       });
                   });
-                  return;
                 }
               })
               .then(() => {
-                if (teamId)
+                if (teamId) {
                   return teamInfo.findOne({
                     where: {
                       team_id: teamId,
                     },
                     attributes: ['team_id', 'team_name'],
-                  })
+                  });
+                }
               })
-              .then((teamDetails) => {
-                let targetTeamsId = [];
+              .then(teamDetails => {
+                const targetTeamsId = [];
+
                 targetTeamsId.push(teamId);
-                if (config.get('notification_socioboard.status') == "on" && teamId)
+                if (
+                  config.get('notification_socioboard.status') == 'on' &&
+                  teamId
+                ) {
                   return this.sendTeamNotifications(
                     `${userName} removed one profile from Team.`,
                     teamDetails.team_name,
@@ -1438,34 +1488,36 @@ class TeamLibs {
                     'success',
                     targetTeamsId,
                     teamId
-                  )
+                  );
+                }
               })
-              .then(() => {
-                return fetchedSocialAccount
+              .then(() =>
+                fetchedSocialAccount
                   .destroy({
-                    where: { account_id: accountId },
+                    where: {account_id: accountId},
                   })
                   .catch(error => {
                     throw new Error(error.message);
-                  });
-              })
+                  })
+              )
               .then(() => {
                 resolve('success');
               })
-              .catch(function (error) {
+              .catch(error => {
                 reject(error);
-              });
-          })
+              })
+          )
           .catch(error => {
             reject(error);
-          });
-      });
+          })
+      );
     });
   }
+
   async getUserDetails(userId) {
     return new Promise((resolve, reject) => {
       if (!userId) {
-        reject({ error: true, message: 'Invalid userId' });
+        reject({error: true, message: 'Invalid userId'});
       } else {
         return userDetails
           .findOne({
@@ -1489,7 +1541,7 @@ class TeamLibs {
               {
                 model: userActivation,
                 as: 'Activations',
-                where: { id: db.Sequelize.col('user_activation_id') },
+                where: {id: db.Sequelize.col('user_activation_id')},
                 attributes: [
                   'id',
                   'last_login',
@@ -1510,7 +1562,7 @@ class TeamLibs {
             ],
           })
           .then(userDetails => {
-            if (!userDetails) reject({ error: true, message: 'User not found!' });
+            if (!userDetails) reject({error: true, message: 'User not found!'});
             else resolve(userDetails);
           })
           .catch(error => {
@@ -1519,12 +1571,14 @@ class TeamLibs {
       }
     });
   }
+
   async deleteAccountsMongoPosts(accountDetails) {
     return new Promise((resolve, reject) => {
       switch (accountDetails.accountType) {
         case 1:
         case 3:
           var facebookMongoPostModelObject = new FacebookMongoPostModel();
+
           facebookMongoPostModelObject.deleteAccountPosts(
             accountDetails.socialId
           );
@@ -1534,6 +1588,7 @@ class TeamLibs {
           // return this.twtConnect.updateSubscriptions(accountDetails.accessToken, accountDetails.refreshToken, false)
           //     .then(() => {
           var twitterMongoPostModelObject = new TwitterMongoPostModel();
+
           twitterMongoPostModelObject
             .deleteAccountPosts(accountDetails.socialId)
             //    return;
@@ -1548,6 +1603,7 @@ class TeamLibs {
           // return this.googleConnect.updateSubscriptions(accountDetails.socialId, false)
           //    .then(() => {
           var youtubeMongoPostModelObject = new YoutubeMongoPostModel();
+
           youtubeMongoPostModelObject
             .deleteAccountPosts(accountDetails.socialId)
             //      return;
@@ -1562,13 +1618,15 @@ class TeamLibs {
           // return this.fbConnect.unsubscribeWebhooks(accountDetails.accessToken, accountDetails.socialId)
           //  .then(() => {
           var instagramStoryMongoModelObject = new InstagramStoryMongoModel();
+
           return (
             instagramStoryMongoModelObject
               .deleteAccountPosts(accountDetails.socialId)
               //   })
               .then(() => {
-                var instagramBusinessMongoPostModelObject =
+                const instagramBusinessMongoPostModelObject =
                   new InstagramBusinessMongoPostModel();
+
                 return instagramBusinessMongoPostModelObject.deleteAccountPosts(
                   accountDetails.socialId
                 );
@@ -1586,6 +1644,7 @@ class TeamLibs {
       }
     });
   }
+
   async updateCrons(accountId, cronvalue) {
     // const promises = fruitsToGet.map(async fruit => {
     //     const numFruit = await getNumFruit(fruit)
@@ -1594,28 +1653,29 @@ class TeamLibs {
     // let promises = await data.map(async itr => await this.updateRating(itr))
     // const res = await Promise.all(promises)
     // return res
-    let response = await socialAccount.update(
+    const response = await socialAccount.update(
       {
         refresh_feeds: cronvalue,
       },
       {
-        where: { account_id: accountId },
+        where: {account_id: accountId},
         returning: true,
         plain: true,
       }
     );
+
     return response;
   }
 
   scheduleNetworkPostFetching(accountId) {
     return new Promise((resolve, reject) => {
-      var scheduleDate = moment().add(3, 'seconds');
-      var batchId = String(moment().unix());
+      const scheduleDate = moment().add(3, 'seconds');
+      const batchId = String(moment().unix());
 
-      var time = new Date(scheduleDate);
+      const time = new Date(scheduleDate);
 
-      var scheduleObject = {
-        accountId: accountId,
+      const scheduleObject = {
+        accountId,
       };
 
       schedule.scheduleJob(batchId, time, () => {
@@ -1633,8 +1693,8 @@ class TeamLibs {
   }
 
   async teamForUser(userId) {
-    let res = await userDetails.findOne({
-      where: { user_id: userId },
+    const res = await userDetails.findOne({
+      where: {user_id: userId},
       attributes: ['user_id'],
       include: [
         {
@@ -1656,18 +1716,19 @@ class TeamLibs {
         },
       ],
     });
+
     return res;
   }
 
   async teamForUserSearch(userId, teamName) {
-    let res = await userDetails.findOne({
-      where: { user_id: userId },
+    const res = await userDetails.findOne({
+      where: {user_id: userId},
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: { team_name: { [Operator.like]: `%${teamName}%` } },
+          where: {team_name: {[Operator.like]: `%${teamName}%`}},
           attributes: ['team_id'],
           through: {
             where: {
@@ -1684,18 +1745,19 @@ class TeamLibs {
         },
       ],
     });
+
     return res;
   }
 
   async teamForUserSpecific(user_id, team_id) {
-    let res = await userDetails.findOne({
-      where: { user_id },
+    const res = await userDetails.findOne({
+      where: {user_id},
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: { team_id },
+          where: {team_id},
           attributes: ['team_id'],
           through: {
             where: {
@@ -1712,6 +1774,7 @@ class TeamLibs {
         },
       ],
     });
+
     return res;
   }
 
@@ -1723,7 +1786,7 @@ class TeamLibs {
   //             },
   //             attributes: ['team_id', 'team_name', 'team_logo', 'team_description', 'team_admin_id'],
   //             include: [{
-  //                 model: socialAccount,
+  //                 model: social-account,
   //                 as: 'SocialAccount',
   //                 // attributes: ['account_id', 'account_type', 'first_name', 'last_name', 'email', 'social_id', 'profile_pic_url', 'cover_pic_url', 'friendship_counts'],
   //                 attributes: ['is_account_locked']
@@ -1731,7 +1794,7 @@ class TeamLibs {
   //             // ,
   //             // order: [
   //             //     [{
-  //             //         model: socialAccount,
+  //             //         model: social-account,
   //             //         as: 'SocialAccount'
   //             //     }, "create_on", "DESC"]
   //             // ]
@@ -1741,8 +1804,8 @@ class TeamLibs {
 
   async teamSocialAccount(teamInformation) {
     return Promise.all(
-      teamInformation.Team.map(function (teamResponse) {
-        return teamInfo.findAll({
+      teamInformation.Team.map(teamResponse =>
+        teamInfo.findAll({
           where: {
             team_id: teamResponse.dataValues.team_id,
           },
@@ -1767,23 +1830,26 @@ class TeamLibs {
               'DESC',
             ],
           ],
-        });
-      })
+        })
+      )
     );
   }
 
   async searchTeamSocialAccount(teamInformation, SocialAccountInfo) {
     return Promise.all(
-      teamInformation.Team.map(function (teamResponse) {
-        let innerQuery = {};
+      teamInformation.Team.map(teamResponse => {
+        const innerQuery = {};
+
         if (SocialAccountInfo.rating.length != 0)
-          innerQuery.rating = { [Operator.or]: SocialAccountInfo.rating };
-        if (SocialAccountInfo.accountType.length != 0)
+          innerQuery.rating = {[Operator.or]: SocialAccountInfo.rating};
+        if (SocialAccountInfo.accountType.length != 0) {
           innerQuery.account_type = {
             [Operator.or]: SocialAccountInfo.accountType,
           };
+        }
+
         return teamInfo.findAll({
-          where: { team_id: teamResponse.dataValues.team_id },
+          where: {team_id: teamResponse.dataValues.team_id},
           include: [
             {
               model: socialAccount,
@@ -1826,17 +1892,18 @@ class TeamLibs {
   }
 
   async teamInfoForSearch(teamId) {
-    let res = await teamInfo.findAll({
+    const res = await teamInfo.findAll({
       where: {
-        team_id: { [Operator.in]: teamId },
+        team_id: {[Operator.in]: teamId},
       },
       group: ['team_id'],
     });
+
     return res;
   }
 
   async getTeamDetails(userId, teamId) {
-    let teams = await teamInfo.findAll({
+    const teams = await teamInfo.findAll({
       where: {
         team_admin_id: userId,
         team_id: teamId,
@@ -1844,11 +1911,12 @@ class TeamLibs {
       raw: true,
       attributes: ['team_id'],
     });
+
     return teams;
   }
 
   async isValidTeam(userId, teamId) {
-    let teams = await teamInfo.findOne({
+    const teams = await teamInfo.findOne({
       where: {
         [Operator.and]: [
           {
@@ -1860,32 +1928,37 @@ class TeamLibs {
         ],
       },
     });
+
     return teams;
   }
+
   async lockTeam(accounts) {
-    let result = await teamInfo.update(
+    const result = await teamInfo.update(
       {
         is_team_locked: 1,
       },
-      { where: { team_id: accounts.map(t => t.team_id) } }
+      {where: {team_id: accounts.map(t => t.team_id)}}
     );
+
     return result;
   }
 
   async unlockTeam(accounts) {
-    let result = await teamInfo.update(
+    const result = await teamInfo.update(
       {
         is_team_locked: 0,
       },
-      { where: { team_id: accounts.map(t => t.team_id) } }
+      {where: {team_id: accounts.map(t => t.team_id)}}
     );
+
     return result;
   }
 
   async createTeam(userId, teamDescription) {
-    let transaction = await db.sequelize.transaction();
+    const transaction = await db.sequelize.transaction();
+
     try {
-      let teamDetails = await teamInfo.create(
+      const teamDetails = await teamInfo.create(
         {
           team_name: teamDescription.name,
           team_description: teamDescription.description,
@@ -1893,15 +1966,15 @@ class TeamLibs {
           team_admin_id: userId,
           is_default_team: false,
         },
-        { transaction }
+        {transaction}
       );
 
-      let user = await userDetails.findOne(
+      const user = await userDetails.findOne(
         {
-          where: { user_id: userId },
+          where: {user_id: userId},
           attributes: ['user_id'],
         },
-        { transaction }
+        {transaction}
       );
 
       await teamDetails.setUser(user, {
@@ -1914,6 +1987,7 @@ class TeamLibs {
         },
       });
       await transaction.commit();
+
       return teamDetails;
     } catch (error) {
       // if we got an error and we created the transaction, roll it back
@@ -1924,7 +1998,7 @@ class TeamLibs {
   }
 
   async getTeamInfo(userId, teamName) {
-    let res = await teamInfo.findOne({
+    const res = await teamInfo.findOne({
       where: {
         [Operator.and]: [
           {
@@ -1937,10 +2011,12 @@ class TeamLibs {
       },
       attributes: ['team_id'],
     });
+
     return res;
   }
+
   async getTeamInfoId(userId, teamId) {
-    let res = await teamInfo.findOne({
+    const res = await teamInfo.findOne({
       where: {
         [Operator.and]: [
           {
@@ -1953,12 +2029,13 @@ class TeamLibs {
       },
       attributes: ['team_id', 'team_name', 'is_default_team'],
     });
+
     return res;
   }
 
   async editTeam(teamDescription, teamId) {
-    let transaction = await db.sequelize.transaction();
-    let res = await teamInfo.update(
+    const transaction = await db.sequelize.transaction();
+    const res = await teamInfo.update(
       {
         team_name: teamDescription.name,
         team_description: teamDescription.description,
@@ -1969,74 +2046,81 @@ class TeamLibs {
           team_id: teamId,
         },
       },
-      { transaction }
+      {transaction}
     );
+
     return res;
   }
 
   async getAllTeamOfUser(userId) {
-    let res = await teamInfo.findAll({
+    const res = await teamInfo.findAll({
       where: {
         team_admin_id: userId,
       },
       attributes: ['team_id'],
     });
+
     return res;
   }
 
   async getAllteamsAccount(usersTeamIds) {
-    let res = await teamSocialAccountJoinTable.findAll({
+    const res = await teamSocialAccountJoinTable.findAll({
       where: {
         team_id: usersTeamIds,
       },
       attributes: ['id', 'account_id', 'team_id'],
     });
+
     return res;
   }
 
   async getTeamsSocialAccount(team_id) {
-    let res = await teamSocialAccountJoinTable.findAll({
+    const res = await teamSocialAccountJoinTable.findAll({
       where: {
         team_id,
       },
       // attributes: ['id', 'account_id', 'team_id']
     });
+
     return res;
   }
 
   async deleteTeam(teamId) {
-    let res = await teamInfo.destroy({
+    const res = await teamInfo.destroy({
       where: {
         team_id: teamId,
       },
     });
+
     return res;
   }
 
   async deleteSocialAccount(filteredDeleteAccounts) {
-    let res = socialAccount.destroy({
-      where: { account_id: filteredDeleteAccounts },
+    const res = socialAccount.destroy({
+      where: {account_id: filteredDeleteAccounts},
     });
+
     return res;
   }
 
   async isUserRegistered(invitingUserEmail) {
-    let res = await userDetails.findOne({
-      where: { email: invitingUserEmail },
+    const res = await userDetails.findOne({
+      where: {email: invitingUserEmail},
       include: [
         {
           model: userActivation,
           as: 'Activations',
-          where: { activation_status: 1 },
+          where: {activation_status: 1},
         },
       ],
       attributes: ['user_id'],
     });
+
     return res;
   }
 
   async getTotalTeamMember(userId) {
-    let res = await userTeamJoinTable.count({
+    const res = await userTeamJoinTable.count({
       where: {
         [Operator.and]: [
           {
@@ -2048,10 +2132,12 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
+
   async checkUserAlreadyAdded(invitingUserId, teamId) {
-    let res = await userTeamJoinTable.findOne({
+    const res = await userTeamJoinTable.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2063,22 +2149,26 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
+
   async addTeamMember(invitingUserId, teamId, userId, permission) {
-    let res = await userTeamJoinTable.create({
+    const res = await userTeamJoinTable.create({
       team_id: teamId,
       user_id: invitingUserId,
       invitation_accepted: false,
-      permission: permission,
+      permission,
       left_from_team: false,
       invited_by: userId,
     });
+
     return res;
   }
+
   async teamInformation(userId) {
-    let res = await userDetails.findOne({
-      where: { user_id: userId },
+    const res = await userDetails.findOne({
+      where: {user_id: userId},
       attributes: ['user_id'],
       include: [
         {
@@ -2086,19 +2176,20 @@ class TeamLibs {
           as: 'Team',
           attributes: ['team_id'],
           through: {
-            where: { invitation_accepted: false, left_from_team: false },
+            where: {invitation_accepted: false, left_from_team: false},
             attributes: ['invitation_accepted', 'permission'],
           },
         },
       ],
     });
+
     return res;
   }
 
   async teamDetails(team_id) {
     return teamInfo.findAll({
       where: {
-        team_id: team_id,
+        team_id,
       },
       attributes: [
         'team_id',
@@ -2131,16 +2222,19 @@ class TeamLibs {
   }
 
   async teamUser(team_admin_id, details) {
-    let res = await userDetails.findOne({
-      where: { user_id: team_admin_id },
+    const res = await userDetails.findOne({
+      where: {user_id: team_admin_id},
       raw: true,
       attributes: ['first_name'],
     });
+
     details.dataValues.team_admin_name = res.first_name;
+
     return details;
   }
+
   async userTeamJoinTableInfo(userId, teamId) {
-    let res = await userTeamJoinTable.findOne({
+    const res = await userTeamJoinTable.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2161,10 +2255,12 @@ class TeamLibs {
       ],
     });
     // if (!res) throw new Error("You don't have invitation for this team!")
+
     return res;
   }
+
   async userTeamJoinTableDecline(userId, teamId) {
-    let res = await userTeamJoinTable.findOne({
+    const res = await userTeamJoinTable.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2174,7 +2270,7 @@ class TeamLibs {
             team_id: teamId,
           },
           {
-            invited_by: { [Operator.ne]: [userId] },
+            invited_by: {[Operator.ne]: [userId]},
           },
           {
             invitation_accepted: false,
@@ -2191,21 +2287,25 @@ class TeamLibs {
       ],
     });
     // if (!res) throw new Error("You don't have invitation for this team!")
+
     return res;
   }
+
   async acceptTeam(userId, teamId) {
-    let result = await userTeamJoinTable.update(
+    const result = await userTeamJoinTable.update(
       {
         invitation_accepted: true,
         left_from_team: false,
       },
-      { where: { [Operator.and]: [{ user_id: userId }, { team_id: teamId }] } }
+      {where: {[Operator.and]: [{user_id: userId}, {team_id: teamId}]}}
     );
+
     return result;
   }
+
   async declineTeam(userId, teamId) {
-    let transaction = await db.sequelize.transaction();
-    let res = await userTeamJoinTable.destroy({
+    const transaction = await db.sequelize.transaction();
+    const res = await userTeamJoinTable.destroy({
       where: {
         [Operator.and]: [
           {
@@ -2217,11 +2317,12 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
 
   async withDraw(userId, teamId) {
-    let res = await userTeamJoinTable.destroy({
+    const res = await userTeamJoinTable.destroy({
       where: {
         [Operator.and]: [
           {
@@ -2236,13 +2337,15 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
+
   async teamMembers(filteredTeams) {
     return Promise.all(
-      filteredTeams.Team.map(function (teamResponse) {
-        return userTeamJoinTable.findAll({
-          where: { team_id: teamResponse.dataValues.team_id },
+      filteredTeams.Team.map(teamResponse =>
+        userTeamJoinTable.findAll({
+          where: {team_id: teamResponse.dataValues.team_id},
           attributes: [
             'id',
             'team_id',
@@ -2251,22 +2354,22 @@ class TeamLibs {
             'permission',
             'user_id',
           ],
-        });
-      })
+        })
+      )
     );
   }
 
   async teamMembersSearch(teamInformation) {
     return Promise.all(
-      teamInformation.Team.map(function (teamResponse) {
-        return teamInfo.findAll({
+      teamInformation.Team.map(teamResponse =>
+        teamInfo.findAll({
           where: {
             team_id: teamResponse.dataValues.team_id,
           },
-          //,
+          // ,
           // attributes: ['team_id', 'team_name', 'team_logo', 'team_description', 'team_admin_id'],
           // include: [{
-          //     model: socialAccount,
+          //     model: social-account,
           //     as: 'SocialAccount',
           //     // attributes: ['account_id', 'account_type', 'first_name', 'last_name', 'email', 'social_id', 'profile_pic_url', 'cover_pic_url', 'friendship_counts'],
           //     through: {
@@ -2275,18 +2378,18 @@ class TeamLibs {
           // }],
           // order: [
           //     [{
-          //         model: socialAccount,
+          //         model: social-account,
           //         as: 'SocialAccount'
           //     }, "create_on", "DESC"]
           // ]
-        });
-      })
+        })
+      )
     );
   }
 
   async memberTeam(team_id) {
     return userTeamJoinTable.findAll({
-      where: { team_id },
+      where: {team_id},
       attributes: [
         'id',
         'team_id',
@@ -2300,11 +2403,11 @@ class TeamLibs {
 
   async teamMemberDetails(teamMembers) {
     return Promise.all(
-      teamMembers.map(function (teamResponse) {
-        return Promise.all(
-          teamResponse.map(function (userIdentifier) {
-            return userDetails.findOne({
-              where: { user_id: userIdentifier.user_id },
+      teamMembers.map(teamResponse =>
+        Promise.all(
+          teamResponse.map(userIdentifier =>
+            userDetails.findOne({
+              where: {user_id: userIdentifier.user_id},
               attributes: [
                 'user_id',
                 'email',
@@ -2312,14 +2415,15 @@ class TeamLibs {
                 'last_name',
                 'profile_picture',
               ],
-            });
-          })
-        );
-      })
+            })
+          )
+        )
+      )
     );
   }
+
   async getAvailableTeamMember(teamMembers) {
-    let res = await userDetails.findAll({
+    const res = await userDetails.findAll({
       where: {
         [Operator.and]: [
           {
@@ -2335,12 +2439,13 @@ class TeamLibs {
         'profile_picture',
       ],
     });
+
     return res;
   }
 
   async memberProfileDetails(userId) {
     return socialAccount.findAll({
-      where: { account_admin_id: userId },
+      where: {account_admin_id: userId},
       attributes: [
         'account_id',
         'first_name',
@@ -2351,8 +2456,8 @@ class TeamLibs {
   }
 
   async socialAccountStats(userId) {
-    let accounts = await socialAccount.findAll({
-      where: { account_admin_id: userId },
+    const accounts = await socialAccount.findAll({
+      where: {account_admin_id: userId},
       attributes: [
         'account_id',
         'first_name',
@@ -2360,11 +2465,12 @@ class TeamLibs {
         'profile_pic_url',
       ],
     });
-    let pinterestBoards = [];
-    let SocialAccountStats = [];
-    let res = await Promise.all(
+    const pinterestBoards = [];
+    const SocialAccountStats = [];
+    const res = await Promise.all(
       accounts.map(account => {
-        var fields = [];
+        let fields = [];
+
         switch (Number(account.account_type)) {
           case 1:
             fields = [
@@ -2441,11 +2547,12 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: { account_id: account.account_id },
+              where: {account_id: account.account_id},
               attributes: fields,
             })
             .then(resultData => {
-              var data = resultData.toJSON();
+              const data = resultData.toJSON();
+
               SocialAccountStats.push(data);
             })
             .catch(error => {
@@ -2454,17 +2561,20 @@ class TeamLibs {
         }
       })
     );
+
     return SocialAccountStats;
   }
 
   async searchSocialAccountStats(userId, socaialAccountDetails) {
-    let account_ids = [];
-    if (socaialAccountDetails[0])
+    const account_ids = [];
+
+    if (socaialAccountDetails[0]) {
       socaialAccountDetails[0].SocialAccount.map(x => {
         account_ids.push(x.account_id);
       });
-    let accounts = await socialAccount.findAll({
-      where: { account_id: account_ids },
+    }
+    const accounts = await socialAccount.findAll({
+      where: {account_id: account_ids},
       attributes: [
         'account_id',
         'first_name',
@@ -2472,11 +2582,12 @@ class TeamLibs {
         'profile_pic_url',
       ],
     });
-    let pinterestBoards = [];
-    let SocialAccountStats = [];
-    let res = await Promise.all(
+    const pinterestBoards = [];
+    const SocialAccountStats = [];
+    const res = await Promise.all(
       accounts.map(account => {
-        var fields = [];
+        let fields = [];
+
         switch (Number(account.account_type)) {
           case 1:
             fields = [
@@ -2553,11 +2664,12 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: { account_id: account.account_id },
+              where: {account_id: account.account_id},
               attributes: fields,
             })
             .then(resultData => {
-              var data = resultData.toJSON();
+              const data = resultData.toJSON();
+
               SocialAccountStats.push(data);
             })
             .catch(error => {
@@ -2566,12 +2678,13 @@ class TeamLibs {
         }
       })
     );
+
     return SocialAccountStats;
   }
 
   async socialAccountStatsForTeam(userId, account_ids) {
-    let accounts = await socialAccount.findAll({
-      where: { account_id: account_ids },
+    const accounts = await socialAccount.findAll({
+      where: {account_id: account_ids},
       attributes: [
         'account_id',
         'first_name',
@@ -2579,11 +2692,12 @@ class TeamLibs {
         'profile_pic_url',
       ],
     });
-    let pinterestBoards = [];
-    let SocialAccountStats = [];
-    let res = await Promise.all(
+    const pinterestBoards = [];
+    const SocialAccountStats = [];
+    const res = await Promise.all(
       accounts.map(account => {
-        var fields = [];
+        let fields = [];
+
         switch (Number(account.account_type)) {
           case 1:
             fields = [
@@ -2660,11 +2774,12 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: { account_id: account.account_id },
+              where: {account_id: account.account_id},
               attributes: fields,
             })
             .then(resultData => {
-              var data = resultData.toJSON();
+              const data = resultData.toJSON();
+
               SocialAccountStats.push(data);
             })
             .catch(error => {
@@ -2673,21 +2788,23 @@ class TeamLibs {
         }
       })
     );
+
     return SocialAccountStats;
   }
 
   async getLockedAccountsForTeam(account_id) {
-    let res = await teamSocialAccountJoinTable.findAll({
-      where: { is_account_locked: true, account_id: account_id },
+    const res = await teamSocialAccountJoinTable.findAll({
+      where: {is_account_locked: true, account_id},
       attributes: ['account_id'],
     });
+
     return res;
   }
 
   async socialAccountStatsTeam(accountId) {
-    let accounts = await socialAccount.findAll({
+    const accounts = await socialAccount.findAll({
       where: {
-        account_id: { [Operator.in]: accountId },
+        account_id: {[Operator.in]: accountId},
       },
       attributes: [
         'account_id',
@@ -2696,11 +2813,12 @@ class TeamLibs {
         'profile_pic_url',
       ],
     });
-    let pinterestBoards = [];
-    let SocialAccountStats = [];
-    let res = await Promise.all(
+    const pinterestBoards = [];
+    const SocialAccountStats = [];
+    const res = await Promise.all(
       accounts.map(account => {
-        var fields = [];
+        let fields = [];
+
         switch (Number(account.account_type)) {
           case 1:
             fields = [
@@ -2777,11 +2895,12 @@ class TeamLibs {
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
-              where: { account_id: account.account_id },
+              where: {account_id: account.account_id},
               attributes: fields,
             })
             .then(resultData => {
-              var data = resultData.toJSON();
+              const data = resultData.toJSON();
+
               SocialAccountStats.push(data);
             })
             .catch(error => {
@@ -2790,18 +2909,19 @@ class TeamLibs {
         }
       })
     );
+
     return SocialAccountStats;
   }
 
   async UserTeam(userId, teamId) {
-    let res = await userDetails.findOne({
-      where: { user_id: userId },
+    const res = await userDetails.findOne({
+      where: {user_id: userId},
       attributes: ['user_id'],
       include: [
         {
           model: teamInfo,
           as: 'Team',
-          where: { team_id: teamId },
+          where: {team_id: teamId},
           attributes: ['team_id'],
           through: {
             where: {
@@ -2818,13 +2938,14 @@ class TeamLibs {
         },
       ],
     });
+
     return res;
   }
 
   async teamSocialAccounts(teamInformation) {
     return Promise.all(
-      teamInformation.Team.map(function (teamResponse) {
-        return teamInfo.findAll({
+      teamInformation.Team.map(teamResponse =>
+        teamInfo.findAll({
           where: {
             team_id: teamResponse.dataValues.team_id,
           },
@@ -2855,13 +2976,13 @@ class TeamLibs {
               },
             },
           ],
-        });
-      })
+        })
+      )
     );
   }
 
   async checkTeamDetails(userId, teamId) {
-    let res = await teamInfo.findOne({
+    const res = await teamInfo.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2873,10 +2994,12 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
+
   async checkTeamUser(userId, teamId) {
-    let res = await userTeamJoinTable.findOne({
+    const res = await userTeamJoinTable.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2889,25 +3012,26 @@ class TeamLibs {
       },
       raw: true,
     });
+
     return res;
   }
 
   async getUser(memberId) {
     return userDetails.findOne({
-      where: { user_id: memberId },
+      where: {user_id: memberId},
       attributes: ['user_id', 'first_name'],
     });
   }
 
   async removeFromTeam(teamId, user_id, userId) {
-    let res = await userTeamJoinTable.destroy({
+    const res = await userTeamJoinTable.destroy({
       where: {
         [Operator.and]: [
           {
             team_id: teamId,
           },
           {
-            user_id: user_id,
+            user_id,
           },
           {
             invited_by: userId,
@@ -2915,36 +3039,39 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
 
   async teamInfoResponse(teamId) {
-    let res = await teamInfo.findOne({
-      where: { team_id: teamId },
+    const res = await teamInfo.findOne({
+      where: {team_id: teamId},
       attributes: ['team_id', 'team_name', 'team_admin_id'],
     });
+
     return res;
   }
 
   async leaveFromTeam(teamId, userId) {
     return userTeamJoinTable.update(
-      { left_from_team: true },
-      { where: { team_id: teamId, user_id: userId } }
+      {left_from_team: true},
+      {where: {team_id: teamId, user_id: userId}}
     );
   }
 
   async updatePermission(teamId, memberId, permission) {
-    let res = await userTeamJoinTable.update(
+    const res = await userTeamJoinTable.update(
       {
-        permission: permission,
+        permission,
       },
-      { where: { team_id: teamId, user_id: memberId } }
+      {where: {team_id: teamId, user_id: memberId}}
     );
+
     return res;
   }
 
   async getTeam(userId, teamId) {
-    let team = await teamInfo.findOne({
+    const team = await teamInfo.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2956,11 +3083,12 @@ class TeamLibs {
         ],
       },
     });
+
     return team;
   }
 
   async getSocialaAcc(userId, accountId) {
-    let res = await socialAccount.findOne({
+    const res = await socialAccount.findOne({
       where: {
         [Operator.and]: [
           {
@@ -2973,15 +3101,18 @@ class TeamLibs {
       },
       attributes: ['account_id', 'account_admin_id'],
     });
+
     return res;
   }
+
   async getSocialaAccDetails(accountId) {
-    let res = await socialAccount.findOne({
+    const res = await socialAccount.findOne({
       where: {
         account_id: accountId,
       },
       attributes: ['account_id', 'account_admin_id'],
     });
+
     return res;
   }
 
@@ -3000,7 +3131,7 @@ class TeamLibs {
     //     }, { transaction })
     //     // Finding the giver account is present in database or not
 
-    //     let socialAcc = await socialAccount.findOne({
+    //     let socialAcc = await social-account.findOne({
     //         where: {
     //             account_id: accountId
     //         },
@@ -3019,11 +3150,12 @@ class TeamLibs {
 
     // }
 
-    let res = await teamSocialAccountJoinTable.create({
+    const res = await teamSocialAccountJoinTable.create({
       team_id: teamId,
       account_id: accountId,
       is_account_locked: false,
     });
+
     return res;
   }
 
@@ -3049,10 +3181,12 @@ class TeamLibs {
           if (!socialAccount)
             throw new Error('Account not available for fetching posts..');
           else {
-            var batchId = '';
+            let batchId = '';
+
             switch (socialAccount.account_type) {
               case 1:
                 var facebookMongoPostModelObject = new FacebookMongoPostModel();
+
                 return this.fbConnect
                   .getFacebookPosts(
                     socialAccount.access_token,
@@ -3065,23 +3199,23 @@ class TeamLibs {
                     logger.info(
                       `Fetched Post Details ${JSON.stringify(response.feeds)}`
                     );
+
                     return facebookMongoPostModelObject.insertManyPosts(
                       response.feeds
                     );
                   })
                   .then(() => {
                     // start media Downloader  through batch Id
-                    return;
                   })
                   .catch(error => {
                     // appInsights
                     logger.error(
                       `error on fetching post details ${error.message}`
                     );
-                    return;
                   });
               case 2:
                 var facebookMongoPostModelObject = new FacebookMongoPostModel();
+
                 return this.fbConnect
                   .getFacebookPagePosts(
                     socialAccount.access_token,
@@ -3094,23 +3228,23 @@ class TeamLibs {
                     logger.info(
                       `Fetched Post Details ${JSON.stringify(response.feeds)}`
                     );
+
                     return facebookMongoPostModelObject.insertManyPosts(
                       response.feeds
                     );
                   })
                   .then(() => {
                     // start media Downloader  through batch Id
-                    return;
                   })
                   .catch(error => {
                     // appInsights
                     logger.error(
                       `error on fetching post details ${error.message}`
                     );
-                    return;
                   });
               case 3:
                 var facebookMongoPostModelObject = new FacebookMongoPostModel();
+
                 return this.fbConnect
                   .getFacebookPosts(
                     socialAccount.access_token,
@@ -3123,20 +3257,19 @@ class TeamLibs {
                     logger.info(
                       `Fetched Post Details ${JSON.stringify(response.feeds)}`
                     );
+
                     return facebookMongoPostModelObject.insertManyPosts(
                       response.feeds
                     );
                   })
                   .then(() => {
                     // start media Downloader  through batch Id
-                    return;
                   })
                   .catch(error => {
                     // appInsights
                     logger.error(
                       `error on fetching post details ${error.message}`
                     );
-                    return;
                   });
               case 4:
                 return this.fetchAllTweets(
@@ -3147,7 +3280,7 @@ class TeamLibs {
                   '0'
                 );
               // var twitterMongoPostModelObject = new TwitterMongoPostModel();
-              // return this.twtConnect.getUserTweets(socialAccount.social_id, socialAccount.access_token, socialAccount.refresh_token, socialAccount.user_name)
+              // return this.twtConnect.getUserTweets(social-account.social_id, social-account.access_token, social-account.refresh_token, social-account.user_name)
               //     .then((response) => {
               //         batchId = response.batchId;
               //         logger.info(`fetched count : ${response.tweets.length}`);
@@ -3166,6 +3299,7 @@ class TeamLibs {
               case 5:
                 var instagramMongoPostModelObject =
                   new InstagramMongoPostModel();
+
                 return this.instagramConnect
                   .getInstagramFeeds(
                     socialAccount.access_token,
@@ -3174,22 +3308,21 @@ class TeamLibs {
                   )
                   .then(response => {
                     logger.info(`fetched count : ${response.length}`);
+
                     return instagramMongoPostModelObject
                       .insertManyPosts(response)
                       .then(result => {
-                        logger.info(`Saved  Insta post details`);
+                        logger.info('Saved  Insta post details');
 
                         // return this.createOrEditLastUpdateTime(
                         //   scheduleObject.accountId,
-                        //   socialAccount.social_id
+                        //   social-account.social_id
                         // );
-                        return;
                       })
                       .catch(result => {
                         logger.error(
                           `Error on saving post details : ${result}`
                         );
-                        return;
                       });
                   })
                   .catch(error => {
@@ -3197,10 +3330,15 @@ class TeamLibs {
                     logger.error(
                       `Error on fetching post details ${error.message}`
                     );
-                    return;
                   });
+              case 7:
+                return this.fetchAllLinkedInPost(
+                  socialAccount.social_id,
+                  socialAccount.access_token
+                );
               case 9:
                 var youtubeMongoPostModelObject = new YoutubeMongoPostModel();
+
                 return this.googleConnect
                   .getYoutubeChannelsInfo(
                     socialAccount.social_id,
@@ -3208,17 +3346,16 @@ class TeamLibs {
                   )
                   .then(response => {
                     logger.info(`fetched count : ${response.length}`);
+
                     return youtubeMongoPostModelObject
                       .insertManyPosts(response)
                       .then(result => {
-                        logger.info(`Saved post details`);
-                        return;
+                        logger.info('Saved post details');
                       })
                       .catch(result => {
                         logger.error(
                           `Error on saving post details : ${result}`
                         );
-                        return;
                       });
                   })
                   .catch(error => {
@@ -3226,7 +3363,6 @@ class TeamLibs {
                     logger.error(
                       `error on fetching post details ${error.message}`
                     );
-                    return;
                   });
               case 12:
                 var instagramBusinessMongoPostModelObject =
@@ -3238,17 +3374,16 @@ class TeamLibs {
                   )
                   .then(response => {
                     logger.info(`fetched count : ${response.feeds.length}`);
+
                     return instagramBusinessMongoPostModelObject
                       .insertManyPosts(response.feeds)
                       .then(result => {
-                        logger.info(`Saved post details`);
-                        return;
+                        logger.info('Saved post details');
                       })
                       .catch(result => {
                         logger.error(
                           `Error on saving post details : ${result}`
                         );
-                        return;
                       });
                   })
                   .catch(error => {
@@ -3256,7 +3391,6 @@ class TeamLibs {
                     logger.error(
                       `error on fetching post details ${error.message}`
                     );
-                    return;
                   });
               default:
                 logger.info(
@@ -3282,10 +3416,11 @@ class TeamLibs {
     user_name,
     archived_status
   ) {
-    var max_id;
+    let max_id;
     let previousMaxid;
+
     do {
-      let result = await this.fetchAllTweetsinloop(
+      const result = await this.fetchAllTweetsinloop(
         social_id,
         access_token,
         refresh_token,
@@ -3293,6 +3428,7 @@ class TeamLibs {
         archived_status,
         max_id
       );
+
       previousMaxid = max_id;
       max_id = result;
     } while (max_id != previousMaxid);
@@ -3307,12 +3443,14 @@ class TeamLibs {
     max_id
   ) {
     return new Promise((resolve, reject) => {
-      var maxId;
+      let maxId;
+
       return this.twtConnect
         .getAllTweets(access_token, refresh_token, user_name, max_id)
         .then(timelineTweets => {
           if (timelineTweets[timelineTweets.length - 1])
             maxId = timelineTweets[timelineTweets.length - 1].id_str;
+
           return this.twtConnect.parseTweetDetails(
             timelineTweets,
             social_id,
@@ -3324,7 +3462,8 @@ class TeamLibs {
         .then(response => {
           //  maxId = response.max_id;
           logger.info(`fetched count : ${response.tweets.length}`);
-          var twitterMongoPostModelObject = new TwitterMongoPostModel();
+          const twitterMongoPostModelObject = new TwitterMongoPostModel();
+
           return twitterMongoPostModelObject.insertManyPosts(response.tweets);
         })
         .then(insertedData => {
@@ -3337,13 +3476,47 @@ class TeamLibs {
           logger.error(
             `Error on fetching post details ${JSON.stringify(error)}`
           );
-          return;
         });
+    });
+  }
+  async fetchAllLinkedInPost(social_id, access_token) {
+    let resultTotal = await this.fetchAllLinkedInPostloop(
+      social_id,
+      access_token,
+      0
+    );
+    let loopNumber = 0;
+    if (resultTotal > 100) loopNumber = resultTotal / 100;
+    if (loopNumber >= 1)
+      for (let i = 1; i < loopNumber; i++) {
+        await this.fetchAllLinkedInPostloop(social_id, access_token, i);
+      }
+  }
+
+  fetchAllLinkedInPostloop(social_id, access_token, start) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let response = await this.linkedInConnect.getCompanyFeeds(
+          social_id,
+          access_token,
+          start
+        );
+
+        logger.info(`fetched count : ${JSON.stringify(response)}`);
+        let linkedInPostMongoModel = new LinkedInPostMongoModels();
+        let insertedData = linkedInPostMongoModel.insertManyPosts(
+          response.feeds
+        );
+        logger.info(`Element : ${JSON.stringify(insertedData)}`);
+        resolve(response.total);
+      } catch (error) {
+        logger.error(`Error on fetching post details ${JSON.stringify(error)}`);
+      }
     });
   }
 
   async removeAccount(teamId, accountId) {
-    let res = await teamSocialAccountJoinTable.destroy({
+    const res = await teamSocialAccountJoinTable.destroy({
       where: {
         [Operator.and]: [
           {
@@ -3355,6 +3528,7 @@ class TeamLibs {
         ],
       },
     });
+
     return res;
   }
 
@@ -3364,6 +3538,7 @@ class TeamLibs {
         teamInfoForSearch[i].dataValues.teamMemberCount =
           teamMembers[i].dataValues.teamMemberCount;
     }
+
     return {
       totalSearchResult: teamInfoForSearch.length,
       teamInfoForSearch,
@@ -3371,7 +3546,8 @@ class TeamLibs {
   }
 
   async createOrUpdateFriendsList(account_id, updateDetails) {
-    let userTeamAccountsLibs = new UserTeamAccountLibs();
+    const userTeamAccountsLibs = new UserTeamAccountLibs();
+
     userTeamAccountsLibs.createOrUpdateFriendsList(account_id, updateDetails);
   }
 
@@ -3386,9 +3562,20 @@ class TeamLibs {
    * @param  {Array} targetTeamsId -Targeted team id
    * @param  {Array} invitingUserId -User id
    */
-  async sendTeamNotifications(notificationMessage, team_name, notifyType, userName, status, targetTeamsId, teamId) {
+  async sendTeamNotifications(
+    notificationMessage,
+    team_name,
+    notifyType,
+    userName,
+    status,
+    targetTeamsId,
+    teamId
+  ) {
     // Sending notification to the Team members saying, an account is added to the Team
-    let notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+    const notification = new NotificationServices(
+      config.get('notification_socioboard.host_url')
+    );
+
     notification.notificationMessage = notificationMessage;
     notification.teamName = team_name;
     notification.notifyType = notifyType;
@@ -3396,11 +3583,18 @@ class TeamLibs {
     notification.status = status;
     notification.targetTeamsId = targetTeamsId;
     try {
-      let savedObject = await notification.saveNotifications()
-      let encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
-      return await notification.sendTeamNotification(teamId, encryptedNotifications);
-    } catch (error) { logger.info(`Notification not sent, ${error.message}`) }
+      const savedObject = await notification.saveNotifications();
+      const encryptedNotifications = this.authorizeServices.encrypt(
+        JSON.stringify(savedObject)
+      );
 
+      return await notification.sendTeamNotification(
+        teamId,
+        encryptedNotifications
+      );
+    } catch (error) {
+      logger.info(`Notification not sent, ${error.message}`);
+    }
   }
 
   /**
@@ -3414,11 +3608,23 @@ class TeamLibs {
    * @param  {} targetTeamsId
    * @param  {} invitingUserId
    */
-  async sendUserNotification(notificationMessage, team_name, notifyType, userName, status, targetTeamsId, invitingUserId) {
-    let targetUserId = [];
+  async sendUserNotification(
+    notificationMessage,
+    team_name,
+    notifyType,
+    userName,
+    status,
+    targetTeamsId,
+    invitingUserId
+  ) {
+    const targetUserId = [];
+
     targetUserId.push(invitingUserId);
     // Sending notification to the Team members saying, an account is added to the Team
-    let notification = new NotificationServices(config.get('notification_socioboard.host_url'));
+    const notification = new NotificationServices(
+      config.get('notification_socioboard.host_url')
+    );
+
     notification.notificationMessage = notificationMessage;
     notification.teamName = team_name;
     notification.notifyType = notifyType;
@@ -3426,12 +3632,54 @@ class TeamLibs {
     notification.status = status;
     notification.targetUserId = targetUserId;
     try {
-      let savedObject = await notification.saveNotifications()
-      let encryptedNotifications = this.authorizeServices.encrypt(JSON.stringify(savedObject));
-      return notification.sendUserNotification(invitingUserId, encryptedNotifications);
-    } catch (error) { logger.info(`Notification not sent, ${error.message}`) }
+      const savedObject = await notification.saveNotifications();
+      const encryptedNotifications = this.authorizeServices.encrypt(
+        JSON.stringify(savedObject)
+      );
 
+      return notification.sendUserNotification(
+        invitingUserId,
+        encryptedNotifications
+      );
+    } catch (error) {
+      logger.info(`Notification not sent, ${error.message}`);
+    }
   }
 
+  /**
+   * TODO To get access token from refresh token
+   * Function To get access token from refresh token
+   * Returns updated access token
+   */
+  async refreshTokenLinkedIn() {
+    let linkedInAccount = await socialAccount.findAll({
+      where: {account_type: [6, 7]},
+      raw: true,
+    });
+    linkedInAccount?.map(async x => {
+      let updateDays = moment().diff(moment(x.updated_at), 'days');
+      let addedDate = moment().diff(moment(x.created_at), 'days');
+      if (updateDays == 59 && addedDate < 360) {
+        let data = await this.linkedInConnect.getAccessTokenFromRefreshToken(
+          x.refresh_token
+        );
+        logger.info(
+          `Updated access token for id: ${x.account_id} added date: ${addedDate}`
+        );
+        //update access token
+        if (data.accessToken) {
+          await socialAccount.update(
+            {
+              access_token: data.accessToken,
+              updated_at: moment.now(),
+            },
+            {
+              where: {account_id: x.account_id},
+            }
+          );
+        }
+      }
+    });
+  }
 }
 export default TeamLibs;

@@ -36,7 +36,9 @@
 							                    <th style="min-width: 150px">Type</th>
 							                    <th style="min-width: 150px">Date</th>
 							                    <th style="min-width: 130px">Status</th>
+												@if(isset($pageTitle) && $pageTitle != "History")
 							                    <th style="min-width: 100px">Action</th>
+												@endif
 							                </tr>
 							            </thead>
 							            <tbody>

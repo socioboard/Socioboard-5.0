@@ -1,17 +1,28 @@
 $(document.body).on('click', '#addToCart', function () {
-    $('#addToCart').tooltip('disable');
-    if ($(this).children('.addtcartclose').hasClass('ss')) {
-        let spanid=$(this).children('.addtcartclose').attr('node-id');
-        $('#' + spanid). css("display", "block");
-        var nodeId = $(this).children('.addtcartclose').attr('node-id').split('_'),
-            id = nodeId[0],
-            title = nodeId[1];
-        $(this).children('.addtcartclose').parent().remove();
-        setTimeout(() => {
-            uploadScreenShots(id, title,spanid);
-        }, 1500);
+    if (custom_report === '1') {
+        $('#addToCart').tooltip('disable');
+        if ($(this).children('.addtcartclose').hasClass('ss')) {
+            let spanid = $(this).children('.addtcartclose').attr('node-id');
+            $('#' + spanid).css("display", "block");
+            var nodeId = $(this).children('.addtcartclose').attr('node-id').split('_'),
+                id = nodeId[0],
+                title = nodeId[1];
+            $(this).children('.addtcartclose').parent().remove();
+            setTimeout(() => {
+                uploadScreenShots(id, title, spanid);
+            }, 1500);
 
+        }
+    } else {
+        toastr.error("Please upgrade your plan first!", "", {
+            timeOut: 2000,
+            fadeOut: 3000,
+            onHidden: function () {
+                document.location.href = 'https://appv5.socioboard.com/plan-details-view';
+            }
+        });
     }
+
 });
 
 /**
@@ -22,7 +33,7 @@ $(document.body).on('click', '#addToCart', function () {
  * @param {string} spanid of the particular span  div inside div.
  * ! Do not change this function without referring API format of upload Screen shot.
  */
-function uploadScreenShots(id, title,spanid) {
+function uploadScreenShots(id, title, spanid) {
     html2canvas(document.getElementById(id), {
         scrollY: -window.scrollY,
         useCORS: true,
@@ -46,7 +57,7 @@ function uploadScreenShots(id, title,spanid) {
                             $('#reportsCount').empty();
                         },
                         success: function (response) {
-                            $('#' + spanid). css("display", "none");
+                            $('#' + spanid).css("display", "none");
                             if (response.code === 200) {
                                 let cart_no = response.data.length;
                                 setTimeout(() => {

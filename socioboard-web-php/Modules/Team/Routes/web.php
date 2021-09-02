@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Team\Http\Controllers\TeamController;
 use Modules\Discovery\Http\Middleware\CheckUser;
 
-Route::group(['module' => 'team', 'middleware' => 'authenticateUser', 'namespace' => 'App\Modules\User\Controllers'], function () {
+Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPlanExpiry'], 'namespace' => 'App\Modules\User\Controllers'], function () {
     Route::get('/view-teams', [TeamController::class, 'viewTeams']);
     Route::get('/team/{id}', [TeamController::class, 'teamView']);
     Route::get('/create-team', [TeamController::class, 'createTeam']);

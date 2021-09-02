@@ -4,16 +4,16 @@
  */
 import Router from 'express';
 /**
+ * @typedef {import('./authorized.controller.js')}
+ */
+import authorizedController from './authorized.controller.js';
+/**
  * Express router for user related operations
  * @type {import('express').Router}
  * @const
  * @namespace router
  */
 const router = Router();
-/**
- * @typedef {import('./authorized.controller.js')}
- */
-import authorizedController from './authorized.controller.js';
 
 router.post('/change-password', authorizedController.changePassword);
 router.delete('/delete-user', authorizedController.deleteUser);
@@ -41,7 +41,7 @@ router.get('/get-user-info', authorizedController.getUserInfo);
  */
 router.post(
   '/update-profile-details',
-  authorizedController.updateProfileDetails
+  authorizedController.updateProfileDetails,
 );
 router.post('/change-plan', authorizedController.changePlan);
 

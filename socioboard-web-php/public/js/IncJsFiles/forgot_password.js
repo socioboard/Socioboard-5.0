@@ -15,14 +15,12 @@ let forgotPasswordSubmit = function () {
             if (response.code === 200) {
                 toastr.success(response.message);
                 $('#forgotPasswordEmailId').val("");
-                setTimeout(function () {
-                    window.location = '/login';
-                }, 1000);
+
             } else if (response.code === 400) {
                 $("#forgotPasswordEmailError1").html(response);
-                toastr.error(response.error);
+                toastr.error(response.error ?? "Some Error Occurred In Mailing");
             } else {
-                toastr.error(response.message);
+                toastr.error(response.message ?? "Some Error Occurred In Mailing");
             }
         },
         error: function (error) {

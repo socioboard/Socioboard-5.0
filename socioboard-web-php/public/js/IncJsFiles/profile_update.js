@@ -42,6 +42,7 @@ let changePassword = function () {
         },
         success: function (response) {
             if (response.code === 200) {
+                localStorage.setItem('random_key', response.new_password);
                 toastr.success(response.message);
             } else if (response.code === 201) {
                 let i;
@@ -126,10 +127,11 @@ let updateProfileData = function (profileType) {
         },
         success: function (response) {
             if (response.code === 200) {
-                $('#phone_number_append, #location_append, #user_name_append').empty();
+                $('#phone_number_append, #location_append, #user_name_append, #last_name_append').empty();
                 $('#phone_number_append').append(response.data.user.phone_no);
                 $('#location_append').append(response.data.user.address);
                 $('#user_name_append').append(response.data.user.first_name);
+                $('#last_name_append').append(response.data.user.last_name);
                 $('#profile_picture_append, #header_profile_picture, #header_picture').css('background-image', 'url(../' + response.data.user.profile_picture  + ')');
                 $('#header_image_out').attr("src", response.data.user.profile_picture);
                 remove_avatar_value = 0;

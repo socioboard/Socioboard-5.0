@@ -14,8 +14,8 @@
                 </div> <!--end::Symbol-->
 
                 <!--begin::Info-->
-                <div class="d-flex flex-column flex-grow-1">
-                    <a href="javascript:;" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">@php echo session('user')['userDetails']['first_name']. ' '.session('user')['userDetails']['last_name']; @endphp</a>
+                <div class="d-flex flex-column flex-grow-2">
+                    <a  class="text-hover-primary mb-1 font-size-lg font-weight-bolder" id="account_name" title="Here it will be your selected account name in selected Platform">Account Name</a>
                 </div>
                 <!--end::Info-->
             </div>

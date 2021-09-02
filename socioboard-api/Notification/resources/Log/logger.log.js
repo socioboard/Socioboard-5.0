@@ -5,7 +5,7 @@ import 'winston-daily-rotate-file';
 if (!fs.existsSync('resources/Log/ResponseLog')) {
   fs.mkdirSync('resources/Log/ResponseLog');
 }
-var transportsLogger = [];
+const transportsLogger = [];
 
 transportsLogger.push(
   new winston.transports.DailyRotateFile({
@@ -16,16 +16,16 @@ transportsLogger.push(
     json: true,
     maxSize: '1g',
     maxFiles: '3d',
-  })
+  }),
 );
 
-var logger = winston.createLogger({
+const logger = winston.createLogger({
   transports: transportsLogger,
   exitOnError: false,
 });
 
 logger.stream = {
-  write: function (message, encoding) {
+  write(message, encoding) {
     logger.info(message);
   },
 };

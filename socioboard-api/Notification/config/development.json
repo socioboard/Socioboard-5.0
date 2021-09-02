@@ -1,0 +1,17 @@
+{
+  "notification_socioboard": {
+    "host_url": "http://localhost:3004",
+    "port": "3004",
+    "host": "localhost:3004"
+  },
+  "swagger_host_url": "localhost:3004",
+  "user_socioboard": {
+    "host_url": "https://local.socioboard.com/"
+  },
+  "mongo": {
+    "username": "<< username >>",
+    "password": "<< Database password >>",
+    "host": "<< host >>",
+    "db_name": "<< Database name >>"
+  }
+}

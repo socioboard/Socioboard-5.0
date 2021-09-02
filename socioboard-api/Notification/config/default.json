@@ -1,0 +1,11 @@
+{
+  "perPageLimit": 12,
+  "maximumTrialPeriod": 1,
+  "authorize": {
+    "secret": "<< RANDOM SECRET >>",
+    "token_secret": "<< RANDOM TOKEN >>",
+    "algorithm": "aes-256-cbc",
+    "encoding_typeOne": "utf8",
+    "encoding_typeTwo": "hex"
+  }
+}

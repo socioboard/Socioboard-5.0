@@ -32,7 +32,7 @@
         <!--begin::Aside-->
 
         <!--begin::Content-->
-        <div class="content order-1 order-lg-2 d-flex flex-column w-100 pb-0" style="background-color: #eee;">
+        <div class="content order-1 order-lg-2 d-flex flex-column w-100 pb-0" style="background-color: #fff;">
             <!--begin::Title-->
             <div class="d-flex flex-column justify-content-center text-center pt-md-5 pt-sm-5 px-lg-0 pt-2 px-7">
                 <h3 class="display4 font-weight-bolder my-7 text-dark" style="color: #986923;">SocioBoard</h3>
@@ -41,10 +41,77 @@
                 </p>
             </div>
             <!--end::Title-->
-
-            <!--begin::Image-->
-            <div class="content-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-top bgi-position-x-center" style="background-image: url({{asset('media/svg/illustrations/dashboard-boy.svg')}});"></div>
-            <!--end::Image-->
+            <!--begin::carousel image-->
+            <div id="SB_carouselIndicator" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#SB_carouselIndicator" data-slide-to="0" class="active"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="1"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="2"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="3"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="4"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="5"></li>
+                    <li data-target="#SB_carouselIndicator" data-slide-to="6"></li>
+                </ol>
+                <div class="carousel-inner SB_carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/media/png/dashboard_slider.png" class="d-block w-80 mr-auto ml-auto"  alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/youtube_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/contentstdio_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/discover_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/teams_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/reports_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/media/png/gallery_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
+                        <div class="carousel-caption">
+                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::carousel image-->
         </div>
         <!--end::Content-->
     </div>

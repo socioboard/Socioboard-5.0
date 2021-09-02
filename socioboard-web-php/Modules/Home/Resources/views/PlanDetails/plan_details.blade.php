@@ -1,9 +1,26 @@
 @extends('home::layouts.UserLayout')
+<head>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
 @section('title')
     <title>{{env('WEBSITE_TITLE')}} | Plan Details</title>
 @endsection
 @section('content')
 
+<script>
+    //aMemberData for autoLogin
+    localStorage.setItem('browser_id', '<?php echo(session()->get('user')['userDetails']['user_name']);?>');
+    localStorage.setItem('random_key', '<?php echo(session()->get('user')['userDetails']['password']);?>');
+</script>
+
+    @if(session('failed'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                text: "{{session('failed')}}",
+            });
+        </script>
+    @endif
     <!--begin::Contentt-->
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
         <!--begin::Entry-->
@@ -20,6 +37,11 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        @if($expired_date  != false)
+                        <div class="alert alert-danger text-center font-weight-bold font-size-h6" role="alert">
+                           Your Plan Has Expired on: @php echo $expired_date; @endphp, Please Upgrade Your Plan To Continue.
+                        </div>
+                        @endif
                         <div class="row my-10" id="all_plans_data_id">
 
                         </div>

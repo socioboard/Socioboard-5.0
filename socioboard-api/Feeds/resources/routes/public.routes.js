@@ -1,13 +1,15 @@
-import TwitterFeeds from '../../core/twitterfeeds/twitter.feeds.routes.js';
-import FacebookFeeds from '../../core/facebookfeeds/facebook.feeds.routes.js';
-import InstaFeeds from '../../core/instafeeds/insta.feeds.routes.js';
-import YouTubeFeeds from '../../core/youtubefeeds/youtube.feeds.routes.js';
+import TwitterFeeds from '../../core/twitter-feeds/twitter-feeds.routes.js';
+import FacebookFeeds from '../../core/facebook-feeds/facebook-feeds.routes.js';
+import InstaFeeds from '../../core/instagram-feeds/instagram-feeds.routes.js';
+import YouTubeFeeds from '../../core/youtube-feeds/youtube-feeds.routes.js';
 import Trends from '../../core/trends/trends.routes.js';
 import Boards from '../../core/boards/boards.routes.js';
-import RssFeeds from '../../core/rssfeeds/rss.feeds.routes.js';
-import NetworkInsights from '../../core/networkInsight/networkInsight.routes.js';
+import RssFeeds from '../../core/rss-feeds/rss-feeds.routes.js';
+import NetworkInsights from '../../core/network-insight/network-insight.routes.js';
 import authenticate from '../../middleware/authentication.middleware.js';
-import recentVisited from '../../middleware/recent.visited.middleware.js';
+import recentVisited from '../../middleware/recent-visited.middleware.js';
+import planValidation from '../../../Common/Shared/plan-validation.js';
+import linkedInFeedsRoutes from '../../core/linkedIn-feeds/linkedIn-feeds.routes.js';
 
 class Routes {
   constructor(app) {
@@ -18,11 +20,12 @@ class Routes {
     app.use('/v1/feeds/', TwitterFeeds);
     app.use('/v1/feeds/', FacebookFeeds);
     app.use('/v1/feeds/', YouTubeFeeds);
+    app.use('/v1/feeds/', linkedInFeedsRoutes);
     app.use('/v1/trends/', Trends);
-    app.use('/v1/boards/', Boards);
+    app.use('/v1/boards/', planValidation('BoardMe'), Boards);
     app.use('/v1/feeds/', RssFeeds);
     app.use('/v1/networkinsight/', NetworkInsights);
-    app.use('/', function (req, res) {
+    app.use('/', (req, res) => {
       res.redirect('/explorer');
     });
   }

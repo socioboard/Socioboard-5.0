@@ -1,5 +1,6 @@
 import request from 'request';
 import requestPromise from 'request-promise';
+import logger from '../../User/resources/Log/logger.log.js';
 
 function Instagram(instagram) {
   this.instagram = instagram;
@@ -23,9 +24,9 @@ Instagram.prototype.addInstagramProfile = function addInstagram(
       reject("Can't get code from instagram!");
     } else {
       return this.getInstagramAccessToken(code)
-        .then(({user_id: uid, acc_token: token}) => {
-          return this.getInstagramProfileInformation(uid, token);
-        })
+        .then(({user_id: uid, acc_token: token}) =>
+          this.getInstagramProfileInformation(uid, token)
+        )
         .then(userDetails => {
           userDetails.TeamId = teamId;
           userDetails.Network = network;
@@ -56,12 +57,12 @@ Instagram.prototype.getInstagramAccessToken = function (code) {
               headers: {'content-type': 'application/x-www-form-urlencoded'},
               url: `https://graph.instagram.com/access_token?client_secret=${this.instagram.client_secret}&access_token=${token}&grant_type=ig_exchange_token`,
             },
-            function (error, response, body) {
+            (error, response, body) => {
               if (error) {
                 reject(error);
               } else {
-                let parsedResponse = JSON.parse(body);
-                let userDetails = {
+                const parsedResponse = JSON.parse(body);
+                const userDetails = {
                   user_id: uid,
                   acc_token: parsedResponse.access_token,
                 };
@@ -83,18 +84,20 @@ Instagram.prototype.getInstagramAccessToken = function (code) {
  */
 Instagram.prototype.getShortLivedAccessToken = function (code) {
   return new Promise((resolve, reject) => {
-    let requestBody = `code=${code}&redirect_uri=${this.profile_add_redirect_url}&client_id=${this.instagram.client_id}&client_secret=${this.instagram.client_secret}&grant_type=authorization_code`;
+    const requestBody = `code=${code}&redirect_uri=${this.profile_add_redirect_url}&client_id=${this.instagram.client_id}&client_secret=${this.instagram.client_secret}&grant_type=authorization_code`;
+
     request.post(
       {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         url: 'https://api.instagram.com/oauth/access_token',
         body: requestBody,
       },
-      function (error, response, body) {
+      (error, response, body) => {
         if (error) {
           reject(error);
         } else {
-          let parsedResponse = JSON.parse(body);
+          const parsedResponse = JSON.parse(body);
+
           resolve(parsedResponse);
         }
       }
@@ -117,27 +120,33 @@ Instagram.prototype.getInstagramProfileInformation = function (
     request.get(
       {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
-        url: `https://graph.instagram.com/${userId}?access_token=${accToken}&fields=username`,
+        url: `https://graph.instagram.com/me?fields=id,account_type,username,media_count&access_token=${accToken}`,
       },
       (error, response, body) => {
         if (error) {
           reject(error);
         } else {
-          let parsedData = JSON.parse(body);
-          let userDetails = {
+          logger.info(`Instagram response ${JSON.stringify(body)}`);
+          const parsedData = JSON.parse(body);
+          if(parsedData.account_type == "PERSONAL"){
+          const userDetails = {
             UserName: parsedData.username,
             FirstName: parsedData.username,
             LastName: '',
             Email: '',
             SocialId: parsedData.id,
-            ProfilePicture: '',
+            ProfilePicture: 'https://i.imgur.com/TMVAonx.png', // Currently basic gives only 4 options
             ProfileUrl: `https://www.instagram.com/${parsedData.username}`,
             AccessToken: accToken,
             RefreshToken: accToken,
-            FriendCount: '',
+            FriendCount: parsedData?.media_count ?? 0,
             Info: '',
           };
-          resolve(userDetails);
+           resolve(userDetails);
+          }
+          else{
+            reject(new Error('Please add only personal account, If you want to add business please choose another option.'));
+          }
         }
       }
     );
@@ -157,21 +166,22 @@ Instagram.prototype.getInstagramFeeds = function (accessToken, socialId) {
       reject(new Error('Invalid accesstoken!'));
     } else {
       let postDetails = [];
-      let url = `https://graph.instagram.com/${socialId}/media?access_token=${accessToken}&fields=media_type,media_url,caption,timestamp`;
+      const url = `https://graph.instagram.com/${socialId}/media?access_token=${accessToken}&fields=media_type,media_url,caption,timestamp`;
+
       return requestPromise
         .get(url)
         .then(async body => {
-          let parsedBody = JSON.parse(body);
+          const parsedBody = JSON.parse(body);
           const promises = parsedBody.data.map(async post => {
-            let mediaUrl = await this.getmediaUrl(
+            const mediaUrl = await this.getmediaUrl(
               post.id,
               post.media_type,
               post.media_url,
               accessToken
             );
-            let data = {
+            const data = {
               postId: post.id,
-              socialId: socialId,
+              socialId,
               userName: post.username,
               publishedDate: post.timestamp,
               captionId: '',
@@ -185,8 +195,10 @@ Instagram.prototype.getInstagramFeeds = function (accessToken, socialId) {
               locationId: '',
               mediaUrl,
             };
+
             return data;
           });
+
           postDetails = await Promise.all(promises);
         })
         .then(() => {
@@ -214,31 +226,33 @@ Instagram.prototype.getmediaUrl = async function (
   accessToken
 ) {
   return new Promise((resolve, reject) => {
-    let mediaurl = [];
-    if (type == `CAROUSEL_ALBUM`) {
-      let url = `https://graph.instagram.com/${feedId}/children?fields=media_type,media_url&access_token=${accessToken}`;
+    const mediaUrl = [];
+
+    if (type == 'CAROUSEL_ALBUM') {
+      const url = `https://graph.instagram.com/${feedId}/children?fields=media_type,media_url&access_token=${accessToken}`;
+
       return requestPromise
         .get(url)
         .then(body => {
-          let parsedBody = JSON.parse(body);
+          const parsedBody = JSON.parse(body);
+
           parsedBody.data.map(post => {
-            mediaurl.push({
+            mediaUrl.push({
               media_type: post.media_type,
               media_url: post.media_url,
             });
           });
-          resolve(mediaurl);
+          resolve(mediaUrl);
         })
         .catch(error => {
           reject(error);
         });
-    } else {
-      mediaurl.push({
-        media_type: type,
-        media_url: mUrl,
-      });
-      resolve(mediaurl);
     }
+    mediaUrl.push({
+      media_type: type,
+      media_url: mUrl,
+    });
+    resolve(mediaUrl);
   });
 };
 export default Instagram;
