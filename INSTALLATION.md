@@ -28,6 +28,8 @@
 
 ## Set Environment for NODE
 
+## 1. `Open the Terminal in Root Directory (current folder)`
+
 `For windows environment`
 ```code
     set NODE_ENV=development
@@ -36,6 +38,12 @@
 `For linux || mac environment`
 ```code
     export NODE_ENV=development
+```
+
+### For installing packages in all Micro services.
+
+```code
+cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common & npm install & cd ../Update & npm install & cd ../Publish & npm install & cd ../Notification & npm install
 ```
 
 ### All in one command line to setup everything.

@@ -1,6 +1,6 @@
 {
     "name": "laravel/socioboard5.0",
-    "type": "Project",
+    "type": "project",
     "description": "The Laravel Framework for Socioboard5.0",
     "keywords": [
         "Framework",

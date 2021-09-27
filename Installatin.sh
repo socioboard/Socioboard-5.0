@@ -2,8 +2,7 @@
 
 # Un comment the Below lines to install packages in all Micro-services
 
-# cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common 
-# & npm install & cd ../Update & npm install & cd ../Publush & npm install & cd ../Notification & npm install & cd ..
+# cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common  & npm install & cd ../Update & npm install & cd ../Publush & npm install & cd ../Notification & npm install & cd ..
 
 # end of package install command
 

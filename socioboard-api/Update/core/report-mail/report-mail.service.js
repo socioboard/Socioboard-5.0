@@ -15,7 +15,7 @@ import {
   SuccessResponse,
   ValidateErrorResponse,
 } from '../../../Common/Shared/response.shared.js';
-import logger from '../../resources/log/logger.log.js';
+import logger from '../../resources/Log/logger.log.js';
 import EmailTemplate from '../../../Common/Services/email.template.js';
 import db from '../../../Common/Sequelize-cli/models/index.js';
 
