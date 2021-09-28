@@ -9,7 +9,7 @@ import YoutubeMongoPostModel from '../Mongoose/models/youtube-post.js';
 import FacebookMongoPostModel from '../Mongoose/models/facebook-posts.js';
 import RssSearchedUrls from '../Mongoose/models/rss-searched-urls.js';
 import db from '../Sequelize-cli/models/index.js';
-import logger from '../../Feeds/resources/log/logger.log.js';
+import logger from '../../Feeds/resources/Log/logger.log.js';
 
 const accountUpdateTable = db.social_account_feeds_updates;
 const socialAccount = db.social_accounts;

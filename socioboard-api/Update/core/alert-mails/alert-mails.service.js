@@ -7,7 +7,7 @@ import {
   ValidateErrorResponse,
 } from '../../../Common/Shared/response.shared.js';
 import AlertMailModel from '../../../Common/Models/alert-mail.model.js';
-import logger from '../../resources/log/logger.log.js';
+import logger from '../../resources/Log/logger.log.js';
 
 const alertMailModel = new AlertMailModel();
 

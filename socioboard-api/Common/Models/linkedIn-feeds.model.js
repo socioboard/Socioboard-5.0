@@ -3,7 +3,7 @@ import LinkedInConnect from '../Cluster/linkedin.cluster.js';
 import LinkedInPostMongoModels from '../Mongoose/models/linkedIn-post.js';
 import config from 'config';
 import db from '../Sequelize-cli/models/index.js';
-import logger from '../../Feeds/resources/log/logger.log.js';
+import logger from '../../Feeds/resources/Log/logger.log.js';
 const accountUpdateTable = db.social_account_feeds_updates;
 import moment from 'moment';
 
