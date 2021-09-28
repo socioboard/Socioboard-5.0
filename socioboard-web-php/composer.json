@@ -57,7 +57,8 @@
             "app/AuthUsers/main.php",
             "app/ApiConfig/ApiConfig.php",
             "app/ApiConfig/config.php"
-        ]
+        ],
+        "exclude-from-classmap": ["./Modules/Discovery/Http/Requests/searchYoutube.php", "./Modules/User/Database/Seeders/UserDatabaseSeeder.php", "./Modules/User/Providers/RouteServiceProvider.php"]
     },
     "autoload-dev": {
         "psr-4": {
