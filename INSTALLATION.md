@@ -121,7 +121,7 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 
     Make sure you're in Root directory.
 
-    For starting User micro service you need to go to User folder Then run `nodemon user.service.js` and it should start in port 3000(which is configured in `development.json` file)
+    For starting User micro service you need to go to User folder Then run `nodemon user.server.js` and it should start in port 3000(which is configured in `development.json` file)
 
 ```diff
 + We should do this in rest 3 micro services as well.
@@ -135,7 +135,7 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
     Your Terminal should be in Root Directory. then run the below command.
 
 ```code
-set NODE_ENV=development & cd ./socioboard-api/User & pm2 user.service.js & cd ../Feeds & pm2 feeds.service.js & ../Publish & pm2 publish.service.js & cd ../Notification & pm2 notify.service.js & cd ../Update & pm2 update.service.js & pm2 status
+set NODE_ENV=development & cd ./socioboard-api/User & pm2 user.server.js & cd ../Feeds & pm2 feeds.server.js & ../Publish & pm2 publish.server.js & cd ../Notification & pm2 notify.server.js & cd ../Update & pm2 update.server.js & pm2 status
 ```
 
     It will Give you all your services status in a table.
