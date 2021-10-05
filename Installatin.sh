@@ -38,7 +38,7 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 
 # To start services with pm2
 
-npm i pm2 -g & set NODE_ENV=development & cd ./socioboard-api/User & pm2 user.service.js & cd ../Feeds & pm2 feeds.service.js & ../Publish & pm2 publish.service.js & cd ../Notification & pm2 notify.service.js & cd ../Update & pm2 update.service.js & pm2 status
+npm i pm2 -g & set NODE_ENV=development & cd ./socioboard-api/User & pm2 user.server.js & cd ../Feeds & pm2 feeds.server.js & ../Publish & pm2 publish.server.js & cd ../Notification & pm2 notify.server.js & cd ../Update & pm2 update.server.js & pm2 status
 
 # ! NOTE: For linux user use export NODE_ENV=developement inplace of set NODE_ENV=development
 
