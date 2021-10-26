@@ -22,6 +22,11 @@ class ApiConfig
         return env('API_URL_NOTIFICATION');
     }
 
+    private function ANALYTICS_API_URL()
+    {
+        return env('API_URL_ANALYTICS');
+    }
+
     private function API_VERSION()
     {
         return env('API_VERSION');
@@ -42,6 +47,11 @@ class ApiConfig
         return $address != null ? $this->NOTIFICATION_API_URL().$this->API_VERSION() . $address : $this->API_URL().$this->API_VERSION();
     }
 
+    public function getAnalytics($address): string
+    {
+        return $address !== null ? $this->ANALYTICS_API_URL(). $address : $this->API_URL().$this->API_VERSION();
+    }
+
     public static function get($address = null)
     {
         $apiConfig =  new ApiConfig();
@@ -58,6 +68,12 @@ class ApiConfig
     {
         $apiConfig =  new ApiConfig();
         return $apiConfig->apiNotification($address);
+    }
+
+    public static function apiAnalytics($address = null): string
+    {
+        $apiConfig =  new self();
+        return $apiConfig->getAnalytics($address);
     }
 
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Discovery\Http\Controllers\DiscoveryController;
+use Modules\Discovery\Http\Controllers\CompetitorController;
 
 Route::group(['module' => 'discovery',  'prefix' => 'discovery', 'middleware' => ['authenticateUser', 'checkPlanExpiry'], 'namespace' => 'App\Modules\Discovery\Controllers'], function () {
     Route::middleware('checkPlanAccesses:discovery')->group(function() {
@@ -19,4 +20,12 @@ Route::group(['module' => 'discovery',  'prefix' => 'discovery', 'middleware' =>
         Route::get('/rss-feeds', [DiscoveryController::class, 'showRssFeeds'])->name('rss-feeds');
         Route::post('/search-rss-feeds', [DiscoveryController::class, 'searchRssFeeds'])->name('search-rss-feeds');
     });
+
+//    Competitor Analysis Routes @Suresh Babu G
+    Route::get('/analytics', [CompetitorController::class, 'index'])->name('analytics');
+    Route::post('/add-competitor', [CompetitorController::class, 'addCompetitor']);
+    Route::delete('/delete-competitor', [CompetitorController::class, 'deleteCompetitor']);
+    Route::post('/get-competitors', [CompetitorController::class, 'getCompetitors']);
+    Route::post('/get-analysis', [CompetitorController::class, 'getAnalytics']);
+    Route::post('/get-platforms', [CompetitorController::class, 'getPlatforms']);
 });

@@ -140,9 +140,11 @@
                                     <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>
                                     <div class="tab-content mt-5" id="AddAccountsTabContent">
                                         @foreach($socialAccounts as $key => $socialAccountsGroups)
+
                                             <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
                                                 <div class="mt-3">
                                                     @foreach($socialAccountsGroups as $group => $socialAccountArray)
+                                                        @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                         <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                         @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -187,6 +189,7 @@
                                                                 <!--end::Page-->
                                                             </div>
                                                         @endforeach
+                                                        @endif
                                                     @endforeach
                                                 </div>
                                             </div>
