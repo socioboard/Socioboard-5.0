@@ -270,10 +270,8 @@ class DiscoveryController extends Controller
                                         $socialAccounts['twitter']['account'][] = $account;
                                         break;
                                     case 6:
-                                        $socialAccounts['linkedin']['personal account'][] = $account;
-                                        break;
                                     case 7:
-                                        $socialAccounts['linkedin']['business account'][] = $account;
+                                        $socialAccounts['linkedin']['account'][] = $account;
                                         break;
                                 }
                             }

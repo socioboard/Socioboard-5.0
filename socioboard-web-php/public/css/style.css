@@ -63584,7 +63584,8 @@ body {
         background-size: 700px; }
     .login.login-2 .login-form {
         width: 100%;
-        max-width: 400px; } }
+        max-width: 400px; }
+}
 
 @media (max-width: 575.98px) {
     .login.login-2 .content .content-img {
@@ -63593,5 +63594,193 @@ body {
     .login.login-2 .login-form {
         width: 100%;
         max-width: 100%; }
+}
+/* end */
+
+/* chat */
+input#myFile {
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+}
+#Sb_chat_modal {
+    min-height: 450px;
+}
+#chat-not-member {
+    display: none;
+}
+#chat-create-group {
+    display: none;
+    height: 500px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#chat-select-group {
+    display: none;
+    height: 200px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#chat-select-group .select2-dropdown{
+    margin-top:20px;
+}
+#chat-select-contact {
+    display: none;
+    height: 500px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#chat-select-contact ul li {
+    cursor: default;
+}
+#chat-select-contact .select2-results {
+    position: relative;
+    z-index: 10;
+}
+#chat-select-contact .temp_plug {
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+#title_group {
+    font-size: 17px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    position: absolute;
+    left: 50%;
+    top: 64px;
+    transform: translate(-50%, 0%);
+    font-style: italic;
+}
+#Sb_chat_modal .card-header {
+    padding-bottom: 2rem !important;
+    padding-top: 2rem !important;
+}
+#chat-select-contact ul li:hover {
+    background-color: transparent !important;
+}
+#chat-select-contact ul li.select2-results__option--highlighted {
+    background-color: transparent !important;
+}
+#chat-select-contact .wrap_contact_list {
+    visibility: hidden;
+    height: 0;
+}
+#create-chat-group-name {
+  background-color: transparent;
+    border: none;
+    border-bottom: 1px solid grey;
+}
+#chat-create-group > button {
+    display: block;
+}
+#chat-add-members > div {
+    padding: 15px 10px;
+    text-transform: capitalize;
+    border-top: 1px solid grey;
+}
+#chat-add-members > div:hover {
+    color: #3699FF;
+}
+#chat-footer > label {
+    width: 100%;
+}
+#found-name {
+    margin: 15px 10px;
+    border: 0 solid transparent;
+    background: transparent;
+}
+#groups-select {
+    width: 100%;
+}
+#members-select {
+    width: 100%;
+}
+.modal-content .card.card-custom {
+    min-height: 450px;
+}
+.select2-container--default .select2-results > .select2-results__options {
+    max-height: 315px;
+}
+.select2-container--default .select2-results > .select2-results__options::-webkit-scrollbar-track {
+    border-radius: 0.42rem;
+}
+.select2-container--default .select2-results > .select2-results__options::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    border-radius: 0.42rem ;
+}
+.select2-container--default .select2-results > .select2-results__options::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 0.42rem;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    max-height: 75px;
+    overflow-y: auto;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar-track {
+    border-radius: 0.42rem;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar-thumb {
+    background-color: #E4E6EF;
+    border-radius: 0.42rem ;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered::-webkit-scrollbar {
+    width: 4px;
+    border-radius: 0.42rem;
+}
+.select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #E1F0FF ;
+}
+#chat-messages {
+    overflow-y: scroll;
+    height: 350px;
+}
+#chat-body__messages {
+    width: 100%;
+}
+.select2-dropdown {
+    /*width: 450px;*/
+    z-index: 22;
+}
+.no-author {
+    margin-top: -15px;
+}
+#myFile {
+  opacity: 0;
+    position: absolute;
+}
+#myFile + label {
+  margin: 0;
+}
+.flex_file {
+    display: flex;
+    flex-direction: row;
+    cursor:pointer;
+}
+.flex_file input {
+    visibility: hidden;
+    width: 0;
+}
+.flex_file label:not(:first-child) {
+    margin-left: 10px;
+}
+.img_body img{
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: contain;
+    min-width: 150px;
+    min-height: 150px;
+}
+.selectValueFile {
+    max-width: 250px;
+    overflow: hidden;
+    margin-left: 10px;
+}
+#chat-footer .fa-video:before {
+    font-size: 22px;
 }
 /* end */

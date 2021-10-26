@@ -271,6 +271,7 @@
                                                         <div class="mt-3">
                                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                                 <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
+                                                                    @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                                 <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                                 @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -314,6 +315,7 @@
                                                                         <!--end::Page-->
                                                                 @endforeach
                                                                 </div>
+                                                                @endif
                                                             @endforeach
                                                         </div>
                                                     </div>
