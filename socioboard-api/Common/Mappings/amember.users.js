@@ -67,7 +67,7 @@ class aMember {
               });
           })
           .catch(error => {
-            logger.error(`Error amember getUserPlanDetail:${error?.message}`);
+            logger.error(`Error amember getUserPlanDetail: ${error?.message}`);
             resolve(true);
           });
       }

@@ -234,10 +234,10 @@ class unauthorizedController {
       // Call aMember to set new details of plan and expiry date
       // userId, userName & password
 
-      // await new aMember(config.get('aMember')).getUserPlanDetail(
-      //   userDetails?.user_id,
-      //   userDetails?.user_name,
-      // );
+      await new aMember(config.get('aMember')).getUserPlanDetail(
+        userDetails?.user_id,
+        userDetails?.user_name
+      );
       const remindingDays = moment(
         userDetails.Activations.account_expire_date
       ).diff(moment(), 'days');
