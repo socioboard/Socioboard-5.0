@@ -5,15 +5,15 @@ class userValidator {
   validateUser(user) {
     const JoiSchema = Joi.object({
       username: Joi.string().required(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
-    return JoiSchema.validate(user);
+    return JoiSchema.validateAsync(user);
   }
 
   validateNetwork(network) {
     const JoiSchema = Joi.object({
       network: Joi.string().required(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(network);
   }
@@ -23,7 +23,7 @@ class userValidator {
       password: Joi.string().required(),
       email: Joi.string().email(),
       username: Joi.string(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(creds);
   }
@@ -31,7 +31,7 @@ class userValidator {
   validateDirectLogin(creds) {
     const JoiSchema = Joi.object({
       email: Joi.string().email().required(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(creds);
   }
@@ -39,7 +39,7 @@ class userValidator {
   validateEmail(email) {
     const JoiSchema = Joi.object({
       email: Joi.string().email().required(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(email);
   }
@@ -62,25 +62,38 @@ class userValidator {
       src: Joi.string().default('').allow(null),
       aboutMe: Joi.string(),
       timeZone: Joi.string().allow(),
-    }).options({ abortEarly: false });
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(data);
   }
 
   validateVerifyEmail(data) {
     const JoiSchema = Joi.object({
-      email: Joi.string().email().required(),
-      activationToken: Joi.string().required(),
-    }).options({ abortEarly: false });
+      email: Joi.string().email().required().messages({
+        'any.required': 'Email required',
+        'string.email': 'Email should be valid email address',
+      }),
+      activationToken: Joi.string().required().messages({
+        'any.required': 'Activation token is required',
+      }),
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(data);
   }
 
   validateResetPassword(data) {
     const JoiSchema = Joi.object({
-      email: Joi.string().email().required(),
-      newPassword: Joi.string().required(),
-    }).options({ abortEarly: false });
+      email: Joi.string().email().required().messages({
+        'any.required': 'Email required',
+        'string.email': 'Email should be valid email address',
+      }),
+      newPassword: Joi.string().required().messages({
+        'any.required': 'New password is required',
+      }),
+      activationToken: Joi.string().required().messages({
+        'any.required': 'Activation token is required',
+      }),
+    }).options({abortEarly: false});
 
     return JoiSchema.validate(data);
   }

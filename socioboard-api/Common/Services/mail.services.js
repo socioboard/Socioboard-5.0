@@ -133,13 +133,13 @@ class MailBase {
           port: 465,
           secure: true,
           auth: {
-            user: this.mailServiceConfig.gmailServices.email,
-            pass: this.mailServiceConfig.gmailServices.password,
+            user: this.mailServiceConfig.gmail.email,
+            pass: this.mailServiceConfig.gmail.password,
           },
         });
 
         const email = {
-          from: this.mailServiceConfig.gmailServices.email,
+          from: this.mailServiceConfig.gmail.email,
           to: data.toMail,
           subject: data.subject,
           html: data.htmlContent,
@@ -149,6 +149,7 @@ class MailBase {
           .sendMail(email)
           .then(info => resolve(info))
           .catch(error => reject(error));
+  
       }
     });
   }

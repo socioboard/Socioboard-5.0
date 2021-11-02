@@ -34,7 +34,7 @@ const logDir = `${__dirname}/resources/Log/ResponseLog`;
 const app = express();
 const server = Server.Server(app);
 
-io.Server;
+const socketService = io.Server;
 
 // Timezone setting
 // moment.tz.setDefault(process.env.TIMEZONE);

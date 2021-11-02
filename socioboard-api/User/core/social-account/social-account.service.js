@@ -1,5 +1,6 @@
 import config from 'config';
 import {resolve} from 'path';
+import uuid from 'uuidv1';
 import Validator from './social-account.validate.js';
 import {
   ValidateErrorResponse,
@@ -11,7 +12,6 @@ import {
 } from '../../../Common/Shared/response.shared.js';
 import TeamLibs from '../../../Common/Models/team.model.js';
 import ProfileLibs from '../../../Common/Models/profile.model.js';
-
 import TwtConnect from '../../../Common/Cluster/twitter.cluster.js';
 import LinkedInConnect from '../../../Common/Cluster/linkedin.cluster.js';
 import GoogleConnect from '../../../Common/Cluster/google.cluster.js';
@@ -23,9 +23,22 @@ import logger from '../../resources/Log/logger.log.js';
 import schedule from 'node-schedule';
 import AuthorizeServices from '../../../Common/Services/authorize.services.js';
 import UserTeamAccount from '../../../Common/Shared/user-team-accounts.shared.js';
-
+import SendEmailServices from '../../../Common/Services/mail-base.services.js';
+import InvitationModel from '../../../Common/Models/invitation.model.js';
+import DailyMotion from '../../../Common/Cluster/dailymotion.cluster.js';
+import RedditCluster from '../../../Common/Cluster/reddit.cluster.js';
+import BitlyCluster from '../../../Common/Cluster/bitly.cluster.js';
+import MediumCluster from '../../../Common/Cluster/medium.cluster.js';
+import TinyLinkCluster from '../../../Common/Cluster/tinylink.cluster.js';
+import BITLY_CONSTANTS from '../../../Common/Constants/bitly.constants.js';
+import REDDIT_CONSTANTS from '../../../Common/Constants/reddit.constants.js';
+import TumblerCluster from '../../../Common/Cluster/tumblr.cluster.js';
+import PinterestCluster from '../../../Common/Cluster/pinterest.newcluster.js';
+import PocketCluster from '../../../Common/Cluster/pocket.cluster.js';
 const teamLibs = new TeamLibs();
 const profileLibs = new ProfileLibs();
+const invitemodel = new InvitationModel();
+const pinConnect = new PinterestCluster();
 
 class SocialAccountService {
   constructor() {
@@ -38,6 +51,8 @@ class SocialAccountService {
     this.fbConnect = new FacebookConnect(config.get('facebook_api'));
     this.instagramConnect = new InstaConnect(config.get('instagram_api'));
     this.refreshTokenLinkedIn();
+    this.sendEmailServices = new SendEmailServices(config.get('mailService'));
+    this.pocketCluster = new PocketCluster(config.get('pocket_api'));
   }
 
   /**
@@ -69,10 +84,11 @@ class SocialAccountService {
 
       let redirectUrl = '';
       const resultJson = '';
-      const {userScopeAvailableNetworks} = req.body;
+      const {userScopeAvailableNetworks, userScopeLinkShortening} = req.body;
       const state = {
         teamId,
         network,
+        invite: 0,
         accessToken: req.headers['x-access-token'],
       };
       const encryptedState = this.authorizeServices.encrypt(
@@ -176,9 +192,11 @@ class SocialAccountService {
           );
           break;
         case 'LinkedIn':
-          // Validating that the user is having permisiion for this network or not by user plan
           if (userScopeAvailableNetworks.includes('6')) {
-            redirectUrl = this.linkedInConnect.getOAuthUrl(encryptedState);
+            redirectUrl = this.linkedInConnect.getOAuthUrl(
+              encryptedState,
+              config.get('linkedIn_api.redirect_url')
+            );
             SuccessNavigationResponse(res, redirectUrl, encryptedState);
           } else {
             ErrorResponse(
@@ -191,7 +209,9 @@ class SocialAccountService {
         case 'LinkedInCompany':
           // Validating that the user is having permisiion for this network or not by user plan
           if (userScopeAvailableNetworks.includes('6')) {
-            redirectUrl = this.linkedInConnect.getV1OAuthUrl(encryptedState);
+            redirectUrl = this.linkedInConnect.getOAuthLinkedPageUrl(
+              config.get('linkedIn_api.redirect_url_page')
+            );
             SuccessNavigationResponse(res, redirectUrl, encryptedState);
           } else {
             ErrorResponse(
@@ -247,13 +267,12 @@ class SocialAccountService {
           }
           break;
         case 'Pinterest':
-          // Validating that the user is having permisiion for this network or not by user plan
           if (userScopeAvailableNetworks.includes('11')) {
-            redirectUrl = `https://api.pinterest.com/oauth/?response_type=code&redirect_uri=${config.get(
-              'pinterest.redirect_url'
-            )}&client_id=${config.get(
+            redirectUrl = `https://www.pinterest.com/oauth/?client_id=${config.get(
               'pinterest.client_id'
-            )}&scope=${config.get('pinterest.scopes')}`;
+            )}&redirect_uri=${config.get(
+              'pinterest.redirect_uri'
+            )}&response_type=code&scope=${config.get('pinterest.scope')}`;
             SuccessNavigationResponse(res, redirectUrl, encryptedState);
           } else {
             ErrorResponse(
@@ -262,11 +281,86 @@ class SocialAccountService {
             );
           }
           break;
+        case 'Bitly':
+          if (userScopeLinkShortening) {
+            redirectUrl =
+              `${BITLY_CONSTANTS.API_URI.AUTHORIZATION}?client_id=${BITLY_CONSTANTS.CLIENT_ID}` +
+              `&redirect_uri=${BITLY_CONSTANTS.REDIRECT_URI}`;
+
+            SuccessNavigationResponse(res, redirectUrl, encryptedState);
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'Reddit':
+          if (
+            userScopeAvailableNetworks.includes(REDDIT_CONSTANTS.ACCOUNT_TYPE)
+          ) {
+            redirectUrl =
+              `${REDDIT_CONSTANTS.API_URI.AUTHORIZATION}?client_id=${REDDIT_CONSTANTS.CLIENT_ID}` +
+              '&response_type=code' +
+              `&state=${uuid()}` +
+              `&redirect_uri=${REDDIT_CONSTANTS.REDIRECT_URI}` +
+              '&duration=permanent' +
+              `&scope=${REDDIT_CONSTANTS.SCOPE.join(',')}`;
+
+            SuccessNavigationResponse(res, redirectUrl, encryptedState);
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'DailyMotion':
+          // Validating that the user is having permisiion for this network or not by user plan
+          // if (userScopeAvailableNetworks.includes('11')) {
+          redirectUrl = `https://www.dailymotion.com/oauth/authorize?response_type=code&client_id=${config.get(
+            'DailyMotion.client_id'
+          )}&redirect_uri=${config.get(
+            'DailyMotion.redirect_url'
+          )}&scope=${config.get('DailyMotion.scope')}`;
+          SuccessNavigationResponse(res, redirectUrl, encryptedState);
+          // } else {
+          //   ErrorResponse(
+          //     res,
+          //     'Sorry, Requested feature not available for your plan.'
+          //   );
+          // }
+          break;
+        case 'Tumblr':
+          let tokens = await TumblerCluster.getTokens(
+            config.get('tumblr_api.OAuth_consumer_Key'),
+            config.get('tumblr_api.OAuth_consumer_secret')
+          );
+          redirectUrl = `https://www.tumblr.com/oauth/authorize?oauth_token=${tokens.auth_token}`;
+          const state = {
+            teamId,
+            network,
+            accessToken: req.headers['x-access-token'],
+            requestToken: tokens.auth_token,
+            requestSecret: tokens.auth_secret,
+          };
+          const tumblerencryptedState = this.authorizeServices.encrypt(
+            JSON.stringify(state)
+          );
+          SuccessNavigationResponse(res, redirectUrl, tumblerencryptedState);
+          break;
+        case 'Pocket':
+          let data = await this.pocketCluster.getCode(config.get('pocket_api'));
+          redirectUrl = `https://getpocket.com/auth/authorize?request_token=${
+            data?.code
+          }&redirect_uri=${config.get('pocket_api.redirect_uri')}`;
+          SuccessNavigationResponse(res, redirectUrl, encryptedState);
+          break;
         default:
           throw new Error(
             `${config.get(
               'applicationName'
-            )} supports anyone of the following. 1.Facebook, 2.FacebookPage, 3.Twitter, 4.LinkedIn, 5.LinkedInCompany, 6.Youtube, 7.GoogleAnalytics, 8.Instagram 9.Pinterest`
+            )} supports anyone of the following. 1.Facebook, 2.FacebookPage, 4.Twitter, 5.Instagram 6.LinkedIn, 7.LinkedInPage, 9.Youtube,  12.InstagramBusiness 15.DailyMotion 16.Tumblr`
           );
       }
     } catch (error) {
@@ -286,8 +380,8 @@ class SocialAccountService {
 
   async addSocialProfile(req, res, next) {
     try {
-      const {state, code, flag} = req.query;
-      const {userScopeAvailableNetworks} = req.body;
+      const {state, code, flag, invite} = req.query;
+      const {userScopeAvailableNetworks, userScopeLinkShortening} = req.body;
       const {value, error} = Validator.validateCode({code});
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const networkId = this.coreServices.networks[req.query.network];
@@ -299,35 +393,49 @@ class SocialAccountService {
       switch (req.query.network) {
         case 'Facebook':
           if (userScopeAvailableNetworks.includes('1')) {
-            return this.fbConnect
-              .addFacebookProfile(
-                networkId,
-                queryInputs.teamId,
-                queryInputs.code,
-                config.get('facebook_api.fbprofile_add_redirect_url')
-              )
-              .then(profile => teamLibs.addProfiles(userId, userName, profile))
-              .then(response => {
-                result = response;
-
-                return this.fbConnect.getFbProfileStats(
-                  result.profileDetails.access_token
-                );
-              })
-              .then(updateDetails =>
-                this.createOrUpdateFriendsList(
-                  result.profileDetails.account_id,
-                  updateDetails
+            let redirecturl = '';
+            if (
+              invite == 1
+                ? (redirecturl = config.get('facebook_api.invite_redirect_url'))
+                : (redirecturl = config.get(
+                    'facebook_api.fbprofile_add_redirect_url'
+                  ))
+            )
+              return this.fbConnect
+                .addFacebookProfile(
+                  networkId,
+                  queryInputs.teamId,
+                  queryInputs.code,
+                  redirecturl
                 )
-              )
-              .then(response => {
-                // result = response;
-                AddSocialAccRes(res, result.teamDetails, result.profileDetails);
-              })
-              .catch(error => {
-                console.error(`error outside${error}`);
-                CatchResponse(res, error.message);
-              });
+                .then(profile =>
+                  teamLibs.addProfiles(userId, userName, profile, invite)
+                )
+                .then(response => {
+                  result = response;
+
+                  return this.fbConnect.getFbProfileStats(
+                    result.profileDetails.access_token
+                  );
+                })
+                .then(updateDetails =>
+                  this.createOrUpdateFriendsList(
+                    result.profileDetails.account_id,
+                    updateDetails
+                  )
+                )
+                .then(response => {
+                  // result = response;
+                  AddSocialAccRes(
+                    res,
+                    result.teamDetails,
+                    result.profileDetails
+                  );
+                })
+                .catch(error => {
+                  console.error(`error outside${error}`);
+                  CatchResponse(res, error.message);
+                });
           }
           ErrorResponse(res, 'Not available.');
 
@@ -406,91 +514,115 @@ class SocialAccountService {
           break;
         case 'LinkedIn':
           if (userScopeAvailableNetworks.includes('6')) {
-            return this.linkedInConnect
-              .addLinkedInProfile(
-                networkId,
-                queryInputs.teamId,
-                queryInputs.code
-              )
-              .then(profile => teamLibs.addProfiles(userId, userName, profile))
-              .then(response => {
-                result = response;
-
-                return this.linkedInConnect.getProfileDetails(
-                  result.profileDetails.access_token
-                );
-              })
-              .then(updateDetails =>
-                this.createOrUpdateFriendsList(
-                  result.profileDetails.account_id,
-                  updateDetails
+            let redirecturl = '';
+            if (
+              invite == 1
+                ? (redirecturl = config.get('linkedIn_api.invite_redirect_url'))
+                : (redirecturl = config.get('linkedIn_api.redirect_url'))
+            )
+              return this.linkedInConnect
+                .addLinkedInProfile(
+                  networkId,
+                  queryInputs.teamId,
+                  queryInputs.code,
+                  redirecturl
                 )
-              )
-              .then(() => {
-                AddSocialAccRes(res, result.teamDetails, result.profileDetails);
-              })
-              .catch(error => {
-                console.error(`error outside${error}`);
-                CatchResponse(res, error.message);
-              });
+                .then(profile =>
+                  teamLibs.addProfiles(userId, userName, profile, invite)
+                )
+                .then(response => {
+                  result = response;
+
+                  return this.linkedInConnect.getProfileDetails(
+                    result.profileDetails.access_token
+                  );
+                })
+                .then(updateDetails =>
+                  this.createOrUpdateFriendsList(
+                    result.profileDetails.account_id,
+                    updateDetails
+                  )
+                )
+                .then(() => {
+                  AddSocialAccRes(
+                    res,
+                    result.teamDetails,
+                    result.profileDetails
+                  );
+                })
+                .catch(error => {
+                  console.error(`error outside${error}`);
+                  CatchResponse(res, error.message);
+                });
           }
-          ErrorResponse(res, 'Not available.');
+          ErrorResponse(
+            res,
+            'Sorry, Requested feature not available for your plan'
+          );
           break;
         case 'Instagram':
           if (userScopeAvailableNetworks.includes('5')) {
-            return this.instagramConnect
-              .addInstagramProfile(
-                networkId,
-                queryInputs.teamId,
-                queryInputs.code
-              )
-              .then(profile => {
-                logger.info(`Profile details : ${JSON.stringify(profile)} `);
+            let redirecturl = '';
+            if (
+              invite == 1
+                ? (redirecturl = config.get(
+                    'instagram_api.invite_redirect_url'
+                  ))
+                : (redirecturl = config.get('instagram_api.redirect_url'))
+            )
+              return this.instagramConnect
+                .addInstagramProfile(
+                  networkId,
+                  queryInputs.teamId,
+                  queryInputs.code,
+                  redirecturl
+                )
+                .then(profile => {
+                  logger.info(`Profile details : ${JSON.stringify(profile)} `);
 
-                return teamLibs.addProfiles(userId, userName, profile);
-              })
-              .then(response => {
-                result = response;
-                AddSocialAccRes(res, result.teamDetails, result.profileDetails);
-              })
-              .catch(error => {
-                console.error(`error outside${error}`);
-                CatchResponse(res, error.message);
-              });
+                  return teamLibs.addProfiles(
+                    userId,
+                    userName,
+                    profile,
+                    invite
+                  );
+                })
+                .then(response => {
+                  result = response;
+                  AddSocialAccRes(
+                    res,
+                    result.teamDetails,
+                    result.profileDetails
+                  );
+                })
+                .catch(error => {
+                  console.error(`error outside${error}`);
+                  CatchResponse(res, error.message);
+                });
           }
-          reject(new Error('Not available.'));
+          ErrorResponse(
+            res,
+            'Sorry, Requested feature not available for your plan'
+          );
           break;
         case 'Pinterest':
           if (userScopeAvailableNetworks.includes('11')) {
-            this.pinterestConnect
-              .addPinterestProfile(
-                networkId,
-                queryInputs.teamId,
-                queryInputs.code
-              )
-              .then(profile => this.addProfiles(userId, userName, profile))
-              .then(response => {
-                result = response;
-
-                return this.pinterestConnect.userDetails(
-                  result.profileDetails.user_name,
-                  result.profileDetails.access_token
-                );
-              })
-              // .then((updateDetails) => {
-              //     return this.createOrUpdateFriendsList(result.profileDetails.account_id, updateDetails);
-              // })
-              .then(() => {
-                resolve({
-                  code: 200,
-                  status: 'success',
-                  teamDetails: result.teamDetails,
-                  profileDetails: result.profileDetails,
-                });
-              })
-              .catch(error => {
-                //    reject(error);
-              });
+            const pinterestProfile = await pinConnect.getPinterestdata(
+              networkId,
+              queryInputs.teamId,
+              queryInputs.code
+            );
+            const pinProfile = await teamLibs.addProfiles(
+              userId,
+              userName,
+              pinterestProfile
+            );
+            AddSocialAccRes(
+              res,
+              pinProfile.teamDetails,
+              pinProfile.profileDetails
+            );
+            break;
           }
           //   reject(new Error("Not available."));
           else break;
@@ -528,20 +660,384 @@ class SocialAccountService {
                 //    reject(error);
               })
           );
-
-          break;
         case 'GoogleAnalytics':
           // resolve({ code: 200, status: "success", responseCode: queryInputs.code });
           break;
-        default:
-          //   reject(new Error('Specified network is invalid.'));
+        case 'Bitly':
+          if (userScopeLinkShortening) {
+            const bitlyProfile = await BitlyCluster.addBitlyProfile(
+              networkId,
+              queryInputs.teamId,
+              code
+            );
+
+            const addedProfile = await teamLibs.addProfiles(
+              userId,
+              userName,
+              bitlyProfile
+            );
+
+            AddSocialAccRes(
+              res,
+              addedProfile.teamDetails,
+              addedProfile.profileDetails
+            );
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
           break;
+        case 'Reddit':
+          const redditProfile = await RedditCluster.addRedditProfile(
+            networkId,
+            queryInputs.teamId,
+            code
+          );
+
+          const createdProfile = await teamLibs.addProfiles(
+            userId,
+            userName,
+            redditProfile
+          );
+
+          AddSocialAccRes(
+            res,
+            createdProfile.teamDetails,
+            createdProfile.profileDetails
+          );
+          break;
+        case 'Pocket':
+          const pocketProfile = await this.pocketCluster.getPocketProfile(
+            networkId,
+            queryInputs.teamId,
+            code
+          );
+          const addedPocketProfile = await teamLibs.addProfiles(
+            userId,
+            userName,
+            pocketProfile
+          );
+
+          AddSocialAccRes(
+            res,
+            addedPocketProfile.teamDetails,
+            addedPocketProfile.profileDetails
+          );
+          break;
+        case 'DailyMotion':
+          try {
+            let updatedProfileDetails = await DailyMotion.addDailyMotionProfile(
+              networkId,
+              queryInputs.teamId,
+              queryInputs.code
+            );
+            let result = await teamLibs.addProfiles(
+              userId,
+              userName,
+              updatedProfileDetails.user
+            );
+            this.createOrUpdateFriendsList(
+              result.profileDetails.account_id,
+              updatedProfileDetails.profileStats
+            );
+            AddSocialAccRes(res, result.teamDetails, result.profileDetails);
+          } catch (error) {
+            CatchResponse(res, error.message);
+          }
+          break;
+        default:
+          throw new Error('Specified network is invalid.');
       }
     } catch (error) {
       return CatchResponse(res, error.message);
     }
   }
 
+  /**
+   * TODO Invite social Account Member
+   * @name post/invite-social-account-member
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} send Mail to Member
+   */
+  async inviteSocialAccountMember(req, res, next) {
+    const invite = req.body;
+    return new Promise((resolve, reject) => {
+      Promise.all(
+        invite.map(async ({userName, accName, email, network, teamId}) => {
+          const {value, error} = Validator.validateInvitation({
+            userName,
+            accName,
+            email,
+            network,
+            teamId,
+          });
+          if (error)
+            return ValidateErrorResponse(res, error.details[0].message);
+          const teamDetails = await teamLibs.isValidTeam(
+            req.body.userScopeId,
+            teamId
+          );
+
+          if (!teamDetails)
+            return ErrorResponse(
+              res,
+              "Team not found or You don't have access to add the profile to team"
+            );
+
+          let profileData = await this.getProfileRedirectUrlForInvite(
+            req,
+            teamId,
+            network
+          );
+
+          if (network == 'Twitter') {
+            try {
+              let storeprofileData = await invitemodel.addsocialdata(
+                profileData.data,
+                teamId,
+                userName,
+                accName,
+                req.body.userScopeId
+              );
+              logger.info(
+                `storeprofileData for network ${network} : ${storeprofileData}`
+              );
+            } catch (error) {
+              return ErrorResponse(
+                res,
+                `Error while storing the Invitataion data ${error.message}`
+              );
+            }
+          }
+          let invitationLink = `${config.get(
+            'invite_redirect_url_web'
+          )}userName=${userName}&network=${network}&redirectUrl=${
+            profileData.data.redirectUrl
+          }&state=${profileData.data.state}&teamId=${teamId}`;
+          let tinyinvitaionLink = await TinyLinkCluster.getTinyLink(
+            config.get('tiny_link.api_key'),
+            invitationLink
+          );
+          let htmlContent = this.sendEmailServices.template.newInvitationLink
+            .replace('[userName]', `${userName}`)
+            .replace('[invitationLink]', tinyinvitaionLink)
+            .replace('[accName]', accName)
+            .replace('[network]', network)
+            .replace('[sbuser]', req.body.userScopeName)
+            .replace('[network]', network)
+            .replace('[network]', network);
+          const emailDetails = {
+            subject: config.get('mailTitles.Invitation_user'),
+            toMail: email,
+            htmlContent: htmlContent,
+          };
+          try {
+            this.sendEmailServices
+              .sendMails(
+                config.get('mailService.defaultMailOption'),
+                emailDetails
+              )
+              .then(result => {
+                logger.info(
+                  `Invitation  mail status: ${JSON.stringify(result)}`
+                );
+              })
+              .catch(error => {
+                logger.error(
+                  `Invitation mail status: ${JSON.stringify(error)}`
+                );
+              });
+          } catch (error) {
+            return ErrorResponse(res, error.message);
+          }
+        })
+      )
+        .then(() => {
+          SuccessResponse(res, 'Mail sent successfully');
+        })
+        .catch(error => {
+          logger.error(`Error in sending mail`, error);
+        });
+    });
+  }
+
+  /**
+   * TODO get Profile RedirectUrl For Invite
+   * @param {Object} Req - Request Object
+   * @param {number} teamId - Team Id
+   * @param {string} network - Network name
+   * @return {object} Returns Network Redirect Url  details
+   */
+  async getProfileRedirectUrlForInvite(req, teamId, network) {
+    return new Promise((resolve, reject) => {
+      let redirect_Url = '';
+      const {userScopeAvailableNetworks} = req.body;
+      const state = {
+        teamId,
+        network,
+        invite: 1,
+        accessToken: req.headers['x-access-token'],
+      };
+      const encryptedStatedata = this.authorizeServices.encrypt(
+        JSON.stringify(state)
+      );
+
+      switch (network) {
+        case 'Twitter':
+          return this.twtConnect
+            .requestTokenInvite()
+            .then(response => {
+              let state = {
+                teamId: teamId,
+                network: network,
+                requestToken: response.requestToken,
+                requestSecret: response.requestSecret,
+              };
+              let encryptedState = this.authorizeServices.encrypt(
+                JSON.stringify(state)
+              );
+              resolve({
+                data: {
+                  message: response,
+                  redirectUrl: `https://api.twitter.com/oauth/authenticate?oauth_token=${response.requestToken}`,
+                  state: encryptedState,
+                },
+              });
+            })
+            .catch(error => {
+              logger.info('Error: Getting ---', error);
+            });
+        case 'Facebook':
+          if (userScopeAvailableNetworks.includes('1')) {
+            redirect_Url = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code
+              &redirect_uri=${encodeURIComponent(
+                config.get('facebook_api.invite_redirect_url')
+              )}
+              &client_id=${config.get('facebook_api.app_id')}
+              &scope=${config.get('facebook_api.profile_scopes')}`;
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'FacebookPage':
+          if (userScopeAvailableNetworks.includes('1')) {
+            redirect_Url = `https://www.facebook.com/v3.3/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(
+              config.get('profile_page_invite_redirect_url')
+            )}&client_id=${config.get(
+              'facebook_api.app_id'
+            )}&scope=${config.get('facebook_api.page_scopes')}`;
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'Instagram':
+          if (userScopeAvailableNetworks.includes('5')) {
+            redirect_Url = `https://api.instagram.com/oauth/authorize?client_id=${config.get(
+              'instagram_api.client_id'
+            )}
+                  &redirect_uri=${encodeURIComponent(
+                    config.get('instagram_api.invite_redirect_url')
+                  )}
+                  &scope=user_profile,user_media&response_type=code`;
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'InstagramBusiness':
+          if (userScopeAvailableNetworks.includes('12')) {
+            redirect_Url = `https://www.facebook.com/dialog/oauth?response_type=code&redirect_uri=${encodeURIComponent(
+              config.get('instagram_business_api.business_invite_redirect_url')
+            )}&client_id=${config.get(
+              'instagram_business_api.client_id'
+            )}&scope=${config.get(
+              'instagram_business_api.business_account_scopes'
+            )}`;
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'LinkedIn':
+          if (userScopeAvailableNetworks.includes('6')) {
+            redirect_Url = this.linkedInConnect.getOAuthUrl(
+              encryptedStatedata,
+              config.get('linkedIn_api.invite_redirect_url')
+            );
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+        case 'LinkedInPage':
+          if (userScopeAvailableNetworks.includes('6')) {
+            redirect_Url = this.linkedInConnect.getOAuthLinkedPageUrl(
+              config.get('linkedIn_api.invite_redirect_url_page')
+            );
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+
+          break;
+        case 'Youtube':
+          if (userScopeAvailableNetworks.includes('9')) {
+            redirect_Url =
+              this.googleConnect.getGoogleAuthUrl('youtube-Invite');
+            resolve({
+              data: {redirectUrl: redirect_Url, state: encryptedStatedata},
+            });
+          } else {
+            ErrorResponse(
+              res,
+              'Sorry, Requested feature not available for your plan.'
+            );
+          }
+          break;
+
+        default:
+          throw new Error(
+            `Currently Invitation doesnt support for given ${network} Network`
+          );
+      }
+    });
+  }
   async getYoutubeChannels(req, res, next) {
     try {
       const {code} = req.query;
@@ -549,7 +1045,7 @@ class SocialAccountService {
       if (error) return ValidateErrorResponse(res, error.details[0].message);
 
       return profileLibs
-        .getYoutubeChannels(req.query.code)
+        .getYoutubeChannels(req.query.code, req.query.invite)
         .then(response => {
           res.status(200).json({
             code: 200,
@@ -569,57 +1065,45 @@ class SocialAccountService {
   }
 
   async getFacebookPages(req, res, next) {
-    try {
-      return profileLibs
-        .getFacebookPages(req.query.code)
-        .then(response => {
-          res.status(200).json({
-            code: 200,
-            status: 'success',
-            pages: response.pages,
-            availablePages: response.availablePages,
-          });
-        })
-        .catch(error => CatchResponse(res, error.message));
-    } catch (error) {
-      return CatchResponse(res, error.message);
-    }
+    return profileLibs
+      .getFacebookPages(req.query.code, req.query.invite)
+      .then(response => {
+        res.status(200).json({
+          code: 200,
+          status: 'success',
+          pages: response.pages,
+          availablePages: response.availablePages,
+        });
+      })
+      .catch(error => CatchResponse(res, error.message));
   }
 
   async getOwnFacebookGroups(req, res, next) {
-    try {
-      return profileLibs
-        .getOwnFacebookGroups(req.query.code)
-        .then(response => {
-          res.status(200).json({
-            code: 200,
-            status: 'success',
-            groups: response.groups,
-            availableGroups: response.availableGroups,
-          });
-        })
-        .catch(error => CatchResponse(res, error.message));
-    } catch (error) {
-      return CatchResponse(res, error.message);
-    }
+    return profileLibs
+      .getOwnFacebookGroups(req.query.code)
+      .then(response => {
+        res.status(200).json({
+          code: 200,
+          status: 'success',
+          groups: response.groups,
+          availableGroups: response.availableGroups,
+        });
+      })
+      .catch(error => CatchResponse(res, error.message));
   }
 
   async getLinkedInCompanyProfileDetails(req, res, next) {
-    try {
-      return profileLibs
-        .getcompanyProfileDetails(req.query.code)
-        .then(response => {
-          res.status(200).json({
-            code: 200,
-            status: 'success',
-            company: response.company,
-            availablePages: response.availablePages,
-          });
-        })
-        .catch(error => CatchResponse(res, error.message));
-    } catch (error) {
-      return CatchResponse(res, error.message);
-    }
+    return profileLibs
+      .getcompanyProfileDetails(req.query.code, req.query.invite)
+      .then(response => {
+        res.status(200).json({
+          code: 200,
+          status: 'success',
+          company: response.company,
+          availablePages: response.availablePages,
+        });
+      })
+      .catch(error => CatchResponse(res, error.message));
   }
 
   /**
@@ -633,7 +1117,7 @@ class SocialAccountService {
   async getInstagramBusinessProfile(req, res, next) {
     try {
       return profileLibs
-        .getInstaBusinessAccount(req.query.code)
+        .getInstaBusinessAccount(req.query.code, req.query.invite)
         .then(response => {
           res.status(200).json({
             code: 200,
@@ -657,28 +1141,24 @@ class SocialAccountService {
    * @return {object} Returns bulk Social Profile  details
    */
   async addBulkSocialProfiles(req, res, next) {
-    try {
-      return teamLibs
-        .addBulkSocialProfiles(
-          req.body.userScopeId,
-          req.query.teamId,
-          req.body,
-          req.body.userScopeMaxAccountCount,
-          req.body.userScopeAvailableNetworks
-        )
-        .then(response => {
-          res.status(200).json({
-            code: 200,
-            status: 'success',
-            teamDetails: response.teamDetails,
-            profileDetails: response.profileDetails,
-            errorProfileId: response.errorProfileId,
-          });
-        })
-        .catch(error => CatchResponse(res, error.message));
-    } catch (error) {
-      return CatchResponse(res, error.message);
-    }
+    return teamLibs
+      .addBulkSocialProfiles(
+        req.body.userScopeId,
+        req.query.teamId,
+        req.body,
+        req.body.userScopeMaxAccountCount,
+        req.body.userScopeAvailableNetworks
+      )
+      .then(response => {
+        res.status(200).json({
+          code: 200,
+          status: 'success',
+          teamDetails: response.teamDetails,
+          profileDetails: response.profileDetails,
+          errorProfileId: response.errorProfileId,
+        });
+      })
+      .catch(error => CatchResponse(res, error.message));
   }
 
   async deleteSocialProfile(req, res, next) {
@@ -699,6 +1179,15 @@ class SocialAccountService {
     }
   }
 
+  async addMediumProfile(accessToken, {teamId, userId, userName}) {
+    const mediumProfile = await MediumCluster.addMediumProfile(
+      accessToken,
+      teamId
+    );
+
+    return teamLibs.addProfiles(userId, userName, mediumProfile);
+  }
+
   /*
    * TODO To update access token from refresh token
    * Function To get access token from refresh token
@@ -709,5 +1198,57 @@ class SocialAccountService {
       teamLibs.refreshTokenLinkedIn();
     });
   }
+
+  /** TODO Add Tumblr Blogs
+   * Route add Tumblr Blogs
+   * @name post/get-own-tumbler-blog
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns Tumblr account Blogs
+   */
+  async getTumblerBlog(req, res, next) {
+    try {
+      const queryInputs = req.query;
+      return TumblerCluster.addTumblrProfile(
+        config.get('tumblr_api.OAuth_consumer_Key'),
+        config.get('tumblr_api.OAuth_consumer_secret'),
+        queryInputs.requestToken,
+        queryInputs.requestSecret,
+        queryInputs.code
+      )
+        .then(response => {
+          res.status(200).json({
+            code: 200,
+            status: 'success',
+            blogs: response?.blogs,
+            availableBlogs: response?.availableBlogs,
+          });
+        })
+        .catch(error => CatchResponse(res, error.message));
+    } catch (error) {
+      return CatchResponse(res, error.message);
+    }
+  }
+
+  /**
+   *TODO To get Board details
+   *@param {import('express').Request} req
+   *@param {import('express').Response} res
+   *@param {import('express').NextFunction} next
+   *@return {object} Returns Deleted Account status
+   */
+  async getPinterestBoards(req, res, next) {
+    try {
+      const {AccId} = req.query;
+      const {value, error} = Validator.validateDeleteAccId({AccId});
+      if (error) return ValidateErrorResponse(res, error.details[0].message);
+      const response = await teamLibs.getPinterestBoards(AccId);
+      SuccessResponse(res, response);
+    } catch (error) {
+      return CatchResponse(res, error.message);
+    }
+  }
 }
+
 export default new SocialAccountService();

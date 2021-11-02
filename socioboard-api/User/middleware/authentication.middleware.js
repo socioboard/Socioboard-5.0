@@ -32,6 +32,7 @@ export default (req, res, next) => {
       req.body.userScopeMaxMemberCount = parsedToken.userPlanDetails.member_count;
       req.body.userScopeAvailableNetworks = parsedToken.userPlanDetails.available_network;
       req.body.userScopeMaxScheduleCount = parsedToken.userPlanDetails.maximum_schedule;
+      req.body.userScopeLinkShortening = parsedToken.userPlanDetails.link_shortening;
       req.body.userScopeIsAdmin = parsedToken.is_admin_user;
 
       if (remindingDays < 0) {
@@ -88,6 +89,7 @@ export default (req, res, next) => {
     decryptedMessage = JSON.parse(decryptedMessage);
     req.query.teamId = decryptedMessage.teamId;
     req.query.network = decryptedMessage.network;
+    req.query.invite = decryptedMessage?.invite
     try {
       // Only for Twitter
       if (decryptedMessage.requestToken) {
@@ -120,6 +122,7 @@ export default (req, res, next) => {
       req.body.userScopeMaxMemberCount = parsedToken.userPlanDetails.member_count;
       req.body.userScopeAvailableNetworks = parsedToken.userPlanDetails.available_network;
       req.body.userScopeMaxScheduleCount = parsedToken.userPlanDetails.maximum_schedule;
+      req.body.userScopeLinkShortening = parsedToken.userPlanDetails.link_shortening;
       req.body.userScopeIsAdmin = parsedToken.is_admin_user;
 
       if (remindingDays < 0) {

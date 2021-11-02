@@ -205,6 +205,11 @@ class TeamController {
             description: 'Email',
             required: false,
             }
+            #swagger.parameters['name'] = {
+            in: 'query',
+            description: 'Name',
+            required: false,
+            }
             #swagger.parameters['Permission'] = {
             in: 'query',
             description: 'description: Permission 2- Admin, 1- full permission , 0 - Approval required',
@@ -468,8 +473,8 @@ class TeamController {
              #swagger.parameters['network'] = {
                 in: 'query',
                 default: '0',
-                description: '0-All,1-Facebook,2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-LinkedIn,7-LinkedInCompany,8-GooglePlus,9-Youtube,10-GoogleAnalytics,11-Pinterest,12-InstagramBusiness',
-                enum: ["0","1", "2","3", "4", "5", "6", "7", "8", "9","10" ,"11","12"]
+                description: '0-All,1-Facebook,2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-LinkedIn,7-LinkedInCompany,8-GooglePlus,9-Youtube,10-GoogleAnalytics,11-Pinterest,12-InstagramBusiness,14-DailyMotion,16-Tumblr',
+                enum: ["0","1", "2","3", "4", "5", "6", "7", "8", "9","10" ,"11","12","14","16"]
             } */
     return await TeamService.getTeamSocialAccount(req, res, next);
   }

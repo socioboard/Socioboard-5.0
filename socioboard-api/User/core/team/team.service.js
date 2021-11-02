@@ -8,10 +8,13 @@ import {
   ErrorResponse,
   CatchResponse,
 } from '../../../Common/Shared/response.shared.js';
-
+import SendEmailServices from '../../../Common/Services/mail-base.services.js';
 const teamLibs = new TeamLibs();
 
 class TeamController {
+  constructor() {
+    this.sendEmailServices = new SendEmailServices(config.get('mailService'));
+  }
   async getSocialProfiles(req, res, next) {
     try {
       const response = await teamLibs.getSocialProfiles(req.body.userScopeId);
@@ -53,8 +56,6 @@ class TeamController {
         req.body.userScopeId,
         req.query.accountId
       );
-
-      console.log(socialAccount.length);
       if (socialAccount.length == 0)
         return ErrorResponse(
           res,
@@ -64,8 +65,6 @@ class TeamController {
         req.query.accountId,
         req.query.rating
       );
-
-      console.log(response.length);
       if (response.length === 0)
         return ErrorResponse(res, "User don't have any social Accounts!");
 
@@ -227,7 +226,7 @@ class TeamController {
         memberProfileDetails: teamMemberDetails,
         socialAccounts: memberProfileDetails,
       };
-
+      this.updateSocialAccountStats(memberProfileDetails);
       return SuccessResponse(res, data);
     } catch (err) {
       return CatchResponse(res, err.message);
@@ -259,14 +258,15 @@ class TeamController {
       const SocialAccountStats = await teamLibs.socialAccountStats(
         req.body.userScopeId
       );
+      const pinterestAccountDetails = await teamLibs.getTeamBoard(req.body.userScopeId, req.query.teamId)
       const data = {
         teamSocialAccountDetails: teamSocialAccount[0],
         SocialAccountStats,
         teamMembers: teamMembers[0],
         memberProfileDetails: teamMemberDetails[0],
         socialAccounts: memberProfileDetails[0],
-      };
-
+        pinterestAccountDetails
+     };
       return SuccessResponse(res, data);
     } catch (err) {
       return CatchResponse(res, err.message);
@@ -411,19 +411,16 @@ class TeamController {
     // Check team is there or not
     try {
       const {teamId, Email, Permission} = req.query;
-      const {value, error} = await validate.inviteTeam({
+      const {error} = await validate.inviteTeam({
         teamId,
         Email,
         Permission,
       });
-
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-
       const teamInfo = await teamLibs.isValidTeam(
         req.body.userScopeId,
         req.query.teamId
       );
-
       if (!teamInfo)
         return ErrorResponse(res, 'Team not found or access denied!');
       if (req.body.userScopeEmail == req.query.Email)
@@ -431,13 +428,39 @@ class TeamController {
 
       const checkUserDetails = await teamLibs.isUserRegistered(req.query.Email);
 
-      if (!checkUserDetails)
-        return ErrorResponse(
-          res,
-          `Please check following points, 1.May be email isn't registered with ${config.get(
-            'applicationName'
-          )}! or \n\r 2.User's email not activated.`
+      if (!checkUserDetails) {
+        await teamLibs.addTeamDetails(
+          teamId,
+          req.query.name ?? '',
+          req.body.userScopeId,
+          Email,
+          Permission
         );
+        const htmlContent = this.sendEmailServices.template.invite_team_user
+          .replace('[FirstName]', `${req.query.name ?? ''}`)
+          .replace(
+            '[RegisterLink]',
+            `${config.get('user_socioboard.mail_url')}/register`
+          )
+          .replace('[teamname]', `${teamInfo.team_name ?? ''}`)
+          .replace('[inviteduser]', `${req.body.userScopeName}`);
+        let emailDetails = {
+          subject: 'SocioBoard Register Mail',
+          toMail: Email,
+          htmlContent,
+        };
+        await this.sendEmailServices.sendMails(
+          config.get('mailService.defaultMailOption'),
+          emailDetails
+        );
+        return SuccessResponse(
+          res,
+          `User not found in SocioBoard. Sent a invitation mail to join your team.`
+        );
+      }
+
+      if (checkUserDetails?.Activations?.activation_status === 0)
+        return ErrorResponse(res, `User's email not activated.`);
 
       const count = await teamLibs.getTotalTeamMember(req.body.userScopeId);
       const availableMemberCount = req.body.userScopeMaxAccountCount - count;
@@ -456,7 +479,8 @@ class TeamController {
 
       if (checkUserAlreadyAdded)
         return ErrorResponse(res, 'Same user already invited or left the team');
-      const addTeamMember = await teamLibs.addTeamMember(
+
+      await teamLibs.addTeamMember(
         checkUserDetails.user_id,
         req.query.teamId,
         req.body.userScopeId,
@@ -1163,6 +1187,17 @@ class TeamController {
     } catch (err) {
       return CatchResponse(res, err.message);
     }
+  }
+
+  /**
+   * TODO To check social account stats and update
+   * Function To check social account stats and update
+   * @param  {object} data -Account details.
+   */
+  async updateSocialAccountStats(data) {
+    data?.map(async x => {
+      await teamLibs.socialAccountDetails(x.account_id);
+    });
   }
 }
 

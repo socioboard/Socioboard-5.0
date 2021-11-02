@@ -9,11 +9,14 @@ import YoutubeMongoPostModel from '../Mongoose/models/youtube-post.js';
 import FacebookMongoPostModel from '../Mongoose/models/facebook-posts.js';
 import RssSearchedUrls from '../Mongoose/models/rss-searched-urls.js';
 import db from '../Sequelize-cli/models/index.js';
-import logger from '../../Feeds/resources/Log/logger.log.js';
-
+import logger from '../../Feeds/resources/log/logger.log.js';
+import Pocket from '../Cluster/pocket.cluster.js';
+import PocketMongoModel from '../Mongoose/models/pocket-post.js';
 const accountUpdateTable = db.social_account_feeds_updates;
 const socialAccount = db.social_accounts;
 const updateFriendsTable = db.social_account_friends_counts;
+const rssChannels = db.rss_channels;
+const rssLinks = db.rss_links;
 
 class FeedModel {
   constructor() {
@@ -21,6 +24,7 @@ class FeedModel {
     this.facebookHelper = new FacebookHelper(config.get('facebook_api'));
     this.twitterLikeComment = new TwitterLikeComment(config.get('twitter_api'));
     this.youtubeLikeComment = new YoutubeLikeComment(config.get('google_api'));
+    this.pocketCluster = new Pocket(config.get('pocket_api'));
   }
 
   twitterLike(userId, accountId, teamId, tweetId, lang) {
@@ -307,77 +311,60 @@ class FeedModel {
   async fetchAllTweets(userId, accountId, teamId, lang) {
     let max_id;
     let previousMaxid;
-    const i = 1;
-
-    do {
-      const result = await this.fetchAllTweetsinloop(
-        userId,
-        accountId,
-        teamId,
-        max_id,
-        lang
+    let socialAccountInfo = await this.getSocialAccount(
+      4,
+      accountId,
+      userId,
+      teamId
+    );
+    let isRunRecentPost = await this.isNeedToFetchRecentPost(
+      accountId,
+      config.get('twitter_api.update_time_frequency_value'),
+      config.get('twitter_api.update_time_frequency_factor')
+    );
+    if (isRunRecentPost) {
+      const twitterMongoPostModelObject = new TwitterMongoPostModel();
+      await twitterMongoPostModelObject.deleteAccountPosts(
+        socialAccountInfo.social_id
       );
-
-      previousMaxid = max_id;
-      max_id = result.max_id;
-    } while (max_id != previousMaxid);
-
+      do {
+        const result = await this.fetchAllTweetsinloop(
+          max_id,
+          socialAccountInfo
+        );
+        previousMaxid = max_id;
+        max_id = result;
+      } while (max_id != previousMaxid);
+      await this.createOrEditLastUpdateTime(
+        accountId,
+        socialAccountInfo.social_id
+      );
+    }
     return 'Successfully fetched all tweets';
   }
 
-  fetchAllTweetsinloop(userId, accountId, teamId, maxid, lang) {
-    return new Promise((resolve, reject) => {
-      if (!accountId) {
-        reject(new Error(getMessage(4, lang)));
-      } else {
-        let max_id = 0;
-        let socialAccountInfo = {};
-        const twitterMongoPostModelObject = new TwitterMongoPostModel();
-
-        return this.getSocialAccount(4, accountId, userId, teamId)
-          .then(socialAccountDetails => {
-            socialAccountInfo = socialAccountDetails;
-
-            return this.twitterLikeComment.getAllTweets(
-              socialAccountDetails.access_token,
-              socialAccountDetails.refresh_token,
-              socialAccountDetails.user_name,
-              maxid
-            );
-          })
-          .then(timelineTweets => {
-            let size = 0;
-
-            for (const count in timelineTweets) {
-              if (timelineTweets.hasOwnProperty(count)) size += 1;
-            }
-            if (timelineTweets[timelineTweets.length - 1])
-              max_id = timelineTweets[timelineTweets.length - 1].id_str;
-
-            return this.twitterLikeComment.parseTweetDetails(
-              timelineTweets,
-              socialAccountInfo.social_id,
-              config.get('twitter_api.app_name'),
-              config.get('twitter_api.version'),
-              socialAccountInfo.archived_status
-            );
-          })
-          .then(tweets =>
-            twitterMongoPostModelObject.insertManyPosts(tweets.tweets)
-          )
-          .then(insertedData => {
-            const data = {
-              max_id,
-              data: insertedData,
-            };
-
-            resolve(data);
-          })
-          .catch(error => {
-            reject(error);
-          });
-      }
-    });
+  async fetchAllTweetsinloop(maxid, socialAccountInfo) {
+    try {
+      let max_id = 0;
+      const twitterMongoPostModelObject = new TwitterMongoPostModel();
+      let timelineTweets = await this.twitterLikeComment.getAllTweets(
+        socialAccountInfo.access_token,
+        socialAccountInfo.refresh_token,
+        socialAccountInfo.user_name,
+        maxid
+      );
+      let tweets = await this.twitterLikeComment.parseTweetDetails(
+        timelineTweets,
+        socialAccountInfo.social_id,
+        config.get('twitter_api.app_name'),
+        config.get('twitter_api.version'),
+        socialAccountInfo.archived_status
+      );
+      if (timelineTweets[timelineTweets.length - 1])
+        max_id = timelineTweets[timelineTweets.length - 1].id_str;
+      twitterMongoPostModelObject.insertManyPosts(tweets.tweets);
+      return max_id;
+    } catch (e) {}
   }
 
   facebookLike(userId, accountId, teamId, postId) {
@@ -427,174 +414,76 @@ class FeedModel {
     });
   }
 
-  getRecentFbFeeds(userId, accountId, teamId, pageId) {
-    return new Promise((resolve, reject) => {
-      if (!pageId) {
-        reject(new Error('Please validate the page id!'));
-      } else {
-        return this.isNeedToFetchRecentPost(
-          accountId,
-          config.get('facebook_api.update_time_frequency_value'),
-          config.get('facebook_api.update_time_frequency_factor')
-        )
-          .then(isRunRecentPost => {
-            if (isRunRecentPost) {
-              let socialAccountInfo = {};
-              let feeds = [];
-
-              return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
-                .then(socialAccountDetails => {
-                  socialAccountInfo = socialAccountDetails;
-
-                  return accountUpdateTable
-                    .findOne({
-                      where: {account_id: accountId},
-                      attributes: ['updated_at'],
-                      raw: true,
-                    })
-                    .then(updatedAccountData => {
-                      if (updatedAccountData && updatedAccountData.updated_at) {
-                        return this.facebookHelper.getRecentFacebookFeeds(
-                          socialAccountInfo.access_token,
-                          socialAccountInfo.social_id,
-                          updatedAccountData.updated_at,
-                          config.get('facebook_api.app_id'),
-                          config.get('facebook_api.version')
-                        );
-                      }
-
-                      return this.facebookHelper.getFacebookPosts(
-                        socialAccountInfo.access_token,
-                        socialAccountInfo.social_id,
-                        config.get('facebook_api.app_id'),
-                        config.get('facebook_api.version')
-                      );
-                    });
-                })
-                .then(postDetails => {
-                  if (
-                    postDetails &&
-                    postDetails.feeds &&
-                    postDetails.feeds.length > 0
-                  ) {
-                    feeds = postDetails.feeds;
-                    const facebookMongoPostModelObject =
-                      new FacebookMongoPostModel();
-
-                    return facebookMongoPostModelObject.insertManyPosts(
-                      postDetails.feeds
-                    );
-                  }
-
-                  return [];
-                })
-                .then(() =>
-                  this.createOrEditLastUpdateTime(
-                    accountId,
-                    socialAccountInfo.social_id
-                  )
-                    .then(() => feeds)
-                    .catch(error => {
-                      throw error;
-                    })
-                )
-                .catch(error => {
-                  throw error;
-                });
-            }
-          })
-          .then(() => this.getFacebookFeeds(userId, accountId, teamId, pageId))
-          .then(feeds => resolve(feeds))
-          .catch(error => {
-            reject(error);
-          });
+  async getRecentFbFeeds(userId, accountId, teamId, pageId) {
+    let isRunRecentPost = await this.isNeedToFetchRecentPost(
+      accountId,
+      config.get('facebook_api.update_time_frequency_value'),
+      config.get('facebook_api.update_time_frequency_factor')
+    );
+    let socialAccountInfo;
+    if (isRunRecentPost) {
+      socialAccountInfo = await this.getSocialAccount(
+        [1, 2, 3],
+        accountId,
+        userId,
+        teamId
+      );
+      let postDetails = await this.facebookHelper.getFacebookPosts(
+        socialAccountInfo.access_token,
+        socialAccountInfo.social_id,
+        config.get('facebook_api.app_id'),
+        config.get('facebook_api.version')
+      );
+      if (postDetails?.feeds?.length > 0) {
+        const facebookMongoPostModelObject = new FacebookMongoPostModel();
+        await facebookMongoPostModelObject.deleteAccountPosts(
+          socialAccountInfo.social_id
+        );
+        facebookMongoPostModelObject.insertManyPosts(postDetails.feeds);
       }
-    });
+      await this.createOrEditLastUpdateTime(
+        accountId,
+        socialAccountInfo.social_id
+      );
+    }
+    let feeds = await this.getFacebookFeeds(userId, accountId, teamId, pageId);
+    return feeds;
   }
 
-  getRecentFbPageFeeds(userId, accountId, teamId, pageId) {
-    return new Promise((resolve, reject) => {
-      if (!pageId) {
-        reject(new Error('Please validate the page id!'));
-      } else {
-        return this.isNeedToFetchRecentPost(
-          accountId,
-          config.get('facebook_api.update_time_frequency_value'),
-          config.get('facebook_api.update_time_frequency_factor')
-        )
-          .then(isRunRecentPost => {
-            if (isRunRecentPost) {
-              let socialAccountInfo = {};
-              let feeds = [];
-
-              return this.getSocialAccount([1, 2, 3], accountId, userId, teamId)
-                .then(socialAccountDetails => {
-                  socialAccountInfo = socialAccountDetails;
-
-                  return accountUpdateTable
-                    .findOne({
-                      where: {account_id: accountId},
-                      attributes: ['updated_at'],
-                      raw: true,
-                    })
-                    .then(updatedAccountData => {
-                      if (updatedAccountData && updatedAccountData.updated_at) {
-                        return this.facebookHelper.getRecentFacebookPageFeeds(
-                          socialAccountInfo.access_token,
-                          socialAccountInfo.social_id,
-                          updatedAccountData.updated_at,
-                          config.get('facebook_api.app_id'),
-                          config.get('facebook_api.version')
-                        );
-                      }
-
-                      return this.facebookHelper.getFacebookPagePosts(
-                        socialAccountInfo.access_token,
-                        socialAccountInfo.social_id,
-                        config.get('facebook_api.app_id'),
-                        config.get('facebook_api.version')
-                      );
-                    });
-                })
-                .then(postDetails => {
-                  if (
-                    postDetails &&
-                    postDetails.feeds &&
-                    postDetails.feeds.length > 0
-                  ) {
-                    feeds = postDetails.feeds;
-                    const facebookMongoPostModelObject =
-                      new FacebookMongoPostModel();
-
-                    return facebookMongoPostModelObject.insertManyPosts(
-                      postDetails.feeds
-                    );
-                  }
-
-                  return [];
-                })
-                .then(() =>
-                  this.createOrEditLastUpdateTime(
-                    accountId,
-                    socialAccountInfo.social_id
-                  )
-                    .then(() => feeds)
-                    .catch(error => {
-                      throw error;
-                    })
-                )
-                .catch(error => {
-                  throw error;
-                });
-            }
-          })
-          .then(() => this.getFacebookFeeds(userId, accountId, teamId, pageId))
-          .then(feeds => resolve(feeds))
-          .catch(error => {
-            reject(error);
-          });
+  async getRecentFbPageFeeds(userId, accountId, teamId, pageId) {
+    let isRunRecentPost = await this.isNeedToFetchRecentPost(
+      accountId,
+      config.get('facebook_api.update_time_frequency_value'),
+      config.get('facebook_api.update_time_frequency_factor')
+    );
+    let socialAccountInfo;
+    if (isRunRecentPost) {
+      socialAccountInfo = await this.getSocialAccount(
+        [1, 2, 3],
+        accountId,
+        userId,
+        teamId
+      );
+      let postDetails = await this.facebookHelper.getFacebookPagePosts(
+        socialAccountInfo.access_token,
+        socialAccountInfo.social_id,
+        config.get('facebook_api.app_id'),
+        config.get('facebook_api.version')
+      );
+      if (postDetails?.feeds?.length > 0) {
+        const facebookMongoPostModelObject = new FacebookMongoPostModel();
+        await facebookMongoPostModelObject.deleteAccountPosts(
+          socialAccountInfo.social_id
+        );
+        facebookMongoPostModelObject.insertManyPosts(postDetails.feeds);
       }
-    });
+      await this.createOrEditLastUpdateTime(
+        accountId,
+        socialAccountInfo.social_id
+      );
+    }
+    let feeds = await this.getFacebookFeeds(userId, accountId, teamId, pageId);
+    return feeds;
   }
 
   getFacebookFeeds(userId, accountId, teamId, pageId) {
@@ -841,6 +730,26 @@ class FeedModel {
           'profile_picture',
         ];
         break;
+      case 15:
+        fields = [
+          'account_id',
+          'follower_count',
+          'following_count',
+          'total_post_count',
+          'profile_picture',
+        ];
+        break;
+      case 16:
+        fields = [
+          'account_id',
+          'follower_count',
+          'total_like_count',
+          'total_post_count',
+          'bio_text',
+          'profile_picture',
+          'cover_picture',
+        ];
+        break;
       default:
         break;
     }
@@ -863,6 +772,361 @@ class FeedModel {
     }
 
     return SocialAccountStats;
+  }
+
+  createChannel(userId, {title, logo_url}, trx) {
+    return rssChannels.create(
+      {
+        title,
+        logo_url,
+        user_id: userId,
+      },
+      {
+        transaction: trx,
+      }
+    );
+  }
+
+  createLinks(channelId, links, trx) {
+    return rssLinks.bulkCreate(
+      links.map(({url, category}) => ({
+        url,
+        category,
+        channel_id: channelId,
+      })),
+      {
+        transaction: trx,
+      }
+    );
+  }
+
+  getChannels({userId, skip = 0, limit = 10, size = 5}) {
+    return rssChannels.findAll({
+      include: [
+        {
+          model: rssLinks,
+          as: 'links',
+          order: [
+            ['createdAt', 'DESC'],
+            ['updatedAt', 'DESC'],
+            ['url', 'ASC'],
+          ],
+          limit: size,
+        },
+      ],
+      where: {
+        user_id: userId,
+      },
+      offset: skip * limit,
+      limit,
+    });
+  }
+
+  getArchivedChannels({userId, skip = 0, limit = 10}) {
+    return rssChannels.findAll({
+      attributes: ['id', 'title', 'logo_url', 'is_archived'],
+      where: {
+        user_id: userId,
+        is_archived: true,
+      },
+      offset: skip * limit,
+      limit,
+    });
+  }
+
+  getArchivedLinks({userId, skip = 0, limit = 10}) {
+    return rssLinks.findAll({
+      attributes: ['id', 'url', 'category', 'is_archived'],
+      include: [
+        {
+          attributes: [],
+          model: rssChannels,
+          as: 'channel',
+          where: {
+            user_id: userId,
+          },
+        },
+      ],
+      where: {
+        is_archived: true,
+      },
+      offset: skip * limit,
+      limit,
+    });
+  }
+
+  getAllArchivedLinks(userId) {
+    return rssLinks.findAll({
+      attributes: ['id', 'url', 'category', 'is_archived'],
+      include: [
+        {
+          attributes: [],
+          model: rssChannels,
+          as: 'channel',
+          where: {
+            user_id: userId,
+          },
+        },
+      ],
+      where: {
+        is_archived: true,
+      },
+    });
+  }
+
+  getArchivedLinksByIds(userId, linkIds) {
+    return rssLinks.findAll({
+      attributes: ['id', 'url', 'category', 'is_archived'],
+      include: [
+        {
+          attributes: [],
+          model: rssChannels,
+          as: 'channel',
+          where: {
+            user_id: userId,
+          },
+        },
+      ],
+      where: {
+        id: linkIds,
+        is_archived: true,
+      },
+    });
+  }
+
+  getChannelById({userId, channelId, skip = 0, limit = 10}) {
+    return rssChannels.findOne({
+      include: [
+        {
+          model: rssLinks,
+          as: 'links',
+          order: [
+            ['createdAt', 'DESC'],
+            ['updatedAt', 'DESC'],
+            ['url', 'ASC'],
+          ],
+          offset: skip * limit,
+          limit,
+        },
+      ],
+      where: {
+        id: channelId,
+        user_id: userId,
+      },
+    });
+  }
+
+  getChannelByTitle(userId, title) {
+    return rssChannels.findOne({
+      include: [
+        {
+          model: rssLinks,
+          as: 'links',
+        },
+      ],
+      where: {
+        title,
+        user_id: userId,
+      },
+    });
+  }
+
+  getManyChannelsByIds(userId, ids) {
+    return rssChannels.findAll({
+      where: {
+        id: ids,
+        user_id: userId,
+      },
+    });
+  }
+
+  getManyLinksByIds(channelId, ids) {
+    return rssLinks.findAll({
+      where: {
+        id: ids,
+        channel_id: channelId,
+      },
+    });
+  }
+
+  getManyLinksByUserId(userId, ids) {
+    return rssLinks.findAll({
+      attributes: ['id', 'url', 'category', 'is_archived'],
+      include: [
+        {
+          attributes: [],
+          model: rssChannels,
+          as: 'channel',
+          where: {
+            user_id: userId,
+          },
+        },
+      ],
+      where: {
+        id: ids,
+      },
+    });
+  }
+
+  deleteManyChannels(userId, ids, trx) {
+    return rssChannels.destroy({
+      where: {
+        id: ids,
+        user_id: userId,
+      },
+      transaction: trx,
+    });
+  }
+
+  deleteManyLinks(ids, trx) {
+    return rssLinks.destroy({
+      where: {
+        id: ids,
+      },
+      transaction: trx,
+    });
+  }
+
+  updateChannel(channelId, {title, logo_url}, trx) {
+    return rssChannels.update(
+      {
+        title,
+        logo_url,
+      },
+      {
+        where: {
+          id: channelId,
+        },
+        transaction: trx,
+      }
+    );
+  }
+
+  getManyLinksByLinks(channelId, links) {
+    const urls = links.map(({url}) => url);
+    const categories = links.map(({category}) => category);
+
+    return rssLinks.findAll({
+      where: {
+        url: urls,
+        category: categories,
+        channel_id: channelId,
+      },
+    });
+  }
+
+  updateLink({id, url, category}, trx) {
+    return rssLinks.update(
+      {
+        url,
+        category,
+      },
+      {
+        where: {
+          id,
+        },
+        transaction: trx,
+      }
+    );
+  }
+
+  setIsArchivedChannel(channelId) {
+    return rssChannels.update(
+      {
+        is_archived: true,
+      },
+      {
+        where: {
+          id: channelId,
+        },
+      }
+    );
+  }
+
+  setIsArchivedLinks(linkIds) {
+    return rssLinks.update(
+      {
+        is_archived: true,
+      },
+      {
+        where: {
+          id: linkIds,
+        },
+      }
+    );
+  }
+
+  /**
+   * TODO To get user recent feeds for pocket profile
+   * Function To get user recent feeds for pocket profile
+   * @param {number} accountId -Social account id
+   * @param {number} pageId -Pagination id
+   * @param {object} socialAccountInfo -Social account details
+   * @returns {object} Pocket user recent feeds
+   */
+  async getRecentPocketFeeds(accountId, pageId, socialAccountInfo) {
+    let isRunRecentPost = await this.isNeedToFetchRecentPost(
+      accountId,
+      config.get('pocket_api.update_time_frequency_value'),
+      config.get('pocket_api.update_time_frequency_factor')
+    );
+    let postDetails;
+    if (isRunRecentPost) {
+      postDetails = await this.pocketCluster.parsedRecentFeeds(
+        socialAccountInfo.access_token,
+        socialAccountInfo.social_id
+      );
+      if (postDetails?.length > 0) {
+        const pocketMongoModel = new PocketMongoModel();
+        await pocketMongoModel.deleteAccountPosts(socialAccountInfo.social_id);
+        pocketMongoModel.insertManyPosts(postDetails);
+      }
+      await this.createOrEditLastUpdateTime(
+        accountId,
+        socialAccountInfo.social_id
+      );
+    }
+    let feeds = await this.getPocketFeeds(pageId, socialAccountInfo);
+    return feeds;
+  }
+
+  /**
+   * TODO To get pocket profile feeds form mongo db
+   * Function To get pocket profile feeds form mongo db
+   * @param {number} pageId -Pagination id
+   * @param {object} socialAccountDetails -Social account details
+   * @returns {object} Pocket user recent feeds
+   */
+  async getPocketFeeds(pageId, socialAccountDetails) {
+    try {
+      const offset = (pageId - 1) * config.get('perPageLimit');
+      const pocketMongoModel = new PocketMongoModel();
+
+      let response = await pocketMongoModel.getSocialAccountPosts(
+        socialAccountDetails.social_id,
+        offset,
+        config.get('perPageLimit')
+      );
+
+      return response;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  /**
+   * TODO To delete pocket profile feeds form mongo db
+   * Function To delete pocket profile feeds form mongo db
+   * @param {object} socialAccountInfo -Social account details
+   * @returns {object} Pocket user recent feeds
+   */
+  async removePocketFeeds(socialAccountInfo) {
+    try {
+      const pocketMongoModel = new PocketMongoModel();
+      await pocketMongoModel.deleteAccountPosts(socialAccountInfo.social_id);
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 }
 export default FeedModel;

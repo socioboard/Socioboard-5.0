@@ -3,7 +3,7 @@ import LinkedInConnect from '../Cluster/linkedin.cluster.js';
 import LinkedInPostMongoModels from '../Mongoose/models/linkedIn-post.js';
 import config from 'config';
 import db from '../Sequelize-cli/models/index.js';
-import logger from '../../Feeds/resources/Log/logger.log.js';
+import logger from '../../Feeds/resources/log/logger.log.js';
 const accountUpdateTable = db.social_account_feeds_updates;
 import moment from 'moment';
 
@@ -57,16 +57,28 @@ class LinkedInFeedModel {
                   socialAccountInfo.social_id
                 )
                   .then(() => {
-                    return this.linkedInConnect.linkedInPageStats(
-                      socialAccountInfo.social_id,
-                      socialAccountInfo.access_token
+                    return this.isNeedToFetchRecentStats(
+                      accountId,
+                      socialAccountInfo.refresh_feeds == 2 ? 12 : 24,
+                      'hours'
                     );
                   })
-                  .then(updateDetails => {
-                    this.createOrUpdateFriendsList(
-                      socialAccountInfo.account_id,
-                      updateDetails
-                    );
+                  .then(isRunRecentstats => {
+                    if (isRunRecentstats) {
+                      {
+                        return this.linkedInConnect
+                          .linkedInPageStats(
+                            socialAccountInfo.social_id,
+                            socialAccountInfo.access_token
+                          )
+                          .then(updateDetails => {
+                            this.createOrUpdateFriendsList(
+                              socialAccountInfo.account_id,
+                              updateDetails
+                            );
+                          });
+                      }
+                    }
                   })
                   .then(() => feeds)
                   .catch(error => {

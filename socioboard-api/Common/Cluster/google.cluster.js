@@ -37,8 +37,10 @@ Google.prototype.getGoogleAuthUrl = function (type, state) {
       url = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.google_api.redirect_url}&prompt=consent&response_type=code&client_id=${this.google_api.client_id}&scope=${this.google_api.login_scopes}&access_type=offline`;
       break;
     case 'youtube':
-      // url = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.google_api.google_profile_add_redirect_url}&prompt=consent&response_type=code&client_id=${this.google_api.client_id}&scope=${this.google_api.youtube_scopes}&access_type=offline&state=${state}`;
       url = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.google_api.google_profile_add_redirect_url}&prompt=consent&response_type=code&client_id=${this.google_api.client_id}&scope=${this.google_api.youtube_scopes}&access_type=offline`;
+      break;
+    case 'youtube-Invite':
+      url = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.google_api.google_profile_add_invite_redirect_url}&prompt=consent&response_type=code&client_id=${this.google_api.client_id}&scope=${this.google_api.youtube_scopes}&access_type=offline`;
       break;
     case 'googleAnalytics':
       url = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=${this.google_api.google_profile_add_redirect_url}&prompt=consent&response_type=code&client_id=${this.google_api.client_id}&scope=${this.google_api.ganalytics_scopes}&access_type=offline&state=${state}`;
@@ -56,14 +58,14 @@ Google.prototype.getGoogleAuthUrl = function (type, state) {
  * @param  {string} code - Youtube Auth Code
  * @return {object} Return User channel details with Access Token
  */
-Google.prototype.getYoutubeChannels = function (code) {
+Google.prototype.getYoutubeChannels = function (code,redirecturl) {
   return new Promise((resolve, reject) => {
     if (!code) {
       reject(new Error('Invalid youtube code'));
     } else {
       this.getGoogleAccessToken(
         code,
-        this.google_api.google_profile_add_redirect_url,
+        redirecturl
       )
         .then((tokens) => {
           if (!tokens) {

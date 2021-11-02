@@ -91,6 +91,10 @@ class unauthorizedController {
         const responseData = await unauthorizedLibs.checkUserDetails(
           req.body.email
         );
+        await unauthorizedLibs.checkTeamInvite(
+          req.body.email,
+          responseData?.user_id
+        );
         // Set Details in aMember as well
         /**
          * userName
@@ -238,6 +242,7 @@ class unauthorizedController {
         userDetails?.user_id,
         userDetails?.user_name
       );
+
       const remindingDays = moment(
         userDetails.Activations.account_expire_date
       ).diff(moment(), 'days');
@@ -258,7 +263,7 @@ class unauthorizedController {
 
   async forgotPassword(req, res, next) {
     try {
-      const {value, error} = validate.validateEmail(req.query);
+      const {error} = validate.validateEmail(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
 
@@ -332,16 +337,13 @@ class unauthorizedController {
     }
   }
 
-  async verifyPasswordToken(req, res, next) {
+  async verifyPasswordToken(req, res) {
     try {
-      const {value, error} = validate.validateVerifyEmail(req.query);
-
+      const {error} = validate.validateVerifyEmail(req.query);
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-
       const user = await unauthorizedLibs.userDetailsForForgotPassword(
         req.query.email
       );
-
       if (!user) return ErrorResponse(res, 'Email not yet registered.');
       if (
         user.Activations.forgot_password_validate_token ===
@@ -375,7 +377,6 @@ class unauthorizedController {
         await unauthorizedLibs.userVerified(user.user_activation_id);
         return SuccessResponse(res);
       }
-
       return ErrorResponse(res, 'Invalid verification token!');
     } catch (err) {
       return CatchResponse(res, err.message);
@@ -385,21 +386,16 @@ class unauthorizedController {
   async verifyDirectLoginToken(req, res, next) {
     try {
       const {error} = validate.validateVerifyEmail(req.query);
-
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-
       const user = await unauthorizedLibs.userDetailsForDirectLogin(
         req.query.email
       );
-
       if (!user) return ErrorResponse(res, 'Email not yet registered.');
-
       if (
         user.Activations.direct_login_validate_token ===
         req.query.activationToken
       ) {
         const expireDate = user.Activations.direct_login_token_expire;
-
         if (moment(expireDate).isBefore(moment.utc())) {
           const newExpireDate = moment().add(1, 'days');
           const newDirectLoginToken = uuidv1();
@@ -413,7 +409,6 @@ class unauthorizedController {
           const mailDetails = await unauthorizedLibs.sendDirectLoginMail(
             userDetails
           );
-
           if (mailDetails) {
             return ErrorResponse(
               res,
@@ -422,68 +417,68 @@ class unauthorizedController {
           }
         }
         await unauthorizedLibs.userVerified(user.user_id);
-        return SuccessResponse(res);
+        const userDetails = await unauthorizedLibs.getUserDetails(
+          req.query.email
+        );
+        if (!userDetails) return ErrorResponse(res, 'Wrong creds!');
+        if (userDetails.is_account_locked)
+          return ErrorResponse(res, 'Account has been locked.');
+        const userInfo = await unauthorizedLibs.getUserAccessToken(
+          userDetails.user_id,
+          userDetails.Activations.id
+        );
+        if (userInfo) return SuccessResponse(res, userInfo);
       }
-
       return ErrorResponse(res, 'Invalid verification token!');
     } catch (err) {
       return CatchResponse(res, err.message);
     }
   }
 
-  async resetPassword(req, res, next) {
+  async resetPassword(req, res) {
     try {
-      const {value, error} = validate.validateResetPassword(req.query);
-
+      const {error} = validate.validateResetPassword(req.query);
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-
-      const response = await unauthorizedLibs.checkEmailAvailability(
+      const user = await unauthorizedLibs.userDetailsForForgotPassword(
         req.query.email
       );
-
-      if (!response) return ErrorResponse(res, 'Sorry! Email not registered.');
-
-      let userDetails = await unauthorizedLibs.getUserDetailswithId(
-        response.user_id
-      );
-      let result = await unauthorizedLibs.updatePassword(
-        response.user_id,
-        userDetails.user_name,
-        req.query.newPassword
-      );
-
-      if (result) return SuccessResponse(res);
-    } catch (err) {
-      return CatchResponse(res, err.message);
-    }
-  }
-
-  async directLogin(req, res, next) {
-    try {
-      const {value, error} = validate.validateDirectLogin(req.body);
-
-      if (error) return ValidateErrorResponse(res, error.details[0].message);
-
-      const userDetails = await unauthorizedLibs.getUserDetails(req.body.email);
-
-      if (!userDetails) return ErrorResponse(res, 'Wrong creds!');
-      if (userDetails.is_account_locked)
-        return ErrorResponse(res, 'Account has been locked.');
-
-      // if (!userDetails.Activations.activation_status) return responseformat(res, 400, null, "Email not yet validated.!", null)
-      const remindingDays = moment(
-        userDetails.Activations.account_expire_date
-      ).diff(moment(), 'days');
-
-      if (remindingDays < 0) {
-        // code for change plan and lock social accounts
+      if (!user) return ErrorResponse(res, 'Email not yet registered.');
+      if (
+        user.Activations.forgot_password_validate_token ===
+        req.query.activationToken
+      ) {
+        const expireDate = user.Activations.forgot_password_token_expire;
+        if (moment(expireDate).isBefore(moment.utc())) {
+          const newExpireDate = moment().add(1, 'days');
+          const newForgotVerificationToken = uuidv1();
+          const update = await unauthorizedLibs.updateForgotVerificationToken(
+            user.user_activation_id,
+            newExpireDate,
+            newForgotVerificationToken
+          );
+          const userDetails =
+            await unauthorizedLibs.getUserDetailswithIdForgetPassword(
+              user.user_id
+            );
+          const mailDetails = await unauthorizedLibs.sendForgotPasswordMail(
+            userDetails
+          );
+          if (mailDetails) {
+            return ErrorResponse(
+              res,
+              'Token expired, please check your email for new token!'
+            );
+          }
+        }
+        await unauthorizedLibs.userVerified(user.user_activation_id);
+        let result = await unauthorizedLibs.updatePassword(
+          user.user_id,
+          user.user_name,
+          req.query.newPassword
+        );
+        if (result) return SuccessResponse(res);
       }
-      const userInfo = await unauthorizedLibs.getUserAccessToken(
-        userDetails.user_id,
-        userDetails.Activations.id
-      );
-
-      if (userInfo) return SuccessResponse(res, userInfo);
+      return ErrorResponse(res, 'Invalid forgot password token!');
     } catch (err) {
       return CatchResponse(res, err.message);
     }

@@ -123,9 +123,7 @@ class AlertMailLibs {
             teamId: -1,
             newsletterContent: '',
         };
-        let result = await sendEmailServiceObject.mailServiceSchedule(scheduleObject);
-        return result
-        return users
+        return sendEmailServiceObject.mailServiceSchedule(scheduleObject);
     }
 
     async updateSentMailStatus(users) {
