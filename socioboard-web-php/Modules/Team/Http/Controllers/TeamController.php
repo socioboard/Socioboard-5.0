@@ -101,8 +101,8 @@ class TeamController extends Controller
                     $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $filedata, true);
                     $responseData = $this->helper->responseHandler($response['data']);
                     if ($responseData['code'] == 200) {
-                        $str=substr(env('APP_URL'), 0, 30);
-                        $mediaUrl = $str . "media/uploads/".$publishimage;;
+                        $str = substr(env('APP_URL'), 0, 30);
+                        $mediaUrl = $str . "media/uploads/" . $publishimage;;
                         $data['TeamInfo'] = array(
                             "name" => $request->team_name,
                             "description" => "Short note about the team activity",
@@ -138,7 +138,7 @@ class TeamController extends Controller
                         'team_id' => $responseData['data']->team_id,
                     );
                     $user = Session::get('user');
-                    $responseData['admin'] = $user['userDetails']['first_name']." ". $user['userDetails']['last_name'];
+                    $responseData['admin'] = $user['userDetails']['first_name'] . " " . $user['userDetails']['last_name'];
                     $responseData['admin_profile'] = $user['userDetails']['profile_picture'];
                     $responseData['admin_id'] = $user['userDetails']['user_id'];
                     $responseData['email'] = $user['userDetails']['email'];
@@ -227,6 +227,8 @@ class TeamController extends Controller
                         if ($teamMembersAcceptedIDs[$i]->teamMembersAcceptedIDs === $data2->user_id) {
                             if ($teamMembersAcceptedIDs[$i]->permissions === 1) {
                                 array_push($teamMembersAcceptedDatas, array('label' => 'Full permissions', 'user' => $data2));
+                            } else if ($teamMembersAcceptedIDs[$i]->permissions === 0) {
+                                array_push($teamMembersAcceptedDatas, array('label' => 'Approval required', 'user' => $data2));
                             } else {
                                 array_push($teamMembersAcceptedDatas, array('label' => 'Admin', 'user' => $data2));
                             }
@@ -369,7 +371,7 @@ class TeamController extends Controller
                                 $result['code'] = 500;
                                 $result['message'] = 'some error occured';
                             }
-                            return  $result;
+                            return $result;
                         } catch (\Exception $e) {
                             return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'dragDopTeamOperation(){TeamController}');
                         }
@@ -429,7 +431,7 @@ class TeamController extends Controller
                         $result['code'] = 500;
                         $result['message'] = 'some error occured';
                     }
-                   return  $result;
+                    return $result;
                 } catch (\Exception $e) {
                     return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'dragDopTeamOperation(){TeamController}');
                 }
@@ -594,7 +596,7 @@ class TeamController extends Controller
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $filedata, true);
             $responseData = $this->helper->responseHandler($response['data']);
             if ($responseData['code'] == 200) {
-                $mediaUrl = 'https://feedsv5.socioboard.com' . $responseData['data'][0]->media_url;
+                $mediaUrl = env('API_URL_FEEDS') . $responseData['data'][0]->media_url;
                 $details['TeamInfo'] = array(
                     "name" => $request->team_name,
                     "logoUrl" => $mediaUrl
@@ -745,12 +747,13 @@ class TeamController extends Controller
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'viewTeams() {TeamController}');
         }
     }
+
     function withDrawInvitation(Request $request)
     {
         try {
-            $teamid=(integer)$request->teamId;
-            $email=$request->email;
-            $apiUrl = ApiConfig::get('/team/withdraw-invitation?teamId=' . $teamid.'&Email='.$email);
+            $teamid = (integer)$request->teamId;
+            $email = $request->email;
+            $apiUrl = ApiConfig::get('/team/withdraw-invitation?teamId=' . $teamid . '&Email=' . $email);
             $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
             if ($response['data']->code === 200) {
                 $result['code'] = 200;
@@ -763,8 +766,7 @@ class TeamController extends Controller
                 $result['message'] = 'some error occured';
             }
             return $result;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'withDrawInvitation() {TeamController}');
         }
 

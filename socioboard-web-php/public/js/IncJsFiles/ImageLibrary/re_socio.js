@@ -22,7 +22,7 @@ function draftPostFunction(postStatus) {
             $('#resocioModal').modal('show');
         },
         success: function (resp) {
-            if(Number(postStatus) === 1 && resp.code === 200 && resp.data.errors.length === 0) {
+            if(Number(postStatus) === 1 && resp.code === 200) {
                 $('#resocioModal').modal('hide');
                 toastr.success(resp.message);
             } else if (Number(postStatus) === 1 && resp.code === 200 && resp.data.errors.length > 0) {

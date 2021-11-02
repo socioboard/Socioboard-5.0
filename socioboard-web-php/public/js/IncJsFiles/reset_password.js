@@ -41,9 +41,9 @@ let newPasswordSubmit = function () {
                 toastr.error(response.message);
             } else {
                 toastr.error(response.message);
-                setTimeout(function () {
-                    window.location.href = '' + APP_URL + 'forgot-password'
-                }, 1000);
+                // setTimeout(function () {
+                //     window.location.href = '' + APP_URL + 'forgot-password'
+                // }, 1000);
             }
 
         },

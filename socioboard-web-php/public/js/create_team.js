@@ -162,7 +162,7 @@ let SBKanbanBoard = function () {
                                     'username': response.email,
                                     'title': '<div class="d-flex align-items-center">' +
                                         '<div class="symbol symbol-success mr-3">' +
-                                        '<img class="symbol-label font-size-h4" src="' + response.admin_profile + '"></img>' +
+                                        '<img class="symbol-label font-size-h4" src="' + (response.admin_profile === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : response.admin_profile) + '"></img>' +
                                         '</div>' +
                                         '<div class="d-flex flex-column align-items-start">' +
                                         '<span class="text-dark-50 font-weight-bold mb-1">' + response.admin + '</span>' +
