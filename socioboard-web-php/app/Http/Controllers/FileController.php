@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request): string
     {
         if (!file_exists($request['folder']))
         {
@@ -20,11 +22,10 @@ class FileController extends Controller
         return $fileName;
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): string
     {
         $path = public_path() .'/'.$request['dataUrl'];
         unlink($path);
         return '/media/logos/sb-icon.svg';
     }
-
 }

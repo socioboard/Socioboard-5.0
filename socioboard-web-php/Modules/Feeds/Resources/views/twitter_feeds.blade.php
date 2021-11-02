@@ -21,43 +21,17 @@
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class=" sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
-                             data-sticky-class="kt-sticky">
-                            <!-- begin:Accounts list -->
-                            <div class="form-group">
-                                <select
-                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
-                                        onchange="call(this)">
-                                    @if($message=== 'success')
-                                        <script>
-                                            var accounId = <?php echo $accounts[0]->account_id; ?>;
-                                        </script>
-                                        <option disabled>Select Account</option>
-                                        @foreach($accounts as $data)
-                                            <option
-                                                    value="{{$data->account_id}}">{{$data->first_name}}
-                                            </option>
-                                        @endforeach
-                                    @elseif($message=== 'failed')
-                                        <option selected value="failed"> Sorry some error ,occurred please reload page
-                                        </option>
-                                    @elseif($message=== 'No Twitter account added yet! or Account has locked')
-                                        <option selected value="failed">No Twitter account added yet! or Account has
-                                            locked
-                                        </option>
-                                    @else
-                                        <option selected value="failed"> {{$message}}
-                                        </option>
-                                    @endif
-                                </select>
-                            </div>
-                            <!-- end:Accounts list -->
+                             data-sticky-class="kt-sticky" style="margin-top:-20px;">
+
                             <!--begin::Profile-->
-                            <div class="card card-custom gutter-b ">
+                            <div class="card card-custom gutter-b mb-4 mt-3">
+
                                 @if($message=== 'success')
                                     @if(count($accounts)>0)
                                         @if($feeds['code']=== 200)
                                             <div
-                                                    class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
+                                                    class="card-body py-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
+
                                                 <div class="ribbon-target bg-twitter" style="top: -2px; right: 20px;">
                                                     <i class="fab fa-twitter dummy"></i>
                                                 </div>
@@ -134,7 +108,7 @@
 
                                                 <!--begin::Contact-->
                                                 @if($feeds['data']->SocialAccountStats !== null)
-                                                    <div class="py-9">
+                                                    <div class="pt-3">
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
                                                             <span class="font-weight-bold mr-2">Following:</span>
                                                             <a href="#"
@@ -184,6 +158,87 @@
                                 @endif
                             </div>
                             <!--end::Profile-->
+                            <div class="card card-custom gutter-b">
+                                <div class="card-body px-3 py-3">
+                                    <p style="font-size:14px; margin-bottom:10px; font-weight:600;">First select country from dropdown and Click on Search hashtags by Country button </p>
+                                    <!-- begin:Accounts list -->
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <select
+                                                    class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
+                                                    onchange="call(this)">
+                                                @if($message=== 'success')
+                                                    <script>
+                                                        var accounId = <?php echo $accounts[0]->account_id; ?>;
+                                                    </script>
+                                                    <option disabled>Select Account</option>
+                                                    @foreach($accounts as $data)
+                                                        <option
+                                                                value="{{$data->account_id}}">{{$data->first_name}}
+                                                        </option>
+                                                    @endforeach
+                                                @elseif($message=== 'failed')
+                                                    <option selected value="failed"> Sorry some error ,occurred please reload page
+                                                    </option>
+                                                @elseif($message=== 'No Twitter account added yet! or Account has locked')
+                                                    <option selected value="failed">No Twitter account added yet! or Account has
+                                                        locked
+                                                    </option>
+                                                @else
+                                                    <option selected value="failed"> {{$message}}
+                                                    </option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <select id="countrySelect"
+                                                    class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
+                                                    onchange="call2(this)">
+                                                @if($message === 'success')
+                                                    @if(count($accounts)>0)
+                                                        @if($country['data']->code === 200)
+                                                            @if(count($country['data']->data)>0)
+                                                                <option disabled selected value="Country">Select Country
+                                                                </option>
+                                                                font-size:12px;      @foreach($country['data']->data as $data)
+                                                                    <option value="{{$data->name}}">{{$data->name}}</option>
+                                                                @endforeach
+                                                            @else
+                                                                <option selected value="Country">No country Data found, For
+                                                                    This account
+                                                                </option>
+                                                            @endif
+                                                        @elseif($country['data']->code === 400)
+                                                            <option selected
+                                                                    value="Country">{{$country['data']->message}}</option>
+                                                        @endif
+                                                    @else
+                                                        <option selected value="Country">No Twitter Account added yet!
+                                                        </option>
+                                                    @endif
+                                                @elseif($message=== 'failed')
+                                                    <option selected value="Country">Some error ocuured, Can not get country
+                                                        data
+                                                    </option>
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-center my-4">
+                                        <button href="javascript:;"
+                                                class="btn btn-lg font-weight-bold  px-xxl-5 my-1 searchButton"
+                                                onclick="searchHashTags()">Search Hashtags By
+                                            country
+                                        </button>
+                                    </div>
+                                    <!-- end:Accounts list -->
+                                    <h3>Trending Hashtags</h3>
+
+                                </div>
+
+                                <div class="card-body hashtags-by-country pt-0" id="hashTagsDiv">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -201,6 +256,7 @@
     display: none;"></span>
                             </div>
                             <div class="card-body" id="twitterFeeds">
+                            <?php $date = 0; ?>
                             @if($message=== 'success')
                                 @if(count($accounts)>0)
                                     @if($feeds['code']=== 200)
@@ -209,6 +265,7 @@
                                                 var feedsLength = <?php echo count($feeds['data']->feeds)  ?>;
                                             </script>
                                             @foreach($feeds['data']->feeds as $data)
+                                                <?php $date = date('d-m-Y H:i:s', strtotime($data->publishedDate))?>
                                                 <div class="mb-5">
                                                     <!--begin::Container-->
                                                     <div>
@@ -229,7 +286,7 @@
                                                                    target="_blank"
                                                                    class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                                 <span
-                                                                        class="font-weight-bold"><?php echo date($data->publishedDate) ?></span>
+                                                                        class="font-weight-bold">{{$date}}</span>
                                                             </div>
                                                             <!--end::Info-->
                                                         </div>
@@ -259,10 +316,32 @@
                                                                 </p>
                                                                 @else
                                                                     <div>
-                                                                        <!--begin::Text-->
-                                                                        <p class="font-size-lg font-weight-normal">
-                                                                            <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
-                                                                        </p>
+                                                                        @if(isset($data->urls))
+                                                                            @if(count($data->urls)>0)
+                                                                                @foreach($data->urls as $urls)
+                                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                        <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                                    </strong>
+                                                                                    <br>
+                                                                                    <a href="{{$urls->url}}"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                                       target=_blank>
+                                                                                        {{$urls->url}}</a>
+                                                                                    <br>
+                                                                                @endforeach
+                                                                            @else
+                                                                                <p class="font-size-lg font-weight-normal">
+                                                                                    <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                                </p>
+                                                                            @endif
+
+                                                                        @else
+                                                                            <p class="font-size-lg font-weight-normal">
+                                                                                <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                            </p>
+                                                                    @endif
+                                                                    <!--begin::Text-->
+
                                                                     @endif
                                                                     <!--end::Text-->
 
@@ -464,7 +543,7 @@
                 /**
                  * TODO we've to dislike the particular feed of twitter.
                  * This function is used for disliking  the particular feed of twitter.
-                 * @param {integer} twitterID - twitterID of feed.
+                 * @param {string} twitterID - twitterID of feed.
                  * ! Do not change this function without referring API format of disliking feed.
                  */
                 function disLikeTweet(twitterID) {
@@ -621,6 +700,7 @@
                             $(".spinner-border").css("display", "block");
                         },
                         success: function (response) {
+                            $(".spinner-border").css("display", "none");
                             if (response.data.code === 200) {
                                 let appendData = '';
                                 let num = 1;
@@ -879,6 +959,18 @@
                                             arrayImages.push(data.url);
                                         });
                                     } else {
+                                        if (element.has("urls")) {
+                                            element.urls.map(urls => {
+                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                    element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                    '</strong><br>\n' +
+                                                    '<a href="' + element.urls + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.urls +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+
+                                        }
                                         appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
                                     }
                                     appendData += '<div class="d-flex align-items-center">\n' +
@@ -1112,6 +1204,45 @@
                         },
                     });
                 };
+
+
+                function searchHashTags() {
+                    let currentCountryValue = ($('#countrySelect option:selected').val());
+                    if (currentCountryValue === 'Country') {
+                        toastr.error('Please select Country first');
+
+                    } else {
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            type: 'post',
+                            url: '/get-country-hashtags',
+                            data: {
+                                currentCountryValue, accounId
+                            },
+                            beforeSend: function () {
+                                $('#hashTagsDiv').empty();
+                                $('.searchButton').html('Searching Hashtags...');
+                            },
+                            success: function (response) {
+                                $('.searchButton').html('Search Hashtags By country');
+                                let append = '';
+                                if (response.code === 200) {
+                                    response.data[0].trends.map(element => {
+                                        console.log(element.name, 'names');
+                                        append += '<a href="' + element.url + '" class="font-weight-bolder font-size-h5 text-hover-primary" target="_blank">\n'
+                                            + element.name +
+                                            '</a> &nbsp';
+                                    });
+                                    $('#hashTagsDiv').append(append);
+                                }
+                            }
+                        });
+                    }
+
+                }
+
                 $('#chatID').tootip();
             </script>
 @endsection

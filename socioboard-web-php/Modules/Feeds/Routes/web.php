@@ -16,6 +16,7 @@ use Modules\Feeds\Http\Controllers\FeedsController;
 Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPlanExpiry']], function () {
     Route::get('feeds/{network}', 'FeedsController@getFeedsSocialAccounts');
     Route::get('get-next-twitter-feeds', 'FeedsController@getNextTwitterFeeds');
+    Route::get('get-next-tumbler-feeds', 'FeedsController@getNextTumblerFeeds');
     Route::get('get-next-youtube-feeds', 'FeedsController@getNextYoutubeFeeds');
     Route::get('get-next-instgram-feeds', 'FeedsController@getNextInstagramFeeds');
     Route::get('get-next-linkedIn-feeds', 'FeedsController@getNextLinkedInFeeds');
@@ -30,4 +31,8 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPla
     Route::post('like-fb-feed', 'FeedsController@likeFbFeed');
     Route::post('comment-fb-feed', 'FeedsController@commentFbFeed');
     Route::get('get-next-facebook-feeds', 'FeedsController@getNextFacebookFeeds');
+    Route::get('get-user-posts', 'FeedsController@getUserPosts');
+    Route::get('get-user-publications', 'FeedsController@getUserPublications');
+    Route::post('publishOnMedium', 'FeedsController@publishOnMedium');
+    Route::post('get-country-hashtags', 'FeedsController@getCountryHashtags');
 });

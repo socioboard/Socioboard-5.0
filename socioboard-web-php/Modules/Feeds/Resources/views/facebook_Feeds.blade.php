@@ -207,11 +207,13 @@
                             @if(count($accounts)>0)
                                 <!--begin::Text-->
                                     @if($feeds['code']=== 200)
+                                        <?php $date = 0; ?>
                                         <script>
                                             var feedsLength = <?php echo count($feeds['data']->feeds)  ?>;
                                         </script>
                                         @if((count($feeds['data']->feeds))>0)
                                             @foreach($feeds['data']->feeds as $data)
+                                                <?php $date = date('d-m-Y H:i:s', strtotime($data->publishedDate))?>
                                                 <div class="mb-5">
                                                     <div>
                                                         <div class="d-flex align-items-center pb-4">
@@ -226,7 +228,7 @@
                                                                 <a href="javascript:;"
                                                                    class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                                 <span
-                                                                        class="font-weight-bold"></span>
+                                                                        class="text-muted font-weight-bold">{{$date}}</span>
                                                             </div>
                                                         </div>
                                                         @if(count($data->mediaUrls)>0)
@@ -263,13 +265,24 @@
                                                                             @endif
                                                                             @else
                                                                                 <div>
-                                                                                    <!--begin::Text-->
-                                                                                    <p class="font-size-lg font-weight-normal">
-                                                                                        {{$data->description}}
-                                                                                    </p>
-                                                                                @endif
-
-                                                                                <!--end::Text-->
+                                                                                    @if($data->postType === 'share')
+                                                                                        <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                            {{$data->description}}
+                                                                                        </strong>
+                                                                                        <br>
+                                                                                        <a href="{{$data->sharedUrl}}"
+                                                                                           class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                                           target=_blank>
+                                                                                            {{$data->sharedUrl}}</a>
+                                                                                        <br>
+                                                                                    @else
+                                                                                        <p class="font-size-lg font-weight-normal">
+                                                                                            {{$data->description}}
+                                                                                        </p>
+                                                                                    @endif
+                                                                                    @endif
+                                                                                    <br>
+                                                                                    <!--end::Text-->
                                                                                     <!--begin::Action-->
                                                                                     <div class="d-flex align-items-center">
                                                                                         @if($accounts[0]->account_type === 2)
@@ -492,6 +505,7 @@
                      * ! Do not change this function without referring API format of getting the facebook feeds.
                      */
                     function getfacebookFeeds(accid, pageId, acctype) {
+                        let publishedDate = 0;
                         $.ajax({
                             type: 'get',
                             url: '/get-next-facebook-feeds',
@@ -610,14 +624,13 @@
                                             '</div>';
                                         $('#follower_counts-div').append(appendData2);
                                     }
-                                    $(".spinner-border").css("display", "none");
                                     if (response.data.code === 200) {
                                         let appendData = '';
                                         let num = 1;
-                                        $(".spinner-border").css("display", "none");
                                         feedsLength = response.data.data.feeds.length;
                                         if (feedsLength > 0) {
                                             response.data.data.feeds.map(element => {
+                                                publishedDate = String(new Date(element.publishedDate)).substring(0, 25);
                                                 appendData = '<div class="mb-5">\n' +
                                                     '<div>\n' +
                                                     '<div class="d-flex align-items-center pb-4">\n' +
@@ -630,6 +643,7 @@
                                                     '<div class="d-flex flex-column flex-grow-1">\n' +
                                                     '<a href="' + element.tweetUrl + '"\n' +
                                                     'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                                    '<span class="text-muted font-weight-bold">' + publishedDate + '</span>' +
                                                     '</div></div>\n';
                                                 if (element.mediaUrls.length > 0) {
                                                     if (element.postType === 'photo') {
@@ -661,12 +675,22 @@
                                                             '</p>';
                                                     }
                                                 } else {
-                                                    appendData += '<div>\n' +
-                                                        '<p class="font-size-lg font-weight-normal">\n' + element.description +
-                                                        '</p>\n';
+                                                    appendData += '<div>\n';
+                                                    if (element.postType === 'share') {
+                                                        appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                            element.description +
+                                                            '</strong><br>\n' +
+                                                            '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.sharedUrl +
+                                                            '</a><br>\n';
+                                                    } else {
+                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                            '</p>';
+                                                    }
+                                                    appendData += '<br>\n';
+
                                                 }
-                                                appendData += '                                                    <!--begin::Action-->\n' +
-                                                    '                                                    <div class="d-flex align-items-center">\n';
+                                                appendData +=
+                                                    '<div class="d-flex align-items-center">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
                                                     appendData += '<a href="javascript:;"\n' +
                                                         'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
@@ -807,6 +831,7 @@
                      * ! Do not change this function without referring API format of getting the facebook feeds.
                      */
                     function getNextFacebookFeeds(accid, pageId, acctype) {
+                        let publishedDate = 0;
                         $.ajax({
                             type: 'get',
                             url: '/get-next-facebook-feeds',
@@ -821,14 +846,15 @@
                                 $(".spinner-border").css("display", "block");
                             },
                             success: function (response) {
+                                $(".spinner-border").css("display", "none");
                                 if (response.data.code === 200) {
-                                    $(".spinner-border").css("display", "none");
                                     if (response.data.code === 200) {
                                         let appendData = '';
                                         let num = 1;
                                         $(".spinner-border").css("display", "none");
                                         feedsLength = response.data.data.feeds.length;
                                         response.data.data.feeds.map(element => {
+                                            publishedDate = String(new Date(element.publishedDate)).substring(0, 25);
                                             appendData = '<div class="mb-5"><div>\n' +
                                                 '<div class="d-flex align-items-center pb-4">\n' +
                                                 '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
@@ -839,6 +865,7 @@
                                                 '<div class="d-flex flex-column flex-grow-1">\n' +
                                                 '<a href="' + element.tweetUrl + '"\n' +
                                                 'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                                '<span class="text-muted font-weight-bold">' + publishedDate + '</span>' +
                                                 '</div></div>\n';
                                             if (element.mediaUrls.length > 0) {
                                                 if (element.postType === 'photo') {
