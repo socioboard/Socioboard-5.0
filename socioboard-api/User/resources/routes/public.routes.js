@@ -9,6 +9,10 @@ import authorized from '../../core/authorized/authorized.routes.js';
 import recentVistedRoutes from '../../core/recent-visited/recent-visted.routes.js';
 import teamReport from '../../core/team-report/team-report.routes.js';
 import otpVerification from '../../core/otp-verification/otp-verification.router.js';
+import invitation from '../../core/invitation/invitation.routes.js'
+import demoBitlyRoutes from '../../../Common/Demo/bitly/bitly-demo.routes.js';
+import demoMediumRoutes from '../../../Common/Demo/medium/medium-demo.routes.js';
+import demoRedditRoutes from '../../../Common/Demo/reddit/reddit-demo.routes.js';
 
 class Routes {
   constructor(app) {
@@ -16,7 +20,14 @@ class Routes {
     // new OpenRoutes('/v1/', app);
     app.use('/v1/', unauthorized);
     app.use('/v1/', socialCallback);
-    app.use('/v1/otp/', otpVerification)
+    app.use('/v1/otp/', otpVerification);
+    app.use('/v1/', invitation);
+
+    app.use('/v1/otp/', otpVerification);
+
+    app.use('/v1', demoBitlyRoutes);
+    app.use('/v1', demoMediumRoutes);
+    app.use('/v1/demo/reddit', demoRedditRoutes);
     // SecuredRoutes;
     app.use(authenticate);
     app.use('/v1/recentvisited/', recentVistedRoutes);

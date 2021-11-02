@@ -23,6 +23,10 @@ const doc = {
       name: 'Social-Callback', // Tag name
       description: 'Endpoints', // Tag description
     },
+    {
+      name: 'Invitation', // Tag name
+      description: 'Endpoints', // Tag description
+    },
 
     {
       name: 'User',
@@ -72,6 +76,14 @@ const doc = {
       aboutMe: 'A business person',
       // { $ref: "#/definitions/myObject" }
     },
+    InviteSocialAccount: [{
+       teamId: '1',
+       userName: '@SocioboardS',
+       accName: 'Socioboard',
+       email: 'sbs@glb.com',
+       network: 'Twitter'
+    
+    }],
     userUpdate: {
       username: 'socioboard',
       firstName: 'socio',
@@ -107,6 +119,7 @@ const doc = {
         refresh_token:
           'SuewfefgEWFEFefdhfdfDVCverf4t34t$#FRCs4t84fgRSGRG4t43fF4t4',
         friendship_counts: '243',
+        is_invite:0,
         info: 'Build the success life with using Smart utils like sociobord for Social Networks',
       },
     ],

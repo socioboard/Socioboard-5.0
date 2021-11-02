@@ -1497,349 +1497,416 @@ class MailService extends MailBase {
       invitationLink:
         '<body style="background-color: #FB6947;"> <div style="margin-top: 50px; margin: 0 auto; width: 630px;"> <div style="width: 630px; height: auto; float: left; margin-top: 125px;"> <div style="width: 630px; padding-top: 17px; text-align: center; height: 80px; background: none repeat scroll 0px 0px rgb(255, 188, 173); border-top-left-radius: 5px; border-top-right-radius: 5px;"> <img style="max-height:110px" src="https://i.imgur.com/JuBM9U5.png" alt="" /> </div> <!--Email content--> <div style="font-family: Tahoma; font-size: 14px; background-color: #fff; color: rgb(24, 24, 24); padding: 10px; float: left; width: 606px; border: 2px solid rgb(255, 255, 255); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"> <div style="width: 610px; float: left; height: 35px;"> </div> <div style="width: 610px; height: auto; float: left;"> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Hello , </div> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Hello Invitation from the EMS, </div> </br> </br> <!--</br>--> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;">  Please click the link below to add the social acount. </div> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> <!-- Click <a href="%replink%"> here</a> to add account. </div></br></br>--> Click <a href="[InvitationLink]"> here</a> </div> </br></br> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Hope you have a great time at Electronic Monitoring System.... :)</div> </br> <!--<div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> </div>--> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Warm regards,</div> </br> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Electronic Monitoring System Team</div> </div> <div style="width: 610px; float: left; height: 35px;"> </div> </div> <!--End Email content--> </div> </div> </body>',
 
-      newInvitationLink: `<html>
+      newInvitationLink: `<html xmlns="http://www.w3.org/1999/xhtml">
 
-             <head>
-                 <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
-             </head>
-             
-             <style>
-                 .instantLike {
-                     position: relative;
-                     display: inline-block;
-                 }
-             
-                 .instantLike .tooltiptext {
-                     visibility: hidden;
-                     width: 120px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: 50%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .instantLike .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .instantLike:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 .autolike {
-                     position: relative;
-                     display: inline-block;
-             
-                 }
-             
-                 .autolike .tooltiptext {
-                     visibility: hidden;
-                     width: 120px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: 50%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .autolike .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .autolike:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 .gilr {
-                     position: relative;
-                     display: inline-block;
-             
-                 }
-             
-                 .gilr .tooltiptext {
-                     visibility: hidden;
-                     width: 202px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: -6%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .gilr .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .gilr:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 .givr {
-                     position: relative;
-                     display: inline-block;
-             
-                 }
-             
-                 .givr .tooltiptext {
-                     visibility: hidden;
-                     width: 223px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: -22%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .givr .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .givr:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 .bhfi {
-                     position: relative;
-                     display: inline-block;
-             
-                 }
-             
-                 .bhfi .tooltiptext {
-                     visibility: hidden;
-                     width: 203px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: -5%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .bhfi .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .bhfi:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 .htr {
-                     position: relative;
-                     display: inline-block;
-                 }
-             
-                 .htr .tooltiptext {
-                     visibility: hidden;
-                     width: 197px;
-                     background-color: #f2f2f2;
-                     color: #4f81bd;
-                     text-align: center;
-                     border-radius: 6px;
-                     padding: 5px 0;
-                     position: absolute;
-                     z-index: 1;
-                     bottom: 95%;
-                     left: -3%;
-                     margin-left: -60px;
-                     box-shadow: 0 0 4px;
-                 }
-             
-                 .htr .tooltiptext::after {
-                     content: "";
-                     position: absolute;
-                     top: 100%;
-                     left: 50%;
-                     margin-left: -5px;
-                     border-width: 5px;
-                     border-style: solid;
-                     border-color: #75afdd transparent transparent transparent;
-                     ;
-                 }
-             
-                 .htr:hover .tooltiptext {
-                     visibility: visible;
-                 }
-             
-                 a:hover {
-                     cursor: pointer;
-                 }
-             
-                 input[type=button]:hover {
-                     cursor: pointer;
-                 }
-             
-                 .buttons {
-                     margin: auto;
-                     text-align: center;
-                 }
-             
-                 .btn-hover {
-                     width: auto;
-                     font-size: 16px;
-                     font-weight: 600;
-                     color: #fff;
-                     cursor: pointer;
-                     margin: 20px auto;
-                     height: 55px;
-                     text-align: center;
-                     border: none;
-                     background-size: 300% 100%;
-                     padding-left: 40px;
-                     padding-right: 40px;
-             
-                     border-radius: 50px;
-                     moz-transition: all .4s ease-in-out;
-                     -o-transition: all .4s ease-in-out;
-                     -webkit-transition: all .4s ease-in-out;
-                     transition: all .4s ease-in-out;
-                 }
-             
-                 .btn-hover:hover {
-                     background-image: linear-gradient(to right, #a9abab, #888383, #868686, #1da9a0) !important;
-                     background-position: 100% 0;
-                     moz-transition: all .4s ease-in-out;
-                     -o-transition: all .4s ease-in-out;
-                     -webkit-transition: all .4s ease-in-out;
-                     transition: all .4s ease-in-out;
-                 }
-             
-                 .btn-hover:focus {
-                     outline: none;
-                 }
-             
-                 .btn-hover.color-4 {
-                     background-image: linear-gradient(to right, #0f8984, #888383, #868686, #126762);
-                     box-shadow: 0 4px 15px 0 rgb(41 135 131 / 67%);
-                 }
-             </style>
-             
-             <body style="font-family: Open Sans">
-                 <div style="max-width: 650px; margin: auto">
-                     <table style="margin: auto;width: 100%;font-size: 14px;background: #e0e0e0">
-                         <div>
-                             <tr style="height: 100px">
-                                 <th colspan="3" style="border-bottom: 1px solid #737373;background:#1a1a1a ;">
-                                     <img src="https://app.ems.globusdemos.com/logo.png" width="210px"></th>
-                             </tr>
-                         </div>
-                         <tbody>
-             
-                             <tr>
-                                 <td colspan="3" style="font-weight: bold;padding: 20px 0 0 20px">Hi [userName] , </td>
-                             </tr>
-                             <tr></tr>
-                             <tr>
-                                 <td colspan="3" style="padding:10px 0 15px 20px">You received this mail to add your account <b> [accName] </b> of twitter to Electronic Monitoring & Archiving System.</td>
-                             </tr>
-                             <tr>
-                                 <td colspan="3" style="padding:0px 0 0px 20px"> We Request you to grant us access to Archive The account by clicking on the <span style="font-weight:bold;">"Add Account"</span> button.</td>
-                             </tr>
-             
-                             <tr>
-                                 <td colspan="3" style="text-align: center;">
-                                     <a href="[invitationLink]">Add Account</a>
-                                 </td>
-                             </tr>
-                             <tr>
-                                 <td style="padding:0 0 0 20px">Before Proceeding Please make sure your currently logged in twitter account is the same account or try to open this account in the Incognito mode </td>
-                             </tr>
-             
-                             <tr>
-                                 <td style="padding: 20px 0 0 20px;">Once you click and approve in twitter It will add that logged in account to the <b>EMS</b>. </td>
-                             </tr>
-                             <tr>
-                                 <td style="padding: 0 0 15px 20px;border-bottom-style: dashed;border-bottom-width: 1px;border-bottom-color:#1c8884"></td>
-                             </tr>
-             
-                             <tr>
-                                 <td style="padding: 20px 0 0 20px;"><span style="font-weight: bold">Thanks & Regards,</span></td>
-                             </tr>
-                             <tr>
-                                 <td style="padding: 0 0 0 20px;">Technical Team
-                             </tr>
-             
-                             <tr>
-                                 <td style="padding: 0 0 15px 20px;"> Electronic Monitoring & Archiving System</td>
-                             </tr>
-             
-                         </tbody>
-             
-                     </table>
-                 </div>
-             
-             </body>
-             
-             </html>`,
+      <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+          <title>Socioboard Invitation</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"> 
+      </head>
+      
+      <body bgcolor="#f8f8f8">
+      
+          <!-- START OF HEADER BLOCK-->
+      <table align="center" bgcolor="#fff" cellpadding="0" cellspacing="0" border="0"
+              style="margin-top: 20px;">
+              <tbody>
+                  <tr>
+                      <td valign="top" width="100%">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+                          
+                                          <table bgcolor="#fff" class="table_scale" width="600" align="center"
+                                              cellpadding="0" cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+      
+                                          <table class="table_scale" width="600" bgcolor="#fff" cellpadding="0"
+                                              cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                   
+                                                                          <table class="full" align="center" width="auto"
+                                                                              cellpadding="0" cellspacing="0" border="0"
+                                                                              style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td class="center" align="center"
+                                                                                          style="padding: 0px; text-transform: uppercase; font-family: Lucida Sans Unicode; color:#666666; font-size:24px; line-height:34px;">
+                                                                                          <span>
+                                                                                              <a href="https://www.socioboard.com/"
+                                                                                                  style="color:#0f48d5;" target="_blank">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/0x0.png"
+                                                                                                      alt="Socioboard"
+                                                                                                      width="auto" height="80"
+                                                                                                      border="0"
+                                                                                                      style="display: inline;">
+                                                                                              </a>
+                                                                                          </span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                  
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      
+      
+      <table align="center" bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" style="background: #fff;">
+          <tbody>
+              <tr>
+                  <td valign="top" width="100%">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                      <tbody>
+                          <tr>
+                              <td width="100%">
+                              <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" class="table_scale" width="600">
+                                  <tbody>
+                                      <tr>
+                                          <td width="100%">
+                                          <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="600">
+                                              <tbody>
+                                                  <tr>
+                                                      <td style="padding: 0px; background: #fff;" valign="middle" width="600">
+                                                      <table align="center" border="0" cellpadding="0" cellspacing="0" class="full" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; " width="540">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td align="center">
+                                                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                      <tbody>
+                                                                          <tr>
+                                                                              <td>
+                                                                              <div style="height: 30px; line-height: 40px;"></div>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                               <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px; mso-line-height-rule: exactly; text-align: left; padding: 0 5px 12px;" align="left">
+                                                                                   <b>Hi [accName],</b>
+                                                                               </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:10px; " align="left">
+                                                                                  <span>You have received this mail to add account <b>[userName]</b> of <b>[network]</b> to Socioboard System from <b>[sbuser]</b>
+                                                                                  </span>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:12px; " align="left">
+                                                                                  <span>We request you to grant us access to the account by clicking on the <b>"Add Account"</b> button
+                                                                                  </span>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:30px; " align="left">
+                                                                                  <span>Before proceeding please make sure your currently logged in [network] account of same account or try to open this account in the incognito mode
+                                                                                  </span>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left"
+                                                                                  style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:30px; "
+                                                                                  align="left">
+                                                                                  <span>Once you click and approve in [network] it will add that logged in the account to Socioboard
+                                                                                  </span>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="center" style="margin: 0; padding-bottom:0px; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 16px; color: #e9e9e9; line-height: 25px;mso-line-height-rule: exactly; text-align: center;" align="center">
+                                                                                  <a target="_blank" href="[invitationLink]" style="background: #f85c37; border: 0px; padding: 12px 20px; color: #fff; font-size: 18px; letter-spacing: 1px; margin-top: 14px; cursor: pointer; font-weight: 600; border-radius: 80px; text-decoration: none;">Add Account</a>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td width="100%" height="50">&nbsp;</td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td width="100%" height="20">&nbsp;</td>
+                                                                          </tr>
+                                                                      </tbody>
+                                                                  </table>
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      
+      
+      
+      
+          <!---FOOTER BLOCK-->
+          <table align="center" bgcolor="#26272b" cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+                  <tr>
+                      <td valign="top" width="100%">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+                          
+                                          <table bgcolor="#26272b" class="table_scale" width="600" align="center"
+                                              cellpadding="0" cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+      
+                                          <table class="table_scale" width="600" bgcolor="#26272b" cellpadding="0"
+                                              cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                   
+                                                                          <table class="full" align="center" width="auto"
+                                                                              cellpadding="0" cellspacing="0" border="0"
+                                                                              style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td class="center" align="center"
+                                                                                          style="padding: 0px; text-transform: uppercase; font-family: Lucida Sans Unicode; color:#666666; font-size:24px; line-height:0; padding-bottom: 0px;">
+                                                                                          <span>
+                                                                                              <a href="https://www.socioboard.com/"
+                                                                                                  style="color:#0f48d5;"  target="_blank">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/socioboard-logo-white.png"
+                                                                                                      alt="Socioboard"
+                                                                                                      width="auto" height="42"
+                                                                                                      border="0"
+                                                                                                      style="display: inline;">
+                                                                                              </a>
+                                                                                          </span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                                   <tr>
+                                                                                      <td width="100%" height="30">&nbsp;</td>
+                                                                                  </tr>
+      
+                                                                              </tbody>
+                                                                          </table>
+                                  
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <table align="center" bgcolor="#26272b" cellpadding="0" cellspacing="0" border="0"
+              style="">
+              <tbody>
+                  <tr>
+                      <td valign="top" width="100%" style="background: #26272b;">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+                                          <table class="table_scale"  width="600" bgcolor="#26272b" cellpadding="0"
+                                              cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                                                          <!-- START OF RIGHT COLUMN FOR SOCIAL ICONS-->
+                                                                          <table class="full" align="center" width="auto"
+                                                                              cellpadding="0" cellspacing="0" border="0"
+                                                                              style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td class="center" align="center"
+                                                                                          style="margin: 0; font-size:14px ; color:#aaaaaa; font-family: Helvetica, Arial, sans-serif; line-height: 100%; padding-bottom: 30px;">
+                                                                                          <span>
+                                                                                              <a href="https://www.facebook.com/SocioBoard"
+                                                                                                  target="_blank" style="padding-right: 28px; text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-fb-icon.png"
+                                                                                                      style="width: 30px;" alt="facebook">
+                                                                                              </a> &nbsp;
+                                                                                              <a href="https://twitter.com/Socioboard"
+                                                                                                  target="_blank" style="padding-right: 28px; text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-tw-icon.png"
+                                                                                                      style="width: 30px;" alt="twitter">
+                                                                                              </a> &nbsp;
+                                                                                              <a href="https://www.linkedin.com/company/socioboard-technologies-private-limited"
+                                                                                                  target="_blank" style=" text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-in-icon.png"
+                                                                                                      style="width: 30px;" alt="linkedin">
+                                                                                              </a>
+                                                                                          </span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                                  <tr>
+                                                                                    <td colspan="3">
+                                                                                      <table width="auto" cellspacing="0" cellpadding="0" align="center">
+                                                                                        <tbody><tr>
+                                                                                          <th>
+                                                                                            <a href="https://socioboard.org/privacy-policy/" style="color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400;line-height:15px; text-decoration: none;" target="_blank">Privacy Policy</a>
+                                                                                          </th>
+                                                                                          <th width="10px" style="border-right: 1px solid #bdbdbd;"></th>
+                                                                                          <th width="10px"></th>
+                                                                                          <th>
+                                                                                            <a href="https://www.socioboard.com/" style="color:#bdbdbd;font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400; line-height:15px; text-decoration: none;" target="_blank">socioboard.com</a>
+                                                                                          </th>
+                                                                                          <th width="10px" style="border-right: 1px solid #bdbdbd;"></th>
+                                                                                          <th width="10px"></th>
+                                                                                          <th>
+                                                                                            <a href="{{{unsubscribe}}}" style="color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400;line-height:15px; text-decoration: none;">Unsubscribe</a>
+                                                                                          </th>
+                                                                                        </tr>
+                                                                                      </tbody></table>
+                                                                                    </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                          <!-- END OF RIGHT COLUMN FOR SOCIAL ICONS-->
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- START OF VERTICAL SPACER-->
+                                          <table bgcolor="#26272b" class="table_scale" width="600" align="center"
+                                              cellpadding="0" cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <table cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+              <tbody>
+                  <tr>
+                      <td width="100%" valign="top">
+                          <table cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+      
+                                          <table class="table_scale" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellspacing="0" cellpadding="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                                                          <!-- START OF LEFT COLUMN FOR HEADING-->
+                                                                          <table class="full" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" width="500" cellspacing="0" cellpadding="0" border="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td style="margin: 0; font-size:13px ; color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; line-height: 18px; text-align: center;" width="100%" height="20">
+                                                                                          Copyright © 2014 - 2021 Socioboard. All Rights Reserved.</td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                          <!-- END OF LEFT COLUMN FOR HEADING-->
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                          <!-- START OF VERTICAL SPACER-->
+                                          <table class="table_scale" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <!-- END OF FOOTER BLOCK-->
+      
+      </body>
+      
+      </html>`,
 
       welcomeMailLink: `<html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -3074,6 +3141,413 @@ class MailService extends MailBase {
       // Replace -[OTP]
       mail_otp:
         '<body style="background-color: #FB6947;"> <div style="margin-top: 50px; margin: 0 auto; width: 630px;"> <div style="width: 630px; height: auto; float: left; margin-top: 125px;"> <div style="width: 630px; padding-top: 17px; text-align: center; height: 80px; background: none repeat scroll 0px 0px rgb(255, 188, 173); border-top-left-radius: 5px; border-top-right-radius: 5px;"> <img style="max-height:110px" src="https://i.imgur.com/qAdpCjL.png" alt="" /> </div> <!--Email content--> <div style="font-family: Tahoma; font-size: 14px; background-color: #fff; color: rgb(24, 24, 24); padding: 10px; float: left; width: 606px; border: 2px solid rgb(255, 255, 255); border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"> <div style="width: 610px; float: left; height: 35px;"> </div> <div style="width: 610px; height: auto; float: left;"> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Welcome to SOCIOBOARD <strong> 2<->way Authentication </strong>, </div> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Congratulations! Your OTP is:  <Strong> [OTP].  </strong> </div> </br> </br> <!--</br>--> <br/> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> <strong> Please, Use this OTP within 10 minutes otherwise OTP will get expire </strong></div> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> <!-- Click <a href="%replink%"> here</a> to login. </div></br></br>--></a> </div> </br></br> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Hope you have a great time at Socioboard. Keep socioboarding... :)</div> </br> <!--<div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> </div>--> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Warm regards,</div> </br> <div style="width: 610px; height: auto; float: left; font-size: 15px; font-family: Arial; margin-top: 10px;"> Socioboard Team</div> </div> <div style="width: 610px; float: left; height: 35px;"> </div> </div> <!--End Email content--> </div> </div> </body>',
+
+      invite_team_user: `<html xmlns="http://www.w3.org/1999/xhtml">
+
+      <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+          <title>Mail Template</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet"> 
+          <style>
+             
+             @media screen and (max-width: 767px) {
+                 .table_scale {
+                     width: 100% !important;
+                 }
+             } 
+          </style>
+      </head>
+      
+      <body bgcolor="#f8f8f8">
+      
+          <!-- START OF HEADER BLOCK-->
+      <table align="center" bgcolor="#fff" cellpadding="0" cellspacing="0" border="0"
+              style="margin-top: 20px;">
+          <tbody>
+              <tr>
+                  <td valign="top" width="100%">
+                      <table cellpadding="0" cellspacing="0" border="0">
+                          <tbody>
+                              <tr>
+                                  <td width="100%">
+                      
+                                      <table bgcolor="#fff" class="table_scale" width="600" align="center"
+                                          cellpadding="0" cellspacing="0" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="100%" height="30">&nbsp;</td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+      
+                                      <table class="table_scale" width="600" bgcolor="#fff" cellpadding="0"
+                                          cellspacing="0" border="0">
+                                          <tbody>
+                                              <tr>
+                                                  <td width="100%">
+                                                      <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td class="spacer" width="30"></td>
+                                                                  <td width="540">
+                                  
+                                                                      <table class="full" align="center" width="auto"
+                                                                          cellpadding="0" cellspacing="0" border="0"
+                                                                          style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                          <tbody>
+                                                                              <tr>
+                                                                                  <td class="center" align="center"
+                                                                                      style="padding: 0px; text-transform: uppercase; font-family: Lucida Sans Unicode; color:#666666; font-size:24px; line-height:34px;">
+                                                                                      <span>
+                                                                                          <a href="https://www.socioboard.com/"
+                                                                                              style="color:#0f48d5;" target="_blank">
+                                                                                              <img src="http://socioboard.com/wp-content/uploads/2021/07/0x0.png"
+                                                                                                  alt="Socioboard"
+                                                                                                  width="auto" height="80"
+                                                                                                  border="0"
+                                                                                                  style="display: inline;">
+                                                                                          </a>
+                                                                                      </span>
+                                                                                  </td>
+                                                                              </tr>
+                                                                          </tbody>
+                                                                      </table>
+                              
+                                                                  </td>
+                                                                  <td class="spacer" width="30"></td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      
+      
+      <table align="center" bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" style="background: #fff;">
+          <tbody>
+              <tr>
+                  <td valign="top" width="100%">
+                  <table border="0" cellpadding="0" cellspacing="0">
+                      <tbody>
+                          <tr>
+                              <td width="100%">
+                              <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" class="table_scale" width="600">
+                                  <tbody>
+                                      <tr>
+                                          <td width="100%">
+                                          <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="600">
+                                              <tbody>
+                                                  <tr>
+                                                      <td style="padding: 0px; background: #fff;" valign="middle" width="600">
+                                                      <table align="center" border="0" cellpadding="0" cellspacing="0" class="full" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt; " width="540">
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td align="center">
+                                                                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                      <tbody>
+                                                                          <tr>
+                                                                              <td>
+                                                                              <div style="height: 30px; line-height: 40px;"></div>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                               <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px; mso-line-height-rule: exactly; text-align: left; padding: 0 5px 12px;" align="left">
+                                                                                   <b>Hi [FirstName],</b>
+                                                                               </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:20px; " align="left">
+                                                                                  <p>We are pleased to acquaint you that [inviteduser] requested you to join the [teamname] team and be a part of the SocioBoard family.
+                                                                                  </p>
+                                                                                  <p>
+                                                                                  The step of joining is just a few clicks away. Please click on the Register button down at the end of this mail to register into the team instantly.
+                                                                                  </p>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:35px; " align="left">
+                                                                                  <span>Welcome to the SocioBoard team!
+                                                                                  </span>
+                                                                              </td>
+                                                                          </tr>
+                                                                         
+                                                                          <tr>
+                                                                              <td class="center" style="margin: 0; padding-bottom:0px; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 16px; color: #e9e9e9; line-height: 25px;mso-line-height-rule: exactly; text-align: center;" align="center">
+                                                                                  <a target="_blank" href="[RegisterLink]" style="background: #f85c37; border: 0px; padding: 12px 20px; color: #fff; font-size: 18px; letter-spacing: 1px; margin-top: 14px; cursor: pointer; font-weight: 600; border-radius: 80px; text-decoration: none;">Register Now</a>
+                                                                              </td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td width="100%" height="20">&nbsp;</td>
+                                                                          </tr>
+                                                                          <tr>
+                                                                              <td width="100%" height="20">&nbsp;</td>
+                                                                          </tr>
+                                                                      </tbody>
+                                                                  </table>
+                                                                  </td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      
+      
+          <!---FOOTER BLOCK-->
+          <table align="center" bgcolor="#26272b" cellpadding="0" cellspacing="0" border="0">
+              <tbody>
+                  <tr>
+                      <td valign="top" width="100%">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+                          
+                                          <table bgcolor="#26272b" class="table_scale" width="600" align="center"
+                                              cellpadding="0" cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+      
+                                          <table class="table_scale" width="600" bgcolor="#26272b" cellpadding="0"
+                                              cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                   
+                                                                          <table class="full" align="center" width="auto"
+                                                                              cellpadding="0" cellspacing="0" border="0"
+                                                                              style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td class="center" align="center"
+                                                                                          style="padding: 0px; text-transform: uppercase; font-family: Lucida Sans Unicode; color:#666666; font-size:24px; line-height:0; padding-bottom: 0px;">
+                                                                                          <span>
+                                                                                              <a href="https://www.socioboard.com/"
+                                                                                                  style="color:#0f48d5;"  target="_blank">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/socioboard-logo-white.png"
+                                                                                                      alt="Socioboard"
+                                                                                                      width="auto" height="42"
+                                                                                                      border="0"
+                                                                                                      style="display: inline;">
+                                                                                              </a>
+                                                                                          </span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                                   <tr>
+                                                                                      <td width="100%" height="30">&nbsp;</td>
+                                                                                  </tr>
+      
+                                                                              </tbody>
+                                                                          </table>
+                                  
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <table align="center" bgcolor="#26272b" cellpadding="0" cellspacing="0" border="0"
+              style="">
+              <tbody>
+                  <tr>
+                      <td valign="top" width="100%" style="background: #26272b;">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+                                          <table class="table_scale"  width="600" bgcolor="#26272b" cellpadding="0"
+                                              cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellpadding="0" cellspacing="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                                                          <!-- START OF RIGHT COLUMN FOR SOCIAL ICONS-->
+                                                                          <table class="full" align="center" width="auto"
+                                                                              cellpadding="0" cellspacing="0" border="0"
+                                                                              style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td class="center" align="center"
+                                                                                          style="margin: 0; font-size:14px ; color:#aaaaaa; font-family: Helvetica, Arial, sans-serif; line-height: 100%; padding-bottom: 30px;">
+                                                                                          <span>
+                                                                                              <a href="https://www.facebook.com/SocioBoard"
+                                                                                                  target="_blank" style="padding-right: 28px; text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-fb-icon.png"
+                                                                                                      style="width: 30px;" alt="facebook">
+                                                                                              </a> &nbsp;
+                                                                                              <a href="https://twitter.com/Socioboard"
+                                                                                                  target="_blank" style="padding-right: 28px; text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-tw-icon.png"
+                                                                                                      style="width: 30px;" alt="twitter">
+                                                                                              </a> &nbsp;
+                                                                                              <a href="https://www.linkedin.com/company/socioboard-technologies-private-limited"
+                                                                                                  target="_blank" style=" text-decoration: none;">
+                                                                                                  <img src="http://socioboard.com/wp-content/uploads/2021/07/mail-in-icon.png"
+                                                                                                      style="width: 30px;" alt="linkedin">
+                                                                                              </a>
+                                                                                          </span>
+                                                                                      </td>
+                                                                                  </tr>
+                                                                                  <tr>
+                                                                                    <td colspan="3">
+                                                                                      <table width="auto" cellspacing="0" cellpadding="0" align="center">
+                                                                                        <tbody><tr>
+                                                                                          <th>
+                                                                                            <a href="https://socioboard.org/privacy-policy/" style="color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400;line-height:15px; text-decoration: none;" target="_blank">Privacy Policy</a>
+                                                                                          </th>
+                                                                                          <th width="10px" style="border-right: 1px solid #bdbdbd;"></th>
+                                                                                          <th width="10px"></th>
+                                                                                          <th>
+                                                                                            <a href="https://www.socioboard.com/" style="color:#bdbdbd;font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400; line-height:15px; text-decoration: none;" target="_blank">socioboard.com</a>
+                                                                                          </th>
+                                                                                          <th width="10px" style="border-right: 1px solid #bdbdbd;"></th>
+                                                                                          <th width="10px"></th>
+                                                                                          <th>
+                                                                                            <a href="{{{unsubscribe}}}" style="color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; font-size:14px;font-weight:400;line-height:15px; text-decoration: none;">Unsubscribe</a>
+                                                                                          </th>
+                                                                                        </tr>
+                                                                                      </tbody></table>
+                                                                                    </td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                          <!-- END OF RIGHT COLUMN FOR SOCIAL ICONS-->
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- START OF VERTICAL SPACER-->
+                                          <table bgcolor="#26272b" class="table_scale" width="600" align="center"
+                                              cellpadding="0" cellspacing="0" border="0">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <table cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+              <tbody>
+                  <tr>
+                      <td width="100%" valign="top">
+                          <table cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b">
+                              <tbody>
+                                  <tr>
+                                      <td width="100%">
+      
+                                          <table class="table_scale" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%">
+                                                          <table width="600" cellspacing="0" cellpadding="0" border="0">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td class="spacer" width="30"></td>
+                                                                      <td width="540">
+                                                                          <!-- START OF LEFT COLUMN FOR HEADING-->
+                                                                          <table class="full" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" width="500" cellspacing="0" cellpadding="0" border="0" align="center">
+                                                                              <tbody>
+                                                                                  <tr>
+                                                                                      <td style="margin: 0; font-size:13px ; color:#bdbdbd; font-family: Open sans, Arial, Helvetica, sans-serif; line-height: 18px; text-align: center;" width="100%" height="20">
+                                                                                          Copyright © 2014 - 2021 Socioboard. All Rights Reserved.</td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                          <!-- END OF LEFT COLUMN FOR HEADING-->
+                                                                      </td>
+                                                                      <td class="spacer" width="30"></td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                          <!-- START OF VERTICAL SPACER-->
+                                          <table class="table_scale" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#26272b" align="center">
+                                              <tbody>
+                                                  <tr>
+                                                      <td width="100%" height="30">&nbsp;</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                          <!-- END OF VERTICAL SPACER-->
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          <!-- END OF FOOTER BLOCK-->
+      
+      </body>
+      
+      </html>`,
     };
   }
 
@@ -3234,7 +3708,6 @@ class MailService extends MailBase {
     return new Promise(async (resolve, reject) => {
       switch (defaultService) {
         case 'gmail':
-          console.log('sendMails', defaultService);
           try {
             const info = await this.sendEmailByGmail(mailingDetails);
             return resolve(info);

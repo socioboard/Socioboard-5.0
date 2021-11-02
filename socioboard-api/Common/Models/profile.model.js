@@ -15,7 +15,7 @@ class ProfileModel {
     this.googleHelper = new GoogleHelper(config.get('google_api'));
   }
 
-  async getFacebookPages(code) {
+  async getFacebookPages(code,invite) {
     const pages = [];
     const pageIds = [];
 
@@ -23,8 +23,9 @@ class ProfileModel {
       if (!code) {
         reject(new Error('Code is Invlaid'));
       } else {
-        return this.facebookHelper
-          .getOwnFacebookPages(code, config.get('profile_page_redirect_url'))
+        let redirecturl = "";
+        if(invite == 1 ? redirecturl = config.get('profile_page_invite_redirect_url') : redirecturl = config.get('profile_page_redirect_url') )
+        return this.facebookHelper.getOwnFacebookPages(code, redirecturl)
           .then(pageDetails => {
             if (!pageDetails) {
               throw new Error('Cant able to fetch page details');
@@ -38,6 +39,7 @@ class ProfileModel {
                   profilePicture: `https://graph.facebook.com/${page.id}/picture?type=large&access_token=${page.access_token}`,
                   fanCount: page.fan_count,
                   isAlreadyAdded: false,
+                  isInvite:invite
                 };
 
                 pages.push(pageObject);
@@ -124,7 +126,7 @@ class ProfileModel {
     });
   }
 
-  async getcompanyProfileDetails(code) {
+  async getcompanyProfileDetails(code,invite) {
     const companies = [];
     const companyIds = [];
     return new Promise((resolve, reject) => {
@@ -132,8 +134,9 @@ class ProfileModel {
         reject(new Error('Code is Invalid'));
       } else {
         // Fetching linkedin company profile details using auth code
-        return this.linkedInHelper
-          .getCompanyProfileDetails(code)
+        let redirecturl = "";
+        if(invite == 1 ? redirecturl = config.get('linkedIn_api.invite_redirect_url_page') : redirecturl= config.get('linkedIn_api.redirect_url_page'))
+         return this.linkedInHelper.getCompanyProfileDetails(code,redirecturl)
           .then(data => {
             const {response, access_token, refresh_token} = data;
             if (response.elements.length != 0) {
@@ -156,6 +159,7 @@ class ProfileModel {
                   profilePicture,
                   profileUrl: `https://www.linkedin.com/company/${company['organizationalTarget~']?.vanityName}`,
                   isAlreadyAdded: false,
+                  isInvite:invite
                 };
 
                 companies.push(companyObject);
@@ -193,7 +197,7 @@ class ProfileModel {
    * @param  {string} code - Youtube Auth Code
    * @return {object} Returns Channel Details
    */
-  async getYoutubeChannels(code) {
+  async getYoutubeChannels(code,invite) {
     const channels = [];
     const channelIds = [];
 
@@ -201,8 +205,9 @@ class ProfileModel {
       if (!code) {
         reject(new Error('Invalid Inputs'));
       } else {
-        return this.googleHelper
-          .getYoutubeChannels(code)
+        let redirecturl = "";
+        if(invite == 1 ? redirecturl = config.get('google_api.google_profile_add_invite_redirect_url') : redirecturl= config.get('google_api.google_profile_add_redirect_url'))
+        return this.googleHelper.getYoutubeChannels(code,redirecturl)
           .then(response => {
             const channelDetails = response.parsedBody;
             const {tokens} = response;
@@ -232,6 +237,7 @@ class ProfileModel {
                     hiddenSubscriberCount:
                       channel.statistics.hiddenSubscriberCount,
                   },
+                  isInvite:invite
                 };
 
                 channelIds.push(channel.id);
@@ -275,7 +281,7 @@ class ProfileModel {
    * @param  {string} code - InstaBusinessAccount Auth Code
    * @return {object} Returns InstaBusinessAccount Details
    */
-  async getInstaBusinessAccount(code) {
+  async getInstaBusinessAccount(code,invite) {
     return new Promise((resolve, reject) => {
       let instagramAccounts = [];
       let instagramIds = [];
@@ -284,11 +290,9 @@ class ProfileModel {
         reject(new Error('Invalid Inputs'));
       } else {
         // Fetching instagram business accounts (linked with Facebook)
-        this.facebookHelper
-          .getPagesConnectWithInsta(
-            code,
-            config.get('instagram_business_api.business_redirect_url')
-          )
+        let redirecturl = "";
+        if(invite == 1 ? redirecturl = config.get('instagram_business_api.business_invite_redirect_url') : redirecturl= config.get('instagram_business_api.business_redirect_url'))
+        this.facebookHelper.getPagesConnectWithInsta(code,redirecturl)
           .then(pageDetails => {
             logger.info(`Page Details: ${JSON.stringify(pageDetails)}`);
             if (pageDetails.data) {
@@ -353,6 +357,7 @@ class ProfileModel {
                             : '',
                           fanCount: profile.followed_by_count,
                           isAlreadyAdded: false,
+                          isInvite:invite
                         };
 
                         logger.info(`Insta Account-- ${instaAcc} `);

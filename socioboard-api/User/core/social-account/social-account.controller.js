@@ -1,3 +1,8 @@
+import {
+  AddSocialAccRes,
+  CatchResponse,
+} from '../../../Common/Shared/response.shared.js';
+import Validator from './social-account.validate.js';
 import SocialAccountService from './social-account.service.js';
 
 class SocialAccountController {
@@ -22,9 +27,8 @@ class SocialAccountController {
             #swagger.parameters['network'] = {
                 in: 'query',
                 default: 'Facebook',
-            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest"]
-
-        } */
+            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest", "Bitly", "Reddit","DailyMotion","Tumblr","Pocket"]
+            } */
     return await SocialAccountService.getProfileRedirectUrl(req, res, next);
   }
 
@@ -68,7 +72,11 @@ class SocialAccountController {
          #swagger.parameters['code'] = {
                 in: 'query'
 
-            } */
+            }
+          #swagger.parameters['state'] = {
+                in: 'query',
+                required:true
+          }*/
     return await SocialAccountService.getYoutubeChannels(req, res, next);
   }
 
@@ -80,9 +88,14 @@ class SocialAccountController {
                     }] */
     /*
           #swagger.parameters['code'] = {
-                 in: 'query'
-
-             } */
+                 in: 'query',
+                  required:true
+          }     
+          #swagger.parameters['state'] = {
+                in: 'query',
+                required:true
+          }
+    */
     return await SocialAccountService.getFacebookPages(req, res, next);
   }
 
@@ -110,22 +123,27 @@ class SocialAccountController {
           #swagger.parameters['code'] = {
                  in: 'query'
 
-             } */
+            } 
+           #swagger.parameters['state'] = {
+               in: 'query',
+               required:true
+            }
+     */
     return await SocialAccountService.getLinkedInCompanyProfileDetails(
       req,
       res,
-      next,
+      next
     );
   }
 
-/**
- * TODO To add Intagram Business 
- * @name post/get-instagram-business-profile
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- * @return {object} Returns added Instagram Business Profile details
- */
+  /**
+   * TODO To add Intagram Business
+   * @name post/get-instagram-business-profile
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns added Instagram Business Profile details
+   */
   async getInstagramBusinessProfile(req, res, next) {
     /* 	#swagger.tags = ['Add-SocialAccount']
                  #swagger.description = get the FaceBook Groups */
@@ -136,18 +154,26 @@ class SocialAccountController {
           #swagger.parameters['code'] = {
                  in: 'query'
 
-             } */
-    return await SocialAccountService.getInstagramBusinessProfile(req, res, next);
+             }
+         #swagger.parameters['state'] = {
+                in: 'query',
+                required:true
+             }*/
+    return await SocialAccountService.getInstagramBusinessProfile(
+      req,
+      res,
+      next
+    );
   }
 
-/**
- * TODO To add Multi Social Profile  
- * @name post/add-bulk-social-profile
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- * @return {object} Returns bulk Social Profile  details
- */
+  /**
+   * TODO To add Multi Social Profile
+   * @name post/add-bulk-social-profile
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns bulk Social Profile  details
+   */
   async addBulkSocialProfiles(req, res, next) {
     /* 	#swagger.tags = ['Add-SocialAccount']
          #swagger.description = 'add Bulk social Profiles' */
@@ -162,18 +188,22 @@ class SocialAccountController {
     /*
            #swagger.parameters['teamId'] = {
                   in: 'query'
-              } */
+              } 
+           #swagger.parameters['state'] = {
+                in: 'query',
+                required:false
+            }*/
     return await SocialAccountService.addBulkSocialProfiles(req, res, next);
   }
 
   /**
- * TODO Delete Social Profile 
- * @name delete/delete-social-profile
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- * @return {object} Returns Deleted Account status 
- */
+   * TODO Delete Social Profile
+   * @name delete/delete-social-profile
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns Deleted Account status
+   */
   async deleteSocialProfile(req, res, next) {
     /* 	#swagger.tags = ['Add-SocialAccount']
          #swagger.description = 'Delete Socila Profile' */
@@ -188,6 +218,119 @@ class SocialAccountController {
                   in: 'query'
               } */
     return await SocialAccountService.deleteSocialProfile(req, res, next);
+  }
+
+  /**
+   * TODO Invite social Account Member
+   * @name post/invite-social-account-member
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} send Mail to Member
+   */
+  async inviteSocialAccountMember(req, res, next) {
+    /* 	#swagger.tags = ['Add-SocialAccount']
+                 #swagger.description = Add the social network to the System */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+    /*	#swagger.parameters['data'] = {
+                            in: 'body',
+                            description: 'User Details',
+                            required: true,
+                            schema: { $ref: "#/definitions/InviteSocialAccount" }
+                    } */
+    return await SocialAccountService.inviteSocialAccountMember(req, res, next);
+  }
+
+  async addMediumProfile(req, res) {
+    /* #swagger.tags = ['Add-SocialAccount']
+        #swagger.description = 'Add Medium Blog profile' */
+    /* #swagger.parameters['teamId'] = {
+        in: 'query',
+        description: 'Team Id',
+        required: true
+       }
+       #swagger.parameters['accessToken'] = {
+        in: 'query',
+        description: 'Access Token',
+        required: true
+       }
+       #swagger.requestBody = {
+        hidden: true
+       } */
+    /* #swagger.security = [{
+        "AccessToken": []
+       }] */
+
+    try {
+      const {accessToken, teamId} = await Validator.validateAddMediumProfile(
+        req.query
+      );
+      const {userName, userScopeId: userId} = req.body;
+
+      const addedProfile = await SocialAccountService.addMediumProfile(
+        accessToken,
+        {
+          userId,
+          userName,
+          teamId,
+        }
+      );
+
+      AddSocialAccRes(
+        res,
+        addedProfile.teamDetails,
+        addedProfile.profileDetails
+      );
+    } catch (error) {
+      CatchResponse(res, error.message);
+    }
+  }
+
+  /** TODO Add Tumblr Blogs
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns get Board details
+   */
+  async getTumblerBlog(req, res, next) {
+    /* 	#swagger.tags = ['Add-SocialAccount']
+                 #swagger.description = get the FaceBook Pages */
+    /* #swagger.security = [{
+                    "AccessToken": []
+                    }] */
+    /*
+          #swagger.parameters['code'] = {
+                 in: 'query',
+                  required:true
+          }     
+          #swagger.parameters['state'] = {
+                in: 'query',
+                required:true
+          }
+    */
+    return await SocialAccountService.getTumblerBlog(req, res, next);
+  }
+
+  /**
+   * TODO To get Board details
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns Deleted Account status
+   */
+  async getPinterestBoards(req, res, next) {
+    /* 	#swagger.tags = ['Add-SocialAccount']
+         #swagger.description = 'Get the Pinterest Boards' */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+    /* #swagger.parameters['AccId'] = {
+                  in: 'query'
+              }
+      */
+    return await SocialAccountService.getPinterestBoards(req, res, next);
   }
 }
 export default new SocialAccountController();

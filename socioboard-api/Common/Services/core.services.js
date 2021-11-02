@@ -46,15 +46,20 @@ function CoreServices() {
     GoogleAnalytics: 10,
     Pinterest: 11,
     InstagramBusiness: 12,
+    Bitly: 13,
+    Reddit: 14,
+    DailyMotion: 15,
+    Tumblr: 16,
+    Pocket: 17,
   };
 }
 
 CoreServices.prototype.getNetworkName = function (id) {
-  if (id > 12 || id == 0) {
+  if (id > Object.keys(this.networks).length || id == 0) {
     return undefined;
   }
 
-  return Object.keys(this.networks).find((k) => this.networks[k] === id);
+  return Object.keys(this.networks).find(k => this.networks[k] === id);
 };
 
 CoreServices.prototype.getNetworkId = function (name) {
@@ -66,7 +71,7 @@ CoreServices.prototype.getUserPlan = function (id) {
     return undefined;
   }
 
-  return Object.keys(userPlans).find((k) => userPlans[k] === id);
+  return Object.keys(userPlans).find(k => userPlans[k] === id);
 };
 
 CoreServices.prototype.getGuid = function () {
@@ -100,7 +105,9 @@ CoreServices.prototype.generatePasswordByDob = function (birthDay, firstName) {
   if (birthDay == null || firstName == null) {
     firstName = this.getRandomCharacters(6);
     birthDay = this.getRandomNumbers(4);
-    password = `${firstName.toUpperCase().substring(0, 2)}${firstName.toLowerCase().substring(2, 4)}${birthYear}#`;
+    password = `${firstName.toUpperCase().substring(0, 2)}${firstName
+      .toLowerCase()
+      .substring(2, 4)}${birthYear}#`;
 
     return password;
   }
@@ -108,7 +115,9 @@ CoreServices.prototype.generatePasswordByDob = function (birthDay, firstName) {
   var birthYear = birthDay.match(/\d{4}/gm);
 
   if (birthYear.length > 0) {
-    password = `${firstName.toUpperCase().substring(0, 2)}${firstName.toLowerCase().substring(2, 4)}${birthYear[0]}#`;
+    password = `${firstName.toUpperCase().substring(0, 2)}${firstName
+      .toLowerCase()
+      .substring(2, 4)}${birthYear[0]}#`;
 
     return password;
   }
@@ -123,7 +132,9 @@ CoreServices.prototype.generatePassword = function () {
     const firstName = this.getRandomCharacters(6);
     const birthYear = this.getRandomNumbers(4);
 
-    password = `${firstName.toUpperCase().substring(0, 2)}${firstName.toLowerCase().substring(2, 4)}${birthYear}#`;
+    password = `${firstName.toUpperCase().substring(0, 2)}${firstName
+      .toLowerCase()
+      .substring(2, 4)}${birthYear}#`;
 
     return password;
   } catch (error) {

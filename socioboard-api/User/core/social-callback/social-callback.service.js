@@ -30,13 +30,13 @@ class SocialCallbackService {
 
   async facebookCallback(req, res, next) {
     try {
-      const { value, error } = Validating.validateCode(req.query);
+      const {value, error} = Validating.validateCode(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-      const { code } = req.query;
+      const {code} = req.query;
       const access_token = await this.fbConnect.getProfileAccessToken(
         code,
-        config.get('facebook_api.redirect_url'),
+        config.get('facebook_api.redirect_url')
       );
 
       if (!access_token) {
@@ -49,7 +49,7 @@ class SocialCallbackService {
 
       const parseData = await unauthorizedLibs.parseDataFacebook(
         fbrawuserInfo,
-        access_token,
+        access_token
       );
       const is_user_register = await unauthorizedLibs.getSocialAccDetail(
         parseData.user.email,
@@ -61,17 +61,17 @@ class SocialCallbackService {
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
-          is_user_register?.user_name,
+          is_user_register?.user_name
         );
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
-          is_user_register.Activations.id,
+          is_user_register.Activations.id
         );
 
         if (userInfo) {
           return res
             .status(200)
-            .json({ code: 200, message: 'success', data: userInfo });
+            .json({code: 200, message: 'success', data: userInfo});
         }
       }
 
@@ -79,18 +79,22 @@ class SocialCallbackService {
 
       this.updateSocialMediaStats(userDetails.socialNetworkDetails);
 
+      await unauthorizedLibs.checkTeamInvite(
+        parseData.user.email,
+        userDetails.userInfo.user.user_id
+      );
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
 
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
-        userDetails.userInfo.activations.id,
+        userDetails.userInfo.activations.id
       );
 
       if (userInfo) {
         return res
           .status(200)
-          .json({ code: 200, message: 'success', data: userInfo });
+          .json({code: 200, message: 'success', data: userInfo});
       }
     } catch (error) {
       return CatchResponse(res, error.message);
@@ -106,7 +110,7 @@ class SocialCallbackService {
         lastName
         email
        */
-    const { user: userData } = userDetails?.userInfo;
+    const {user: userData} = userDetails?.userInfo;
     const aMemberData = {
       userName: userData?.user_name,
       password: userData?.password,
@@ -120,28 +124,29 @@ class SocialCallbackService {
 
   async googleCallback(req, res, next) {
     try {
-      const { value, error } = Validating.validateCode(req.query);
+      const {value, error} = Validating.validateCode(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-      const { code } = req.query;
+      const {code} = req.query;
       const g_token = await this.googleConnect.getGoogleAccessToken(
         code,
-        config.get('google_api.redirect_url'),
+        config.get('google_api.redirect_url')
       );
 
       if (!g_token) {
       }
 
-      const googlerawuserInfo = await this.googleConnect.getGoogleProfileInformation(g_token);
+      const googlerawuserInfo =
+        await this.googleConnect.getGoogleProfileInformation(g_token);
 
       if (!googlerawuserInfo) {
       }
       const parseData = await unauthorizedLibs.parsedataGoogle(
         googlerawuserInfo,
-        g_token,
+        g_token
       );
       const is_user_register = await unauthorizedLibs.getSocialAccDetail(
-        parseData.user.email,
+        parseData.user.email
       );
 
       if (is_user_register) {
@@ -149,18 +154,18 @@ class SocialCallbackService {
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
-          is_user_register?.user_name,
+          is_user_register?.user_name
         );
 
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
-          is_user_register.Activations.id,
+          is_user_register.Activations.id
         );
 
         if (userInfo) {
           return res
             .status(200)
-            .json({ code: 200, message: 'success', data: userInfo });
+            .json({code: 200, message: 'success', data: userInfo});
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(parseData);
@@ -168,15 +173,19 @@ class SocialCallbackService {
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
 
+      await unauthorizedLibs.checkTeamInvite(
+        parseData.user.email,
+        userDetails.userInfo.user.user_id
+      );
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
-        userDetails.userInfo.activations.id,
+        userDetails.userInfo.activations.id
       );
 
       if (userInfo) {
         return res
           .status(200)
-          .json({ code: 200, message: 'success', data: userInfo });
+          .json({code: 200, message: 'success', data: userInfo});
       }
     } catch (error) {
       return CatchResponse(res, error.message);
@@ -185,18 +194,22 @@ class SocialCallbackService {
 
   async githubCallback(req, res, next) {
     try {
-      const { value, error } = Validating.validateCode(req.query);
+      const {value, error} = Validating.validateCode(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-      const { code } = req.query;
-      const GithubrawuserInfo = await this.githubConnect.getGithubuserData(code);
+      const {code} = req.query;
+      const GithubrawuserInfo = await this.githubConnect.getGithubuserData(
+        code
+      );
 
       if (!GithubrawuserInfo) {
       }
-      const data = await unauthorizedLibs.parsedatagitHub(GithubrawuserInfo.data);
+      const data = await unauthorizedLibs.parsedatagitHub(
+        GithubrawuserInfo.data
+      );
       const is_user_register = await unauthorizedLibs.getSocialAccDetail(
         data.user.email,
-        data.user.username,
+        data.user.username
       );
 
       if (is_user_register) {
@@ -204,32 +217,38 @@ class SocialCallbackService {
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
-          is_user_register?.user_name,
+          is_user_register?.user_name
         );
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
-          is_user_register.Activations.id,
+          is_user_register.Activations.id
         );
 
         if (userInfo) {
           return res
             .status(200)
-            .json({ code: 200, message: 'success', data: userInfo });
+            .json({code: 200, message: 'success', data: userInfo});
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(data);
 
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
+
+      await unauthorizedLibs.checkTeamInvite(
+        userDetails.userInfo.user.email,
+        userDetails.userInfo.user.user_id
+      );
+
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
-        userDetails.userInfo.activations.id,
+        userDetails.userInfo.activations.id
       );
 
       if (userInfo) {
         return res
           .status(200)
-          .json({ code: 200, message: 'success', data: userInfo });
+          .json({code: 200, message: 'success', data: userInfo});
       }
     } catch (error) {
       return CatchResponse(res, error.message);
@@ -238,21 +257,21 @@ class SocialCallbackService {
 
   async twitterCallback(req, res, next) {
     try {
-      const { value, error } = Validating.validateTwitterData(req.query);
+      const {value, error} = Validating.validateTwitterData(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-      const { requestToken } = req.query;
-      const { requestSecret } = req.query;
-      const { verifier } = req.query;
+      const {requestToken} = req.query;
+      const {requestSecret} = req.query;
+      const {verifier} = req.query;
 
       const twitterdata = await unauthorizedLibs.getTwitterData(
         requestToken,
         requestSecret,
-        verifier,
+        verifier
       );
       const is_user_register = await unauthorizedLibs.getSocialAccDetail(
         twitterdata.user.email,
-        twitterdata.user.username,
+        twitterdata.user.username
       );
 
       if (is_user_register) {
@@ -260,35 +279,42 @@ class SocialCallbackService {
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
-          is_user_register?.user_name,
+          is_user_register?.user_name
         );
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
-          is_user_register.Activations.id,
+          is_user_register.Activations.id
         );
 
         if (userInfo) {
           return res
             .status(200)
-            .json({ code: 200, message: 'success', data: userInfo });
+            .json({code: 200, message: 'success', data: userInfo});
         }
       }
 
-      const userDetails = await unauthorizedLibs.registerSocialUser(twitterdata);
+      const userDetails = await unauthorizedLibs.registerSocialUser(
+        twitterdata
+      );
 
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
 
       this.updateSocialMediaStats(userDetails.socialNetworkDetails);
+
+      await unauthorizedLibs.checkTeamInvite(
+        userDetails.userInfo.user.email,
+        userDetails.userInfo.user.user_id
+      );
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
-        userDetails.userInfo.activations.id,
+        userDetails.userInfo.activations.id
       );
 
       if (userInfo) {
         return res
           .status(200)
-          .json({ code: 200, message: 'success', data: userInfo });
+          .json({code: 200, message: 'success', data: userInfo});
       }
     } catch (error) {
       return CatchResponse(res, error.message);
@@ -300,15 +326,19 @@ class SocialCallbackService {
       case '1':
         this.fbConnect
           .getFbProfileStats(socialAccounts.dataValues.access_token)
-          .then((updateDetails) => this.createOrUpdateFriendsList(
-            socialAccounts.dataValues.account_id,
-            updateDetails,
-          ))
-          .then(() => teamlibs
-            .scheduleNetworkPostFetching(socialAccounts.dataValues.account_id)
-            .catch((error) => {
-              logger.error(error.message);
-            }))
+          .then(updateDetails =>
+            this.createOrUpdateFriendsList(
+              socialAccounts.dataValues.account_id,
+              updateDetails
+            )
+          )
+          .then(() =>
+            teamlibs
+              .scheduleNetworkPostFetching(socialAccounts.dataValues.account_id)
+              .catch(error => {
+                logger.error(error.message);
+              })
+          )
           .catch(() => {});
         break;
 
@@ -321,9 +351,9 @@ class SocialCallbackService {
           .getLookupList(
             socialAccounts.dataValues.access_token,
             socialAccounts.dataValues.refresh_token,
-            socialAccounts.dataValues.user_name,
+            socialAccounts.dataValues.user_name
           )
-          .then((updateDetails) => {
+          .then(updateDetails => {
             updatedProfileDetails = updateDetails;
             const data = {
               accountId: socialAccounts.dataValues.account_id,
@@ -340,16 +370,20 @@ class SocialCallbackService {
 
             return twitterInsightPostModelObject.insertInsights(data);
           })
-          .then(() => this.createOrUpdateFriendsList(
-            socialAccounts.dataValues.account_id,
-            updatedProfileDetails,
-          ))
-          .then(() => teamlibs
-            .scheduleNetworkPostFetching(socialAccounts.dataValues.account_id)
-            .catch((error) => {
-              logger.error(error.message);
-            }))
-          .catch((error) => {
+          .then(() =>
+            this.createOrUpdateFriendsList(
+              socialAccounts.dataValues.account_id,
+              updatedProfileDetails
+            )
+          )
+          .then(() =>
+            teamlibs
+              .scheduleNetworkPostFetching(socialAccounts.dataValues.account_id)
+              .catch(error => {
+                logger.error(error.message);
+              })
+          )
+          .catch(error => {
             //  console.log(JSON.stringify(error, null, 4))
           });
         break;

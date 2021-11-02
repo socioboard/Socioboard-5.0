@@ -5,6 +5,8 @@ import db from '../Sequelize-cli/models/index.js';
 import SendEmailServices from '../Services/mail-base.services.js';
 import TwtConnect from '../Cluster/twitter.cluster.js';
 import aMember from '../Mappings/amember.users.js';
+import TeamLibs from './team.model.js';
+const teamLibs = new TeamLibs();
 
 // import config from 'config';
 
@@ -27,6 +29,8 @@ const userActivation = db.user_activations;
 const teamInfo = db.team_informations;
 const socialAccount = db.social_accounts;
 const userDetails = db.user_details;
+const teamInviteUser = db.invite_user_for_team;
+const userTeamJoinTable = db.join_table_users_teams;
 
 class userLibs {
   constructor() {
@@ -722,7 +726,13 @@ class userLibs {
       where: {
         email,
       },
-      attributes: ['user_id', 'first_name', 'email', 'user_activation_id'],
+      attributes: [
+        'user_id',
+        'user_name',
+        'first_name',
+        'email',
+        'user_activation_id',
+      ],
       include: [
         {
           model: userActivation,
@@ -1217,6 +1227,63 @@ class userLibs {
     );
 
     return mailData.response ? mailData.response : mailData;
+  }
+
+  /**
+   * TODO To check user invited to join any team
+   * Function To check user invited to join any team
+   * @param  {number} user_id -Invited user id.
+   * @param  {string} email -Email id of user invited
+   */
+  async checkTeamInvite(email, user_id) {
+    let res = await teamInviteUser.findAll({
+      where: {
+        email,
+        status: 0,
+      },
+      raw: true,
+    });
+    let result;
+    if (res?.length > 0) {
+      res.map(async x => {
+        let user = await userDetails.findOne({
+          where: {
+            user_id: x.invited_by,
+          },
+          raw: true,
+        });
+        if (user) {
+          let teamDetails = await teamInfo.findOne({
+            where: {
+              team_id: x.team_id,
+            },
+            raw: true,
+          });
+          if (teamInfo) {
+            result = await userTeamJoinTable.create({
+              team_id: x.team_id,
+              user_id,
+              invitation_accepted: false,
+              permission: x.permission,
+              left_from_team: false,
+              invited_by: x.invited_by,
+            });
+            await teamInviteUser.update({status: 1}, {where: {id: x.id}});
+            if (config.get('notification_socioboard.status') == 'on') {
+              await teamLibs.sendUserNotification(
+                `${user.first_name} invited to join ${teamDetails.team_name} Team.`,
+                teamDetails.team_name,
+                'team_invite',
+                user.first_name,
+                'success',
+                user_id,
+                user_id
+              );
+            }
+          }
+        }
+      });
+    }
   }
 }
 export default userLibs;

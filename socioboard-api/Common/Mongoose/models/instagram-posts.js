@@ -94,8 +94,6 @@ instagramPost.methods.getSocialAccountPosts = function (
     ])
     .then((result) => {
       if (result.length > 0) {
-        console.log(`result ${JSON.stringify(result)}`);
-
         return result;
       }
 

@@ -33,22 +33,25 @@ function LinkedIn(linkedIn_api) {
   ];
 }
 
-LinkedIn.prototype.getOAuthUrl = function (state) {
+LinkedIn.prototype.getOAuthUrl = function (state, redirectUrl) {
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${
     this.linkedIn_api.client_id
-  }&redirect_uri=${this.linkedIn_api.redirect_url}&scope=${config.get(
-    'linkedIn_api.scope'
-  )}`;
+  }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
 };
 
-LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code) {
+LinkedIn.prototype.addLinkedInProfile = function (
+  network,
+  teamId,
+  code,
+  redirectUrl
+) {
   let accessTokenData;
   return new Promise((resolve, reject) => {
     if (!code) {
       reject("Can't get code from linkedIn!");
     } else {
       // Calling a function to fetch the accessToken by giving user code
-      return this.getProfileAccessToken(code)
+      return this.getProfileAccessToken(code, redirectUrl)
         .then(response => {
           accessTokenData = response;
           // Checking whether it gave user accessToken or not
@@ -89,7 +92,7 @@ LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code) {
   });
 };
 
-LinkedIn.prototype.getProfileAccessToken = function (code) {
+LinkedIn.prototype.getProfileAccessToken = function (code, redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -99,7 +102,7 @@ LinkedIn.prototype.getProfileAccessToken = function (code) {
         grant_type: 'authorization_code',
         client_id: this.linkedIn_api.client_id,
         client_secret: this.linkedIn_api.client_secret,
-        redirect_uri: this.linkedIn_api.redirect_url,
+        redirect_uri: redirectUrl,
         code,
       },
       json: true,
@@ -123,7 +126,7 @@ LinkedIn.prototype.getProfileAccessToken = function (code) {
  * @param  {string} code -Code from linkedIn redirect url
  * @returns {string} access_token -Access token of a page
  */
-LinkedIn.prototype.getCompanyPageAccessToken = function (code) {
+LinkedIn.prototype.getCompanyPageAccessToken = function (code, redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -133,7 +136,7 @@ LinkedIn.prototype.getCompanyPageAccessToken = function (code) {
         grant_type: 'authorization_code',
         client_id: this.linkedIn_api.client_id,
         client_secret: this.linkedIn_api.client_secret,
-        redirect_uri: this.linkedIn_api.redirect_url_page,
+        redirect_uri: redirectUrl,
         code,
       },
       json: true,
@@ -275,11 +278,16 @@ LinkedIn.prototype.getV1OAuthUrl = function (state) {
   // return this.LinkedInApiConfig.auth.authorize(this.scope, state);
   return this.LinkedInApiConfig.auth.authorize(this.scope);
 };
+LinkedIn.prototype.getOAuthLinkedPageUrl = function (redirectUrl) {
+  return `https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=${
+    this.linkedIn_api.client_id
+  }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
+};
 
-LinkedIn.prototype.getCompanyProfileDetails = function (code) {
+LinkedIn.prototype.getCompanyProfileDetails = function (code, redirectUrl) {
   let accessTokenData;
   return new Promise((resolve, reject) =>
-    this.getCompanyPageAccessToken(code)
+    this.getCompanyPageAccessToken(code, redirectUrl)
       .then(response => {
         accessTokenData = response;
         if (!response.access_token)
@@ -640,8 +648,9 @@ LinkedIn.prototype.publishPost = function (
             },
             body: {
               owner: `urn:li:${target}:${userName}`,
-              text: {text: postDetails.message},
-              subject: 'Test Share Subject',
+              text: {
+                text: `${postDetails.message} \n${postDetails.link ?? ''}`,
+              },
               distribution: {
                 linkedInDistributionTarget: {anyOne: true},
               },
@@ -651,7 +660,6 @@ LinkedIn.prototype.publishPost = function (
                     entity: `${asset}`,
                   },
                 ],
-                title: 'Test Share with Content title',
                 shareMediaCategory: 'IMAGE',
               },
             },

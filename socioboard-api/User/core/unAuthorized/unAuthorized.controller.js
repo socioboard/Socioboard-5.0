@@ -66,7 +66,6 @@ class UnauthorizedController {
                             required: true,
                             }
                     } */
-
     return await UnauthorizedService.verifyEmail(req, res, next);
   }
 
@@ -79,7 +78,6 @@ class UnauthorizedController {
                             required: false,
                             }
                     } */
-
     return await UnauthorizedService.forgotPassword(req, res, next);
   }
 
@@ -108,12 +106,16 @@ class UnauthorizedController {
                             description: 'User email.',
                             required: true,
                             }
-                    #swagger.parameters['newPassword'] = {
+        #swagger.parameters['activationToken'] = {
+                            in: 'query',
+                            description: 'User email activationToken.',
+                            required: true,
+                            }
+        #swagger.parameters['newPassword'] = {
                             in: 'query',
                             description: 'User newPassword',
                             required: true,
-                            }
-                    } */
+                            } */
     return await UnauthorizedService.resetPassword(req, res, next);
   }
 
@@ -135,27 +137,13 @@ class UnauthorizedController {
     /*	#swagger.parameters['email'] = {
                             in: 'query',
                             description: 'User email.',
-                            required: true,
                             }
                     #swagger.parameters['activationToken'] = {
                             in: 'query',
                             description: 'User email activationToken.',
-                            required: true,
                             }
                     } */
     return await UnauthorizedService.verifyDirectLoginToken(req, res, next);
-  }
-
-  async directLogin(req, res, next) {
-    /* 	#swagger.tags = ['Open']
-                    #swagger.description = 'Endpoint to sign in a specific user' */
-    /*	#swagger.parameters['data'] = {
-                            in: 'body',
-                            description: 'User credentials.',
-                            required: true,
-                            schema: { $ref: "#/definitions/DirectLogin" }
-                    } */
-    return await UnauthorizedService.directLogin(req, res, next);
   }
 
   async socialLogin(req, res, next) {

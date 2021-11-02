@@ -132,8 +132,8 @@ class Trends {
             const parsedBody = JSON.parse(body);
             const imgurDetails = [];
 
-            parsedBody.data.forEach((element) => {
-              const media_type = element.type ? element.type : element.images[0].type;
+            parsedBody?.data?.forEach((element) => {
+              const media_type = element?.type ?? element?.images[0]?.type;
               const mediaUrls = [];
 
               if (element.images) {
