@@ -138,8 +138,10 @@ $(document).ready(function () {
     $(document).on('submit', '#login_form', function (e) {
         e.preventDefault();
         $('#login_button').empty().append('<i class="fa fa-spinner fa-spin"></i>Signing In');
+        let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         let form = document.getElementById('login_form');
         let formData = new FormData(form);
+        formData.append('timezone', timezone);
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -153,6 +155,8 @@ $(document).ready(function () {
             success: function (response) {
                 $('#login_button').empty().append('Sign In');
                 if (response.code === 200) {
+                    document.cookie = 'bearer=' + response.data.accessToken;
+                    document.cookie = 'user_id=' + response.data.user.user_id;
                     window.location.href = "/dashboard";
                 } else if (response.code === 400) {
                     toastr.error(response.error);

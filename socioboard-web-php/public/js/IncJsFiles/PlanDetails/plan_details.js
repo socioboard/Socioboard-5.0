@@ -250,7 +250,7 @@ $(document).ready(function () {
         append +=
           '<button type="button" id="plan' +
           x.plan_id +
-          '" class="btn bg-red text-uppercase font-weight-bolder px-15 py-3"> Current </button>';
+          '" class="btn bg-red text-uppercase font-weight-bolder px-15 py-3" onclick="openPackagesPage()"> Current </button>';
       else if (x.plan_id > GET_USER_PLANS_DATA.plan_id)
         append +=
           '<button type="button" id="plan' +

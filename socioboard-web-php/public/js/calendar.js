@@ -32,16 +32,28 @@ var SBCalendarBasic = function() {
                 },
 
                 defaultView: 'dayGridMonth',
-                editable: true,
+                editable: false,
                 eventLimit: true, // allow "more" link when too many events
                 navLinks: true,
                 events:data,
+                eventClick: function(info) {
+                    $('#title').empty().append(info.event.title);
+                    $('#description').empty().append(info.event.extendedProps.description);
+                    $('#redirection').empty().append('<a href="'+info.event.extendedProps.redirection+'" class="btn text-hover-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 "\n' +
+                        '                                           >Edit</a>');
+                    $('#editcalenderbtn').modal('show')
+                },
+
 
                 eventRender: function(info) {
                     var element = $(info.el);
 
+
                     if (info.event.extendedProps && info.event.extendedProps.description) {
                         if (element.hasClass('fc-day-grid-event')) {
+
+                            element.find('.fc-content').append('<div class="mt-3 calender-crud"><button class="btn btn-primary btn-sm ml-2" >Edit</button></div>');
+
                             element.data('content', info.event.extendedProps.description);
                             element.data('placement', 'top');
                             SBApp.initPopover(element);
@@ -50,6 +62,7 @@ var SBCalendarBasic = function() {
                         } else if (element.find('.fc-list-item-title').lenght !== 0) {
                             element.find('.fc-list-item-title').append('<div class="fc-description">' + info.event.extendedProps.description + '</div>');
                         }
+
                     }
                 }
             });
@@ -90,6 +103,9 @@ jQuery(document).ready(function() {
                             events[i] = {
                                 title: "Day Wise Schedule",
                                 start: element.createdDate,
+                                extendedProps:  {
+                                    redirection: response.url+'home/publishing/socioQueue-scheduling/'+element._id+'/1',
+                                },
                                 description: element.description,
                                 className: "fc-event-danger fc-event-solid-warning",
                             }
@@ -97,6 +113,9 @@ jQuery(document).ready(function() {
                             events[i] = {
                                 title: "Normal Schedule",
                                 start: element.createdDate,
+                                extendedProps:  {
+                                    redirection: response.url+'home/publishing/socioQueue-scheduling/'+element._id+'/1',
+                                },
                                 description: element.description,
                                 className: "fc-event-solid-danger fc-event-light",
                             }

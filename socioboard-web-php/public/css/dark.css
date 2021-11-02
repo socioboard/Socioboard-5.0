@@ -178,6 +178,14 @@ i {
 .bg-github i {
     color: var(--white);
 }
+.bg-medium {
+    background-image: linear-gradient(145deg, #000, #000) !important;
+    color: var(--white) !important;
+}
+.bg-bitly {
+    background-image: linear-gradient(145deg, #e55d21, #f36021) !important;
+    color: var(--white) !important;
+}
 /* end:bg color */
 
 /* header */
@@ -419,7 +427,11 @@ i {
 }
 .btn-bitly {
     background-image: linear-gradient(145deg, #e55d21, #f36021) !important;
-    color: var(--white);
+    color: var(--white); !importantar
+}
+.btn-medium {
+    background-image: linear-gradient(145deg, #000, #000) !important;
+    color: var(--white) !important;
 }
 
 .bootstrap-select > .dropdown-toggle.btn-light,
@@ -675,11 +687,15 @@ i {
 /* begin:images and video upload css */
 
 #media-list li img {
-    width: 100px;
-    height: 100px;
+    width: 100%;
+    max-width: 100px;
+    min-height: 100%;
+    height: auto;
+    object-fit: contain;
 }
 
 #media-list li {
+    overflow: hidden;
     height: 102px;
 }
 
@@ -1170,7 +1186,13 @@ html[data-theme='dark'] .assistant-right-sidebar {
         height: calc(100% - 70px) !important;
     }
     .publish_assistant_card .card-body {
-        padding-right: 160px !important;
+        /*padding-right: 160px !important;*/
+    }
+    .publish_assistant_card .initial_view_section {
+        padding-right: 130px !important;
+    }
+    .publish_assistant_card .visible_form_assistance {
+        padding-right: 0px;
     }
     .assistant-right-sidebar .publish_assistant_tabs .nav-item a {
         flex-direction: column;
@@ -1183,6 +1205,9 @@ html[data-theme='dark'] .assistant-right-sidebar {
     }
     .publish_assistant_tabs .nav-item a span {
         margin-top: 10px;
+    }
+    .visible_form_assistance .col:empty {
+        display: none;
     }
     /*begin::color representation for calender*/
     .color-descriptive div + div {
@@ -1243,6 +1268,7 @@ html[data-theme='dark'] .assistant-right-sidebar {
         height: 70px;
     }
 }
+
 
 @media screen and (min-width: 992px) {
     .assistant_step {
@@ -1423,7 +1449,7 @@ html[data-theme='dark'] .assistant-right-sidebar {
 .leftside-competitor .card {
     height: calc(100vh - 250px);
     overflow-y: auto;
-    position: static;
+    position:static !important;
 }
 .leftside-competitor .card .add-competitor {
     position: absolute;
@@ -1659,4 +1685,211 @@ html[data-theme='dark'] .bitly-black-logo {
 .box-profile .image-input-wrapper {
     height: 30px;
 }
+
+.medium-story {
+    padding-top: 0px !important;
+}
+.medium-feeds-section {
+    display: flex;
+    align-items: center;
+}
+.medium-feeds-section a .profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.medium-story .card-img {
+    border-radius: 10px;
+}
+
+
 /* end::Rss feature css */
+/* end::Rss feature css */
+
+.rss-tags .btn {
+    padding: 10px 20px;
+}
+.rss-tags .btn + .btn {
+    margin-left: 10px;
+}
+.rss-search-input {
+    position: relative;
+    margin-bottom: 0px;
+}
+.rss-search-input .feed_searchbtn {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    box-shadow: 3px 3px 6px var(--shadow-light), -3px -3px 6px var(--shadow-dark);
+}
+.rss-feeds-wrapper .card-text {
+    display: flex;
+    align-items: center;
+}
+#addtags .tagify__input {
+    color: var(--secondary-color);
+}
+
+.newspaper-keyword {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.medium_feeds_group .select2-search__field {
+    color: var(--secondary-color);
+}
+.calender-crud .btn {
+    box-shadow: none;
+}
+.twittersubscription-card {
+    margin-top: 6rem;
+}
+.twittersubscription-card .twitter-card {
+    height: 60px;
+}
+.twittersubscription-card .twitter-card img {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    left: 50%;
+    top: -50px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+}
+.social-subscriptions-inner {
+    display: flex;
+    margin-top: 15px;
+}
+.social-subscriptions-inner .start-item + .start-item {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+.social-subscriptions-inner .start-item .start-item-name p {
+    font-size: 12px;
+}
+.twitter-social-icons {
+    display: flex;
+    justify-content: center;
+}
+
+.twitter-social-icons .social-icons + .social-icons {
+    margin-left: 10px;
+}
+@media screen and (max-width: 767px) {
+    #twittersubscription-list .twitter-media-title {
+        display: none;
+    }
+    .twitter-subscription-btn {
+        width: 100%;
+        margin-top: 20px;
+    }
+    .twitter-input-search,
+    .twitter-social-icons .social-icons {
+        margin-top: 20px;
+    }
+    .twitter-social-icons .social-icons {
+        margin-bottom: 10px;
+    }
+    .subscription-view {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+    }
+    .twitter-wrapper .start-item-name p,
+    .twitter-wrapper .twitter-media {
+        font-size: 10px !important;
+    }
+    #twittersubscription-list .twiiter-details {
+        padding-left: 20px;
+    }
+    #twittersubscription-list .twitter-card .card-img-top {
+        width: 75px;
+        height: 75px;
+    }
+}
+
+.twitter-add-accounts li + li {
+    margin-top: 10px;
+}
+
+#sb_calendar .fc-content-skeleton .fc-more-cell a.fc-more {
+    color: var(--heading-color);
+    font-size: 14px !important;
+}
+
+#twittersubscription-list .twitter-card .card-img-top {
+    /*position: absolute;*/
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    /*top: 0px;*/
+}
+#twittersubscription-list .twitter-social-icons .social-icons + .social-icons {
+    margin-left: 0;
+}
+#twittersubscription-list .twiiter-details {
+    padding-left: 50px;
+}
+#twittersubscription-list .social-icons {
+    border: 0px none;
+    background: transparent;
+    /*text-align: left;*/
+}
+#twittersubscription-list .twitter-social-icons {
+    flex-direction: column;
+}
+#twittersubscription-list .twitter-social-icons .social-icons + .social-icons {
+    margin-top: 8px;
+}
+#twittersubscription-list .twitter-social-icons .social-icons i {
+    margin-right: 5px;
+}
+#twittersubscription-list .twitter-media {
+    font-size: 1.2rem;
+    text-align: center;
+}
+#twittersubscription-list .twitter-media-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.3rem;
+    opacity: 0.5;
+}
+#twittersubscription-list .twitter-wrapper {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 20px 10px;
+    margin-top: 20px;
+}
+html[data-theme='dark']
+#twittersubscription-list
+.twitter-social-icons
+.social-icons {
+    color: var(--font-color);
+    font-size: 14px;
+}
+#sb_calendar .fc-content-skeleton .fc-more-cell a.fc-more,
+#sb_calendar .fc-content-skeleton a.fc-more {
+    color: var(--heading-color);
+    font-size: 14px !important;
+}
+
+.hashtags-by-country .card-title {
+    color: #1bc5bd;
+}
+#hashtags-chart {
+    width: 100%;
+    height: 600px;
+}
+
+.hashtags-by-country {
+    overflow-y: auto;
+    height: 200px;
+}
+
+.login-social-btns .btn {
+    min-width:300px;
+}

@@ -1,5 +1,24 @@
+function imageIdForDelete(id,size) {
+    $("#imageId").val(id)
+    $("#imageSize").val(size)
+}
+
 function imageId(id) {
     $("#imageId").val(id)
+}
+
+function imageInfo(env, url, title, rating, createdDate, type, size) {
+    $('#imageDiv').empty().append('<img src="' + env + url + '" alt="image" class="img-fluid">');
+    $('#title_id').empty().append(title);
+    $('#model_header').empty().append('<h5 class="modal-title" id="imageGalleryInfoLabel">' + title + '</h5>' +
+        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+        '                        <i aria-hidden="true" class="ki ki-close"></i>\n' +
+        '                    </button>');
+    $('#size_id').empty().append(Number(size)/(1024*1024) + ' MB');
+    $('#create_date').empty().append(createdDate);
+    $('#type').empty().append(type);
+    $('#ratng').empty().append('<i class="fas fa-star">' + rating + '</i></b></span>');
+
 }
 
 function clearDataBeforeUpload() {
@@ -7,8 +26,48 @@ function clearDataBeforeUpload() {
     $('#image_name_error1, #image_name_error2').html("");
 }
 
+function updateRating(rating, accountId) {
+    $.ajax({
+        type: "put",
+        url: '/imagelibary/rate-image',
+        data: {accountId, rating},
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.code === 200) {
+                toastr.success('Sucessfully Update Rating', "", {
+                    timeOut: 1000,
+                    fadeOut: 1000,
+                    onHidden: function () {
+                        window.location.reload();
+                    }
+                });
+            } else if (response.code === 400) {
+                toastr.error(response.message, {
+                    timeOut: 1000,
+                    fadeOut: 1000,
+                });
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+}
+
+$(document).on('click', '#search_button', function (e) {
+    document.getElementById("vieww").value = $("#type_of_view").find(".active").attr('id');
+    $('#search_button').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
+})
+
+$(document).on('click', '#search_buttonss', function (e) {
+    document.getElementById("vieww").value = $("#type_of_views").find(".active").attr('id');
+    $('#search_buttonss').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
+})
+
 let pageId = 2;
 let IS_LAST = false;
+
 function getScrollXY() {
     let scrOfX = 0, scrOfY = 0;
     if (typeof (window.pageYOffset) == 'number') {
@@ -47,24 +106,25 @@ let matchBottomScroll = (documentSize, scrollSize, frequency = 5) => {
 
 function deleteImage() {
     let mediaId = $("#imageId").val();
-    let size = Number($("#Image"+mediaId).attr("data-value"));
+    let size = Number($("#imageSize").val());
+    // let size = Number($("#Images" + mediaId).attr("data-value"));
     let isForceDelete = 1;
     $.ajax({
         url: "/imagelibary/delete-image",
-        type: 'post',
+        type: 'delete',
         data: {mediaId, isForceDelete},
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        beforeSend: function () {
-        },
         success: function (response) {
             if (response.code === 200) {
                 $("#usedSize").empty();
-                USEDSIZE =  Number(USEDSIZE - size);
+                USEDSIZE = Number(USEDSIZE - size);
                 $("#usedSize").append(sizeConverter(USEDSIZE));
                 toastr.success(response.message);
                 $("#Image" + mediaId).remove();
+                $("#Images" + mediaId).remove();
+                window.location.reload();
             } else {
                 toastr.error(response.message);
             }
@@ -93,48 +153,41 @@ function imageUpload(privacy) {
         cache: false,
         contentType: false,
         processData: false,
-        beforeSend: function () {
-        },
-             success: function (response) {
-                    if (response.code === 200) {
-                        $("#privateImagesError1, #privateImagesError2").html("");
-                        let append = "";
-                        $(".modal-backdrop").remove();
-                        $('#uploadImageModal').hide().removeClass("hide");
-                        $("#image_name").val("");
-                        $("#file-upload").val("");
-                        response.data.map(function (image) {
-                            $("#usedSize").empty();
-                            USEDSIZE = Number(USEDSIZE + image.media_size);
-                            $("#usedSize").append(sizeConverter(USEDSIZE));
-                            append += '<div class="card" id="Image' + image.id + '" data-value="' + image.media_size + '">\n' +
-                                '                                <img src="' + API_URL + image.media_url + '" class="card-img-top" alt="...">\n' +
-                                '                                <div class="card-body">\n' +
-                                '                                    <div class="d-flex justify-content-center">\n' +
-                                '                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal"\n' +
-                                '                                           onclick="oneClickImage(\'' + image.media_url + '\')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i\n' +
-                                '                                                class="far fa-hand-point-up fa-fw"></i> 1 click</a>\n' +
-                                '                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId(\'' + image.id + '\')"\n' +
-                                '                                           class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i\n' +
-                                '                                                class="far fa-trash-alt fa-fw"></i> Delete</a>\n' +
-                                '                                    </div>\n' +
-                                '                                </div>\n' +
-                                '                            </div>';
-                        });
-                        $("#privateImages").append(append);
-                        toastr.success("successfully uploaded");
-                    } else if (response.code === 201) {
-                        // $('#uploadImageModal').modal('show');
-                        let i;
-                        for (i of response.msg) {
+        success: function (response) {
+            if (response.code === 200) {
+                $("#privateImagesError1, #privateImagesError2").html("");
+                let append = "";
+                $(".modal-backdrop").remove();
+                $('#uploadImageModal').hide().removeClass("hide");
+                $("#image_name").val("");
+                $("#file-upload").val("");
+                response.data.map(function (image) {
+                    $("#usedSize").empty();
+                    USEDSIZE = Number(USEDSIZE + image.media_size);
+                    $("#usedSize").append(sizeConverter(USEDSIZE));
+                });
+                toastr.success("successfully uploaded", "", {
+                    timeOut: 2000,
+                    fadeOut: 2000,
+                    onHidden: function () {
+                        window.location.reload();
+                    }
+                });
+            } else if (response.code === 201) {
+                // $('#uploadImageModal').modal('show');
+                let i;
+                for (i of response.msg) {
                     switch (i) {
                         case 'File name is Required':
                             $('#image_name_error1, #image_name_error2').html(i);
                             break;
+                        case 'The file must be a file of type: jpeg, jpg, png.':
+                            toastr.error(i);
+                            break;
                     }
                 }
-            }else if (response.code === 202) {
-                            toastr.error(response.msg);
+            } else if (response.code === 202) {
+                toastr.error(response.msg);
             } else {
                 $('#uploadImageModal').modal('hide');
                 toastr.error(response.message);
@@ -148,17 +201,17 @@ function imageUpload(privacy) {
 
 function sizeConverter(size) {
     let totalSize = 0;
-    totalSize = Number(size/(1024*1024)).toFixed(2) + "/" + (Number(TOTALSIZE/(1024*1024))).toFixed(2) + "MB";
+    totalSize = Number(size / (1024 * 1024)).toFixed(2) + "/" + (Number(TOTALSIZE / (1024 * 1024))).toFixed(2) + "MB";
     return totalSize;
 }
 
 function getImages(pageID) {
     $('#loader_id').show();
-    loadingFunction("Loading...",1);
-    let urls ;
-    if(IMAGE_TYPE === Number(0))  urls = "/imagelibary/public-images";
-    else if (IMAGE_TYPE === Number(1) )  urls = "/imagelibary/private-images";
-    else if (IMAGE_TYPE === Number(3))  urls = "/imagelibary/gallery-images";
+    loadingFunction("Loading...", 1);
+    let urls;
+    if (IMAGE_TYPE === Number(0)) urls = "/imagelibary/public-images";
+    else if (IMAGE_TYPE === Number(1)) urls = "/imagelibary/private-images";
+    else if (IMAGE_TYPE === Number(3)) urls = "/imagelibary/gallery-images";
     pageId++;
     $.ajax({
         type: "post",
@@ -166,48 +219,46 @@ function getImages(pageID) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-        data: { pageID },
-        beforeSend: function () {
-        },
+        data: {pageID},
         success: function (response) {
-            let append ='';
-                let x='';
-                if(response.code === 200) {
-                    $('#loader_id, #loader_text_id').hide();
-                    if(response.data.data.length > 0) {
-                        for (x of response.data.data) {
-                            if((IMAGE_TYPE === Number(0)) || (IMAGE_TYPE === Number(1))) {
-                                append += '<div class="card" id="Image' + x.id + '" data-value="' + x.media_size + '">' +
-                                    ' <img src=" ' + API_URL + x.media_url + '" class="card-img-top" alt="...">' +
-                                    ' <div class="card-body">' +
-                                    ' <div class="d-flex justify-content-center">' +
-                                    ' <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" ' +
+            let append = '';
+            let x = '';
+            if (response.code === 200) {
+                $('#loader_id, #loader_text_id').hide();
+                if (response.data.data.length > 0) {
+                    for (x of response.data.data) {
+                        if ((IMAGE_TYPE === Number(0)) || (IMAGE_TYPE === Number(1))) {
+                            append += '<div class="card" id="Image' + x.id + '" data-value="' + x.media_size + '">' +
+                                ' <img src=" ' + API_URL + x.media_url + '" class="card-img-top" alt="...">' +
+                                ' <div class="card-body">' +
+                                ' <div class="d-flex justify-content-center">' +
+                                ' <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" ' +
                                 ' onclick="oneClickImage(\'' + x.media_url + '\')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5">' +
                                 ' <i class="far fa-hand-point-up fa-fw"></i> 1 click</a>' +
-                                    ' <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId(\'' + x.id + '\')"' +
-                                    ' class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i class="far fa-trash-alt fa-fw"></i> Delete</a>' +
-                                    ' </div></div></div>';
-                            } else if(IMAGE_TYPE === Number(3)) {
-                            append += '<div class="card" id="Image'+ x.id +'">'+
-                                '<img src=" ' + API_URL + x.media_url +'" class="card-img-top" alt="...">'+
+                                ' <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageIdForDelete(\'' + x.id + '\',\'' + x.media_size + '\')"' +
+                                ' class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i class="far fa-trash-alt fa-fw"></i> Delete</a>' +
+                                ' </div></div></div>';
+                        } else if (IMAGE_TYPE === Number(3)) {
+                            append += '<div class="card" id="Image' + x.id + '">' +
+                                '<img src=" ' + API_URL + x.media_url + '" class="card-img-top" alt="...">' +
                                 ' <div class="card-body">' +
                                 ' <div class="d-flex justify-content-center">' +
                                 ' <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" ' +
                                 ' onclick="oneClickImage(\'' + x.media_url + '\')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5">' +
                                 ' <i class="far fa-hand-point-up fa-fw"></i> 1 click</a>' +
                                 ' </div></div></div>';
-                            }
                         }
-                        $('#privateImages').append(append);
-
-                    } else {
-                        $('#loader_id').hide();
-                        IS_LAST = true;
-                        loadingFunction("No More Images !",2);
                     }
-            } else {
+                    $('#privateImages').append(append);
+
+                } else {
                     $('#loader_id').hide();
-                    loadingFunction(response.message,2);
+                    IS_LAST = true;
+                    loadingFunction("No Image Found !", 2);
+                }
+            } else {
+                $('#loader_id').hide();
+                loadingFunction(response.message, 2);
             }
         },
         error: function () {
@@ -225,7 +276,7 @@ function loadingFunction(text, val) {
         $('#loader_id').empty().append(loader);
     }
     loader_text += '<div class="d-flex justify-content-center">';
-    loader_text += (val === 1)  ? '<span>' + text + '</span></div>' : '<span style="color:red">' + text + '</span></div>';
+    loader_text += (val === 1) ? '<span>' + text + '</span></div>' : '<span style="color:red">' + text + '</span></div>';
     $('#loader_text_id').empty().append(loader_text);
     $('#loader_text_id').show();
 }
