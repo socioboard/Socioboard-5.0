@@ -46,6 +46,9 @@ class FeedsController extends Controller
         $linkedInAccounts = [];
         $instagramAccounts = [];
         $instagramBusinessAccounts = [];
+        $mediumAccounts = [];
+        $tumblrAccounts = [];
+        $country = [];
         if (strpos($network, 'twitter') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
@@ -77,7 +80,8 @@ class FeedsController extends Controller
                             $accId = $accounts[0]->account_id;
                             $feedsData = $this->getTwitterFeeds($accId);
                         }
-                        return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
+                        $country = $this->getCountryDetailsByAccount($accId);
+                        return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'country' => $country]);
                     } else {
                         return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'No Twitter account added yet! or Account has locked']);
                     }
@@ -298,7 +302,6 @@ class FeedsController extends Controller
                             $accounts = $instagramBusinessAccounts;
                         }
                         $feedsData = $this->getInstgramAndBusinessFeeds($accId, 12, 1);
-                        //   dd($feedsData);
                         return view('feeds::InstaBusiness')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
                     } else {
                         return view('feeds::InstaBusiness')->with(["accounts" => $accounts, 'message' => 'No Instagram business Pages added yet!']);
@@ -340,7 +343,7 @@ class FeedsController extends Controller
                             $accounts = $linkedInAccounts;
                             $accId = $linkedInAccounts[0]->account_id;
                         }
-                        $feedsData = $this->getLinkedInFeeds($accId,1);
+                        $feedsData = $this->getLinkedInFeeds($accId, 1);
                         return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'followersData' => $response['data']]);
                     } else {
                         return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'No LinkedIn Pages account has been added yet!']);
@@ -350,6 +353,84 @@ class FeedsController extends Controller
                     return view('feeds::linkedIn_Feeds')->with(["accounts" => $linkedInAccounts, 'message' => 'failed']);
                 }
 
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
+            }
+        } else if (strpos($network, 'medium') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 14 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($mediumAccounts, $data);
+                        }
+                    }
+                    if (count($mediumAccounts) > 0) {
+                        if (preg_match('~[0-9]+~', $network)) {
+                            $accId = (integer)substr($network, 6, strlen($network));
+                            for ($i = 0; $i < count($mediumAccounts); $i++) {
+                                if ($mediumAccounts[$i]->account_id === $accId) {
+                                    array_push($accounts, $mediumAccounts[$i]);
+                                    unset($mediumAccounts[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($mediumAccounts) > 0) {
+                                foreach ($mediumAccounts as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accId = $mediumAccounts[0]->account_id;
+                            $accounts = $mediumAccounts;
+                        }
+                        $feedsData = $this->getMediumFeeds($accId);
+                        return view('feeds::medium_feeds')->with(["accounts" => $accounts, 'message' => 'success', 'publications' => $feedsData]);
+                    } else {
+                        return view('feeds::medium_feeds')->with(["accounts" => $accounts, 'message' => 'No Medium Account has been  added yet!']);
+                    }
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
+            }
+        } else if (strpos($network, 'Tumblr') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 16 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($tumblrAccounts, $data);
+                        }
+                    }
+                    if (count($tumblrAccounts) > 0) {
+                        if (preg_match('~[0-9]+~', $network)) {
+                            $accId = (integer)substr($network, 6, strlen($network));
+                            for ($i = 0; $i < count($tumblrAccounts); $i++) {
+                                if ($tumblrAccounts[$i]->account_id === $accId) {
+                                    array_push($accounts, $tumblrAccounts[$i]);
+                                    unset($tumblrAccounts[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($tumblrAccounts) > 0) {
+                                foreach ($tumblrAccounts as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accId = $tumblrAccounts[0]->account_id;
+                            $accounts = $tumblrAccounts;
+                        }
+                        $feedsData = $this->getTumblrFeeds($accId, 1);
+                        return view('feeds::tumblr_feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
+                    } else {
+                        return view('feeds::tumblr_feeds')->with(["accounts" => $accounts, 'message' => 'No Tumblr Account has been  added yet!']);
+                    }
+                }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
                 return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
@@ -555,6 +636,66 @@ class FeedsController extends Controller
     }
 
 
+    public function getMediumFeeds($accID)
+    {
+
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        try {
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/publications?accountId=' . $accID . '&teamId=' . $teamID;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+            }
+            return $result;
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+
+    public function getTumblrFeeds($accID, $pageID)
+    {
+
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        try {
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-tumblr-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageID;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+            }
+            return $result;
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+
     /**
      * TODO we've to get  the next  feeds of twitter account on pagination.
      * This function is used for getting next feeds from particular twitter account,on pagination.
@@ -600,6 +741,16 @@ class FeedsController extends Controller
      * @return {object} Returns in object form if twitter feed has been disliked or not.
      * ! Do not change this function without referring API format of disliking feed.
      */
+
+
+    public function getNextTumblerFeeds(Request $request)
+    {
+        $accID = $request->accid;
+        $pageId = $request->pageId;
+        $feedsData = $this->getTumblrFeeds($accID, $pageId);
+        return $feedsData;
+    }
+
     public function disLikeTheTweet(Request $request)
     {
         $tweetId = (int)$request->twitterID;
@@ -890,17 +1041,18 @@ class FeedsController extends Controller
     {
         $accID = (int)$request->accid;
         $pageId = (int)$request->pageid;
-        $accountType =(int) $request->accounType;
-        return  $this->getInstgramAndBusinessFeeds($accID, $accountType, $pageId);
+        $accountType = (int)$request->accounType;
+        return $this->getInstgramAndBusinessFeeds($accID, $accountType, $pageId);
     }
 
     function getNextLinkedInFeeds(Request $request)
     {
         $accID = (int)$request->accid;
         $pageId = (int)$request->pageid;
-        return  $this->getLinkedInFeeds($accID, $pageId);
+        return $this->getLinkedInFeeds($accID, $pageId);
     }
-    function getLinkedInFeeds($accID,$pageId)
+
+    function getLinkedInFeeds($accID, $pageId)
     {
         $team = Session::get('team');
         $teamID = $team['teamid'];
@@ -928,4 +1080,137 @@ class FeedsController extends Controller
             return $result;
         }
     }
+
+    function getUserPosts(Request $request)
+    {
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        $accID = $request->accID;
+        $pageId = $request->pageId;
+        try {
+            if ($pageId === "1") {
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/posts?accountId=' . $accID . '&teamId=' . $teamID . '&limit=25';
+
+            } else {
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/posts?accountId=' . $accID . '&teamId=' . $teamID . '&limit=25' . '&cursor=' . $pageId;
+
+            }
+            $apiUrl2 = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/account?accountId=' . $accID . '&teamId=' . $teamID;
+            $response1 = $this->helper->postApiCallWithAuth('get', $apiUrl2);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+                $result['profileData'] = $response1['data']->data;
+                return $result;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+                return $result;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+                return $result;
+            }
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getLinkedInFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+    function getUserPublications(Request $request)
+    {
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        $accID = $request->accID;
+        try {
+            $apiUrl1 = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/publications?accountId=' . $accID . '&teamId=' . $teamID;
+            $apiUrl2 = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/account?accountId=' . $accID . '&teamId=' . $teamID;
+            $response1 = $this->helper->postApiCallWithAuth('get', $apiUrl2);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl1);
+            if ($response['data']->code === 200 && $response1['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+                $result['profileData'] = $response1['data']->data;
+                return $result;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+                return $result;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+                return $result;
+            }
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getLinkedInFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+    function publishOnMedium(Request $request)
+    {
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $accID = $request->accID;
+        $tags = $request->tags;
+        $descriptionText = $request->descriptionText;
+        $titleText = $request->titleText;
+        try {
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/posts';
+            $data = (object)array("accountId" => $accID, "teamId" => $teamID, "article" => (object)array('title' => $titleText, 'contentFormat' => 'html', 'content' => "<p>$descriptionText</p>", 'publishStatus' => 'public', "tags" => $tags));
+            $response1 = $this->helper->postApiCallWithAuth('post', $apiUrl, $data);
+            return $this->helper->responseHandler($response1['data']);
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getLinkedInFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+    function getCountryDetailsByAccount($accId)
+    {
+        try {
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/twitter/trends/available?accountId=' . $accId . '&teamId=' . $teamID;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            return $response;
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getCountryDetailsByAccount() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get Country names';
+            return $result;
+        }
+    }
+
+    function getCountryHashtags(Request $request)
+    {
+        try {
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            if($request->method()==='POST')
+            {
+                $accounId = $request->accounId;
+                $country = $request->currentCountryValue;
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/twitter/trends?accountId=' . $accounId . '&teamId=' . $teamID . '&country=' . $country;
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                $result = $this->helper->responseHandler($response['data']);
+                return $result;
+            }
+            } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getCountryHashtags() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get Country Hash tags';
+            return $result;
+        }
+    }
+
 }

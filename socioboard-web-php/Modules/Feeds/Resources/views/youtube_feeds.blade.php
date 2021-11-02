@@ -422,6 +422,7 @@
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
+                    $(".spinner-border").css("display", "none");
                     if (response.code === 200) {
                         $('#youtubeProfileDiv').empty();
                         $('#youtubeProfileDiv').append('<div\n' +
@@ -575,6 +576,7 @@
                     $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
+                    $(".spinner-border").css("display", "none");
                     if (response.code === 200) {
                         $('#youtubeProfileDiv').empty();
                         $('#youtubeProfileDiv').append('<div\n' +
