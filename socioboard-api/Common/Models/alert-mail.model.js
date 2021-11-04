@@ -1,6 +1,6 @@
 import config from 'config';
 import moment from 'moment';
-import logger from '../../Update/resources/log/logger.log.js';
+import logger from '../../Update/resources/Log/logger.log.js';
 import db from '../Sequelize-cli/models/index.js';
 import SendEmailService from '../Services/mail-base.services.js';
 
