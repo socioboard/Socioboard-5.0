@@ -191,6 +191,7 @@
                                         <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
                                             <div class="mt-3">
                                                 @foreach($socialAccountsGroups as $group => $socialAccountArray)
+                                                    @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                     <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                     <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
                                                     @foreach($socialAccountArray as $group_key => $socialAccount)
@@ -234,6 +235,7 @@
                                                             <!--end::Page-->
                                                     @endforeach
                                                     </div>
+                                                    @endif
                                                 @endforeach
                                             </div>
                                         </div>
