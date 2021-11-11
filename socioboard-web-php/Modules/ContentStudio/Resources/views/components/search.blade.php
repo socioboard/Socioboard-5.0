@@ -1,6 +1,6 @@
 
 <div class="col-xl-4" style="top: 50px;">
-    <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023" style="position: fixed; width: 606px; left: 26px; top: 200px;">
+    <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023">
         <div class="card-header border-0 py-5">
             <h3 class="card-title font-weight-bolder">{{$title}}</h3>
         </div>
