@@ -622,6 +622,7 @@ class PublishContentController extends Controller
                 'mediaData' => [
                     'description' => isset($postData->description) ? $postData->description : null,
                     'type' => isset($postType) ? strtolower($postType) : null,
+                    'sourceUrl' => isset($postData->shareLink) ? $postData->shareLink : null,
                 ],
                 'mediaUrl' => isset($postData->mediaUrl) ? $postData->mediaUrl : null,
                 'socialAccounts' => $socialAccounts,
@@ -963,7 +964,7 @@ class PublishContentController extends Controller
                 "scheduleCategory" => $request->has('scheduling_type') ? $request->get('scheduling_type') : 0,  //it should be either 0(daily) or 1(weekly)
                 "teamId" => $teamId,
 
-                "moduleName" => "string",
+                "moduleName" => $request->has('scheduling_type') && $request->get('scheduling_type') === 1 ? "Daywise scheduling" : "Normal scheduling",
                 "moduleValues" => [
                     "string"
                 ],
@@ -1134,7 +1135,8 @@ class PublishContentController extends Controller
                         "description" => $request->discription,
                         "categoryId" => 24,
                         "defaultLanguage" => "en",
-                        "defaultAudioLanguage" => "en"
+                        "defaultAudioLanguage" => "en",
+                        "tags" => isset($request->param ) ? $request->param : [],
                     ],
                     "status" => $status
                 ],

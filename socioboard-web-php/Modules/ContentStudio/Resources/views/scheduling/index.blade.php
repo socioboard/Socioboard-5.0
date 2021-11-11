@@ -9,6 +9,7 @@
     <!--end::Page Vendors Styles-->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/dropify/dist/css/dropify.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/emojionearea/css/emojionearea.min.css') }}">
+    <link rel="shortcut icon" href="assets/media/logos/favicon.ico"/>
 
 @endsection
 @section('content')
@@ -27,7 +28,7 @@
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
-            <div class=" container ">
+            <div class=" container-fluid publish_assistant_wrapper ">
                 <!--begin::Schedule-->
                 <div class="row">
                     <div class="col-xl-6 col-sm-12">
@@ -274,6 +275,192 @@
                     <div class="col-xl-6 col-sm-12">
                         @include('contentstudio::scheduling.components._draft_preview')
                     </div>
+                    <div class="col-xl-6 publish_assistant">
+                        <!--begin::shrink-btn-->
+                        <div class="btn btn-icon btn-sm shrink-btn">
+                                        <span class="svg-icon svg-icon-xl">
+                                            <i class="fas fa-angle-left" id="arrow"></i>
+                                        </span>
+                        </div>
+                        <!--end::shrink-btn-->
+                        <div class="card card-custom gutter-b card-stretch publish_assistant_card">
+                            <!--begin::Header-->
+                            <div class="card-header border-0 py-5">
+                                <h3 class="card-title font-weight-bolder">Assistant Preview</h3>
+                            </div>
+                            <!--end::Header-->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="tab-pane active show" id="right_sidebar_assistant">
+                                        <div class="initial_view_block">
+                                            <ul class="nav justify-content-center nav-pills" id="" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" id="" data-toggle="tab" href="#">
+    <span class="nav-text">
+    <i class="icon-1x text-dark-50 flaticon2-world"></i></span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="instagram">
+      <span class="nav-text">
+      <i class="icon-1x text-dark-50 flaticon-youtube"></i></span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="twitter-tab-accounts" data-toggle="tab" href="#" aria-controls="twitter">
+      <span class="nav-text">
+      <i class="icon-1x text-dark-50 flaticon-twitter-logo-button"></i>
+      </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
+    <span class="nav-text">
+    <i class="icon-1x text-dark-50 flaticon-more-1"></i>
+    </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
+    <span class="nav-text">
+    <i class="icon-1x text-dark-50 flaticon2-photo-camera"></i>
+    </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
+     <span class="nav-text">
+     <i class="icon-1x text-dark-50 flaticon2-safe"></i>
+     </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
+   <span class="nav-text">
+   <i class="icon-1x text-dark-50 flaticon-more"></i>
+  </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-icon mt-5 search-assistant">
+                                                <input class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" type="search"
+                                                       name="username" autocomplete="off" placeholder="Search by keyword" />
+                                                <span>
+                                                            <i class="icon-1x text-dark-50 flaticon2-search-1 ml-auto mr-2"></i>
+                                                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="assistant_step">
+                                            <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                            <div class="right_section">
+                                                <h4>Assistant 1</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+                                        <div class="assistant_step">
+                                            <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                            <div class="right_section">
+                                                <h4>Assistant 2</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="right_sidebar_tasks" role="tabpanel">
+                                        <div class="assistant_step">
+                                            <!-- <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div> -->
+                                            <div class="right_section">
+                                                <h4>Tasks 1</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+                                        <div class="assistant_step">
+                                            <!-- <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div> -->
+                                            <div class="right_section">
+                                                <h4>Tasks 2</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="right_sidebar_activities" role="tabpanel">
+                                        <div class="assistant_step">
+                                            <!-- <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div> -->
+                                            <div class="right_section">
+                                                <h4>Activities 1</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+                                        <div class="assistant_step">
+                                            <!-- <div class="left_section">
+                                                <i class="fa fa-search"></i>
+                                            </div> -->
+                                            <div class="right_section">
+                                                <h4>Activities 2</h4>
+                                                <span>Search</span>
+                                                <p>Select a channel and find content suggestion with your own keywords.</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="tab-pane" id="right_sidebar_comments" role="tabpanel">
+                                        <div class="assistant_step">
+                                            <div class="right_section">
+                                                <h4>Comments 1</h4>
+                                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+                                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+                                                    book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+                                                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                                                    recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="assistant-right-sidebar">
+                            <ul class="publish_assistant_tabs nav-pills nav nav-bold nav-tabs-line-3x nav-tabs-line-active-border-success justify-content-center" role=" tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" data-toggle="tab" href="#right_sidebar_assistant">
+                                        <i class="fa fa-th"></i>
+                                        <span>Assistant</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_tasks">
+                                        <i class="fa fa-tasks"></i>
+                                        <span>Tasks</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_activities">
+                                        <i class="fa fa-list"></i>
+                                        <span>Activities</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_comments">
+                                        <i class="far fa-comment"></i>
+                                        <span>Chats</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <!--end::Schedule-->
             </div>
@@ -344,6 +531,12 @@
         $("#schedule_normal_post_daterange").on("change.datetimepicker", function (e) {
             $('#schedule_normal_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
         });
+
+        $('.shrink-btn').on('click', function() {
+            let y = document.getElementById("arrow").className;
+            y == "fas fa-angle-right" ? $("#arrow").attr('class', 'fas fa-angle-left') : $("#arrow").attr('class', 'fas fa-angle-right')
+            $('.publish_assistant_wrapper').toggleClass('toggle-wrapper')
+        })
 
         // schedule_normal_post daterange
         var start = moment().subtract(29, 'days');
