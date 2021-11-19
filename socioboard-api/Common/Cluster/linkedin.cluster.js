@@ -38,20 +38,14 @@ LinkedIn.prototype.getOAuthUrl = function (state, redirectUrl) {
     this.linkedIn_api.client_id
   }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
 };
-
-LinkedIn.prototype.addLinkedInProfile = function (
-  network,
-  teamId,
-  code,
-  redirectUrl
-) {
+LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code,redirectUrl) {
   let accessTokenData;
   return new Promise((resolve, reject) => {
     if (!code) {
       reject("Can't get code from linkedIn!");
     } else {
       // Calling a function to fetch the accessToken by giving user code
-      return this.getProfileAccessToken(code, redirectUrl)
+      return this.getProfileAccessToken(code,redirectUrl)
         .then(response => {
           accessTokenData = response;
           // Checking whether it gave user accessToken or not
@@ -92,7 +86,7 @@ LinkedIn.prototype.addLinkedInProfile = function (
   });
 };
 
-LinkedIn.prototype.getProfileAccessToken = function (code, redirectUrl) {
+LinkedIn.prototype.getProfileAccessToken = function (code,redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -126,7 +120,7 @@ LinkedIn.prototype.getProfileAccessToken = function (code, redirectUrl) {
  * @param  {string} code -Code from linkedIn redirect url
  * @returns {string} access_token -Access token of a page
  */
-LinkedIn.prototype.getCompanyPageAccessToken = function (code, redirectUrl) {
+LinkedIn.prototype.getCompanyPageAccessToken = function (code,redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -284,10 +278,10 @@ LinkedIn.prototype.getOAuthLinkedPageUrl = function (redirectUrl) {
   }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
 };
 
-LinkedIn.prototype.getCompanyProfileDetails = function (code, redirectUrl) {
+LinkedIn.prototype.getCompanyProfileDetails = function (code,redirectUrl) {
   let accessTokenData;
   return new Promise((resolve, reject) =>
-    this.getCompanyPageAccessToken(code, redirectUrl)
+    this.getCompanyPageAccessToken(code,redirectUrl)
       .then(response => {
         accessTokenData = response;
         if (!response.access_token)

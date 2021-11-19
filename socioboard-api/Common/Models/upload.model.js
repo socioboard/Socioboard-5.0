@@ -280,15 +280,14 @@ class UploadLibs {
               .then(() => {
                 let totalSize = 0;
 
-                totalSize = privacy === 0
-                  ? (config.get('uploadService.max_size_public'))
-                  : (config.get('uploadService.max_size_private'));
-
-                totalSize = privacy === 2
-                  ? config.get('uploadService.max_size_public')
-                    + config.get('uploadService.max_size_private')
+                privacy == 0
+                  ? (totalSize = config.get('uploadService.max_size_public'))
+                  : (totalSize = config.get('uploadService.max_size_private'));
+                privacy == 2
+                  ? (totalSize =
+                      config.get('uploadService.max_size_public') +
+                      config.get('uploadService.max_size_private'))
                   : totalSize;
-
                 resolve({totalSize, usedSize: usedSpace, data});
               })
               .catch(error => {
@@ -439,7 +438,14 @@ class UploadLibs {
             .then(data => {
               if (!data) throw new Error('No such media found!');
 
-              media_url = `${config.get('uploadService.basePath')}/${data.dataValues.media_url}`;
+              if (data.dataValues.mime_type == 'video/mp4')
+                media_url = `${config.get('uploadService.basePath')}/${
+                  data.dataValues.media_url
+                }`;
+              else
+                media_url = `${config.get('uploadService.basePath')}/${
+                  data.dataValues.media_url
+                }`;
 
               // var media_url = `${ config.get('uploadService.video_path') } / ${ data.dataValues.media_url }`;
               thumbnail = `${config.get('uploadService.thumbnail_path')}/${

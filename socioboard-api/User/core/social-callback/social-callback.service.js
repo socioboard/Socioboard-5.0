@@ -78,11 +78,11 @@ class SocialCallbackService {
       const userDetails = await unauthorizedLibs.registerSocialUser(parseData);
 
       this.updateSocialMediaStats(userDetails.socialNetworkDetails);
-
       await unauthorizedLibs.checkTeamInvite(
         parseData.user.email,
         userDetails.userInfo.user.user_id
       );
+
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
 
@@ -177,6 +177,7 @@ class SocialCallbackService {
         parseData.user.email,
         userDetails.userInfo.user.user_id
       );
+
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
         userDetails.userInfo.activations.id
@@ -234,12 +235,10 @@ class SocialCallbackService {
 
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
-
       await unauthorizedLibs.checkTeamInvite(
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id
       );
-
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
         userDetails.userInfo.activations.id
@@ -301,7 +300,6 @@ class SocialCallbackService {
       this.registerSocialUserToAmember(userDetails);
 
       this.updateSocialMediaStats(userDetails.socialNetworkDetails);
-
       await unauthorizedLibs.checkTeamInvite(
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id
@@ -383,9 +381,7 @@ class SocialCallbackService {
                 logger.error(error.message);
               })
           )
-          .catch(error => {
-            //  console.log(JSON.stringify(error, null, 4))
-          });
+          .catch(error => {});
         break;
     }
   }

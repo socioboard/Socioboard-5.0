@@ -424,7 +424,7 @@ class ReportMailService {
               attachments.push({
                 content,
                 filename: `${reportTitle}_${
-                  data.socialAccDetails.user_name
+                  data.socialAccDetails.first_name
                 }_${frequency}_${data.socialAccDetails.account_id}_${
                   data.response.daywises[0].day
                 }_${
@@ -449,7 +449,7 @@ class ReportMailService {
               attachments.push({
                 content,
                 filename: `${reportTitle}_${
-                  data.socialAccDetails.user_name
+                  data.socialAccDetails.first_name
                 }_${frequency}_${data.response.daywises[0].day}_${
                   data.response.daywises[data.response.daywises.length - 1].day
                 }.csv`,

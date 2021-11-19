@@ -6,11 +6,13 @@ const { Schema } = mongoose;
 mongoose.set('useCreateIndex', true);
 
 const hashtaggroup = new Schema({
-  hashtaggroupId: { type: Schema.Types.Mixed, index: true, unique: true },
+  hashtaggroupId: { type: String, index: true, unique: true },
+  hashtaggroupId: { type: Number, index: true },
   groupname: { type: String },
   userId: { type: String },
   teamId: { type: String },
   created: { type: Date, default: Date.now },
+
 });
 
 hashtaggroup.methods.insertHashTagGroup = function (posts) {

@@ -1,18 +1,24 @@
+// const twitterApi = require('node-twitter-api');
+// var TwtAPi = require('twitter');
+// const moment = require('moment');
+// const path = require('path');
+// const requestPromise = require('request-promise');
+
 import twitterApi from 'node-twitter-api';
 import TwtAPi from 'twitter';
 import moment from 'moment';
 import path, {dirname} from 'path';
 import requestPromise from 'request-promise';
 import Sentiment from 'sentiment';
-import axios from 'axios';
 
 import {fileURLToPath} from 'url';
 import fs, {readFileSync} from 'fs';
-import TwitterShared from '../../Common/Shared/twitter.shared.js';
-import TWITTER_CONSTANTS from '../Constants/twitter.constants.js';
 
 // const logger = require('../utils/logger');
 import {createRequire} from 'module';
+
+import TwitterShared from '../../Common/Shared/twitter.shared.js';
+import TWITTER_CONSTANTS from '../Constants/twitter.constants.js';
 
 const sentiment = new Sentiment();
 
@@ -30,16 +36,16 @@ function Twitter(twitter_api) {
     callback: twitter_api.redirect_url,
   });
 
-  this.twitterObjInvite = new twitterApi({
-    consumerKey: twitter_api.api_key,
-    consumerSecret: twitter_api.secret_key,
-    callback: twitter_api.invite_redirect_url,
-  });
-
   this.twitterLogin = new twitterApi({
     consumerKey: twitter_api.api_key,
     consumerSecret: twitter_api.secret_key,
     callback: twitter_api.login_redirect_url,
+  });
+  
+  this.twitterObjInvite = new twitterApi({
+    consumerKey: twitter_api.api_key,
+    consumerSecret: twitter_api.secret_key,
+    callback: twitter_api.invite_redirect_url,
   });
 
   this.twitterRq = new TwitterShared({
@@ -208,6 +214,7 @@ Twitter.prototype.addTwitterProfilebyInvite = function (
   });
 };
 
+
 Twitter.prototype.requestToken = function () {
   return new Promise((resolve, reject) => {
     this.twitterObj.getRequestToken((error, requestToken, requestSecret) => {
@@ -231,8 +238,7 @@ Twitter.prototype.requestToken = function () {
  * Function to get the Twitter Request token for Invite
  * @return {object} Returns Twitter request Token and requestSecret
  */
-
-Twitter.prototype.requestTokenInvite = function () {
+ Twitter.prototype.requestTokenInvite = function () {
   return new Promise((resolve, reject) => {
     this.twitterObjInvite.getRequestToken(function (
       error,
@@ -250,6 +256,7 @@ Twitter.prototype.requestTokenInvite = function () {
     });
   });
 };
+
 
 Twitter.prototype.requestTokenLogin = function () {
   return new Promise((resolve, reject) => {
@@ -803,18 +810,16 @@ Twitter.prototype.getLookupList = function (
         .get('users/lookup', queryString)
         .then(response => {
           const updateDetails = {
-            follower_count: response[0].followers_count,
-            following_count: response[0].friends_count,
-            total_like_count: response[0].favourites_count,
-            total_post_count: response[0].statuses_count,
-            profile_picture: response[0].profile_image_url_https,
-            bio_text: response[0].description,
-            user_mentions: response[0].status.entities.user_mentions.length,
-            retweet_count: response[0].status.retweet_count,
-            favorite_count: response[0].favourites_count,
+            follower_count: response[0]?.followers_count,
+            following_count: response[0]?.friends_count,
+            total_like_count: response[0]?.favourites_count,
+            total_post_count: response[0]?.statuses_count,
+            profile_picture: response[0]?.profile_image_url_https,
+            bio_text: response[0]?.description,
+            user_mentions: response[0]?.status?.entities?.user_mentions?.length,
+            retweet_count: response[0]?.status?.retweet_count,
+            favorite_count: response[0]?.favourites_count,
           };
-          // Sending response
-
           resolve(updateDetails);
         })
         .catch(error => {

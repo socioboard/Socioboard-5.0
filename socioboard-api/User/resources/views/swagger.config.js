@@ -11,7 +11,7 @@ const doc = {
   host: config.get('swagger_host_url'), // by default: "localhost:3000"
   basePath: '/', // by default: "/"
   schemes: ['http', 'https'], // by default: ['http']
-  consumes: ['application/json'],
+  consumes: ['application/json', 'application/x-www-form-urlencoded'],
   produces: ['application/json'],
   tags: [
     // by default: empty Array
@@ -27,7 +27,6 @@ const doc = {
       name: 'Invitation', // Tag name
       description: 'Endpoints', // Tag description
     },
-
     {
       name: 'User',
       description: 'User Endpoint',
@@ -50,6 +49,13 @@ const doc = {
       name: 'x-access-token',
       description:
         'Please provide the valid access token, if you dont have please login and get the token as response!',
+    },
+    Bearer: {
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header',
+      description:
+        'Enter your bearer token in the format **Bearer &lt;token>**',
     },
   }, // by default: empty object
   definitions: {
@@ -76,14 +82,15 @@ const doc = {
       aboutMe: 'A business person',
       // { $ref: "#/definitions/myObject" }
     },
-    InviteSocialAccount: [{
-       teamId: '1',
-       userName: '@SocioboardS',
-       accName: 'Socioboard',
-       email: 'sbs@glb.com',
-       network: 'Twitter'
-    
-    }],
+    InviteSocialAccount: [
+      {
+        teamId: '1',
+        userName: '@SocioboardS',
+        accName: 'Socioboard',
+        email: 'sbs@glb.com',
+        network: 'Twitter',
+      },
+    ],
     userUpdate: {
       username: 'socioboard',
       firstName: 'socio',
@@ -91,7 +98,7 @@ const doc = {
       email: 'socioboard5.0@gmail.com',
       profilePicture: 'https://i.imgur.com/fdzLeWY.png',
       company: 'Globussoft Technologies',
-      location:'Bangalore',
+      location: 'Bangalore',
       language: 'En',
       phoneCode: '+91',
       phoneNo: '1324575248',
@@ -119,7 +126,7 @@ const doc = {
         refresh_token:
           'SuewfefgEWFEFefdhfdfDVCverf4t34t$#FRCs4t84fgRSGRG4t43fF4t4',
         friendship_counts: '243',
-        is_invite:0,
+        is_invite: 0,
         info: 'Build the success life with using Smart utils like sociobord for Social Networks',
       },
     ],

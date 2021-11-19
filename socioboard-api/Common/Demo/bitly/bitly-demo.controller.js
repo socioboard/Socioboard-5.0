@@ -263,7 +263,6 @@ class DemoController {
        }] */
 
     try {
-      // await demoBitlyCallback.validateAsync(req.query);
       const accessToken = this.getReqAccessToken(req);
 
       if (accessToken !== BITLY_CONSTANTS.ACCOUNT_DETAILS.ACCESS_TOKEN) {

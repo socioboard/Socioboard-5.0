@@ -242,7 +242,6 @@ class unauthorizedController {
         userDetails?.user_id,
         userDetails?.user_name
       );
-
       const remindingDays = moment(
         userDetails.Activations.account_expire_date
       ).diff(moment(), 'days');

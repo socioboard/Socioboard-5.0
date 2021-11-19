@@ -473,8 +473,8 @@ class TeamController {
              #swagger.parameters['network'] = {
                 in: 'query',
                 default: '0',
-                description: '0-All,1-Facebook,2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-LinkedIn,7-LinkedInCompany,8-GooglePlus,9-Youtube,10-GoogleAnalytics,11-Pinterest,12-InstagramBusiness,14-DailyMotion,16-Tumblr',
-                enum: ["0","1", "2","3", "4", "5", "6", "7", "8", "9","10" ,"11","12","14","16"]
+                description: '0-All,1-Facebook,2-FacebookPage,3-FacebookGroup,4-Twitter,5-Instagram,6-LinkedIn,7-LinkedInCompany,8-GooglePlus,9-Youtube,10-GoogleAnalytics,11-Pinterest,12-InstagramBusiness',
+                enum: ["0","1", "2","3", "4", "5", "6", "7", "8", "9","10" ,"11","12"]
             } */
     return await TeamService.getTeamSocialAccount(req, res, next);
   }

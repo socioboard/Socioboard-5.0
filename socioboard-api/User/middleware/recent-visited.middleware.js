@@ -1,6 +1,6 @@
 import moment from 'moment';
 import RecentVisitedModel from '../../Common/Mongoose/models/recent-visited.js';
-import { phproutes } from '../../Common/Shared/recent.visited.shared.js';
+import {phproutes} from '../../Common/Shared/recent.visited.shared.js';
 
 const recentVisitedModel = new RecentVisitedModel();
 
@@ -19,12 +19,11 @@ export default (request, response, next) => {
   };
   response.end = function (chunk) {
     if (chunk) chunks.push(chunk);
-    if (Buffer.isBuffer(chunks))
-      body = Buffer.concat(chunks).toString('utf8');
+    body = Buffer.concat(chunks).toString('utf8') ?? '';
     oldEnd.apply(response, arguments);
   };
   let requestErrorMessage = null;
-  const getError = (error) => {
+  const getError = error => {
     requestErrorMessage = error.message;
   };
 
@@ -33,7 +32,7 @@ export default (request, response, next) => {
     removeHandlers();
     log(request, response, 'Client aborted.');
   };
-  const logError = (error) => {
+  const logError = error => {
     removeHandlers();
     log(request, response, error.message);
   };
@@ -55,11 +54,9 @@ export default (request, response, next) => {
   };
   const log = (request, response, errorMessage) => {
     try {
-      const {
-        rawHeaders, httpVersion, method, socket, url,
-      } = request;
-      const { remoteAddress, remoteFamily } = socket;
-      const { statusCode, statusMessage } = response;
+      const {rawHeaders, httpVersion, method, socket, url} = request;
+      const {remoteAddress, remoteFamily} = socket;
+      const {statusCode, statusMessage} = response;
       const headers = response.getHeaders();
       const userId = request.body.userScopeId;
 
@@ -74,18 +71,17 @@ export default (request, response, next) => {
         let nodeUrl = url.split('/');
 
         nodeUrl = nodeUrl[1].split('?');
-        const subcategory = phproutes[category]?.find((x) => x.nodeapi === nodeUrl[0]).subcategory || '';
-        const phproute = phproutes[category]?.find((x) => x.nodeapi === nodeUrl[0]).phproutes || '';
-
+        const subcategory =
+          phproutes[category]?.find(x => x.nodeapi === nodeUrl[0])
+            .subcategory || '';
+        const phproute =
+          phproutes[category]?.find(x => x.nodeapi === nodeUrl[0]).phproutes ||
+          '';
         if (subcategory !== '') {
           if (nodeUrl[0] !== 'get-team-invitations') {
-            const {
-              requestParams,
-              requestQuery,
-              requestBody,
-            } = requestParameters(request.params, request.query, request.body);
+            const {requestParams, requestQuery, requestBody} =
+              requestParameters(request.params, request.query, request.body);
             // if (response.statusCode == !304) //no changes in response
-
             post = {
               createdTime: moment.now(),
               processingTime: Date.now() - requestStart,
@@ -107,9 +103,7 @@ export default (request, response, next) => {
           }
         }
       }
-    } catch (error) {
-      // console.log(error)
-    }
+    } catch (error) {}
   };
 
   const requestParameters = (requestParams, requestQuery, requestBody) => {
@@ -123,7 +117,7 @@ export default (request, response, next) => {
     delete requestBody.userScopeMaxScheduleCount;
     delete requestBody.userScopeIsAdmin;
 
-    return { requestParams, requestQuery, requestBody };
+    return {requestParams, requestQuery, requestBody};
   };
 
   next();

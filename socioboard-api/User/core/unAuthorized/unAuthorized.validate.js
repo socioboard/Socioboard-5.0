@@ -7,7 +7,7 @@ class userValidator {
       username: Joi.string().required(),
     }).options({abortEarly: false});
 
-    return JoiSchema.validateAsync(user);
+    return JoiSchema.validate(user);
   }
 
   validateNetwork(network) {

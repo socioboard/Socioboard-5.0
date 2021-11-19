@@ -57,28 +57,16 @@ class LinkedInFeedModel {
                   socialAccountInfo.social_id
                 )
                   .then(() => {
-                    return this.isNeedToFetchRecentStats(
-                      accountId,
-                      socialAccountInfo.refresh_feeds == 2 ? 12 : 24,
-                      'hours'
+                    return this.linkedInConnect.linkedInPageStats(
+                      socialAccountInfo.social_id,
+                      socialAccountInfo.access_token
                     );
                   })
-                  .then(isRunRecentstats => {
-                    if (isRunRecentstats) {
-                      {
-                        return this.linkedInConnect
-                          .linkedInPageStats(
-                            socialAccountInfo.social_id,
-                            socialAccountInfo.access_token
-                          )
-                          .then(updateDetails => {
-                            this.createOrUpdateFriendsList(
-                              socialAccountInfo.account_id,
-                              updateDetails
-                            );
-                          });
-                      }
-                    }
+                  .then(updateDetails => {
+                    this.createOrUpdateFriendsList(
+                      socialAccountInfo.account_id,
+                      updateDetails
+                    );
                   })
                   .then(() => feeds)
                   .catch(error => {

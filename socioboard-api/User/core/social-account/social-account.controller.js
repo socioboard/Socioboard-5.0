@@ -27,8 +27,9 @@ class SocialAccountController {
             #swagger.parameters['network'] = {
                 in: 'query',
                 default: 'Facebook',
-            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest", "Bitly", "Reddit","DailyMotion","Tumblr","Pocket"]
-            } */
+            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest", "Bitly","Tumblr"]
+
+        } */
     return await SocialAccountService.getProfileRedirectUrl(req, res, next);
   }
 
@@ -86,7 +87,7 @@ class SocialAccountController {
     /* #swagger.security = [{
                     "AccessToken": []
                     }] */
-    /*
+   /*
           #swagger.parameters['code'] = {
                  in: 'query',
                   required:true
@@ -119,7 +120,7 @@ class SocialAccountController {
     /* #swagger.security = [{
                     "AccessToken": []
                     }] */
-    /*
+   /*
           #swagger.parameters['code'] = {
                  in: 'query'
 
@@ -132,18 +133,18 @@ class SocialAccountController {
     return await SocialAccountService.getLinkedInCompanyProfileDetails(
       req,
       res,
-      next
+      next,
     );
   }
 
-  /**
-   * TODO To add Intagram Business
-   * @name post/get-instagram-business-profile
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   * @param {import('express').NextFunction} next
-   * @return {object} Returns added Instagram Business Profile details
-   */
+/**
+ * TODO To add Intagram Business 
+ * @name post/get-instagram-business-profile
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Returns added Instagram Business Profile details
+ */
   async getInstagramBusinessProfile(req, res, next) {
     /* 	#swagger.tags = ['Add-SocialAccount']
                  #swagger.description = get the FaceBook Groups */
@@ -159,65 +160,7 @@ class SocialAccountController {
                 in: 'query',
                 required:true
              }*/
-    return await SocialAccountService.getInstagramBusinessProfile(
-      req,
-      res,
-      next
-    );
-  }
-
-  /**
-   * TODO To add Multi Social Profile
-   * @name post/add-bulk-social-profile
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   * @param {import('express').NextFunction} next
-   * @return {object} Returns bulk Social Profile  details
-   */
-  async addBulkSocialProfiles(req, res, next) {
-    /* 	#swagger.tags = ['Add-SocialAccount']
-         #swagger.description = 'add Bulk social Profiles' */
-    /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-    /*	#swagger.parameters['data'] = {
-                in: 'body',
-                required: true,
-                schema: { $ref: "#/definitions/addBulk" }
-        } */
-    /*
-           #swagger.parameters['teamId'] = {
-                  in: 'query'
-              } 
-           #swagger.parameters['state'] = {
-                in: 'query',
-                required:false
-            }*/
-    return await SocialAccountService.addBulkSocialProfiles(req, res, next);
-  }
-
-  /**
-   * TODO Delete Social Profile
-   * @name delete/delete-social-profile
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   * @param {import('express').NextFunction} next
-   * @return {object} Returns Deleted Account status
-   */
-  async deleteSocialProfile(req, res, next) {
-    /* 	#swagger.tags = ['Add-SocialAccount']
-         #swagger.description = 'Delete Socila Profile' */
-    /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-
-    /* #swagger.parameters['AccId'] = {
-                  in: 'query'
-              }
-     *#swagger.parameters['teamId'] = {
-                  in: 'query'
-              } */
-    return await SocialAccountService.deleteSocialProfile(req, res, next);
+    return await SocialAccountService.getInstagramBusinessProfile(req, res, next);
   }
 
   /**
@@ -241,6 +184,60 @@ class SocialAccountController {
                             schema: { $ref: "#/definitions/InviteSocialAccount" }
                     } */
     return await SocialAccountService.inviteSocialAccountMember(req, res, next);
+  }
+
+/**
+ * TODO To add Multi Social Profile  
+ * @name post/add-bulk-social-profile
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Returns bulk Social Profile  details
+ */
+  async addBulkSocialProfiles(req, res, next) {
+    /* 	#swagger.tags = ['Add-SocialAccount']
+         #swagger.description = 'add Bulk social Profiles' */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+    /*	#swagger.parameters['data'] = {
+                in: 'body',
+                required: true,
+                schema: { $ref: "#/definitions/addBulk" }
+        } */
+    /*
+           #swagger.parameters['teamId'] = {
+                  in: 'query'
+              } 
+           #swagger.parameters['state'] = {
+                in: 'query',
+                required:false
+      }*/
+    return await SocialAccountService.addBulkSocialProfiles(req, res, next);
+  }
+
+  /**
+ * TODO Delete Social Profile 
+ * @name delete/delete-social-profile
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Returns Deleted Account status 
+ */
+  async deleteSocialProfile(req, res, next) {
+    /* 	#swagger.tags = ['Add-SocialAccount']
+         #swagger.description = 'Delete Socila Profile' */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+
+    /* #swagger.parameters['AccId'] = {
+                  in: 'query'
+              }
+     *#swagger.parameters['teamId'] = {
+                  in: 'query'
+              } */
+    return await SocialAccountService.deleteSocialProfile(req, res, next);
   }
 
   async addMediumProfile(req, res) {
@@ -289,12 +286,12 @@ class SocialAccountController {
   }
 
   /** TODO Add Tumblr Blogs
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   * @param {import('express').NextFunction} next
-   * @return {object} Returns get Board details
-   */
-  async getTumblerBlog(req, res, next) {
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Returns get Board details 
+ */
+   async getTumblerBlog(req, res, next) {
     /* 	#swagger.tags = ['Add-SocialAccount']
                  #swagger.description = get the FaceBook Pages */
     /* #swagger.security = [{
@@ -311,26 +308,6 @@ class SocialAccountController {
           }
     */
     return await SocialAccountService.getTumblerBlog(req, res, next);
-  }
-
-  /**
-   * TODO To get Board details
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   * @param {import('express').NextFunction} next
-   * @return {object} Returns Deleted Account status
-   */
-  async getPinterestBoards(req, res, next) {
-    /* 	#swagger.tags = ['Add-SocialAccount']
-         #swagger.description = 'Get the Pinterest Boards' */
-    /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-    /* #swagger.parameters['AccId'] = {
-                  in: 'query'
-              }
-      */
-    return await SocialAccountService.getPinterestBoards(req, res, next);
   }
 }
 export default new SocialAccountController();

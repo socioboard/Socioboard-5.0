@@ -21,9 +21,8 @@ import UserTeamAccount from '../Shared/user-team-accounts.shared.js';
 import NotificationServices from '../Shared/notify-services.js';
 import LinkedInPostMongoModels from '../Mongoose/models/linkedIn-post.js';
 import InstagramBusinessMongoPostModel from '../Mongoose/models/instagram-business-posts.js';
-import DailyMotionFeedModel from './dailyMotion-feeds.model.js';
-import TumblrConnect from './../Cluster/tumblr.cluster.js';
 import TumblrMongoPostModel from '../Mongoose/models/tumblr-post.js';
+import TumblrConnect from './../Cluster/tumblr.cluster.js';
 const userDetails = db.user_details;
 const Operator = db.Sequelize.Op;
 const userRewardsModel = db.user_rewards;
@@ -34,9 +33,7 @@ const socialAccount = db.social_accounts;
 const teamSocialAccountJoinTable = db.join_table_teams_social_accounts;
 const userTeamJoinTable = db.join_table_users_teams;
 const updateFriendsTable = db.social_account_friends_counts;
-const dailyMotionFeedModel = new DailyMotionFeedModel();
 import TwitterInsightPostModel from '../Mongoose/models/twitter-insights.js';
-import tumblrCluster from '../Cluster/tumblr.cluster.js';
 const teamInviteUser = db.invite_user_for_team;
 const pinterestBoard = db.pinterest_boards;
 
@@ -97,9 +94,6 @@ class TeamLibs {
           'profile_picture',
         ];
         break;
-      case 7:
-        fields = ['account_id', 'follower_count'];
-        break;
       case 9:
         fields = ['subscription_count', 'total_post_count', 'profile_picture'];
         break;
@@ -114,15 +108,6 @@ class TeamLibs {
         break;
       case 12:
         fields = [
-          'follower_count',
-          'following_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 15:
-        fields = [
-          'account_id',
           'follower_count',
           'following_count',
           'total_post_count',
@@ -404,6 +389,7 @@ class TeamLibs {
                   throw new Error(
                     'Sorry, Requested network not available for your plan.'
                   );
+                  break;
                 case 'LinkedIn':
                   // Validating that the user is having permisiion for this network or not by user plan
                   if (userScopeAvailableNetworks.includes('6')) {
@@ -931,6 +917,9 @@ class TeamLibs {
                         reject(error);
                       })
                   );
+
+                  break;
+
                 case 'GoogleAnalytics':
                   resolve({
                     code: 200,
@@ -1047,7 +1036,7 @@ class TeamLibs {
                           isErrorOnNetwork = true;
                         break;
                       case '16':
-                        break;
+                       break;
                       default:
                         isErrorOnNetwork = true;
                         break;
@@ -1288,7 +1277,7 @@ class TeamLibs {
    * @param  {Object} profile - Profile Object of the Specified Network
    * @return {object} Returns object contains Team and Profile details
    */
-  addProfiles(userId, userName, profile, invite) {
+  addProfiles(userId, userName, profile,invite) {
     let ProfileInfo = null;
     let teamDetails = null;
 
@@ -1351,7 +1340,7 @@ class TeamLibs {
                     info: profile.Info,
                     account_admin_id: userId,
                     is_invite: invite,
-                  },
+                },
                   {transaction: t}
                 );
               }
@@ -1364,20 +1353,20 @@ class TeamLibs {
                 through: {is_account_locked: false},
               });
             })
-           .then(() => {
-             if (ProfileInfo.account_type == 11) {
-                  if (profile.Boards.length > 0) {
-                      profile.Boards.map(boards => {
-                      boards.social_account_id = ProfileInfo.account_id;
-                      });
-                      return pinterestBoard.bulkCreate(profile.Boards, { transaction: t, returning: true });
-                    }
-                else
-                  return;
-             }
-             else
-                return;
-            })
+            .then(() => {
+              if (ProfileInfo.account_type == 11) {
+                   if (profile.Boards.length > 0) {
+                       profile.Boards.map(boards => {
+                       boards.social_account_id = ProfileInfo.account_id;
+                       });
+                       return pinterestBoard.bulkCreate(profile.Boards, { transaction: t, returning: true });
+                     }
+                 else
+                   return;
+              }
+              else
+                 return;
+             })
             .then(() =>
               this.scheduleNetworkPostFetching(ProfileInfo.account_id).catch(
                 error => {
@@ -1445,13 +1434,13 @@ class TeamLibs {
       if (!profile) {
         reject(new Error('Invalid Inputs'));
       } else {
-        logger.info(`profiles, ${JSON.stringify(profile)}`);
+        logger.info(`profiles, ${profile}`);
         return db.sequelize.transaction(t => {
           return teamInfo
             .findOne(
               {
                 where: {
-                  [Operator.and]: [
+                  [Operator.or]: [
                     {
                       team_admin_id: userId,
                     },
@@ -1542,6 +1531,7 @@ class TeamLibs {
       }
     });
   }
+
   async deleteSocialProfile(userId, accountId, teamId, userName) {
     return new Promise((resolve, reject) => {
       let fetchedSocialAccount = '';
@@ -2139,6 +2129,7 @@ class TeamLibs {
       if (transaction) {
         await transaction.rollback();
       }
+      throw new Error(error.message);
     }
   }
 
@@ -2499,6 +2490,7 @@ class TeamLibs {
             'permission',
             'user_id',
           ],
+          raw: true,
         })
       )
     );
@@ -2560,6 +2552,7 @@ class TeamLibs {
                 'last_name',
                 'profile_picture',
               ],
+              raw: true,
             })
           )
         )
@@ -2613,11 +2606,81 @@ class TeamLibs {
     const pinterestBoards = [];
     const SocialAccountStats = [];
     const res = await Promise.all(
-      accounts.map(async account => {
-        let fields = await this.getSocialAccountStatsFields(
-          account.account_type
-        );
-        if (fields.length > 0) {
+      accounts.map(account => {
+        let fields = [];
+
+        switch (Number(account.account_type)) {
+          case 1:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'page_count',
+              'profile_picture',
+            ];
+            break;
+          case 2:
+            fields = [
+              'account_id',
+              'follower_count',
+              'total_like_count',
+              'profile_picture',
+            ];
+            break;
+          case 4:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_like_count',
+              'total_post_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 5:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 7:
+            fields = ['account_id', 'follower_count'];
+            break;
+          case 9:
+            fields = [
+              'account_id',
+              'subscription_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 11:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'board_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 12:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          default:
+            break;
+        }
+       if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
               where: {account_id: account.account_id},
@@ -2658,10 +2721,78 @@ class TeamLibs {
     const pinterestBoards = [];
     const SocialAccountStats = [];
     const res = await Promise.all(
-      accounts.map(async account => {
-        let fields = await this.getSocialAccountStatsFields(
-          account.account_type
-        );
+      accounts.map(account => {
+        let fields = [];
+
+        switch (Number(account.account_type)) {
+          case 1:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'page_count',
+              'profile_picture',
+            ];
+            break;
+          case 2:
+            fields = [
+              'account_id',
+              'follower_count',
+              'total_like_count',
+              'profile_picture',
+            ];
+            break;
+          case 4:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_like_count',
+              'total_post_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 5:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 9:
+            fields = [
+              'account_id',
+              'subscription_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 11:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'board_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 12:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          default:
+            break;
+        }
+
         if (account.account_type == 11) {
           pinterestIds.push(account.account_id);
         }
@@ -2700,10 +2831,77 @@ class TeamLibs {
     const pinterestBoards = [];
     const SocialAccountStats = [];
     const res = await Promise.all(
-      accounts.map(async account => {
-        let fields = await this.getSocialAccountStatsFields(
-          account.account_type
-        );
+      accounts.map(account => {
+        let fields = [];
+
+        switch (Number(account.account_type)) {
+          case 1:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'page_count',
+              'profile_picture',
+            ];
+            break;
+          case 2:
+            fields = [
+              'account_id',
+              'follower_count',
+              'total_like_count',
+              'profile_picture',
+            ];
+            break;
+          case 4:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_like_count',
+              'total_post_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 5:
+            fields = [
+              'account_id',
+              'friendship_count',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 9:
+            fields = [
+              'account_id',
+              'subscription_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          case 11:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'board_count',
+              'bio_text',
+              'profile_picture',
+            ];
+            break;
+          case 12:
+            fields = [
+              'account_id',
+              'follower_count',
+              'following_count',
+              'total_post_count',
+              'profile_picture',
+            ];
+            break;
+          default:
+            break;
+        }
 
         if (account.account_type == 11) {
           pinterestIds.push(account.account_id);
@@ -2794,9 +2992,6 @@ class TeamLibs {
               'total_post_count',
               'profile_picture',
             ];
-            break;
-          case 7:
-            fields = ['account_id', 'follower_count'];
             break;
           case 9:
             fields = [
@@ -3333,31 +3528,27 @@ class TeamLibs {
                       `error on fetching post details ${error.message}`
                     );
                   });
-              case 15:
-                return dailyMotionFeedModel.fetchAllDailyMotionPost(
-                  socialAccount.access_token,
-                  socialAccount.social_id
-                );
               case 16:
-                let TumblrMongoPostModelObject = new TumblrMongoPostModel();
-                 return TumblrConnect.getBlogPostDetails(config.get('tumblr_api.OAuth_consumer_Key'),socialAccount.social_id)
-                    .then(response => {
-                    logger.info(`Tumblr Feed Fetched count : ${response.length}`);
-                    return TumblrMongoPostModelObject
-                      .insertManyPosts(response)
-                      .then(result => {
-                        logger.info('Saved  Insta post details');
+                    let TumblrMongoPostModelObject = new TumblrMongoPostModel();
+                     return TumblrConnect.getBlogPostDetails(config.get('tumblr_api.OAuth_consumer_Key'),socialAccount.social_id)
+                        .then(response => {
+                        logger.info(`Tumblr Feed Fetched count : ${response.length}`);
+                        return TumblrMongoPostModelObject
+                          .insertManyPosts(response)
+                          .then(result => {
+                            logger.info('Saved  Insta post details');
+                          })
+                          .catch(result => {
+                            logger.error(
+                              `Error in saving Tumblr post details : ${result}`
+                            );
+                          });
                       })
-                      .catch(result => {
-                        logger.error(
-                          `Error in saving Tumblr post details : ${result}`
-                        );
+                      .catch(error => {
+                        logger.error(`Error in Fetching Tumblr Post details from Tumblr API ${error.message}`);
                       });
-                  })
-                  .catch(error => {
-                    logger.error(`Error in Fetching Tumblr Post details from Tumblr API ${error.message}`);
-                  });
-              default:
+                      
+             default:
                 logger.info(
                   `default account type ${socialAccount.account_type}`
                 );
@@ -3646,6 +3837,7 @@ class TeamLibs {
       }
     });
   }
+
   /**
    * TODO To check social account stats and update
    * Function To check social account stats and update
@@ -3713,15 +3905,6 @@ class TeamLibs {
             socialProfile.access_token
           );
           break;
-        case 16:
-          updateDetails = await tumblrCluster.getBlogStats(
-            config.get('tumblr_api.OAuth_consumer_Key'),
-            config.get('tumblr_api.OAuth_consumer_secret'),
-            socialProfile.access_token,
-            socialProfile.refresh_token,
-            socialProfile.social_id
-          );
-          break;
         default:
           break;
       }
@@ -3752,7 +3935,7 @@ class TeamLibs {
       where: {
         team_id,
         email,
-        status: 0,   
+        status: 0,
       },
       raw: true,
     });
@@ -3767,170 +3950,6 @@ class TeamLibs {
       });
   }
 
-  /**
-   * TODO To fetch social account stats based on social media platforms
-   * Function To fetch social account stats based on social media platforms
-   * @param  {number} account_type -Account type .
-   * @return  {Array} field array
-   */
-  async getSocialAccountStatsFields(account_type) {
-    let fields = [];
-    switch (Number(account_type)) {
-      case 1:
-        fields = [
-          'account_id',
-          'friendship_count',
-          'page_count',
-          'profile_picture',
-        ];
-        break;
-      case 2:
-        fields = [
-          'account_id',
-          'follower_count',
-          'total_like_count',
-          'profile_picture',
-        ];
-        break;
-      case 4:
-        fields = [
-          'account_id',
-          'follower_count',
-          'following_count',
-          'total_like_count',
-          'total_post_count',
-          'bio_text',
-          'profile_picture',
-        ];
-        break;
-      case 5:
-        fields = [
-          'account_id',
-          'friendship_count',
-          'follower_count',
-          'following_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 7:
-        fields = ['account_id', 'follower_count'];
-        break;
-      case 9:
-        fields = [
-          'account_id',
-          'subscription_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 11:
-        fields = [
-          'account_id',
-          'follower_count',
-          'following_count',
-          'board_count',
-          'bio_text',
-          'profile_picture',
-        ];
-        break;
-      case 12:
-        fields = [
-          'account_id',
-          'follower_count',
-          'following_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 15:
-        fields = [
-          'account_id',
-          'follower_count',
-          'following_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 16:
-        fields = [
-          'account_id',
-          'follower_count',
-          'total_like_count',
-          'total_post_count',
-          'bio_text',
-          'profile_picture',
-          'cover_picture',
-        ];
-        break;
-      default:
-        break;
-    }
-    return fields;
-  }
-  
-
-   
-  /**
-   * TODO To get number of Pinterst Account for User Account 
-   * Function To get number of Pinterst Account for User Account 
-   * @param  {number} UserId - User Id
-   * @return {Array} Users Pinterest Account  
-   */
-   async getPinterestBoards(userId) {
-       const res = await pinterestBoard.findAll({
-       where: {social_account_id: userId},
-       raw:true
-       });
-      return res;
- }
-  
-  /**
-   * TODO To get User's Pinterst Account 
-   * Function To get User's Pinterst Account
-   * @param  {number} UserId - User Id
-   * @param  {number} team_id - Team Id
-   * @return {Array} Users Pinterest Account  
-   */
-    async getPinterstSocilaAcc(userId,team_id){
-         let accIds = []
-         let res = await teamSocialAccountJoinTable.findAll({
-           where:{team_id},
-           raw: true,
-          })
-         res.map(x=>{
-         if(x. is_account_locked == 0){
-              accIds.push(x. account_id)  
-          }
-        })
-        console.log(`accIds`,accIds)
-        let pinterestAccts =await socialAccount.findAll({
-          where: {
-               account_id: {[Operator.in]: accIds},
-               account_type: '11'                 
-            },
-          raw: true,
-         })
-         return pinterestAccts;
-
-    }
-  
-  /**
-   * TODO To get Pinterst Board deatils 
-   * Function To get Pinterst Board deatils
-   * @param  {Array} pinterestAccts - Pinterest Accs
-   * @return {object} Pinterest Boars  Deatils
-   */  
-   async getBoard(pinterestAccts){
-         let BoardDetials=[]
-         const promises =  pinterestAccts.map(async x=>{
-         let boarddata = await this.getPinterestBoards(x.account_id) 
-         BoardDetials.push({...x,boardDetails:boarddata})
-         })
-         await Promise.all(promises);
-         return BoardDetials;
-      }
-
    /**
    * TODO To get Pinterst Users with Board details
    * Function To get Pinterst Users with Board details
@@ -3938,11 +3957,68 @@ class TeamLibs {
    * @return  {Array} Pinterest Account details 
    */
     async getTeamBoard(userId,teamId){
-         let pinterestAccts = await this.getPinterstSocilaAcc(userId,teamId)
-         let boardsData = await this.getBoard(pinterestAccts)
-         return boardsData;  
-      
-      }
+      let pinterestAccts = await this.getPinterstSocilaAcc(userId,teamId)
+      let boardsData = await this.getBoard(pinterestAccts)
+      return boardsData;  
+   
+   }
+
+   /**
+   * TODO To get User's Pinterst Account 
+   * Function To get User's Pinterst Account
+   * @param  {number} UserId - User Id
+   * @param  {number} team_id - Team Id
+   * @return {Array} Users Pinterest Account  
+   */
+    async getPinterstSocilaAcc(userId,team_id){
+      let accIds = []
+      let res = await teamSocialAccountJoinTable.findAll({
+        where:{team_id},
+        raw: true,
+       })
+      res.map(x=>{
+      if(x. is_account_locked == 0){
+           accIds.push(x. account_id)  
+       }
+     })
+     let pinterestAccts =await socialAccount.findAll({
+       where: {
+            account_id: {[Operator.in]: accIds},
+            account_type: '11'                 
+         },
+       raw: true,
+      })
+      return pinterestAccts;
 }
 
+ /**
+   * TODO To get Pinterst Board deatils 
+   * Function To get Pinterst Board deatils
+   * @param  {Array} pinterestAccts - Pinterest Accs
+   * @return {object} Pinterest Boars  Deatils
+   */  
+  async getBoard(pinterestAccts){
+    let BoardDetials=[]
+    const promises =  pinterestAccts.map(async x=>{
+    let boarddata = await this.getPinterestBoards(x.account_id) 
+    BoardDetials.push({...x,boardDetails:boarddata})
+    })
+    await Promise.all(promises);
+    return BoardDetials;
+ }
+
+ /**
+   * TODO To get number of Pinterst Account for User Account 
+   * Function To get number of Pinterst Account for User Account 
+   * @param  {number} UserId - User Id
+   * @return {Array} Users Pinterest Account  
+   */
+  async getPinterestBoards(userId) {
+    const res = await pinterestBoard.findAll({
+    where: {social_account_id: userId},
+    raw:true
+    });
+   return res;
+}
+}
 export default TeamLibs;

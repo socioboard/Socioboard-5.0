@@ -15,6 +15,7 @@ class TeamController {
   constructor() {
     this.sendEmailServices = new SendEmailServices(config.get('mailService'));
   }
+
   async getSocialProfiles(req, res, next) {
     try {
       const response = await teamLibs.getSocialProfiles(req.body.userScopeId);
@@ -233,7 +234,7 @@ class TeamController {
     }
   }
 
-  async getTeamDetails(req, res, next) {
+  async getTeamDetails(req, res) {
     try {
       let filteredTeams;
       let teamMemberDetails;
@@ -242,7 +243,6 @@ class TeamController {
         req.body.userScopeId,
         req.query.teamId
       );
-
       if (!teamInformation)
         return ErrorResponse(res, "User don't have any team");
       filteredTeams = teamInformation;
@@ -250,11 +250,22 @@ class TeamController {
         teamInformation
       );
       const teamMembers = await teamLibs.teamMembers(teamInformation);
-
       teamMemberDetails = await teamLibs.teamMemberDetails(teamMembers);
       memberProfileDetails = await teamLibs.memberProfileDetails(
         req.body.userScopeId
       );
+      let teamMemberDetail = [];
+      teamMembers[0]?.map(y => {
+        teamMemberDetails[0]?.map(x => {
+          if (x.user_id == y.user_id)
+            teamMemberDetail.push({
+              ...x,
+              invitation_accepted: y.invitation_accepted,
+              left_from_team: y.left_from_team,
+              permission: y.permission,
+            });
+        });
+      });
       const SocialAccountStats = await teamLibs.socialAccountStats(
         req.body.userScopeId
       );
@@ -263,10 +274,10 @@ class TeamController {
         teamSocialAccountDetails: teamSocialAccount[0],
         SocialAccountStats,
         teamMembers: teamMembers[0],
-        memberProfileDetails: teamMemberDetails[0],
+        memberProfileDetails: teamMemberDetail,
         socialAccounts: memberProfileDetails[0],
         pinterestAccountDetails
-     };
+      };
       return SuccessResponse(res, data);
     } catch (err) {
       return CatchResponse(res, err.message);
@@ -407,7 +418,7 @@ class TeamController {
     }
   }
 
-  async inviteTeam(req, res, next) {
+  async inviteTeam(req, res) {
     // Check team is there or not
     try {
       const {teamId, Email, Permission} = req.query;

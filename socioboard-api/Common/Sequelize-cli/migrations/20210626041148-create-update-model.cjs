@@ -22,7 +22,7 @@ module.exports = {
         },
         {transaction}
       );
-    } catch (err) {
+    } catch (error) {
       await transaction.rollback();
       throw err;
     }

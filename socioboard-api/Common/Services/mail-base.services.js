@@ -4,6 +4,7 @@ import MailServiceMongoModel from '../Mongoose/models/mail-services.js';
 import expirednotification from './expired-mail.template.js';
 import expiringEmailTemplate from './expiring-mail.template.js';
 import config from 'config';
+import appSumoMailTemplate from './appSumo.template.js';
 class MailService extends MailBase {
   constructor(mailServiceConfig) {
     super(mailServiceConfig);
@@ -3548,6 +3549,8 @@ class MailService extends MailBase {
       </body>
       
       </html>`,
+
+      appSumoMailTemplate,
     };
   }
 

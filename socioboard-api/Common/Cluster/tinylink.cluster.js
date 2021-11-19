@@ -3,8 +3,7 @@ import axios from 'axios';
 import qs from 'qs'
 
 class TinyLink {
-
- /**
+/**
  * TODO generate the Tiny Url 
  * Function to generate the Tiny Url
  * @param {string} token - api token 

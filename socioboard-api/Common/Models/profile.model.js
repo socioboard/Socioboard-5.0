@@ -23,9 +23,10 @@ class ProfileModel {
       if (!code) {
         reject(new Error('Code is Invlaid'));
       } else {
-        let redirecturl = "";
-        if(invite == 1 ? redirecturl = config.get('profile_page_invite_redirect_url') : redirecturl = config.get('profile_page_redirect_url') )
-        return this.facebookHelper.getOwnFacebookPages(code, redirecturl)
+         let redirecturl = "";
+         if(invite == 1 ? redirecturl = config.get('profile_page_invite_redirect_url') : redirecturl = config.get('profile_page_redirect_url') )
+          return this.facebookHelper
+          .getOwnFacebookPages(code, redirecturl)
           .then(pageDetails => {
             if (!pageDetails) {
               throw new Error('Cant able to fetch page details');
@@ -40,8 +41,7 @@ class ProfileModel {
                   fanCount: page.fan_count,
                   isAlreadyAdded: false,
                   isInvite:invite
-                };
-
+                 };
                 pages.push(pageObject);
                 pageIds.push(page.id);
               });
@@ -134,9 +134,10 @@ class ProfileModel {
         reject(new Error('Code is Invalid'));
       } else {
         // Fetching linkedin company profile details using auth code
-        let redirecturl = "";
+         let redirecturl = "";
         if(invite == 1 ? redirecturl = config.get('linkedIn_api.invite_redirect_url_page') : redirecturl= config.get('linkedIn_api.redirect_url_page'))
-         return this.linkedInHelper.getCompanyProfileDetails(code,redirecturl)
+         return this.linkedInHelper
+          .getCompanyProfileDetails(code,redirecturl)
           .then(data => {
             const {response, access_token, refresh_token} = data;
             if (response.elements.length != 0) {
@@ -160,7 +161,7 @@ class ProfileModel {
                   profileUrl: `https://www.linkedin.com/company/${company['organizationalTarget~']?.vanityName}`,
                   isAlreadyAdded: false,
                   isInvite:invite
-                };
+             };
 
                 companies.push(companyObject);
                 companyIds.push(company['organizationalTarget~']?.id);
@@ -207,7 +208,8 @@ class ProfileModel {
       } else {
         let redirecturl = "";
         if(invite == 1 ? redirecturl = config.get('google_api.google_profile_add_invite_redirect_url') : redirecturl= config.get('google_api.google_profile_add_redirect_url'))
-        return this.googleHelper.getYoutubeChannels(code,redirecturl)
+        return this.googleHelper
+          .getYoutubeChannels(code,redirecturl)
           .then(response => {
             const channelDetails = response.parsedBody;
             const {tokens} = response;
@@ -237,8 +239,8 @@ class ProfileModel {
                     hiddenSubscriberCount:
                       channel.statistics.hiddenSubscriberCount,
                   },
-                  isInvite:invite
-                };
+                   isInvite:invite
+                 };
 
                 channelIds.push(channel.id);
                 channels.push(channelDetails);
@@ -289,10 +291,13 @@ class ProfileModel {
       if (!code) {
         reject(new Error('Invalid Inputs'));
       } else {
-        // Fetching instagram business accounts (linked with Facebook)
-        let redirecturl = "";
+       let redirecturl = "";
         if(invite == 1 ? redirecturl = config.get('instagram_business_api.business_invite_redirect_url') : redirecturl= config.get('instagram_business_api.business_redirect_url'))
-        this.facebookHelper.getPagesConnectWithInsta(code,redirecturl)
+        this.facebookHelper
+          .getPagesConnectWithInsta(
+            code,
+            redirecturl
+          )
           .then(pageDetails => {
             logger.info(`Page Details: ${JSON.stringify(pageDetails)}`);
             if (pageDetails.data) {
@@ -358,6 +363,7 @@ class ProfileModel {
                           fanCount: profile.followed_by_count,
                           isAlreadyAdded: false,
                           isInvite:invite
+
                         };
 
                         logger.info(`Insta Account-- ${instaAcc} `);
