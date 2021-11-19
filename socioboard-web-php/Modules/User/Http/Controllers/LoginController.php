@@ -206,6 +206,7 @@ class LoginController extends Controller
                     'accessToken' => $response['data']['accessToken']
                 );
                 session()->put('socialUser', $data);
+                session()->put('timezone', $request['timezone']);
                 $response2 = $this->checkPlanExpirySocial();
                 if ($response2 === "true") {
                     AuthUsers::login($data);
@@ -361,6 +362,7 @@ class LoginController extends Controller
             $response = $this->helper->postApiCall('get', $apiUrl);
             $response = $this->helper->responseHandlerWithArrayIfElse($response);
             session()->put('forgot_password_user_email', $request->input("email"));
+            if ($response['code'] == 200) session()->put('otherToken', $request->input('activationToken'));
             if ($response['code'] == 200) return redirect("reset-password")->with('email', $request->input("email"));
             else return redirect("forgot-password")->with('message', $response["message"]);
         } catch (Exception $e) {
@@ -387,7 +389,8 @@ class LoginController extends Controller
                 $response['data'] = null;
                 return Response::json($response, 200);
             }
-            $apiUrl = ApiConfig::get('/reset-password?email=' . $request->input("email") . '&newPassword=' . md5($request->input("new_password")));
+            $apiUrls = ApiConfig::get('/reset-password?email=' . $request->input("email") . '&newPassword=' . md5($request->input("new_password")));
+            $apiUrl = $apiUrls.'&activationToken='.\session()->get('otherToken');
             try {
                 $response = $this->helper->postApiCall('post', $apiUrl);
                 return $this->helper->responseHandlerWithArrayIfElse($response);
@@ -460,9 +463,18 @@ class LoginController extends Controller
             $response = $this->helper->postApiCall('get', $apiUrl);
             $response = $this->helper->responseHandlerWithArrayIfElse($response);
             if ($response['code'] == 200) {
-                $data['email'] = $request->input("email");
-                $this->directLogin($data);
-                return redirect()->route('dashboard');
+                $data = array(
+                    'userDetails' => $response['data']['user'],
+                    'accessToken' => $response['data']['accessToken']
+                );
+                AuthUsers::login($data);
+                session()->put('socialUser', $data);
+                $response2 = $this->checkPlanExpirySocial();
+                if ($response2 === "true") {
+                    return redirect('/plan-details-view');
+                }
+                $this->helper->getTeamNewSession();
+                return redirect('/dashboard');
             } else return view('user::login', ['result' => $response['message'], 'code' => $response['code']]);
 
         } catch (Exception $e) {

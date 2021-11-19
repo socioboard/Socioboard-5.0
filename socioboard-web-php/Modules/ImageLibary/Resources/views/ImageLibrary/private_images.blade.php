@@ -45,35 +45,236 @@
 
                 </div>
                 <!--end::Row-->
+                <form id="search_form" method="POST" action="/imagelibary/search-private-image">
+                    @csrf
+                    <div class="row mb-5 align-items-center">
+                        <div class="col-md-3">
+                            <input type="hidden" name="typeofview" id="vieww">
+                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6" name="order">
+                                <option disabled>Sort by</option>
+                                <option value="desc" @if (isset($search) && $search['order'] === "desc" ) selected @endif>Descending order(created date)</option>
+                                <option value="asc" @if (isset($search) && $search['order'] === "asc" ) selected @endif>Ascending order(created date)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6" name="rating">
+                                <option selected disabled>Rating</option>
+                                <option value="1" @if (isset($search) && $search['rating'] == "1" ) selected @endif>One</option>
+                                <option value="2" @if (isset($search) && $search['rating'] == "2" ) selected @endif>Two</option>
+                                <option value="3" @if (isset($search) && $search['rating'] == "3" ) selected @endif>Three</option>
+                                <option value="4" @if (isset($search) && $search['rating'] == "4" ) selected @endif>Four</option>
+                                <option value="5" @if (isset($search) && $search['rating'] == "5" ) selected @endif>Five</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-icon">
+                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="title" value="{{isset($search) ? $search['title'] : "" }}"
+                                       placeholder="Title" />
+                                <span></span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="type" value="1">
+
+                        <div class="col-md-1">
+                            <button type="submit" id="search_buttonss" class="btn font-weight-bolder font-size-h6 px-8 py-4">Search</button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <a href="/imagelibary/private-images" class="btn font-weight-bolder font-size-h6 px-8 py-4">Clear</a>
+                        </div>
+                        <div class="col-md-2">
+                            <!--begin::Tabs-->
+                            <ul class="nav nav-bold nav-pills px-8 justify-content-end" id="type_of_views"
+                                role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" id="grid" href="#imagelibrary-grid"><i class="fas fa-th"></i></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#imagelibrary-list" id="list" ><i class="fas fa-list"></i></a>
+                                </li>
+                            </ul>
+                            <!--end::Tabs-->
+                        </div>
+                    </div>
+                </form>
                 <!--begin::Board-->
-                <!--begin::Row-->
-                <div class="card-columns" id="privateImages">
+                <div class="tab-content">
+                    <!--begin::Tabpane-->
+                    <div class="tab-pane active show" id="imagelibrary-grid" role="tabpanel">
+                        <div class="row" id="imagsss">
+                            @if($images["code"] == 200 && isset($images["data"]->data) && !empty($images["data"]->data))
+                                @foreach($images["data"]->data as $image)
+                                    <div class="col-md-3" id="Images{{$image->id}}" >
+                                        <div class="card imagelibrary-card">
+                                            <div class="img-card">
+                                                <img src="{{env('API_URL_PUBLISH').$image->media_url}}" class="card-img-top" alt="...">
+                                                <button class="info-btn btn btn-hover-text-success btn-sm" data-toggle="modal" data-target="#imageGalleryInfoss" onclick="imageInfo('{{env('API_URL_PUBLISH')}}','{{$image->media_url}}','{{$image->title}}','{{$image->rating}}','{{$image->created_date}}','{{$image->privacy_type === 1 ? "Private" : "Public"}}','{{$image->media_size}}')">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </button>
+                                            </div>
+                                            <div class="card-body p-3">
+                                                <div class="d-flex">
+                                                    <h4 class="card-title mb-2">{{$image->title}}</h4>
+                                                    <div class="rating-css ml-auto">
+                                                        <div class="star-icon">
+                                                            <input type="radio"
+                                                                   <?php if ($image->rating === 1) echo "checked";?> name="rating1{{$image->id}}"
+                                                                   id="rating1{{$image->id}}"
+                                                                   onclick="updateRating('1', '{{$image->id}}');">
+                                                            <label
+                                                                    for="rating1{{$image->id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($image->rating == 2) echo "checked";?> name="rating1{{$image->id}}"
+                                                                   id="rating2{{$image->id}}"
+                                                                   onclick="updateRating('2', '{{$image->id}}');">
+                                                            <label
+                                                                    for="rating2{{$image->id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($image->rating == 3) echo "checked";?> name="rating1{{$image->id}}"
+                                                                   id="rating3{{$image->id}}"
+                                                                   onclick="updateRating('3', '{{$image->id}}');">
+                                                            <label
+                                                                    for="rating3{{$image->id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($image->rating == 4) echo "checked";?> name="rating1{{$image->id}}"
+                                                                   id="rating4{{$image->id}}"
+                                                                   onclick="updateRating('4', '{{$image->id}}');">
+                                                            <label
+                                                                    for="rating4{{$image->id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($image->rating == 5) echo "checked";?> name="rating1{{$image->id}}"
+                                                                   id="rating5{{$image->id}}"
+                                                                   onclick="updateRating('5', '{{$image->id}}');">
+                                                            <label
+                                                                    for="rating5{{$image->id}}"
+                                                                    class="fas fa-star"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    {{--                                                    <?php--}}
+                                                    {{--                                                    $date=date_create($image->created_date);--}}
+                                                    {{--                                                    date_add($date,date_interval_create_from_date_string("330 mins"));--}}
+                                                    {{--                                                    ?>--}}
+                                                    {{--                                                    Created - <b>{{date_format($date,"Y-m-d H:i:s")}}</b>--}}
+                                                    <?php
+                                                    $timezone = session()->get('timezone');
+                                                    $dateTIme = $image->created_date;
+                                                    $date = new DateTime($dateTIme);
+                                                    $date->setTimezone(new DateTimeZone($timezone));
+                                                    echo "Created -".$date->format('Y-m-d H:i');
+                                                    ?>
+                                                </div>
+                                                <hr />
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}')"
+                                                       class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
+                                                                class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                                    <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId('{{$image->id}}')"
+                                                       class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i
+                                                                class="far fa-trash-alt fa-fw"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @elseif($images["code"] == 200 && isset($images["data"]->data) && empty($images["data"]->data))
+                                <div class="card-body text-danger" id="privateImagesError1" style="text-align: center">No Data Found</div>
+                            @elseif($images["code"] && !empty($images["code"]))
+                                <div class="card-body text-danger" id="privateImagesError2" style="text-align: center">{{$images["message"]}}</div>
+                            @else
+                                <div class="card-body text-danger" style="text-align: center">Some error occurred while fetching data Please reload
+                                    it...
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="tab-pane"   id="imagelibrary-list" role="tabpanel">
                         @if($images["code"] == 200 && isset($images["data"]->data) && !empty($images["data"]->data))
-                        @foreach($images["data"]->data as $image)
-                            <div class="card" id="Image{{$image->id}}" data-value="{{$image->media_size}}">
-                                <img src="{{env('API_URL_PUBLISH').$image->media_url}}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-center">
-                                                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal"
-                                                                                   onclick="oneClickImage('{{$image->media_url}}')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
-                                                                                        class="far fa-hand-point-up fa-fw"></i> 1 click</a>
-                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal"
-                                           onclick="imageId('{{$image->id}}')"
-                                           class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i
+                            @foreach($images["data"]->data as $image)
+                                <div class="imagelibrary-list-row" id="Image{{$image->id}}" >
+                                    <div class="img-card">
+                                        <img src="{{env('API_URL_PUBLISH').$image->media_url}}" class="card-img-top" alt="...">
+                                    </div>
+                                    <div>
+                                        <h4 class="card-title mb-2">{{$image->title}}</h4>
+                                        <div>
+                                            <div class="rating-css ml-auto">
+                                                <div class="star-icon">
+                                                    <input type="radio"
+                                                           <?php if ($image->rating === 1) echo "checked";?> name="ratings1{{$image->id}}"
+                                                           id="ratings1{{$image->id}}"
+                                                           onclick="updateRating('1', '{{$image->id}}');">
+                                                    <label
+                                                            for="ratings1{{$image->id}}"
+                                                            class="fas fa-star"></label>
+                                                    <input type="radio"
+                                                           <?php if ($image->rating == 2) echo "checked";?> name="ratings1{{$image->id}}"
+                                                           id="ratings2{{$image->id}}"
+                                                           onclick="updateRating('2', '{{$image->id}}');">
+                                                    <label
+                                                            for="ratings2{{$image->id}}"
+                                                            class="fas fa-star"></label>
+                                                    <input type="radio"
+                                                           <?php if ($image->rating == 3) echo "checked";?> name="ratings1{{$image->id}}"
+                                                           id="ratings3{{$image->id}}"
+                                                           onclick="updateRating('3', '{{$image->id}}');">
+                                                    <label
+                                                            for="ratings3{{$image->id}}"
+                                                            class="fas fa-star"></label>
+                                                    <input type="radio"
+                                                           <?php if ($image->rating == 4) echo "checked";?> name="ratings1{{$image->id}}"
+                                                           id="ratings4{{$image->id}}"
+                                                           onclick="updateRating('4', '{{$image->id}}');">
+                                                    <label
+                                                            for="ratings4{{$image->id}}"
+                                                            class="fas fa-star"></label>
+                                                    <input type="radio"
+                                                           <?php if ($image->rating == 5) echo "checked";?> name="ratings1{{$image->id}}"
+                                                           id="ratings5{{$image->id}}"
+                                                           onclick="updateRating('5', '{{$image->id}}');">
+                                                    <label
+                                                            for="ratings5{{$image->id}}"
+                                                            class="fas fa-star"></label>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            $date=date_create($image->created_date);
+                                            date_add($date,date_interval_create_from_date_string("330 mins"));
+                                            ?>
+                                            Created - <b>{{date_format($date,"Y-m-d H:i:s")}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="ml-auto d-flex">
+                                        <button class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 align-self-start"
+                                                data-toggle="modal" data-target="#imageGalleryInfoss" onclick="imageInfo('{{env('API_URL_PUBLISH')}}','{{$image->media_url}}','{{$image->title}}','{{$image->rating}}','{{$image->created_date}}','{{$image->privacy_type === 1 ? "Private" : "Public"}}','{{$image->media_size}}')">
+                                            <i class="fas fa-info-circle"></i> Info
+                                        </button>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}')"
+                                           class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 align-self-start"><i
+                                                    class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                        <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId('{{$image->id}}')"
+                                           class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder align-self-start"><i
                                                     class="far fa-trash-alt fa-fw"></i> Delete</a>
                                     </div>
                                 </div>
+                            @endforeach
+                        @elseif($images["code"] == 200 && isset($images["data"]->data) && empty($images["data"]->data))
+                            <div class="card-body text-danger" id="privateImagesError1" style="text-align: center">>No Data Found</div>
+                        @elseif($images["code"] && !empty($images["code"]))
+                            <div class="card-body text-danger" id="privateImagesError2" style="text-align: center">>{{$images["message"]}}</div>
+                        @else
+                            <div class="card-body text-danger" style="text-align: center">>Some error occurred while fetching data Please reload
+                                it...
                             </div>
-                        @endforeach
-                    @elseif($images["code"] == 200 && isset($images["data"]->data) && empty($images["data"]->data))
-                        <div class="card-body text-danger" id="privateImagesError1">No Data Found</div>
-                    @elseif($images["code"] && !empty($images["code"]))
-                        <div class="card-body text-danger" id="privateImagesError2">{{$images["message"]}}</div>
-                    @else
-                        <div class="card-body text-danger">Some error occurred while fetching data Please reload it... </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
-                <!--end::Row-->
 
                 <!-- Begin::Loader -->
                 <div class="mb-10" id="loader_id">
@@ -89,6 +290,7 @@
     </div>
     <!--end::Content-->
     <input type="hidden" value="" id="imageId">
+    <input type="hidden" value="" id="imageSize">
     <!-- begin::Re-socio-->
     @include('imagelibary::ImageLibrary.re_socio_image_library')
 
@@ -105,7 +307,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="text-center">
-                        <img src="../media/svg/icons/Communication/Delete-user.svg"/><br>
                         <span class="font-weight-bolder font-size-h4 "> Are you sure wanna delete this Image? </span>
                     </div>
                     <div class="d-flex justify-content-center">
@@ -145,7 +346,7 @@
                             </div>
                         </div>
                         <input type="file" class="dropify" id="file-upload" accept=".jpeg, .png, .jpg"/>
-                        <div class="error text-danger" id="upload_image_error"></div>
+                        <div class="error text-danger" id="upload_image_error1"></div>
                     </div>
                     <div class="d-flex justify-content-center">
                         <a href="javascript:;" type="button"
@@ -160,6 +361,40 @@
         </div>
     </div>
     <!-- end::Upload Image modal-->
+
+    <!-- begin::image gallery info-->
+    <div class="modal fade" id="imageGalleryInfoss" tabindex="-1" role="dialog" aria-labelledby="imageGalleryInfoLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" id="model_header">
+                    <h5 class="modal-title" id="imageGalleryInfoLabel">Nature</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6" id="imageDiv">
+                            <img src="" alt="image" class="img-fluid">
+                            <!-- <div class="text-center">
+                                <button class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mt-5">Download</button>
+                            </div> -->
+                        </div>
+                        <div class="col-md-6">
+                            <p><span>Title - <b id="title_id"></b></span></p>
+                            <p><span>Size - <b id="size_id"></b></span></p>
+                            <p><span>Create Date - <b id="create_date"></b></span></p>
+                            <p><span>Rating - <b id="ratng"><i class="fas fa-star"></i></b></span></p>
+                            <p><span>Type - <b id="type"></b></span></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end::image gallery info-->
 
     <script src="../plugins/custom/dropify/dist/js/dropify.min.js"></script>
     <script src="../plugins/custom/emojionearea/js/emojionearea.min.js"></script>
@@ -317,6 +552,8 @@
 
         $(document).ready(function () {
             $("#imageLibrary").trigger('click');
+            var sessionId = "<?php echo session()->get('view'); ?>";
+            $('#'+sessionId).trigger('click');
         })
 
     </script>

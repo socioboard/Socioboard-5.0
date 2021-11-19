@@ -2,6 +2,8 @@
 
 namespace Modules\ImageLibary\Http\Controllers;
 
+use App\ApiConfig\ApiConfig;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -153,6 +155,7 @@ class ImageLibaryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
+            'file' => 'required|mimes:jpeg,jpg,png'
         ], [
             'title.required' => 'File name is Required',
         ]);
@@ -201,6 +204,7 @@ class ImageLibaryController extends Controller
 
     public function publicImages(Request $request)
     {
+        Session::put('view', 'grid');
         $socialAccountsData = new HistoryController();
         $socialAccounts = $socialAccountsData->getTeamSocialAccounts();
         $result = [];
@@ -278,9 +282,10 @@ class ImageLibaryController extends Controller
                 return Response::json($response, 200);
             }
             $apiUrl = $this->PUBLISH_API_URL . env('API_VERSION') . '/publish/publishPosts?teamId=' . $team['teamid'];
+            $outgoing_url = $request->outgoing_url === null ? "" : $request->outgoing_url;
             $requestData = (object)[
                 'postType' => 'Image',
-                'message' => $request->normal_text_area,
+                'message' => $request->normal_text_area .' '. $outgoing_url ,
                 'mediaPaths' => [$request->selected_image],
                 'accountIds' => $request->socialAccount,
                 'postStatus' => intval($request->postStatus) == 1 ? "1" : "0",
@@ -293,6 +298,65 @@ class ImageLibaryController extends Controller
             return $this->helper->responseHandler($response['data']);
         } catch (Exception $e) {
             return $this->helper->callingErrorHandler($e, ' ImageLibaryController => draftPostFunction => Method-post ');
+        }
+    }
+
+    public function searchPublic(Request $request){
+        $search = [];
+        $search['order'] = isset($request->order) ? $request->order : "";
+        $search['rating'] = isset($request->rating) ? $request->rating : "";
+        $search['title'] = isset($request->title) ? $request->title : "";
+        $result = $this->SearchImages($request);
+        $socialAccountsData = new HistoryController();
+        $socialAccounts = $socialAccountsData->getTeamSocialAccounts();
+        return view("imagelibary::ImageLibrary.public_images")->with(["images" => $result, 'socialAccounts' => $socialAccounts, 'search' =>$search]);
+    }
+
+    public function searchPrivte(Request $request){
+        $search = [];
+        $search['order'] = isset($request->order) ? $request->order : "";
+        $search['rating'] = isset($request->rating) ? $request->rating : "";
+        $search['title'] = isset($request->title) ? $request->title : "";
+        $result = $this->SearchImages($request);
+        $socialAccountsData = new HistoryController();
+        $socialAccounts = $socialAccountsData->getTeamSocialAccounts();
+        return view("imagelibary::ImageLibrary.private_images")->with(["images" => $result, 'socialAccounts' => $socialAccounts, 'search' =>$search]);
+    }
+
+    public function SearchImages(Request $request){
+        try {
+            \session()->put('view',$request->typeofview);
+            $team = \Session::get('team');
+            $sortBy = $request->order;
+            $rating = isset($request->rating) ? [$request->rating] : [];
+            $apiUrl = $request->datepicker != null ? $this->PUBLISH_API_URL . env('API_VERSION') . '/upload/search-media-details?teamId=' . $team['teamid'].'&filterPeriod='.$request->datepicker.'&sortBy='.$sortBy.'&pageId=1' :$this->PUBLISH_API_URL . env('API_VERSION') . '/upload/search-media-details?teamId=' . $team['teamid'].'&sortBy='.$sortBy.'&pageId=1';
+            $requestData = (object)
+            [
+                'SocialImageInfo' => [
+                    'rating' => $rating,
+                    'imagePrivacyType' => [
+                        $request->type
+                    ],
+                    "imageTitle" => $request->title !== null ? $request->title : ""
+                ]
+            ];
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
+            return $this->helper->responseHandler($response['data']);
+
+        }catch (Exception $e){
+            return $this->helper->guzzleErrorHandler($e->getMessage(), ' ImageLibaryController => SearchImages => Method-post ');
+        }
+    }
+
+    public function rateImages(Request $request)
+    {
+        $api_url = $this->PUBLISH_API_URL . env('API_VERSION') . '/upload/update-media?mediaId=' . $request['accountId'] . '&rating=' . $request['rating'];
+        $data = ($request->all());
+        try {
+            $response = $this->helper->postApiCallWithAuth("PUT", $api_url, $data);
+            return response()->json($response["data"]);
+        } catch (RequestException $e) {
+            return $this->helper->guzzleErrorHandler($e->getMessage(), ' ImageLibaryController => rateImages => Method-PUT ');
         }
     }
 }
