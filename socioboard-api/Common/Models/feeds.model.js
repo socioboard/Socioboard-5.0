@@ -9,8 +9,9 @@ import YoutubeMongoPostModel from '../Mongoose/models/youtube-post.js';
 import FacebookMongoPostModel from '../Mongoose/models/facebook-posts.js';
 import RssSearchedUrls from '../Mongoose/models/rss-searched-urls.js';
 import db from '../Sequelize-cli/models/index.js';
-import logger from '../../Feeds/resources/log/logger.log.js';
-
+import logger from '../../Feeds/resources/Log/logger.log.js';
+import Pocket from '../Cluster/pocket.cluster.js';
+import PocketMongoModel from '../Mongoose/models/pocket-post.js';
 const accountUpdateTable = db.social_account_feeds_updates;
 const socialAccount = db.social_accounts;
 const updateFriendsTable = db.social_account_friends_counts;
@@ -778,7 +779,7 @@ class FeedModel {
     );
   }
 
-  getChannels({ userId, skip = 0, limit = 10, size = 5 }) {
+  getChannels({userId, skip = 0, limit = 10, size = 5}) {
     return rssChannels.findAll({
       include: [
         {
@@ -800,7 +801,7 @@ class FeedModel {
     });
   }
 
-  getChannelById({ userId, channelId, skip = 0, limit = 10 }) {
+  getChannelById({userId, channelId, skip = 0, limit = 10}) {
     return rssChannels.findOne({
       include: [
         {
@@ -874,7 +875,7 @@ class FeedModel {
     });
   }
 
-  updateChannel(channelId, { title, logo_url}, trx) {
+  updateChannel(channelId, {title, logo_url}, trx) {
     return rssChannels.update(
       {
         title,
@@ -885,7 +886,7 @@ class FeedModel {
           id: channelId,
         },
         transaction: trx,
-      },
+      }
     );
   }
 
@@ -902,7 +903,7 @@ class FeedModel {
     });
   }
 
-  updateLink({ id, url, category }, trx) {
+  updateLink({id, url, category}, trx) {
     return rssLinks.update(
       {
         url,
@@ -913,7 +914,7 @@ class FeedModel {
           id,
         },
         transaction: trx,
-      },
+      }
     );
   }
 }
