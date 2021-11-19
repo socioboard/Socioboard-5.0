@@ -6,7 +6,7 @@ import AuthorizeServices from '../Services/authorize.services.js';
 import FacebookConnect from '../Cluster/facebook.cluster.js';
 import TwitterConnect from '../Cluster/twitter.cluster.js';
 import LinkedInConnect from '../Cluster/linkedin.cluster.js';
-import PinterestConnect from '../Cluster/pinterest.cluster.js';
+import PinterestConnect from '../Cluster/pinterest.newcluster.js';
 import PublishedPost from '../Mongoose/models/published-posts.js';
 import DraftPost from '../Mongoose/models/drafted-post-lists.js';
 import AdminApprovalPost from '../Mongoose/models/admin-approval-posts.js';
@@ -14,12 +14,14 @@ import TaskModel from '../Mongoose/models/task-models.js';
 import logger from '../../Publish/resources/Log/logger.log.js';
 import NotificationServices from '../Shared/notify-services.js';
 import {reject} from 'async';
-
+import tumblrCluster from '../Cluster/tumblr.cluster.js';
 const teamSocialAccountJoinTable = db.join_table_teams_social_accounts;
 const teamUserJoinTable = db.join_table_users_teams;
 const socialAccount = db.social_accounts;
 const userMediaDetails = db.user_media_details;
 const Operator = db.Sequelize.Op;
+import lodash from 'lodash';
+
 
 class PublishModel {
   constructor() {
@@ -36,6 +38,7 @@ class PublishModel {
   async publishPost(requestBody, teamId, lang) {
     return new Promise((resolve, reject) => {
       if (!requestBody) reject(new Error('Invalid Inputs'));
+      if (!teamId) reject(new Error('TeamId cant be empty'));
       else if (
         !(
           requestBody.postType == 'Text' ||
@@ -260,17 +263,17 @@ class PublishModel {
                     if (!socialAccount)
                       return reject({message: 'No social Account found'});
 
-                    const invite = socialaccount?.is_invite;
+                    //const invite = socialaccount?.is_invite;
 
-                    if (invite == 1) {
-                      logger.error({
-                        message: 'Publish is denied for Invite User!! ',
-                      });
+                    // if (invite == 1) {
+                    //   logger.error({
+                    //     message: 'Publish is denied for Invite User!! ',
+                    //   });
 
-                      return reject({
-                        message: 'Publish is denied for Invite User!!',
-                      });
-                    }
+                    //   return reject({
+                    //     message: 'Publish is denied for Invite User!!',
+                    //   });
+                    // }
                     SocialAccount = socialaccount;
 
                     return teamSocialAccountJoinTable.findOne(
@@ -296,44 +299,93 @@ class PublishModel {
                     );
                   })
 
-              .then((teamDetails) => {
-                if (!teamDetails) {
-                  logger.info('TeamDetails is null!');
-                } else if (teamDetails.is_account_locked == 1) lockedAccount.push(accountId);
-                else {
-                  postDetails.targetId = SocialAccount.social_id;
-                  const clonedPostDetails = JSON.parse(JSON.stringify(postDetails));
+                  .then(teamDetails => {
+                    if (!teamDetails) {
+                      logger.info('TeamDetails is null!');
+                    } else if (teamDetails.is_account_locked == 1)
+                      lockedAccount.push(accountId);
+                    else {
+                      postDetails.targetId = SocialAccount.social_id;
+                      const clonedPostDetails = JSON.parse(
+                        JSON.stringify(postDetails)
+                      );
 
-                  logger.info(`clonedPostDetails : ${JSON.stringify(clonedPostDetails)} `);
+                      logger.info(
+                        `clonedPostDetails : ${JSON.stringify(
+                          clonedPostDetails
+                        )} `
+                      );
 
-                  switch (SocialAccount.account_type) {
-                    case 2:
-                    case 3:
-                      return this.publishOnFb(clonedPostDetails, SocialAccount.account_id, SocialAccount.access_token, teamId);
-                    case 6:
-                    case 7:
-                      return this.publishOnLinkedIn(clonedPostDetails, SocialAccount.access_token, SocialAccount.account_type, SocialAccount.user_name, teamId, SocialAccount.account_id);
-                    case 4:
-                      return this.publishOnTwitter(clonedPostDetails, SocialAccount.account_id, SocialAccount.access_token, SocialAccount.refresh_token, teamId);
-                    case 11:
-                      return this.validatePinterestPosts(clonedPostDetails)
-                        .then(() => this.publishOnPinterest(clonedPostDetails, SocialAccount.account_id, SocialAccount.access_token, SocialAccount.refresh_token, teamId))
-                        .catch((error) => {
-                          throw error;
-                        });
-                    case 12:
-                       return this.publishonInsta(clonedPostDetails, SocialAccount.account_id, SocialAccount.access_token, teamId,SocialAccount.social_id);
-                    default:
-                      break;
-                  }
-                }
-              })
-              .catch((error_1) => {
-                errors.push({
-                  accountId: SocialAccount.account_id, firstName: SocialAccount.first_name, accountType: SocialAccount.account_type, error: error_1.message,
-                });
-              }));
-          }));
+                      switch (SocialAccount.account_type) {
+                        case 2:
+                        case 3:
+                          return this.publishOnFb(
+                            clonedPostDetails,
+                            SocialAccount.account_id,
+                            SocialAccount.access_token,
+                            teamId
+                          );
+                        case 6:
+                        case 7:
+                          return this.publishOnLinkedIn(
+                            clonedPostDetails,
+                            SocialAccount.access_token,
+                            SocialAccount.account_type,
+                            SocialAccount.user_name,
+                            teamId,
+                            SocialAccount.account_id
+                          );
+                        case 4:
+                          return this.publishOnTwitter(
+                            clonedPostDetails,
+                            SocialAccount.account_id,
+                            SocialAccount.access_token,
+                            SocialAccount.refresh_token,
+                            teamId
+                          );
+                          case 11:
+                            this.publishOnPinterest(
+                              clonedPostDetails,
+                              SocialAccount.account_id,
+                              SocialAccount.access_token,
+                              SocialAccount.refresh_token,
+                              teamId
+                            );
+                            break;
+                        case 12:
+                          return this.publishonInsta(
+                            clonedPostDetails,
+                            SocialAccount.account_id,
+                            SocialAccount.access_token,
+                            teamId,
+                            SocialAccount.social_id
+                          );
+                        case 16:
+                          return this.publishOnTumblr(
+                            clonedPostDetails,
+                            SocialAccount.account_id,
+                            SocialAccount.access_token,
+                            SocialAccount.refresh_token,
+                            teamId,
+                            SocialAccount.social_id,
+                            SocialAccount.profile_url
+                          );
+                        default:
+                          break;
+                      }
+                    }
+                  })
+                  .catch(error_1 => {
+                    errors.push({
+                      accountId: SocialAccount.account_id,
+                      firstName: SocialAccount.first_name,
+                      accountType: SocialAccount.account_type,
+                      error: error_1.message,
+                    });
+                  })
+              );
+            })
+          );
           const details = {
             message:
               'Publishing is in process, It will take few minutes to publish.',
@@ -490,16 +542,29 @@ class PublishModel {
 
                   publishedPost.save();
                 } else {
-                  const err = new Error(`${status.message.error.message}`);
-
-                  return err;
+                  publishedDetails = {
+                    publishedDate: moment.utc(),
+                    accountId,
+                    fullPublishContentId: postDetails.mongoScheduleId,
+                    postCategory: postDetails.moduleName,
+                    publishedContentDetails: postDetails.message,
+                    publishedMediaUrls: postDetails.mediaPath,
+                    postShareUrl: postDetails.link,
+                    PublishedId: moment().valueOf(),
+                    PublishedUrl: '',
+                    PublishedStatus: `Failed ${status.message.error.message}`,
+                    TeamId: Number(teamId),
+                  };
+                  const publishedPost = new PublishedPost(publishedDetails);
+                  publishedPost.save();
                 }
                 if (config.get('notification_socioboard.status') == 'on') {
                   return this.teamNotificationData(
                     teamId,
                     postDetails,
                     publishedDetails.PublishedUrl,
-                    'Facebook Page'
+                    'Facebook Page',
+                    publishedDetails?.PublishedStatus.replace('Failed ', '')
                   ).catch(error => {});
                 }
               })
@@ -525,62 +590,71 @@ class PublishModel {
         })
         .catch(error => {
           throw error;
-          // return error
-          // console.log(error)
         });
     } catch (error) {
       throw error;
     }
   }
 
-
-/**
-   * TODO Publish and saving Image/video InstaBusinessAccount 
-   * Function Publish and saving Image/video InstaBusinessAccount 
+  /**
+   * TODO Publish and saving Image/video InstaBusinessAccount
+   * Function Publish and saving Image/video InstaBusinessAccount
    * @param  {object} postDetails - Post details
    * @param  {number} accountId - Insta Account Account Id
    * @param  {string} accessToken - Insta Account token
-   * @param  {number} teamId - socioboard Team Id 
+   * @param  {number} teamId - socioboard Team Id
    * @param  {number} social_id - Insta Account User Id
-   * @return {object} return status of Insta Publish 
-   */ 
-  async publishonInsta(postDetails, accountId, accessToken, teamId,social_id) {
+   * @return {object} return status of Insta Publish
+   */
+  async publishonInsta(postDetails, accountId, accessToken, teamId, social_id) {
     const publishedPostObject = new PublishedPost();
 
     try {
-      await publishedPostObject.getTodayPostsCount(accountId)
-        .then((postCount) => {
-          if (postCount < config.get('instagram_business_api.maximum_post_per_day')) { 
-            this.facebookConnect.publishPostInsta(postDetails, accessToken, social_id,(status) => {
-              logger.info(status);
-              if (status.code == 200) {
-                const publishedId = status.message.id.split('_')[1];
-                let publishedDetails = {
-                  publishedDate: moment.utc(),
-                  accountId,
-                  fullPublishContentId: postDetails.mongoScheduleId,
-                  postCategory: postDetails.moduleName,
-                  publishedContentDetails: postDetails.message,
-                  publishedMediaUrls: postDetails.mediaPath,
-                  postShareUrl: postDetails.link,
-                  PublishedId: publishedId, 
-                  PublishedUrl: `https://www.instagram.com/${publishedId}`, 
-                  PublishedStatus: 'Success',
-                  TeamId: Number(teamId),
-                };
-                const publishedPost = new PublishedPost(publishedDetails);
-                publishedPost.save();
-              } else {
-                const err = new Error(`${status.message.error.message}`);
-                return err;
-              }
-              if (config.get('notification_socioboard.status') == 'on') {
-                return this.teamNotificationData(teamId, postDetails, publishedDetails.PublishedUrl, 'Instagram Business')
-                  .catch((error) => {
-                    logger.error(`Error while notifing  teamNotificationData  ${error}`)
+      await publishedPostObject
+        .getTodayPostsCount(accountId)
+        .then(postCount => {
+          if (
+            postCount <
+            config.get('instagram_business_api.maximum_post_per_day')
+          ) {
+            this.facebookConnect
+              .publishPostInsta(postDetails, accessToken, social_id, status => {
+                logger.info(status);
+                if (status.code == 200) {
+                  const publishedId = status.message.id.split('_')[1];
+                  let publishedDetails = {
+                    publishedDate: moment.utc(),
+                    accountId,
+                    fullPublishContentId: postDetails.mongoScheduleId,
+                    postCategory: postDetails.moduleName,
+                    publishedContentDetails: postDetails.message,
+                    publishedMediaUrls: postDetails.mediaPath,
+                    postShareUrl: postDetails.link,
+                    PublishedId: publishedId,
+                    PublishedUrl: `https://www.instagram.com/${publishedId}`,
+                    PublishedStatus: 'Success',
+                    TeamId: Number(teamId),
+                  };
+                  const publishedPost = new PublishedPost(publishedDetails);
+                  publishedPost.save();
+                } else {
+                  const err = new Error(`${status.message.error.message}`);
+                  return err;
+                }
+                if (config.get('notification_socioboard.status') == 'on') {
+                  return this.teamNotificationData(
+                    teamId,
+                    postDetails,
+                    publishedDetails.PublishedUrl,
+                    'Instagram Business'
+                  ).catch(error => {
+                    logger.error(
+                      `Error while notifing  teamNotificationData  ${error}`
+                    );
                   });
-              }
-            }).catch((error) => error);
+                }
+              })
+              .catch(error => error);
           } else {
             const publishedDetails = {
               publishedDate: moment.utc(),
@@ -595,16 +669,16 @@ class PublishModel {
               PublishedStatus: 'Failed, Maximum limit reached for the day.',
               TeamId: Number(teamId),
             };
-             const publishedPost = new PublishedPost(publishedDetails);
-             publishedPost.save();
+            const publishedPost = new PublishedPost(publishedDetails);
+            publishedPost.save();
           }
         })
-        .catch((error) => {
-          logger.error(`Error saving publishonInsta ${error} `)
+        .catch(error => {
+          logger.error(`Error saving publishonInsta ${error} `);
           throw error;
         });
     } catch (error) {
-      logger.error(`Error  publishonInsta ${error} `)
+      logger.error(`Error  publishonInsta ${error} `);
       throw error;
     }
   }
@@ -660,7 +734,7 @@ class PublishModel {
                   userName,
                   response.asset,
                   response.status,
-                  postDetails.message,
+                  `${postDetails.message} \n${postDetails.link ?? ''}`,
                   teamId,
                   postDetails,
                   accountId
@@ -668,7 +742,9 @@ class PublishModel {
                 resolve(response);
               })
               .catch(error => {
-                logger.info(error);
+                logger.info(
+                  `Error linkedin posting ${JSON.stringify(error?.body)}`
+                );
                 reject(error);
               });
           }
@@ -713,7 +789,29 @@ class PublishModel {
           }
         })
         .catch(error => {
-          logger.info(error);
+          logger.info(`Error linkedin posting ${JSON.stringify(error)}`);
+          return this.savePostLinkedIn(
+            accountId,
+            postDetails,
+            {id: moment().valueOf()},
+            teamId,
+            '',
+            error?.error?.message
+          );
+        })
+        .then(response => {
+          if (config.get('notification_socioboard.status') == 'on') {
+            this.teamNotificationData(
+              response.TeamId,
+              postDetails,
+              '',
+              'LinkedIn',
+              response?.PublishedStatus.replace(
+                'com.linkedin.content.common.ResponseException:',
+                ''
+              )
+            );
+          }
         });
     }
 
@@ -801,7 +899,6 @@ class PublishModel {
                   TeamId: Number(teamId),
                 };
                 const publishedPost = new PublishedPost(publishedDetails);
-
                 return publishedPost.save();
               })
               .then(() => {
@@ -815,7 +912,35 @@ class PublishModel {
               })
               .catch(error => {
                 logger.info(error);
-                throw error;
+                publishedDetails = {
+                  publishedDate: moment.utc(),
+                  accountId,
+                  fullPublishContentId: postDetails.mongoScheduleId,
+                  postCategory: postDetails.moduleName,
+                  publishedContentDetails: postDetails.message,
+                  publishedMediaUrls: postDetails.mediaPath,
+                  postShareUrl: postDetails.link,
+                  PublishedId: moment().valueOf(),
+                  PublishedUrl: '',
+                  PublishedStatus: `Failed ${error?.message[0]?.message}`,
+                  TeamId: Number(teamId),
+                };
+                const publishedPost = new PublishedPost(publishedDetails);
+                return publishedPost.save();
+              })
+              .then(() => {
+                if (config.get('notification_socioboard.status') == 'on')
+                  return this.teamNotificationData(
+                    teamId,
+                    postDetails,
+                    publishedDetails.PublishedUrl,
+                    'Twitter',
+                    publishedDetails?.PublishedStatus.replace('Failed ', '')
+                  );
+              })
+              .catch(error => {
+                logger.info(error);
+                logger.info(status);
               });
           }
           publishedDetails = {
@@ -832,7 +957,6 @@ class PublishModel {
             TeamId: Number(teamId),
           };
           const publishedPost = new PublishedPost(publishedDetails);
-
           publishedPost.save();
         })
         .then(() => resolve())
@@ -842,90 +966,63 @@ class PublishModel {
     });
   }
 
-  publishOnPinterest(
+ /**
+   * TODO Publish pin on Pinterest
+   * Function Publish pin on Pinterest
+   * @param  {object} postDetails - Post details
+   * @param  {number} accountId - Pinterest Account Account Id
+   * @param  {string} accessToken - Pinterest Account token
+   * @param  {number} teamId - socioboard Team Id
+   * @param  {number} refreshToken - Pinterest Account Refresh Token
+   * @return {object} return status of Pinterest Publish
+   */
+  async publishOnPinterest(
     postDetails,
     accountId,
     accessToken,
     refreshToken,
     teamId
   ) {
-    return new Promise((resolve, reject) => {
-      const publishedPostObject = new PublishedPost();
-
-      publishedPostObject.getTodayPostsCount(accountId).then(postCount => {
-        if (postCount < config.get('pinterest.maximum_post_per_day')) {
-          const boards = lodash.filter(postDetails.boardDetails, {accountId});
-
-          logger.info(boards);
-
-          return this.pinterestConnect
-            .createPins(postDetails, boards[0].boardId, accessToken)
-            .then(response => {
-              logger.info(`Published Details \n: ${JSON.stringify(response)}`);
-
-              const publishedModel = [];
-
-              if (response.successPublishIds.length > 0) {
-                response.successPublishIds.forEach(publishedId => {
-                  const publishedDetails = {
-                    publishedDate: moment.utc(),
-                    accountId,
-                    fullPublishContentId: postDetails.mongoScheduleId,
-                    postCategory: postDetails.moduleName,
-                    publishedContentDetails: postDetails.message,
-                    publishedMediaUrls: postDetails.mediaPath,
-                    postShareUrl: postDetails.link,
-                    PublishedId: publishedId,
-                    PublishedUrl: `https://www.pinterest.com/pin/${publishedId}`,
-                    PublishedStatus: 'Success',
-                    TeamId: Number(teamId),
-                  };
-
-                  publishedModel.push(publishedDetails);
-
-                  return this.teamNotificationData(
-                    teamId,
-                    postDetails,
-                    publishedDetails.PublishedUrl,
-                    'Pinterest'
-                  ).catch(error => {
-                    throw error;
-                  });
-                });
+    const publishedPostObject = new PublishedPost();
+    let postCount = await publishedPostObject.getTodayPostsCount(accountId);
+    if (postCount < config.get('pinterest.maximum_post_per_day')) {
+      const boards = lodash.filter(postDetails.boardDetails, {accountId});
+      logger.info(boards);
+      boards?.map(async x => {
+        if (x?.accountId == accountId)
+          x.boardId.map(async board_id => {
+            try {
+              let data = await this.pinterestConnect.publishPin(
+                postDetails,
+                board_id,
+                accessToken
+              );
+              data.url = '';
+              if (!data?.id) data.reason = data?.message;
+              if (data?.id) {
+                data.url = `https://www.pinterest.com/pin/${data?.id}`;
               }
-              if (response.failedBoards.length > 0) {
-                response.failedBoards.forEach(boardId => {
-                  const publishedDetails = {
-                    publishedDate: moment.utc(),
-                    accountId,
-                    fullPublishContentId: postDetails.mongoScheduleId,
-                    postCategory: postDetails.moduleName,
-                    publishedContentDetails: postDetails.message,
-                    publishedMediaUrls: postDetails.mediaPath,
-                    postShareUrl: postDetails.link,
-                    PublishedId: boardId,
-                    PublishedUrl: 'https://www.pinterest.com/',
-                    PublishedStatus:
-                      'Failed, Something went wrong or You have exceeded your rate limit.',
-                    TeamId: Number(teamId),
-                  };
-
-                  publishedModel.push(publishedDetails);
-                });
+              let result = await this.savePostPinterest(
+                accountId,
+                postDetails,
+                data,
+                teamId,
+                data?.url,
+                data?.reason
+              );
+              if (config.get('notification_socioboard.status') == 'on') {
+                this.teamNotificationData(
+                  teamId,
+                  postDetails,
+                  result.PublishedUrl,
+                  'Pinterest',
+                  data?.reason
+                );
               }
-
-              const publishedPost = new PublishedPost();
-
-              publishedPost.insertManyPosts(publishedModel);
-              logger.info('Completed..');
-            })
-            .then(() => resolve())
-            .catch(error => {
-              reject(error);
-            });
-        }
+            } catch (e) {}
+          });
       });
-    });
+    }
   }
 
   saveAsAdminApproval(publishedDetails) {
@@ -1051,17 +1148,26 @@ class PublishModel {
    * @param  {string} PublishedUrl -Post url from different social medias
    * @param  {string} network -Social media platform
    */
-  async teamNotificationData(teamId, postDetails, PublishedUrl, network) {
+  async teamNotificationData(
+    teamId,
+    postDetails,
+    PublishedUrl,
+    network,
+    reason
+  ) {
     const targetTeamsId = [];
-
     targetTeamsId.push(teamId);
     const notification = new NotificationServices(
       config.get('notification_socioboard.host_url')
     );
 
-    notification.notificationMessage = ` Published post on ${network},Published by ${postDetails.ownerName}, Published url is: "${PublishedUrl}"`;
+    notification.notificationMessage =
+      PublishedUrl != ''
+        ? ` Published post on ${network},Published by ${postDetails.ownerName}, Published url is: "${PublishedUrl}"`
+        : `Publish failed on ${network}, Published by ${postDetails.ownerName},Reason ${reason} Mongo Id ${postDetails?.mongoScheduleId}`;
     notification.teamName = teamId;
-    notification.notifyType = 'publish_publishPosts';
+    notification.notifyType =
+      PublishedUrl != '' ? 'publish_publishPosts' : 'publish_failed';
     notification.initiatorName = postDetails.ownerName;
     notification.status = 'success';
     notification.targetTeamsId = targetTeamsId;
@@ -1071,7 +1177,6 @@ class PublishModel {
       const encryptedNotifications = this.authorizeServices.encrypt(
         JSON.stringify(savedObject)
       );
-
       return await notification.sendTeamNotification(
         teamId,
         encryptedNotifications
@@ -1090,7 +1195,14 @@ class PublishModel {
    * @param  {number} teamId -Team id
    * @param  {string} url -Post url from different LinkedIn
    */
-  async savePostLinkedIn(accountId, postDetails, response, teamId, url) {
+  async savePostLinkedIn(
+    accountId,
+    postDetails,
+    response,
+    teamId,
+    url,
+    reason
+  ) {
     const publishedDetails = {
       publishedDate: moment.utc(),
       accountId,
@@ -1103,7 +1215,7 @@ class PublishModel {
       PublishedUrl:
         url ??
         `https://www.linkedin.com/feed/update/urn:li:share:${response.id}`,
-      PublishedStatus: 'Success',
+      PublishedStatus: reason ?? 'Success',
       TeamId: Number(teamId),
     };
     const publishedPost = new PublishedPost(publishedDetails);
@@ -1144,7 +1256,6 @@ class PublishModel {
         status,
         message
       );
-
       logger.info(
         ` Response from linkedIn after upload ${JSON.stringify(data)}`
       );
@@ -1166,6 +1277,132 @@ class PublishModel {
       }
     } catch (err) {}
   }
+
+  /**
+   * TODO To post on Tumblr
+   * Function To post on Tumblr
+   * @param  {object} postDetails -Post details
+   * @param  {number} accountId -Tumblr account id
+   * @param  {string} accessToken -Tumblr account access token
+   * @param  {string} refreshToken -Tumblr account refresh token
+   * @param  {number} teamId -Team id
+   * @param  {number} social_id -Social id
+   */
+  async publishOnTumblr(
+    postDetails,
+    accountId,
+    accessToken,
+    refreshToken,
+    teamId,
+    social_id,
+    profileUrl
+  ) {
+    let response = await tumblrCluster.postOnTumblr(
+      postDetails,
+      config.get('tumblr_api.OAuth_consumer_Key'),
+      config.get('tumblr_api.OAuth_consumer_secret'),
+      social_id,
+      accessToken,
+      refreshToken
+    );
+    let data = response?.response;
+    postDetails.postType === 'Video'
+      ? (data.url = '')
+      : (data.url = `https://${response?.response?.display_text?.replace(
+          'Posted to ',
+          ''
+        )}.tumblr.com/post/${response?.response?.id_string}`);
+    if (response?.errors || response?.response?.errors) {
+      data = {
+        id_string: moment().valueOf(),
+        url: '',
+        reason: `Failed ${
+          response?.response?.errors
+            ? response?.response?.errors[0]?.message
+            : response?.errors[0]?.detail
+        }`,
+      };
+    }
+    let result = await this.savePostTumblr(
+      accountId,
+      postDetails,
+      data,
+      teamId,
+      data?.url,
+      data?.reason
+    );
+    if (config.get('notification_socioboard.status') == 'on') {
+      this.teamNotificationData(
+        teamId,
+        postDetails,
+        result.PublishedUrl,
+        'Tumblr',
+        data?.reason
+      );
+    }
+  }
+
+  /**
+   * TODO To share video to Tumblr after post
+   * Function to share video to Tumblr after post
+   * @param  {number} accountId -Tumblr account id
+   * @param  {object} postDetails -Post details
+   * @param  {object} response -Response from Tumblr api after successful upload
+   * @param  {number} teamId -Team id
+   * @param  {string} url -Post url from Tumblr
+   * @param  {string} reason -Post Failed reason
+   */
+  async savePostTumblr(accountId, postDetails, response, teamId, url, reason) {
+    const publishedDetails = {
+      publishedDate: moment.utc(),
+      accountId,
+      fullPublishContentId: postDetails?.mongoScheduleId,
+      postCategory: postDetails?.moduleName,
+      publishedContentDetails: postDetails?.message,
+      publishedMediaUrls: postDetails?.mediaPath,
+      postShareUrl: postDetails?.link,
+      PublishedId: response?.id_string,
+      PublishedUrl: url ?? '',
+      PublishedStatus: reason ?? 'Success',
+      TeamId: Number(teamId),
+    };
+    const publishedPost = new PublishedPost(publishedDetails);
+    return publishedPost.save();
+  }
+   /**
+   * TODO To save post details on Pinterest
+   * Function To save post details on Pinterest
+   * @param  {number} accountId -Pinterest account id
+   * @param  {object} postDetails -Post details
+   * @param  {object} response -Response from Pinterest api after successful upload
+   * @param  {number} teamId -Team id
+   * @param  {string} url -Post url from Pinterest
+   * @param  {string} reason -Post Failed reason
+   */
+    async savePostPinterest(
+      accountId,
+      postDetails,
+      response,
+      teamId,
+      url,
+      reason
+    ) {
+      const publishedDetails = {
+        publishedDate: moment.utc(),
+        accountId,
+        fullPublishContentId: postDetails?.mongoScheduleId,
+        postCategory: postDetails?.moduleName,
+        publishedContentDetails: postDetails?.message,
+        publishedMediaUrls: postDetails?.mediaPath,
+        postShareUrl: postDetails?.link,
+        PublishedId: response?.id ?? moment().valueOf(),
+        PublishedUrl: url ?? '',
+        PublishedStatus: reason ?? 'Success',
+        TeamId: Number(teamId),
+      };
+      const publishedPost = new PublishedPost(publishedDetails);
+      return publishedPost.save();
+    }
 }
 
 export default PublishModel;

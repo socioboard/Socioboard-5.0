@@ -58,6 +58,7 @@ instagramBusinessPost.methods.getSocialAccountPosts = function (accountId, skip,
       { $skip: skip },
     ])
     .then((result) => {
+      console.log(result);
       if (result.length > 0) {
         return result;
       }

@@ -126,6 +126,8 @@ class InvitationModel{
                         .catch((error) => {
                             reject(error);
                         });
+                
+                    break;
                 default:
                     reject(new Error('Specified network is invalid.'));
                     break;

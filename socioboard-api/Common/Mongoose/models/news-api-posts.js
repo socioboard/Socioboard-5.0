@@ -12,7 +12,7 @@ const newsApiPost = new Schema({
   description: { type: String },
   publisherName: { type: String },
   publishedDate: { type: Date, default: Date.now },
-  mediaUrl: { type: [String], unique: true },
+  mediaUrl: { type: String, unique: true },
 
   batchId: { type: String },
   serverMediaUrl: { type: String },

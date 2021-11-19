@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      join_table_users_teams.belongsTo(models.user_details, { foreignKey: 'user_id', targetKey: 'user_id' })
+      // define association here
     }
   };
   join_table_users_teams.init({
@@ -56,7 +56,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
-    },
+    }
   }, {
     sequelize,
     modelName: 'join_table_users_teams',

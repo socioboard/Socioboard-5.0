@@ -11,8 +11,6 @@ const accountFeedsUpdateTable = db.social_account_feeds_updates;
 const Operator = db.Sequelize.Op;
 const teamInfo = db.team_informations;
 const updateFriendsTable = db.social_account_friends_counts;
-
-const {Op, Sequelize} = pkg;
 // const customHashtagModel = require('../mongoose/models/customHashTags');
 
 const coreServices = new CoreServices();
@@ -256,6 +254,7 @@ const UserTeamAccount = {
                 updated_at: moment.utc().format(),
               });
             }
+
             return result.update({updated_at: moment.utc().format()});
           })
           .then(() => resolve())

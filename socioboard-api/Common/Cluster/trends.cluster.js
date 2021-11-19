@@ -132,8 +132,8 @@ class Trends {
             const parsedBody = JSON.parse(body);
             const imgurDetails = [];
 
-            parsedBody?.data?.forEach((element) => {
-              const media_type = element?.type ?? element?.images[0]?.type;
+            parsedBody.data.forEach((element) => {
+              const media_type = element.type ? element.type : element.images[0].type;
               const mediaUrls = [];
 
               if (element.images) {
@@ -263,14 +263,12 @@ class Trends {
           newsApiDetails: [],
         };
 
-        newsapi.v2.everything({
+        newsapi.v2.topHeadlines({
           q: keyword,
-          // from: todayDate,
-          // to: todayDate,
           language: 'en',
-          // category: category,
+          category: category,
           sortBy,
-          page: pageId, // integer
+          page: pageId, 
         })
           .then((response) => {
             const parsedBody = response;

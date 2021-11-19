@@ -5,16 +5,16 @@
 import Router from 'express';
 
 /**
-  * @typedef {import('./bitly-demo.controller.js')}
-  */
+ * @typedef {import('./bitly-demo.controller.js')}
+ */
 import demoController from './bitly-demo.controller.js';
 
 /**
-  * Express router for demo related operations
-  * @type {import('express').Router}
-  * @const
-  * @namespace router
-  */
+ * Express router for demo related operations
+ * @type {import('express').Router}
+ * @const
+ * @namespace router
+ */
 const router = Router();
 
 router.get('/demo/bitly/oauth/authorize', demoController.bitlyOAuthAuthorize.bind(demoController));

@@ -8,7 +8,7 @@ function Authorize(authorizeConfig) {
 
 Authorize.prototype.encrypt = function encrypt(text) {
   const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(this.authorize.algorithm, Buffer.from(this.cipherKey), iv);
+  const cipher = crypto.createCipheriv(this.authorize.algorithm, new Buffer.from(this.cipherKey), iv);
   let encrypted = cipher.update(text);
 
   encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -18,17 +18,11 @@ Authorize.prototype.encrypt = function encrypt(text) {
 
 Authorize.prototype.decrypt = function decrypt(text) {
   text = decodeURIComponent(text);
-
   const textParts = text.split(':');
 
-  const iv = Buffer.from(textParts.shift(), 'hex');
-
-  const encryptedText = Buffer.from(textParts.join(':'), 'hex');
-
-  const decipher = crypto.createDecipheriv(
-    this.authorize.algorithm, Buffer.from(this.cipherKey), iv,
-  );
-
+  const iv = new Buffer.from(textParts.shift(), 'hex');
+  const encryptedText = new Buffer.from(textParts.join(':'), 'hex');
+  const decipher = crypto.createDecipheriv(this.authorize.algorithm, new Buffer.from(this.cipherKey), iv);
   let decrypted = decipher.update(encryptedText);
 
   decrypted = Buffer.concat([decrypted, decipher.final()]);

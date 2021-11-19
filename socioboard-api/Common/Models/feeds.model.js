@@ -24,7 +24,6 @@ class FeedModel {
     this.facebookHelper = new FacebookHelper(config.get('facebook_api'));
     this.twitterLikeComment = new TwitterLikeComment(config.get('twitter_api'));
     this.youtubeLikeComment = new YoutubeLikeComment(config.get('google_api'));
-    this.pocketCluster = new Pocket(config.get('pocket_api'));
   }
 
   twitterLike(userId, accountId, teamId, tweetId, lang) {
@@ -730,26 +729,6 @@ class FeedModel {
           'profile_picture',
         ];
         break;
-      case 15:
-        fields = [
-          'account_id',
-          'follower_count',
-          'following_count',
-          'total_post_count',
-          'profile_picture',
-        ];
-        break;
-      case 16:
-        fields = [
-          'account_id',
-          'follower_count',
-          'total_like_count',
-          'total_post_count',
-          'bio_text',
-          'profile_picture',
-          'cover_picture',
-        ];
-        break;
       default:
         break;
     }
@@ -822,78 +801,6 @@ class FeedModel {
     });
   }
 
-  getArchivedChannels({userId, skip = 0, limit = 10}) {
-    return rssChannels.findAll({
-      attributes: ['id', 'title', 'logo_url', 'is_archived'],
-      where: {
-        user_id: userId,
-        is_archived: true,
-      },
-      offset: skip * limit,
-      limit,
-    });
-  }
-
-  getArchivedLinks({userId, skip = 0, limit = 10}) {
-    return rssLinks.findAll({
-      attributes: ['id', 'url', 'category', 'is_archived'],
-      include: [
-        {
-          attributes: [],
-          model: rssChannels,
-          as: 'channel',
-          where: {
-            user_id: userId,
-          },
-        },
-      ],
-      where: {
-        is_archived: true,
-      },
-      offset: skip * limit,
-      limit,
-    });
-  }
-
-  getAllArchivedLinks(userId) {
-    return rssLinks.findAll({
-      attributes: ['id', 'url', 'category', 'is_archived'],
-      include: [
-        {
-          attributes: [],
-          model: rssChannels,
-          as: 'channel',
-          where: {
-            user_id: userId,
-          },
-        },
-      ],
-      where: {
-        is_archived: true,
-      },
-    });
-  }
-
-  getArchivedLinksByIds(userId, linkIds) {
-    return rssLinks.findAll({
-      attributes: ['id', 'url', 'category', 'is_archived'],
-      include: [
-        {
-          attributes: [],
-          model: rssChannels,
-          as: 'channel',
-          where: {
-            user_id: userId,
-          },
-        },
-      ],
-      where: {
-        id: linkIds,
-        is_archived: true,
-      },
-    });
-  }
-
   getChannelById({userId, channelId, skip = 0, limit = 10}) {
     return rssChannels.findOne({
       include: [
@@ -945,25 +852,6 @@ class FeedModel {
       where: {
         id: ids,
         channel_id: channelId,
-      },
-    });
-  }
-
-  getManyLinksByUserId(userId, ids) {
-    return rssLinks.findAll({
-      attributes: ['id', 'url', 'category', 'is_archived'],
-      include: [
-        {
-          attributes: [],
-          model: rssChannels,
-          as: 'channel',
-          where: {
-            user_id: userId,
-          },
-        },
-      ],
-      where: {
-        id: ids,
       },
     });
   }
@@ -1028,105 +916,6 @@ class FeedModel {
         transaction: trx,
       }
     );
-  }
-
-  setIsArchivedChannel(channelId) {
-    return rssChannels.update(
-      {
-        is_archived: true,
-      },
-      {
-        where: {
-          id: channelId,
-        },
-      }
-    );
-  }
-
-  setIsArchivedLinks(linkIds) {
-    return rssLinks.update(
-      {
-        is_archived: true,
-      },
-      {
-        where: {
-          id: linkIds,
-        },
-      }
-    );
-  }
-
-  /**
-   * TODO To get user recent feeds for pocket profile
-   * Function To get user recent feeds for pocket profile
-   * @param {number} accountId -Social account id
-   * @param {number} pageId -Pagination id
-   * @param {object} socialAccountInfo -Social account details
-   * @returns {object} Pocket user recent feeds
-   */
-  async getRecentPocketFeeds(accountId, pageId, socialAccountInfo) {
-    let isRunRecentPost = await this.isNeedToFetchRecentPost(
-      accountId,
-      config.get('pocket_api.update_time_frequency_value'),
-      config.get('pocket_api.update_time_frequency_factor')
-    );
-    let postDetails;
-    if (isRunRecentPost) {
-      postDetails = await this.pocketCluster.parsedRecentFeeds(
-        socialAccountInfo.access_token,
-        socialAccountInfo.social_id
-      );
-      if (postDetails?.length > 0) {
-        const pocketMongoModel = new PocketMongoModel();
-        await pocketMongoModel.deleteAccountPosts(socialAccountInfo.social_id);
-        pocketMongoModel.insertManyPosts(postDetails);
-      }
-      await this.createOrEditLastUpdateTime(
-        accountId,
-        socialAccountInfo.social_id
-      );
-    }
-    let feeds = await this.getPocketFeeds(pageId, socialAccountInfo);
-    return feeds;
-  }
-
-  /**
-   * TODO To get pocket profile feeds form mongo db
-   * Function To get pocket profile feeds form mongo db
-   * @param {number} pageId -Pagination id
-   * @param {object} socialAccountDetails -Social account details
-   * @returns {object} Pocket user recent feeds
-   */
-  async getPocketFeeds(pageId, socialAccountDetails) {
-    try {
-      const offset = (pageId - 1) * config.get('perPageLimit');
-      const pocketMongoModel = new PocketMongoModel();
-
-      let response = await pocketMongoModel.getSocialAccountPosts(
-        socialAccountDetails.social_id,
-        offset,
-        config.get('perPageLimit')
-      );
-
-      return response;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  }
-
-  /**
-   * TODO To delete pocket profile feeds form mongo db
-   * Function To delete pocket profile feeds form mongo db
-   * @param {object} socialAccountInfo -Social account details
-   * @returns {object} Pocket user recent feeds
-   */
-  async removePocketFeeds(socialAccountInfo) {
-    try {
-      const pocketMongoModel = new PocketMongoModel();
-      await pocketMongoModel.deleteAccountPosts(socialAccountInfo.social_id);
-    } catch (e) {
-      throw new Error(e.message);
-    }
   }
 }
 export default FeedModel;

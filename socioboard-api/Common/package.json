@@ -40,7 +40,6 @@
     "node-schedule": "^2.0.0",
     "node-twitter-api": "^1.8.0",
     "nodemailer": "^6.5.0",
-    "oauth": "0.9.15",
     "pdfmake": "^0.1.71",
     "qs": "^6.10.1",
     "request-promise": "^4.2.6",
@@ -48,7 +47,6 @@
     "rss-parser": "^3.12.0",
     "sentiment": "^5.0.2",
     "sequelize": "^6.5.1",
-    "supertest": "6.1.6",
     "swagger-ui-express": "^4.1.6",
     "twilio": "^3.66.1",
     "twitter": "^1.7.1",
@@ -59,7 +57,6 @@
   "devDependencies": {
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4",
-    "sequelize-cli": "^6.2.0"
+    "eslint-plugin-import": "^2.23.4"
   }
 }

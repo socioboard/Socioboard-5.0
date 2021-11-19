@@ -164,7 +164,13 @@ twitterArchivePost.methods.deleteMediaFile = function (accountId, isArray, skip,
 
 const deleteMediaFile = function (arrayOfMediaFile) {
   Promise.all(arrayOfMediaFile.map((data) => {
-    fs.promises.unlink(mediaBasePath + data);
+    fs.unlink(mediaBasePath + data, (err) => {
+      if (err) {
+
+      } else {
+
+      }
+    });
   }));
 };
 

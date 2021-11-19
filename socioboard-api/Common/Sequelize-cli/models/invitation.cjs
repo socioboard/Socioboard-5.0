@@ -24,10 +24,6 @@ module.exports = (sequelize, Sequelize) => {
     redirectUrl:{
       type:Sequelize.STRING
     },
-    state:{
-      type:Sequelize.STRING
-
-    },
     account_name:{
       type: Sequelize.STRING(64),
       allowNull: true

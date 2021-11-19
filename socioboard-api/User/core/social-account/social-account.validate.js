@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import MEDIUM_CONSTANTS from '../../../Common/Constants/medium.constants.js';
 
 class SocialAccValidator {
   /**
@@ -34,8 +33,6 @@ class SocialAccValidator {
 
     return JoiSchema.validate(data);
   }
-
-
 /**
   * TODO  validate Invitation Data
   * This function is used for Validate Invitation data
@@ -71,7 +68,6 @@ class SocialAccValidator {
     }).options({ abortEarly: false });
        return JoiSchema.validate(data);
   }
-
 
   validateAddMediumProfile(data) {
     const JoiSchema = Joi.object({
