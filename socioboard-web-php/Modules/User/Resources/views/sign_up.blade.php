@@ -273,13 +273,8 @@
         {
             let countrycoder = $('.iti__selected-flag').attr('title');
             let phoneno = $('#phone').val();
-            let mob = /^[1-9]{1}[0-9]{9}$/;
             let code = countrycoder.match(/\d+/)[0];
-            if (mob.test(phoneno) === false) {
-                toastr.error("Please enter valid mobile number.");
-                phoneno.focus();
-                return false;
-            } else if (phoneno === '') {
+            if (phoneno === '') {
                 toastr.error('Please Enter the mobile number first');
             } else {
                 $.ajax({
@@ -291,7 +286,7 @@
                         if (response.code === 200) {
                             toastr.success('Have sent OTP to mobile number successfully,please check');
                         } else if (response.code === 400) {
-                            toastr.error(response.error);
+                            toastr.error("Can not send OTP.",response.error);
                         } else {
                             toastr.error('Some error occured, Can not send the OTP');
 

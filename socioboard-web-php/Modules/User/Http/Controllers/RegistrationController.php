@@ -50,8 +50,15 @@ class RegistrationController extends Controller
                 $apiUrl2 = ApiConfig::get('/otp/verify-otp-phone-number?countryCode=' . $mobileCode . '&phoneNumber=' . $mobileno . '&otp=' . $OTP);
                 $response2 = $this->helper->postApiCall('post', $apiUrl2);
                 if ($response2['code'] === 200) {
-                    $response = $this->helper->postApiCall('post', $apiUrl, $parameters);
-                } else  {
+                    if ($response2['data']['status'] === 'pending') {
+                        $response['code'] = 400;
+                        $response['message'] = 'failed';
+                        $response['error'] = 'You have entered Wrong or expired OTP';
+                        return $response;
+                    } else {
+                        $response = $this->helper->postApiCall('post', $apiUrl, $parameters);
+                    }
+                } else {
                     return $this->helper->responseHandlerWithArray($response2);
                 }
             } catch (Exception $e) {

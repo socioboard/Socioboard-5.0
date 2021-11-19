@@ -72,7 +72,6 @@
                     <div class="col-xl-6" id="ss-scheduled">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Page Fan</h3>
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports">+
                                     <span node-id="ss-scheduled_md6" class="ss addtcartclose"></span>
@@ -80,6 +79,8 @@
                                 <span class="spinner spinner-primary spinner-center" id="ss-scheduled_md6" style="
     display: none;"></span>
                             </div>
+                            <h3 class="card-title font-weight-bolder">Page Fan</h3>
+
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -149,7 +150,6 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Page Impressions</h3>
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports">+
                                     <span node-id="ss-page-impressions_md6" class="ss addtcartclose"></span>
@@ -157,6 +157,7 @@
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-impressions_md6" style="
     display: none;"></span>
                             </div>
+                            <h3 class="card-title font-weight-bolder">Page Impressions</h3>
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -259,7 +260,6 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Page Organic & Paid Impressions</h3>
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports">+
                                     <span node-id="ss-page-organic_md6" class="ss addtcartclose"></span>
@@ -267,6 +267,7 @@
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-organic_md6" style="
     display: none;"></span>
                             </div>
+                            <h3 class="card-title font-weight-bolder">Page Organic & Paid Impressions</h3>
                             <!--end::Header-->
 
 
@@ -347,7 +348,6 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Page Stories</h3>
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports">+
                                     <span node-id="ss-page-stories_md6" class="ss addtcartclose"></span>
@@ -355,6 +355,7 @@
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-stories_md6" style="
     display: none;"></span>
                             </div>
+                            <h3 class="card-title font-weight-bolder">Page Stories</h3>
                             <div class="card-body d-flex flex-column">
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">

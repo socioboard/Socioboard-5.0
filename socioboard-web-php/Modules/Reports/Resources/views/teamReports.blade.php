@@ -69,7 +69,7 @@
                             <!--begin: Info-->
                             <div class="flex-grow-1">
                                 <!--begin::Title-->
-                                <div  class="d-flex align-items-center justify-content-between flex-wrap mt-2 card-stretch" >
+                                <div class="d-flex align-items-center justify-content-between flex-wrap mt-2 card-stretch">
                                     <!--begin::User-->
                                     <div class="mr-3">
                                         <!--begin::Name-->
@@ -91,10 +91,10 @@
                                         </div>
                                         <!--end::Contacts-->
                                     </div>
-                                        <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                             title="Add to custom Reports">+
-                                            <span node-id="ss-Div_d-flex" class="ss addtcartclose"></span>
-                                        </div>
+                                    <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
+                                         title="Add to custom Reports">+
+                                        <span node-id="ss-Div_d-flex" class="ss addtcartclose"></span>
+                                    </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-Div_d-flex" style="
     display: none;"></span>
                                     <!--begin::User-->
@@ -133,13 +133,13 @@
                             <!--begin: Item-->
                             <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
                                             <span class="mr-4">
-                                                <i class="fas fa-envelope fa-2x text-primary font-weight-bold"></i>
+                                                <i class="fas fa-user fa-2x text-info font-weight-bold"></i>
                                             </span>
                                 <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">Invited</span>
+                                    <span class="font-weight-bolder font-size-sm">Team Members List</span>
                                     @if($memberDetails['code']=== 200)
                                         <span class="font-weight-bolder font-size-h5"
-                                              id="invitedList">{{$memberDetails['data']->TeamMemberStats->invitedList}}</span>
+                                              id="invitedList">{{$memberDetails['data']->TeamMemberStats->teamMembersCount}}</span>
                                     @else
                                         <span class="font-weight-bolder font-size-h5">N/A</span>
                                     @endif
@@ -164,7 +164,7 @@
                                             } ?>
                                         </script>
                                         <span class="font-weight-bolder font-size-h5"
-                                              id="invitePending">{{$memberDetails['data']->TeamMemberStats->leftTeamMem}}</span>
+                                              id="invitePending">{{$memberDetails['data']->TeamMemberStats->invitedList}}</span>
                                     @else
                                         <span class="font-weight-bolder font-size-h5">N/A</span>
                                     @endif
@@ -180,10 +180,10 @@
                                                 <i class="fas fa-envelope-open fa-2x text-success font-weight-bold"></i>
                                             </span>
                                 <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">Invitees</span>
+                                    <span class="font-weight-bolder font-size-sm">Left from Team</span>
                                     @if($memberDetails['code']=== 200)
                                         <span class="font-weight-bolder font-size-h5"
-                                              id="invitees">{{$memberDetails['data']->TeamMemberStats->teamMembersCount}}</span>
+                                              id="invitees">{{$memberDetails['data']->TeamMemberStats->leftTeamMem}}</span>
                                     @else
                                         <span class="font-weight-bolder font-size-h5">N/A</span>
                                     @endif
@@ -201,13 +201,16 @@
                                     @if($members->code === 200)
                                         @if(count($members->data->memberProfileDetails)>0)
                                             @foreach($members->data->memberProfileDetails as $data)
-                                                <div class="symbol symbol-30 symbol-circle" onclick="return false"
-                                                     id="members_name"
-                                                     title="{{$data->first_name}} {{$data->last_name}}"
-                                                >
-                                                    <img alt="Pic" src="<?php echo teamProfilePic($data->profile_picture); ?>"
-                                                         id="team_image_out" >
-                                                </div>
+                                                @if($data->invitation_accepted === 1 && $data->left_from_team === 0 )
+                                                    <div class="symbol symbol-30 symbol-circle" onclick="return false"
+                                                         id="members_name"
+                                                         title="{{$data->first_name}} {{$data->last_name}}"
+                                                    >
+                                                        <img alt="Pic"
+                                                             src="<?php echo teamProfilePic($data->profile_picture); ?>"
+                                                             id="team_image_out">
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         @endif
                                     @endif($members->code === 400)
@@ -336,11 +339,11 @@
                                                 <!--begin::Symbol-->
 
                                                 <!--end::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
-                                                                        <i class="fas fa-chart-pie fa-2x text-danger"></i>
-                                                                    </span>
+ <span class="svg-icon svg-icon-lg svg-icon-success">
+ <i class="far fa-calendar-times text-success fa-2x"></i>
+ </span>
                                                     </div>
                                                 </div>
                                                 <!--begin::Title-->
@@ -386,11 +389,11 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-dangers mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                            <i class="far fa-calendar-times text-success fa-2x"></i>
-                                                                    </span>
+<span class="svg-icon svg-icon-lg svg-icon-danger">
+<i class="fas fa-chart-pie fa-2x text-danger"></i>
+</span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -494,7 +497,7 @@
     display: none;"></span>
                             </div>
                             <div class="card-body p-0 position-relative overflow-hidden">
-                                <div id="twt_stats_chart" class="card-rounded-bottom " style="height: 200px" ></div>
+                                <div id="twt_stats_chart" class="card-rounded-bottom " style="height: 200px"></div>
                             </div>
                             <!--end::Body-->
                         </div>
@@ -677,18 +680,29 @@
                 beforeSend: function () {
                 },
                 success: function (response) {
+                    let profile_picture;
                     if (response.teamsData.code === 200) {
                         document.getElementById('teamImageLink').src = response.teamsData.data.teamSocialAccountDetails[0].team_logo;
                         $('#teamName, #memberProfileDetails').empty();
                         $('#teamName').append(response.teamsData.data.teamSocialAccountDetails[0].team_name);
                         if (response.teamsData.data.memberProfileDetails.length > 0) {
                             response.teamsData.data.memberProfileDetails.map(element => {
-                                $('#memberProfileDetails').append('<div class="symbol symbol-30 symbol-circle"\n' +
-                                    'title="' + element.first_name + " " + element.last_name + '" onclick="return false"\n' +
-                                    'id="members_name">\n' +
-                                    '<img alt="Pic" src="' + element.profile_picture + '"/>\n' +
-                                    '</div>');
-                                $("#members_name").tooltip();
+                                profile_picture = element.profile_picture;
+                                if (isValidURL(element.profile_picture) === true) {
+                                    profile_picture = element.profile_picture;
+                                } else {
+                                    profile_picture = (profile_picture === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
+                                }
+                                if (element.invitation_accepted === 1 && element.left_from_team === 0) {
+                                    $('#memberProfileDetails').append('<div class="symbol symbol-30 symbol-circle"\n' +
+                                        'title="' + element.first_name + " " + element.last_name + '" onclick="return false"\n' +
+                                        'id="members_name">\n' +
+                                        '<img alt="Pic" src="' + profile_picture + '"/>\n' +
+                                        '</div>');
+                                    $("#members_name").tooltip();
+
+                                }
+
                             });
                             setTimeout(function () {
                                 getScheduleReports(teamid, 3);
@@ -763,9 +777,9 @@
                     }
                     if (response.teamInsight.code === 200) {
                         $('#invitePending, #invitees, #invitePending, #invitedList').empty();
-                        $('#invitePending').append(response.teamInsight.data.TeamMemberStats.leftTeamMem);
-                        $('#invitees').append(response.teamInsight.data.TeamMemberStats.teamMembersCount);
-                        $('#invitedList').append(response.teamInsight.data.TeamMemberStats.invitedList);
+                        $('#invitePending').append(response.teamInsight.data.TeamMemberStats.invitedList);
+                        $('#invitees').append(response.teamInsight.data.TeamMemberStats.leftTeamMem);
+                        $('#invitedList').append(response.teamInsight.data.TeamMemberStats.teamMembersCount);
                     }
                 }
             });
@@ -911,8 +925,8 @@
                                     }
                                 }
                             },
-                            series: [response.data.totalPost, response.data.totalpostFailed, response.data.totalschedulePosts, socialProfileCount],
-                            labels: ["Total Post Count", "Total Post Failed", "Schedule Publish", "Social Profile Count"]
+                            series: [response.data.totalPost, socialProfileCount, response.data.totalschedulePosts, response.data.totalpostFailed],
+                            labels: ["Total Post Count", "Social Profile Count", "Schedule Publish", "Total Post Failed"]
                         };
 
                         var chart = new ApexCharts(document.querySelector("#team-report"), options);
@@ -1327,6 +1341,16 @@
 
             $('#members_name').tooltip();
         });
+
+
+        function isValidURL(str) {
+            var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+            if (!regex.test(str)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
 
     </script>
 

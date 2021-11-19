@@ -18,7 +18,7 @@
                 <!--begin::Search Form-->
                 <div class="d-flex align-items-center" id="">
                     @if(isset($accounts) && isset($accounts['data']->teamSocialAccountDetails))
-                        <span class="text-dark-50 font-weight-bold" id="">{{count($accounts['data']->teamSocialAccountDetails)}} @if(count($accounts['data']->teamSocialAccountDetails) > 1)Teams @else Team @endif</span>
+                        <span class="text-dark-50 font-weight-bold" id="count_data">{{count($accounts['data']->teamSocialAccountDetails)}}  </span>@if(count($accounts['data']->teamSocialAccountDetails) > 1)&nbspTeams @else &nbspTeam @endif
                     @endif
                     <form class="ml-5" action="/search" method="post" >
                         @csrf
@@ -593,6 +593,7 @@
         }
 
         function deleteIt(id) {
+            let count = $('#count_data').text();
             $.ajax({
                 url: "/team-delete/" + id,
                 type: "get",
@@ -603,6 +604,7 @@
                             fadeOut: 1000,
                         });
                         $('#team'+id).remove();
+                        $('#count_data').empty().append(count-1);
                     } else if (response['code'] === 400) {
                         toastr.error(response.error);
                     } else if(response.code === 500) {

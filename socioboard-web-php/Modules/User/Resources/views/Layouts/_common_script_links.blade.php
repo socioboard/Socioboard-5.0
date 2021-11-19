@@ -3,7 +3,14 @@
 <script src="{{asset('/plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
 <script src="{{asset('/js/main.js')}}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+<!-- Global site tag (gtag.js) - Google Ads: 323729849 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-323729849"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-323729849');
+</script>
 
 <script>
     toastr.options = {

@@ -22,6 +22,11 @@
                     {{$ErrorMessage}}
                 </div>
             @endif
+            @if(isset($result))
+                <div style="color: red;text-align:center;">
+                    {{$result}}
+                </div>
+            @endif
             @if(session('SuccessMessage'))
                 <div style="color: forestgreen;text-align:center;">
                     {{session('SuccessMessage')}}
@@ -84,71 +89,66 @@
                                 Remember Me
                             </label>
                             <a href=""
-                               class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" data-toggle="modal" data-target="#forgotPasswordModel">
+                               class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5"
+                               data-toggle="modal" data-target="#forgotPasswordModel">
                                 Forgot Password ?
+                            </a>
+
+                        </div>
+                        <div class="d-flex justify-content-end mt-5">
+                            <a href="" class="text-primary font-size-h6 font-weight-bolder text-hover-primary" data-toggle="modal" data-target="#emailActivationModalLabel" >
+                                Get Activation Link
                             </a>
                         </div>
                     </div>
-                    <!--end::Form group-->
-                    <!--begin::Action-->
                     <div class="text-center pt-2">
                         <button type="submit" id="login_button"
                                 class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3">Sign In
                         </button>
                     </div>
-                    <!--end::Action-->
                 </form>
             </div>
             <!--end::Form-->
             <!--begin: Aside footer for desktop-->
-            <div class="text-center">
+            <div class="text-center login-social-btns">
                 <!-- Email login button -->
                 <div>
-                    <a href=""
-                       class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" data-toggle="modal" data-target="#emailActivationModalLabel">
-                        Get Activation Link
-                    </a>
-                    <button type="button" class="btn font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
-                            data-toggle="modal" data-target="#emailSignInModal">
-                                    <span class="svg-icon svg-icon-md">
-                                        <i class="far fa-envelope"></i>
-                                    </span>
-                        Sign in with Email
-                    </button>
                     <!-- begin:Email modal -->
                     <div class="modal fade" id="emailActivationModalLabel" tabindex="-1" role="dialog"
                          aria-labelledby="emailActivationModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="emailModalLabel">Email of Account which need to verify</h5>
+                                    <h5 class="modal-title" id="emailModalLabel">Email of Account which need to
+                                        verify</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <i aria-hidden="true" class="ki ki-close"></i>
                                     </button>
                                 </div>
                                 <form id="activationForm">
                                     @csrf
-                                <div class="modal-body">
-                                    <!--begin::Form group-->
-                                    <div class="form-group">
-                                        <div class="input-icon">
-                                            <label for="emailLoginId" style="display: none"></label>
-                                            <input
-                                                    class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6"
-                                                    type="text" name="email" id="emailId"
-                                                    autocomplete="off"
-                                                    placeholder="Email"/>
-                                            <span><i class="far fa-envelope"></i></span>
-                                            <div class="error text-danger" id="emailError1"></div>
+                                    <div class="modal-body">
+                                        <!--begin::Form group-->
+                                        <div class="form-group">
+                                            <div class="input-icon">
+                                                <label for="emailLoginId" style="display: none"></label>
+                                                <input
+                                                        class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6"
+                                                        type="text" name="email" id="emailId"
+                                                        autocomplete="off"
+                                                        placeholder="Email"/>
+                                                <span><i class="far fa-envelope"></i></span>
+                                                <div class="error text-danger" id="emailError1"></div>
+                                            </div>
                                         </div>
+                                        If you use <b>Sign in with Email</b> option or <b>Update Password</b> that time
+                                        also your email verification will be done automatically.
+                                        <!--end::Form group-->
                                     </div>
-                                    If you use <b>Sign in with Email</b> option or <b>Update Password</b> that time also your email verification will be done automatically.
-                                    <!--end::Form group-->
-                                </div>
-                                <div class="modal-footer" style="padding: 8px 21px 20px 21px">
-                                    <button type="submit" id="activation" class="btn font-weight-bolder ">Submit
-                                    </button>
-                                </div>
+                                    <div class="modal-footer" style="padding: 8px 21px 20px 21px">
+                                        <button type="submit" id="activation" class="btn font-weight-bolder ">Submit
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -160,7 +160,8 @@
                         <div class="modal-dialog modal-dialog-centered modal" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="emailModalLabel">Enter your email to reset your password</h5>
+                                    <h5 class="modal-title" id="emailModalLabel">Enter your email to reset your
+                                        password</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <i aria-hidden="true" class="ki ki-close"></i>
                                     </button>
@@ -231,7 +232,7 @@
                 <!-- end:Email login button -->
                 <!-- Facebook login button -->
                 <div>
-                    <button type="button" class="btn bg-facebook font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
+                    <button type="button" class="btn bg-facebook font-weight-bolder mt-5 font-size-h6"
                             onclick="location.href='/social/Facebook'">
                                     <span class="svg-icon svg-icon-md">
                                         <i class="fab fa-facebook"> </i>
@@ -242,7 +243,7 @@
                 <!-- end:Facebook login button -->
                 <!-- Google login button -->
                 <div>
-                    <button type="button" class="btn bg-google font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
+                    <button type="button" class="btn bg-google font-weight-bolder  mt-5 font-size-h6"
                             onclick="location.href='/social/Google'">
                                     <span class="svg-icon svg-icon-md">
                                         <i class="fab fa-google"></i>
@@ -253,7 +254,7 @@
                 <!-- end:Google background-color: #eee;login button -->
                 <!-- Twitter login button -->
                 <div>
-                    <button type="button" class="btn bg-twitter font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
+                    <button type="button" class="btn bg-twitter font-weight-bolder  mt-5 font-size-h6"
                             onclick="location.href='/social/Twitter'">
                                     <span class="svg-icon svg-icon-md">
                                         <i class="fab fa-twitter"></i>
@@ -264,7 +265,7 @@
                 <!-- end:Twitter login button -->
                 <!-- Git-hub login button -->
                 <div>
-                    <button type="button" class="btn bg-github font-weight-bolder pl-20 pr-20 mt-5 font-size-h6"
+                    <button type="button" class="btn bg-github font-weight-bolder  mt-5 font-size-h6"
                             onclick="location.href='/social/GitHub'">
                                     <span class="svg-icon svg-icon-md">
                                         <i class="fab fa-github"></i>
@@ -272,6 +273,14 @@
                         Sign in with Github
                     </button>
                 </div>
+                <button type="button" class="btn font-weight-bolder  mt-5 font-size-h6"
+                        data-toggle="modal" data-target="#emailSignInModal">
+                                    <span class="svg-icon svg-icon-md">
+                                        <i class="far fa-envelope"></i>
+                                    </span>
+                    Sign in with Email
+                </button>
+
                 <!-- end:Git-hub login button -->
             </div>
             <!--end: Aside footer for desktop-->
@@ -415,13 +424,8 @@
             let countrycoder = $('.iti__selected-flag').attr('title');
             let phoneno = $('#phoneOtp').val();
             $('#error-otp-msg').remove();
-            let mob = /^[1-9]{1}[0-9]{9}$/;
             let code = countrycoder.match(/\d+/)[0]
-            if (mob.test(phoneno) === false) {
-                toastr.error("Please enter valid mobile number.");
-                phoneno.focus();
-                return false;
-            } else if (phoneno === '') {
+            if (phoneno === '') {
                 toastr.error('Please Enter the mobile number first');
             } else {
                 $.ajax({
@@ -433,7 +437,8 @@
                         if (response.code === 200) {
                             toastr.success('Have sent OTP to mobile number successfully,please check');
                         } else if (response.code === 400) {
-                            toastr.error(response.error);
+                            toastr.error("Can not send OTP.",response.error);
+
                         } else {
                             toastr.error('Some error occured, Can not send the OTP');
 
@@ -466,7 +471,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    data: {phoneno, code,otp},
+                    data: {phoneno, code, otp},
                     dataType: 'json',
                     success: function (response) {
                         if (response.code === 200) {
@@ -475,7 +480,7 @@
                                     url: "/update-session",
                                     type: 'post',
                                     data: {
-                                        phoneno, code,countryName
+                                        phoneno, code, countryName
                                     },
                                     headers: {
                                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -492,8 +497,12 @@
                                                     document.location.href = '{{env('APP_URL')}}dashboard';
                                                 }
                                             });
-                                        } else if (response.code === 400) {
-                                            toastr.error(response.error);
+                                        } else if (response['code'] === 400) {
+                                            if (response.error === 'Error: The requested resource /Services/VAb998f968120dfd40106eb6ca4bcd39a4/VerificationCheck was not found') {
+                                                toastr.error('You have entered wrong or Expired OTP', 'Login failed!!');
+                                            } else {
+                                                toastr.error(response.error, 'Login failed!!');
+                                            }
                                         } else if (response.code === 401) {
                                             toastr.error(response.error);
                                         } else {

@@ -50,6 +50,7 @@
 <script>
     let APP_URL = '{{env('APP_URL')}}';
     var email = '{{session()->get('forgot_password_user_email')}}';
+    var token = '{{session()->get('otherToken')}}';
     $(document).ready(function () {
         $('#new_password a').on('click',function (event) {
             event.preventDefault();

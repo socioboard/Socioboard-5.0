@@ -106,10 +106,9 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"></div>
+                                                    <div class="font-size-h4 font-weight-bolder"> Followers</div>
                                                     <div class="font-size-sm font-weight-bold mt-1"
                                                          id="follower_count">
-                                                        Followers
                                                     </div>
                                                 </div>
 
@@ -133,10 +132,9 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"></div>
+                                                    <div class="font-size-h4 font-weight-bolder">Following</div>
                                                     <div class="font-size-sm font-weight-bold mt-1"
                                                          id="following_count">
-                                                        Following
                                                     </div>
                                                 </div>
 
@@ -397,8 +395,8 @@
                             likecount.push(element.favouritesCount);
                             postsCount.push(element.postsCount);
                         });
-                        $('#following_count').append(response.data.stats[0].totalFollowerCount);
-                        $('#follower_count').append(response.data.stats[0].totalFollowingCount);
+                        $('#following_count').append(response.data.stats[0].totalFollowingCount);
+                        $('#follower_count').append(response.data.stats[0].totalFollowerCount);
                         var optionsLine = {
                             chart: {
                                 height: 328,

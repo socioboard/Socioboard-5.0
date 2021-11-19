@@ -263,6 +263,7 @@ class helper
                     $response = $this->client->delete($api_url, [
 
                         'headers' => ['x-access-token' => $this->authUser()->__token()],
+                        'json' => $data
                     ]);
                     return $this->successResponse($response->getStatusCode(),$response->getBody()->getContents());
                 } catch (GuzzleException $e) {

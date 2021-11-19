@@ -19,7 +19,10 @@ Route::prefix('imagelibary')->middleware('checkPlanAccesses:share_library')->gro
     Route::post('/public-images', [ImageLibaryController::class, 'publicImages']);
     Route::get('/gallery-images', [ImageLibaryController::class, 'galleryImages']);
     Route::post('/gallery-images', [ImageLibaryController::class, 'galleryImages']);
-    Route::post('/delete-image', [ImageLibaryController::class, 'deleteImage']);
+    Route::delete('/delete-image', [ImageLibaryController::class, 'deleteImage']);
     Route::post('/upload-image', [ImageLibaryController::class, 'uploadImage']);
     Route::post('/draft-post', [ImageLibaryController::class, 'draftPostFunction']);
+    Route::post('/search-public-image', [ImageLibaryController::class, 'searchPublic']);
+    Route::post('/search-private-image', [ImageLibaryController::class, 'searchPrivte']);
+    Route::put('/rate-image', [ImageLibaryController::class, 'rateImages']);
 });

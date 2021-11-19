@@ -3,42 +3,42 @@
      aria-hidden="true">
     <form id="one_click_form_id">
         @csrf
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="resocioModalLabel">Re-Socio</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i aria-hidden="true" class="ki ki-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resocioModalLabel">Re-Socio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
                         <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
                                   name="normal_text_area" id="normal_post_area_id" rows="3" placeholder="Write something !" required></textarea>
-                    <div class="error text-danger" id="text_area_error1"></div>
-                </div>
-
-                <div class="form-group">
-                    <div class="input-icon">
-                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 " id="outgoing_url_id"
-                               type="text" name="outgoing_url" autocomplete="off" placeholder="Enter Outgoing url"/>
-                        <span><i class="fas fa-link"></i></span>
+                        <div class="error text-danger" id="text_area_error1"></div>
                     </div>
-                </div>
 
-                <!-- image and video upload -->
-                <div class="row">
-                    <div class="col-12" id="">
-                        <ul id="media-list" class="clearfix">
-                            <li id="selected_image_id">
-                            </li>
-                        </ul>
+                    <div class="form-group">
+                        <div class="input-icon">
+                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 " id="outgoing_url_id"
+                                   type="text" name="outgoing_url" autocomplete="off" placeholder="Enter Outgoing url"/>
+                            <span><i class="fas fa-link"></i></span>
+                        </div>
                     </div>
-                </div>
-                <div class="error text-danger" id="add_image_error1"></div>
-                <!-- end of image and video upload -->
-                <!-- begin:Accounts list -->
-                <div class="error text-danger" id="add_account_error1"></div>
+
+                    <!-- image and video upload -->
+                    <div class="row">
+                        <div class="col-12" id="">
+                            <ul id="media-list" class="clearfix">
+                                <li id="selected_image_id">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="error text-danger" id="add_image_error1"></div>
+                    <!-- end of image and video upload -->
+                    <!-- begin:Accounts list -->
+                    <div class="error text-danger" id="add_account_error1"></div>
                     @if(isset($socialAccounts) && !empty($socialAccounts))
                         <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
                             @foreach($socialAccounts as $key => $socialAccount)
@@ -56,7 +56,7 @@
                                     <div class="mt-3">
                                         <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="height: 180px;overflow-y: scroll;">
                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                                                @if(($group == "account") || ($group == "page") || ($group == "personal account"))
+                                                @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                     <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                                                     @foreach($socialAccountArray as $group_key => $socialAccount)
                                                         @if($key == 'facebook')
@@ -81,10 +81,13 @@
                                                                     <!--end::Title-->
 
                                                                     <!--begin::Data-->
-                                                                    <span class="text-muted font-weight-bold">
-                                                {{ $socialAccount->friendship_counts }} followers
-                                            </span>
-                                                                    <!--end::Data-->
+                                                                @if($socialAccount->account_type !== 6)
+                                                                    <!--begin::Data-->
+                                                                        <span class="text-muted font-weight-bold">
+                                                                            {{ $socialAccount->friendship_counts }} followers
+                                                                        </span>
+                                                                @endif
+                                                                <!--end::Data-->
                                                                 </div>
                                                                 <!--end::Info-->
                                                             </div>
@@ -105,17 +108,17 @@
                                 </div>
                             @endforeach
                         </div>
-                    @endif
+                @endif
                 <!-- end:Accounts list -->
-            </div>
+                </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(0);">Draft
-                </button>
-                <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(1);">Post
-                </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(0);">Draft
+                    </button>
+                    <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(1);">Post
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-        </form>
+    </form>
 </div>

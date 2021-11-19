@@ -29,6 +29,9 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser','checkPlan
         Route::post('get-twitter-reports', 'ReportsController@getTwitterReportsByTeam');
         Route::get('get-youtube-reports', 'ReportsController@getYoutubeReports');
         Route::post('get-youtube-reports', 'ReportsController@getYoutubeReportsByTeam');
+        Route::get('get-linked-reports', 'ReportsController@getLinkedInReports');
+        Route::post('get-linked-reports-follower-stats', 'ReportsController@getLinkedInFollowerReportsByTeam');
+        Route::post('get-linked-pages-stats', 'ReportsController@getLinkedInPagesReportsByTeam');
     });
 
     Route::middleware('checkPlanAccesses:team_report')->group(function() {

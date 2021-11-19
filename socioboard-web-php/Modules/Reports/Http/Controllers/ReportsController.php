@@ -654,4 +654,85 @@ class ReportsController extends Controller
         }
     }
 
+    /**
+     * TODO we've to get all the linkedIN pages added in Account to show in dropdowm in reports UI.
+     * @return {object} Returns All accoounts data in team    in JSON object format and also returns linkedIn reports View UI.
+     */
+    public function getLinkedInReports()
+    {
+        try {
+            try {
+                $team = Session::get('team');
+                $teamID = $team['teamid'];
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                return view("reports::linkeInReports")->with(["teamsSocialAccounts" => $response['data']]);
+            } catch (Exception $e) {
+                return $this->helper->callingErrorHandler($e, 'getLinkedInReports() {ReportsController}');
+            }
+        } catch (Exception $e) {
+            return $this->helper->callingErrorHandler($e, 'getLinkedInReports() {ReportsController}');
+        }
+    }
+
+    /**
+     * TODO we've to get all followers data stats of particular linkedIN page account in particular date range.
+     * @param {teamid) pageid for getting the first 12 nortifications passing in controller.
+     * @param {accid}  Account id of linkedIn page.
+     * @param {filterPeriod}  filterPeriod UI.
+     * @param {startDate}  Start date value from date filter range UI.
+     * @param {endDate} end date value from date filter range UI.
+     * @return {object} returns the follower stats value in JSON format.
+     */
+    public function getLinkedInFollowerReportsByTeam(Request $request)
+    {
+        try {
+            $teamid = $request->teamid;
+            $accid = $request->accid;
+            $filterPeriod = intval($request->filterPeriod);
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+            if ($filterPeriod === 7) {
+                $apiUrl = ApiConfig::getFeeds('/feeds/get-follower-stats?accountId=' . $accid . '&teamId=' . $teamid . '&filterPeriod=' . $filterPeriod . '&since=' . $startDate . '&until=' . $endDate);
+            } else {
+                $apiUrl = ApiConfig::getFeeds('/feeds/get-follower-stats?accountId=' . $accid . '&teamId=' . $teamid . '&filterPeriod=' . $filterPeriod);
+            }
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+            return $this->helper->responseHandler($response['data']);
+
+        } catch (Exception $e) {
+            return $this->helper->callingErrorHandler($e, 'getLinkedInFollowerReportsByTeam() {ReportsController}');
+        }
+    }
+
+    /**
+     * TODO we've to get all LinkedInPages  stats of particular linkedIN page account in particular date range.
+     * @param {teamid) pageid for getting the first 12 nortifications passing in controller.
+     * @param {accid}  Account id of linkedIn page.
+     * @param {filterPeriod}  filterPeriod UI.
+     * @param {startDate}  Start date value from date filter range UI.
+     * @param {endDate} end date value from date filter range UI.
+     * @return {object} returns the follower stats value in JSON format.
+     */
+    public function getLinkedInPagesReportsByTeam(Request $request)
+    {
+        try {
+            $teamid = $request->teamid;
+            $accid = $request->accid;
+            $filterPeriod = intval($request->filterPeriod);
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+            if ($filterPeriod === 7) {
+                $apiUrl = ApiConfig::getFeeds('/feeds/get-page-stats?accountId=' . $accid . '&teamId=' . $teamid . '&filterPeriod=' . $filterPeriod . '&since=' . $startDate . '&until=' . $endDate);
+            } else {
+                $apiUrl = ApiConfig::getFeeds('/feeds/get-page-stats?accountId=' . $accid . '&teamId=' . $teamid . '&filterPeriod=' . $filterPeriod);
+            }
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+            return $this->helper->responseHandler($response['data']);
+        } catch (Exception $e) {
+            return $this->helper->callingErrorHandler($e, 'getLinkedInPagesReportsByTeam() {ReportsController}');
+
+        }
+    }
+
 }
