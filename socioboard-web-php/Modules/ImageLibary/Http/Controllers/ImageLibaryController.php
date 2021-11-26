@@ -266,15 +266,29 @@ class ImageLibaryController extends Controller
     {
         try {
             $team = \Session::get('team');
-            $validator = Validator::make($request->all(), [
-                'normal_text_area' => 'required',
-                'selected_image' => 'required',
-                'socialAccount' => 'required'
-            ], [
-                'normal_text_area.required' => 'Text is required',
-                'selected_image.required' => 'Image is required',
-                'socialAccount.required' => 'Please select Social Accounts'
-            ]);
+            if ($request->outgoing_url !== null){
+                $validator = Validator::make($request->all(), [
+                    'normal_text_area' => 'required',
+                    'selected_image' => 'required',
+                    'socialAccount' => 'required',
+                    'outgoing_url' =>  'url'
+                ], [
+                    'normal_text_area.required' => 'Text is required',
+                    'selected_image.required' => 'Image is required',
+                    'socialAccount.required' => 'Please select Social Accounts',
+                    'outgoing_url.url' => 'URl format should be valid'
+                ]);
+            } else {
+                $validator = Validator::make($request->all(), [
+                    'normal_text_area' => 'required',
+                    'selected_image' => 'required',
+                    'socialAccount' => 'required',
+                ], [
+                    'normal_text_area.required' => 'Text is required',
+                    'selected_image.required' => 'Image is required',
+                    'socialAccount.required' => 'Please select Social Accounts'
+                ]);
+            }
             if ($validator->fails()) {
                 $response['code'] = 201;
                 $response['msg'] = $validator->errors()->all();

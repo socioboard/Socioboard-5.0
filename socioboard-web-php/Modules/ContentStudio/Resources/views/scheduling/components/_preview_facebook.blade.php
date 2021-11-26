@@ -14,7 +14,7 @@
 
                 <!--begin::Info-->
                 <div class="d-flex flex-column flex-grow-2">
-                    <a class="text-hover-primary mb-1 font-size-lg font-weight-bolder" id="account_name" title="Here it will be your selected account name in selected Platform">Account Name</a>
+                    <a class="text-hover-primary mb-1 font-size-lg font-weight-bolder" id="account_name" title="Here it will be your selected account name on the selected Platform">Account Name</a>
                     <span class="text-muted font-weight-bold">Just now</span>
                 </div>
                 <!--end::Info-->

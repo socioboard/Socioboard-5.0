@@ -23,7 +23,7 @@
 
                                 <div class="card-toolbar">
                                     <!--begin::Teams Actions Dropdown-->
-                                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions" data-placement="left">
+                                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-placement="left">
                                         <a href="javascript:;" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="ki ki-bold-more-hor"></i>
                                         </a>
@@ -31,7 +31,7 @@
                                             <!--begin::Navigation-->
                                             <ul class="navi navi-hover">
                                                 <li class="navi-item">
-                                                    <a href="javascript:;" class="navi-link" onclick="location.reload()">
+                                                    <a href="{{env('APP_URL')}}boards/board-me/Football/refresh/49" class="navi-link">
                                                                     <span class="navi-text">
                                                                         <span class="text-success"><i class="fas fa-sync-alt fa-fw text-success"></i> Refresh </span>
                                                                     </span>
@@ -60,7 +60,7 @@
                 <!--end::Row-->
                 <!--begin::Board-->
                 <!--begin::Row-->
-                <div class="card-columns" id="youtubeFeeds">
+                <div class="card-columns feeds-container" id="youtubeFeeds">
                     @if(isset($responseData) && $responseData['data'] !== null)
                         <script>
                             var feedsLength = <?php echo count($responseData['data']->youtubeDetails)  ?>;
@@ -76,37 +76,46 @@
                                 </div>
                                 <!--end::Video-->
                                 <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <!--begin::Symbol-->
-                                        <div class="symbol symbol-40 symbol-light-success mr-5">
-                                                            <span class="symbol-label">
-                                                                <img src="/media/svg/avatars/011-boy-5.svg"
-                                                                     class="h-75 align-self-end" alt="">
-                                                            </span>
-                                        </div>
-                                        <!--end::Symbol-->
+                                    <div class="board-card">
+                                        <div>
+                                            <div class="d-flex align-items-center">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-40 symbol-light-success mr-5">
+                                                                    <span class="symbol-label">
+                                                                        <img src="/media/svg/avatars/011-boy-5.svg"
+                                                                             class="h-75 align-self-end" alt="">
+                                                                    </span>
+                                                </div>
+                                                <!--end::Symbol-->
 
-                                        <!--begin::Info-->
-                                        <div class="d-flex flex-column flex-grow-1">
-                                            <a href="{{$account->mediaUrl}}"
-                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder"
-                                               target="_blank">{{$account->channelTitle}}</a>
-                                            <span class="text-muted font-weight-bold">{{$account->publishedDate}}</span>
+                                                <!--begin::Info-->
+                                                <div class="d-flex flex-column flex-grow-1">
+                                                    <a href="{{$account->mediaUrl}}"
+                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder"
+                                                       target="_blank">{{$account->channelTitle}}</a>
+                                                    @php
+                                                        $date = new DateTime($account->publishedDate);
+                                                    @endphp
+                                                    <span class="text-muted font-weight-bold">{{$date->format('Y-m-d H:i:s')}}</span>
+                                                </div>
+                                                <!--end::Info-->
+                                            </div>
+                                            <h5 class="card-title mt-3 mb-2">{{$account->title}}</h5>
+                                            <p class="card-text">
+                                                {{$account->description}}<br><br>
+                                            </p>
                                         </div>
-                                        <!--end::Info-->
-                                    </div>
-                                    <h5 class="card-title mt-3 mb-2">{{$account->title}}</h5>
-                                    <p class="card-text">
-                                        {{$account->description}}<br><br>
-                                    </p>
-                                    <hr>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="openModel('{{$account->mediaUrl}}','{{$account->channelTitle}}','{{$account->title}}')"
-                                           class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
-                                                class="far fa-hand-point-up fa-fw"></i> 1 click</a>
-                                        <a href="{{$account->mediaUrl}}"
-                                           class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i
-                                                class="fab fa-youtube fa-fw"></i> Show Original</a>
+                                        <div>
+                                            <hr>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="openModel('{{$account->mediaUrl}}','{{$account->channelTitle}}','{{$account->title}}')"
+                                                   class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
+                                                            class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                                <a href="{{$account->mediaUrl}}"
+                                                   class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i
+                                                            class="fab fa-youtube fa-fw"></i> Show Original</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +200,6 @@
                                         <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
                                             <div class="mt-3">
                                                 @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                                                    @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                     <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                     <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
                                                     @foreach($socialAccountArray as $group_key => $socialAccount)
@@ -214,12 +222,12 @@
                                                                         </a>
                                                                         <!--end::Title-->
 
+                                                                    @if($socialAccount->account_type !== 6)
                                                                         <!--begin::Data-->
-                                                                        <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
+                                                                            <span class="text-muted font-weight-bold">
                                                                             {{ $socialAccount->friendship_counts }} followers
                                                                         </span>
-                                                                        <!--end::Data-->
+                                                                        @endif
                                                                     </div>
                                                                     <!--end::Info-->
                                                                 </div>
@@ -235,7 +243,6 @@
                                                             <!--end::Page-->
                                                     @endforeach
                                                     </div>
-                                                    @endif
                                                 @endforeach
                                             </div>
                                         </div>
@@ -341,17 +348,7 @@
                     pageid:pageid,
                     keyword:keyword
                 },
-                beforeSend: function () {
-                    $('#youtubeFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status"  id="' + pageid + '" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
-                     $(".spinner-border").css("display", "block");
-                },
                 success: function (response) {
-                    console.log(response.code, 'response');
                     if(response.code === 200 ){
                         let appendData = '';
                         $(".spinner-border").css("display", "none");
@@ -368,6 +365,8 @@
                                 '<iframe class="embed-responsive-item rounded" src="'+element.embed_url+'" allowfullscreen=""></iframe>'+
                                 '</div>'+
                                 '<div class="card-body">'+
+                                '<div class="board-card">'+
+                                '<div>'+
                                 '<div class="d-flex align-items-center">'+
                                 '<div class="symbol symbol-40 symbol-light-success mr-5">'+
                                 '<span class="symbol-label">'+
@@ -378,16 +377,19 @@
                         '</div>'+
                         '</div>'+
                         '<h5 class="card-title mt-3 mb-2">'+element.title+'</h5>'+
-                        '<p class="card-text">'+element.description+'<br><br></p><hr>'+
-                                '<div class="d-flex justify-content-center">'+
+                        '<p class="card-text">'+element.description+'<br><br></p>'+
+                                '</div>'+
+                                '<div>'+
+                                '<hr><div class="d-flex justify-content-center">'+
                                 '<a href="javascript:;" data-toggle="modal" data-target="#resocioModal"class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('+url+','+chaneltitle+','+title+')">'+
                                 '<iclass="far fa-hand-point-up fa-fw"></i> 1 click</a>'+
                                 '<a href="'+element.mediaUrl+'" class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder">'+
                                 '<i class="fab fa-youtube fa-fw"></i> Show Original</a>'+
                             '</div>'+
                             '</div>'+
+                            '</div>'+
+                            '</div>'+
                             '</div>';
-                        console.log(appendData);
                             $('#youtubeFeeds').append(appendData);
                         })
 

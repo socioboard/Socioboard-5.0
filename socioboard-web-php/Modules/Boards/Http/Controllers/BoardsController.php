@@ -154,10 +154,14 @@ class BoardsController extends Controller
      * !Do not change this function without referring API format getting the particular feeds from feeds servies.
      * @return {Object} Returns searched youtube data in JSON object format.
     */
-    public function viewPerticularBoard($keyword, $id, $pageid = 1)
+    public function viewPerticularBoard($keyword, $type, $id)
     {
+        $sortBy = array('relevance','rating','title','viewcount','date');
+        $randomElement = $sortBy[array_rand($sortBy, 1)];
+        $pageId = '';
+        ($type === "real") ? $pageId = 1 : $pageId = rand(1, 9);
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
-        $apiUrl = $apiUrl.'?keyword='.$keyword.'&pageId=1&sortBy=relevance';
+        $apiUrl = $apiUrl.'?keyword='.$keyword.'&pageId='.$pageId.'&sortBy='.$randomElement;
         $socialAccounts = $this->getSocialAccounts();
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
@@ -215,27 +219,33 @@ class BoardsController extends Controller
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
 
                     if(!empty($accounts)){
+                        foreach ($accounts as $social){
+                            foreach ($responseData['data']->SocialAccountStats as $stats){
+                                if ($social->account_id === $stats->account_id && $social->account_type !== 9){
+                                    $social->friendship_counts = isset($stats->follower_count) && $stats->follower_count !== null ? $stats->follower_count : "0";
+                                }
+                            }
+                        }
                         foreach ($accounts as $key => $account) {
-                            switch ($account->account_type) {
-                                case 1:
-                                    $socialAccounts['facebook']['user'][] = $account;
-                                    break;
-                                case 2:
-                                    $socialAccounts['facebook']['page'][] = $account;
-                                    break;
-                                case 3:
-                                    $socialAccounts['facebook']['group'][] = $account;
-                                    break;
-                                case 4:
-                                    $socialAccounts['twitter']['account'][] = $account;
-                                    break;
-                                case 6:
-                                case 7:
-                                    $socialAccounts['linkedin']['account'][] = $account;
-                                    break;
-                                case 12:
-                                    $socialAccounts['instagram']['business account'][] = $account;
-                                    break;
+                            if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                switch ($account->account_type) {
+                                    case 2:
+                                        $socialAccounts['facebook']['page'][] = $account;
+                                        break;
+                                    case 3:
+                                        $socialAccounts['facebook']['group'][] = $account;
+                                        break;
+                                    case 4:
+                                        $socialAccounts['twitter']['account'][] = $account;
+                                        break;
+                                    case 6:
+                                    case 7:
+                                        $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 12:
+                                        $socialAccounts['instagram']['business account'][] = $account;
+                                        break;
+                                }
                             }
                         }
                     }

@@ -3,6 +3,17 @@
 <!--begin::Head-->
 <head>
     <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V6QT9MK6QL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-V6QT9MK6QL');
+    </script>
     <script>
         window.ga = window.ga || function () {
             (ga.q = ga.q || []).push(arguments)
@@ -11,9 +22,19 @@
         ga('create', 'UA-153612010-1', 'auto');
         ga('send', 'pageview');
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-323729849"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'AW-323729849');
+    </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
     <!-- End Google Analytics -->
-
     <!-- Hotjar Tracking Code for https://appv5.socioboard.com/login -->
     <script>
         (function (h, o, t, j, a, r) {
@@ -28,11 +49,22 @@
             a.appendChild(r);
         })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
     </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72806503-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-72806503-3');
+    </script>
 @include('user::Layouts._header')
 @yield('links')
 <!--end::Global Theme Styles-->
-
     <!--begin::Layout Themes(used by all pages)-->
     <!--end::Layout Themes-->
     <link rel="shortcut icon" href="{{asset('public/media/logos/favicon.ico')}}"/>
@@ -147,12 +179,6 @@
                                 <!--end::Item-->
 
                                 <!--begin::Item-->
-                                <li class="nav-item mr-3">
-                                    <a href="#" class="nav-link py-4 px-6" data-toggle="tab"
-                                       data-target="#Sb_header_chat" role="tab">
-                                        Chat
-                                    </a>
-                                </li>
                                 <!--end::Item-->
                             </ul>
                             <!--begin::Tab Navs-->
@@ -196,9 +222,9 @@
                                 <!--begin::Toggle-->
                                 <div id="nofifications" class="topbar-item notificationsIcon" data-toggle="dropdown"
                                      disabled
-                                     title="Notifications" data-offset="10px,0px"
+                                      data-offset="10px,0px"
                                      onclick="checkPlanExpiryNotifications()">
-                                    <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-danger">
+                                    <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-danger" data-placement="bottom" title="Notifications">
                                                 <span class="symbol svg-icon svg-icon-xl">
                                                     <i class="fas fa-bell"></i>
                                                 <i id="notification-user"></i>
@@ -357,19 +383,19 @@
 
                                     <div class="tab-pane" id="topbar_publishing" role="tabpanel">
                                         <!--begin::Scroll-->
-                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="100"
+                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="300"
                                              data-mobile-height="200" id="publishNotiFications"
                                              style="max-height: 300px;overflow-y: scroll;">
                                         </div>
-                                        <div class="d-flex align-items-center mt-4 ml-4" id="readAllPublish">
-                                            <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-                                                <input type="checkbox" id="checkboxes2" value="1"/>
-                                                <span></span>
-                                            </label>
-                                            <span>Read all publishing notifications</span>
-                                        </div>
-                                        <hr>
-                                        <!--end::Action-->
+                                    {{--                                        <div class="d-flex align-items-center mt-4 ml-4" id="readAllPublish">--}}
+                                    {{--                                            <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">--}}
+                                    {{--                                                <input type="checkbox" id="checkboxes3" value="1"/>--}}
+                                    {{--                                                <span></span>--}}
+                                    {{--                                            </label>--}}
+                                    {{--                                            <span>Read all publishing notifications</span>--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                        <hr>--}}
+                                    <!--end::Action-->
                                     </div>
                                 </div>
                                 <!--end::Content-->
@@ -541,6 +567,27 @@
                                                 <span class="menu-text"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</span>
                                             </a>
                                         </li>
+
+                                        <li class="menu-item menu-item-submenu menu-item-rel menu-item-open-dropdown" aria-haspopup="true" data-menu-toggle="click">
+                                            <a href="javascript:;" class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                                <span class="menu-text"><i class="fas fa-users fa-fw"></i> Accounts</span>
+                                            </a>
+                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left" data-hor-direction="menu-submenu-left">
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}view-accounts" class="menu-link">
+                                                            <span class="menu-text">View Accounts</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}blogged-accounts" class="menu-link">
+                                                            <span class="menu-text">Blogg Accounts</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+
                                         <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:;"
@@ -555,7 +602,7 @@
                                                         aria-haspopup="true">
                                                         <a href="{{route('publish_content.scheduling')}}"
                                                            class="menu-link">
-                                                            <span class="menu-text">Schedule Messages</span>
+                                                            <span class="menu-text">Schedule Post</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
@@ -598,16 +645,17 @@
                                                             <span class="menu-text">History</span>
                                                         </a>
                                                     </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{route('pinterest-publish')}}" class="menu-link">
+                                                            <span class="menu-text">Pinterest Publish</span>
+                                                        </a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
-                                            <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                <span class="menu-text"><i class="fas fa-people-arrows fa-fw"></i> Engagement</span>
-                                                <span class="menu-desc"></span><i class="menu-arrow"></i>
-                                            </a>
                                             <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
@@ -702,49 +750,10 @@
                                                                 class="menu-submenu menu-submenu-classic menu-submenu-right">
                                                             <ul class="menu-subnav">
                                                                 <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="" title="Coming Soon"
-                                                                       onclick="return false" id="discovery_id"
+                                                                    <a href="/discovery/twitter-subscription" id="twitter_subscription"
                                                                        class="menu-link "><i
                                                                                 class="menu-bullet menu-bullet-dot"><span></span></i>
-                                                                        <span class="menu-text">Discovery</span></a>
-                                                                </li>
-                                                                <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="" title="Coming Soon"
-                                                                       onclick="return false" id="smart_search_id"
-                                                                       class="menu-link "><i
-                                                                                class="menu-bullet menu-bullet-dot"><span></span></i>
-                                                                        <span class="menu-text">Smart Search</span></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true">
-                                                        <a href="javascript:;" class="menu-link menu-toggle">
-                                                            <i class="menu-bullet menu-bullet-dot"><span></span></i>
-                                                            <span class="menu-text">Group Post</span><i
-                                                                    class="menu-arrow"></i>
-                                                        </a>
-                                                        <div
-                                                                class="menu-submenu menu-submenu-classic menu-submenu-right">
-                                                            <ul class="menu-subnav">
-                                                                <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="" title="Coming Soon"
-                                                                       onclick="return false" id="facebook_group_post"
-                                                                       class="menu-link ">
-                                                                        <i class="menu-bullet menu-bullet-dot"><span></span></i>
-                                                                        <span
-                                                                                class="menu-text">Facebook Group Post</span>
-                                                                    </a>
-                                                                </li>
-                                                                <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="" title="Coming Soon"
-                                                                       onclick="return false" id="linkedin_group_post"
-                                                                       class="menu-link ">
-                                                                        <i class="menu-bullet menu-bullet-dot"><span></span></i>
-                                                                        <span
-                                                                                class="menu-text">Linkedin Group Post</span>
-                                                                    </a>
+                                                                        <span class="menu-text">Twitter Subscription</span></a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -769,7 +778,14 @@
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                                aria-haspopup="true">
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/fbPages')"
+                                                           class="menu-link">
+                                                            <span class="menu-text">Facebook Pages</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}feeds/instagram')"
                                                            class="menu-link"
                                                         >
@@ -800,9 +816,39 @@
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/linkedIn')" class="menu-link"
-                                                           id="linkedinFeeds" >
-                                                            <span class="menu-text">Linkedin</span>
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/linkedIn')"
+                                                           class="menu-link"
+                                                           id="linkedinFeeds">
+                                                            <span class="menu-text">LinkedIn Pages</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}show-boards/PinterestFeeds"
+                                                           class="menu-link"
+                                                           id="linkedinFeeds">
+                                                            <span class="menu-text">Pinterest</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
+                                            <a href="#" class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                                            <span class="menu-text"><i class="icon-lg fab fa-blogger"></i>
+                                                            Blogged Feeds</span>
+                                                <span class="menu-desc"></span><i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left">
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}feeds/medium" class="menu-link">
+                                                            <span class="menu-text">Medium</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}feeds/Tumblr" class="menu-link">
+                                                            <span class="menu-text">Tumblr</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -842,7 +888,7 @@
                                                         aria-haspopup="true" id="newApi">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.news_api')}}')"
                                                            class="menu-link">
-                                                            <span class="menu-text">News_Api</span>
+                                                            <span class="menu-text">News Api</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
@@ -859,30 +905,6 @@
                                                             <span class="menu-text">Giphy</span>
                                                         </a>
                                                     </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true" id="mostShared">
-                                                        <a href="" onclick="return false"
-                                                           id="most_shared" title="Coming Soon"
-                                                           class="menu-link">
-                                                            <span class="menu-text">Most Shared</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true" id="trendingNow">
-                                                        <a href="" onclick="return false"
-                                                           id="trending_now" title="Coming Soon"
-                                                           class="menu-link">
-                                                            <span class="menu-text">Trending Now</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true" id="shareathonQueue">
-                                                        <a href="" onclick="return false"
-                                                           id="shereathon_queue" title="Coming Soon"
-                                                           class="menu-link">
-                                                            <span class="menu-text">Shareathon Queue</span>
-                                                        </a>
-                                                    </li>
                                                 </ul>
                                             </div>
                                         </li>
@@ -897,24 +919,16 @@
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="" class="menu-link" onclick="return false"
-                                                           id="conted_feeds_id" title="Coming Soon">
-                                                            <span class="menu-text">Content Feeds</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true">
-                                                        <a href="" class="menu-link" onclick="return false"
-                                                           id="automated_rss_feeds" title="Coming Soon">
+                                                        <a href="/discovery/automated-rss-feeds" class="menu-link"
+                                                           id="automated_rss_feeds">
                                                             <span class="menu-text">Automated RSS Feeds</span>
                                                         </a>
                                                     </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                    <li class="menu-item  menu-item-submenu"
                                                         aria-haspopup="true">
-                                                        <a href="rss/posted.html" class="menu-link"
-                                                           onclick="return false" id="posted_rss_feeds"
-                                                           title="Coming Soon">
-                                                            <span class="menu-text">Posted RSS Feeds</span>
+                                                        <a href="/discovery/rss-feeds-article" class="menu-link"
+                                                           id="posted_rss_feeds">
+                                                            <span class="menu-text">RSS Feeds Article</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
@@ -929,12 +943,6 @@
                                         </li>
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
-                                            <a href="javascript:;" onclick="return false" id="ShareathonButton"
-                                               title="Coming Soon"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                <span class="menu-text"><i class="fas fa-share-alt-square fa-fw"></i> Shareathon</span>
-                                                <span class="menu-desc"></span><i class="menu-arrow"></i>
-                                            </a>
                                             <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
@@ -942,6 +950,25 @@
                                                         <a href="#" class="menu-link" onclick="return false"
                                                            id="Shareathon" title="Coming Soon">
                                                             <span class="menu-text">Page Shareathon</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
+                                            aria-haspopup="true">
+                                            <a href="javascript:"
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                                <span class="menu-text"><i class="icon-md fas fa-chart-bar"></i> Competitor analysis</span>
+                                                <span class="menu-desc"></span><i class="menu-arrow"></i>
+                                            </a>
+                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left">
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}discovery/analytics')"
+                                                           class="menu-link">
+                                                            <span class="menu-text">Competitor analysis</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -958,19 +985,6 @@
                             <div class="tab-pane p-5 p-lg-0 justify-content-between" id="Sb_header_reports">
                                 <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
                                     <!--begin::Actions-->
-                                    <a href="#"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0"
-                                       onclick="return false" id="archiveReports" title="Coming Soon">
-                                        <i class="fas fa-clipboard-check fa-fw"></i> Archived Report
-                                    </a>
-
-                                    <a href="#"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" onclick="return false"
-                                       id="primitiveReports"
-                                       title="Coming Soon">
-                                        <i class="fas fa-notes-medical fa-fw"></i> Primitive Report
-                                    </a>
-
                                     <a onclick="planCheck('{{env('APP_URL')}}get-team-reports')"
                                        class="btn font-weight-bold mr-3 my-2 my-lg-0">
                                         <i class="fas fa-id-badge fa-fw"></i> Team Report
@@ -980,17 +994,20 @@
                                        class="btn font-weight-bold mr-3 my-2 my-lg-0">
                                         <i class="fas fa-id-badge fa-fw"></i> Twitter Report
                                     </a>
-
                                     <a onclick="planCheck('{{env('APP_URL')}}get-youtube-reports')"
                                        class="btn font-weight-bold mr-3 my-2 my-lg-0"
                                     >
                                         <i class="fas fa-id-badge fa-fw"></i> Youtube Report
                                     </a>
-
                                     <a onclick="planCheck('{{env('APP_URL')}}get-facebook-reports')"
                                        class="btn font-weight-bold mr-3 my-2 my-lg-0"
                                     >
                                         <i class="fas fa-id-badge fa-fw"></i> Facebook Report
+                                    </a>
+                                    <a onclick="planCheck('{{env('APP_URL')}}get-linked-reports')"
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0"
+                                    >
+                                        <i class="fas fa-id-badge fa-fw"></i>LinkedIn Reports
                                     </a>
                                 </div>
                             </div>
@@ -1152,109 +1169,13 @@
                     <!--end:Item-->
 
                     <!--begin::Item-->
-                    {{--                    <a href="custom/apps/user/profile-3.html" class="navi-item">--}}
-                    <a class="navi-item">
-                        <div class="navi-link">
-                            <div class="symbol symbol-40 bg-light mr-3">
-                                <div class="symbol-label">
-                                <span class="svg-icon svg-icon-md svg-icon-warning"><!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Chart-bar1.svg-->
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect x="0" y="0" width="24" height="24"/>
-                                            <rect fill="#000000" opacity="0.3" x="12" y="4" width="3" height="13"
-                                                  rx="1.5"/>
-                                            <rect fill="#000000" opacity="0.3" x="7" y="9" width="3" height="8"
-                                                  rx="1.5"/>
-                                            <path
-                                                    d="M5,19 L20,19 C20.5522847,19 21,19.4477153 21,20 C21,20.5522847 20.5522847,21 20,21 L4,21 C3.44771525,21 3,20.5522847 3,20 L3,4 C3,3.44771525 3.44771525,3 4,3 C4.55228475,3 5,3.44771525 5,4 L5,19 Z"
-                                                    fill="#000000" fill-rule="nonzero"/>
-                                            <rect fill="#000000" opacity="0.3" x="17" y="11" width="3" height="6"
-                                                  rx="1.5"/>
-                                        </g>
-                                    </svg><!--end::Svg Icon-->
-                                </span>
-                                </div>
-                            </div>
-                            <div class="navi-text">
-                                <div class="font-weight-bold" title="Coming Soon" id="my_messages_id">
-                                    My Messages
-                                </div>
-                                <div class="text-muted">
-                                    Inbox And Tasks
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <!--end:Item-->
 
                     <!--begin::Item-->
                     {{--                    <a href="custom/apps/user/profile-2.html" class="navi-item">--}}
-                    <a class="navi-item">
-                        <div class="navi-link">
-                            <div class="symbol symbol-40 bg-light mr-3">
-                                <div class="symbol-label">
-                                <span class="svg-icon svg-icon-md svg-icon-danger"><!--begin::Svg Icon | path:assets/media/svg/icons/Files/Selected-file.svg-->
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <polygon points="0 0 24 0 24 24 0 24"/>
-                                            <path
-                                                    d="M4.85714286,1 L11.7364114,1 C12.0910962,1 12.4343066,1.12568431 12.7051108,1.35473959 L17.4686994,5.3839416 C17.8056532,5.66894833 18,6.08787823 18,6.52920201 L18,19.0833333 C18,20.8738751 17.9795521,21 16.1428571,21 L4.85714286,21 C3.02044787,21 3,20.8738751 3,19.0833333 L3,2.91666667 C3,1.12612489 3.02044787,1 4.85714286,1 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z"
-                                                    fill="#000000" fill-rule="nonzero" opacity="0.3"/>
-                                            <path
-                                                    d="M6.85714286,3 L14.7364114,3 C15.0910962,3 15.4343066,3.12568431 15.7051108,3.35473959 L20.4686994,7.3839416 C20.8056532,7.66894833 21,8.08787823 21,8.52920201 L21,21.0833333 C21,22.8738751 20.9795521,23 19.1428571,23 L6.85714286,23 C5.02044787,23 5,22.8738751 5,21.0833333 L5,4.91666667 C5,3.12612489 5.02044787,3 6.85714286,3 Z M8,12 C7.44771525,12 7,12.4477153 7,13 C7,13.5522847 7.44771525,14 8,14 L15,14 C15.5522847,14 16,13.5522847 16,13 C16,12.4477153 15.5522847,12 15,12 L8,12 Z M8,16 C7.44771525,16 7,16.4477153 7,17 C7,17.5522847 7.44771525,18 8,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 Z"
-                                                    fill="#000000" fill-rule="nonzero"/>
-                                        </g>
-                                    </svg><!--end::Svg Icon-->
-                                </span>
-                                </div>
-                            </div>
-                            <div class="navi-text">
-                                <div class="font-weight-bold" title="Coming Soon" id="my_activities_id">
-                                    My Activities
-                                </div>
-                                <div class="text-muted">
-                                    Logs And Notifications
-                                </div>
-                            </div>
-                        </div>
-                    </a>
                     <!--end:Item-->
 
                     <!--begin::Item-->
                     {{--                    <a href="custom/apps/userprofile-1/overview.html" class="navi-item">--}}
-                    <a class="navi-item">
-                        <div class="navi-link">
-                            <div class="symbol symbol-40 bg-light mr-3">
-                                <div class="symbol-label">
-                                <span class="svg-icon svg-icon-md svg-icon-primary"><!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Mail-opened.svg-->
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                         width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <rect x="0" y="0" width="24" height="24"/>
-                                            <path
-                                                    d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z"
-                                                    fill="#000000" opacity="0.3"/>
-                                            <path
-                                                    d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z"
-                                                    fill="#000000"/>
-                                        </g>
-                                    </svg><!--end::Svg Icon-->
-                                </span>
-                                </div>
-                            </div>
-                            <div class="navi-text">
-                                <div class="font-weight-bold" title="Coming Soon" id="my_task_id">
-                                    My Tasks
-                                </div>
-                                <div class="text-muted">
-                                    Latest Tasks And Projects
-                                </div>
-                            </div>
-
-                        </div>
-                    </a>
                     <a href="{{route('auto-email-reports')}}" class="navi-item">
                         <div class="navi-link">
                             <div class="symbol symbol-40 bg-light mr-3">
@@ -1267,7 +1188,7 @@
                                     Auto Email Reports
                                 </div>
                                 <div class="text-muted">
-                                    Latest Email Reports
+                                    Configure report mails
                                 </div>
                             </div>
                         </div>
@@ -1305,6 +1226,23 @@
                                 </div>
                                 <div class="text-muted">
                                     Reports Settings And More
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{route('shortening-links')}}" class="navi-item">
+                        <div class="navi-link">
+                            <div class="symbol symbol-40 bg-light mr-3">
+                                <div class="symbol-label">
+                                    <i class="fa fa-link text-danger"></i>
+                                </div>
+                            </div>
+                            <div class="navi-text">
+                                <div class="font-weight-bold">
+                                    Link Shortening
+                                </div>
+                                <div class="text-muted">
+                                    Configure your link shortener
                                 </div>
                             </div>
                         </div>
@@ -1765,17 +1703,8 @@
     /// ?>
 
     <!-- Global site tag (gtag.js) - Google Ads: 323729849 -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-323729849"></script>
         <script>
             let custom_report = '<?php echo(session()->get('user')['userDetails']['userPlanDetails']['custom_report']);?>';
-            window.dataLayer = window.dataLayer || [];
-
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-
-            gtag('js', new Date());
-            gtag('config', 'AW-323729849');
         </script>
         <!--begin::Global Theme Bundle(used by all pages)-->
         <script src="{{asset('plugins/global/plugins.bundle.js')}}"></script>
@@ -1805,11 +1734,12 @@
                 "hideMethod": "fadeOut"
             };
             let invitations = [];
-            let publishOrFeeds =0;
+            let publishOrFeeds = 0;
             $(document).ready(function () {
                 getReportsCount();
                 getNotifications(1);
                 getNotificationsUser(1);
+                checkNotificationsStatus();
                 const currentTheme = localStorage.getItem('theme');
                 if (currentTheme === "dark") {
                     $("#checkbox").prop("checked", true);
@@ -1886,20 +1816,20 @@
                             }
                             $("#team_count").html("");
                             $("#team_count").append('<div class="col-12">\n' +
-                                '<a href="#" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
+                                '<a href="' + response.env + 'team/' + response.teams[0]['team_id'] + '" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
                                 '<span class="d-block font-weight-bold font-size-h6 mt-2 mb-1">' + response.teams[0]['teamName'] + '</span>\n' +
                                 '<span class="d-block font-size-lg">' + response.teams[0]['members'] + member + ' </span>' +
                                 '</a>' +
                                 '</div>' +
                                 '<div class="col-12">' +
-                                '<a href="#" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
+                                '<a href="' + response.env + 'team/' + response.teams[1]['team_id'] + '" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
                                 '<span\n' +
                                 'class="d-block font-weight-bold font-size-h6 mt-2 mb-1">' + response.teams[1]['teamName'] + '</span>' +
                                 '<span class="d-block font-size-lg">' + response.teams[1]['members'] + member1 + ' </span>' +
                                 '</a>' +
                                 '</div>' +
                                 '<div class="col-6">' +
-                                '<a href="/view-teams" class="d-block py-10 px-5 text-center bg-hover-light border-right">' +
+                                '<a href="{{env('APP_URL')}}view-teams" class="d-block py-10 px-5 text-center bg-hover-light border-right">' +
                                 '<span class="svg-icon svg-icon-3x">' +
                                 '<i class="fas fa-users"></i>' +
                                 '</span>' +
@@ -1921,7 +1851,7 @@
                             $("#team_count").html("");
                             $("#team_count").append(
                                 '<div class="col-6">' +
-                                '<a href="/view-teams" class="d-block py-10 px-5 text-center bg-hover-light border-right">' +
+                                '<a href="{{env('APP_URL')}}view-teams" class="d-block py-10 px-5 text-center bg-hover-light border-right">' +
                                 '<span class="svg-icon svg-icon-3x">' +
                                 '<i class="fas fa-users"></i>' +
                                 '</span>' +
@@ -2043,8 +1973,7 @@
                 })
             }
 
-            $('#conted_feeds_id, #shereathon_queue, #trending_now, #most_shared, #automated_rss_feeds, #posted_rss_feeds, #group_chat, #twitter_analyutics, #twitter_inbox, #my_task, #youtube_inbox, #discovery_id, #smart_search_id, #facebook_group_post, #linkedin_group_post, #archiveReports, #primitiveReports, #calendarView , #facebookReports, #ShareathonButton, #Shareathon #youtubereports, #linkedinFeeds, #instagramFeeds, #twitterReports ,#chats').tooltip();
-            $('#my_messages_id, #my_activities_id, #my_task_id, #reportsCart ,#reports_Settings ,#publishMessage,#nofifications').tooltip();
+
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.js"></script>
         <script>
@@ -2057,6 +1986,7 @@
              * @param {string) pageid for getting the first 12 nortifications passing in controller.
              * @return {object} Returns getNotifications from  in JSON object format.
              */
+
             function getNotifications(pageid) {
                 $.ajax({
                     type: 'get',
@@ -2073,26 +2003,61 @@
                         let publishNotificationCounts = 0;
                         let teamNotificationCounts = 0;
                         let num = 1;
+                        let publishMessage;
+                        let namesArray = [];
                         if (response.code === 200) {
                             if (response.data.length > 0) {
                                 response.data.map(element => {
-                                    if (element.notifyType === 'publish_publishPosts') {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" href="' + getStringUrl(element.notificationMessage) + '" class="mb-1 font-size-lg" target="_blank"  title="' + element.notificationMessage + '"  onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    publishMessage = '';
+                                    if (element.notifyType === 'publish_publishPosts' || element.notifyType === 'publish_failed') {
+                                        namesArray = element.notificationMessage.split(',');
+                                        for (let i = 0; i < namesArray.length - 1; i++) {
+                                            publishMessage += namesArray[i] + ' ';
+                                        }
+                                        if (element.isRead === true) {
+                                            if (element.notifyType === 'publish_failed')
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            else
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                        } else {
+                                            if (element.notifyType === 'publish_failed')
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            else
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                        }
                                         publishNotificationCounts++;
                                     } else if (element.notifyType === 'team_leave') {
-                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true)
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                         teamNotificationCounts++;
                                     } else if (element.notifyType === 'publish_addProfile') {
-                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true)
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                         teamNotificationCounts++;
                                     } else if (element.notifyType === 'team_addProfile') {
                                         teamNotificationCounts++;
-                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true)
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                     } else if (element.notifyType === 'team_deleteTeamSocialProfile') {
-                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true)
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                     } else if (element.notifyType === 'team_leave') {
                                         teamNotificationCounts++;
-                                        appendData += '<div id="notificationNum' + num + '"  class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true)
+                                            appendData += '<div id="notificationNum' + num + '"  class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '"  class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                     }
                                     num++;
                                 });
@@ -2102,6 +2067,7 @@
                                         'No new notifications.' +
                                         '</div>' +
                                         '</div>');
+                                    $('#readAllPublish').remove();
                                 } else {
                                     $('#publishNotiFications').append(appendData2);
                                 }
@@ -2111,13 +2077,12 @@
                                         'No new notifications.' +
                                         '</div>' +
                                         '</div>');
+                                    $('#readAllTeam').remove();
                                 } else {
                                     $('#invitation').append(appendData);
                                 }
 
                             } else {
-                                $('#readAllTeam').remove();
-                                $('#readAllPublish').remove();
                                 $('#publishNotiFications').append('<div class="tab-pane" id="topbar_publishing" role="tabpanel">' +
                                     '<div class="d-flex flex-center text-center min-h-200px" id="noNotify">All caught up!<br/>' +
                                     'No new notifications.' +
@@ -2128,6 +2093,8 @@
                                     'No new notifications.' +
                                     '</div>' +
                                     '</div>');
+                                $('#readAllTeam').remove();
+                                $('#readAllPublish').remove();
                             }
                         } else if (response.code === 400) {
                             $('#invitation').append('<div class="tab-pane" id="topbar_notifications_teams" role="tabpanel">' +
@@ -2158,6 +2125,7 @@
                         }
                     }
                 });
+
             }
 
             /**
@@ -2173,7 +2141,8 @@
                         teamIds = response.teamIds;
                         userID = response.userId;
                         let num = 0;
-                        let socket = io.connect('https://notifyv5.socioboard.com');
+                        let envVariable = "{{env('API_URL_NOTIFICATION')}}";
+                        let socket = io.connect(envVariable.slice(0, (envVariable.length - 1)));
                         socket.on('connect', function () {
                             let details = {
                                 userId: userID,
@@ -2185,9 +2154,18 @@
                             num++;
                             let appendData = '';
                             let appendData2 = '';
+                            let namesArray = '';
+                            let publishMessage = '';
                             $("#notification-user").addClass("symbol-badge bg-danger");
-                            if (message.notifyType === 'publish_publishPosts') {
-                                appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" href="' + getStringUrl(message.notificationMessage) + '" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + message.notificationMessage + ' </a></div></div>';
+                            if (message.notifyType === 'publish_publishPosts' || message.notifyType === 'publish_failed') {
+                                namesArray = message.notificationMessage.split(',');
+                                for (let i = 0; i < namesArray.length - 1; i++) {
+                                    publishMessage += namesArray[i] + ' ';
+                                }
+                                if (message.notifyType === 'publish_failed')
+                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '" class="mb-1 font-size-lg publish_failed"  data-toggle="tooltip" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
+                                else
+                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '"  href="' + getStringUrl(message.notificationMessage) + '"  data-toggle="tooltip" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
                                 $('#publishNotiFications').prepend(appendData2);
                             } else if (message.notifyType === 'team_invite') {
                                 $.ajax({
@@ -2215,34 +2193,34 @@
                                     }
                                 });
                             } else if (message.notifyType === 'team_accept') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a  href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a  href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_decline') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_removeTeamMember') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_editMemberPermission') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_leave') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'publish_addProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_addProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_deleteTeamSocialProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_leave') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             }
                         });
@@ -2271,21 +2249,19 @@
                     },
                     success: function (response) {
                         let appendData = '';
-                        let num=1;
+                        let num = 1;
                         if (response.code === 200) {
                             response.data.map(element => {
                                 if (element.notifyType === 'team_leave') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')" >' + element.notificationMessage + '</a></div></div>';
+                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" >' + element.notificationMessage + '</a></div></div>';
                                 } else if (element.notifyType === 'publish_addProfile') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                 } else if (element.notifyType === 'team_addProfile') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                 } else if (element.notifyType === 'team_deleteTeamSocialProfile') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank"  class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                 } else if (element.notifyType === 'team_leave') {
-                                    appendData += '<div  id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
-                                } else {
-                                    appendData += '<div class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    appendData += '<div  id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                 }
                                 num++;
                             });
@@ -2344,15 +2320,45 @@
 
 
                                     } else if (element.notifyType === 'team_accept') {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true) {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold "><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        } else {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold "><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        }
                                     } else if (element.notifyType === 'team_decline') {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true) {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        } else {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        }
                                     } else if (element.notifyType === 'team_removeTeamMember') {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true) {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        } else {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        }
                                     } else if (element.notifyType === 'team_editMemberPermission') {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true) {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        } else {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        }
                                     } else {
-                                        appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                        if (element.isRead === true) {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        } else {
+                                            appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
+                                        }
                                     }
                                     num++;
                                 });
@@ -2400,11 +2406,30 @@
                     },
                     success: function (response) {
                         let appendData = '';
+                        let namesArray = '';
+                        let publishMessage = '';
+                        let num = 1;
                         if (response.code === 200) {
                             response.data.map(element => {
-                                if (element.notifyType === 'publish_publishPosts') {
-                                    appendData += '<div class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a  href="' + getStringUrl(element.notificationMessage) + '" class="mb-1 font-size-lg" target="_blank" >' + element.notificationMessage + '</a></div></div>';
+                                publishMessage = '';
+                                if (element.notifyType === 'publish_publishPosts' || element.notifyType === 'publish_failed') {
+                                    namesArray = element.notificationMessage.split(',');
+                                    for (let i = 0; i < namesArray.length - 1; i++) {
+                                        publishMessage += namesArray[i] + ' ';
+                                    }
+                                    if (element.isRead === true) {
+                                        if (element.notifyType === 'publish_failed')
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                    } else {
+                                        if (element.notifyType === 'publish_failed')
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                        else
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" data-toggle="tooltip" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '"data-toggle="tooltip"  class="mb-1 font-size-lg publish_message" target="_blank"   title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                    }
                                 }
+                                num++;
                             });
                             $('#publishNotiFications').append(appendData);
                         }
@@ -2432,17 +2457,40 @@
                         if (response.code === 200) {
                             response.data.map(element => {
                                 if (element.notifyType === 'team_invite') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                 } else if (element.notifyType === 'team_accept') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                 } else if (element.notifyType === 'team_decline') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                 } else if (element.notifyType === 'team_removeTeamMember') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                 } else if (element.notifyType === 'team_editMemberPermission') {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+
                                 } else {
-                                    appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}/view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead('+num+')">' + element.notificationMessage + '</a></div></div>';
+                                    if (element.isRead === true)
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
+                                    else
+                                        appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 userNotification"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" target="_blank" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                 }
                                 num++;
                             });
@@ -2452,11 +2500,13 @@
                 });
             }
 
+
             /**
              * TODO we've to make read all user notifications on check box click.
              * This function makes read all user notificaations on checked of checkboxes.
              * @return {object} Returns getNotifications from  in JSON object format.
              */
+
             $("#checkboxes2").click(function () {
                 if ($('#checkboxes2').is(':checked')) {
                     $.ajax({
@@ -2469,6 +2519,7 @@
                         },
                         success: function (response) {
                             if (response.code === 200) {
+                                $('.userNotification').addClass('read');
                                 toastr.success('Have read all user notifications');
                                 $("#notification-user").removeClass("symbol-badge bg-danger");
                             } else if (response.code === 400) {
@@ -2499,6 +2550,7 @@
                         success: function (response) {
                             if (response.code === 200) {
                                 toastr.success('Have read all user team notifications');
+                                $('.teamNotifications').addClass('read');
                                 $("#notification-user").removeClass("symbol-badge bg-danger");
                             } else if (response.code === 400) {
                                 toastr.error(response.error);
@@ -2520,14 +2572,17 @@
             }
 
             function getStringUrl(text) {
-                let urlRegex = /(https?:\/\/[^ ]*)/;
-                let input = text
-                let url = input.match(urlRegex)[1];
-                return url;
+                let replyText = text;
+                let urls = replyText.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm);
+                return urls;
             }
+
 
             function checkPlanExpiryNotifications() {
                 $('#teams_tab').trigger('click');
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                })
                 let expire_date = '<?php echo(session()->get('expired'));?>';
                 if (expire_date === 'true') {
                     $('.notificationsIcon').removeAttr('data-toggle');
@@ -2535,9 +2590,8 @@
                 }
             }
 
-            function changeColorOnRead(data)
-            {
-                $('div#notificationNum' + data).addClass( 'read');
+            function changeColorOnRead(data) {
+                $('div#notificationNum' + data).addClass('read');
             }
 
             /**
@@ -2565,6 +2619,32 @@
                     }
                 });
             });
+
+
+            $('#conted_feeds_id, #shereathon_queue, #trending_now, #most_shared, #posted_rss_feeds, #group_chat, #twitter_analyutics, #twitter_inbox, #my_task, #youtube_inbox, #discovery_id, #smart_search_id, #facebook_group_post, #linkedin_group_post, #archiveReports, #primitiveReports, #calendarView , #facebookReports, #ShareathonButton, #Shareathon #youtubereports, #linkedinFeeds, #instagramFeeds, #twitterReports ,#chats').tooltip();
+            $('#my_messages_id, #my_activities_id, #my_task_id, #reportsCart ,#reports_Settings ,#nofifications .btn, .publish_message, #notificationNum1').tooltip();
+
+
+            function checkNotificationsStatus() {
+                $.ajax({
+                    type: 'get',
+                    url: '/get-notifications-status',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (response) {
+                        if (response.code === 200) {
+                            if (response.readStatus === 'true') {
+                                $("#notification-user").addClass("symbol-badge bg-danger");
+
+                            }
+                        }
+                    }
+                });
+
+            }
         </script>
 {{-- scripts that are used in blades --}}
 @yield('scripts')

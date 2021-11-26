@@ -47,6 +47,7 @@
                                     </video>
                                 @endif
                                 <!-- sample code for video added -->
+                                        <div class="thumb-count"></div>
                                 </li>
                                 @endif
                                 <li class="myupload">
@@ -84,11 +85,11 @@
                     <!-- begin:Accounts list -->
                             <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
                                 @foreach($socialAccounts as $key => $socialAccount)
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
-                                            <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
-                                        </a>
-                                    </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
+                                                <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
+                                            </a>
+                                        </li>
                                 @endforeach
                             </ul>
                             <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>
@@ -99,46 +100,75 @@
                                             <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="height: 180px;overflow-y: scroll;">
                                                 @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                     @if(($group === "account") || ($group === "page") || ($group === "business account"))
+                                                        @if(ucwords($key) === "Twitter")
+                                                            <ul class="schedule-social-tabs">
+                                                                <li class="font-size-md font-weight-normal">Character limit is 280.</li>
+                                                                <li class="font-size-md font-weight-normal">You can post max 4 images at a time.</li>
+                                                            </ul>
+                                                        @elseif(ucwords($key) === "Facebook")
+                                                            <ul class="schedule-social-tabs">
+                                                                <li class="font-size-md font-weight-normal">Character limit is 5000.</li>
+                                                                <li class="font-size-md font-weight-normal">You can post max 4 images at a time.</li>
+                                                            </ul>
+                                                        @elseif(ucwords($key) === "Instagram")
+                                                            <ul class="schedule-social-tabs">
+                                                                <li class="font-size-md font-weight-normal">Character limit is 2200.</li>
+                                                                <li class="font-size-md font-weight-normal">You can post max 1 image or 1 video at a time.</li>
+                                                                <li class="font-size-md font-weight-normal">Image or video for posting is required.</li>
+                                                            </ul>
+                                                        @elseif(ucwords($key) === "Linkedin")
+                                                            <ul class="schedule-social-tabs">
+                                                                <li class="font-size-md font-weight-normal">Character limit is 700.</li>
+                                                                <li class="font-size-md font-weight-normal">You can post max 1 image or 1 video at a time.</li>
+                                                            </ul>
+                                                        @elseif(ucwords($key) === "Tumblr")
+                                                            <ul class="schedule-social-tabs">
+                                                                <li class="font-size-md font-weight-normal">You can post max 1 image or 1 video at a time.</li>
+                                                                <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                                            </ul>
+                                                        @endif
                                                         <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                                                         @foreach($socialAccountArray as $group_key => $socialAccount)
-                                                        <!--begin::Page-->
-                                                            <div class="d-flex align-items-center flex-grow-1">
-                                                                <!--begin::Facebook Fanpage Profile picture-->
-                                                                <div class="symbol symbol-45 symbol-light mr-5">
+                                                            @if($socialAccount->join_table_teams_social_accounts->is_account_locked == false)
+                                                            <!--begin::Page-->
+                                                                <div class="d-flex align-items-center flex-grow-1">
+                                                                    <!--begin::Facebook Fanpage Profile picture-->
+                                                                    <div class="symbol symbol-45 symbol-light mr-5">
                                                                     <span class="symbol-label">
                                                                         <img src="{{isset($socialAccount->profile_pic_url) ?  $socialAccount->profile_pic_url : null}}" class="w-100 align-self-center" alt=""/>
                                                                     </span>
-                                                                </div>
-                                                                <!--end::Facebook Fanpage Profile picture-->
-                                                                <!--begin::Section-->
-                                                                <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
-                                                                    <!--begin::Info-->
-                                                                    <div class="d-flex flex-column align-items-cente py-2 w-75">
-                                                                        <!--begin::Title-->
-                                                                        <a href="javascript:;" class="font-weight-bold text-hover-primary font-size-lg mb-1">
-                                                                            {{ $socialAccount->first_name.' '. $socialAccount->last_name }}
-                                                                        </a>
-                                                                        <!--end::Title-->
-
-                                                                        <!--begin::Data-->
-                                                                        <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
-                                                                            {{ $socialAccount->friendship_counts }} followers
-                                                                        </span>
-                                                                        <!--end::Data-->
                                                                     </div>
-                                                                    <!--end::Info-->
+                                                                    <!--end::Facebook Fanpage Profile picture-->
+                                                                    <!--begin::Section-->
+                                                                    <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                                                        <!--begin::Info-->
+                                                                        <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                                                            <!--begin::Title-->
+                                                                            <a href="javascript:;" class="font-weight-bold text-hover-primary font-size-lg mb-1">
+                                                                                {{ $socialAccount->first_name.' '. $socialAccount->last_name }}
+                                                                            </a>
+                                                                            <!--end::Title-->
+
+                                                                            <!--begin::Data-->
+                                                                            <span class="text-muted font-weight-bold">
+                                                                            {{-- 2M followers --}}
+                                                                                {{ $socialAccount->friendship_counts }} followers
+                                                                        </span>
+                                                                            <!--end::Data-->
+                                                                        </div>
+                                                                        <!--end::Info-->
+                                                                    </div>
+                                                                    <!--end::Section-->
+                                                                    <!--begin::Checkbox-->
+                                                                    <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
+                                                                        <input type="checkbox" name="socialAccount[]" value="{{ $socialAccount->account_id }}"/>
+                                                                        {{-- <input type="hidden" name="account_id[{{ $socialAccount->account_id }}]" value="{{ $socialAccount->account_id }}"> --}}
+                                                                        <span></span>
+                                                                    </label>
+                                                                    <!--end::Checkbox-->
                                                                 </div>
-                                                                <!--end::Section-->
-                                                                <!--begin::Checkbox-->
-                                                                <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-                                                                    <input type="checkbox" name="socialAccount[]" value="{{ $socialAccount->account_id }}"/>
-                                                                    {{-- <input type="hidden" name="account_id[{{ $socialAccount->account_id }}]" value="{{ $socialAccount->account_id }}"> --}}
-                                                                    <span></span>
-                                                                </label>
-                                                                <!--end::Checkbox-->
-                                                            </div>
-                                                            <!--end::Page-->
+                                                                <!--end::Page-->
+                                                                @endif
                                                         @endforeach
                                                     @endif
                                                 @endforeach

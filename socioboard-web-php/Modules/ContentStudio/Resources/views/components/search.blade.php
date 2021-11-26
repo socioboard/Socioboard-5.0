@@ -1,6 +1,6 @@
 
 <div class="col-xl-4" style="top: 50px;">
-    <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023">
+    <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023" style="position: fixed; width: 606px; left: 26px;">
         <div class="card-header border-0 py-5">
             <h3 class="card-title font-weight-bolder">{{$title}}</h3>
         </div>
@@ -13,8 +13,10 @@
                 <div class="form-group">
                     <div class="input-icon">
                         <label for="keyword" style="display: none"></label>
-                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" id="keyword" name="keyword" value="@if(isset($_GET['keyword'])){{ $_GET['keyword'] }}@endif" autocomplete="off" placeholder="Enter Keyword">
-                        <span><i class="far fa-keyboard"></i></span>
+                        <div id="InKwyword">
+                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" id="keyword" name="keyword" value="@if(isset($_GET['keyword'])){{ $_GET['keyword'] }}@endif" autocomplete="off" placeholder="Enter Keyword">
+                            <span><i class="far fa-keyboard"></i></span>
+                        </div>
                     </div>
                     <span  id="error-keyword" class="error-message" style="color: red"></span>
                 </div>
@@ -46,9 +48,9 @@
                         </select>
                         <span id="error-rating" class="error-message" style="color: red"></span>
                     </div>
-                @endif
-                <!--end::Social-->
-                <button type="reset" class="btn font-weight-bolder mr-2 px-8">Clear</button>
+            @endif
+            <!--end::Social-->
+                <button type="reset" class="btn font-weight-bolder mr-2 px-8" onclick="clearFunction()">Clear</button>
                 <button id="searchBtn" class="btn font-weight-bolder px-8" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Order">Search</button>
             </form>
             <!--end::Form-->
@@ -56,3 +58,9 @@
         <!--end::Body-->
     </div>
 </div>
+<script>
+    function clearFunction() {
+        $("#InKwyword").empty().append('<input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" id="keyword" placeholder="Enter Keyword"/>\n' +
+            '                                            <span><i class="far fa-keyboard"></i></span>');
+    }
+</script>

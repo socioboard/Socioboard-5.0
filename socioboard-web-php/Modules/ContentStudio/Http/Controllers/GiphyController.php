@@ -30,9 +30,9 @@ class GiphyController extends Controller
             'stickers' => 'Stickers'
         ];
         $rating = [
-            'g' => 'G', 
+            'g' => 'G',
             'pg' => 'PG',
-            'pg-13' => 'Pg-13', 
+            'pg-13' => 'Pg-13',
             'R' => 'R'
         ];
 
@@ -58,11 +58,14 @@ class GiphyController extends Controller
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, null);
             $data = $this->helper->responseHandler($response['data'])['data'];
-            if (!$data)
-                return response()->json(['error' => '<p id="notification"> No data available </p>']);
-            
-            $html = view('contentstudio::giphy.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
-            return response()->json($html);
+            if (sizeof($data) === 0){
+                return response()->json(['error' => 'No data available']);
+//                return view('contentstudio::giphy.components.listing',compact('error'));
+            }else{
+                $html = view('contentstudio::giphy.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
+                return response()->json($html);
+            }
+
 
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'getSearchSessionApi() {GiphyController}');

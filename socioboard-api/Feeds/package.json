@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "prestart": "node ./resources/views/swagger.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node ./resources/views/swagger.config.js && nodemon feed.server.js",
     "live": "node ./resources/views/swagger.config.js && nodemon feed.server.js",
     "swagger": "node ./resources/views/swagger.config.js",
-    "updatePackage": "npm install package-update"
+    "updatePackage": "npm install package-update",
+    "jest": "node --experimental-vm-modules node_modules/.bin/jest --runInBand",
+    "test": "env NODE_ENV=test npx start-test dev 5001 jest"
   },
   "keywords": [
     "User",
@@ -26,14 +27,17 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
+    "cheerio": "1.0.0-rc.10",
     "compression": "^1.7.4",
     "config": "^3.3.6",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "csurf": "^1.11.0",
+    "csvtojson": "2.0.10",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^5.2.6",
+    "fast-xml-parser": "3.20.3",
     "fb": "^2.0.0",
     "file-stream-rotator": "^0.5.7",
     "helmet": "^4.4.1",
@@ -42,6 +46,7 @@
     "moment-timezone": "^0.5.33",
     "mongoose": "^5.12.2",
     "morgan": "^1.10.0",
+    "multer": "1.4.3",
     "mysql2": "^2.2.5",
     "node-twitter-api": "^1.8.0",
     "sequelize": "^6.5.1",
@@ -57,7 +62,10 @@
     "eslint": "^7.31.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
+    "jest": "^27.0.6",
     "sequelize-cli": "^6.2.0",
+    "start-server-and-test": "^1.13.1",
+    "supertest": "^6.1.5",
     "swagger-autogen": "^2.7.2"
   }
 }

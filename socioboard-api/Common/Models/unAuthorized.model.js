@@ -11,6 +11,7 @@ const teamLibs = new TeamLibs();
 // import config from 'config';
 
 import AuthorizeServices from '../Services/authorize.services.js';
+import logger from '../../User/resources/Log/logger.log.js';
 // const AuthorizeServices = require('../Services/authorizeServices.js')
 // const twitterApi = require('node-twitter-api')
 
@@ -31,7 +32,7 @@ const socialAccount = db.social_accounts;
 const userDetails = db.user_details;
 const teamInviteUser = db.invite_user_for_team;
 const userTeamJoinTable = db.join_table_users_teams;
-
+const appsumoActivation = db.appsumo_activation;
 class userLibs {
   constructor() {
     this.sendEmailServices = new SendEmailServices(config.get('mailService'));
@@ -1289,6 +1290,23 @@ class userLibs {
           }
         }
       });
+    }
+  }
+
+  async checkAppSumoActivation(activation_email, user_name) {
+    let res = await appsumoActivation.findOne({
+      where: {
+        activation_email,
+      },
+      raw: true,
+    });
+    logger.info(`AppSumo result ${JSON.stringify(res)} user_name ${user_name}`);
+    if (res) {
+      await new aMember(config.get('aMember')).setAMemberPlanForAppSumoUser(
+        user_name,
+        res.plan_id,
+        res.action === 'refund' ? true : false
+      );
     }
   }
 }

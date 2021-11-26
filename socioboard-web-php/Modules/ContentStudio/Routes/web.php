@@ -11,6 +11,7 @@
 */
 
 use Illuminate\Support\Facades\Route;
+use Modules\ContentStudio\Http\Controllers\PublishContentController;
 
 Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function () {
     Route::middleware('checkPlanAccesses:content_studio')->group(function () {
@@ -78,9 +79,11 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::get('youtube-scheduling', "PublishContentController@youtubeView")->name('youtube-publish');
             Route::post('youtube-schedule', "PublishContentController@youtubeSchedule")->name('youtube-schedule');
             Route::any('/scheduling/{id}', 'PublishContentController@edit')->name('publish_content.scheduling-edit');
-            Route::any('/socioQueue-scheduling/{id}', 'PublishContentController@socioQueueEdit')->name('publish_content.dayWise-SocioQueue');
+            Route::any('/socioQueue-scheduling/{id}/{content}', 'PublishContentController@socioQueueEdit')->name('publish_content.dayWise-SocioQueue');
             Route::any('/draft/{id}', 'PublishContentController@draftEdit')->name('publish_content.draft-edit');
             Route::any('/draft-schedule/{id}', 'PublishContentController@draftScheduleEdit')->name('publish_content.draft-schedule-edit');
+            Route::get('pinterest-scheduling', "PublishContentController@pinterestView")->name('pinterest-publish');
+            Route::post('pinterest-schedule', "PublishContentController@pinterestSchedule")->name('pinterest-schedule');
 
             Route::post('history-show', "HistoryController@historyShow");
 
@@ -90,6 +93,7 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::get('schedule/ready-queue', 'HistoryController@index')->name('schedule-ready-queue-history');
             Route::get('schedule/history', 'HistoryController@index')->name('schedule-done-history');
             Route::get('schedule/day-wise-socioqueue', 'HistoryController@index')->name('schedule-day-wise-history');
+            Route::delete('schedule/delete', 'HistoryController@deleteSchedule')->name('schedule-day-wise-history-delete');
         });
     });
 });

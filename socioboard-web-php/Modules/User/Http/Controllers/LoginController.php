@@ -327,6 +327,7 @@ class LoginController extends Controller
     public function logout(): RedirectResponse
     {
         Session::forget('user');
+        Session::put('offer_session', false);
         authUser()->logout();
         if (env('APP_ENV') === 'main') {
             return redirect(env('APP_URL') . "amember/logout");

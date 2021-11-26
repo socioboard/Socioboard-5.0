@@ -17,7 +17,36 @@
                 <div class="mt-3">
                     <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="max-height: 180px;overflow-y: scroll;">
                         @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                            @if(($group === "account") || ($group === "page") || ($group === "business account"))
+                            @if(($group === "account") || ($group === "page") || ($group === "business account") || ($group === "pages"))
+                                @if(ucwords($key) === "Twitter")
+                                    <ul class="schedule-social-tabs">
+                                        <li class="font-size-md font-weight-normal">The Character limit is 280.</li>
+                                        <li class="font-size-md font-weight-normal">You can only post four images at a time.</li>
+                                    </ul>
+                                @elseif(ucwords($key) === "Facebook")
+                                    <ul class="schedule-social-tabs">
+                                        <li class="font-size-md font-weight-normal">The Character limit is 5000.</li>
+                                        <li class="font-size-md font-weight-normal">You can only post four images at a time.</li>
+                                    </ul>
+                                @elseif(ucwords($key) === "Instagram")
+                                    <ul class="schedule-social-tabs">
+                                        <li class="font-size-md font-weight-normal">The Character limit is 2200.</li>
+                                        <li class="font-size-md font-weight-normal">You can only post one image video at a time.</li>
+                                        <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                        <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
+                                    </ul>
+                                @elseif(ucwords($key) === "Linkedin")
+                                    <ul class="schedule-social-tabs">
+                                        <li class="font-size-md font-weight-normal">The Character limit is 700.</li>
+                                        <li class="font-size-md font-weight-normal">You can only post one image video at a time.</li>
+                                        <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                    </ul>
+                                @elseif(ucwords($key) === "Tumblr")
+                                    <ul class="schedule-social-tabs">
+                                        <li class="font-size-md font-weight-normal">You can only post one image video at a time.</li>
+                                        <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                    </ul>
+                                @endif
                             <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                             @foreach($socialAccountArray as $group_key => $socialAccount)
                                 @if($key === 'facebook')
@@ -41,11 +70,13 @@
                                             </a>
                                             <!--end::Title-->
 
+                                        @if($socialAccount->account_type !== 6 && $socialAccount->account_type !== 16)
                                             <!--begin::Data-->
-                                            <span class="text-muted font-weight-bold">
+                                                <span class="text-muted font-weight-bold">
                                                 {{ $socialAccount->friendship_counts }} followers
                                             </span>
-                                            <!--end::Data-->
+                                        @endif
+                                        <!--end::Data-->
                                         </div>
                                         <!--end::Info-->
                                     </div>

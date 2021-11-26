@@ -16,6 +16,9 @@
             <div class=" container-fluid">
                 <!--begin::Profile-->
                 <!--begin::Row-->
+                <?php $regex = "#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#"; ?>
+                <?php $urls = []; ?>
+                <?php $imageCounts = 0; ?>
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class="sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
@@ -30,15 +33,13 @@
                                         </script>
                                         <option disabled>Select Account</option>
                                         @foreach($accounts as $data)
-                                            <option
-                                                    accounttype="{{$data->account_type}}"
-                                                    value="{{$data->account_id}}">{{$data->first_name}}
+                                            <option value="{{$data->account_id}} {{$data->account_type}}">{{$data->first_name}}
                                             </option>
                                         @endforeach
                                     @elseif($message=== 'failed')
                                         <option selected value="failed"> Sorry some error ,occurred please reload page
                                         </option>
-                                    @elseif($message=== 'No Twitter account added yet! or Account has locked')
+                                    @elseif($message=== 'No facebook Accounts added yet!')
                                         <option selected value="failed">No Facebook account added yet! or Account has
                                             locked
                                         </option>
@@ -90,14 +91,14 @@
                                                         <div class="star-icon">
                                                             <input type="radio"
                                                                    <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                                   id="rating1{{$accounts[0]->account_id}}}"
+                                                                   id="rating1{{$accounts[0]->account_id}}"
                                                                    onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
                                                             <label
                                                                     for="rating1{{$accounts[0]->account_id}}"
                                                                     class="fas fa-star"></label>
                                                             <input type="radio"
                                                                    <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                                   id="rating2{{$accounts[0]->account_id}}}"
+                                                                   id="rating2{{$accounts[0]->account_id}}"
                                                                    onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
                                                             <label
                                                                     for="rating2{{$accounts[0]->account_id}}"
@@ -213,105 +214,149 @@
                                         </script>
                                         @if((count($feeds['data']->feeds))>0)
                                             @foreach($feeds['data']->feeds as $data)
-                                                <?php $date = date('d-m-Y H:i:s', strtotime($data->publishedDate))?>
-                                                <div class="mb-5">
-                                                    <div>
-                                                        <div class="d-flex align-items-center pb-4">
-                                                            <div class="symbol symbol-40 symbol-light-success mr-5">
+                                                <?php $date = new Datetime($data->publishedDate);
+                                                $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
+                                                preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $data->description, $urls);
+                                                ?>
+                                                <?php $string_desc = trim(preg_replace('/\r|\n/', ' ', $data->description));?>
+                                                <?php  $string_desc = str_replace("'", '', $string_desc);;?>
+                                                @if($data->postType !== 'profile_media'&& $data->postType !== 'cover_photo'&& $data->postType !== 'pages_share'&& $data->postType !== 'native_templates')
+                                                    <div class="mb-5">
+                                                        <div>
+                                                            <div class="d-flex align-items-center pb-4">
+                                                                <div class="symbol symbol-40 symbol-light-success mr-5">
                                                             <span class="symbol-label">
                                                                 <img
                                                                         src="{{$feeds['data']->socialAccountDetails->profile_pic_url}}"
                                                                         class="h-75 align-self-end" alt=""/>
                                                             </span>
+                                                                </div>
+                                                                <div class="d-flex flex-column flex-grow-1">
+                                                                    @if($accounts[0]->account_type === 2)
+                                                                        <a href="https://www.facebook.com/{{$accounts[0]->user_name}}"
+                                                                           class="text-hover-primary mb-1 font-size-lg font-weight-bolder"
+                                                                           target="_blank">
+                                                                            {{$feeds['data']->socialAccountDetails->first_name}}
+                                                                        </a>
+                                                                    @elseif($accounts[0]->account_type === 1)
+                                                                        <a class="text-hover-primary mb-1 font-size-lg font-weight-bolder">
+                                                                            {{$feeds['data']->socialAccountDetails->first_name}}
+                                                                        </a>
+                                                                    @endif
+                                                                    <span
+                                                                            class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
+                                                                </div>
                                                             </div>
-                                                            <div class="d-flex flex-column flex-grow-1">
-                                                                <a href="javascript:;"
-                                                                   class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
-                                                                <span
-                                                                        class="text-muted font-weight-bold">{{$date}}</span>
-                                                            </div>
-                                                        </div>
-                                                        @if(count($data->mediaUrls)>0)
-                                                            @if($data->postType === 'photo')
-                                                                <div class="pt-4">
-                                                                    @foreach($data->mediaUrls as $image)
-                                                                        <div class="">
-                                                                            <img src="{{$image}}"
-                                                                                 class="img-fluid"/>
-                                                                        </div>
-                                                                    @endforeach
-                                                                <!--begin::Text-->
-                                                                    <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                        {{$data->description}}
-                                                                    </p>
-                                                                    @else
-                                                                        <div class="pt-4">
-
-                                                                            <!--begin::Video-->
-                                                                            @foreach($data->mediaUrls as $video)
-                                                                                <div
-                                                                                        class="embed-responsive embed-responsive-16by9">
-                                                                                    <iframe class="embed-responsive-item rounded"
-                                                                                            src="{{$video}}"
-                                                                                            allowfullscreen=""></iframe>
-                                                                                </div>
-                                                                            @endforeach
-                                                                        <!--end::Video-->
-
-                                                                            <!--begin::Text-->
-                                                                            <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                                {{$data->description}}
-                                                                            </p>
+                                                            @if(count($data->mediaUrls)>0)
+                                                                @if($data->postType === 'photo')
+                                                                    <div class="pt-4">
+                                                                        @foreach($data->mediaUrls as $image)
+                                                                            <div class="">
+                                                                                <img src="{{$image}}"
+                                                                                     class="img-fluid"/>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    <!--begin::Text-->
+                                                                        <p class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                            <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                            </strong>
+                                                                            @if(count($urls[0])>0)
+                                                                                <br>
+                                                                                @foreach($urls[0] as $data2)
+                                                                                    <a href="{{$data2}}"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                       target=_blank>
+                                                                                        {{$data2}}</a>
+                                                                                @endforeach
                                                                             @endif
-                                                                            @else
-                                                                                <div>
-                                                                                    @if($data->postType === 'share')
-                                                                                        <strong class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                                            {{$data->description}}
-                                                                                        </strong>
+                                                                        </p>
+                                                                        @else
+                                                                            <div class="pt-4">
+
+                                                                                <!--begin::Video-->
+                                                                                @foreach($data->mediaUrls as $video)
+                                                                                    <div
+                                                                                            class="embed-responsive embed-responsive-16by9">
+                                                                                        <iframe class="embed-responsive-item rounded"
+                                                                                                src="{{$video}}"
+                                                                                                allowfullscreen=""></iframe>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            <!--end::Video-->
+
+                                                                                <!--begin::Text-->
+                                                                                <p class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                        <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                                    </strong>
+                                                                                    @if(count($urls[0])>0)
                                                                                         <br>
-                                                                                        <a href="{{$data->sharedUrl}}"
-                                                                                           class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                                        <a href="{{$urls[0][0]}}"
+                                                                                           class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
                                                                                            target=_blank>
-                                                                                            {{$data->sharedUrl}}</a>
-                                                                                        <br>
-                                                                                    @else
-                                                                                        <p class="font-size-lg font-weight-normal">
-                                                                                            {{$data->description}}
-                                                                                        </p>
+                                                                                            {{$urls[0][0]}}</a>
+                                                                                    @endif
+                                                                                </p>
+                                                                                @endif
+                                                                                @else
+                                                                                    <div>
+                                                                                        @if($data->postType === 'share')
+                                                                                            <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                                {{$data->description}}
+                                                                                            </strong>
+                                                                                            <br>
+                                                                                            <a href="{{$data->sharedUrl}}"
+                                                                                               class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                               target=_blank>
+                                                                                                {{$data->sharedUrl}}</a>
+                                                                                            <br>
+                                                                                        @else
+                                                                                            <p class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                                <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                                    <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                                                </strong>
+                                                                                                @if(count($urls[0])>0)
+                                                                                                    <br>
+                                                                                                    <a href="{{$urls[0][0]}}"
+                                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                                       target=_blank>
+                                                                                                        {{$urls[0][0]}}</a>
+                                                                                                @endif
+                                                                                            </p>
                                                                                     @endif
                                                                                     @endif
-                                                                                    <br>
+
                                                                                     <!--end::Text-->
-                                                                                    <!--begin::Action-->
-                                                                                    <div class="d-flex align-items-center">
-                                                                                        @if($accounts[0]->account_type === 2)
-                                                                                            <a href="javascript:;"
-                                                                                               class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">
+                                                                                        <!--begin::Action-->
+                                                                                        <div class="d-flex align-items-center">
+                                                                                            @if($accounts[0]->account_type === 2)
+                                                                                                <a href="javascript:;"
+                                                                                                   class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">
                                                                 <span
                                                                         class="svg-icon svg-icon-md svg-icon-primary pr-2">
                                                                         <i class="fas fa-comments"></i>
                                                                     {{$data->commentCount}}
                                                                 </span>
-                                                                                            </a>
+                                                                                                </a>
 
-                                                                                            @if($data->isLiked === false)
-                                                                                                <a href="javascript:;"
-                                                                                                   data-value="{{$data->postId}}"
-                                                                                                   class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
-                                                                                                   onclick="likeFeed('{{$data->postId}}')">
+                                                                                                @if($data->isLiked === false)
+                                                                                                    <a href="javascript:;"
+                                                                                                       data-value="{{$data->postId}}"
+                                                                                                       class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
+                                                                                                       onclick="likeFeed('{{$data->postId}}')">
                                                                 <span data-value="{{$data->postId}}"
                                                                       class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"
                                                                       like-count="{{$data->likeCount}}">
                                                                         <i class="fas fa-heart"></i>
                                                                     {{$data->likeCount}}
                                                                 </span>
-                                                                                                </a>
-                                                                                            @else
-                                                                                                <a href="javascript:;"
-                                                                                                   data-value="{{$data->postId}}"
-                                                                                                   class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
-                                                                                                   onclick="disLikeFeed('{{$data->postId}}')">
+                                                                                                    </a>
+                                                                                                @else
+                                                                                                    <a href="javascript:;"
+                                                                                                       data-value="{{$data->postId}}"
+                                                                                                       class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
+                                                                                                       onclick="disLikeFeed('{{$data->postId}}')">
                                                                 <span data-value="{{$data->postId}}"
                                                                       class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"
                                                                       like-count="{{$data->likeCount}}">
@@ -319,98 +364,146 @@
                                                                         ></i>
                                                                     {{$data->likeCount}}
                                                                 </span>
-                                                                                                </a>
-                                                                                            @endif
-
-                                                                                            @if(count($data->mediaUrls)>0)
-                                                                                                @if($data->postType === 'photo'||$data->postType === 'album')
-                                                                                                    <?php $type = 'image'?>
-                                                                                                @else
-                                                                                                    <?php $type = 'video'?>
+                                                                                                    </a>
                                                                                                 @endif
-                                                                                                <a id="reSocioButton"
-                                                                                                   href="javascript:;"
-                                                                                                   value="{{$data->description}}"
-                                                                                                   imageSrc="#"
-                                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                                   onclick="resocioButton('{{$data->description}}','{{$data->mediaUrls[0]}}','{{$type}}')">
-                                                                                    <span
-                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
-                                                                        <i class="fas fa-pencil-alt"></i>
-                                                                </span>Re-socio
-                                                                                                </a>
-                                                                                            @else
-                                                                                                <a id="reSocioButton"
-                                                                                                   href="javascript:;"
-                                                                                                   value="{{$data->description}}"
-                                                                                                   imageSrc="#"
-                                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                                   onclick="resocioButton('{{$data->description}}',null,null)">
-                                                                                    <span
-                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
-                                                                        <i class="fas fa-pencil-alt"></i>
-                                                                </span>Re-socio
-                                                                                                </a>
-                                                                                            @endif
-                                                                                    </div>
-                                                                                    <!--end::Action-->
 
-                                                                                </div>
-                                                                                <!--end::Body-->
-                                                                        </div>
-                                                                        <div class="fb_cmt_div">
-                                                                            <!--end::Container-->
-                                                                            <!--begin::Editor-->
-                                                                            <form class="position-relative">
+                                                                                                @if(count($data->mediaUrls)>0)
+                                                                                                    @if(count($data->mediaUrls)>1)
+                                                                                                        <?php $imageCounts = count($data->mediaUrls)?>
+                                                                                                    @else
+                                                                                                        <?php $imageCounts = 0?>
+                                                                                                    @endif
+                                                                                                    @if($data->postType === 'photo'||$data->postType === 'album')
+                                                                                                        <?php $type = 'image'?>
+                                                                                                    @else
+                                                                                                        <?php $type = 'video'?>
+                                                                                                    @endif
+                                                                                                    @if(count($urls[0])>0)
+                                                                                                        <a id="reSocioButton"
+                                                                                                           href="javascript:;"
+                                                                                                           value="{{$data->description}}"
+                                                                                                           imageSrc="#"
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,'{{$urls[0][0]}}',{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                                        </a>
+                                                                                                    @else
+                                                                                                        <a id="reSocioButton"
+                                                                                                           href="javascript:;"
+                                                                                                           value="{{$data->description}}"
+                                                                                                           imageSrc="#"
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                                        </a>
+                                                                                                    @endif
+
+                                                                                                @elseif($data->postType === 'share')
+                                                                                                    <a id="reSocioButton"
+                                                                                                       href="javascript:;"
+                                                                                                       value="{{$data->description}}"
+                                                                                                       imageSrc="#"
+                                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$data->sharedUrl}}',{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                                    </a>
+                                                                                                @else
+                                                                                                    @if(count($urls[0])>0)
+                                                                                                        <a id="reSocioButton"
+                                                                                                           href="javascript:;"
+                                                                                                           value="{{$data->description}}"
+                                                                                                           imageSrc="#"
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$urls[0][0]}}',{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                                        </a>
+                                                                                                    @else
+                                                                                                        <a id="reSocioButton"
+                                                                                                           href="javascript:;"
+                                                                                                           value="{{$data->description}}"
+                                                                                                           imageSrc="#"
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                                        </a>
+                                                                                                    @endif
+
+                                                                                                @endif
+                                                                                        </div>
+                                                                                        <!--end::Action-->
+
+                                                                                    </div>
+                                                                                    <!--end::Body-->
+                                                                            </div>
+                                                                            <div class="fb_cmt_div">
+                                                                                <!--end::Container-->
+                                                                                <!--begin::Editor-->
+                                                                                <form class="position-relative">
                                                     <textarea class="form-control border-0 pr-10 resize-none"
                                                               rows="1" placeholder="Reply..."
                                                               name="{{$data->postId}}"></textarea>
 
-                                                                                <div name="{{$data->postId}}"
-                                                                                     id="commentButton"
-                                                                                     class="position-absolute top-0 right-0 mt-1 mr-n2">
+                                                                                    <div name="{{$data->postId}}"
+                                                                                         id="commentButton"
+                                                                                         class="position-absolute top-0 right-0 mt-1 mr-n2">
                                                             <span class="btn btn-icon btn-sm btn-hover-icon-primary">
                                                                     <i class="fas fa-paper-plane"></i>
                                                             </span>
-                                                                                </div>
-                                                                            </form>
-                                                                            <!--edit::Editor-->
-                                                                        </div>
-                                                                        @else
-                                                                            @if(count($data->mediaUrls)>0)
-                                                                                @if($data->postType === 'photo'||$data->postType === 'album')
-                                                                                    <?php $type = 'image'?>
-                                                                                @else
-                                                                                    <?php $type = 'video'?>
-                                                                                @endif
-                                                                                <a id="reSocioButton"
-                                                                                   href="javascript:;"
-                                                                                   value="{{$data->description}}"
-                                                                                   imageSrc="#"
-                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('{{$data->description}}','{{$data->mediaUrls[0]}}','{{$type}}',null,null)">
-                                                                                    <span
-                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
-                                                                        <i class="fas fa-pencil-alt"></i>
-                                                                </span>Re-socio
-                                                                                </a>
+                                                                                    </div>
+                                                                                </form>
+                                                                                <!--edit::Editor-->
+                                                                            </div>
                                                                             @else
-                                                                                <a id="reSocioButton"
-                                                                                   href="javascript:;"
-                                                                                   value="{{$data->description}}"
-                                                                                   imageSrc="#"
-                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('{{$data->description}}',null,null,null,null)">
+                                                                                @if(count($data->mediaUrls)>0)
+                                                                                    @if($data->postType === 'photo'||$data->postType === 'album')
+                                                                                        <?php $type = 'image'?>
+                                                                                    @else
+                                                                                        <?php $type = 'video'?>
+                                                                                    @endif
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="{{$data->description}}"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                         <i class="fas fa-pencil-alt"></i>
                                                                 </span>Re-socio
-                                                                                </a>
+                                                                                    </a>
+                                                                                @else
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="{{$string_desc}}"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                    </a>
+                                                                                @endif
                                                                             @endif
-                                                                        @endif
-                                                                </div>
-                                                                <!--end::Text-->
-                                                                <hr>
+                                                                    </div>
+                                                                    <!--end::Text-->
+                                                                    <hr>
+                                                                @endif
                                                                 @endforeach
                                                             @else
                                                                 <div class="text-center">
@@ -421,29 +514,29 @@
                                                                         Account</h6>
                                                                 </div>
                                                             @endif
-                                                        @elseif($feeds['code']=== 400)
-                                                            <div class="text-center">
-                                                                <div class="symbol symbol-150">
-                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                            @elseif($feeds['code']=== 400)
+                                                                <div class="text-center">
+                                                                    <div class="symbol symbol-150">
+                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                    </div>
+                                                                    <h6> Error Occured : {{$feeds['message']}}</h6>
                                                                 </div>
-                                                                <h6> Error Occured : {{$feeds['message']}}</h6>
-                                                            </div>
-                                                        @endif
-                                                        @else
-                                                            <div class="text-center">
-                                                                <div class="symbol symbol-150">
-                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                            @endif
+                                                            @else
+                                                                <div class="text-center">
+                                                                    <div class="symbol symbol-150">
+                                                                        <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                    </div>
+                                                                    <h6>
+                                                                        Currently no Facebook Account has been added for
+                                                                        this
+                                                                        team</h6>
                                                                 </div>
-                                                                <h6>
-                                                                    Currently no Facebook Account has been added for
-                                                                    this
-                                                                    team</h6>
-                                                            </div>
-                                                        @endif
+                                                            @endif
+                                                        </div>
+                                                        <!--end::Body-->
                                                     </div>
-                                                    <!--end::Body-->
-                                                </div>
-                                                <!--end::feeds-->
+                                                    <!--end::feeds-->
                             </div>
                         </div>
                         <!--end::Row-->
@@ -460,6 +553,7 @@
                 {{--                <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
                 <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
                 <script src="{{asset('js/images-grid.js')}}"></script>
+                <script src="{{asset('js/accounts.js')}}"></script>
                 <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
                 <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
                 <script>
@@ -517,7 +611,7 @@
                                 $('#follower_counts-div').empty();
                                 $('#facebookProfileDiv').empty();
                                 $('#facebookFeeds').empty().append('<div class="d-flex justify-content-center" >\n' +
-                                    '        <div class="spinner-border" role="status"  style="display: none;">\n' +
+                                    '        <div class="spinner-border" id="' + pageId + '"  role="status"  style="display: none;">\n' +
                                     '            <span class="sr-only">Loading...</span>\n' +
                                     '        </div>\n' +
                                     '        </div>');
@@ -530,6 +624,7 @@
                                 $(".spinner-border").css("display", "none");
                                 let append = '';
                                 let appendData2 = '';
+                                let multiImageCount = 0;
                                 if (response.data.code === 200) {
                                     append += ' <div\n' +
                                         'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
@@ -564,33 +659,23 @@
                                     append += '<div class="text-muted">\n' + response.data.data.socialAccountDetails.user_name +
                                         '</div>\n' +
                                         '<div class="rating-css">\n' +
-                                        '<div class="star-icon">\n' +
-                                        (
-                                            response.data.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
-                                                '<input type="radio" name="rating1" id="rating1">\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
-                                                '<input type="radio" name="rating1" id="rating1">\n'
-                                        ) +
-                                        (
-                                            response.data.data.socialAccountDetails.rating === 2 ? ' <input type="radio" checked name="rating2" id="rating2">\n' +
-                                                '<input type="radio" name="rating2" id="rating2">\n' : ' <input type="radio"  name="rating2" id="rating2">\n' +
-                                                '<input type="radio" name="rating2" id="rating2">\n'
-                                        ) +
-                                        (
-                                            response.data.data.socialAccountDetails.rating === 3 ? ' <input type="radio" checked name="rating3" id="rating3">\n' +
-                                                '<input type="radio" name="rating3" id="rating3">\n' : ' <input type="radio"  name="rating3" id="rating3">\n' +
-                                                '<input type="radio" name="rating3" id="rating3">\n'
-                                        ) +
-                                        (
-                                            response.data.data.socialAccountDetails.rating === 4 ? ' <input type="radio" checked name="rating4" id="rating4">\n' +
-                                                '<input type="radio" name="rating4" id="rating4">\n' : ' <input type="radio"  name="rating4" id="rating4">\n' +
-                                                '<input type="radio" name="rating4" id="rating4">\n'
-                                        ) +
-                                        (
-                                            response.data.data.socialAccountDetails.rating === 5 ? ' <input type="radio" checked name="rating5" id="rating5">\n' +
-                                                '<input type="radio" name="rating5" id="rating5">\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
-                                                '<input type="radio" name="rating5" id="rating5">\n'
-                                        ) +
-                                        '</div>\n' +
+                                        '<div class="star-icon">\n';
+                                    (response.data.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                        '<label for="rating1' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                        '<label for="rating1' + accid + '" class="fas fa-star"></label>\n';
+                                    (response.data.data.socialAccountDetails.rating === 2) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                        '<label for="rating2' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                        '<label for="rating2' + accid + '" class="fas fa-star"></label>\n';
+                                    (response.data.data.socialAccountDetails.rating === 3) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                        '<label for="rating3' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                        '<label for="rating3' + accid + '" class="fas fa-star"></label>\n';
+                                    (response.data.data.socialAccountDetails.rating === 4) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                        '<label for="rating4' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                        '<label for="rating4' + accid + '" class="fas fa-star"></label>\n';
+                                    (response.data.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                        '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                        '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
+                                    append += '</div>\n' +
                                         '</div>\n' +
                                         '<div class="mt-2">\n';
                                     append += '<a href="javascript:;"\n' +
@@ -624,42 +709,391 @@
                                             '</div>';
                                         $('#follower_counts-div').append(appendData2);
                                     }
+                                    $(".spinner-border").css("display", "none");
                                     if (response.data.code === 200) {
                                         let appendData = '';
                                         let num = 1;
+                                        let undfinedFeeds = 1;
+                                        let urlsFromDesc = '';
+                                        $(".spinner-border").css("display", "none");
                                         feedsLength = response.data.data.feeds.length;
                                         if (feedsLength > 0) {
                                             response.data.data.feeds.map(element => {
+                                                urlsFromDesc = '';
+                                                let desc = element.description.replace(/(\r\n|\n|\r)/gm, "");
+                                                desc = desc.replace("'", '');
+                                                urlsFromDesc = getUrlsFromDesc(element.description);
+                                                if (element.postType !== 'profile_media' && element.postType !== 'cover_photo' && element.postType !== 'pages_share' && element.postType !== 'native_templates') {
+                                                    publishedDate = String(new Date(element.publishedDate)).substring(0, 25);
+                                                    appendData = '<div class="mb-5">\n' +
+                                                        '<div>\n' +
+                                                        '<div class="d-flex align-items-center pb-4">\n' +
+                                                        '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
+                                                        '<span class="symbol-label">\n' +
+                                                        '<img\n' +
+                                                        'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
+                                                        'class="h-75 align-self-end" alt=""/>\n' +
+                                                        '</span></div>\n' +
+                                                        '<div class="d-flex flex-column flex-grow-1">\n';
+                                                    if (response.data.data.socialAccountDetails.account_type === 2) {
+                                                        appendData += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                                            'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                    } else {
+                                                        appendData += '<a target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                    }
+                                                    appendData += '<span class="text-muted font-weight-bold">' + publishedDate + '</span>';
+                                                    appendData += '</div></div>\n';
+                                                    if (element.mediaUrls.length > 0) {
+                                                        if (element.postType === 'photo') {
+                                                            appendData += '<div class="pt-4">';
+                                                            element.mediaUrls.map(image => {
+                                                                appendData += '<div class="">\n' +
+                                                                    '<img src="' + image + '"\n' +
+                                                                    'class="img-fluid"/>\n' +
+                                                                    '</div>'
+                                                            });
+                                                            if (urlsFromDesc !== null) {
+                                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                    + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</strong><br>\n' +
+                                                                    '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
+                                                                    '</a>';
+                                                            } else {
+                                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</p>';
+                                                            }
+                                                        } else if (element.postType === 'album') {
+                                                            appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                                            if (urlsFromDesc !== null) {
+                                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                    + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</strong><br>\n' +
+                                                                    '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
+                                                                    '</a>';
+                                                            } else {
+                                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</p>';
+                                                            }
+                                                        } else {
+                                                            appendData += '<div class="pt-4">';
+                                                            element.mediaUrls.map(video => {
+                                                                appendData += ' <div\n' +
+                                                                    'class="embed-responsive embed-responsive-16by9">\n' +
+                                                                    '<iframe class="embed-responsive-item rounded"\n' +
+                                                                    'src="' + video + '"\n' +
+                                                                    'allowfullscreen=""></iframe>\n' +
+                                                                    '</div>';
+
+                                                            });
+                                                            if (element.postType === 'share') {
+                                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                                    element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</strong><br>\n' +
+                                                                    '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + element.sharedUrl +
+                                                                    '</a><br>\n';
+                                                            } else {
+                                                                if (urlsFromDesc !== null) {
+                                                                    appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                        + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                        '</strong><br>\n' +
+                                                                        '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
+                                                                        '</a>';
+                                                                } else {
+                                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                        '</p>';
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        appendData += '<div>\n';
+                                                        if (element.postType === 'share') {
+                                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                                element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                '</strong><br>\n' +
+                                                                '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + element.sharedUrl +
+                                                                '</a><br>\n';
+                                                        } else {
+                                                            if (urlsFromDesc !== null) {
+                                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                    + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</strong><br>\n' +
+                                                                    '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
+                                                                    '</a>';
+                                                            } else {
+                                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</p>';
+                                                            }
+                                                        }
+                                                    }
+                                                    appendData += '<div class="d-flex align-items-center">\n';
+                                                    if (response.data.data.socialAccountDetails.account_type === 2) {
+                                                        appendData += '<a href="javascript:;"\n' +
+                                                            'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
+                                                            '<i class="fas fa-comments"></i>\n' +
+                                                            element.commentCount +
+                                                            '</span></a>\n';
+                                                        if (element.isLiked === false) {
+                                                            appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                                'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                                'onclick="likeFeed(\'' + element.postId + '\')">\n' +
+                                                                '<span data-value="' + element.postId + '"\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                                'like-count="' + element.likeCount + '">\n' +
+                                                                '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                                '</span></a>\n';
+                                                        } else {
+                                                            appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
+                                                                'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                                                'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
+                                                                '<span data-value="' + element.postId + '"\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
+                                                                'like-count="' + element.likeCount + '">\n' +
+                                                                '<i class="fas fa-heart"></i>\n' + element.likeCount +
+                                                                '</span></a>\n';
+                                                        }
+                                                        if (element.mediaUrls.length > 0) {
+                                                            if (element.mediaUrls.length > 1) {
+                                                                multiImageCount = element.mediaUrls.length;
+                                                            } else {
+                                                                multiImageCount = 0;
+                                                            }
+                                                            let type = '';
+                                                            if (element.postType === 'photo' || element.postType === 'album') {
+                                                                type = 'image';
+                                                            } else {
+                                                                type = 'video';
+                                                            }
+                                                            if (urlsFromDesc !== null) {
+                                                                appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,\'' + urlsFromDesc[0]
+                                                                    + '\', ' + multiImageCount + ' )"\n' +
+                                                                    '<span\n' +
+                                                                    'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                    '</span>Re-socio</a>\n';
+                                                            } else {
+                                                                appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                                    '<span\n' +
+                                                                    'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                    '</span>Re-socio</a>\n';
+                                                            }
+                                                        } else if (element.postType === 'share') {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        } else {
+                                                            if (urlsFromDesc !== null) {
+                                                                appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc[0]
+                                                                    + '\')"\n' +
+                                                                    '<span\n' +
+                                                                    'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                    '</span>Re-socio</a>\n';
+                                                            } else {
+                                                                appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                    '<span\n' +
+                                                                    'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                    '</span>Re-socio</a>\n';
+                                                            }
+
+                                                        }
+                                                    }
+                                                    appendData += '</div>\n' +
+                                                        '</div>\n' +
+                                                        '</div>\n' +
+                                                        '<div class="fb_cmt_div">\n' +
+                                                        '<form class="position-relative">\n' +
+                                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                                        'rows="1" placeholder="Reply..."\n' +
+                                                        'name="' + element.postId + '"></textarea>\n' +
+                                                        '<div name="' + element.postId + '"\n' +
+                                                        'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                                        'id="commentButton"\n' +
+                                                        'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
+                                                        '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
+                                                        '<i class="fas fa-paper-plane"></i>\n' +
+                                                        '</span></div></form></div>\n';
+                                                } else {
+                                                    if (element.mediaUrls.length > 0) {
+                                                        if (element.mediaUrls.length > 1) {
+                                                            multiImageCount = element.mediaUrls.length;
+                                                        } else {
+                                                            multiImageCount = 0;
+                                                        }
+                                                        let type = '';
+                                                        if (element.postType === 'photo' || element.postType === 'album') {
+                                                            type = 'image';
+                                                        } else {
+                                                            type = 'video';
+                                                        }
+                                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,' + multiImageCount + ')"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
+                                                    } else {
+                                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null,' + multiImageCount + ')"\n' +
+                                                            '<span\n' +
+                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio</a>\n';
+                                                    }
+
+                                                }
+                                                appendData += '</div><hr>\n';
+                                                $('#facebookFeeds').append(appendData);
+                                                $('div#image-gallery' + num).imagesGrid({
+                                                    images: element?.mediaUrls
+                                                });
+                                                num++;
+                                            });
+                                        } else {
+                                            undfinedFeeds++;
+                                        }
+                                        if (undfinedFeeds === feedsLength) {
+                                            $('#facebookFeeds').append('<div class="text-center">\n' +
+                                                '<div class="symbol symbol-150">\n' +
+                                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                                '</div>\n' +
+                                                '<h6>\n' +
+                                                'Currently no Facebook Feeds has been found for\n' +
+                                                'this\n' +
+                                                'Account</h6>\n' +
+                                                '</div>');
+                                        }
+                                    } else if (response.data.code === 400) {
+                                        $('#facebookFeeds').append('<div class="text-center">\n' +
+                                            '<div class="symbol symbol-150">\n' +
+                                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                            '</div>\n' +
+                                            '<h6>\n' + "Can not get feeds, as : " + response.data.error +
+                                            '</h6></div>');
+                                    } else {
+                                        $('#facebookFeeds').append(' <div style="color: red;text-align:center;">\n' +
+                                            "Some error occured can get feeds" +
+                                            '</div>');
+                                    }
+                                }
+                                else if (response.data.code === 400) {
+                                    $('#facebookFeeds').append('<div class="text-center">\n' +
+                                        '<div class="symbol symbol-150">\n' +
+                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                        '</div>\n' +
+                                        '<h6>\n' + "Can not get feeds, as : " + response.data.error +
+                                        '</h6></div>');
+                                    $('#facebookProfileDiv').append('<div class="text-center">\n' +
+                                        '<div class="symbol symbol-150">\n' +
+                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                        '</div>\n' +
+                                        '<h6>\n' + "Can not get feeds, as : " + response.data.error +
+                                        '</h6></div>');
+                                } else {
+                                    $('#facebookProfileDiv').append(' <div style="color: red;text-align:center;">\n' +
+                                        "Some error occured can get feeds" +
+                                        '</div>');
+                                    $('#facebookFeeds').append(' <div style="color: red;text-align:center;">\n' +
+                                        "Some error occured can get feeds" +
+                                        '</div>');
+                                }
+                            }
+                        });
+                    }
+
+                    /**
+                     * TODO we've to get  the next  feeds of facebook account on pagination.
+                     * This function is used for getting next feeds from particular facebook account,on pagination.
+                     * @param {integer} accid- account id of that particular facebook account.
+                     * ! Do not change this function without referring API format of getting the facebook feeds.
+                     */
+                    function getNextFacebookFeeds(accid, pageId, acctype) {
+                        let publishedDate = 0;
+                        $.ajax({
+                            type: 'get',
+                            url: '/get-next-facebook-feeds',
+                            data: {
+                                accid, pageId, acctype,
+                            },
+                            dataType: 'json',
+                            beforeSend: function () {
+                            },
+                            success: function (response) {
+                                if (response.data.code === 200) {
+                                    if (response.data.code === 200) {
+                                        let appendData = '';
+                                        let num = 1;
+                                        let urlsFromDesc2 = '';
+                                        let multiImageCount = 0;
+                                        $(".spinner-border").css("display", "none");
+                                        feedsLength = response.data.data.feeds.length;
+                                        response.data.data.feeds.map(element => {
+                                            urlsFromDesc2 = '';
+                                            let desc = element.description.replace(/(\r\n|\n|\r)/gm, "");
+                                            desc = desc.replace("'", '');
+                                            urlsFromDesc2 = getUrlsFromDesc(element.description);
+                                            if (element.postType !== 'profile_media' && element.postType !== 'cover_photo' && element.postType !== 'pages_share' && element.postType !== 'native_templates') {
                                                 publishedDate = String(new Date(element.publishedDate)).substring(0, 25);
-                                                appendData = '<div class="mb-5">\n' +
-                                                    '<div>\n' +
+                                                appendData = '<div class="mb-5"><div>\n' +
                                                     '<div class="d-flex align-items-center pb-4">\n' +
                                                     '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                                    '<span class="symbol-label">\n' +
-                                                    '<img\n' +
+                                                    '<span class="symbol-label"><img\n' +
                                                     'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
                                                     'class="h-75 align-self-end" alt=""/>\n' +
                                                     '</span></div>\n' +
-                                                    '<div class="d-flex flex-column flex-grow-1">\n' +
-                                                    '<a href="' + element.tweetUrl + '"\n' +
-                                                    'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                                    '<span class="text-muted font-weight-bold">' + publishedDate + '</span>' +
+                                                    '<div class="d-flex flex-column flex-grow-1">\n';
+                                                if (response.data.data.socialAccountDetails.account_type === 2) {
+                                                    appendData += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"\n' +
+                                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                } else {
+                                                    appendData += '<a target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                }
+                                                appendData += '<span class="text-muted font-weight-bold">' + publishedDate + '</span>' +
                                                     '</div></div>\n';
                                                 if (element.mediaUrls.length > 0) {
+                                                    if (element.mediaUrls.length > 1) {
+                                                        multiImageCount = element.mediaUrls.length;
+                                                    } else {
+                                                        multiImageCount = 0;
+                                                    }
                                                     if (element.postType === 'photo') {
                                                         appendData += '<div class="pt-4">';
                                                         element.mediaUrls.map(image => {
-                                                            appendData += '<div class="">\n' +
-                                                                '<img src="' + image + '"\n' +
-                                                                'class="img-fluid"/>\n' +
-                                                                '</div>'
+                                                            appendData += '<div class=""><img src="' + image + '" class="img-fluid"/></div>'
                                                         });
-                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                            '</p>';
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                '</strong><br>\n' +
+                                                                '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                                '</a>';
+                                                        } else {
+                                                            appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                '</p>';
+                                                        }
+                                                        '                                                                </p>';
                                                     } else if (element.postType === 'album') {
                                                         appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
-                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                            '</p>';
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                '</strong><br>\n' +
+                                                                '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                                '</a>';
+                                                        } else {
+                                                            appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                '</p>';
+                                                        }
                                                     } else {
                                                         appendData += '<div class="pt-4">';
                                                         element.mediaUrls.map(video => {
@@ -671,26 +1105,38 @@
                                                                 '</div>';
 
                                                         });
-                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                            '</p>';
+                                                        if (element.postType === 'share') {
+                                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                                element.description +
+                                                                '</strong><br>\n' +
+                                                                '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.sharedUrl +
+                                                                '</a><br>\n';
+                                                        } else {
+                                                            if (urlsFromDesc2 !== null) {
+                                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                    + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</strong><br>\n' +
+                                                                    '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                                    '</a>';
+                                                            } else {
+                                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                                    '</p>';
+                                                            }
+                                                        }
                                                     }
                                                 } else {
-                                                    appendData += '<div>\n';
-                                                    if (element.postType === 'share') {
-                                                        appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
-                                                            element.description +
+                                                    if (urlsFromDesc2 !== null) {
+                                                        appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                            + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                             '</strong><br>\n' +
-                                                            '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.sharedUrl +
-                                                            '</a><br>\n';
+                                                            '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                            '</a>';
                                                     } else {
-                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
+                                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                             '</p>';
                                                     }
-                                                    appendData += '<br>\n';
-
                                                 }
-                                                appendData +=
-                                                    '<div class="d-flex align-items-center">\n';
+                                                appendData += '<div class="d-flex align-items-center">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
                                                     appendData += '<a href="javascript:;"\n' +
                                                         'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
@@ -719,29 +1165,61 @@
                                                             '</span></a>\n';
                                                     }
                                                     if (element.mediaUrls.length > 0) {
-                                                        let type = '';
-                                                        if (element.postType === 'photo' || element.postType === 'album') {
-                                                            type = 'image';
+                                                        if (element.mediaUrls.length > 1) {
+                                                            multiImageCount = element.mediaUrls.length;
                                                         } else {
-                                                            type = 'video';
+                                                            multiImageCount = 0;
                                                         }
-                                                        appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
+                                                        let postType = '';
+                                                        if (element.postType === 'photo' || element.postType === 'album') {
+                                                            postType = 'image'
+                                                        } else {
+                                                            postType = 'video'
+                                                        }
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,\'' + urlsFromDesc2[0]
+                                                                + '\','+multiImageCount+')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        } else {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null,'+multiImageCount+')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        }
+                                                    } else if (element.postType === 'share') {
+                                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
                                                             '</span>Re-socio</a>\n';
                                                     } else {
-                                                        appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                            '<span\n' +
-                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                                            '</span>Re-socio</a>\n';
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
+                                                                + '\')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        } else {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        }
+
                                                     }
                                                     appendData += '</div>\n' +
-                                                        '</div>\n' +
-                                                        '</div>\n' +
+                                                        '</div></div>\n' +
                                                         '<div class="fb_cmt_div">\n' +
                                                         '<form class="position-relative">\n' +
                                                         '<textarea class="form-control border-0 pr-10 resize-none"\n' +
@@ -756,242 +1234,69 @@
                                                         '</span></div></form></div>\n';
                                                 } else {
                                                     if (element.mediaUrls.length > 0) {
-                                                        let type = '';
-                                                        if (element.postType === 'photo' || element.postType === 'album') {
-                                                            type = 'image';
+                                                        if (element.mediaUrls.length > 1) {
+                                                            multiImageCount = element.mediaUrls.length;
                                                         } else {
-                                                            type = 'video';
+                                                            multiImageCount = 0;
                                                         }
-                                                        appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null)"\n' +
+                                                        let type2 = '';
+                                                        if (element.postType === 'photo' || element.postType === 'album') {
+                                                            type2 = 'image'
+                                                        } else {
+                                                            type2 = 'video'
+                                                        }
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,\'' + urlsFromDesc2[0]
+                                                                + '\','+multiImageCount+')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        } else {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null,'+multiImageCount+')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        }
+
+                                                    } else if (element.postType === 'share') {
+                                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
                                                             '</span>Re-socio</a>\n';
                                                     } else {
-                                                        appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                            '<span\n' +
-                                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                                            '</span>Re-socio</a>\n';
-                                                    }
+                                                        if (urlsFromDesc2 !== null) {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
+                                                                + '\')"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        } else {
+                                                            appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                '<span\n' +
+                                                                'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                                '</span>Re-socio</a>\n';
+                                                        }
 
+                                                    }
                                                 }
+
                                                 appendData += '</div><hr>\n';
                                                 $('#facebookFeeds').append(appendData);
                                                 $('div#image-gallery' + num).imagesGrid({
                                                     images: element?.mediaUrls
                                                 });
                                                 num++;
-                                            });
-                                        } else {
-                                            $('#facebookFeeds').append('<div class="text-center">\n' +
-                                                '<div class="symbol symbol-150">\n' +
-                                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                                '</div>\n' +
-                                                '<h6>\n' +
-                                                'Currently no Facebook Feeds has been found for\n' +
-                                                'this\n' +
-                                                'Account</h6>\n' +
-                                                '</div>');
-                                        }
-                                    } else if (response.data.code === 400) {
-                                        $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
-                                            response.data.error +
-                                            '</div>');
-                                    } else {
-                                        $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">\n' +
-                                            "Some error occured can get feeds" +
-                                            '</div>');
-                                    }
-                                } else if (response.data.code === 400) {
-                                    $('#facebookFeeds').append('<div class="text-center">\n' +
-                                        '<div class="symbol symbol-150">\n' +
-                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                        '</div>\n' +
-                                        '<h6>\n' + "Can not get feeds, Error occured : " + response.data.error +
-                                        '</h6></div>');
-                                } else {
-                                    $('#facebookFeeds').append('<div class="text-center">\n' +
-                                        '<div class="symbol symbol-150">\n' +
-                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                        '</div>\n' +
-                                        '<h6>\n' + "Can not get feeds, Some error occured ,can not get Feeds" +
-                                        '</h6></div>');
-                                }
-                            }
-                        });
-                    }
-
-                    /**
-                     * TODO we've to get  the next  feeds of facebook account on pagination.
-                     * This function is used for getting next feeds from particular facebook account,on pagination.
-                     * @param {integer} accid- account id of that particular facebook account.
-                     * ! Do not change this function without referring API format of getting the facebook feeds.
-                     */
-                    function getNextFacebookFeeds(accid, pageId, acctype) {
-                        let publishedDate = 0;
-                        $.ajax({
-                            type: 'get',
-                            url: '/get-next-facebook-feeds',
-                            data: {
-                                accid, pageId, acctype,
-                            },
-                            dataType: 'json',
-                            beforeSend: function () {
-                                $('#facebookFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                    '                       <div class="spinner-border" role="status"  style="display: none;">\n' +
-                                    '                       <span class="sr-only">Loading...</span></div></div>');
-                                $(".spinner-border").css("display", "block");
-                            },
-                            success: function (response) {
-                                $(".spinner-border").css("display", "none");
-                                if (response.data.code === 200) {
-                                    if (response.data.code === 200) {
-                                        let appendData = '';
-                                        let num = 1;
-                                        $(".spinner-border").css("display", "none");
-                                        feedsLength = response.data.data.feeds.length;
-                                        response.data.data.feeds.map(element => {
-                                            publishedDate = String(new Date(element.publishedDate)).substring(0, 25);
-                                            appendData = '<div class="mb-5"><div>\n' +
-                                                '<div class="d-flex align-items-center pb-4">\n' +
-                                                '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
-                                                '<span class="symbol-label"><img\n' +
-                                                'src="' + response.data.data.socialAccountDetails.profile_pic_url + '"\n' +
-                                                'class="h-75 align-self-end" alt=""/>\n' +
-                                                '</span></div>\n' +
-                                                '<div class="d-flex flex-column flex-grow-1">\n' +
-                                                '<a href="' + element.tweetUrl + '"\n' +
-                                                'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
-                                                '<span class="text-muted font-weight-bold">' + publishedDate + '</span>' +
-                                                '</div></div>\n';
-                                            if (element.mediaUrls.length > 0) {
-                                                if (element.postType === 'photo') {
-                                                    appendData += '<div class="pt-4">';
-                                                    element.mediaUrls.map(image => {
-                                                        appendData += '<div class=""><img src="' + image + '" class="img-fluid"/></div>'
-                                                    });
-                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                        '                                                                </p>';
-                                                } else if (element.postType === 'album') {
-                                                    appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
-                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                        '</p>';
-                                                } else {
-                                                    appendData += '<div class="pt-4">';
-                                                    element.mediaUrls.map(video => {
-                                                        appendData += ' <div\n' +
-                                                            'class="embed-responsive embed-responsive-16by9">\n' +
-                                                            '<iframe class="embed-responsive-item rounded"\n' +
-                                                            'src="' + video + '"\n' +
-                                                            'allowfullscreen=""></iframe>\n' +
-                                                            '</div>';
-
-                                                    });
-                                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description +
-                                                        '</p>';
-                                                }
-                                            } else {
-                                                appendData += '<div>\n' +
-                                                    '<p class="font-size-lg font-weight-normal">\n' + element.description +
-                                                    '</p>\n';
                                             }
-                                            appendData += '<div class="d-flex align-items-center">\n';
-                                            if (response.data.data.socialAccountDetails.account_type === 2) {
-                                                appendData += '<a href="javascript:;"\n' +
-                                                    'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                                    '<span\n' +
-                                                    'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                                    '<i class="fas fa-comments"></i>\n' +
-                                                    element.commentCount +
-                                                    '</span></a>\n';
-                                                if (element.isLiked === false) {
-                                                    appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                        'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                        'onclick="likeFeed(\'' + element.postId + '\')">\n' +
-                                                        '<span data-value="' + element.postId + '"\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                        'like-count="' + element.likeCount + '">\n' +
-                                                        '<i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                        '</span></a>\n';
-                                                } else {
-                                                    appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
-                                                        'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                        'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
-                                                        '<span data-value="' + element.postId + '"\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
-                                                        'like-count="' + element.likeCount + '">\n' +
-                                                        '<i class="fas fa-heart"></i>\n' + element.likeCount +
-                                                        '</span></a>\n';
-                                                }
-                                                if (element.mediaUrls.length > 0) {
-                                                    let postType = '';
-                                                    if (element.postType === 'photo' || element.postType === 'album') {
-                                                        postType = 'image'
-                                                    } else {
-                                                        postType = 'video'
-                                                    }
-                                                    appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null)"\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                                        '</span>Re-socio</a>\n';
-                                                } else {
-                                                    appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                                        '</span>Re-socio</a>\n';
-                                                }
-
-                                                appendData += '</div>\n' +
-                                                    '</div></div>\n' +
-                                                    '<div class="fb_cmt_div">\n' +
-                                                    '<form class="position-relative">\n' +
-                                                    '<textarea class="form-control border-0 pr-10 resize-none"\n' +
-                                                    'rows="1" placeholder="Reply..."\n' +
-                                                    'name="' + element.postId + '"></textarea>\n' +
-                                                    '<div name="' + element.postId + '"\n' +
-                                                    'value="' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                                    'id="commentButton"\n' +
-                                                    'class="position-absolute top-0 right-0 mt-1 mr-n2">\n' +
-                                                    '<span class="btn btn-icon btn-sm btn-hover-icon-primary">\n' +
-                                                    '<i class="fas fa-paper-plane"></i>\n' +
-                                                    '</span></div></form></div>\n';
-                                            } else {
-                                                if (element.mediaUrls.length > 0) {
-                                                    let type2 = '';
-                                                    if (element.postType === 'photo' || element.postType === 'album') {
-                                                        type2 = 'image'
-                                                    } else {
-                                                        type2 = 'video'
-                                                    }
-                                                    appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null)"\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                                        '</span>Re-socio</a>\n';
-                                                } else {
-                                                    appendData += '<a id="reSocioButton" value="' + element.description + '" href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                                        '</span>Re-socio</a>\n';
-                                                }
-                                            }
-
-                                            appendData += '</div><hr>\n';
-                                            $('#facebookFeeds').append(appendData);
-                                            $('div#image-gallery' + num).imagesGrid({
-                                                images: element?.mediaUrls
-                                            });
-                                            num++;
                                         });
                                     }
 
@@ -1095,7 +1400,7 @@
                         }
                     }
 
-                    var accountType = 0;
+                    let accountType;
 
                     /**
                      * TODO we've to get  the faebook feeds and data of a particular faecbook account on change of facebook ccounts from dropdown.
@@ -1104,8 +1409,10 @@
                      * ! Do not change this function without referring API format of getting the faecbook feeds.
                      */
                     function call(data) {
-                        accounId = data.value, accountType = data.accounttype;
-                        getfacebookFeeds(data.value, 1, accountType);
+                        let accountsData = data.value;
+                        let accountsArray = accountsData.split(" ");
+                        accounId = accountsArray[0], accountType = accountsArray[1];
+                        getfacebookFeeds(accountsArray[0], 1, accountsArray[1]);
                     }
 
                     /**
@@ -1157,7 +1464,7 @@
                      * @param {sourceUrl} sourceUrlon post.
                      * ! Do not change this function without referring API format of resocio.
                      */
-                    function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+                    function resocioButton(description, mediaUrl, type, title, sourceUrl, imagecount) {
                         publishOrFeeds = 1;
                         $('body').find('#resocioModal').remove();
                         let action = '/discovery/content_studio/publish-content/feeds-modal',
@@ -1179,6 +1486,12 @@
                                     pickerPosition: "right",
                                     tonesStyle: "bullet"
                                 });
+                                if (imagecount === 0 || imagecount === '0') {
+                                    $('.thumb-count').empty();
+                                } else {
+                                    $('.thumb-count').html('+' + (parseInt(imagecount)-1).toString());
+
+                                }
                                 setTimeout(function () {
                                     downloadMediaUrl('fb');
                                 }, 3000);
@@ -1192,5 +1505,12 @@
                             },
                         });
                     };
+
+                    function getUrlsFromDesc(text) {
+                        let replyText = text;
+                        let urls = replyText.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
+                        );
+                        return urls;
+                    }
                 </script>
 @endsection

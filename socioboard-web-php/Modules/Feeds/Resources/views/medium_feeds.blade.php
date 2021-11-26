@@ -29,7 +29,7 @@
                                         onchange="call(this)">
                                     @if($message=== 'success')
                                         <script>
-                                            var accounId = <?php echo $accounts[0]->account_id; ?>;
+                                            let accounId = <?php echo $accounts[0]->account_id; ?>;
                                         </script>
                                         <option disabled>Select Account</option>
                                         @foreach($accounts as $data)
@@ -165,33 +165,6 @@
                                                                     <p class="mt-2">{{$data->description}}</p>
                                                                 </div>
                                                                 </a>
-                                                                {{--                                                                                                                        <div class="medium-feeds-section">--}}
-                                                                {{--                                                                                                                            <div>--}}
-                                                                {{--                                                                                                                                <a href="#">--}}
-                                                                {{--                                                                                                                                    <img src="/media/grid-image1.jpg"--}}
-                                                                {{--                                                                                                                                         class="profile-img img-fluid"/>--}}
-                                                                {{--                                                                                                                                </a>--}}
-                                                                {{--                                                                                                                            </div>--}}
-                                                                {{--                                                                                                                            <div>--}}
-                                                                {{--                                                                                                                                <a href="#"--}}
-                                                                {{--                                                                                                                                   class="font-weight-bolder font-size-h5 text-hover-primary">George--}}
-                                                                {{--                                                                                                                                    J. Ziogas</a>--}}
-                                                                {{--                                                                                                                                <p class="mb-0">How to Write with Power</p>--}}
-                                                                {{--                                                                                                                            </div>--}}
-                                                                {{--                                                                                                                            <div class="ml-auto">--}}
-                                                                {{--                                                                                                                                <a href="#">--}}
-                                                                {{--                                                                                                                                    <i class="icon-xl far fa-bookmark"></i>--}}
-                                                                {{--                                                                                                                                    <i class="icon-xl fas fa-bookmark"></i>--}}
-                                                                {{--                                                                                                                                </a>--}}
-
-                                                                {{--                                                                                                                            </div>--}}
-                                                                {{--                                                                                                                        </div>--}}
-                                                                {{--                                                                                                                                <div class="mt-5">--}}
-                                                                {{--                                                                                                                                    <button type="button" data-toggle="modal"--}}
-                                                                {{--                                                                                                                                            data-target="#mediumfeed"--}}
-                                                                {{--                                                                                                                                            class="btn btn-primary">Start writting--}}
-                                                                {{--                                                                                                                                    </button>--}}
-                                                                {{--                                                                                                                                </div>--}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -258,15 +231,6 @@
                                        class="form-control form-control-solid py-4 rounded-lg font-size-h6 mb-4"
                                        placeholder="Enter text" id="titleText">
                             </div>
-                            {{--                    <div class="form-group">--}}
-                            {{--                        <label>Outgoing url</label>--}}
-                            {{--                        <div class="input-icon">--}}
-                            {{--                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"--}}
-                            {{--                                   type="text"--}}
-                            {{--                                   name="outgoing-url" autocomplete="off" placeholder="Enter Outgoing url">--}}
-                            {{--                            <span><i class="fas fa-link"></i></span>--}}
-                            {{--                        </div>--}}
-                            {{--                    </div>--}}
                             <div class="form-group">
                                 <label>Description:</label>
                                 <textarea class="form-control border-0 p-4" rows="6"
@@ -279,25 +243,6 @@
                                     <option label="Label"></option>
                                 </select>
                             </div>
-                            {{--                    <div class="d-flex">--}}
-                            {{--                        <ul class="btn-nav">--}}
-                            {{--                            <li>--}}
-                            {{--                                <span>--}}
-                            {{--                                    <i class="far fa-image fa-2x mr-2"></i>--}}
-                            {{--                                    <input type="file" name="" click-type="img-video-option" class="picupload"--}}
-                            {{--                                           multiple="" accept="image/*">--}}
-                            {{--                                </span>--}}
-                            {{--                            </li>--}}
-                            {{--                            <li>--}}
-                            {{--                                <span>--}}
-                            {{--                                    <i class="fas fa-video fa-2x"></i>--}}
-                            {{--                                    <input type="file" name="" click-type="img-video-option" class="picupload"--}}
-                            {{--                                           multiple="" accept="video/*">--}}
-                            {{--                                </span>--}}
-                            {{--                            </li>--}}
-                            {{--                        </ul>--}}
-                            {{--                    </div>--}}
-                            {{--                </div>--}}
                             <div class="modal-footer">
                                 <button type="button"
                                         class="btn text-hover-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 "
@@ -345,13 +290,13 @@
                         // end:normal post emoji
                         // begin:images and videos upload
                         $(function () {
-                            var names = [];
+                            let names = [];
                             $("#hint_brand").css("display", "none");
                             $("body").on("change", ".picupload", function (event) {
-                                var getAttr = $(this).attr("click-type");
-                                var files = event.target.files;
-                                var output = document.getElementById("media-list");
-                                var z = 0;
+                                let getAttr = $(this).attr("click-type");
+                                let files = event.target.files;
+                                let output = document.getElementById("media-list");
+                                let z = 0;
                                 if (getAttr == "type1") {
                                     $("#media-list").html("");
                                     $("#media-list").html(
@@ -359,15 +304,15 @@
                                     );
                                     $("#hint_brand").css("display", "block");
                                     $("#option_upload").css("display", "none");
-                                    for (var i = 0; i < files.length; i++) {
-                                        var file = files[i];
+                                    for (let i = 0; i < files.length; i++) {
+                                        let file = files[i];
                                         names.push($(this).get(0).files[i].name);
                                         if (file.type.match("image")) {
-                                            var picReader = new FileReader();
+                                            let picReader = new FileReader();
                                             picReader.fileName = file.name;
                                             picReader.addEventListener("load", function (event) {
-                                                var picFile = event.target;
-                                                var div = document.createElement("li");
+                                                let picFile = event.target;
+                                                let div = document.createElement("li");
                                                 div.innerHTML =
                                                     "<img src='" +
                                                     picFile.result +
@@ -380,11 +325,11 @@
                                                 $("#media-list").prepend(div);
                                             });
                                         } else {
-                                            var picReader = new FileReader();
+                                            let picReader = new FileReader();
                                             picReader.fileName = file.name;
                                             picReader.addEventListener("load", function (event) {
-                                                var picFile = event.target;
-                                                var div = document.createElement("li");
+                                                let picFile = event.target;
+                                                let div = document.createElement("li");
                                                 div.innerHTML =
                                                     "<video src='" +
                                                     picFile.result +
@@ -402,15 +347,15 @@
                                         picReader.readAsDataURL(file);
                                     }
                                 } else if (getAttr == "type2") {
-                                    for (var i = 0; i < files.length; i++) {
-                                        var file = files[i];
+                                    for (let i = 0; i < files.length; i++) {
+                                        let file = files[i];
                                         names.push($(this).get(0).files[i].name);
                                         if (file.type.match("image")) {
-                                            var picReader = new FileReader();
+                                            let picReader = new FileReader();
                                             picReader.fileName = file.name;
                                             picReader.addEventListener("load", function (event) {
-                                                var picFile = event.target;
-                                                var div = document.createElement("li");
+                                                let picFile = event.target;
+                                                let div = document.createElement("li");
                                                 div.innerHTML =
                                                     "<img src='" +
                                                     picFile.result +
@@ -423,13 +368,11 @@
                                                 $("#media-list").prepend(div);
                                             });
                                         } else {
-                                            var picReader = new FileReader();
+                                            let picReader = new FileReader();
                                             picReader.fileName = file.name;
                                             picReader.addEventListener("load", function (event) {
-                                                var picFile = event.target;
-
-                                                var div = document.createElement("li");
-
+                                                let picFile = event.target;
+                                                let div = document.createElement("li");
                                                 div.innerHTML =
                                                     "<video src='" +
                                                     picFile.result +
@@ -453,8 +396,8 @@
                                     .parent()
                                     .parent()
                                     .remove();
-                                var removeItem = $(this).attr("data-id");
-                                var yet = names.indexOf(removeItem);
+                                let removeItem = $(this).attr("data-id");
+                                let yet = names.indexOf(removeItem);
                                 if (yet != -1) {
                                     names.splice(yet, 1);
                                 }
@@ -487,13 +430,12 @@
                             }
                         });
 
-                        function getNextMediumFeeds(accounId, pageId)
-                        {
+                        function getNextMediumFeeds(accounId, pageId) {
                             $.ajax({
                                 type: 'get',
                                 url: '/get-user-posts',
                                 dataType: 'json',
-                                data: {accID: accounId,pageId: pageId},
+                                data: {accID: accounId, pageId: pageId},
                                 beforeSend: function () {
                                     $('#mediumFeeds').append('<div class="d-flex justify-content-center" >\n' +
                                         '<div class="spinner-border" role="status"  style="display: none;">\n' +
@@ -563,6 +505,45 @@
                                                         'class="img-fluid"/>\n' +
                                                         '</div>\n';
                                                 }
+                                                appendData += '<br>\n';
+                                                appendData += '<div class="d-flex align-items-center">\n';
+                                                if (imageurls !== '') {
+                                                    appendData += '<a id="reSocioButton"\n' +
+                                                        'onclick="resocioButton(\'' + title + '\',\'' + imageurls + '\',\'' + 'image' + '\',null,null)"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio\n' +
+                                                        '</a>\n';
+                                                } else if (isUrl === true) {
+                                                    appendData += '<a id="reSocioButton"\n' +
+                                                        'onclick="resocioButton(\'' + paragraphs + '\',null,null,null,null,\'' + paragraphs + '\')"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio\n' +
+                                                        '</a>\n';
+                                                } else {
+                                                    if (paragraphs !== '') {
+                                                        appendData += '<a id="reSocioButton"\n' +
+                                                            'onclick="resocioButton(\'' + paragraphs + '\',null,null,null,null,null)"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio\n' +
+                                                            '</a>\n';
+                                                    } else {
+                                                        appendData += '<a id="reSocioButton"\n' +
+                                                            'onclick="resocioButton(\'' + title + '\',null,null,null,null,null)"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio\n' +
+                                                            '</a>\n';
+                                                    }
+
+                                                }
+                                                appendData += '</div>\n';
                                                 appendData += '</div>\n' +
                                                     '</div>\n';
                                                 appendData += '</div>\n' +
@@ -587,7 +568,7 @@
                                 type: 'get',
                                 url: '/get-user-posts',
                                 dataType: 'json',
-                                data: {accID: accounId,pageId: 1},
+                                data: {accID: accounId, pageId: 1},
                                 beforeSend: function () {
                                     $('#mediumFeeds').empty().append('<div class="d-flex justify-content-center" >\n' +
                                         '<div class="spinner-border" role="status"  style="display: none;">\n' +
@@ -657,6 +638,45 @@
                                                         'class="img-fluid"/>\n' +
                                                         '</div>\n';
                                                 }
+                                                appendData += '<br>\n';
+                                                appendData += '<div class="d-flex align-items-center">\n';
+                                                if (imageurls !== '') {
+                                                    appendData += '<a id="reSocioButton"\n' +
+                                                        'onclick="resocioButton(\'' + title + '\',\'' + imageurls + '\',\'' + 'image' + '\',null,null)"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio\n' +
+                                                        '</a>\n';
+                                                } else if (isUrl === true) {
+                                                    appendData += '<a id="reSocioButton"\n' +
+                                                        'onclick="resocioButton(\'' + paragraphs + '\',null,null,null,null,\'' + paragraphs + '\')"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio\n' +
+                                                        '</a>\n';
+                                                } else {
+                                                    if (paragraphs !== '') {
+                                                        appendData += '<a id="reSocioButton"\n' +
+                                                            'onclick="resocioButton(\'' + paragraphs + '\',null,null,null,null,null)"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio\n' +
+                                                            '</a>\n';
+                                                    } else {
+                                                        appendData += '<a id="reSocioButton"\n' +
+                                                            'onclick="resocioButton(\'' + title + '\',null,null,null,null,null)"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                                            '</span>Re-socio\n' +
+                                                            '</a>\n';
+                                                    }
+
+                                                }
+                                                appendData += '</div>\n';
                                                 appendData += '</div>\n' +
                                                     '</div>\n';
                                                 appendData += '</div>\n' +
@@ -806,7 +826,7 @@
 
 
                         function isValidURL(str) {
-                            var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+                            let regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
                             if (!regex.test(str)) {
                                 return false;
                             } else {
@@ -815,15 +835,15 @@
                         }
 
                         function timeConverter(UNIX_timestamp) {
-                            var a = new Date(UNIX_timestamp * 1000);
-                            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            var year = a.getFullYear();
-                            var month = months[a.getMonth()];
-                            var date = a.getDate();
-                            var hour = a.getHours();
-                            var min = a.getMinutes();
-                            var sec = a.getSeconds();
-                            var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
+                            let a = new Date(UNIX_timestamp * 1000);
+                            let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            let year = a.getFullYear();
+                            let month = months[a.getMonth()];
+                            let date = a.getDate();
+                            let hour = a.getHours();
+                            let min = a.getMinutes();
+                            let sec = a.getSeconds();
+                            let time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec;
                             return time;
                         }
 

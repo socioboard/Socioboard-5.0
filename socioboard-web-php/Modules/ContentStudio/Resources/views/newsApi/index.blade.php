@@ -18,10 +18,10 @@
                 <!--begin::Row-->
                 <div class="row" data-sticky-container="">
                     {!! $html !!}
-                    <p id="notification">Please enter the keyword for find News Api’s </p>
+                    <p id="notification">Please enter the keyword to find News Api’s </p>
                     <div class="col-xl-8">
                         <!--begin::Feeds-->
-                        <div class="card-columns" id="list"></div>
+                        <div class="card-columns feeds-container feeds-card-container" id="list"></div>
                         <!--end::Feeds-->
                     </div>
                 </div>
@@ -43,4 +43,5 @@
     <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
 @endsection
+
 

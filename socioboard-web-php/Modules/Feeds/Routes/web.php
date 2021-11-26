@@ -35,4 +35,9 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPla
     Route::get('get-user-publications', 'FeedsController@getUserPublications');
     Route::post('publishOnMedium', 'FeedsController@publishOnMedium');
     Route::post('get-country-hashtags', 'FeedsController@getCountryHashtags');
+    Route::get('get-next-pinterest-feeds', 'FeedsController@getNextPinterestFeeds');
+    Route::get('show-boards/Pinterest{id}', 'FeedsController@showPinterestBoards');
+    Route::post('get-boards-on-change', 'FeedsController@getBoardsOnChange');
+    Route::get('/show-boards/get-pinterest-pins', 'FeedsController@showPinterestPins');
+
 });

@@ -64,6 +64,10 @@ const doc = {
       password: '9e7c5071f8dae2cfb8dc0a0c055cd8ce',
       username: 'mahi07bRao',
     },
+    UserLoginAppSumo: {
+      username: 'YOUR_NOTIFICATION_PROFILE_USERNAME',
+      password: 'YOUR_NOTIFICATION_PROFILE_PASSWORD',
+    },
     DirectLogin: {
       email: 'maheshglobussoft@gmail.com',
     },
@@ -154,6 +158,13 @@ const doc = {
         accountType: ['1', '2'],
         username: 'firstnameorlastname',
       },
+    },
+    AppSumoNotification: {
+      action: 'activate',
+      plan_id: 'yourproduct_tier1',
+      uuid: '65b9528a-702d-4326-9b23-3e0c37ce4553',
+      activation_email: 'othermail@test.com',
+      invoice_item_uuid: '01ae3d93-ec5f-44a8-b4b9-093cbd662164',
     },
   },
 };

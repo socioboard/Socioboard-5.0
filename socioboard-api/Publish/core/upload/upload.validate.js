@@ -39,11 +39,17 @@ class Validator {
       teamId: Joi.string()
         .required()
         .messages({'any.required': 'Team id required'}),
-      filterPeriod: Joi.number().integer().min(1).max(7).required().messages({
-        'any.required': 'Filtration id required',
-        'number.min': 'Filtration id must be greater than or equal to 1',
-        'number.max': 'Filtration id must be less than or equal to 7',
-      }),
+      filterPeriod: Joi.number()
+        .integer()
+        .min(1)
+        .max(7)
+        .allow()
+        .allow(null)
+        .default(null)
+        .messages({
+          'number.min': 'Filtration id must be greater than or equal to 1',
+          'number.max': 'Filtration id must be less than or equal to 7',
+        }),
       sortBy: Joi.string().valid('desc', 'asc').required().messages({
         'any.only': 'Sort by must be one of [desc, asc]',
       }),
@@ -67,6 +73,29 @@ class Validator {
         'date.base': 'Until date format should be YYYY-MM-DD',
         'any.required': 'Until date required for custom filtration',
       }),
+    }).options({abortEarly: false});
+    return JoiSchema.validate(data);
+  }
+
+  /**
+   * TODO Validate update user media details
+   * This function is used update user media input validations
+   * @param {Object} data - It will have multiple inputs
+   * @param {number} teamId - User team id
+   * @param {number} mediaId - Media Id
+   * @param {string} title - Title of media file
+   * @return {boolean} Returns the inputs are valid or not based on rules
+   */
+  updateMediaDetails(data) {
+    const JoiSchema = Joi.object({
+      rating: Joi.number().integer().allow('').min(1).max(7).messages({
+        'number.min': 'Rating must be greater than or equal to 1',
+        'number.max': 'Rating must be less than or equal to 5',
+      }),
+      mediaId: Joi.string().required().messages({
+        'any.required': 'Media Id required',
+      }),
+      title: Joi.string(),
     }).options({abortEarly: false});
     return JoiSchema.validate(data);
   }

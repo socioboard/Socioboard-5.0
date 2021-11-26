@@ -21,6 +21,7 @@ data-api="imgur">
     @endif
 
     <div class="card-body">
+        <div class="board-card">
         @if(isset($item->publisherName))
             @if(isset($item->sourceUrl) && filter_var($item->sourceUrl, FILTER_VALIDATE_URL))
                 <a href="{{$item->sourceUrl}}" class="d-block text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">{{ $item->publisherName }}</a>
@@ -48,6 +49,7 @@ data-api="imgur">
                 <textarea name="description" style="display: none">{{ $item->description }}</textarea>
                 <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder"><i class="fas fa-history fa-fw"></i> Schedule</button>
             </form>
+        </div>
         </div>
     </div>
 </div>

@@ -36,7 +36,7 @@
                         <div class="card card-custom gutter-b sticky">
                             <div class="competitive-list">
                                         <span class="nav-text">
-                                            <i class="fab fa-facebook fa-2x"></i>
+                                            <i class="fab fa-facebook fa-2x mt-2"></i>
                                         </span>
                                 <div class="competitive-list-block" id="facebookCompetitor">
                                     <div class="d-flex">
@@ -49,33 +49,36 @@
                             </div>
 
                             {{--            I'm commenting these becuase we don't want to show it in the Adding pannel                --}}
-                            {{--                                                        <hr>--}}
-                            {{--                                                        <div class="competitive-list">--}}
-                            {{--                                                                    <span class="nav-text">--}}
-                            {{--                                                                        <i class="fab fa-twitter fa-2x"></i>--}}
-                            {{--                                                                    </span>--}}
-                            {{--                                                            <div class="competitive-list-block" id="twitterCompetitor">--}}
-                            {{--                                                                <div class="d-flex">--}}
-                            {{--                                                                    <p> Coming soon</p>--}}
-                            {{--                                                                </div>--}}
-                            {{--                                                            </div>--}}
-                            {{--                                                        </div>--}}
-                            {{--                            <hr>--}}
-                            {{--                            <div class="competitive-list">--}}
-                            {{--                                        <span class="nav-text">--}}
-                            {{--                                            <i class="fab fa-youtube fa-2x"></i>--}}
-                            {{--                                        </span>--}}
-                            {{--                                <div class="competitive-list-block" id="youtubeCompetitor">--}}
-                            {{--                                    <div class="d-flex">--}}
-                            {{--                                        <p> Coming soon</p>--}}
-                            {{--                                    </div>--}}
-                            {{--                                </div>--}}
-                            {{--                            </div>--}}
                             <hr>
                             <div class="competitive-list">
-                                                                    <span class="nav-text">
-                                                                        <i class="fab fa-instagram fa-2x"></i>
-                                                                    </span>
+                                <span class="nav-text">
+                                    <i class="fab fa-twitter fa-2x"></i>
+                                </span>
+                                <div class="competitive-list-block" id="twitterCompetitor">
+                                    <div class="d-flex">
+                                        <p>Competitor List</p>
+                                    </div>
+                                    <div class="d-flex" id="fbLoading">
+                                        <p>Loading ...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="competitive-list">
+                                        <span class="nav-text">
+                                            <i class="fab fa-youtube fa-2x"></i>
+                                        </span>
+                                <div class="competitive-list-block" id="youtubeCompetitor">
+                                    <div class="d-flex">
+                                        <p> Competitor List</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="competitive-list">
+                                <span class="nav-text">
+                                    <i class="fab fa-instagram fa-2x"></i>
+                                </span>
                                 <div class="competitive-list-block" id="instagramCompetitor">
                                     <div class="d-flex">
                                         <p> Competitor List</p>
@@ -111,24 +114,25 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="inline-flex flex-wrap px-5">
+                                    <div class="competitor-overview">
+                                        <button type="button" class="btn" id="twitterTitle" title="Available"
+                                                onclick="activateMe('#twitterTitle')">
+                                            <span><i class="fab fa-twitter"></i></span>
+                                            <span>Twitter</span>
+                                        </button>
+                                    </div>
+                                </div>
 
-                                {{--            I'm commenting the down section as these are not yet Ready and don't want to show to users                    --}}
-                                {{--                                <div class="inline-flex flex-wrap px-5">--}}
-                                {{--                                    <div class="competitor-overview">--}}
-                                {{--                                        <button type="button" class="btn" id="twitterTitle" title="Coming Soon">--}}
-                                {{--                                            <span><i class="fab fa-twitter"></i></span>--}}
-                                {{--                                            <span>Twitter</span>--}}
-                                {{--                                        </button>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="inline-flex flex-wrap px-5">--}}
-                                {{--                                    <div class="competitor-overview">--}}
-                                {{--                                        <button type="button" class="btn" id="youTubeTitle" title="Coming Soon">--}}
-                                {{--                                            <span><i class="fab fa-youtube"></i></span>--}}
-                                {{--                                            <span>Youtube</span>--}}
-                                {{--                                        </button>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
+                                <div class="inline-flex flex-wrap px-5">
+                                    <div class="competitor-overview">
+                                        <button type="button" class="btn" id="youTubeTitle" title="Available"
+                                                onclick="activateMe('#youTubeTitle')">
+                                            <span><i class="fab fa-youtube"></i></span>
+                                            <span>YouTube</span>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="inline-flex flex-wrap px-5">
                                     <div class="competitor-overview">
                                         <button type="button" class="btn" id="instagramTitle" title="Available"
@@ -217,9 +221,8 @@
                             <option disabled>Social media platform list</option>
                             <option value="facebook" selected>Facebook</option>
                             <option value="instagram">Instagram</option>
-                            <option value="Coming soon" disabled>Sorry! as of now we've only One, Rest are Coming
-                                soon...
-                            </option>
+                            <option value="twitter">Twitter</option>
+                            <option value="youtube">YouTube</option>
                         </select>
                     </div>
                     <!--end::Form group-->
@@ -314,7 +317,10 @@
                     dates.push(fans_count[0]);
                     values.push(fans_count[1]);
                 });
-                seriesData.push({name: page?.page_user_name, data: values});
+                seriesData.push({
+                    name: SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name,
+                    data: values
+                });
             });
 
             let optionsLine = {
@@ -323,10 +329,10 @@
                     type: 'line',
                     dropShadow: {
                         enabled: true,
-                        top: 3,
-                        left: 2,
-                        blur: 4,
-                        opacity: 1,
+                        top: 2,
+                        left: 1,
+                        blur: 2,
+                        opacity: .5,
                     }
                 },
                 tooltip: {
@@ -336,7 +342,7 @@
                     curve: 'smooth',
                     width: 2
                 },
-                //colors: ["#3F51B5", '#2196F3'],
+                colors: ["#2BB527", '#000000', '#cc00ff', '#0033cc', '#ffff00', '#66ccff'],
                 series: seriesData,
                 markers: {
                     size: 6,
@@ -357,11 +363,6 @@
                         enabled: false
                     }
                 },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    offsetY: -20
-                }
             };
             const chartLine = new ApexCharts(document.querySelector('#fan_count_chart'), optionsLine);
             chartLine.render();
@@ -375,7 +376,10 @@
                     dates.push(fans_growth[0]);
                     values.push(fans_growth[1]);
                 });
-                seriesData.push({name: page?.page_user_name, data: values});
+                seriesData.push({
+                    name: SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name,
+                    data: values
+                });
             });
 
             let options = {
@@ -393,13 +397,14 @@
                                 opacity: 0.4
                             },
                             stroke: {
-                                color: '#0D47A1',
+                                color: '#C6A043',
                                 opacity: 0.4,
                                 width: 1
                             }
                         }
                     }
                 },
+                colors: ["#5b52e5", '#00ff00', '#0066ff', '#ff0066', '#ffff00', '#6699ff'],
                 plotOptions: {
                     bar: {
                         horizontal: false,
@@ -449,18 +454,27 @@
 
         function userEngagementChart(engagementData = []) {
             let seriesData = [], competitors = [];
-            let likes = [], comments = [], shares = [];
+            let keys = new Set();
+            let graphValues = {};
             engagementData.map(page => {
-                competitors.push(page?.page_user_name ?? 'Competitor');
-                likes.push(page?.like ?? 0);
-                comments.push(page?.comment ?? 0);
-                shares.push(page?.share ?? 0);
+                competitors.push(SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name ?? 'Competitor');
+                let keysForLoop = Object.keys(page);
+                keys = new Set([...keysForLoop, ...keys]);
+                keysForLoop.map(key => {
+                    graphValues[key] = graphValues.hasOwnProperty(key) ? [...graphValues[key] ?? 0, page[key] ?? 0] : [page[key] ?? 0];
+                });
             });
 
-            seriesData.push({name: "Comments", data: comments},
-                {name: "Likes", data: likes},
-                {name: "Shares", data: shares}
-            );
+            let {page_user_name, page_display_name, ...requiredObject} = graphValues;
+
+            let convertedKeys = toUpperCase(Object.keys(requiredObject));
+            let values = Object.values(requiredObject);
+            for (let i = 0; i < convertedKeys.length; i++) {
+                seriesData.push({
+                    name: convertedKeys[i], data: values[i]
+                });
+            }
+
             let options = {
                 series: seriesData,
                 chart: {
@@ -476,7 +490,7 @@
                                 opacity: 0.4
                             },
                             stroke: {
-                                color: '#0D47A1',
+                                color: '#C17E1B',
                                 opacity: 0.4,
                                 width: 1
                             }
@@ -532,22 +546,26 @@
 
         function postTypeEngagementChart(engagementData = []) {
             let seriesData = [], competitors = [];
-            let albums = [], nativeTemplates = [], photos = [], shares = [], videos = [];
+            let keys = new Set();
+            let graphValues = {};
             engagementData.map(page => {
-                competitors.push(page?.page_user_name ?? 'Competitor');
-                albums.push(page?.album ?? 0);
-                nativeTemplates.push(page?.native_templates ?? 0);
-                photos.push(page?.photo ?? 0);
-                shares.push(page?.share ?? 0);
-                videos.push(page?.video ?? 0);
+                competitors.push(SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name ?? 'Competitor');
+                let keysForLoop = Object.keys(page);
+                keys = new Set([...keysForLoop, ...keys]);
+                keysForLoop.map(key => {
+                    graphValues[key] = graphValues.hasOwnProperty(key) ? [...graphValues[key] ?? 0, page[key] ?? 0] : [page[key] ?? 0];
+                });
             });
-            seriesData.push(
-                {name: "Albums", data: albums},
-                {name: "Native Templates", data: nativeTemplates},
-                {name: "Photos", data: photos},
-                {name: "Shares", data: shares},
-                {name: "Videos", data: videos},
-            );
+
+            let {page_user_name, page_display_name, ...requiredObject} = graphValues;
+
+            let convertedKeys = toUpperCase(Object.keys(requiredObject));
+            let values = Object.values(requiredObject);
+            for (let i = 0; i < convertedKeys.length; i++) {
+                seriesData.push({
+                    name: convertedKeys[i], data: values[i]
+                });
+            }
 
             let options = {
                 series: seriesData,
@@ -612,7 +630,10 @@
                     dates.push(engagement[0]);
                     values.push(engagement[1]);
                 });
-                seriesData.push({name: page?.page_user_name, data: values});
+                seriesData.push({
+                    name: SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name,
+                    data: values
+                });
             });
 
             let optionsLine = {
@@ -640,7 +661,6 @@
                     curve: 'smooth',
                     width: 2
                 },
-                //colors: ["#3F51B5", '#2196F3'],
                 series: seriesData,
                 markers: {
                     size: 6,
@@ -649,6 +669,7 @@
                         size: 9
                     }
                 },
+                colors: ["#C1180A", '#38C116', '#9933ff', '#ffff00', '#33cccc', '#ff6600'],
                 grid: {
                     show: true,
                     padding: {
@@ -661,11 +682,6 @@
                         enabled: false
                     }
                 },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'right',
-                    offsetY: -20
-                }
             };
             const chartLine = new ApexCharts(document.querySelector('#post_engagement_chart'), optionsLine);
             chartLine.render();
@@ -681,46 +697,69 @@
                     dates.push(engagement[0]);
                     values.push(engagement[1].toFixed(2));
                 });
-                seriesData.push({name: page?.page_user_name, data: values});
+                seriesData.push({
+                    name: SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name,
+                    data: values
+                });
             });
 
             let options = {
                 series: seriesData,
                 chart: {
-                    type: 'bar',
+                    type: "bar",
                     height: 350,
-                    stacked: true,
-                    toolbar: {
-                        show: true
-                    },
                     zoom: {
-                        enabled: true
+                        enabled: true,
+                        type: 'x',
+                        autoScaleYaxis: false,
+                        zoomedArea: {
+                            fill: {
+                                color: '#90CAF9',
+                                opacity: 0.4
+                            },
+                            stroke: {
+                                color: '#1AA151',
+                                opacity: 0.4,
+                                width: 1
+                            }
+                        }
                     }
                 },
-                plotOptions: {
-                    bar: {
-                        horizontal: true,
-                    },
+                dataLabels: {
+                    enabled: false
                 },
                 stroke: {
+                    show: true,
                     width: 1,
-                    colors: ['#fff']
+                    colors: ["transparent"]
                 },
+                colors: ["#e8d129", '#a117c1', '#000000', '#33cc33', '#3333ff', '#ff66ff'],
                 xaxis: {
-                    categories: [...new Set(dates)],
+                    labels: {
+                        rotate: -45,
+                        style: {
+                            fontSize: "11px",
+                            cssClass: ".apexcharts-margin"
+                        },
+                    },
+                    categories: dates,
+                    tickPlacement: 'on'
                 },
                 yaxis: {
                     title: {
-                        text: undefined
-                    },
+                        text: "counts"
+                    }
                 },
                 fill: {
                     opacity: 1
                 },
-                legend: {
-                    position: 'top',
-                    horizontalAlign: 'left',
-                    offsetX: 40
+                tooltip: {
+                    theme: 'dark',
+                    y: {
+                        formatter: function (val) {
+                            return val;
+                        }
+                    }
                 }
             };
 
@@ -730,22 +769,26 @@
 
         function postTypeDistributionChart(distributionData = []) {
             let seriesData = [], competitors = [];
-            let albums = [], nativeTemplates = [], photos = [], shares = [], videos = [];
+            let keys = new Set();
+            let graphValues = {};
             distributionData.map(page => {
-                competitors.push(page?.page_user_name ?? 'Competitor');
-                albums.push(page?.album ?? 0);
-                nativeTemplates.push(page?.native_templates ?? 0);
-                photos.push(page?.photo ?? 0);
-                shares.push(page?.share ?? 0);
-                videos.push(page?.video ?? 0);
+                competitors.push(SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name ?? 'Competitor');
+                let keysForLoop = Object.keys(page);
+                keys = new Set([...keysForLoop, ...keys]);
+                keysForLoop.map(key => {
+                    graphValues[key] = graphValues.hasOwnProperty(key) ? [...graphValues[key] ?? 0, page[key] ?? 0] : [page[key] ?? 0];
+                });
             });
-            seriesData.push(
-                {name: "Albums", data: albums},
-                {name: "Native Templates", data: nativeTemplates},
-                {name: "Photos", data: photos},
-                {name: "Shares", data: shares},
-                {name: "Videos", data: videos},
-            );
+
+            let {page_user_name, page_display_name, ...requiredObject} = graphValues;
+
+            let convertedKeys = toUpperCase(Object.keys(requiredObject));
+            let values = Object.values(requiredObject);
+            for (let i = 0; i < convertedKeys.length; i++) {
+                seriesData.push({
+                    name: convertedKeys[i], data: values[i]
+                });
+            }
 
             let options = {
                 series: seriesData,
@@ -831,7 +874,7 @@
                 });
             });
 
-            let {page_user_name, ...requiredObject} = graphValues;
+            let {page_user_name, page_display_name, ...requiredObject} = graphValues;
 
             let convertedKeys = toUpperCase(Object.keys(requiredObject));
             let options = {
@@ -926,8 +969,13 @@
          * This function even update the list of competitors based on the Network
          * */
         function activateMe(whichOne = '#facebookTitle') {
-            let totalIdsSting = '#facebookTitle, #instagramTitle'; // Add rest 2 or more in future
-            let platformOption = {'#facebookTitle': 'facebook', '#instagramTitle': 'instagram'};
+            let totalIdsSting = '#facebookTitle, #instagramTitle, #twitterTitle, #youTubeTitle'; // Add rest 2 or more in future
+            let platformOption = {
+                '#facebookTitle': 'facebook',
+                '#instagramTitle': 'instagram',
+                '#youTubeTitle': 'youtube',
+                '#twitterTitle': 'twitter'
+            };
             SELECTED_PLATFORM = platformOption[whichOne];
             totalIdsSting.replace(whichOne, '');
             $(totalIdsSting).removeClass('active');
@@ -938,7 +986,7 @@
         }
 
         function addCompetitor() {
-            const networkTypesAvailable = ['facebook', 'instagram'];
+            const networkTypesAvailable = ['facebook', 'instagram', 'twitter', 'youtube'];
             let competitorId = $('#competitorId').val().trim().replaceAll('@', '').replaceAll('/', '');
             let platform = $('#networkTypes').find(":selected").val();
             if (networkTypesAvailable.includes(platform) && competitorId.length > 0) {
@@ -961,7 +1009,7 @@
                             checkToRemoveItOrNot(`#${platform}Competitor`);
                             $(`#${platform}Competitor`).append(`<div class="d-flex" id="${competitorId}">
                                                     <p>${competitorId}</p>
-                                                    <div class="ml-auto">
+                                                    <div class="ml-auto d-flex">
                                                         <a href="#" data-toggle="tooltip" data-placement="top" title=""
                                                            data-original-title="Just Added"><i
                                                                     class="fas fa-info-circle mx-5"></i></a>
@@ -1028,7 +1076,7 @@
                         $(`div[id='${RECENT_ID}']`).remove();
                         $(`#${RECENT_ID}-button`).prev('span').length ? $(`#${RECENT_ID}-button`).prev('span').remove() : $(`#${RECENT_ID}-button`).next('span').remove();
                         $(`#${RECENT_ID}-button`).remove();
-                        if ($(`#${parentId}`).length <= 1) $(`#${parentId}`).append('<div class="d-flex"><p>Competitor List</p></div>');
+                        if ($(`#${parentId}`).children('div').length < 1) $(`#${parentId}`).append('<div class="d-flex"><p>Competitor List</p></div>');
                         if (response?.code === 200) {
                             toastr.success('successfully Deleted')
                         } else {
@@ -1077,8 +1125,8 @@
                         data.map(competitor => {
                             let customInfoInHTML = `<b>Followers:</b> ${intToString(competitor?.page_followers) ?? '--'} <br/> <b>Likes:</b> ${intToString(competitor?.page_likes) ?? '--'} <br/> <b>Posts:</b> ${intToString(competitor?.post_count) ?? '--'}`;
                             $(`#${platform}Competitor`).append(`<div class="d-flex" id="${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names}">
-                                                    <p>${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}${isValidCompetitor(competitor)}</p>
-                                                    <div class="ml-auto">
+                                                    <p>${competitor?.status || competitor?.page_user_name ? platform === 'youtube' ? competitor?.page_display_name : competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}${isValidCompetitor(competitor)}</p>
+                                                    <div class="ml-auto d-flex">
                                                         <a href="#" data-toggle="tooltip" data-placement="top" title="" data-html="true"
                                                            data-original-title="${customInfoInHTML}"><i
                                                                     class="fas fa-info-circle mx-5"></i></a>
@@ -1124,11 +1172,11 @@
                 if (competitor?.status) startIndex = 1;
                 if (competitor?.status) {
                     $('#competitorSelectors').append(`<button type="button" class="rounded-pills ${startIndex ? 'mx-3' : 'mr-3'} competitor-filter-btn" id="${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names}-button">
-                                   ${SELECTED_PLATFORM !== 'instagram' ? `<span><img src="${competitor?.status ? competitor?.page_logo : '../media/icons/user.png'}" alt="Logo" class="user-black-logo normal-logo"></span>` :
+                                   ${SELECTED_PLATFORM !== 'instagram' ? `<span><img src="${competitor?.status ? competitor?.page_logo : '../media/icons/user.png'}" alt="Logo" class="user-black-logo normal-logo" onerror="this.onerror=null;this.src='../media/icons/user.png';"></span>` :
                         `<span class="iframe-container"><iframe src="https://img5.imginn.org/?${competitor?.page_logo}"
                                                                                 title="Logo" width="20" height="20" scrolling="no" frameborder="0"></iframe></span>`
                     }
-                                    <span>${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}</span>
+                                    <span value="${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}">${competitor?.status || competitor?.page_user_name ? SELECTED_PLATFORM === 'youtube' ? competitor?.page_display_name : competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}</span>
                                 </button>`);
                 }
             });
@@ -1166,7 +1214,7 @@
         function checkIsAnalysisOrEmpty() {
             let competitorNames = [];
             $('.competitor-filter-btn.active').each(function () {
-                competitorNames.push($(this).text().trim());
+                competitorNames.push($(this).children('span').eq(1).attr('value').trim());
             });
             if (!competitorNames.length) {
                 $('#vsDiv').nextAll('div').remove();
@@ -1189,10 +1237,10 @@
                 finalDivContent += `<div class="compare-box">
                                          <div class="compare-box-competitor">
                                           ${SELECTED_PLATFORM !== 'instagram' ?
-                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo">` :
+                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo" onerror="this.onerror=null;this.src='../media/icons/user.png';">` :
                     `<span class="iframe-container iframe-logo"><iframe src="https://img5.imginn.org/?${PROFILES[rank?.page_user_name]}" title="Logo" scrolling="no" frameborder="0"></iframe></span>`}
                                              <div class="compare-box-label">
-                                                 <div>${rank?.page_user_name ?? 'Name'}</div>
+                                                 <div>${SELECTED_PLATFORM === 'youtube' ? rank?.page_display_name : rank?.page_user_name ?? 'Name'}</div>
                                              </div>
                                          </div>
                                          <div class="compare-box-value">
@@ -1212,10 +1260,10 @@
                 finalDivContent += `<div class="compare-box">
                                          <div class="compare-box-competitor">
                                              ${SELECTED_PLATFORM !== 'instagram' ?
-                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo">` :
+                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo" onerror="this.onerror=null;this.src='../media/icons/user.png';">` :
                     `<span class="iframe-container iframe-logo"><iframe src="https://img5.imginn.org/?${PROFILES[rank?.page_user_name]}" title="Logo" scrolling="no" frameborder="0"></iframe></span>`}
                                              <div class="compare-box-label">
-                                                 <div>${rank?.page_user_name ?? 'Name'}</div>
+                                                 <div>${SELECTED_PLATFORM === 'youtube' ? rank?.page_display_name : rank?.page_user_name ?? 'Name'}</div>
                                              </div>
                                          </div>
                                          <div class="compare-box-value">
@@ -1235,10 +1283,10 @@
                 finalDivContent += `<div class="compare-box">
                                          <div class="compare-box-competitor">
                                             ${SELECTED_PLATFORM !== 'instagram' ?
-                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo">` :
+                    `<img src="${PROFILES[rank?.page_user_name]}" class="compare-box-logo" alt="logo" onerror="this.onerror=null;this.src='../media/icons/user.png';">` :
                     `<span class="iframe-container"><iframe src="https://img5.imginn.org/?${PROFILES[rank?.page_user_name]}" title="Logo" scrolling="no" frameborder="0"></iframe></span>`}
                                              <div class="compare-box-label">
-                                                 <div>${rank?.page_user_name ?? 'Name'}</div>
+                                                 <div>${SELECTED_PLATFORM === 'youtube' ? rank?.page_display_name : rank?.page_user_name ?? 'Name'}</div>
                                              </div>
                                          </div>
                                          <div class="compare-box-value">
@@ -1252,7 +1300,7 @@
 
         function comparativeColumns(comparatives = []) {
             comparatives.map(page => {
-                $('#page_talks').after(`<td><span>${SELECTED_PLATFORM !== 'instagram' ? SELECTED_PLATFORM !== 'twitter' ? page?.founded_on ?? '--' : intToString(page?.page_talks) ?? 0 : page?.business_account}</span></td>`);
+                $('#page_talks').after(`<td><span>${SELECTED_PLATFORM !== 'instagram' ? SELECTED_PLATFORM === 'twitter' ? page?.founded_on ?? '--' : SELECTED_PLATFORM === 'youtube' ? intToString(page?.total_views) ?? 0 : intToString(page?.page_talks) ?? 0 : page?.business_account}</span></td>`);
                 $('#max_change_fans').after(`<td><span>${intToString(page?.max_change_fans) ?? 0}</span></td>`);
                 $('#max_post_engagement').after(`<td><span>${intToString(page?.max_post_engagement) ?? 0}</span></td>`);
                 $('#post_most_on').after(`<td><span>${moment(page?.post_most_on?.[0], 'YYYY-MM-DD').format('MMM DD, YYYY') ?? 'Date '} (${page?.post_most_on?.[1] ?? 'Count'}) </span></td>`);
@@ -1264,7 +1312,7 @@
             let headerContent = '';
             let columnsContent = '';
             comparatives.map(page => {
-                headerContent += `<th style="min-width: 150px">${page?.page_user_name ?? 'Competitor Name'}</th>`;
+                headerContent += `<th style="min-width: 150px">${SELECTED_PLATFORM === 'youtube' ? page?.page_display_name : page?.page_user_name ?? 'Competitor Name'}</th>`;
             });
             $('#rankingDiv').next().remove();
             $('#rankingDiv').after(`<div class="card my-8 p-5" id="comparativeDiv">
@@ -1282,7 +1330,7 @@
                                         <tr>
                                             <td class="" id="page_talks">
                                                 <div class="d-flex align-items-center">
-                                                <div class="">${SELECTED_PLATFORM !== 'instagram' ? SELECTED_PLATFORM !== 'twitter' ? `Founded At` : `Talking about page` : 'Business Account'}
+                                                <div class="">${SELECTED_PLATFORM !== 'instagram' ? SELECTED_PLATFORM === 'twitter' ? `Founded At` : SELECTED_PLATFORM === 'youtube' ? 'Total Views' : `Talking about page` : 'Business Account'}
                                                 </div>
                                                     <a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="You see the page talks in this column and you can compare">
                                                         <i class="fas fa-info-circle mx-5"></i>
@@ -1341,7 +1389,7 @@
            <div class="form-group">
                </div></div></div>
                <div class="row" id="growthAndHistoryGraphsDiv">
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Fan Count</h3>
@@ -1361,7 +1409,7 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Fan Growth</h3>
@@ -1437,7 +1485,7 @@
 
         function postEngagement(postEngagement = [], avgEngagement = []) {
             let chartContent = `<div class="row" id="postEngagementDiv">
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Post Engagement Per Day</h3>
@@ -1457,7 +1505,7 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Average Post Engagement Per Day</h3>
@@ -1547,11 +1595,11 @@
                 <div class="card">
                     <div class="d-flex align-items-center p-4">
                         ${SELECTED_PLATFORM !== 'instagram' ? `<div class="symbol symbol-40 symbol-light-success mr-5">
-                            <img src="${PROFILES[post?.page_user_name] ?? '../media/svg/avatars/018-girl-9.svg'}" class="h-75 align-self-end" alt=""></div>` :
+                            <img src="${PROFILES[post?.page_user_name] ?? '../media/svg/avatars/018-girl-9.svg'}" class="h-75 align-self-end" alt="" onerror="this.onerror=null;this.src='../media/icons/user.png';"></div>` :
                 `<div class="iframe-container"><iframe src="https://img5.imginn.org/?${PROFILES[post?.page_user_name]}" title="Logo" scrolling="no" frameborder="0"></iframe></div>`}
 
                         <div class="d-flex flex-column flex-grow-1 ${SELECTED_PLATFORM === 'instagram' ? 'pl-5' : ''}">
-                            <a href="javascript:;" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">${post?.page_user_name ?? 'Name'}</a>
+                            <a href="javascript:;" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">${SELECTED_PLATFORM === 'youtube' ? post?.page_display_name ?? 'Name' : post?.page_user_name ?? 'Name'}</a>
                             <span class="font-weight-bold">${post?.dateCreated ?? moment()}</span>
                         </div>
                     </div>
@@ -1559,12 +1607,26 @@
                         <p>${post?.description ?? post?.caption ?? 'Description'}</p>
                         ${SELECTED_PLATFORM === 'instagram' ?
                 `<span class="iframe-container top-posts-image"> <iframe  src="https://img5.imginn.org/?${post?.mediaUrl}" title="Logo" scrolling="no" frameborder="0"></iframe></span>` :
-                `<img src="${post?.mediaURL?.[0] ?? `../media/grid-image${index + 1}.jpg`}" alt="Default Banner">`
+                `<img src="${['twitter', 'youtube'].includes(SELECTED_PLATFORM) ? post?.mediaUrl ?? `../media/grid-image${index + 1}.jpg` : post?.mediaURL?.[0] ?? `../media/grid-image${index + 1}.jpg`}" alt="Default Banner" onerror="this.onerror=null;this.src='../media/grid-image${index + 1}.jpg';">`
             }
                     </div>
                     <div class="px-4 analytic-post-card mb-5">
                         <ul>
+                            ${SELECTED_PLATFORM === 'twitter' ? `<li>
+                            <span>Favourite Count</span>
+                            <span><b>${post?.favoriteCount ?? '--'}</b></span>
+                            </li>
                             <li>
+                            <span>Quote Count</span>
+                            <span><b>${post?.quoteCount ?? '--'}</b></span>
+                            </li>
+                            <li>
+                            <span>Reply Count</span>
+                            <span><b>${post?.replyCount ?? '--'}</b></span>
+                            </li>
+                            <li><span>Re-Tweet Count</span>
+                            <span><b>${post?.retweetCount ?? '--'}</b></span>
+                            </li>` : `<li>
                             <span>Total Comments</span>
                             <span><b>${post?.commentCount ?? '--'}</b></span>
                             </li>
@@ -1572,9 +1634,14 @@
                             <span>Total Likes</span>
                             <span><b>${post?.likeCount ?? '--'}</b></span>
                             </li>
-                            ${SELECTED_PLATFORM !== 'instagram' ? `<li><span>Total Shares</span>
+                            ${SELECTED_PLATFORM !== 'instagram' ? SELECTED_PLATFORM === 'youtube' ?
+                `<li><span>Total Dis Likes</span>
+                            <span><b>${post?.dislikeCount ?? '0'}</b></span>
+                            </li><li><span>Total Views</span>
+                            <span><b>${post?.viewsCount ?? '0'}</b></span>
+                            </li>` : `<li><span>Total Shares</span>
                             <span><b>${post?.shareCount ?? '--'}</b></span>
-                            </li>` : ``}
+                            </li>` : ``}`}
                         </ul>
                     </div>
                 </div>

@@ -66,9 +66,8 @@ class DailymotionController extends Controller
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, null);
             $data = $this->helper->responseHandler($response['data'])['data'];
-            
-            if ($data == null)
-                return response()->json(['error'=>'<p id="notification"> End of the listing </p>']);
+            if ($data->dailymotionDetails == null)
+                return response()->json(['error'=>'No data available']);
             
             $html = view('contentstudio::dailyMotion.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
             return response()->json($html);

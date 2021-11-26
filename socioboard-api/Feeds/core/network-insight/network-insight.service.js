@@ -185,17 +185,43 @@ class NetworkService {
 
   async getYouTubeInsights(req, res, next) {
     try {
-      const { accountId, teamId, filterPeriod } = req.query;
-      const { value, error } = NetworkInsightValidate.validateTwtInsight({ accountId, teamId, filterPeriod });
+      const {accountId, teamId, filterPeriod} = req.query;
+      const {value, error} = NetworkInsightValidate.validateTwtInsight({
+        accountId,
+        teamId,
+        filterPeriod,
+      });
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
 
-      const getSocialAccDetails = await this.userTeamAccountLibs.getSocialAccount(9, accountId, req.body.userScopeId, teamId);
-      const dates = await this.getFilteredPeriod(filterPeriod, req.query.since, req.query.until); // modification required
-      const data = await this.googleHelper.youtubeInsights(getSocialAccDetails.refresh_token, encodeURIComponent(getSocialAccDetails.social_id), dates.since, dates.untill);
+      const getSocialAccDetails =
+        await this.userTeamAccountLibs.getSocialAccount(
+          9,
+          accountId,
+          req.body.userScopeId,
+          teamId
+        );
+      const dates = await this.getFilteredPeriod(
+        filterPeriod,
+        req.query.since,
+        req.query.until
+      ); // modification required
+      const data = await this.googleHelper.youtubeInsights(
+        getSocialAccDetails.refresh_token,
+        encodeURIComponent(getSocialAccDetails.social_id),
+        dates.since,
+        dates.untill
+      );
+      if (data?.error)
+        return ErrorResponse(
+          res,
+          data?.error?.message ?? 'Error in fethcing the Youutbe Insight'
+        );
       const response = await this.parseYoutubeData(data);
 
-      response ? SuccessResponse(res, response) : CatchResponse(res, 'Error in fethcing the Youutbe Insight');
+      response
+        ? SuccessResponse(res, response)
+        : CatchResponse(res, 'Error in fethcing the Youutbe Insight');
     } catch (error) {
       return CatchResponse(res, error.message);
     }

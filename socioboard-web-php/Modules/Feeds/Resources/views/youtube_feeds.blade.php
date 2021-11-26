@@ -73,21 +73,21 @@
                                                             class="flaticon2-correct text-primary icon-md ml-2"></i>
                                                 </a>
                                                 <div class="text-muted">
-                                                    {{$accounts[0]->email}}
+{{--                                                    {{$accounts[0]->email}}--}}
                                                 </div>
                                                 <!-- begin:account star rating -->
                                                 <div class="rating-css">
                                                     <div class="star-icon">
                                                         <input type="radio"
                                                                <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating1{{$accounts[0]->account_id}}}"
-                                                               onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
+                                                               id="rating1{{$accounts[0]->account_id}}"
+                                                               onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}');">
                                                         <label
                                                                 for="rating1{{$accounts[0]->account_id}}"
                                                                 class="fas fa-star"></label>
                                                         <input type="radio"
                                                                <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating2{{$accounts[0]->account_id}}}"
+                                                               id="rating2{{$accounts[0]->account_id}}"
                                                                onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
                                                         <label
                                                                 for="rating2{{$accounts[0]->account_id}}"
@@ -128,16 +128,14 @@
                                         <!--end::User-->
 
                                         <!--begin::Contact-->
-                                        <div class="py-9">
-                                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <span class="font-weight-bold mr-2">Subscription Count:</span>
-                                                <a href="javascript:;"
-                                                   class=" text-hover-primary">{{$feeds['data']->SocialAccountStats->subscription_count}}</a>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <span class="font-weight-bold mr-2">Feeds:</span>
-                                                <span class="">{{$feeds['data']->SocialAccountStats->total_post_count}}</span>
-                                            </div>
+                                        <div class="py-9" id="follower_counts-div">
+                                            @if($feeds['code'] === 200)
+                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                    <span class="font-weight-bold mr-2">Subscription Count:</span>
+                                                    <a href="javascript:;"
+                                                       class=" text-hover-primary">{{$feeds['data']->SocialAccountStats->subscription_count}}</a>
+                                                </div>
+                                            @endif
                                         </div>
                                         <!--end::Contact-->
                                     </div>
@@ -179,6 +177,9 @@
                                         @if(sizeof($feeds['data']->feeds) !== 0 )
                                             @foreach($feeds['data']->feeds as $data)
                                                 <div class="mb-5">
+                                                <?php $date =  new Datetime($data->publishedDate );
+                                                $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
+                                                ?>
                                                     <!--begin::Top-->
                                                     <div class="d-flex align-items-center">
                                                         <!--begin::Symbol-->
@@ -193,10 +194,10 @@
 
                                                         <!--begin::Info-->
                                                         <div class="d-flex flex-column flex-grow-1">
-                                                            <a href="javascript:;"
+                                                            <a href="{{$feeds['data']->socialAccountDetails->profile_url}}" target="_blank"
                                                                class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                             <span
-                                                                    class="text-muted font-weight-bold">{{$data->publishedDate}}</span>
+                                                                    class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                         </div>
                                                         <!--end::Info-->
                                                     </div>
@@ -227,7 +228,6 @@
                                                                     <span class="svg-icon svg-icon-md svg-icon-danger pr-1"
                                                                           onclick="likeTweet('{{$data->videoId}}')">
                                                                             <i class="fas fa-thumbs-up" id="likeCount">
-                                                                                {{ $data->isLiked==='like' ? 1 : 0 }}
                                                                             </i>
                                                                     </span>
                                                             </a>
@@ -238,12 +238,11 @@
                                                                           onclick="disLikeTweet('{{$data->videoId}}')">
                                                                             <i class="fas fa-thumbs-down"
                                                                                id="dislikeCount">
-                                                                                {{ $data->isLiked==='like' ? 0 : 1 }}
                                                                         </i>
                                                                     </span>
                                                             </a>
                                                             <a id="reSocioButton"
-                                                               onclick="resocioButton('{{$data->description}}','{{$data->mediaUrl[0]}}','video',null,null)"
+                                                               onclick="resocioButton('{{$data->description}}',null,'video',null,'{{$data->mediaUrl}}')"
                                                                class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-retweet"></i>
@@ -324,6 +323,7 @@
     {{--    <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
     <script src="/plugins/custom/dropify/dist/js/dropify.min.js"></script>
     <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+    <script src="{{asset('js/accounts.js')}}"></script>
     <script src="../plugins/custom/emojionearea/js/emojionearea.min.js"></script>
     <script>
         // begin::sticky
@@ -413,19 +413,22 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
+                    $('#youtubeFeeds').empty().append('<div class="d-flex justify-content-center" >\n' +
                         '        <div class="spinner-border" role="status"  id="' + pageid + '" style="display: none;">\n' +
                         '            <span class="sr-only">Loading...</span>\n' +
                         '        </div>\n' +
                         '\n' +
                         '        </div>');
                     $(".spinner-border").css("display", "block");
+                    $('#follower_counts-div').empty();
                 },
                 success: function (response) {
                     $(".spinner-border").css("display", "none");
                     if (response.code === 200) {
+                        let append= '';
+                        let appendData2= '';
                         $('#youtubeProfileDiv').empty();
-                        $('#youtubeProfileDiv').append('<div\n' +
+                        append+='<div\n' +
                             '                                            class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                             '                                            <div class="symbol-label"\n' +
                             '                                                 style="background-image:url(' + response.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
@@ -438,33 +441,45 @@
                             '                                                <i\n' +
                             '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                             '                                            </a>\n' +
-                            '  <div class="text-muted">\n' + response.data.socialAccountDetails.email +
-                            '                                            </div>' +
+                            // '  <div class="text-muted">\n' + response.data.socialAccountDetails.email +
+                            // '                                            </div>' +
                             '                                            <div class="rating-css">\n' +
-                            '                                                <div class="star-icon">\n' +
-                            '                                                    <input type="radio" name="rating1" id="rating1">\n' +
-                            '                                                    <label for="rating1" class="fas fa-star"></label>\n' +
-                            '                                                    <input type="radio" name="rating1" id="rating2">\n' +
-                            '                                                    <label for="rating2" class="fas fa-star"></label>\n' +
-                            '                                                    <input type="radio" name="rating1" id="rating3">\n' +
-                            '                                                    <label for="rating3" class="fas fa-star"></label>\n' +
-                            '                                                    <input type="radio" name="rating1" id="rating4">\n' +
-                            '                                                    <label for="rating4" class="fas fa-star"></label>\n' +
-                            '                                                    <input type="radio" name="rating1" id="rating5">\n' +
-                            '                                                    <label for="rating5" class="fas fa-star"></label>\n' +
-                            '                                                </div>\n' +
-                            '                                            </div>\n' +
+                            '                                                <div class="star-icon">\n' ;
+                        (response.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                            '<label for="rating1' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                            '<label for="rating1' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 2) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                            '<label for="rating2' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                            '<label for="rating2' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 3) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                            '<label for="rating3' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                            '<label for="rating3' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 4) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                            '<label for="rating4' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                            '<label for="rating4' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                            '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                            '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
+                        append += '</div></div>\n' +
                             '                                            <div class="mt-2">\n' +
                             '                                                <a id="chatID" href="javascript:;" \n' +
                             '                                                   class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" title="Coming soon">Chat</a>\n' +
                             '                                            </div>\n' +
-                            '                                        </div>');
-                        $(".spinner-border").css("display", "none");
+                            '                                        </div>';
+                        $('#youtubeProfileDiv').append(append);
+                        appendData2 = '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
+                            '<span class="font-weight-bold mr-2">Subscription Count:</span>\n' +
+                            '<span class=""\n' +
+                            'id="page_count">' + response.data.SocialAccountStats.subscription_count + '</span>\n' +
+                            '</div>';
+                        $('#follower_counts-div').append(appendData2);
                         feedsLength = response.data.feeds.length;
                         $('#youtubeFeeds').empty();
                         let appendData = '';
                         if (response.data.feeds.length > 0) {
                             response.data.feeds.map(element => {
+                                let createdDate = new Date(element.publishedDate),
+                                    published = String(createdDate).substring(0, 25);
                                 appendData = '<div class="mb-5">\n' +
                                     '                                            <div class="d-flex align-items-center">\n' +
                                     '                                                <!--begin::Symbol-->\n' +
@@ -474,11 +489,11 @@
                                     '                                                                 class="h-75 align-self-end" alt=""/>\n' +
                                     '                                                        </span>\n' +
                                     '                                                </div>\n' +
-                                    '                                                <div class="d-flex flex-column flex-grow-1">\n' +
-                                    '                                                    <a href="javascript:;"\n' +
-                                    '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                    '                                                <div class="d-flex flex-column flex-grow-1" >\n' +
+                                    '                                                    <a href="' + response.data.socialAccountDetails.profile_url + '" \n' +
+                                    '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                     '                                                    <span\n' +
-                                    '                                                        class="text-muted font-weight-bold">' + element.publishedDate + '</span>\n' +
+                                    '                                                        class="text-muted font-weight-bold">' + published + '</span>\n' +
                                     '                                                </div>\n' +
                                     '                                            </div>\n' +
                                     '                                            <div class="pt-4">\n' +
@@ -495,11 +510,6 @@
                                     '                                                                    <span class="svg-icon svg-icon-md svg-icon-danger pr-1"\n' +
                                     '                                                                          onclick="likeTweet(\'' + element.videoId + '\')">\n' +
                                     '                                                                            <i class="fas fa-thumbs-up" id="likeCount">\n';
-                                if (element.isLiked === 'like') {
-                                    appendData += 0;
-                                } else {
-                                    appendData += 1;
-                                }
                                 appendData += '                                                                            </i>\n' +
                                     '                                                                    </span>\n' +
                                     '                                                            </a>\n' +
@@ -510,20 +520,16 @@
                                     '                                                                          onclick="disLikeTweet(\'' + element.videoId + '\')">\n' +
                                     '                                                                            <i class="fas fa-thumbs-down"\n' +
                                     '                                                                               id="dislikeCount">\n';
-                                if (element.isLiked === 'like') {
-                                    appendData += 1;
-                                } else {
-                                    appendData += 0;
-                                }
                                 appendData += '                                                                        </i>\n' +
                                     '                                                                    </span>\n' +
                                     '                                                            </a>';
-                                appendData += '                                                    <a href="javascript:;"\n' +
-                                    '                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                appendData += '<a id="reSocioButton"\n' +
+                                    '                                                               onclick="resocioButton(\'' + element.description.replace(/\n/g, '') + '\',null,\'' + 'video' + '\',null,\'' + element.mediaUrl + '\')"\n' +
+                                    '                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
                                     '                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                     '                                                                    <i class="fas fa-retweet"></i>\n' +
                                     '                                                            </span>Re-socio\n' +
-                                    '                                                    </a>\n' +
+                                    '                                                            </a>' +
                                     '                                                </div>\n' +
                                     '                                            </div>\n' +
                                     '                                            <div class="fb_cmt_div">\n' +
@@ -567,7 +573,7 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
+                    $('#youtubeFeeds').append('<div class="d-flex justify-content-center" >\n' +
                         '        <div class="spinner-border" role="status"  id="' + pageid + '" style="display: none;">\n' +
                         '            <span class="sr-only">Loading...</span>\n' +
                         '        </div>\n' +
@@ -645,8 +651,8 @@
                                 '                                                        </span>\n' +
                                 '                                                </div>\n' +
                                 '                                                <div class="d-flex flex-column flex-grow-1">\n' +
-                                '                                                    <a href="javascript:;"\n' +
-                                '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                '                                                    <a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
+                                '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                 '                                                    <span\n' +
                                 '                                                        class="text-muted font-weight-bold">' + element.publishedDate + '</span>\n' +
                                 '                                                </div>\n' +
@@ -728,17 +734,12 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#dislikeCount,#likeCount').empty();
                 },
                 success: function (response) {
                     if (response.code === 200) {
                         toastr.success('Successfully Disliked Feed');
-                        $('#dislikeCount').append(1);
-                        $('#likeCount').append(0);
                     } else if (response.code === 400) {
                         toastr.error(response.error);
-                        $('#dislikeCount').append(0);
-                        $('#likeCount').append(1);
                     } else {
                         toastr.error('can not dislike ,some error occured');
                     }
@@ -753,7 +754,7 @@
          * !Do not change this function without referring API format of commenting on particular facebook feed of particular facebook account.
          */
         function commentOnFeed(videoId) {
-            let comment = $("textarea[name='" + videoID + "']").val();
+            let comment = $("textarea[name='" + videoId + "']").val();
             if (comment === '') {
                 toastr.error('Comment can not be empty', "");
             } else {
@@ -804,16 +805,12 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#dislikeCount,#likeCount').empty();
                 },
                 success: function (response) {
                     if (response.code === 200) {
                         toastr.success('Successfully Liked  Feed');
-                        $('#likeCount').append(1);
-                        $('#dislikeCount').append(0);
                     } else if (response.code === 400) {
                         toastr.error(response.error);
-                        $('#likeCount').append(1);
                     } else {
                         toastr.error('can not dislike ,some error occured');
                     }

@@ -39,6 +39,9 @@ var SBCalendarBasic = function() {
                 eventClick: function(info) {
                     $('#title').empty().append(info.event.title);
                     $('#description').empty().append(info.event.extendedProps.description);
+                    var gmtDateTime = moment.utc(info.event.extendedProps.dateTime, "YYYY-MM-DD h:mm:ss")
+                    var local = gmtDateTime.local().format('YYYY-MMM-DD h:mm:ss A');
+                    $('#created_date').empty().append(local);
                     $('#redirection').empty().append('<a href="'+info.event.extendedProps.redirection+'" class="btn text-hover-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 "\n' +
                         '                                           >Edit</a>');
                     $('#editcalenderbtn').modal('show')
@@ -105,6 +108,7 @@ jQuery(document).ready(function() {
                                 start: element.createdDate,
                                 extendedProps:  {
                                     redirection: response.url+'home/publishing/socioQueue-scheduling/'+element._id+'/1',
+                                    dateTime: element.createdDate,
                                 },
                                 description: element.description,
                                 className: "fc-event-danger fc-event-solid-warning",
@@ -115,6 +119,7 @@ jQuery(document).ready(function() {
                                 start: element.createdDate,
                                 extendedProps:  {
                                     redirection: response.url+'home/publishing/socioQueue-scheduling/'+element._id+'/1',
+                                    dateTime: element.createdDate,
                                 },
                                 description: element.description,
                                 className: "fc-event-solid-danger fc-event-light",

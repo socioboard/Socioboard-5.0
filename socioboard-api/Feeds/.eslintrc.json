@@ -1,0 +1,23 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest/globals": true
+    },
+    "extends": [
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        "import/extensions": "off",
+        "newline-after-var": ["error", "always"],
+        "newline-before-return": "error",
+        "eqeqeq": ["error", "smart"],
+        "no-tabs": "off",
+        "no-unused-vars": "error",
+        "class-methods-use-this": "off"
+    }
+}

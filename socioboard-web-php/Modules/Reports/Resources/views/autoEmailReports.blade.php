@@ -24,6 +24,7 @@
             <!--begin::Body-->
             <div class="card-body pt-0 pb-3">
                 <div class="table-responsive">
+                    @if(sizeof($data))
                     <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
                         <thead>
                         <tr>
@@ -161,7 +162,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="contents"
-                                                           class="col-form-label font-weight-bolder font-size-lg">Contents
+                                                           class="col-form-label font-weight-bolder font-size-lg">Contents to include in reports :
                                                         :</label>
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -259,6 +260,16 @@
                         @endforeach
                         </tbody>
                     </table>
+                    @else
+                        <div class="card-body">
+                            <div class="text-center">
+                                <div class="symbol symbol-150">
+                                    <img src="/media/svg/illustrations/no-feeds.svg" class="">
+                                </div>
+                                <h6>Currently no Added Scheduled reports</h6>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             <!--end::Body-->

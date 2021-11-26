@@ -155,8 +155,6 @@ $(document).ready(function () {
             success: function (response) {
                 $('#login_button').empty().append('Sign In');
                 if (response.code === 200) {
-                    document.cookie = 'bearer=' + response.data.accessToken;
-                    document.cookie = 'user_id=' + response.data.user.user_id;
                     window.location.href = "/dashboard";
                 } else if (response.code === 400) {
                     toastr.error(response.error);

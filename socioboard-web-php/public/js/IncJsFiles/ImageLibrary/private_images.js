@@ -15,7 +15,9 @@ function imageInfo(env, url, title, rating, createdDate, type, size) {
         '                        <i aria-hidden="true" class="ki ki-close"></i>\n' +
         '                    </button>');
     $('#size_id').empty().append(Number(size)/(1024*1024) + ' MB');
-    $('#create_date').empty().append(createdDate);
+    var gmtDateTime = moment.utc(createdDate, "YYYY-MM-DD h:mm:ss")
+    var local = gmtDateTime.local().format('YYYY-MMM-DD h:mm:ss A');
+    $('#create_date').empty().append(local);
     $('#type').empty().append(type);
     $('#ratng').empty().append('<i class="fas fa-star">' + rating + '</i></b></span>');
 
@@ -36,7 +38,7 @@ function updateRating(rating, accountId) {
         },
         success: function (response) {
             if (response.code === 200) {
-                toastr.success('Sucessfully Update Rating', "", {
+                toastr.success('Successfully Update Rating', "", {
                     timeOut: 1000,
                     fadeOut: 1000,
                     onHidden: function () {
@@ -56,12 +58,14 @@ function updateRating(rating, accountId) {
 }
 
 $(document).on('click', '#search_button', function (e) {
-    document.getElementById("vieww").value = $("#type_of_view").find(".active").attr('id');
+    let  idvalue =  $("#type_of_view").find(".active").attr('id')
+    document.getElementById("vieww").value = idvalue;
     $('#search_button').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
 })
 
 $(document).on('click', '#search_buttonss', function (e) {
-    document.getElementById("vieww").value = $("#type_of_views").find(".active").attr('id');
+    let  idvalue =  $("#type_of_views").find(".active").attr('id')
+    document.getElementById("vieww").value = idvalue;
     $('#search_buttonss').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
 })
 
@@ -130,7 +134,7 @@ function deleteImage() {
             }
         },
         error: function () {
-            toastr.error("Not able to load");
+            // toastr.error("Not able to load");
         }
     })
 
@@ -194,7 +198,7 @@ function imageUpload(privacy) {
             }
         },
         error: function () {
-            toastr.error("Not able to load");
+            // toastr.error("Not able to load");
         }
     })
 }
@@ -254,7 +258,7 @@ function getImages(pageID) {
                 } else {
                     $('#loader_id').hide();
                     IS_LAST = true;
-                    loadingFunction("No Image Found !", 2);
+                    loadingFunction("", 2);
                 }
             } else {
                 $('#loader_id').hide();
@@ -262,7 +266,7 @@ function getImages(pageID) {
             }
         },
         error: function () {
-            toastr.error("Not able to load");
+            // toastr.error("Not able to load");
         }
     })
 }

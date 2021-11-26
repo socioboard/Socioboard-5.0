@@ -23,6 +23,10 @@
         </script>
     @endif
     <script>
+        let plan_id = <?php echo(session()->get('user')['userDetails']['userPlanDetails']['plan_id']);?>;
+        let offerSession = <?php echo(session()->get('offer_session') !== null ? '1' : '0');?>;
+    </script>
+    <script>
         window.getCookie = function (name) {
             let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
             if (match) return match[2];
@@ -45,6 +49,12 @@
             <div class=" container-fluid ">
                 <!--begin::Dashboard-->
                 <!--begin::Row-->
+                @if(session()->get('user')['userDetails']['userPlanDetails']['plan_id'] === 0)
+                <div class="SB-blackfriday-sale d-flex align-items-center justify-content-center">
+                    <p>Socioboard: BlackFriday sale:  Get upto 30% off on  all  of our Monthly plans.</p>
+                    <a href="/plan-details-view" class="btn">Upgrade Now</a>
+                </div>
+                @endif
                 <div class="row">
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
@@ -403,16 +413,24 @@
                             <!--end::Header-->
 
                             <!--begin::Body-->
-                            <div class="card-body pt-2 position-relative">
-                                <button data-toggle="modal" data-target="#addAccountsModal"
-                                        class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12">
-                                    Add Accounts
-                                </button>
-                                <small class="text-center">*Note: Click on "<b> Add Accounts </b>"
+                            <div class="card-body pt-2 position-relative" id="accountsSectionDiv">
+                                <div class="d-flex">
+                                    <button data-toggle="modal"
+                                            data-target="#inviteModal"
+                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6 mr-3">Send
+                                        Invite
+                                    </button>
+                                    <button data-toggle="modal" data-target="#addAccountsModal"
+                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 ml-3 col-6">+ Add
+                                        Accounts
+                                    </button>
+                                </div>
+                                <small class="text-center">Click on "<b> Add Accounts </b>"
                                     button to add social
                                     profiles
                                 </small>
                                 <!-- begin:Add Accounts Modal-->
+                                <div class="modal fade" id="addAccountsModal" tabindex="-1"
                                 <div class="modal fade" id="addAccountsModal" tabindex="-1"
                                      role="dialog"
                                      aria-labelledby="addAccountsModalLabel" aria-hidden="true">
@@ -615,8 +633,8 @@
                                                                     a Twitter Profile</a>
                                                             </div>
                                                             <label class="checkbox mb-0 pt-5">
-                                                                <input id="checkboxes2" type="checkbox" name="sb-twt"
-                                                                >
+                                                                <input class="checkboxes2" type="checkbox" name="sb-twt"
+                                                                       onclick="followSBTwitter();">
                                                                 <span class="mr-2"></span>
                                                                 Follow Socioboard on twitter for update
                                                                 & announcements
@@ -720,7 +738,8 @@
                                                                     a LinkedIn page</a>
                                                             </div>
                                                             @if($LinkedInpages === 1)
-                                                                <div class="mt-3 linkedIn_Pages_div" style="display: none;">
+                                                                <div class="mt-3 linkedIn_Pages_div"
+                                                                     style="display: none;">
                                                                     <span>Choose LinkedIN pages accounts for posting</span>
                                                                     <div class="scroll scroll-pull" data-scroll="true"
                                                                          data-wheel-propagation="true"
@@ -788,6 +807,37 @@
                                                                 must first give authorization from the
                                                                 Youtube
                                                                 Channel.</p>
+                                                            <p><strong>Important Notes:</strong></p>
+                                                            <ol class="twitter-add-accounts">
+                                                                <li>
+                                                                    YouTube's Terms of Services link <br/>
+                                                                    <strong>Please Visit -</strong>
+                                                                    <a href="https://www.youtube.com/t/terms">
+                                                                        https://www.youtube.com/t/terms</a>
+                                                                </li>
+                                                                <li>
+                                                                    Google privacy policy Link <br/>
+                                                                    <strong>Please Visit -</strong>
+                                                                    <a href="https://policies.google.com/privacy">
+                                                                        https://policies.google.com/privacy</a>
+                                                                </li>
+                                                                <li>
+                                                                    Google security settings page about revoking user
+                                                                    access <br/>
+                                                                    <strong>Please Visit -</strong>
+                                                                    <a href="https://myaccount.google.com/permissions?pli=1">
+                                                                        https://myaccount.google.com/permissions?pli=1</a>
+                                                                </li>
+                                                                <li>
+                                                                    Handling YouTube Data and Content <br/>
+                                                                    <strong>Official Terms -</strong>
+                                                                    <a href="https://developers.google.com/youtube/terms/developer-policies#e.-handling-youtube-data-and-content">
+                                                                        https://developers.google.com/youtube/terms/developer-policies#e.-handling-youtube-data-and-content.</a>
+                                                                </li>
+                                                            </ol>
+                                                            <p>Storing of Data will be max 30 days.</p>
+                                                            <strong>Please go throw all the links for Terms and
+                                                                Policies</strong>
                                                             <div class="d-flex justify-content-center">
                                                                 <a href="add-accounts/Youtube"
                                                                    type="button"
@@ -800,31 +850,80 @@
                                                              id="pinterest-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="pinterest-tab-accounts">
-                                                            {{--                                                            <p>Grant access to your profile to share updates and view--}}
-                                                            {{--                                                                your feed.</p>--}}
-                                                            <p>This feature is coming soon,it's under
-                                                                development</p>
-                                                            {{--                                                            <div class="d-flex justify-content-center">--}}
-                                                            {{--                                                                <a href="#" type="button"--}}
-                                                            {{--                                                                   class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                                            {{--                                                                    a Pinterest Profile</a>--}}
-                                                            {{--                                                            </div>--}}
+                                                            <p>Grant access to your profile to share updates and view
+                                                                your feed.</p>
+                                                            <div class="d-flex justify-content-center">
+                                                                <a href="add-accounts/Pinterest" type="button"
+                                                                   class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                    a Pinterest Profile</a>
+                                                            </div>
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="tumblr-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="tumblr-tab-accounts">
-                                                            {{--                                                            <p>Grant access to your profile to share updates and view--}}
-                                                            {{--                                                                your feed.</p>--}}
-                                                            <p>This feature is coming soon, it's under
-                                                                development</p>
-                                                            {{--                                                            <div class="d-flex justify-content-center">--}}
-                                                            {{--                                                                <a href="#" type="button"--}}
-                                                            {{--                                                                   class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                                            {{--                                                                    a Tumblr Profile</a>--}}
-                                                            {{--                                                            </div>--}}
-
+                                                            <p>Grant access to your profile to share updates and view
+                                                                your feed.</p>
+                                                            <div class="d-flex justify-content-center">
+                                                                <a href="/add-accounts/Tumblr" type="button"
+                                                                   class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                    a Tumblr Profile</a>
+                                                            </div>
                                                         </div>
+                                                        @if($bloggedpages === 1)
+                                                            <div class="mt-3 tb_page_div" style="display: none;">
+                                                                <span>Choose Blooged pages for posting</span>
+                                                                <div class="scroll scroll-pull" data-scroll="true"
+                                                                     data-wheel-propagation="true"
+                                                                     style="height: 200px; overflow-y: scroll;">
+                                                                @for($i=0; $i<count(session()->get('blogs')); $i++)                                                                        <!--begin::Page-->
+                                                                    <div class="d-flex align-items-center flex-grow-1">
+                                                                        <!--begin::Facebook Fanpage Profile picture-->
+                                                                        <div class="symbol symbol-45 symbol-light mr-5">
+                                                <span class="symbol-label">
+                                                    <img src="{{session()->get('blogs')[$i]->ProfilePicture}}"
+                                                         class="h-50 align-self-center" alt=""/>
+                                                </span>
+                                                                        </div>
+                                                                        <!--end::Facebook Fanpage Profile picture-->
+                                                                        <!--begin::Section-->
+                                                                        <div
+                                                                                class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                                                            <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                                                                <a href="{{session()->get('blogs')[$i]->ProfileUrl}}"
+                                                                                   class="font-weight-bold text-hover-primary font-size-lg mb-1">
+                                                                                    {{session()->get('blogs')[$i]->FirstName}}
+                                                                                </a>
+                                                                                <span class="text-muted font-weight-bold">
+                                                        {{session()->get('blogs')[$i]->FriendCount}} followers
+                                                    </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        @if(session()->get('blogs')[$i]->isAlreadyAdded===false)
+                                                                            <div
+                                                                                    class="custom-control custom-checkbox"
+                                                                                    id="checkboxes3">
+                                                                                <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4"
+                                                                                       for="{{session()->get('blogs')[$i]->SocialId}}">
+                                                                                    <input type="checkbox"
+                                                                                           id="{{session()->get('blogs')[$i]->SocialId}}"
+                                                                                           name="{{session()->get('blogs')[$i]->FirstName}}">
+                                                                                    <span></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                    @endfor
+
+                                                                </div>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="javascript:;" type="button"
+                                                                       id="checkedPages4"
+                                                                       class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Submit
+                                                                        for adding blogged pages</a>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
 
@@ -842,133 +941,162 @@
                                         <?php $count = 0; ?>
                                         @if(count($accounts['data']->teamSocialAccountDetails[0]->SocialAccount)!==0)
                                             @foreach($accounts['data']->teamSocialAccountDetails[0]->SocialAccount as $account)
+                                                @if($account->account_type !== 13 && $account->account_type !== 14)
+                                                    <?php if ($count == 7) break; ?>
+                                                <!--begin::Item-->
+                                                    @if($account->join_table_teams_social_accounts->is_account_locked === true)
+                                                        <div
+                                                                class="d-flex align-items-center flex-wrap mb-5 mt-5  ribbon ribbon-clip ribbon-left"
+                                                                id="accountsSection{{$account->account_id}}">
 
-                                                <?php if ($count == 7) break; ?>
-                                            <!--begin::Item-->
-                                                @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                    <div
-                                                            class="d-flex align-items-center flex-wrap mb-5 mt-5  ribbon ribbon-clip ribbon-left">
-
-                                                        <div class="ribbon-target" style="top: 12px;">
-                                                            <span class="ribbon-inner bg-danger"></span>
-                                                            locked
-                                                        </div>
-                                                        @else
-                                                            <div class="d-flex align-items-center flex-wrap mb-5 mt-5" id="accountsSection{{$account->account_id}}">
-                                                            @endif
-                                                            <!--begin::profile pic-->
-                                                                <div class="symbol symbol-50 symbol-light mr-5">
+                                                            <div class="ribbon-target" style="top: 12px;">
+                                                                <span class="ribbon-inner bg-danger"></span>
+                                                                locked
+                                                            </div>
+                                                            @else
+                                                                <div class="d-flex align-items-center flex-wrap mb-5 mt-5"
+                                                                     id="accountsSection{{$account->account_id}}">
+                                                                @endif
+                                                                <!--begin::profile pic-->
+                                                                    <div class="symbol symbol-50 symbol-light mr-5">
 
                                                     <span class="symbol-label">
                                                             <img src="{{$account->profile_pic_url}}"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                     </span>
-                                                                </div>
-                                                                <!--end::profile pic-->
+                                                                    </div>
+                                                                    <!--end::profile pic-->
 
-                                                                <!--begin::Text-->
-                                                                <div class="d-flex flex-column flex-grow-1 mr-2">
-                                                                    @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                                        <a class="font-weight-bold font-size-lg mb-1 truncate"
-                                                                           id="name" data-toggle="tooltip"
-                                                                           title="{{$account->first_name}}{{$account->last_name}}"
-                                                                           disabled
-                                                                        >{{$account->first_name}}{{$account->last_name}}  </a>
-                                                                    @else
-                                                                        <a id="name"
-                                                                           class="font-weight-bold font-size-lg mb-1 truncate"
-                                                                           data-toggle="tooltip"
-                                                                           title="{{$account->first_name}}{{$account->last_name}}"
-                                                                        >{{$account->first_name}}{{$account->last_name}}</a  id="name">
-                                                                    @endif
-                                                                    @if($account->account_type === 1 || $account->account_type === 3)
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Facebook</span>
-                                                                    @elseif($account->account_type === 2 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Facebook page</span>
-                                                                    @elseif($account->account_type === 4 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Twitter</span>
-                                                                    @elseif($account->account_type === 5 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Instagram</span>
-                                                                    @elseif($account->account_type === 6 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">LinkedIn</span>
+                                                                    <!--begin::Text-->
+                                                                    <div class="SB-accounts-section d-flex flex-column flex-grow-1 mr-2">
+                                                                        @if($account->join_table_teams_social_accounts->is_account_locked == true)
+                                                                            <a class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                               id="name" data-toggle="tooltip"
+                                                                               title="{{$account->first_name}}{{$account->last_name}}"
+                                                                               disabled
+                                                                            >{{$account->first_name}}{{$account->last_name}}  </a>
+                                                                        @else
+                                                                            <a id="name"
+                                                                               class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                               data-toggle="tooltip"
+                                                                               title="{{$account->first_name}}{{$account->last_name}}"
+                                                                            >{{$account->first_name}}{{$account->last_name}}</a  id="name">
+                                                                        @endif
+                                                                        @if($account->account_type === 1 || $account->account_type === 3)
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Facebook</span>
+                                                                        @elseif($account->account_type === 2 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Facebook page</span>
+                                                                        @elseif($account->account_type === 4 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Twitter</span>
+                                                                        @elseif($account->account_type === 5 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Instagram</span>
+                                                                        @elseif($account->account_type === 6 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">LinkedIn</span>
                                                                         @elseif($account->account_type === 7 )
                                                                             <span
                                                                                     class="text-muted font-weight-bold">LinkedIn page</span>
-                                                                    @elseif($account->account_type === 9 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Youtube</span>
-                                                                    @elseif($account->account_type === 8 || $account->account_type === 10 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Google</span>
-                                                                    @elseif( $account->account_type === 12 )
-                                                                        <span
-                                                                                class="text-muted font-weight-bold">Instagram Business</span>
-
-                                                                    @endif
-                                                                </div>
-                                                                <!--end::Text-->
-                                                                @if($account->join_table_teams_social_accounts->is_account_locked === false)
-                                                                    @if($account->account_type === 2 || $account->account_type === 1)
-                                                                        <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           id="connectedButton" title="View Profile"
-                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                            Connected</a>
-                                                                    @elseif($account->account_type === 9)
-                                                                        <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           id="connectedButton" title="View Profile"
-                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                            Connected</a>
-                                                                    @elseif($account->account_type === 4)
-                                                                        <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           id="connectedButton" title="View Profile"
-                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                            Connected</a>
-                                                                    @elseif($account->account_type === 5)
-                                                                        <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           id="connectedButton" title="View Profile"
-                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                            Connected</a>
+                                                                        @elseif($account->account_type === 9 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Youtube</span>
+                                                                        @elseif($account->account_type === 8 || $account->account_type === 10 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Google</span>
+                                                                        @elseif( $account->account_type === 12 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Instagram Business</span>
+                                                                        @elseif( $account->account_type === 16 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Tumblr</span>
+                                                                        @elseif( $account->account_type === 11 )
+                                                                            <span
+                                                                                    class="text-muted font-weight-bold">Pinterest</span>
+                                                                        @endif
+                                                                    </div>
+                                                                    <!--end::Text-->
+                                                                    @if($account->join_table_teams_social_accounts->is_account_locked === false)
+                                                                        @if( $account->account_type === 1)
+                                                                            <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 2)
+                                                                            <a href="{{env('APP_URL')}}feeds/fbPages{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 9)
+                                                                            <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 4)
+                                                                            <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 5)
+                                                                            <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 7)
+                                                                            <a href="{{env('APP_URL')}}feeds/linkedIn{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 12)
+                                                                            <a href="{{env('APP_URL')}}feeds/Business{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @elseif($account->account_type === 11)
+                                                                            <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">Connected</a>
+                                                                        @else
+                                                                            <a href="{{$account->profile_url}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
+                                                                        @endif
                                                                     @else
-                                                                        <a href="{{$account->profile_url}}"
-                                                                           target="_blank"
-                                                                           id="connectedButton" title="View Profile"
-                                                                           class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                            Connected</a>
-                                                                    @endif
-                                                                @else
-                                                                    <a
-                                                                            class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
-                                                                        Not Connected</a>
-                                                            @endif
-                                                            <!--begin::Account Dropdown-->
-                                                                <div class="dropdown dropdown-inline ml-2"
-                                                                     id="quick_actions"
-                                                                     title="Quick actions"
-                                                                     data-placement="left">
-                                                                    <a href="javascript:;"
-                                                                       class="btn btn-hover-light-primary btn-sm btn-icon"
-                                                                       data-toggle="dropdown"
-                                                                       aria-haspopup="true"
-                                                                       aria-expanded="false">
-                                                                        <i class="ki ki-bold-more-hor"></i>
-                                                                    </a>
-                                                                    <div
-                                                                            class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                                                        <!--begin::Navigation-->
-                                                                        <ul class="navi navi-hover">
-                                                                            @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                                                <li class="navi-item">
-                                                                                    <a href="javascript:;"
-                                                                                       class="navi-link">
+                                                                        <a
+                                                                                class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                            Not Connected</a>
+                                                                @endif
+                                                                <!--begin::Account Dropdown-->
+                                                                    <div class="dropdown dropdown-inline ml-2"
+                                                                         id="quick_actions"
+                                                                         title="Quick actions"
+                                                                         data-placement="left">
+                                                                        <a href="javascript:;"
+                                                                           class="btn btn-hover-light-primary btn-sm btn-icon"
+                                                                           data-toggle="dropdown"
+                                                                           aria-haspopup="true"
+                                                                           aria-expanded="false">
+                                                                            <i class="ki ki-bold-more-hor"></i>
+                                                                        </a>
+                                                                        <div
+                                                                                class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
+                                                                            <!--begin::Navigation-->
+                                                                            <ul class="navi navi-hover">
+                                                                                @if($account->join_table_teams_social_accounts->is_account_locked == true)
+                                                                                    <li class="navi-item">
+                                                                                        <a href="javascript:;"
+                                                                                           class="navi-link">
                                                                     <span class="navi-text">
                                                                         <span
                                                                                 class="label label-xl label-inline label-primary"
@@ -976,12 +1104,12 @@
                                                                                     class="fas fa-user-lock fa-fw text-white"></i>&nbsp; Un-Lock This Account</span>
 
                                                                     </span>
-                                                                                    </a>
-                                                                                </li>
-                                                                            @else
-                                                                                <li class="navi-item">
-                                                                                    <a href="javascript:;"
-                                                                                       class="navi-link">
+                                                                                        </a>
+                                                                                    </li>
+                                                                                @else
+                                                                                    <li class="navi-item">
+                                                                                        <a href="javascript:;"
+                                                                                           class="navi-link">
                                                                     <span class="navi-text">
                                                                         <span
                                                                                 class="label label-xl label-inline label-primary"
@@ -989,73 +1117,74 @@
                                                                                     class="fas fa-user-lock fa-fw text-white"></i>&nbsp; Lock This Account</span>
 
                                                                     </span>
-                                                                                    </a>
-                                                                                </li>
-                                                                            @endif
-                                                                            <li class="navi-item">
-                                                                                <a href="javascript:;"
-                                                                                   class="navi-link"
-                                                                                   data-toggle="modal"
-                                                                                   data-target="#accountDeleteModal{{$account->account_id}}">
+                                                                                        </a>
+                                                                                    </li>
+                                                                                @endif
+                                                                                <li class="navi-item">
+                                                                                    <a href="javascript:;"
+                                                                                       class="navi-link"
+                                                                                       data-toggle="modal"
+                                                                                       data-target="#accountDeleteModal{{$account->account_id}}">
                                                                     <span class="navi-text">
                                                                         <span
                                                                                 class="label label-xl label-inline label-danger"><i
                                                                                     class="far fa-trash-alt fa-fw text-white"></i> Delete This Account</span>
 
                                                                     </span>
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                        <!--end::Navigation-->
-                                                                    </div>
-                                                                </div>
-                                                                <!--end::Account Dropdown-->
-                                                            </div>
-                                                            <!--end::Item-->
-                                                            <?php $count++; ?>
-                                                            <div class="modal fade"
-                                                                 id="accountDeleteModal{{$account->account_id}}"
-                                                                 tabindex="-1"
-                                                                 role="dialog"
-                                                                 aria-labelledby="teamDeleteModalLabel"
-                                                                 aria-hidden="true">
-                                                                <div class="modal-dialog modal-dialog-centered modal-lg"
-                                                                     role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title"
-                                                                                id="teamDeleteModalLabel">Delete
-                                                                                This Account</h5>
-                                                                            <button type="button" class="close"
-                                                                                    data-dismiss="modal"
-                                                                                    aria-label="Close">
-                                                                                <i aria-hidden="true"
-                                                                                   class="ki ki-close"></i>
-                                                                            </button>
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                            <!--end::Navigation-->
                                                                         </div>
-                                                                        <div class="modal-body">
-                                                                            <div class="text-center">
-                                                                                <img
-                                                                                        src="/media/svg/icons/Communication/Delete-user.svg"/><br>
-                                                                                <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>
-                                                                            </div>
-                                                                            <div class="d-flex justify-content-center">
-                                                                                <button type="submit"
-                                                                                        onclick="deleteSocialAcc('{{$account->account_id}}','{{$account->account_type}}')"
-                                                                                        class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                                                        id="{{$account->account_id}}"
-                                                                                        data-dismiss="modal">
-                                                                                    Delete it
+                                                                    </div>
+                                                                    <!--end::Account Dropdown-->
+                                                                </div>
+                                                                <!--end::Item-->
+                                                                <?php $count++; ?>
+                                                                <div class="modal fade"
+                                                                     id="accountDeleteModal{{$account->account_id}}"
+                                                                     tabindex="-1"
+                                                                     role="dialog"
+                                                                     aria-labelledby="teamDeleteModalLabel"
+                                                                     aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered modal-lg"
+                                                                         role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="teamDeleteModalLabel">Delete
+                                                                                    This Account</h5>
+                                                                                <button type="button" class="close"
+                                                                                        data-dismiss="modal"
+                                                                                        aria-label="Close">
+                                                                                    <i aria-hidden="true"
+                                                                                       class="ki ki-close"></i>
                                                                                 </button>
-                                                                                <a href="javascript:;" type="button"
-                                                                                   class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                                                   data-dismiss="modal">No
-                                                                                    thanks.</a>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="text-center">
+                                                                                    <img
+                                                                                            src="/media/svg/icons/Communication/Delete-user.svg"/><br>
+                                                                                    <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>
+                                                                                </div>
+                                                                                <div class="d-flex justify-content-center">
+                                                                                    <button type="submit"
+                                                                                            onclick="deleteSocialAcc('{{$account->account_id}}','{{$account->account_type}}')"
+                                                                                            class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                                            id="{{$account->account_id}}"
+                                                                                            data-dismiss="modal">
+                                                                                        Delete it
+                                                                                    </button>
+                                                                                    <a href="javascript:;" type="button"
+                                                                                       class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                                       data-dismiss="modal">No
+                                                                                        thanks.</a>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            @endif
                                                             @endforeach
                                                             @else
                                                                 <div class="text-center">
@@ -1086,9 +1215,9 @@
 
                                                                 </div>
                                                             @endif
-                                                        @endif
-                                                    </div>
-                                                    <!--end::Body-->
+                                                            @endif
+                                                        </div>
+                                                        <!--end::Body-->
                             </div>
                             <!--end::Accounts-->
                         </div>
@@ -1100,7 +1229,7 @@
                             <div class="card card-custom gutter-b card-stretch" id="ss-topRssDiv">
                                 <!--begin::Header-->
                                 <div class="card-header border-0 py-5">
-                                    <h3 class="card-title font-weight-bolder">Top 5 RSS</h3>
+                                    <h3 class="card-title font-weight-bolder">Recently Searched Top 5 RSS Links</h3>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                          title="Add to custom Reports">+
                                         <span node-id="ss-topRssDiv_md4" class="ss addtcartclose"></span>
@@ -1126,7 +1255,7 @@
                                                         <td class="pl-0">
                                                             <div class="text-muted font-weight-bold d-block"
                                                                  id="title_id{{$data->_id}}" contenteditable="true"
-                                                                 onkeyup="editFunction('{{$data->_id}}','{{$data->rssUrl}}','{{$data->description}}')">{{$data->title}}</div>
+                                                                 onblur="editFunction('{{$data->_id}}','{{$data->rssUrl}}','{{$data->description}}')">{{$data->title}}</div>
                                                             <a href="javascript:;"
                                                                class="font-weight-bolder text-hover-primary mb-1 font-size-lg"
                                                                onclick="viweFunction('{{$data->rssUrl}}')">{{$data->rssUrl}}</a>
@@ -1227,17 +1356,6 @@
                                                                 </span>
                                                                 </td>
                                                             @endif
-                                                            <td>
-                                                                <span class="label label-lg label-light-primary label-inline">Active</span>
-                                                            </td>
-                                                            <td class="pr-0">
-                                                                <a href="/home/publishing/scheduling/{{$item->_id}}"
-                                                                   class="btn btn-icon text-hover-info btn-sm">
-                                                                    <span class="svg-icon svg-icon-md svg-icon-info">
-                                                                            <i class="fas fa-pen-square"></i>
-                                                                    </span>
-                                                                </a>
-                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>
@@ -1250,7 +1368,6 @@
                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
                                             <h6>Currently, no published posts are available.</h6>
-
                                         </div>
                                 @endif
                                 <!--end::Table-->
@@ -1269,6 +1386,162 @@
         </div>
         <!--end::Content-->
         <!-- begin::Delete account modal-->
+
+        <!-- begin:Invite button Modal-->
+        <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog"
+             aria-labelledby="inviteModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="inviteModalLabel">Add Accounts By
+                            Invitation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body invite-input-browse">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div class="card text-center px-2 py-3">
+                                    <h6>Download Format</h6>
+                                    <i class="icon-xl fas fa-download"
+                                       onclick="location.href='excel-file'"
+                                    >
+                                    </i>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card px-4 py-3">
+                                    <div class="card-body p-0">
+                                        <h6 class="text-right">Bulk Upload</h6>
+                                        <div class="d-flex">
+                                            <button type="submit" class="btn btn-primary mr-3"
+                                                    onclick="bulkInvite();">
+                                                Bulk Invite
+                                            </button>
+                                            <div class="custom-file">
+                                                <input accept=".xlsx" class="custom-file-input"
+                                                       id="upload-bulk"
+                                                       name="files[]"
+                                                       type="file">
+                                                <lable for="custom-file" id="lableInvite"
+                                                       class="custom-file-label w-90">Choose file
+                                                </lable>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive mt-5 pt-5" id="invitation-table">
+                            <table class="table" id="socialRows">
+                                <tbody>
+
+                                <tr>
+                                    <th>
+                                        <button class="table-add btn btn-sm"><i
+                                                    class="fa fa-plus pr-0"
+                                                    onclick="addRow(1)"></i></button>
+                                    </th>
+                                    <th>Remove</th>
+                                    <th>Social Media</th>
+                                    <th>Team Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Account Name</th>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="">
+                                    </td>
+                                    <td>
+                                        <select class="form-control h-auto py-4"
+                                                id="socialMediaSelected1"
+                                                onchange="getSelectedSocialValue()">
+                                            <option selected disabled>Select Account</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="LinkedIn">LinkedIn</option>
+                                            <option value="InstagramBusiness">Instagram Business</option>
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="LinkedInPage">LinkedInPage</option>
+                                            <option value="FacebookPage">FaceBookPage</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control h-auto py-4" id="teamDropDown1"
+                                                onchange="getSelectedTeamValue()">
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input id="userID1" type="text"
+                                               class="form-control h-auto py-4"
+                                               placeholder="Type User ID">
+                                    </td>
+                                    <td>
+                                        <input id="emailID1" type="email"
+                                               class="form-control h-auto py-4"
+                                               placeholder="Email ID">
+                                    </td>
+                                    <td>
+                                        <input id="accountName1" type="text"
+                                               class="form-control h-auto py-4"
+                                               placeholder="Account Name">
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="sendInvite()">Send
+                            Invite
+                        </button>
+                        <button id="bulkInvites" type="button" class="btn btn-primary" onclick="bulkInvite()">Bulk
+                            Invite
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end:Invite button Modal -->
+
+        <!--begin::Blackfriday newsletter modal-->
+        <div class="modal fade" id="blackfridayNewsletter" tabindex="-1" aria-labelledby="blackfridayNewsletterLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <img src="https://socioboard.com/wp-content/uploads/2021/07/SocioBoard_icon.png" alt="SocioBoard" class="logo" />
+                        <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary ml-auto" data-dismiss="modal"
+                                aria-label="Close" id="Sb_quick_user_close"  onclick="setSession()">
+                            <i class="ki ki-close icon-xs text-muted"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body blackfriday-modal text-center">
+                        <!-- <p>lorem</p> -->
+                        <img src="/media/balckfriday_modal_img.png" alt="blackfriday" class="img-fluid my-10" />
+                        <p>30% Discount <br>For All Monthly Plans</p>
+                        <div class="input-group my-5">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Coupon Code</span>
+                            </div>
+                            <input type="text" class="form-control" value="BFD30" aria-label="BFD30" aria-describedby="basic-addon1">
+                        </div>
+
+                        <a href="/plan-details-view" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="setSession()">GRAB NOW</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end::Blackfriday newsletter modal-->
+
     </div>
     <!-- end::Delete account modal-->
 
@@ -1276,6 +1549,8 @@
 
 @section('scripts')
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="{{asset('js/accounts.js')}}"></script>
     <script>
         function lock(id, type, acctype) {
             var data = id;
@@ -1375,7 +1650,7 @@
                 url: 'get-scheduled-reports-dashboard',
                 type: 'GET',
                 data: {
-                    timeInterval: timeInterval
+                    timeInterval, timezone
                 },
                 beforeSend: function () {
                     $('#line-adwords').empty();
@@ -1499,7 +1774,7 @@
                 url: 'get-scheduled-reports-dashboard',
                 type: 'GET',
                 data: {
-                    timeInterval: timeInterval
+                    timeInterval, timezone
                 },
                 beforeSend: function () {
                     $('#team-report').empty();
@@ -1551,33 +1826,27 @@
         }
 
         function editFunction(id, url, description) {
-            let wage = document.getElementById("title_id" + id);
-            wage.addEventListener("keydown", function (e) {
-                if (e.code === "Enter") {
-                    e.preventDefault();
-                    let value = document.getElementById("title_id" + id).innerHTML;
-                    $.ajax({
-                        url: '/discovery/edit-rss-feeds',
-                        type: 'post',
-                        data: {
-                            id: id,
-                            title: value,
-                            url: url,
-                            description: description
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (response) {
-                            if (response.code === 200) toastr.success('Success');
-                            else toastr.error(response.error);
-                        },
-                        error: function (error) {
-                            toastr.error(error.error);
-                        }
-                    })
+            let value = document.getElementById("title_id" + id).innerHTML;
+            $.ajax({
+                url: '/discovery/edit-rss-feeds',
+                type: 'post',
+                data: {
+                    id: id,
+                    title: value,
+                    url: url,
+                    description: description
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    if (response.code === 200) toastr.success('Success');
+                    else toastr.error(response.error);
+                },
+                error: function (error) {
+                    toastr.error(error.error);
                 }
-            });
+            })
         }
 
         function displayFacebookPages() {
@@ -1595,6 +1864,10 @@
             $("#linkedin-tab-accounts").trigger("click");
         }
 
+        function displayTumblrPages() {//It displayes the tumbler pages from facebook account to modal in checkboxes to select
+            $(".tb_page_div").css("display", "block");
+        }
+
         function selectDateStats(data) {
             let timeInterval = parseInt(data.value);
             getScheduledReports(timeInterval);
@@ -1605,17 +1878,34 @@
             getTeamReports(timeInterval);
         }
 
+        function followSBTwitter() {
+            if ($('input.checkboxes2').is(':checked')) {
+                $("#twitterButton").attr("href", "/add-accounts/twitterChecked");
+            } else {
+                $("#twitterButton").attr("href", "/add-accounts/Twitter");
+
+            }
+        }
+
+        function setSession(){
+            $.ajax({
+                url: "/setSession",
+                type: 'get',
+            });
+        }
+
         $(document).ready(function () {
+            if(offerSession !== 1 && plan_id === 0){
+                $('#blackfridayNewsletter').modal('show');
+            }
+
+            $("#upload-bulk").change(function () {
+                $('#lableInvite').html('File uploaded Successfully')
+            });
             $("#home_tab").trigger("click");
             getScheduledReports(3);
             getTeamReports(3);
-            $("#checkboxes2").click(function () {
-                if ($('#checkboxes2').is(':checked')) {
-                    $("#twitterButton").attr("href", "/add-accounts/twitterChecked");
-                } else {
-                    $("#twitterButton").attr("href", "/add-accounts/Twitter");
-                }
-            });
+            appendTeams();
             $("#checkedPages").click(function () {
                 var selected = [];
                 $('#checkboxes input:checked').each(function () {
@@ -1757,11 +2047,23 @@
                 dataType: 'json',
                 success: function (response) {
                     if (response.code === 200) {
-                        $('div#accountsSection' + id).remove();
+                        // $('div#accountsSection' + id).remove();
                         if (type === '2') {
-                            toastr.success("Page Deleted Successfully");
+                            toastr.success("Page Deleted Successfully!", "", {
+                                timeOut: 1000,
+                                fadeOut: 1000,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            });
                         } else {
-                            toastr.success("Account Deleted Successfully");
+                            toastr.success("Account Deleted Successfully!", "", {
+                                timeOut: 1000,
+                                fadeOut: 1000,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            });
                         }
                     } else if (response.code === 400) {
                         toastr.error(response.message, "Unable to delete Account");
@@ -1772,9 +2074,57 @@
             });
         }
 
+
+        $("#checkedPages4").click(function () {
+            let selected = [];
+            $('#checkboxes3 input:checked').each(function () {
+                selected.push($(this).attr('name'));
+            });
+            $.ajax({
+                url: "/tumblrPageAdd",
+                type: 'POST',
+                data: {
+                    "pages": selected,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if (response.code === 200) {
+                        if (response.errorIds.length !== 0) {
+                            $('#addAccountsModal').modal('hide')
+                            Swal.fire({
+                                icon: 'warning',
+                                text: "Could not add Tumblr accounts as " + response.errorIds + "... Already added!!",
+                            });
+                        } else {
+                            toastr.success("Tumblr accounts added successfully!");
+                            $('#addAccountsModal').modal('hide');
+                            location.reload();
+                        }
+                    } else if (response.code == 400) {
+                        $('#addAccountsModal').modal('hide')
+                        toastr.error(response.message);
+                    } else if (response.code == 500) {
+                        $('#addAccountsModal').modal('hide')
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (error) {
+                    toastr.error("Something went wrong.. Not able to add the accounts.")
+//                    $('#error').text("Something went wrong.. Not able to create team");
+                }
+            });
+
+        });
+
         $fbp = {{$facebookpages}}
             $inp = {{$instagrampages}}
             $linp = {{$LinkedInpages}}
+            $tbp =
+        {{$bloggedpages}}
         if ($fbp === 1) {
             $('#addAccountsModal').modal('show');
             displayFacebookPages();
@@ -1786,6 +2136,13 @@
         if ($linp === 1) {
             $('#addAccountsModal').modal('show');
             displayLinkedInPages();
+        }
+
+        if ($tbp === 1) {
+            $('#addAccountsModal').modal('show');
+            displayTumblrPages();
+            $("#tumblr-tab-accounts").trigger("click");
+
         }
         $('#calendarPost,#scheduledPost').tooltip();
 

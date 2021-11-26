@@ -11,7 +11,7 @@ const youtubePost = new Schema({
   channelId: { type: String },
   channelTitle: { type: String },
   publishedDate: { type: Date, default: Date.now },
-  mediaUrl: { type: [String] },
+  mediaUrl: { type: String },
   updatedDate: { type: Date, default: Date.now },
   thumbnailUrls: { type: [String] },
   embed_url: { type: String },

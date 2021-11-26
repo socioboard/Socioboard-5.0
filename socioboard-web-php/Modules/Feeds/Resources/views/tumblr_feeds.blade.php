@@ -133,22 +133,22 @@
                                                 <!--end::User-->
 
                                                 <!--begin::Contact-->
-                                                @if($feeds['data']->SocialAccountStats !== null)
-                                                    <div class="py-9">
-                                                        <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="font-weight-bold mr-2">Followers:</span>
-                                                            <a href="#"
-                                                               class="text-hover-primary"
-                                                               id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>
-                                                        </div>
-                                                        <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="font-weight-bold mr-2">Feeds:</span>
-                                                            <a href="#"
-                                                               class="text-hover-primary"
-                                                               id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>
-                                                        </div>
-                                                    </div>
-                                                @endif
+{{--                                                @if($feeds['data']->SocialAccountStats !== null)--}}
+{{--                                                    <div class="py-9">--}}
+{{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
+{{--                                                            <span class="font-weight-bold mr-2">Followers:</span>--}}
+{{--                                                            <a href="#"--}}
+{{--                                                               class="text-hover-primary"--}}
+{{--                                                               id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
+{{--                                                            <span class="font-weight-bold mr-2">Feeds:</span>--}}
+{{--                                                            <a href="#"--}}
+{{--                                                               class="text-hover-primary"--}}
+{{--                                                               id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                @endif--}}
                                             </div>
                                         @else
                                             <div style="color: Red;text-align:center;">

@@ -53,6 +53,42 @@
                         </div>
                         <!--end::Accounts-->
                     </div>
+                    <!--begin::editcalenderbtn modal-->
+                    <div class="modal fade" id="editcalenderbtn" tabindex="-1" aria-labelledby="editcalenderbtnLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editcalenderbtnLabel">Post Details</h5>
+                                    <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary" data-dismiss="modal"
+                                            aria-label="Close" id="Sb_quick_user_close">
+                                        <i class="ki ki-close icon-xs text-muted"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- begin:info list -->
+                                    <div class="info-list">
+                                        <!-- end of image and video upload -->
+                                        <div class="schedule-div" style="display: block;" >
+                                            <!--begin::Header-->
+                                            <p class="font-size-h6"><strong>Post type: </strong> <span id="title"></span></p>
+                                            <p class="font-size-h6"><strong>Post Content: </strong> <span id="description"></span></p>
+                                            <p class="font-size-h6"><strong>Created On: </strong><span id="created_date"></span></p>
+                                            <!--end::Header-->
+                                        </div>
+                                    </div>
+                                    <!-- end:info list -->
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="redirection">
+                                        <a class="btn text-hover-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 "
+                                           data-dismiss="modal">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::editcalenderbtn modal-->
+
                 </div>
                 <!-- end:calendar -->
             </div>
@@ -60,7 +96,8 @@
         </div>
         <!--end::Entry-->
     </div>
-    @endsection
+
+@endsection
 @section('scripts')
     <script src="{{asset('js/calendar.js')}}"></script>
     <script src="{{asset('plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
@@ -69,9 +106,9 @@
 @endsection
 
 @section('page-scripts')
-<script>
-    $(document).ready(function(){
-        $("#home_tab").trigger('click');
-    });
-</script>
+    <script>
+        $(document).ready(function(){
+            $("#home_tab").trigger('click');
+        });
+    </script>
 @endsection

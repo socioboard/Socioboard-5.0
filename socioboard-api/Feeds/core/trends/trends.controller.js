@@ -118,17 +118,11 @@ class TrendsController {
                 in: 'query',
                 description: 'Pagination Id'
                 }
-                #swagger.parameters['sortBy'] = {
-                in: 'query',
-                description: 'sortBy',
-                default: 'relevancy',
-                enum: ["relevancy","publishedAt","popularity"]
-                 }
                 #swagger.parameters['category'] = {
                 in: 'query',
                 description: 'category',
                 default: 'business',
-                enum: ["business","techcrunch","entertainment","general","health","science","sports","technology"]
+                enum: ["business","entertainment","general","health","science","sports","technology"]
                  }
                 */
     /* #swagger.security = [{

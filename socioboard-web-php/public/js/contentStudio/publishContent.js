@@ -22,6 +22,7 @@ let twitterAccountsIds = $("#twitterAccountsIds").data('list');
 let facebookAccountsIds = $("#facebookAccountsIds").data('list');
 let linkedinAccountsIds = $("#linkedinAccountsIds").data('list');
 let instagramAccountsIds = $("#instagramAccountsIds").data('list');
+let tumblrAccountsIds = $("#tumblrAccountsIds").data('list');
 let selectedAccountIds = ($("#selectedAccountIds").data('list')) ? $("#selectedAccountIds").data('list') : [];
 selectedAccountIds = selectedAccountIds.map(x => +x);
 let twitter = 0;
@@ -33,6 +34,7 @@ $(document.body).on('click', '.check_social_account', function (e) {
     facebook = 0;
     linkedin = 0;
     instagram = 0;
+    tumblr = 0;
     SelectedId = "";
     if ($(this).is(':checked')) {
         selectedAccountIds.push(Number($(this).attr('acc_id')));
@@ -49,6 +51,7 @@ $(document.body).on('click', '.check_social_account', function (e) {
         if ((selectedAccountIds.length > 0) && (facebookAccountsIds.includes(Number(ids)))) facebook++;
         if ((selectedAccountIds.length > 0) && (linkedinAccountsIds.includes(Number(ids)))) linkedin++;
         if ((selectedAccountIds.length > 0) && (instagramAccountsIds.includes(Number(ids)))) instagram++;
+        if ((selectedAccountIds.length > 0) && (tumblrAccountsIds.includes(Number(ids)))) tumblr++;
     });
     if (instagram > 0) {
         $('#insta_type').empty().append('Media is required for Instagram and multi-media posts are not supported for instagram');
@@ -121,6 +124,20 @@ $(document.body).on('click', '.check_social_account', function (e) {
                 '<span class="nav-text">Instagram</span></a></li>';
             if (instagramAccountsIds.includes(Number(SelectedId))) deselectIds();
         }
+        if (tumblr > 0) {
+            ((tumblrAccountsIds.includes(Number(SelectedId)))) ?
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link active" id="tumblr-tab-preview" data-toggle="tab" href="#tumblr-preview">' +
+                    '<span class="nav-text">Tumblr</span></a></li>' :
+                append += '<li class="nav-item">' +
+                    '<a class="nav-link active" id="tumblr-tab-preview" data-toggle="tab" href="#tumblr-preview">' +
+                    '<span class="nav-text">Tumblr</span></a></li>';
+        } else {
+            append += '<li class="nav-item">' +
+                '<a class="nav-link" id="tumblr-tab-preview" title="please select tumblr account to enable the Preview">' +
+                '<span class="nav-text">Tumblr</span></a></li>';
+            if (tumblrAccountsIds.includes(Number(SelectedId))) deselectIds();
+        }
 
         append += '</ul>';
     } else {
@@ -137,6 +154,8 @@ $(document.body).on('click', '.check_social_account', function (e) {
             '<li class="nav-item">' +
             '<a class="nav-link" id="instagram-tab-preview" title="please select instagram account to enable the Preview">' +
             '<span class="nav-text">Instagram</span></a></li></ul>';
+            '<a class="nav-link" id="tumblr-tab-preview" title="please select tumblr account to enable the Preview">' +
+            '<span class="nav-text">Tumblr</span></a></li></ul>';
     }
 
 
@@ -169,6 +188,7 @@ $(document.body).on('click', '.check_social_account', function (e) {
 $(document).ready(function () {
     $('body').on('click', '.publishContentItemShareBtn', function (e) {
         e.preventDefault();
+        publishOrFeeds = 1;
         let btn = $(this);
         btn.html("<i class='fa fa-spinner fa-spin'></i> 1 Click");
         btn.attr('disabled', 1);
@@ -248,7 +268,6 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data) {
-
                 btn.html(btnText);
                 btn.removeAttr('disabled');
                 $("#resocioModal").modal('hide');
@@ -261,7 +280,9 @@ $(document).ready(function () {
                 } else {
                     toastr.success(data.message);
                 }
-                if (data.type_text == "socioQueue") {
+                if (data.returnto == "1") {
+                    window.location.href = "/calendar-view";
+                } else if (data.type_text == "socioQueue") {
                     (data.type_value == 0 || data.type_value == "0") ? location.replace('' + APP_URL + 'home/publishing/schedule/ready-queue') : location.replace('' + APP_URL + 'home/publishing/schedule/day-wise-socioqueue');
                 }
             },
@@ -283,8 +304,12 @@ $(document).ready(function () {
                     if (error.responseJSON.error === "Cannot read property 'dayId' of null" || error.responseJSON.error === "Cannot read property 'length' of undefined") {
                         toastr.error("Schedule Type And Respective Date or Day, Timings fields required ");
                     } else {
-                        toastr.error(error.responseJSON.error);
+                        toastr.error(error.responseJSON.error.message);
                     }
+
+                } else {
+
+                    toastr.error(error.message);
 
                 }
             },
@@ -306,14 +331,18 @@ function textCountData() {
     if (selectedAccountIds.length > 0) {
         $("#errorText1").text('');
         let count = "";
-        if (twitter > 0 && facebook === 0 && linkedin === 0 && instagram === 0) count = 140;
-        else if (facebook > 0 && twitter === 0 && linkedin === 0) count = 5000;
+        if (twitter > 0 && facebook === 0 && linkedin === 0 && instagram === 0 && tumblr=== 0) count = 280;
+        else if (facebook > 0 && twitter === 0 && linkedin === 0 && instagram === 0) count = 5000;
         else if (linkedin > 0 && twitter === 0 && facebook === 0) count = 700;
-        else if (twitter > 0 && facebook > 0 && linkedin === 0) count = 140;
-        else if (twitter > 0 && linkedin > 0 && facebook === 0) count = 140;
+        else if (twitter > 0 && facebook > 0 && linkedin === 0) count = 280;
+        else if (twitter > 0 && linkedin > 0 && facebook === 0) count = 280;
         else if (facebook > 0 && linkedin > 0 && twitter === 0) count = 700;
-        else if (twitter > 0 && facebook > 0 && linkedin > 0) count = 140;
-        else if (twitter === 0 && facebook === 0 && linkedin === 0 && instagram > 0) count = 5000;
+        else if (twitter > 0 && facebook > 0 && linkedin > 0) count = 280;
+        else if (twitter === 0 && facebook === 0 && linkedin === 0 && instagram > 0) count = 2200;
+        else if (twitter === 0 && facebook === 0 && linkedin === 0 && instagram === 0 && tumblr > 0) count = 2200;
+        else if (twitter === 0 && facebook > 0 && linkedin === 0 && instagram > 0 && tumblr === 0) count = 2200;
+        else if (twitter > 0 && facebook === 0 && linkedin === 0 && instagram > 0) count = 280;
+        else if (twitter === 0 && facebook > 0 && linkedin === 0 && instagram > 0 && tumblr > 0) count = 2200;
         if (Number($(".emojionearea-editor").text().length) <= count) {
             descriptionText = $(".emojionearea-editor").text();
         } else {
@@ -360,9 +389,11 @@ $(function () {
         var z = 0;
         if (getAttr == "type1") {
             $("#media-list").html("");
-            $("#media-list").html(
-                '<li class="myupload"><span><i class="fas fa-plus" aria-hidden="true"></i><input type="file" click-type="type2" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple></span></li>'
-            );
+            if (!(instagram > 0 && twitter === 0 && facebook === 0 && tumblr === 0 && linkedin === 0 )) {
+                $("#media-list").html(
+                    '<li class="myupload"><span><i class="fas fa-plus" aria-hidden="true"></i><input type="file" click-type="type2" id="picupload" class="picupload" title="Click to Add images" data-toggle="tooltip" multiple></span></li>'
+                );
+            }
             $('#picupload').tooltip();
             $("#hint_brand").css("display", "block");
             $("#option_upload").css("display", "none");
@@ -509,7 +540,7 @@ $(function () {
         $(this).parent().parent().parent().remove();
         let removeItem = $(this).attr('data-id');
         let lists = $('#media-list li').length;
-        if (lists == 1){
+        if (lists == 1) {
             $('.myupload').remove();
             $('#next_upload').empty().append('<small>Note: Add only 4 items at a single time.</small>\n' +
                 '                                                    <ul class="btn-nav">\n' +
@@ -517,7 +548,7 @@ $(function () {
                 '                                                            <span>\n' +
                 '                                                                <i class="far fa-image fa-2x"></i>\n' +
                 '                                                                <input type="file" name="" click-type="img-video-option" class="picupload"\n' +
-                '                                                                    multiple accept=".jpg, .jpeg" />\n' +
+                '                                                                    multiple accept=".jpg, .png .jpeg" />\n' +
                 '                                                            </span>\n' +
                 '                                                        </li>\n' +
                 '                                                        <li>\n' +
@@ -555,7 +586,7 @@ downloadMediaUrl = function (feedtype) {
         $.ajax({
             url: '/discovery/content_studio/media/download', // point to server-side PHP script 
             dataType: 'json',  // what to expect back from the PHP script, if anything
-            data: {'mediaUrl': passedMediaUrl.val(),'feedtype':feedtype},
+            data: {'mediaUrl': passedMediaUrl.val(), 'feedtype': feedtype},
             type: 'post',
             success: (response) => {
                 $("body").find('.defaultImage').remove();

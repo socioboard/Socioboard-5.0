@@ -48,22 +48,22 @@
 
                                 <div class="col-xl-3" id="board{{$account->id}}">
                                     <!--begin::Borad-->
-                                    <div class="card card-custom p-2 mb-8 mb-lg-0">
+                                    <div class="card card-custom p-2 mb-8">
                                         <div class="card-body">
                                             <div class="row">
                                                 <!--begin::Content-->
                                                 <div class="col-sm-12">
                                                     <h2 class="mb-4">{{$account->keyword}}</h2>
-                                                    <p class="text-primary line-height-lg">
+                                                    <h4 class="text-primary line-height-lg">
                                                         {{$account->board_name}}
-                                                    </p>
+                                                    </h4>
                                                 </div>
                                                 <!--end::Content-->
                                                 @php
                                                     $keyword = str_replace("#","",$account->keyword);@endphp
                                                 <!--begin::Button-->
                                                 <div class="col-sm-12 d-flex align-items-center justify-content-sm-end">
-                                                    <a href="/boards/board-me/{{$keyword}}/{{$account->id}}" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" title="Search In youtube">View</a>
+                                                    <a href="/boards/board-me/{{$keyword}}/{{'real'}}/{{$account->id}}" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" title="Search In youtube">View</a>
                                                     <a href="boardme/board.html" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" data-toggle="modal" data-target="#updateBoardModal{{$account->id}}">Edit</a>
                                                     <a href="javascript:;" class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6" data-toggle="modal" data-target="#deleteBoardModal{{$account->id}}">Delete</a>
                                                 </div>
@@ -83,11 +83,10 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="text-center">
-                                                        <img src="/media/svg/icons/Communication/Delete-user.svg"/><br>
-                                                        <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this board?</span>
+                                                        <span class="font-weight-bolder font-size-h4 ">Are you sure want to delete this board?</span>
                                                     </div>
                                                     <div class="d-flex justify-content-center">
-                                                        <a href="javascript:;" type="button" onclick=" deleteIt('{{$account->id}}')" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal" id="board-delete">Delete it!</a>
+                                                        <a href="javascript:;" type="button" onclick=" deleteIt('{{$account->id}}')" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal" id="board-delete">Delete it</a>
                                                         <a href="javascript:;" type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">No thanks.</a>
                                                     </div>
                                                 </div>
@@ -192,7 +191,7 @@
                         </div>
                         <!--end::Form group-->
                         <div class="d-flex justify-content-center">
-                            <button type="submit" id="create_button" onclick="" class="btn text-primary font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Create</button>
+                            <button type="submit" id="create_button" onclick="" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Create</button>
                             <a href="javascript:;" type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">Close</a>
                         </div>
                     </div>
@@ -324,7 +323,7 @@
                 },
                 success: function (response) {
                     if (response['code'] === 200) {
-                        toastr.success("", "Board Deleted Successfully!");
+                        toastr.success("", "Board Deleted Successfully");
                         $('#board'+id).remove();
                     } else if (response['code'] === 400) {
                         toastr.error(response.error);

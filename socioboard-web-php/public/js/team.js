@@ -42,6 +42,7 @@ function withDrawInvitaion(email) {
 
 var SBKanbanBoard = function () {
     let id = parseInt(window.location.pathname.split("/")[2]);//to get teamid
+    let socialAccounts = [];
     var sb_teams = async function () {
         await jQuery.ajax({
             url: '/get-team-details',
@@ -53,13 +54,18 @@ var SBKanbanBoard = function () {
             success: function (response) {
                 let profilepic;
                 if (response.code === 200) {
+                    response.teamSocialAccounts.map(element => {
+                        if (element.account_type !== 13) {
+                            socialAccounts.push(element);
+                        }
+                    });
                     if (response.adminData.length > 0) {
                         adminData = response.adminData.map(element => {
                             profilepic = element.profile_picture;
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
+                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -77,7 +83,7 @@ var SBKanbanBoard = function () {
                         });
                     }
                     if (response.teamSocialAccounts.length > 0) {
-                        teamSocialAccounts = response.teamSocialAccounts.map(element => {
+                        teamSocialAccounts = socialAccounts.map(element => {
                             if (isValidURL(element.profile_pic_url) === true) {
                                 profilepic = element.profile_pic_url;
                             } else {
@@ -89,20 +95,26 @@ var SBKanbanBoard = function () {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
-                            } else if (element.account_type === 6 ) {
+                            } else if (element.account_type === 6) {
                                 acctype = 'LinkedIn';
                             } else if (element.account_type === 8 || element.account_type === 10) {
                                 acctype = 'Google';
                             } else if (element.account_type === 9) {
                                 acctype = 'Youtube';
                             } else if (element.account_type === 12) {
-                                acctype = 'Instagram Business';
-                            }else if(element.account_type === 7)
-                            {
+                                acctype = 'Insta-Business';
+                            } else if (element.account_type === 7) {
                                 acctype = 'LinkedIn Page';
-                            }
-                            else {
+                            } else if (element.account_type === 14) {
+                                acctype = 'Medium';
+                            } else if (element.account_type === 16) {
+                                acctype = 'Tumblr';
+                            } else if (element.account_type === 11) {
                                 acctype = 'Pinterest';
+                            } else if (element.account_type === 15) {
+                                acctype = 'DailyMotion';
+                            } else {
+                                acctype = 'Social Account';
                             }
                             return {
                                 'id': element.account_id,
@@ -126,7 +138,7 @@ var SBKanbanBoard = function () {
                             if (isValidURL(element.user.profile_picture) === true) {
                                 profilepic = element.user.profile_picture;
                             } else {
-                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.user.profile_picture);
+                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.user.profile_picture);
                             }
                             return {
                                 'id': element.user.user_id,
@@ -150,7 +162,7 @@ var SBKanbanBoard = function () {
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
+                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -175,7 +187,7 @@ var SBKanbanBoard = function () {
                             if (isValidURL(element.profile_pic_url) === true) {
                                 profilepic = element.profile_pic_url;
                             } else {
-                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_pic_url);
+                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_pic_url);
                             }
                             if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
                                 acctype = 'Facebook';
@@ -189,15 +201,20 @@ var SBKanbanBoard = function () {
                                 acctype = 'Google';
                             } else if (element.account_type === 9) {
                                 acctype = 'Youtube';
-                            }
-                            else if (element.account_type === 7) {
+                            } else if (element.account_type === 7) {
                                 acctype = 'LinkedIn page';
-                            }
-                            else if (element.account_type === 12) {
+                            } else if (element.account_type === 12) {
                                 acctype = 'Instagram Business';
-                            }
-                            else {
+                            } else if (element.account_type === 14) {
+                                acctype = 'Medium';
+                            } else if (element.account_type === 16) {
+                                acctype = 'Tumblr';
+                            } else if (element.account_type === 11) {
                                 acctype = 'Pinterest';
+                            } else if (element.account_type === 15) {
+                                acctype = 'DailyMotion';
+                            } else {
+                                acctype = 'Social Account';
                             }
                             return {
                                 'id': element.account_id,
@@ -221,7 +238,7 @@ var SBKanbanBoard = function () {
                             if (isValidURL(element.profile_picture) === true) {
                                 profilepic = element.profile_picture;
                             } else {
-                                profilepic =  (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
+                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
                             }
                             return {
                                 'id': element.user_id,
@@ -286,7 +303,7 @@ var SBKanbanBoard = function () {
                 },
                 {
                     'id': '_leftTeamMembers',
-                    'title': 'Left or Removed Team Members<br><small>Drag here to remove member from a team</small>',
+                    'title': 'Left Team Members<br><small>Drag here to make Team member leave from a team</small>',
                     'class': 'light-warning',
                     'item': leftFromTeamDatas
                 }
@@ -316,8 +333,7 @@ var SBKanbanBoard = function () {
                                     window.location.reload();
                                 }
                             });
-                        }
-                        else if (response.code === 501) {
+                        } else if (response.code === 501) {
                             toastr.info(response.message, 'warning', {
                                 timeOut: 2000,
                                 fadeOut: 2000,
@@ -325,8 +341,7 @@ var SBKanbanBoard = function () {
                                     window.location.reload();
                                 }
                             });
-                        }
-                        else if (response.code === 500) {
+                        } else if (response.code === 500) {
                             toastr.error(response.message, '!!error', {
                                 timeOut: 2000,
                                 fadeOut: 2000,

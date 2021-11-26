@@ -140,24 +140,54 @@ class UploadController {
       const {error} = validate.searchMediaDetails({
         SocialImageInfo,
         teamId,
-        filterPeriod,
         sortBy,
         pageId,
         since,
         until,
+        filterPeriod,
       });
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const response = await uploadModel.searchUserMediaDetails(
         SocialImageInfo,
         teamId,
-        filterPeriod,
         sortBy,
         pageId,
         userScopeId,
+        filterPeriod,
         since,
         until
       );
       SuccessResponse(res, response);
+    } catch (error) {
+      CatchResponse(res, error.message);
+    }
+  }
+
+  /**
+   * TODO To update rating and title of media file
+   * Route To update rating and title of media file
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns user media updated details
+   */
+  async updateMedia(req, res) {
+    try {
+      const {userScopeId} = req.body;
+      const {mediaId, title, rating} = req.query;
+      const {error} = validate.updateMediaDetails({
+        mediaId,
+        title,
+        rating,
+      });
+      if (error) return ValidateErrorResponse(res, error.details[0].message);
+      if (!title && !rating)
+        ValidateErrorResponse(res, 'Title or rating required.');
+      let data = {};
+      if (title) data.title = title;
+      if (rating) data.rating = rating;
+      await uploadModel.updateMedia(userScopeId, mediaId, data);
+      SuccessResponse(res, 'Media details successfully updated.');
     } catch (error) {
       CatchResponse(res, error.message);
     }

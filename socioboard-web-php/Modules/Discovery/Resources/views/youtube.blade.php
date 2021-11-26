@@ -36,8 +36,10 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="input-icon">
+                                            <div id="InKwyword">
                                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" id="keyword" autocomplete="off" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword"/>
                                             <span><i class="far fa-keyboard"></i></span>
+                                            </div>
                                         </div>
                                         @if ($errors->any())
                                             <span id="validboardname" style="color: red;font-size: medium;" role="alert">{{ $errors->first('keyword') }}</span>
@@ -46,7 +48,7 @@
 
 
                                     <!--end::search-->
-                                    <button type="reset" class="btn font-weight-bolder mr-2 px-8 ">Clear</button>
+                                    <button type="reset"  class="btn font-weight-bolder mr-2 px-8 " onclick="clearFunction()">Clear</button>
                                     <button type="submit" class="btn font-weight-bolder px-8" id="search_button">Search</button>
                                 </form>
                                 <!--end::Form-->
@@ -67,7 +69,7 @@
                     @endif
                     <div class="col-xl-8" id="feeds" >
                         <!--begin::feeds-->
-                        <div class="card-columns" id="youtubeFeeds">
+                        <div class="card-columns feeds-container" id="youtubeFeeds">
                             @if(isset($responseData) && $responseData['data'] !== null)
                                 <script>
                                     var feedsLength = <?php echo count($responseData['data']->youtubeDetails)  ?>;
@@ -98,7 +100,10 @@
                                                     <a href="{{$account->mediaUrl}}"
                                                        class="text-hover-primary mb-1 font-size-lg font-weight-bolder"
                                                        target="_blank">{{$account->channelTitle}}</a>
-                                                    <span class="text-muted font-weight-bold">{{$account->publishedDate}}</span>
+                                                    @php
+                                                        $date = new DateTime($account->publishedDate);
+                                                    @endphp
+                                                    <span class="text-muted font-weight-bold">{{$date->format('Y-m-d H:i:s')}}</span>
                                                 </div>
                                                 <!--end::Info-->
                                             </div>
@@ -183,7 +188,6 @@
                                     <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
                                         <div class="mt-3">
                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                                                @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                 <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
                                                 <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                 @foreach($socialAccountArray as $group_key => $socialAccount)
@@ -209,10 +213,12 @@
                                                                     <!--end::Title-->
 
                                                                     <!--begin::Data-->
-                                                                    <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
-                                                                        {{ $socialAccount->friendship_counts }} followers
+                                                                @if($socialAccount->account_type !== 6)
+                                                                    <!--begin::Data-->
+                                                                        <span class="text-muted font-weight-bold">
+                                                                            {{ $socialAccount->friendship_counts }} followers
                                                                         </span>
+                                                                @endif
                                                                     <!--end::Data-->
                                                                 </div>
                                                                 <!--end::Info-->
@@ -230,7 +236,6 @@
 
                                                 @endforeach
                                                 </div>
-                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -356,15 +361,6 @@
                     pageid:pageid,
                     keyword:keywordName
                 },
-                beforeSend: function () {
-                    $('#feeds').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status"  id="' + pageid + '" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
-                    $(".spinner-border").css("display", "block");
-                },
                 success: function (response) {
                     if(response.code === 200 ){
                         let appendData = '';
@@ -419,6 +415,11 @@
         function openModel(id, cheaneltitle, title ) {
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+title +'</textarea>');
                     $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id+'"/><span><i class="fas fa-link"></i></span>');
+        }
+
+        function clearFunction() {
+            $("#InKwyword").empty().append('<input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" id="keyword" placeholder="Enter Keyword"/>\n' +
+                '                                            <span><i class="far fa-keyboard"></i></span>');
         }
     </script>
 @endsection

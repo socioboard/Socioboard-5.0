@@ -32,4 +32,15 @@ router.delete(
  */
 router.post('/search-media-details', uploadController.searchUserMediaDetails);
 
+/**
+ * TODO To update rating and title of media file
+ * Route To update rating and title of media file
+ * @name put/search-media-details
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Returns user media updated details
+ */
+router.put('/update-media', uploadController.updateMedia);
+
 export default router;

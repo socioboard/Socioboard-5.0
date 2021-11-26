@@ -23,6 +23,7 @@
                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 " id="outgoing_url_id"
                                    type="text" name="outgoing_url" autocomplete="off" placeholder="Enter Outgoing url"/>
                             <span><i class="fas fa-link"></i></span>
+                            <div class="error text-danger" id="text_area_error2"></div>
                         </div>
                     </div>
 

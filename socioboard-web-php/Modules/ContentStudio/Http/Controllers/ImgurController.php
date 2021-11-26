@@ -56,7 +56,7 @@ class ImgurController extends Controller
             $html = view('contentstudio::imgur.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
 
             if ($data == null)
-                return response()->json(['error'=>'<p id="notification"> End of the listing </p>']);
+                return response()->json(['error'=>'No data available']);
 
             return response()->json($html);
 

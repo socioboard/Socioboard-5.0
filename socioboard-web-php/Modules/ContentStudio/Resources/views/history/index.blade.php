@@ -44,7 +44,9 @@
 							            <tbody>
                 							@include("contentstudio::history.parts._item")
 							            </tbody>
+
 							        </table>
+									<div id="sb_loader" style="max-width: 1100px; margin: 40px auto; "></div>
 							    </div>
 							    <!--end::Table-->
 							</div>

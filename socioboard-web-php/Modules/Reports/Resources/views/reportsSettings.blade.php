@@ -40,8 +40,8 @@
                                         <div class="py-9">
                                             <div class="d-flex align-items-center justify-content-between mb-2">
                                                 <span class="font-weight-bold mr-2">Email:</span>
-                                                <a href="#"
-                                                   class=" text-hover-primary">{{$userDetails->data->user->email}}</a>
+                                                <div
+                                                   >{{$userDetails->data->user->email}}</div>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mb-2">
                                                 <span class="font-weight-bold mr-2">Phone:</span>
@@ -83,7 +83,7 @@
                                     <div class="card-header py-3">
                                         <div class="card-title align-items-start flex-column">
                                             <h3 class="card-label font-weight-bolder">Report Settings</h3>
-                                            <span class="font-weight-bold font-size-sm mt-1">Update your report settings</span>
+                                            <span class="font-weight-bold font-size-sm mt-1">Update your report settings (These will be your custom report PDF Logo and Brand Name)</span>
                                         </div>
                                         <div class="card-toolbar">
                                             <button type="reset" class="btn mr-2"
