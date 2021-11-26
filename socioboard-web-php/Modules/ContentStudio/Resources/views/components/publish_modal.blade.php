@@ -1,7 +1,6 @@
 @php
     $content = '';
     $content .= isset($mediaData) && isset($mediaData['title']) ? $mediaData['title'].' ' : '';
-    $content .= isset($mediaData) && isset($mediaData['description']) ? $mediaData['description'] : '';
 @endphp
 <!-- begin::Re-socio-->
 <div class="modal fade" id="resocioModal" tabindex="-1" role="dialog" aria-labelledby="resocioModalLabel" aria-hidden="true">
@@ -98,10 +97,12 @@
                                                                         <!--end::Title-->
 
                                                                         <!--begin::Data-->
-                                                                        <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
+                                                                    @if($socialAccount->account_type !== 6)
+                                                                        <!--begin::Data-->
+                                                                            <span class="text-muted font-weight-bold">
                                                                             {{ $socialAccount->friendship_counts }} followers
                                                                         </span>
+                                                                    @endif
                                                                         <!--end::Data-->
                                                                     </div>
                                                                     <!--end::Info-->

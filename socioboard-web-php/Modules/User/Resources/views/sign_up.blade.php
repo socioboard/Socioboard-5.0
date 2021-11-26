@@ -137,7 +137,7 @@
                 <label class="checkbox mb-0">
                     <input type="checkbox" checked name="agree" id="agree"/>
                     <span class="mr-2"></span>
-                    I Agree The &nbsp;<a href="#" class="text-primary"> Terms and Conditions</a>.
+                    I Agree to The &nbsp;<a href="#" class="text-primary"> Terms and Conditions</a>.
                 </label>
                 <div id="agreeError" style="font-size: medium"></div>
             </div>

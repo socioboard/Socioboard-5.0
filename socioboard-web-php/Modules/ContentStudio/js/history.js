@@ -2,6 +2,13 @@ var paginationId = 1;
 var paginate = true;
 
 jQuery(document).ready(function($) {
+		$('#sb_loader').append('<div class="d-flex justify-content-center" >\n' +
+			'        <div class="spinner-border" role="status"  id="" style="display: none;">\n' +
+			'            <span class="sr-only">Loading...</span>\n' +
+			'        </div>\n' +
+			'\n' +
+			'        </div>');
+		$(".spinner-border").css("display", "block");
 	if(paginate){
 		paginate = false;
 		sendAjax();
@@ -41,6 +48,7 @@ function sendAjax(){
 		dataProcess : false,
 		cache : false,
 		success : (r)=>{
+			$('#sb_loader').empty();
 			if(r.html.length > 0){
 				$('body').find('#table-div tbody').append(r.html)
 				paginate = true;

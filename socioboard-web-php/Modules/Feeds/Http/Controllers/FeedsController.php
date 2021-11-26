@@ -41,14 +41,13 @@ class FeedsController extends Controller
         $updatedAccounts = [];
         $fbPages = [];
         $fbAccs = [];
-        $fballAccs = [];
         $youtubeAccounts = [];
         $linkedInAccounts = [];
         $instagramAccounts = [];
+        $tumblrAccounts = [];
         $instagramBusinessAccounts = [];
         $mediumAccounts = [];
-        $tumblrAccounts = [];
-        $country = [];
+        $countryData = [];
         if (strpos($network, 'twitter') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
@@ -80,8 +79,8 @@ class FeedsController extends Controller
                             $accId = $accounts[0]->account_id;
                             $feedsData = $this->getTwitterFeeds($accId);
                         }
-                        $country = $this->getCountryDetailsByAccount($accId);
-                        return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'country' => $country]);
+                        $countryData = $this->getCountryDetailsByAccount($accId);
+                        return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData,'country' => $countryData]);
                     } else {
                         return view('feeds::twitter_feeds')->with(["code" => 200, "accounts" => $accounts, 'message' => 'No Twitter account added yet! or Account has locked']);
                     }
@@ -100,43 +99,17 @@ class FeedsController extends Controller
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
                 if ($response['data']->code === 200) {
                     foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
-                        if ($data->account_type === 2 || $data->account_type === 1 && $data->join_table_teams_social_accounts->is_account_locked === false) {
-                            array_push($fballAccs, $data);
-                        }
-                        if ($data->account_type === 2 && $data->join_table_teams_social_accounts->is_account_locked === false) {
-                            array_push($fbPages, $data);
-                        }
                         if ($data->account_type === 1 && $data->join_table_teams_social_accounts->is_account_locked === false) {
                             array_push($fbAccs, $data);
                         }
                     }
-                    if (count($fbPages) > 0 && count($fbAccs) === 0) {
-                        if (preg_match('~[0-9]+~', $network)) {
-                            $accId = (integer)substr($network, 8, strlen($network));
-                            for ($i = 0; $i < count($fbPages); $i++) {
-                                if ($fbPages[$i]->account_id === $accId) {
-                                    array_push($accounts, $fbPages[$i]);
-                                    unset($fbPages[$i]);
-                                    break;
-                                }
-                            }
-                            if (count($fbPages) > 0) {
-                                foreach ($fbPages as $data) {
-                                    array_push($accounts, $data);
-                                }
-                            }
-                        } else {
-                            $accId = $fbPages[0]->account_id;
-                            $accounts = $fbPages;
-                        }
-                        $feedsData = $this->getFbPagesFeeds($accId, 2);
-                        return view('feeds::facebook_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
-                    } else if (count($fbAccs) > 0 && count($fbPages) === 0) {
+             if (count($fbAccs) > 0 ) {
                         if (preg_match('~[0-9]+~', $network)) {
                             $accId = (integer)substr($network, 8, strlen($network));
                             for ($i = 0; $i < count($fbAccs); $i++) {
                                 if ($fbAccs[$i]->account_id === $accId) {
                                     array_push($accounts, $fbAccs[$i]);
+                                    $accType = $fbAccs[$i]->account_type;
                                     unset($fbAccs[$i]);
                                     break;
                                 }
@@ -148,35 +121,13 @@ class FeedsController extends Controller
                             }
                         } else {
                             $accId = $fbAccs[0]->account_id;
+                            $accType = $fbAccs[0]->account_type;
                             $accounts = $fbAccs;
-                        }
-                        $feedsData = $this->getFbPagesFeeds($accId, 1);
-                        return view('feeds::facebook_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
-                    } else if (count($fbAccs) > 0 && count($fbPages) > 0) {
-                        if (preg_match('~[0-9]+~', $network)) {
-                            $accId = (integer)substr($network, 8, strlen($network));
-                            for ($i = 0; $i < count($fballAccs); $i++) {
-                                if ($fballAccs[$i]->account_id === $accId) {
-                                    array_push($accounts, $fballAccs[$i]);
-                                    $accType = $fballAccs[$i]->account_type;
-                                    unset($fballAccs[$i]);
-                                    break;
-                                }
-                            }
-                            if (count($fballAccs) > 0) {
-                                foreach ($fballAccs as $data) {
-                                    array_push($accounts, $data);
-                                }
-                            }
-                        } else {
-                            $accId = $fballAccs[0]->account_id;
-                            $accType = $fballAccs[0]->account_type;
-                            $accounts = $fballAccs;
                         }
                         $feedsData = $this->getFbPagesFeeds($accId, $accType);
                         return view('feeds::facebook_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
                     } else {
-                        return view('feeds::facebook_Feeds')->with(["accounts" => $fballAccs, 'message' => 'No facebook pages or Accounts added yet!']);
+                        return view('feeds::facebook_Feeds')->with(["accounts" => $fbAccs, 'message' => 'No facebook Accounts added yet!']);
                     }
 
                 } else if ($response['data']->code === 400) {
@@ -187,7 +138,54 @@ class FeedsController extends Controller
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
                 return view('feeds::facebook_Feeds')->with(['message' => 'failed']);
             }
-        } else if (strpos($network, 'youtube') !== false) {
+        }
+        else if (strpos($network, 'fbPages') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 2 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($fbPages, $data);
+                        }
+                    }
+                    if (count($fbPages) > 0 ) {
+                        if (preg_match('~[0-9]+~', $network)) {
+                            $accId = (integer)substr($network, 7, strlen($network));
+                            for ($i = 0; $i < count($fbPages); $i++) {
+                                if ($fbPages[$i]->account_id === $accId) {
+                                    array_push($accounts, $fbPages[$i]);
+                                    $accType = $fbPages[$i]->account_type;
+                                    unset($fbPages[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($fbPages) > 0) {
+                                foreach ($fbPages as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accId = $fbPages[0]->account_id;
+                            $accType = $fbPages[0]->account_type;
+                            $accounts = $fbPages;
+                        }
+                        $feedsData = $this->getFbPagesFeeds($accId, $accType);
+                        return view('feeds::facebook_pages')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
+                    } else {
+                        return view('feeds::facebook_pages')->with(["accounts" => $fbPages, 'message' => 'No facebook pages added yet!']);
+                    }
+
+                } else if ($response['data']->code === 400) {
+                    return view('feeds::facebook_pages')->with(["accounts" => $fbPages, 'message' => 'failed']);
+                }
+
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::facebook_pages')->with(['message' => 'failed']);
+            }
+        }
+        else if (strpos($network, 'youtube') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -343,7 +341,7 @@ class FeedsController extends Controller
                             $accounts = $linkedInAccounts;
                             $accId = $linkedInAccounts[0]->account_id;
                         }
-                        $feedsData = $this->getLinkedInFeeds($accId, 1);
+                        $feedsData = $this->getLinkedInFeeds($accId,1);
                         return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData, 'followersData' => $response['data']]);
                     } else {
                         return view('feeds::linkedIn_Feeds')->with(["accounts" => $accounts, 'message' => 'No LinkedIn Pages account has been added yet!']);
@@ -357,7 +355,9 @@ class FeedsController extends Controller
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
                 return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
             }
-        } else if (strpos($network, 'medium') !== false) {
+        }
+
+        else  if (strpos($network, 'medium') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -394,9 +394,10 @@ class FeedsController extends Controller
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
-                return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
+                return view('feeds::medium_feeds')->with(['message' => 'failed']);
             }
-        } else if (strpos($network, 'Tumblr') !== false) {
+        }
+        else if (strpos($network, 'Tumblr') !== false) {
             try {
                 $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
                 $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
@@ -433,9 +434,11 @@ class FeedsController extends Controller
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
-                return view('feeds::linkedIn_Feeds')->with(['message' => 'failed']);
+                return view('feeds::tumblr_feeds')->with(['message' => 'failed']);
             }
         }
+
+
     }
 
     /**
@@ -603,7 +606,6 @@ class FeedsController extends Controller
 
     public function getInstgramAndBusinessFeeds($accID, $type, $pageId)
     {
-
         $team = Session::get('team');
         $teamID = $team['teamid'];
         $result = [];
@@ -627,66 +629,6 @@ class FeedsController extends Controller
                 $result['message'] = 'Some error occured cant get feeds';
                 return $result;
             }
-        } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
-            $result['code'] = 500;
-            $result['message'] = 'Some error occured cant get feeds';
-            return $result;
-        }
-    }
-
-
-    public function getMediumFeeds($accID)
-    {
-
-        $team = Session::get('team');
-        $teamID = $team['teamid'];
-        $result = [];
-        try {
-            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/publications?accountId=' . $accID . '&teamId=' . $teamID;
-            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
-            if ($response['data']->code === 200) {
-                $result['code'] = 200;
-                $result['data'] = $response['data']->data;
-            } else if ($response['data']->code === 400) {
-                $result['code'] = 400;
-                $result['message'] = $response['data']->error;
-            } else {
-                $result['code'] = 500;
-                $result['message'] = 'Some error occured cant get feeds';
-            }
-            return $result;
-
-        } catch (Exception $e) {
-            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
-            $result['code'] = 500;
-            $result['message'] = 'Some error occured cant get feeds';
-            return $result;
-        }
-    }
-
-
-    public function getTumblrFeeds($accID, $pageID)
-    {
-
-        $team = Session::get('team');
-        $teamID = $team['teamid'];
-        $result = [];
-        try {
-            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-tumblr-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageID;
-            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
-            if ($response['data']->code === 200) {
-                $result['code'] = 200;
-                $result['data'] = $response['data']->data;
-            } else if ($response['data']->code === 400) {
-                $result['code'] = 400;
-                $result['message'] = $response['data']->error;
-            } else {
-                $result['code'] = 500;
-                $result['message'] = 'Some error occured cant get feeds';
-            }
-            return $result;
-
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
             $result['code'] = 500;
@@ -741,16 +683,6 @@ class FeedsController extends Controller
      * @return {object} Returns in object form if twitter feed has been disliked or not.
      * ! Do not change this function without referring API format of disliking feed.
      */
-
-
-    public function getNextTumblerFeeds(Request $request)
-    {
-        $accID = $request->accid;
-        $pageId = $request->pageId;
-        $feedsData = $this->getTumblrFeeds($accID, $pageId);
-        return $feedsData;
-    }
-
     public function disLikeTheTweet(Request $request)
     {
         $tweetId = (int)$request->twitterID;
@@ -1006,15 +938,15 @@ class FeedsController extends Controller
      */
     public function getNextFacebookFeeds(Request $request)
     {
-        $accID = $request->accid;
-        $pageId = $request->pageId;
-        $Acctype = $request->acctype;
+        $accID = (int)$request->accid;
+        $pageId = (int)$request->pageId;
+        $Acctype = (int)$request->acctype;
         $team = Session::get('team');
         $teamID = $team['teamid'];
         $result = [];
         try {
             if ($Acctype === 1) {
-                $apiUrl = $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-recent-feeds' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
+                $apiUrl = $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-recent-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
 
             } else {
                 $apiUrl = $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-recent-page-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageId;
@@ -1041,18 +973,17 @@ class FeedsController extends Controller
     {
         $accID = (int)$request->accid;
         $pageId = (int)$request->pageid;
-        $accountType = (int)$request->accounType;
-        return $this->getInstgramAndBusinessFeeds($accID, $accountType, $pageId);
+        $accountType =(int) $request->accounType;
+        return  $this->getInstgramAndBusinessFeeds($accID, $accountType, $pageId);
     }
 
     function getNextLinkedInFeeds(Request $request)
     {
         $accID = (int)$request->accid;
         $pageId = (int)$request->pageid;
-        return $this->getLinkedInFeeds($accID, $pageId);
+        return  $this->getLinkedInFeeds($accID, $pageId);
     }
-
-    function getLinkedInFeeds($accID, $pageId)
+    function getLinkedInFeeds($accID,$pageId)
     {
         $team = Session::get('team');
         $teamID = $team['teamid'];
@@ -1075,6 +1006,36 @@ class FeedsController extends Controller
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getLinkedInFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+
+    public function getMediumFeeds($accID)
+    {
+
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        try {
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/medium/publications?accountId=' . $accID . '&teamId=' . $teamID;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+            }
+            return $result;
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
             $result['code'] = 500;
             $result['message'] = 'Some error occured cant get feeds';
             return $result;
@@ -1175,6 +1136,43 @@ class FeedsController extends Controller
         }
     }
 
+    public function getTumblrFeeds($accID, $pageID)
+    {
+
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $result = [];
+        try {
+            $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/get-tumblr-feeds?accountId=' . $accID . '&teamId=' . $teamID . '&pageId=' . $pageID;
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+            }
+            return $result;
+
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+    public function getNextTumblerFeeds(Request $request)
+    {
+        $accID = $request->accid;
+        $pageId = $request->pageId;
+        $feedsData = $this->getTumblrFeeds($accID, $pageId);
+        return $feedsData;
+    }
+
     function getCountryDetailsByAccount($accId)
     {
         try {
@@ -1205,7 +1203,7 @@ class FeedsController extends Controller
                 $result = $this->helper->responseHandler($response['data']);
                 return $result;
             }
-            } catch (Exception $e) {
+        } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getCountryHashtags() {FeedsController}');
             $result['code'] = 500;
             $result['message'] = 'Some error occured cant get Country Hash tags';
@@ -1213,4 +1211,184 @@ class FeedsController extends Controller
         }
     }
 
+    function showPinterestBoards($accid)
+    {
+        $pinterestAcc = [];
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        if ($accid === 'Feeds') {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 11 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($pinterestAcc, $data);
+                        }
+                    }
+                    if (count($pinterestAcc) > 0) {
+                        $accId = $pinterestAcc[0]->account_id;
+                        foreach ($response['data']->data->pinterestAccountDetails as $data) {
+                            if ($data->account_id === $accId) {
+                                $boards = $data->boardDetails;
+                            }
+                        }
+                        if (count($boards) > 0) {
+                            return view('feeds::Pinterest.pinterest_boards')->with(["boards" => $boards, 'message' => 'success', "accounts" => $pinterestAcc]);
+                        } else {
+                            return view('feeds::Pinterest.pinterest_boards')->with(["boards" => $boards, 'message' => 'No Boards have found yet! for Pinterest account', "accounts" => $pinterestAcc]);
+                        }
+                    } else {
+                        return view('feeds::Pinterest.pinterest_boards')->with(["code" => 200, "accounts" => $pinterestAcc, 'message' => 'No Pinterest account added yet! or Account has locked']);
+                    }
+                } else if ($response['data']->code === 400) {
+                    return view('feeds::Pinterest.pinterest_boards')->with(["code" => 400, "accounts" => $pinterestAcc, 'message' => $response['data']->message]);
+                } else {
+                    return view('feeds::Pinterest.pinterest_boards')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
+                return view('feeds::Pinterest.pinterest_boards')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+            }
+        } else {
+            $accountID = (int)$accid;
+            $boards = [];
+            $pinterestAcc = [];
+            $accounts = [];
+            $accountName = '';
+            try {
+
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 11 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($pinterestAcc, $data);
+                        }
+                    }
+                    for ($i = 0; $i < count($pinterestAcc); $i++) {
+                        if ($pinterestAcc[$i]->account_id === $accountID) {
+                            array_push($accounts, $pinterestAcc[$i]);
+                            unset($pinterestAcc[$i]);
+                            break;
+                        }
+                    }
+                    if (count($pinterestAcc) > 0) {
+                        foreach ($pinterestAcc as $data) {
+                            array_push($accounts, $data);
+                        }
+                    }
+                    foreach ($response['data']->data->pinterestAccountDetails as $data) {
+                        if ($data->account_id === $accountID) {
+                            $boards = $data->boardDetails;
+                            $accountName = $data->user_name;
+                        }
+                    }
+                    if (count($boards) > 0) {
+                        return view('feeds::Pinterest.pinterest_boards')->with(["boards" => $boards, 'message' => 'success', "accounts" => $accounts]);
+                    } else {
+                        return view('feeds::Pinterest.pinterest_boards')->with(["boards" => $boards, 'message' => 'No Boards have found yet! for Pinterest account', "accounts" => $accounts]);
+                    }
+                } else if ($response['data']->code === 400) {
+                    return view('feeds::Pinterest.pinterest_boards')->with(["code" => 400, "accounts" => $accounts, 'message' => $response['data']->message]);
+
+                } else {
+                    return view('feeds::Pinterest.pinterest_boards')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
+                return view('feeds::Pinterest.pinterest_boards')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+            }
+        }
+
+
+    }
+
+    function showPinterestPins(Request $request)
+    {
+        $boardID = (int)$request['boardId'];
+        $accID = (int)$request['accId'];
+        $pins = [];
+        $accountName = '';
+        try {
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl = ApiConfig::getFeeds('/feeds/get-pinterest-pins?accountId=' . $accID . '&boardId=' . $boardID . '&teamId=' . $teamID . '&pageId=1');
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $pins = $response['data']->data->pins;
+                if (count($pins) > 0) {
+                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins, 'message' => 'success', 'accounts' => $response['data']->data->socialAccountDetails, 'accountId' => $accID, 'boardId' => $boardID]);
+                } else {
+                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins, 'message' => 'No Pinterest Pins found for the Board', 'account' => $response['data']->data->socialAccountDetails]);
+                }
+            } else if ($response['data']->code === 400) {
+                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => $response['data']->error, 'account' => 'Pinterest Account']);
+
+            } else {
+                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+
+            }
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
+            return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+        }
+    }
+
+    function getNextPinterestFeeds(Request $request)
+    {
+        $boardID = (int)$request->boardId;
+        $pageId = (int)$request->pageId;
+        $accounId = (int)$request->accounId;
+        try {
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl = ApiConfig::getFeeds('/feeds/get-pinterest-pins?accountId=' . $accounId . '&boardId=' . $boardID . '&teamId=' . $teamID . '&pageId=' . $pageId);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            return $this->helper->responseHandlerWithArray($response);
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getNextPinterestFeeds() {FeedsController}');
+            $result['data']['code'] = 500;
+            $result['message'] = 'Some error occured cant get Pinterest Pins';
+            return $result;
+        }
+    }
+
+    function getBoardsOnChange(Request $request)
+    {
+        $accID = (int)$request->accID;
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        try {
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                foreach ($response['data']->data->pinterestAccountDetails as $data) {
+                    if ($data->account_id === $accID) {
+                        $boards = $data->boardDetails;
+                        $profilePic = $data->profile_pic_url;
+                    }
+                }
+                $result['code'] = 200;
+                $result['data'] = $boards;
+                $result['profilePic'] = $profilePic;
+                return $result;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+                return $result;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+                return $result;
+            }
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
 }

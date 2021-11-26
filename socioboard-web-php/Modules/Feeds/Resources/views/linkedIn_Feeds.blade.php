@@ -16,6 +16,8 @@
             <div class=" container-fluid ">
                 <!--begin::Profile-->
                 <!--begin::Row-->
+                <?php $regex = "#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#"; ?>
+                <?php $imageCounts = 0; ?>
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class="sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
@@ -78,14 +80,14 @@
                                                     <div class="star-icon">
                                                         <input type="radio"
                                                                <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating1{{$accounts[0]->account_id}}}"
-                                                               onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
+                                                               id="rating1{{$accounts[0]->account_id}}"
+                                                               onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}');">
                                                         <label
                                                                 for="rating1{{$accounts[0]->account_id}}"
                                                                 class="fas fa-star"></label>
                                                         <input type="radio"
                                                                <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating2{{$accounts[0]->account_id}}}"
+                                                               id="rating2{{$accounts[0]->account_id}}"
                                                                onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
                                                         <label
                                                                 for="rating2{{$accounts[0]->account_id}}"
@@ -134,7 +136,7 @@
                                                 </div>
                                             </div>
                                     @endif
-                                        <!--end::Contact-->
+                                    <!--end::Contact-->
                                     </div>
                                 @else
                                     <div class="text-center">
@@ -171,7 +173,13 @@
                                             @foreach($feeds['data']->feeds as $data)
                                                 <?php $count = 0?>
                                                 <?php $arrayImages = []?>
-                                                <?php $date =   date('d-m-Y H:i:s', strtotime($data->publishedAt))?>
+                                                <?php $string_desc = trim(preg_replace('/\r|\n/', ' ', $data->description));?>
+                                                <?php  $string_desc = str_replace("'", '', $string_desc);
+                                                preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $data->description, $urls);
+                                                ?>
+                                                <?php $date = new Datetime($data->publishedAt);
+                                                $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
+                                                ?>
                                                 <div class="mb-5">
                                                     <!--begin::Top-->
                                                     <div class="d-flex align-items-center">
@@ -187,16 +195,22 @@
 
                                                         <!--begin::Info-->
                                                         <div class="d-flex flex-column flex-grow-1">
-                                                            <a href="javascript:;"
+                                                            <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
+                                                               target="_blank"
                                                                class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                             <span
-                                                                    class="text-muted font-weight-bold">{{$date}}</span>
+                                                                    class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                         </div>
                                                         <!--end::Info-->
                                                     </div>
                                                     <!--end::Top-->
                                                     <div class="pt-4">
                                                         @if($data->shareMediaCategory === 'IMAGE')
+                                                            @if(count($data->mediaUrl)>1)
+                                                                <?php $imageCounts = count($data->mediaUrl)?>
+                                                            @else
+                                                                <?php $imageCounts = 0?>
+                                                            @endif
                                                             @foreach($data->mediaUrl as $images)
                                                                 <div class="">
                                                                     <img src="{{$images}}"
@@ -229,55 +243,118 @@
                                                                     <?php $count++;?>;
                                                                 @endforeach
                                                                 @elseif($data->shareMediaCategory === 'ARTICLE')
-                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2 ">
                                                                         {{$data->mediaTitle}}
                                                                     </strong>
                                                                     <br>
                                                                     <a href="{{$data->sharedUrl}}"
-                                                                       class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
                                                                        target=_blank>
                                                                         {{$data->sharedUrl}}</a>
                                                             @endif
                                                             <!--begin::Text-->
                                                                 <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                    {{$data->description}}
+                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                        <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                    </strong>
+                                                                    @if(count($urls[0])>0)
+                                                                        <br>
+                                                                        <a href="{{$urls[0][0]}}"
+                                                                           class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                           target=_blank>
+                                                                            {{$urls[0][0]}}</a>
+                                                                    @endif
                                                                 </p>
                                                                 <!--end::Text-->
 
                                                                 <!--begin::Action-->
                                                                 <div class="d-flex align-items-center">
                                                                     @if($data->shareMediaCategory === 'IMAGE')
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->description}}','{{$data->mediaUrl[0]}}','image',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
-                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
-                                                                    <i class="fas fa-pencil-alt"></i>
-                                                            </span>Re-socio
-                                                                        </a>
+                                                                        @if(count($urls[0])>0)
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>','{{$data->mediaUrl[0]}}','image',null,'{{$urls[0][0]}}',{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @else
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>','{{$data->mediaUrl[0]}}','image',null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @endif
                                                                     @elseif($data->shareMediaCategory === 'VIDEO')
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->description}}','{{$data->mediaUrl[0]}}','video',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                        @if(count($urls[0])>0)
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrl[0]}}','video','{{$urls[0][0]}}',null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
-                                                                        </a>
+                                                                            </a>
+                                                                        @else
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrl[0]}}','video',null,null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                            </span>Re-socio
+                                                                            </a>
+                                                                        @endif
                                                                     @elseif($data->shareMediaCategory === 'CAROUSEL_ALBUM')
+                                                                        @if(count($urls[0])>0)
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>','{{$data->mediaUrl[0]}}','image',null,'{{$urls[0][0]}}',{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @else
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>','{{$data->mediaUrl[0]}}','image',null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @endif
+                                                                    @elseif($data->shareMediaCategory === 'ARTICLE')
                                                                         <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->description}}','{{$data->mediaUrl[0]}}','image',null,null)"
+                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', "$data->mediaTitle"); ?>',null,null,null,'{{$data->sharedUrl}}')"
                                                                            class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
                                                                         </a>
                                                                     @else
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->description}}',null,null,null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
-                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
-                                                                    <i class="fas fa-pencil-alt"></i>
-                                                            </span>Re-socio
-                                                                        </a>
+                                                                        @if(count($urls[0])>0)
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>',null,null,null,'{{$urls[0][0]}}')">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @else
+                                                                            <a id="reSocioButton" value="image"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc) ?>',null,null,null,null)">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                            </a>
+                                                                        @endif
                                                                     @endif
                                                                 </div>
                                                                 <!--end::Action-->
@@ -322,6 +399,7 @@
 @section('scripts')
     <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
     <script src="{{asset('js/images-grid.js')}}"></script>
+    <script src="{{asset('js/accounts.js')}}"></script>
     <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
     <script>
@@ -349,7 +427,7 @@
         $(window).scroll(function () {
             if (Math.ceil($(window).scrollTop()) === Math.ceil(($(document).height() - $(window).height()))) {
                 if (feedsLength >= 12) {
-                    getNextInstagramFeeds(accounId, pageId);
+                    getNextLinkedInFeeds(accounId, pageId);
                     pageId++;
                 }
             }
@@ -383,8 +461,9 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
+                    $('#linkedInFeeds').empty();
                     $('#linkedInFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                        '<div class="spinner-border" role="status"   style="display: none;">\n' +
+                        '<div class="spinner-border" role="status" id="' + pageid + '"    style="display: none;">\n' +
                         '<span class="sr-only">Loading...</span>\n' +
                         '</div></div>');
                     $(".spinner-border").css("display", "block");
@@ -393,8 +472,9 @@
                     $(".spinner-border").css("display", "none");
                     if (response.code === 200) {
                         $('#linkedProfileDiv,#follower_count').empty();
+                        let append = '';
                         $('#follower_count').append(response?.data?.SocialAccountStats?.follower_count ?? 0);
-                        $('#linkedProfileDiv').append('<div\n' +
+                        append = '<div\n' +
                             'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                             '<div class="symbol-label"\n' +
                             'style="background-image:url(' + response.data.socialAccountDetails.profile_pic_url + ')"></div></div><div>\n' +
@@ -404,47 +484,45 @@
                             '<i class="flaticon2-correct text-primary icon-md ml-2"></i></a>\n' +
                             '<div class="text-muted">\n' + response.data.socialAccountDetails.email + '</div>' +
                             '<div class="rating-css">\n' +
-                            '<div class="star-icon">\n' +
-                            (
-                                response.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
-                                    '<label for="rating1" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
-                                    '<label for="rating1" class="fas fa-star"></label>\n'
-                            ) +
-                            (
-                                response.data.socialAccountDetails.rating === 2 ? ' <input type="radio" checked name="rating2" id="rating2">\n' +
-                                    '<label for="rating2" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating2" id="rating2">\n' +
-                                    '<label for="rating2" class="fas fa-star"></label>\n'
-                            ) +
-                            (
-                                response.data.socialAccountDetails.rating === 3 ? ' <input type="radio" checked name="rating3" id="rating3">\n' +
-                                    '<label for="rating3" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating3" id="rating3">\n' +
-                                    '<label for="rating3" class="fas fa-star"></label>\n'
-                            ) +
-                            (
-                                response.data.socialAccountDetails.rating === 4 ? ' <input type="radio" checked name="rating4" id="rating4">\n' +
-                                    '<label for="rating4" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating4" id="rating4">\n' +
-                                    '<label for="rating4" class="fas fa-star"></label>\n'
-                            ) +
-                            (
-                                response.data.socialAccountDetails.rating === 5 ? ' <input type="radio" checked name="rating5" id="rating5">\n' +
-                                    '<label for="rating5" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
-                                    '<label for="rating5" class="fas fa-star"></label>\n'
-                            ) +
-                            '                                                </div>\n' +
-                            '</div>\n' +
-                            '<div class="mt-2">\n' +
+                            '<div class="star-icon">\n';
+                        (response.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                            '<label for="rating1' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                            '<label for="rating1' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 2) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                            '<label for="rating2' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                            '<label for="rating2' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 3) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                            '<label for="rating3' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                            '<label for="rating3' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 4) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                            '<label for="rating4' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                            '<label for="rating4' + accid + '" class="fas fa-star"></label>\n';
+                        (response.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                            '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                            '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
+                        append += '</div></div>\n' +
+                            '<div class="mt-2"><a href="#"class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
+                            '</div>\</div>';
+                        $('#linkedProfileDiv').append(append);
+                        append += '<div class="mt-2">\n' +
                             '<a id="chatID" href="javascript:;" \n' +
                             'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" title="Coming soon">Chat</a>\n' +
-                            '</div></div>');
-                        $(".spinner-border").css("display", "none");
+                            '</div></div>';
                         feedsLength = response.data.feeds.length;
-                        $('#linkedInFeeds').empty();
                         let appendData = '';
                         let arrayImages = [];
                         let num = 0;
-                        let publishedDate=0;
+                        let publishedDate = 0;
+                        let multiImageCount = 0;
+                        let urlsFromDesc = '';
                         if (response.data.feeds.length > 0) {
                             response.data.feeds.map(element => {
+                                let desc = element.description.replace(/(\r\n|\n|\r)/gm, "");
+                                multiImageCount = 0;
+                                arrayImages = [];
+                                desc = desc.replace("'", '');
+                                urlsFromDesc = '';
+                                urlsFromDesc = getUrlsFromDesc(element.description);
                                 publishedDate = String(new Date(element.publishedAt)).substring(0, 25);
                                 appendData = '<div class="mb-5">\n' +
                                     '<div class="d-flex align-items-center">\n' +
@@ -453,12 +531,17 @@
                                     '<img src="' + response.data.socialAccountDetails.profile_pic_url + '"\n' +
                                     'class="h-75 align-self-end" alt=""/>\n' +
                                     '</span></div><div class="d-flex flex-column flex-grow-1">\n' +
-                                    '<a href="javascript:;"\n' +
-                                    'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                    '<a href="' + response.data.socialAccountDetails.profile_url + '" target="_blank"\n' +
+                                    'class="text-hover-primary mb-1 font-size-lg font-weight-bolder" >' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                     '<span class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
                                     '</div></div>\n' +
                                     '<div class="pt-4">';
                                 if (element.shareMediaCategory === 'IMAGE') {
+                                    if (element.mediaUrl.length > 1) {
+                                        multiImageCount = element.mediaUrl.length;
+                                    } else {
+                                        multiImageCount = 0;
+                                    }
                                     element.mediaUrl.map(data => {
                                         appendData += '<div class="">\n' +
                                             '<img src="' + data + '"\n' +
@@ -474,6 +557,11 @@
                                     });
                                 } else if (element.shareMediaCategory === 'CAROUSEL_ALBUM') {
                                     appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                    if (element.mediaUrl.length > 1) {
+                                        multiImageCount = element.mediaUrl.length;
+                                    } else {
+                                        multiImageCount = 0;
+                                    }
                                     element.mediaUrl.map(data => {
                                         if (data.shareMediaCategory === 'IMAGE') {
                                             arrayImages.push(data);
@@ -489,34 +577,85 @@
                                     appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
                                         element.mediaTitle +
                                         '</strong><br>\n' +
-                                        '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.sharedUrl +
+                                        '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + element.sharedUrl +
                                         '</a>';
                                 }
                                 appendData += '</div>';
-                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
-                                    '' + element.description + '\n' +
-                                    '</p><div class="d-flex align-items-center">\n';
-                                if (element.shareMediaCategory === 'IMAGE') {
-                                    appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,null)"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
-                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                        '</span>Re-socio</a>\n';
+                                if (urlsFromDesc !== null) {
+                                    appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                        + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                        '</strong><br>\n' +
+                                        '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
+                                        '</a>';
+                                } else {
+                                    appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                        '</p>';
+                                }
+                                appendData +=  '<div class="d-flex align-items-center">\n';
+                                if (element.shareMediaCategory === 'IMAGE'|| element.shareMediaCategory === 'CAROUSEL_ALBUM') {
+                                    if (element.mediaUrl.length > 1) {
+                                        multiImageCount = element.mediaUrl.length;
+                                    } else {
+                                        multiImageCount = 0;
+                                    }
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,\'' + urlsFromDesc[0]
+                                            + '\',\'' + multiImageCount + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
+
                                 } else if (element.shareMediaCategory === 'VIDEO') {
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,\'' + urlsFromDesc[0]
+                                            + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,null)"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
+                                } else if (element.shareMediaCategory === 'ARTICLE') {
                                     appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,null)"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                        'onclick="resocioButton(\'' + element.mediaTitle.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
+                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 ">\n' +
                                         '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                         '<i class="fas fa-pencil-alt"></i>\n' +
                                         '</span>Re-socio</a>\n';
                                 } else {
-                                    appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
-                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                        '</span>Re-socio</a>\n';
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc[0]
+                                            + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
 
                                 }
                                 appendData += '</div></div></div>\n';
@@ -545,20 +684,15 @@
          * @param {this} pageid- page id of that particular Instagram account.
          * ! Do not change this function without referring API format of getting the Instagram feeds.
          */
-        function getNextLinkedInFeeds(accid, pageId) {
+        function getNextLinkedInFeeds(accid, pageid) {
             $.ajax({
                 type: 'get',
                 url: '/get-next-linkedIn-feeds',
                 data: {
-                    accid, pageId
+                    accid, pageid
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#linkedInFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                        '<div class="spinner-border" role="status"  id="' + pageId + '" style="display: none;">\n' +
-                        '<span class="sr-only">Loading...</span>\n' +
-                        '</div></div>');
-                    $(".spinner-border").css("display", "block");
                 },
                 success: function (response) {
                     $(".spinner-border").css("display", "none");
@@ -567,9 +701,15 @@
                         let appendData = '';
                         let arrayImages = [];
                         let num = 0;
-                        let publishedDate=0;
+                        let publishedDate = 0;
+                        let multiImageCount = 0;
                         if (response.data.feeds.length > 0) {
                             response.data.feeds.map(element => {
+                                let urlsFromDesc = '';
+                                arrayImages = [];
+                                let desc = element.description.replace(/(\r\n|\n|\r)/gm, "");
+                                desc = desc.replace("'", '');
+                                urlsFromDesc = getUrlsFromDesc(element.description);
                                 publishedDate = String(new Date(element.publishedAt)).substring(0, 25);
                                 appendData = '<div class="mb-5">\n' +
                                     '<div class="d-flex align-items-center">\n' +
@@ -579,12 +719,17 @@
                                     'class="h-75 align-self-end" alt=""/>\n' +
                                     '</span></div>\n' +
                                     '<div class="d-flex flex-column flex-grow-1">\n' +
-                                    '<a href="javascript:;"\n' +
+                                    '<a href="' + response.data.socialAccountDetails.profile_url + '" target="_blank"\n' +
                                     'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                     '<span class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
                                     '</div></div>\n' +
                                     '<div class="pt-4">';
                                 if (element.shareMediaCategory === 'IMAGE') {
+                                    if (element.mediaUrl.length > 1) {
+                                        multiImageCount = element.mediaUrl.length;
+                                    } else {
+                                        multiImageCount = 0;
+                                    }
                                     element.mediaUrl.map(data => {
                                         appendData += '<div class="">\n' +
                                             '<img src="' + data + '"\n' +
@@ -601,6 +746,11 @@
                                             '</div>\n';
                                     });
                                 } else if (element.shareMediaCategory === 'CAROUSEL_ALBUM') {
+                                    if (element.mediaUrl.length > 1) {
+                                        multiImageCount = element.mediaUrl.length;
+                                    } else {
+                                        multiImageCount = 0;
+                                    }
                                     appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
                                     element.mediaUrl.map(data => {
                                         if (data.shareMediaCategory === 'IMAGE') {
@@ -614,8 +764,7 @@
                                                 '</div>';
                                         }
                                     });
-                                }
-                                else if (element.shareMediaCategory === 'ARTICLE') {
+                                } else if (element.shareMediaCategory === 'ARTICLE') {
                                     appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
                                         element.mediaTitle +
                                         '</strong><br>\n' +
@@ -628,29 +777,64 @@
                                     '</p>\n' +
                                     '<div class="d-flex align-items-center">\n';
                                 if (element.shareMediaCategory === 'IMAGE') {
-                                    appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,null)"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
-                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                        '</span>Re-socio\n' +
-                                        '</a>\n';
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,\'' + urlsFromDesc[0]
+                                            + '\',\'' + multiImageCount + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'image' + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
+
                                 } else if (element.shareMediaCategory === 'VIDEO') {
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,\'' + urlsFromDesc[0]
+                                            + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,null)"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
+                                } else if (element.shareMediaCategory === 'ARTICLE') {
                                     appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',\'' + element.mediaUrl[0] + '\',\'' + 'video' + '\',null,null)"\n' +
+                                        'onclick="resocioButton(\'' + element.mediaTitle.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                         'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
                                         '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                         '<i class="fas fa-pencil-alt"></i>\n' +
-                                        '</span>Re-socio\n' +
-                                        '</a>\n';
+                                        '</span>Re-socio</a>\n';
                                 } else {
-                                    appendData += '<a id="reSocioButton"\n' +
-                                        'onclick="resocioButton(\'' + element.description + '\',null,null,null,null)"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
-                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                        '<i class="fas fa-pencil-alt"></i>\n' +
-                                        '</span>Re-socio\n' +
-                                        '</a>\n';
+                                    if (urlsFromDesc !== null) {
+                                        appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc[0]
+                                            + '\')"\n' +
+                                            '<span\n' +
+                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    } else {
+                                        appendData += '<a id="reSocioButton"\n' +
+                                            'onclick="resocioButton(\'' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                            '<i class="fas fa-pencil-alt"></i>\n' +
+                                            '</span>Re-socio</a>\n';
+                                    }
 
                                 }
                                 appendData += '</div></div</div>\n';
@@ -681,7 +865,7 @@
          * @param {sourceUrl} sourceUrlon post.
          * ! Do not change this function without referring API format of resocio.
          */
-        function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+        function resocioButton(description, mediaUrl, type, title, sourceUrl,imagecount) {
             publishOrFeeds = 1;
             $('body').find('#resocioModal').remove();
             let action = '/discovery/content_studio/publish-content/feeds-modal';
@@ -704,6 +888,12 @@
                         pickerPosition: "right",
                         tonesStyle: "bullet"
                     });
+                    if (imagecount === 0 || imagecount === '0') {
+                        $('.thumb-count').empty();
+                    } else {
+                        $('.thumb-count').html('+' + (parseInt(imagecount)-1).toString());
+
+                    }
                     downloadMediaUrl();
                 },
                 error: function (error) {
@@ -713,6 +903,13 @@
                 },
             });
         };
+
+        function getUrlsFromDesc(text) {
+            let replyText = text;
+            let urls = replyText.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
+            );
+            return urls;
+        }
     </script>
 
 @endsection

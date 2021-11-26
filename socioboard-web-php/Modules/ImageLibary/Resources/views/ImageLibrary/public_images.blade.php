@@ -296,10 +296,10 @@
                 <div class="modal-body">
                     <div class="text-center">
                         {{--                        <img src="../media/svg/icons/Communication/Delete-user.svg"/><br>--}}
-                        <span class="font-weight-bolder font-size-h4 "> Are you sure wanna delete this Image? </span>
+                        <span class="font-weight-bolder font-size-h4 "> Are you sure want to delete this Image? </span>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a href="javascript:;" type="button" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal" id="image-delete" onclick="deleteImage();">Delete it! </a>
+                        <a href="javascript:;" type="button" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal" id="image-delete" onclick="deleteImage();">Delete it </a>
                         <a href="javascript:;" type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">No thanks.</a>
                     </div>
                 </div>
@@ -330,7 +330,7 @@
                         <div class="col-md-6">
                             <p><span>Title - <b id="title_id"></b></span></p>
                             <p><span>Size - <b id="size_id"></b></span></p>
-                            <p><span>Create Date - <b id="create_date"></b></span></p>
+                            <p><span>Created Date - <b id="create_date"></b></span></p>
                             <p><span>Rating - <b id="ratng"><i class="fas fa-star"></i></b></span></p>
                             <p><span>Type - <b id="type"></b></span></p>
                         </div>

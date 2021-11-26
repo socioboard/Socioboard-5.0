@@ -15,6 +15,13 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
             Route::get('/calendar-view', [DashboardController::class, 'calendarView'])->name('calendar-view');
             Route::get('/calendar-data', [DashboardController::class, 'getCalendarData'])->name('calendar-data');
         });
+        Route::middleware('checkPlanAccesses:link_shortening')->group(function() {
+            Route::post('bitly/get-shortened-link',[DashboardController::class, 'getBitlyShortenedLink']);
+            Route::get('shortening-links',[DashboardController::class, 'shorteningLinks'])->name('shortening-links');
+            Route::get('/bitly/callback ', [DashboardController::class, 'addBitlyCallback']);
+            Route::delete('/bitly/delete', [DashboardController::class, 'DeleteBitlyAccount']);
+
+        });
 
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/add-twitter-accounts', [DashboardController::class, 'addTwitterAccounts']);
@@ -30,6 +37,9 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
         Route::get('/linkedin/callback', [DashboardController::class, 'addLinkedInCallback']);
         Route::get('/youtube/callback', [DashboardController::class, 'addYoutubeCallback']);
         Route::get('/instagram/callback', [DashboardController::class, 'addInstagramCallback']);
+        Route::get('/tumblr-callback', [DashboardController::class, 'addTumblrCallback']);
+        Route::get('/pinterest-callback', [DashboardController::class, 'addPinterestCallback']);
+        Route::post('tumblrPageAdd', [DashboardController::class, 'addtumblrInPageBulkInBulk']);
         Route::get('/instagram-business/callback', [DashboardController::class, 'addInstagramBusinessCallback']);
         Route::get('/linkedIn-pages/callback', [DashboardController::class, 'addLinkedInPagesCallback']);
         Route::get('/get-social-accounts-details', [DashboardController::class, 'getSocialAccountsDetails']);
@@ -60,8 +70,30 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
         Route::get('get-all-notifications-users', [DashboardController::class, 'getAllNotificationsUsers']);
         Route::put('mark-all-notifications-user-read', [DashboardController::class, 'markAllNotificationsUserRead']);
         Route::put('mark-all-notifications-team-read', [DashboardController::class, 'markAllNotificationsTeamRead']);
+        Route::get('get-notifications-status', [DashboardController::class, 'getNotificatiosStatus']);
+        Route::get('/blogged-accounts', [DashboardController::class, 'getBloggedAccountsDetails']);
+        Route::post('/add-medium-account', [DashboardController::class, 'addMediumAccounts']);
+        Route::get('excel-file', [DashboardController::class, 'DownloadExcel']);
+        Route::get('append-teams-name', [DashboardController::class, 'appepndTeamsName']);
+        Route::post('send-invite-to-add-account', [DashboardController::class, 'sendInviteToAddAccount']);
     });
     Route::get('get-plan-details', [DashboardController::class, 'getPlanDetails']);
     Route::get('/plan-details-view', [PlanDetailsController::class, 'planDetailsView']);
     Route::get('check-email-user', [DashboardController::class, 'checkTheEmailUser']);
+
+    Route::get('invitation-add-social-profie', [DashboardController::class, 'sendInviteToAddSocialAccount']);
+    Route::get('/facebook-invite/callback', [DashboardController::class, 'addFacebookInviteCallback']);
+    Route::get('/facebook-page/invite-callback', [DashboardController::class, 'addFaceboookPagesCallbackInvite']);
+    Route::get('/insta-invite/callback', [DashboardController::class, 'addFacebookInviteCallback']);
+    Route::get('/linkedin-invite/callback', [DashboardController::class, 'addFacebookInviteCallback']);
+    Route::get('/instagram-business/invite-callback', [DashboardController::class, 'addinstagramBusinessCallbackInvite']);
+    Route::get('/linkedIn-pages/invite-callback', [DashboardController::class, 'addLinkedInPagesCallbackInvite']);
+    Route::get('/youtube/invite-callback', [DashboardController::class, 'addYoutubeCallbackInvite']);
+    Route::post('/instagramPageAddByInvite', [DashboardController::class, 'addInstagramPageBulkByInvite']);
+    Route::post('/linkedInPageAddByInvite', [DashboardController::class, 'addLinkedInPageBulkByInvite']);
+    Route::post('/facebookPageAddByInvite', [DashboardController::class, 'addfacebookPageBulkByInvite']);
+    Route::get('invite/callback', [DashboardController::class, 'addAccountUsingCallback']);
+    Route::post('/bulk-invite', [DashboardController::class, 'BulkInvitation']);
+    Route::get('/thankyouPage', [DashboardController::class, 'getThankyouPage']);
+    Route::get('/setSession', [DashboardController::class, 'setSessioForPlan']);
 });

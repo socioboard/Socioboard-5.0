@@ -8,6 +8,7 @@ data-type="image"
 >
     <img src="{{ $item->mediaUrl }}" class="card-img-top" alt="...">
     <div class="card-body">
+        <div class="board-card">
     	<div class="d-flex align-items-center">
             <!--begin::Info-->
             <div class="d-flex flex-column flex-grow-1">
@@ -33,7 +34,7 @@ data-type="image"
         <h5 class="card-title mb-1 mt-2">{{ $item->title }}</h5>
         <p class="card-text">{{ $item->description }}</p>
         <div class="d-flex justify-content-center">
-            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> One-Click</a>
             <form action="{{ route('publish_content.scheduling')  }}" method="POST">
                 @csrf
                 <input type="hidden" name="mediaUrl" value="{{ $item->mediaUrl }}">
@@ -45,6 +46,7 @@ data-type="image"
                 <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder"><i class="fas fa-history fa-fw"></i> Schedule</button>
             </form>
 
+        </div>
         </div>
     </div>
 </div>

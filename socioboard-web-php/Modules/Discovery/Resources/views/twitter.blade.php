@@ -26,8 +26,10 @@
                                     <!--begin::search-->
                                     <div class="form-group">
                                         <div class="input-icon">
+                                            <div id="InKwyword">
                                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" autocomplete="off" id="keyword_name" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword or Topics""/>
                                             <span><i class="far fa-keyboard"></i></span>
+                                            </div>
                                         </div>
                                         @if ($errors->any())
                                             <span id="validboardname" style="color: red;font-size: medium;" role="alert">{{ $errors->first('keyword') }}</span>
@@ -35,8 +37,8 @@
                                     </div>
 
                                     <!--end::search-->
-                                    <button id="search"  class="btn font-weight-bolder mr-2 px-8">Search</button>
-                                    <button type="reset" class="btn font-weight-bolder px-8">Clear</button>
+                                    <button id="search"  class="btn font-weight-bolder mr-2 px-8" >Search</button>
+                                    <button type="reset" class="btn font-weight-bolder px-8" onclick="clearFunction()">Clear</button>
                                 </form>
                                 <!--end::Form-->
                             </div>
@@ -66,21 +68,28 @@
                                 </script>
                                 @foreach($responseData['data']->tweets as $twits)
                                     @if($twits->mediaUrls != null)
-                                        @foreach($twits->mediaUrls as $media)
+                                    @php (sizeof($twits->mediaUrls) > 1 ? $count = "multiple" : $count = "single") @endphp
                                     <div class="card">
-                                        <!--begin::carousel-->
-                                        <div id="carouselExampleControls{{$twits->tweetId}}" class="carousel slide" data-ride="carousel">
+                                        <div class="card-body">
+                                            <!--begin::carousel-->
+                                            <div id="carouselExampleControls{{$twits->tweetId}}" class="carousel slide" data-ride="carousel">
 
-                                            <div class="carousel-inner">
-
+                                                <div class="carousel-inner">
+                                                    @foreach($twits->mediaUrls as $k=>$media)
                                                     @if($media->type === 'photo' && isset($media->url))
+                                                        @if($k == 0)
                                                         <div class="carousel-item active">
                                                             <img src="{{$media->url}}" class="d-block w-100" alt="...">
                                                         </div>
+                                                            @else
+                                                                <div class="carousel-item">
+                                                                    <img src="{{$media->url}}" class="d-block w-100" alt="...">
+                                                                </div>
+                                                            @endif
                                                     @elseif($media->type === 'video' && isset($media->url))
                                                         <div class="carousel-item active">
-                                                        <iframe class="d-block w-100"
-                                                                src="{{$media->url}}" allowfullscreen=""></iframe>
+                                                            <iframe class="d-block w-100"
+                                                                    src="{{$media->url}}" allowfullscreen=""></iframe>
                                                         </div>
                                                     @elseif($media->type === 'animated_gif' && isset($media->url))
                                                         <div class="carousel-item active">
@@ -88,18 +97,19 @@
                                                                     src="{{$media->url}}" allowfullscreen=""></iframe>
                                                         </div>
                                                     @endif
+                                                        @endforeach
+                                                </div>
+                                                                                            <a class="carousel-control-prev" href="#carouselExampleControls{{$twits->tweetId}}" role="button" data-slide="prev">
+                                                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                                                <span class="sr-only">Previous</span>
+                                                                                            </a>
+                                                                                            <a class="carousel-control-next" href="#carouselExampleControls{{$twits->tweetId}}" role="button" data-slide="next">
+                                                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                                                <span class="sr-only">Next</span>
+                                                                                            </a>
                                             </div>
-{{--                                            <a class="carousel-control-prev" href="#carouselExampleControls{{$twits->tweetId}}" role="button" data-slide="prev">--}}
-{{--                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>--}}
-{{--                                                <span class="sr-only">Previous</span>--}}
-{{--                                            </a>--}}
-{{--                                            <a class="carousel-control-next" href="#carouselExampleControls{{$twits->tweetId}}" role="button" data-slide="next">--}}
-{{--                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>--}}
-{{--                                                <span class="sr-only">Next</span>--}}
-{{--                                            </a>--}}
-                                        </div>
-                                        <!--end::carousel-->
-                                        <div class="card-body">
+                                            <br>
+                                            <!--end::carousel-->
                                             <div class="d-flex align-items-center">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-40 symbol-light-success mr-5">
@@ -112,7 +122,9 @@
                                                 <!--begin::Info-->
                                                 <div class="d-flex flex-column flex-grow-1">
                                                     <a href="javascript:;" class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">{{$twits->postedAccountScreenName}}</a>
-                                                    <span class="text-muted font-weight-bold">{{$twits->publishedDate}}</span>
+                                                    <?php $date = new Datetime($twits->publishedDate);
+                                                    ?>
+                                                    <span class="text-muted font-weight-bold">{{$date->format('Y-m-d')}}</span>
                                                 </div>
                                                 <!--end::Info-->
                                             </div>
@@ -140,7 +152,7 @@
                                             <hr>
                                             @if(isset($media->url))
                                             <div class="d-flex justify-content-center">
-                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openImageModel('{{$twits->tweetUrl}}','{{$media->type}}','{{$twits->description}}','{{$media->url}}')"><i class="far fa-hand-point-up fa-fw" ></i> 1 click</a>
+                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openImageModel('{{$twits->tweetUrl}}','{{$media->type}}','{{$twits->description}}','{{$media->url}}', '{{$count}}')"><i class="far fa-hand-point-up fa-fw" ></i> 1 click</a>
                                                 <a href="{{$twits->tweetUrl}}" class="btn btn-hover-text-primary btn-hover-icon-primary rounded font-weight-bolder"><i class="fab fa-twitter fa-fw"></i> Show Original</a>
                                             </div>
                                                 @else
@@ -151,7 +163,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                        @endforeach
+
                                     @else
                                     <div class="card">
                                         <div class="card-body">
@@ -168,7 +180,9 @@
                                                 <!--begin::Info-->
                                                 <div class="d-flex flex-column flex-grow-1">
                                                     <a href="{{$twits->tweetUrl}}" class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">{{$twits->postedAccountScreenName}}</a>
-                                                    <span class="text-muted font-weight-bold">{{$twits->publishedDate}}</span>
+                                                    <?php $date = new Datetime($twits->publishedDate);
+                                                    ?>
+                                                    <span class="text-muted font-weight-bold">{{$date->format('Y-m-d ')}}</span>
                                                 </div>
                                                 <!--end::Info-->
                                             </div>
@@ -271,7 +285,6 @@
                                                         <div class="mt-3">
                                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                                 <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
-                                                                    @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                                 <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                                 @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -295,11 +308,12 @@
                                                                                     <!--end::Title-->
 
                                                                                     <!--begin::Data-->
-                                                                                    <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
-                                                                                        {{ $socialAccount->friendship_counts }} followers
+                                                                                @if($socialAccount->account_type !== 6)
+                                                                                    <!--begin::Data-->
+                                                                                        <span class="text-muted font-weight-bold">
+                                                                            {{ $socialAccount->friendship_counts }} followers
                                                                         </span>
-                                                                                    <!--end::Data-->
+                                                                                    @endif
                                                                                 </div>
                                                                                 <!--end::Info-->
                                                                             </div>
@@ -315,7 +329,6 @@
                                                                         <!--end::Page-->
                                                                 @endforeach
                                                                 </div>
-                                                                @endif
                                                             @endforeach
                                                         </div>
                                                     </div>
@@ -414,15 +427,6 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                beforeSend: function () {
-                    $('#feeds').append('<div class="d-flex justify-content-center" >\n' +
-                        '        <div class="spinner-border" role="status"  id="' + maxId + '" style="display: none;">\n' +
-                        '            <span class="sr-only">Loading...</span>\n' +
-                        '        </div>\n' +
-                        '\n' +
-                        '        </div>');
-                    $(".spinner-border").css("display", "block");
-                },
                 success : function (response) {
                     if(response.code === 200 ){
                         let appendData = '';
@@ -500,22 +504,36 @@
             });
         }
 
-        function openImageModel(mediaUrl, mediatype, title,media ) {
+        function openImageModel(mediaUrl, mediatype, title,media,count ) {
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+title +'</textarea>');
                     $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+mediaUrl+'"/><span><i class="fas fa-link"></i></span>');
                     if(mediatype === "photo") {
-                        $('#mediaUrl').empty().append('<div class="col-12" id="">' +
-                            '                                            <ul id="media-list" class="clearfix">' +
-                            '                                                <li>' +
-                            '                                                    <img src="' + media + '"/>' +
-                            '                                                </li>' +
-                            '                                            </ul>' +
-                            '                                        </div>');
+                        if (count === "single") {
+                            $('#mediaUrl').empty().append('<div class="col-12" id="">' +
+                                '                                            <ul id="media-list" class="clearfix">' +
+                                '                                                <li>' +
+                                '                                                    <img src="' + media + '"/>' +
+                                '                                                </li>' +
+                                '                                            </ul>' +
+                                '                                        </div>');
+                        }else {
+                            $('#mediaUrl').empty().append('<div class="col-12" id="">' +
+                                '                                            <ul id="media-list" class="clearfix">' +
+                                '                                                <li>' +
+                                '                                                    <img src="' + media + '"/><div class="image-monero">\n' +
+                                '      <i class="fab fa-monero"></i>\n' +
+                                ' </div>' +
+                                '                                                </li>' +
+                                '                                            </ul>' +
+                                '                                        </div>');
+                        }
                     }else{
                         $('#mediaUrl').empty().append('<div class="col-12" id="">' +
                             '                                            <ul id="media-list" class="clearfix">' +
                             '                                                <li>' +
-                            '                                                    <iframe src="' + media + '"/>' +
+                            '                                                    <iframe src="' + media + '"/><div class="image-monero">\n' +
+                            '      <i class="fab fa-monero"></i>\n' +
+                            ' </div>' +
                             '                                                </li>' +
                             '                                            </ul>' +
                             '                                        </div>');
@@ -528,5 +546,10 @@
         $(document).on('click','#search',function (e) {
             $('#search').empty().append('<i class="fa fa-spinner fa-spin"></i>Searching');
         })
+
+        function clearFunction() {
+            $("#InKwyword").empty().append('<input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" id="keyword" placeholder="Enter Keyword"/>\n' +
+                '                                            <span><i class="far fa-keyboard"></i></span>');
+        }
     </script>
 @endsection

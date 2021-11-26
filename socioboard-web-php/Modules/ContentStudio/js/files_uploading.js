@@ -19,8 +19,38 @@ $("#normal_post_area").emojioneArea({
 // begin:images and videos upload
 
 $(function () {
-    var names = {};
+    let names = {};
     $('#hint_brand').css("display", "none");
+    let twitterAccountsIds = $("#twitterAccountsIds").data('list');
+    let facebookAccountsIds = $("#facebookAccountsIds").data('list');
+    let linkedinAccountsIds = $("#linkedinAccountsIds").data('list');
+    let instagramAccountsIds = $("#instagramAccountsIds").data('list');
+    let tumblrAccountsIds = $("#tumblrAccountsIds").data('list');
+    let selectedAccountIds = ($("#selectedAccountIds").data('list')) ? $("#selectedAccountIds").data('list') : [];
+    selectedAccountIds = selectedAccountIds.map(x => +x);
+    let twitter = 0; let facebook = 0; let linkedin = 0; let instagram = 0; let tumblr = 0;
+    $(document.body).on('click', '.check_social_account', function (e) {
+        let append = '';
+        SelectedId = "";
+        if ($(this).is(':checked')) {
+            selectedAccountIds.push(Number($(this).attr('acc_id')));
+            SelectedId = Number($(this).attr('acc_id'));
+        } else {
+            let index = selectedAccountIds.indexOf(Number($(this).attr('acc_id')));
+            SelectedId = Number($(this).attr('acc_id'));
+            if (index > -1) {
+                selectedAccountIds.splice(index, 1);
+            }
+        }
+        selectedAccountIds.forEach(function (ids) {
+            if ((selectedAccountIds.length > 0) && (twitterAccountsIds.includes(Number(ids)))) twitter++;
+            if ((selectedAccountIds.length > 0) && (facebookAccountsIds.includes(Number(ids)))) facebook++;
+            if ((selectedAccountIds.length > 0) && (linkedinAccountsIds.includes(Number(ids)))) linkedin++;
+            if ((selectedAccountIds.length > 0) && (instagramAccountsIds.includes(Number(ids)))) instagram++;
+            if ((selectedAccountIds.length > 0) && (tumblrAccountsIds.includes(Number(ids)))) tumblr++;
+        });
+    });
+
     $(document).on('change', '.picupload', function (event) {
         $('#hint_brand').css('display', 'block');
         $.ajaxSetup({
@@ -28,32 +58,32 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        var getAttr = $(this).attr('click-type');
-        var files = event.target.files;
-        var output = document.getElementById("media-list");
-        var z = 0;
+        let getAttr = $(this).attr('click-type');
+        let files = event.target.files;
+        let output = document.getElementById("media-list");
+        let z = 0;
 
         if (getAttr == 'img-video-option' || getAttr == 'img-video-upload'){
             // $('#hint_brand').css("display", "block");
             $('#option_upload').css("display", "none");
             $('#next_upload').empty();
 
-            for (var fileKey = 0; fileKey < files.length; fileKey++) {
-                var checkIsUploaded = false;
-                var fileItem = files[fileKey];
+            for (let fileKey = 0; fileKey < files.length; fileKey++) {
+                let checkIsUploaded = false;
+                let fileItem = files[fileKey];
 
                 names[iterator] = $(this).get(0).files[fileKey].name;
                 if (fileItem.type.match('image')) {
-                    var form_data = new FormData(); 
+                    let form_data = new FormData();
                     form_data.append('file', fileItem);
 
                     $.ajax({
-                        url: '/discovery/content_studio/image/upload', // point to server-side PHP script 
+                        url: '/discovery/content_studio/image/upload', // point to server-side PHP script
                         dataType: 'text',  // what to expect back from the PHP script, if anything
                         cache: false,
                         contentType: false,
                         processData: false,
-                        data: form_data,                         
+                        data: form_data,
                         type: 'post',
                         success: (r)=>{
                             checkIsUploaded = true;
@@ -66,7 +96,11 @@ $(function () {
                                 $("body").find('.imageShow').prepend(`<img src='${response.media_url}' class='img-fluid image${iterator}' style="object-fit:contain;">`);
                                 if (getAttr == 'img-video-option') {
                                     $('#media-list').html('');
-                                    $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept=".jpg, .png, .jpeg" style="width: 100px"></span></li></div>');
+                                    if (!((instagram > 0 || linkedin> 0) && twitter === 0 && facebook === 0 && tumblr === 0 )) {
+                                        $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept=".jpg, .png, .jpeg" style="width: 100px"></span></li></div>');
+                                    } else {
+                                        $('#media-list').html('<div><li class="myupload"><span></div>');
+                                    }
                                 }
 
                                 $("body").find("#media-list").prepend(`
@@ -91,17 +125,17 @@ $(function () {
                             }
                         }
                     });
-                                               
+
                 } else if(fileItem.type.match('video')) {
-                    var form_data = new FormData();                  
+                    let form_data = new FormData();
                     form_data.append('file', files[0]);
                     $.ajax({
-                        url: '/discovery/content_studio/video/upload', // point to server-side PHP script 
+                        url: '/discovery/content_studio/video/upload', // point to server-side PHP script
                         dataType: 'text',  // what to expect back from the PHP script, if anything
                         cache: false,
                         contentType: false,
                         processData: false,
-                        data: form_data,                         
+                        data: form_data,
                         type: 'post',
                         success: (r)=>{
                             $("body").find('.defaultImage').remove();
@@ -111,7 +145,11 @@ $(function () {
                                 $("body").find('.imageShow').prepend(`<video style="width:100%; height:auto" controls class='video${iterator}'><source src="${response.media_url}"></source></video>`);
                                 if (getAttr == 'img-video-option') {
                                     $('#media-list').html('');
-                                    $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept="video/*" style="width: 100px"></span></li></div>');
+                                    if (!((instagram > 0 || linkedin> 0) && twitter === 0 && facebook === 0 && tumblr === 0 )) {
+                                        $('#media-list').html('<div><li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i><input type="file" click-type="img-video-upload" id="picupload" class="picupload" title="Click to Add File" data-toggle="tooltip" multiple accept="video/*" style="width: 100px"></span></li></div>');
+                                    } else {
+                                        $('#media-list').html('<div><li class="myupload"><span></div>');
+                                    }
                                 }
                                 
                                 $("body").find("#media-list").prepend(`

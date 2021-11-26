@@ -9,7 +9,6 @@
     <!--end::Page Vendors Styles-->
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/dropify/dist/css/dropify.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{asset('plugins/custom/emojionearea/css/emojionearea.min.css') }}">
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico"/>
 
 @endsection
 @section('content')
@@ -28,7 +27,7 @@
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
-            <div class=" container-fluid publish_assistant_wrapper ">
+            <div class=" container ">
                 <!--begin::Schedule-->
                 <div class="row">
                     <div class="col-xl-6 col-sm-12">
@@ -52,7 +51,7 @@
                                     <div class="form-group">
                                         <textarea name="content"
                                                   class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
-                                                  id="normal_post_area" rows="3" placeholder="Write Something !"
+                                                  id="normal_post_area" rows="3" placeholder="Write Something here!"
                                                   required>{{ $content  }}</textarea>
                                     </div>
                                     <p class="text-right">Charecters Remaining : <span id="errorText3" class="text-danger"></span></p>
@@ -63,7 +62,19 @@
                                                    placeholder="Enter Outgoing URL"
                                                    value="{!! isset($mediaData) && isset($mediaData['sourceUrl']) ? $mediaData['sourceUrl'] : null !!}"/>
                                             <span><i class="fas fa-link"></i></span>
+                                            @php
+                                            $bitly = Session::get('bitly_id');
+                                            @endphp
                                         </div>
+                                                @if($bitly !== null)
+                                                <div class="form-group mt-5 d-flex" id="input_urls_for_short">
+                                                    <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" autocomplete="off" placeholder="Enter URL To get Short Link" id="link_to_be">
+                                                    <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8" onclick="SortLink()">Get Shortened Link</button>
+                                                </div>
+                                        <div id="OutputURL">
+
+                                        </div>
+                                                    @endif
                                     </div>
 
                                     <!-- image and video upload -->
@@ -73,7 +84,7 @@
                                                 @else
                                                     <div class="col-12" id="option_upload">
                                                         @endif
-                                                        <small>Note: Add only 4 items at a single time.</small>
+                                                        <small>Note: Add only 4 items at a time.</small>
                                                         <ul class="btn-nav">
                                                             <li>
                                                     <span>
@@ -144,6 +155,7 @@
                                                         <input type="hidden" id="facebookAccountsIds" data-list="{{json_encode($facebookAccountsIds) }}">
                                                         <input type="hidden" id="linkedinAccountsIds" data-list="{{json_encode($linkedinAccountsIds) }}">
                                                         <input type="hidden" id="instagramAccountsIds" data-list="{{json_encode($instagramAccountsIds) }}">
+                                                        <input type="hidden" id="tumblrAccountsIds" data-list="{{json_encode($tumblrAccountsIds) }}">
                                                         <input type="hidden" id="selectedAccountIds" data-list="{{json_encode($accountIds) }}">
                                     {{-- End checking if the media has to been downloaded and then downloaded or not--}}
                                     <!-- end of image and video upload -->
@@ -275,192 +287,6 @@
                     <div class="col-xl-6 col-sm-12">
                         @include('contentstudio::scheduling.components._draft_preview')
                     </div>
-                    <div class="col-xl-6 publish_assistant">
-                        <!--begin::shrink-btn-->
-                        <div class="btn btn-icon btn-sm shrink-btn">
-                                        <span class="svg-icon svg-icon-xl">
-                                            <i class="fas fa-angle-left" id="arrow"></i>
-                                        </span>
-                        </div>
-                        <!--end::shrink-btn-->
-                        <div class="card card-custom gutter-b card-stretch publish_assistant_card">
-                            <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Assistant Preview</h3>
-                            </div>
-                            <!--end::Header-->
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="tab-pane active show" id="right_sidebar_assistant">
-                                        <div class="initial_view_block">
-                                            <ul class="nav justify-content-center nav-pills" id="" role="tablist">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" id="" data-toggle="tab" href="#">
-    <span class="nav-text">
-    <i class="icon-1x text-dark-50 flaticon2-world"></i></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="instagram">
-      <span class="nav-text">
-      <i class="icon-1x text-dark-50 flaticon-youtube"></i></span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="twitter-tab-accounts" data-toggle="tab" href="#" aria-controls="twitter">
-      <span class="nav-text">
-      <i class="icon-1x text-dark-50 flaticon-twitter-logo-button"></i>
-      </span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
-    <span class="nav-text">
-    <i class="icon-1x text-dark-50 flaticon-more-1"></i>
-    </span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
-    <span class="nav-text">
-    <i class="icon-1x text-dark-50 flaticon2-photo-camera"></i>
-    </span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
-     <span class="nav-text">
-     <i class="icon-1x text-dark-50 flaticon2-safe"></i>
-     </span>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="" data-toggle="tab" href="#" aria-controls="linkedin">
-   <span class="nav-text">
-   <i class="icon-1x text-dark-50 flaticon-more"></i>
-  </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-icon mt-5 search-assistant">
-                                                <input class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" type="search"
-                                                       name="username" autocomplete="off" placeholder="Search by keyword" />
-                                                <span>
-                                                            <i class="icon-1x text-dark-50 flaticon2-search-1 ml-auto mr-2"></i>
-                                                        </span>
-                                            </div>
-                                        </div>
-                                        <div class="assistant_step">
-                                            <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div>
-                                            <div class="right_section">
-                                                <h4>Assistant 1</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-                                        <div class="assistant_step">
-                                            <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div>
-                                            <div class="right_section">
-                                                <h4>Assistant 2</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" id="right_sidebar_tasks" role="tabpanel">
-                                        <div class="assistant_step">
-                                            <!-- <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div> -->
-                                            <div class="right_section">
-                                                <h4>Tasks 1</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-                                        <div class="assistant_step">
-                                            <!-- <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div> -->
-                                            <div class="right_section">
-                                                <h4>Tasks 2</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" id="right_sidebar_activities" role="tabpanel">
-                                        <div class="assistant_step">
-                                            <!-- <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div> -->
-                                            <div class="right_section">
-                                                <h4>Activities 1</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-                                        <div class="assistant_step">
-                                            <!-- <div class="left_section">
-                                                <i class="fa fa-search"></i>
-                                            </div> -->
-                                            <div class="right_section">
-                                                <h4>Activities 2</h4>
-                                                <span>Search</span>
-                                                <p>Select a channel and find content suggestion with your own keywords.</p>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="tab-pane" id="right_sidebar_comments" role="tabpanel">
-                                        <div class="assistant_step">
-                                            <div class="right_section">
-                                                <h4>Comments 1</h4>
-                                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
-                                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
-                                                    book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
-                                                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
-                                                    recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="assistant-right-sidebar">
-                            <ul class="publish_assistant_tabs nav-pills nav nav-bold nav-tabs-line-3x nav-tabs-line-active-border-success justify-content-center" role=" tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active show" data-toggle="tab" href="#right_sidebar_assistant">
-                                        <i class="fa fa-th"></i>
-                                        <span>Assistant</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_tasks">
-                                        <i class="fa fa-tasks"></i>
-                                        <span>Tasks</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_activities">
-                                        <i class="fa fa-list"></i>
-                                        <span>Activities</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#right_sidebar_comments">
-                                        <i class="far fa-comment"></i>
-                                        <span>Chats</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
                 <!--end::Schedule-->
             </div>
@@ -532,12 +358,6 @@
             $('#schedule_normal_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
         });
 
-        $('.shrink-btn').on('click', function() {
-            let y = document.getElementById("arrow").className;
-            y == "fas fa-angle-right" ? $("#arrow").attr('class', 'fas fa-angle-left') : $("#arrow").attr('class', 'fas fa-angle-right')
-            $('.publish_assistant_wrapper').toggleClass('toggle-wrapper')
-        })
-
         // schedule_normal_post daterange
         var start = moment().subtract(29, 'days');
         var end = moment();
@@ -582,6 +402,41 @@
                     $(".emojionearea-filter").removeClass("active");
             });
         });
+
+        function SortLink() {
+            $('#submitButton').empty().append('<i class="fa fa-spinner fa-spin"></i>Processing');
+            let short_link = $('#link_to_be').val();
+            $.ajax({
+                type: "post",
+                url: "/bitly/get-shortened-link",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data:{
+                    'short_link' : short_link
+                } ,
+                success: function (response) {
+                    $('#submitButton').empty().append('Submit');
+                    if (response.code === 200){
+                        $('#OutputURL').empty().append('<div class="link-shortening-text" id="responseURL">'+response.data.link+'<span class="ml-auto"><i class="icon-md far fa-file-alt" onclick="myFunction()"></i><i class="icon-md fas fa-check-circle ml-4"></i></span></div>')
+                    }else if (response.error == "\"long_url\" must be a string"){
+                        toastr.error("URL field is required");
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (error) {
+                    $('#submitButton').empty().append('Submit');
+                    toastr.error(error.message);
+                },
+            });
+        }
+        function myFunction() {
+            let copyText = document.getElementById("responseURL");
+            let elementText = copyText.textContent; //get the text content from the element
+            navigator.clipboard.writeText(elementText);
+            toastr.success('Copied')
+        }
 
     </script>
 

@@ -15,8 +15,7 @@ class SearchRequest extends FormRequest
     {
         return [
             'keyword'     => ['required', 'string'],
-            'type'  => ['required', 'string'],
-            'rating'  => ['required', 'string'],
+//            'type'  => ['required', 'string'],
         ];
     }
 

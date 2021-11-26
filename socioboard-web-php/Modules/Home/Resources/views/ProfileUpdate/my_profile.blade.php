@@ -165,7 +165,7 @@
                                     <div class="card-header py-3">
                                         <div class="card-title align-items-start flex-column">
                                             <h3 class="card-label font-weight-bolder">Personal Information</h3>
-                                            <span class="font-weight-bold font-size-sm mt-1">Update your personal informaiton</span>
+                                            <span class="font-weight-bold font-size-sm mt-1">Update your personal information</span>
                                         </div>
                                         <div class="card-toolbar">
                                             <button type="reset" class="btn mr-2" id="save_button_id"
@@ -200,7 +200,7 @@
                                                             class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow upload-button"
                                                             data-action="change" data-toggle="tooltip" title=""
                                                             data-original-title="Change avatar">
-                                                            <i class="fa fa-pen icon-sm "></i>
+                                                            <i class="fas fa-pen icon-sm "></i>
                                                             <input type="file" id="profile_avatar" name="profile_avatar"
                                                                    class="file-upload" accept=".png, .jpg, .jpeg"/>
                                                             <input type="hidden" name="profile_avatar_remove"/>
@@ -271,7 +271,7 @@
                                             <div class="row">
                                                 <label class="col-xl-3"></label>
                                                 <div class="col-lg-9 col-xl-6">
-                                                    <h5 class="font-weight-bold mt-10 mb-6">Contact Info</h5>
+                                                    <h5 class="font-weight-bold mt-10 mb-6">Contact Information</h5>
                                                 </div>
                                             </div>
 
@@ -303,6 +303,7 @@
                                                                value="<?php if (isset($getProfileData['data']->user->email)  && ($getProfileData['data']->user->email != "nil")) {
                                                                    echo $getProfileData['data']->user->email;
                                                                } else echo ''?>" id="email_address_id" placeholder="Email" disabled/>
+                                                            <span><i class="far fa-envelope-open"></i></span>
                                                     </div>
                                                     </div>
                                                     <span class="form-text ">We'll never share your email with anyone else.</span>
@@ -323,7 +324,7 @@
                                     <div class="card-header py-3">
                                         <div class="card-title align-items-start flex-column">
                                             <h3 class="card-label font-weight-bolder">Account Information</h3>
-                                            <span class="text-muted font-weight-bold font-size-sm mt-1">Change your account settings</span>
+                                            <span class="text-muted font-weight-bold font-size-sm mt-1">You can update account details</span>
                                         </div>
                                         <div class="card-toolbar">
                                             <button type="reset" class="btn mr-2" id="account_information_save_id" onclick="updateProfileData(2)">Save
@@ -371,6 +372,7 @@
                                                                value="<?php if (isset($getProfileData['data']->user->email) && ($getProfileData['data']->user->email != "nil")) {
                                                                    echo $getProfileData['data']->user->email;
                                                                } else echo ''?>" placeholder="Email" id="email2_name_id" disabled/>
+                                                            <span><i class="far fa-envelope-open"></i></span>
                                                     </div>
                                                     </div>
                                                     <div style="display: none;">

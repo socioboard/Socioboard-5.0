@@ -19,6 +19,14 @@ Route::group(['module' => 'discovery',  'prefix' => 'discovery', 'middleware' =>
         Route::post('/edit-rss-feeds', [DiscoveryController::class, 'editRssTitle'])->name('edit-rss-feeds');
         Route::get('/rss-feeds', [DiscoveryController::class, 'showRssFeeds'])->name('rss-feeds');
         Route::post('/search-rss-feeds', [DiscoveryController::class, 'searchRssFeeds'])->name('search-rss-feeds');
+        Route::get('/automated-rss-feeds', [DiscoveryController::class, 'automatedRssFeeds'])->name('automated-rss-feeds');
+        Route::get('/rss-feeds-article', [DiscoveryController::class, 'RssFeedsArticle'])->name('rss-feeds-article');
+        Route::get('/rss-feeds-by-link', [DiscoveryController::class, 'RssFeedsByLink'])->name('rss-feeds-by-link');
+        Route::get('/get-keywords/{id}', [DiscoveryController::class, 'getKeywordsForNewsPaper'])->name('get-keywords');
+        Route::post('/add-newspaper', [DiscoveryController::class, 'saveNewsPapers'])->name('automated-rss-feeds');
+        Route::post('/update-newspaper', [DiscoveryController::class, 'updateNewsPapers'])->name('update-newspaper');
+        Route::delete('/newspaper-delete/{id}', [DiscoveryController::class, 'deleteNewsPapers'])->name('newspaper-delete');
+        Route::post('/newspaper-update/{id}', [DiscoveryController::class, 'updateNewsPapers'])->name('newspaper-update');
     });
 
 //    Competitor Analysis Routes @Suresh Babu G
@@ -28,4 +36,9 @@ Route::group(['module' => 'discovery',  'prefix' => 'discovery', 'middleware' =>
     Route::post('/get-competitors', [CompetitorController::class, 'getCompetitors']);
     Route::post('/get-analysis', [CompetitorController::class, 'getAnalytics']);
     Route::post('/get-platforms', [CompetitorController::class, 'getPlatforms']);
+
+    Route::get('/twitter-subscription', [DiscoveryController::class,'showTwitterSubscription'])->name('twitter-subscription');
+    Route::get('/get-twitter-influencers', [DiscoveryController::class,'getTwitterInfuencers'])->name('get-twitter-influencers');
+    Route::get('/get-twitter-influencers-by-username', [DiscoveryController::class,'getTwitterInfuencersByusername'])->name('get-twitter-influencers');
+    Route::get('/follow-twitter-influencers-by-username', [DiscoveryController::class,'followTwitterInfuencersByusername'])->name('get-twitter-influencers');
 });

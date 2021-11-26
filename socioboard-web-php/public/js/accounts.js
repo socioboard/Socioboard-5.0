@@ -1,11 +1,3 @@
-let allTeamsValue;
-
-/**
- * TODO We have update the rating of the Social accounts.
- * This function is used updating rating of the Social accounts.
- * @param {integer} rating- rating value passed fromm front end of the particular User Social account.
- * ! Do not change this function without referring API format of getting the rating updates.
- */
 function ratingUpdate(rating, accountId) {
     $.ajax({
         type: "post",
@@ -18,7 +10,7 @@ function ratingUpdate(rating, accountId) {
         },
         success: function (response) {
             if (response.code === 200) {
-                toastr.success('Sucessfully Update Rating', {
+                toastr.success('Sucessfully Updated Rating', {
                     timeOut: 1000,
                     fadeOut: 1000,
                 });
@@ -34,13 +26,6 @@ function ratingUpdate(rating, accountId) {
     });
 }
 
-/**
- * TODO We have update the Cron of the Social accounts.
- * This function is used Crons  of the Social accounts(Crons can be off or on).
- * @param {integer} accountId- account Id value passed fromm front end of the particular User Social account.
- * @param {integer} cronvalue- cronvalue value passed fromm front end of the particular User Social account.
- * ! Do not change this function without referring API format of getting the Cron updates.
- */
 function cronUpdate(accountId, cronvalue) {
     if (cronvalue === 1) cronvalue = 2;
     else cronvalue = 1;
@@ -80,7 +65,7 @@ function cronUpdate(accountId, cronvalue) {
 }
 
 function lock(id, type) {
-    let data = id;
+    var data = id;
     if (type === 1) {
         $.ajax({
             url: '/lock-accounts/' + data,
@@ -145,6 +130,7 @@ function lock(id, type) {
         })
     }
 }
+
 
 /**
  * TODO We have to append the teams names in the dropdown value of the selects.
@@ -377,4 +363,5 @@ function bulkInvite() {
             }
         }
     });
+
 }

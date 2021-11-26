@@ -28,12 +28,12 @@ class FlickrController extends Controller
     {
         $title = 'Flickr';
         $rating = array(
-            'date-posted-desc'    => 'Date-posted-desc',
-            'date-posted-asc'     => 'Date-posted-asc',
-            'date-taken-as'       => 'Date-taken-as',
-            'date-taken-desc'     => 'Date-taken-desc',
-            'interestingness-des' => 'Interestingness-des',
-            'interestingness-asc' => 'Interestingness-asc',
+            'date-posted-desc'    => 'Date-posted-descending',
+            'date-posted-asc'     => 'Date-posted-ascending',
+            'date-taken-as'       => 'Date-taken-ascending',
+            'date-taken-desc'     => 'Date-taken-descending',
+            'interestingness-des' => 'Interestingness-descending',
+            'interestingness-asc' => 'Interestingness-ascending',
             'relevance'           => 'Relevance'
         );
 
@@ -63,7 +63,7 @@ class FlickrController extends Controller
             $data = $this->helper->responseHandler($response['data'])['data'];
             
             if ($data == null)
-                return response()->json(['error'=>'<p id="notification"> End of the listing </p>']);
+                return response()->json(['error'=>'No data available']);
             
             $html = view('contentstudio::flickr.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
             return response()->json($html);

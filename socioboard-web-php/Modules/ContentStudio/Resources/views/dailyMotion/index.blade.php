@@ -18,10 +18,10 @@
                 <!--begin::Row-->
                 <div class="row" data-sticky-container="">
                     {!! $html !!}
-                    <p id="notification">Please enter the keyword for find DailyMotion’s </p>
+                    <p id="notification">Please enter the keyword to find DailyMotion’s </p>
                     <div class="col-xl-8">
                         <!--begin::Feeds-->
-                        <div class="card-columns" id="list"></div>
+                        <div class="card-columns feeds-container" id="list"></div>
                         <!--end::Feeds-->
                     </div>
                 </div>

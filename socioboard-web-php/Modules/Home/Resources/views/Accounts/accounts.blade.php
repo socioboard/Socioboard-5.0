@@ -18,6 +18,10 @@
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Accounts</h3>
                                 <div class="card-toolbar">
+                                    <a href="javascript:;" class="btn btn-sm font-weight-bold mr-5" data-toggle="modal"
+                                       data-target="#inviteModal">
+                                        Send Invite
+                                    </a>
                                     <a href="javascript:;" class="btn btn-sm font-weight-bold" data-toggle="modal"
                                        data-target="#addAccountsModal">
                                         <i class="fas fa-plus fa-fw"></i> Add Accounts
@@ -36,7 +40,7 @@
                             <!--begin::Body-->
                             <div class="card-body pt-2 position-relative overflow-hidden">
                                 <div class="row d-flex justify-content-center">
-                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $pinterest = $facebookpage = $linkedinBusiness = $instagramPages = 0;
+                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $facebookpage = $linkedinBusiness = $instagramPages = $tumblr = $pinterest = 0;
                                     ?>
                                     @if(isset($accountsCount))
                                         @if($accountsCount->code === 200)
@@ -65,6 +69,12 @@
                                                     @break
                                                     @case(12)
                                                     <?php $instagramPages = $data->count  ?>
+                                                    @break
+                                                    @case(16)
+                                                    <?php $tumblr = $data->count  ?>
+                                                    @break
+                                                    @case(11)
+                                                    <?php $pinterest = $data->count  ?>
                                                     @break
                                                 @endswitch
                                             @endforeach
@@ -110,14 +120,14 @@
                                             class="col-md-1 col-sm-12 card bg-pinterest border-0 px-6 py-8 rounded-xl mr-4 mb-7">
                                                     <span class="svg-icon svg-icon-3x d-block my-2">
                                                             <i class="fab fa-pinterest fa-2x"></i>
-                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>
+                                                        <b class="font-weight-bold font-size-h2 float-right">{{$pinterest}}</b>
                                                     </span>
                                     </div>
                                     <div
                                             class="col-md-1 col-sm-12 card bg-tumblr border-0 px-6 py-8 rounded-xl mr-4 mb-7">
                                                     <span class="svg-icon svg-icon-3x d-block my-2">
                                                             <i class="fab fa-tumblr fa-2x"></i>
-                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>
+                                                        <b class="font-weight-bold font-size-h2 float-right">{{$tumblr}}</b>
                                                     </span>
                                     </div>
                                     <div
@@ -162,6 +172,8 @@
                                 <option value="6">Linkedin</option>
                                 <option value="7">Linkedin Pages</option>
                                 <option value="9">Youtube</option>
+                                <option value="16">Tumblr</option>
+                                <option value="11">Pinterest</option>
                             </select>
                         </div>
                     </div>
@@ -192,245 +204,280 @@
                             @if($accounts->code  === 200 )
                                 @if(count($accounts->data->teamSocialAccountDetails[0]->SocialAccount)!==0)
                                     @foreach($accounts->data->teamSocialAccountDetails[0]->SocialAccount as $account)
-                                        <div class="col-xl-3" id="accountsSection{{$account->account_id}}">
-                                            <div class="card card-custom gutter-b card-stretch">
-                                                <div
-                                                        class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
-                                                    @if($account->account_type === 1 || $account->account_type === 2 || $account->account_type === 3)
-                                                        <div class="ribbon-target bg-facebook"
-                                                             style="top: -2px; right: 20px;">
-                                                            <i class="fab fa-facebook-f"></i>
-                                                        </div>
-                                                    @elseif($account->account_type === 4)
-                                                        <div class="ribbon-target" style="top: -2px; right: 20px;">
-                                                            <i class="fab fa-twitter"></i>
-                                                        </div>
-                                                    @elseif($account->account_type === 5 || $account->account_type === 12)
-                                                        <div class="ribbon-target bg-instagram"
-                                                             style="top: -2px; right: 20px;">
-                                                            <i class="fab fa-instagram"></i>
-                                                        </div>
-                                                    @elseif($account->account_type === 6 || $account->account_type === 7 )
-                                                        <div class="ribbon-target bg-linkedin"
-                                                             style="top: -2px; right: 20px;">
-                                                            <i class="fab fa-linkedin"></i>
-                                                        </div>
-                                                    @elseif($account->account_type === 9 )
-                                                        <div class="ribbon-target bg-youtube"
-                                                             style="top: -2px; right: 20px;">
-                                                            <i class="fab fa-youtube"></i>
-                                                        </div>
-                                                    @endif
-                                                <!--begin::User-->
+                                        @if($account->account_type !== 13 && $account->account_type !== 14)
+                                            <div class="col-xl-3" id="accountsSection{{$account->account_id}}">
+                                                <div class="card card-custom gutter-b card-stretch">
                                                     <div
-                                                            class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">
-                                                        <div id="status{{$account->account_id}}">
-                                                            @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                                <div class="ribbon-target" style="top: 12px;"
-                                                                     onclick="lock('{{$account->account_id}}',0 )">
-                                                                    <span class="ribbon-inner bg-danger"></span>
-                                                                    <i
-                                                                            class="fas fa-user-lock fa-fw mr-2 text-white"></i>
-                                                                    Un-Lock
-                                                                </div>
-                                                            @else
-                                                                <div class="ribbon-target" style="top: 80px;"
-                                                                     onclick="lock('{{$account->account_id}}',1 )">
-                                                                    <span class="ribbon-inner bg-info"></span>
-                                                                    <i
-                                                                            class="fas fa-lock-open fa-fw mr-2 text-white"></i>
-                                                                    Lock
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                                                            class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
+                                                        @if($account->account_type === 1 || $account->account_type === 2 || $account->account_type === 3)
+                                                            <div class="ribbon-target bg-facebook"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-facebook-f"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 4)
+                                                            <div class="ribbon-target" style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-twitter"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 5 || $account->account_type === 12)
+                                                            <div class="ribbon-target bg-instagram"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-instagram"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 6 || $account->account_type === 7 )
+                                                            <div class="ribbon-target bg-linkedin"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-linkedin"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 9 )
+                                                            <div class="ribbon-target bg-youtube"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-youtube"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 16 )
+                                                            <div class="ribbon-target bg-tumblr"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-tumblr"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 11 )
+                                                            <div class="ribbon-target bg-pinterest"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-pinterest"></i>
+                                                            </div>
+                                                        @endif
+                                                    <!--begin::User-->
                                                         <div
-                                                                class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
-                                                            <div class="symbol-label"
-                                                                 style="background-image:url({{$account->profile_pic_url}})"></div>
-                                                            <i class="symbol-badge bg-success"></i>
-                                                        </div>
-                                                        <div>
-                                                            @if($account->join_table_teams_social_accounts->is_account_locked === false)
-                                                                @if($account->account_type === 2)
-                                                                    <a href="https://www.facebook.com/{{$account->user_name}}"
-                                                                       target="_blank">
-                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                    </a>
-                                                                @elseif($account->account_type === 1)
-                                                                    <a>
-                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                    </a>
+                                                                class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">
+                                                            <div id="status{{$account->account_id}}">
+                                                                @if($account->join_table_teams_social_accounts->is_account_locked == true)
+                                                                    <div class="ribbon-target" style="top: 12px;"
+                                                                         onclick="lock('{{$account->account_id}}',0 )">
+                                                                        <span class="ribbon-inner bg-danger"></span>
+                                                                        <i
+                                                                                class="fas fa-user-lock fa-fw mr-2 text-white"></i>
+                                                                        Un-Lock
+                                                                    </div>
                                                                 @else
-                                                                    <a href="{{$account->profile_url}}"
-                                                                       target="_blank">
-                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                    </a>
+                                                                    <div class="ribbon-target" style="top: 80px;"
+                                                                         onclick="lock('{{$account->account_id}}',1 )">
+                                                                        <span class="ribbon-inner bg-info"></span>
+                                                                        <i
+                                                                                class="fas fa-lock-open fa-fw mr-2 text-white"></i>
+                                                                        Lock
+                                                                    </div>
                                                                 @endif
-                                                            @else
-                                                                <a
-                                                                >
-                                                                    {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
-                                                                </a>
-                                                            @endif
-                                                            <div class="text-muted">
-                                                                {{$account->user_name}}
                                                             </div>
-                                                            <!-- begin:account star rating -->
-                                                            <div class="rating-css">
-                                                                <div class="star-icon">
-                                                                    <input type="radio"
-                                                                           <?php if ($account->rating === 1) echo "checked";?> name="rating1{{$account->account_id}}"
-                                                                           id="rating1{{$account->account_id}}"
-                                                                           onclick="ratingUpdate('1', '{{$account->account_id}}');">
-                                                                    <label
-                                                                            for="rating1{{$account->account_id}}"
-                                                                            class="fas fa-star"></label>
-                                                                    <input type="radio"
-                                                                           <?php if ($account->rating == 2) echo "checked";?> name="rating1{{$account->account_id}}"
-                                                                           id="rating2{{$account->account_id}}"
-                                                                           onclick="ratingUpdate('2', '{{$account->account_id}}');">
-                                                                    <label
-                                                                            for="rating2{{$account->account_id}}"
-                                                                            class="fas fa-star"></label>
-                                                                    <input type="radio"
-                                                                           <?php if ($account->rating == 3) echo "checked";?> name="rating1{{$account->account_id}}"
-                                                                           id="rating3{{$account->account_id}}"
-                                                                           onclick="ratingUpdate('3', '{{$account->account_id}}');">
-                                                                    <label
-                                                                            for="rating3{{$account->account_id}}"
-                                                                            class="fas fa-star"></label>
-                                                                    <input type="radio"
-                                                                           <?php if ($account->rating == 4) echo "checked";?> name="rating1{{$account->account_id}}"
-                                                                           id="rating4{{$account->account_id}}"
-                                                                           onclick="ratingUpdate('4', '{{$account->account_id}}');">
-                                                                    <label
-                                                                            for="rating4{{$account->account_id}}"
-                                                                            class="fas fa-star"></label>
-                                                                    <input type="radio"
-                                                                           <?php if ($account->rating == 5) echo "checked";?> name="rating1{{$account->account_id}}"
-                                                                           id="rating5{{$account->account_id}}"
-                                                                           onclick="ratingUpdate('5', '{{$account->account_id}}');">
-                                                                    <label
-                                                                            for="rating5{{$account->account_id}}"
-                                                                            class="fas fa-star"></label>
-                                                                </div>
+                                                            <div
+                                                                    class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
+                                                                <div class="symbol-label"
+                                                                     style="background-image:url({{$account->profile_pic_url}})"></div>
+                                                                <i class="symbol-badge bg-success"></i>
                                                             </div>
-                                                            <!-- end:account star rating -->
-
-                                                            <div class="mt-2">
+                                                            <div>
                                                                 @if($account->join_table_teams_social_accounts->is_account_locked === false)
-                                                                    @if($account->account_type === 2 || $account->account_type === 1)
-                                                                        <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
-                                                                    @elseif($account->account_type === 9)
-                                                                        <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
-                                                                    @elseif($account->account_type === 4)
-                                                                        <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
-                                                                    @elseif($account->account_type === 5)
-                                                                        <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
-                                                                           target="_blank"
-                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                    @if($account->account_type === 2)
+                                                                        <a href="https://www.facebook.com/{{$account->user_name}}"
+                                                                           target="_blank">
+                                                                            {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                        </a>
+                                                                    @elseif($account->account_type === 1)
+                                                                        <a>
+                                                                            {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                        </a>
+                                                                    @else
+                                                                        <a href="{{$account->profile_url}}"
+                                                                           target="_blank">
+                                                                            {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                        </a>
                                                                     @endif
                                                                 @else
+                                                                    <a
+                                                                    >
+                                                                        {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                    </a>
+                                                            @endif
+                                                            <!-- begin:account star rating -->
+                                                                <div class="rating-css">
+                                                                    <div class="star-icon">
+                                                                        <input type="radio"
+                                                                               <?php if ($account->rating === 1) echo "checked";?> name="rating1{{$account->account_id}}"
+                                                                               id="rating1{{$account->account_id}}"
+                                                                               onclick="ratingUpdate('1', '{{$account->account_id}}');">
+                                                                        <label
+                                                                                for="rating1{{$account->account_id}}"
+                                                                                class="fas fa-star"></label>
+                                                                        <input type="radio"
+                                                                               <?php if ($account->rating == 2) echo "checked";?> name="rating1{{$account->account_id}}"
+                                                                               id="rating2{{$account->account_id}}"
+                                                                               onclick="ratingUpdate('2', '{{$account->account_id}}');">
+                                                                        <label
+                                                                                for="rating2{{$account->account_id}}"
+                                                                                class="fas fa-star"></label>
+                                                                        <input type="radio"
+                                                                               <?php if ($account->rating == 3) echo "checked";?> name="rating1{{$account->account_id}}"
+                                                                               id="rating3{{$account->account_id}}"
+                                                                               onclick="ratingUpdate('3', '{{$account->account_id}}');">
+                                                                        <label
+                                                                                for="rating3{{$account->account_id}}"
+                                                                                class="fas fa-star"></label>
+                                                                        <input type="radio"
+                                                                               <?php if ($account->rating == 4) echo "checked";?> name="rating1{{$account->account_id}}"
+                                                                               id="rating4{{$account->account_id}}"
+                                                                               onclick="ratingUpdate('4', '{{$account->account_id}}');">
+                                                                        <label
+                                                                                for="rating4{{$account->account_id}}"
+                                                                                class="fas fa-star"></label>
+                                                                        <input type="radio"
+                                                                               <?php if ($account->rating == 5) echo "checked";?> name="rating1{{$account->account_id}}"
+                                                                               id="rating5{{$account->account_id}}"
+                                                                               onclick="ratingUpdate('5', '{{$account->account_id}}');">
+                                                                        <label
+                                                                                for="rating5{{$account->account_id}}"
+                                                                                class="fas fa-star"></label>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- end:account star rating -->
+
+                                                                <div class="mt-2">
+                                                                    @if($account->join_table_teams_social_accounts->is_account_locked === false)
+                                                                        @if($account->account_type === 1)
+                                                                            <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 2)
+                                                                            <a href="{{env('APP_URL')}}feeds/fbPages{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 9)
+                                                                            <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 4)
+                                                                            <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 5)
+                                                                            <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 16)
+                                                                            <a href="{{env('APP_URL')}}feeds/Tumblr{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 11)
+                                                                            <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @endif
+                                                                    @else
+                                                                        <a href="#"
+                                                                           target="_blank" id="profileDivButton"
+                                                                           onclick="return false"
+                                                                           title="The Account is  Locked"
+                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                    @endif
                                                                     <a href="#"
-                                                                       target="_blank" id="profileDivButton"
+                                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
                                                                        onclick="return false"
-                                                                       title="The Account is  Locked"
-                                                                       class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
-                                                                @endif
-                                                                <a href="#"
-                                                                   class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                                   onclick="return false"
-                                                                   id="chatDivButton"
-                                                                   title="Coming soon">Chat</a>
+                                                                       id="chatDivButton"
+                                                                       title="Coming soon">Chat</a>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <!--end::User-->
+                                                        <!--end::User-->
 
-                                                    <!--begin::Contact-->
-                                                    <div class="py-9">
-                                                        <br>
-                                                        </br>
-                                                        <!--                                                                    -->
-                                                        <div
-                                                                class="d-flex align-items-center justify-content-between mb-2">
-                                                            @foreach($accounts->data->SocialAccountStats as $stats)
-                                                                @if($account->account_id === $stats->account_id)
-                                                                    @switch($account->account_type)
-                                                                        @case(4)
-                                                                        <span class="font-weight-bold mr-2">Following:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->following_count}}</a>
-                                                                        @break
-                                                                        @case(1)
-                                                                        <span class="font-weight-bold mr-2">Page Count:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->page_count}}</a>
-                                                                        @break
-                                                                        @case(2)
-                                                                        <span class="font-weight-bold mr-2">Like counts:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->total_like_count}}</a>
-                                                                        @break
-                                                                    @endswitch
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                        <div
-                                                                class="d-flex align-items-center justify-content-between mb-2">
-                                                            @foreach($accounts->data->SocialAccountStats as $stats)
-                                                                @if($account->account_id === $stats->account_id)
-                                                                    @switch($account->account_type)
-                                                                        @case(4)
-                                                                        <span class="font-weight-bold mr-2">Followers:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->follower_count}}</a>
-                                                                        @break
-                                                                        @case(1)
-                                                                        <span class="font-weight-bold mr-2">Followers:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->friendship_count}}</a>
-                                                                        @break
-                                                                        @case(2)
-                                                                        <span class="font-weight-bold mr-2">Followers:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->follower_count}}</a>
-                                                                        @break
-                                                                        @case(9)
-                                                                        <span class="font-weight-bold mr-2">Subscription Counts:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->subscription_count}}</a>
-                                                                        @break
-                                                                    @endswitch
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                        <div
-                                                                class="d-flex align-items-center justify-content-between">
-                                                            @foreach($accounts->data->SocialAccountStats as $stats)
-                                                                @if($account->account_id === $stats->account_id)
-                                                                    @switch($account->account_type)
-                                                                        @case(4)
-                                                                        <span class="font-weight-bold mr-2">Feeds:</span>
-                                                                        <a href="#"
-                                                                           class="text-hover-primary">{{$stats->total_post_count}}</a>
-                                                                        @break
-                                                                    @endswitch
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                        <div
-                                                                class="d-flex align-items-center justify-content-between">
+                                                        <!--begin::Contact-->
+                                                        <div class="py-9">
+                                                            <br>
+                                                            </br>
+                                                            <!--                                                                    -->
+                                                            <div
+                                                                    class="d-flex align-items-center justify-content-between mb-2">
+                                                                @foreach($accounts->data->SocialAccountStats as $stats)
+                                                                    @if($account->account_id === $stats->account_id)
+                                                                        @switch($account->account_type)
+                                                                            @case(4)
+                                                                            <span class="font-weight-bold mr-2">Following:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->following_count}}</a>
+                                                                            @break
+                                                                            @case(1)
+                                                                            <span class="font-weight-bold mr-2">Page Count:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->page_count}}</a>
+                                                                            @break
+                                                                            @case(2)
+                                                                            <span class="font-weight-bold mr-2">Like counts:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->total_like_count}}</a>
+                                                                            @break
+                                                                        @endswitch
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                            <div
+                                                                    class="d-flex align-items-center justify-content-between mb-2">
+                                                                @foreach($accounts->data->SocialAccountStats as $stats)
+                                                                    @if($account->account_id === $stats->account_id)
+                                                                        @switch($account->account_type)
+                                                                            @case(4)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->follower_count}}</a>
+                                                                            @break
+                                                                            @case(12)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->follower_count}}</a>
+                                                                            @break
+                                                                            @case(7)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->follower_count}}</a>
+                                                                            @break
+                                                                            @case(1)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->friendship_count}}</a>
+                                                                            @break
+                                                                            @case(2)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->follower_count}}</a>
+                                                                            @break
+                                                                            @case(9)
+                                                                            <span class="font-weight-bold mr-2">Subscription Counts:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->subscription_count}}</a>
+                                                                            @break
+                                                                            @case(16)
+                                                                            <span class="font-weight-bold mr-2">Followers:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->follower_count}}</a>
+                                                                            @break
+                                                                        @endswitch
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                            <div
+                                                                    class="d-flex align-items-center justify-content-between">
+                                                                @foreach($accounts->data->SocialAccountStats as $stats)
+                                                                    @if($account->account_id === $stats->account_id)
+                                                                        @switch($account->account_type)
+                                                                            @case(4)
+                                                                            <span class="font-weight-bold mr-2">Feeds:</span>
+                                                                            <a href="#"
+                                                                               class="text-hover-primary">{{$stats->total_post_count}}</a>
+                                                                            @break
+                                                                        @endswitch
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                            <div
+                                                                    class="d-flex align-items-center justify-content-between">
                                                                     <span
                                                                             class="font-weight-bold mr-2">Cron Update:</span>
-                                                            <span class="switch switch-sm switch-icon"
-                                                                  id="cronModify{{$account->account_id}}">
+                                                                <span class="switch switch-sm switch-icon"
+                                                                      id="cronModify{{$account->account_id}}">
 
 
                                                         <label>
@@ -440,82 +487,91 @@
                                                             <span></span>
                                                         </label>
                                                     </span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    @switch($account->account_type)
-                                                        @case(6)
-                                                        <br><br><br><br>
-                                                        @break
-                                                        @case(5)
-                                                        <br><br><br><br>
-                                                        @break
-                                                        @case(12)
-                                                        <br><br><br><br>
-                                                        @break
-                                                        @case(7)
-                                                        <br><br><br>
-                                                        @break
-                                                        @case(2)
-                                                        <br><br>
-                                                        @break
-                                                        @case(9)<br><br>
-                                                        @break
-                                                        @case(1)<br><br>
-                                                        @break
-                                                    @endswitch
-                                                    <div>
-                                                        <a href="#" data-toggle="modal"
-                                                           data-target="#accountDeleteModal{{$account->account_id}}"
-                                                           class="btn text-danger font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12"
-                                                        >Delete
-                                                            Account</a>
-                                                    </div>
-                                                    <!-- end:Delete button -->
+                                                        @switch($account->account_type)
+                                                            @case(6)
+                                                            <br><br><br><br>
+                                                            @break
+                                                            @case(5)
+                                                            <br><br><br><br>
+                                                            @break
+                                                            @case(12)
+                                                            <br><br><br>
+                                                            @break
+                                                            @case(7)
+                                                            <br><br><br>
+                                                            @break
+                                                            @case(2)
+                                                            <br><br>
+                                                            @break
+                                                            @case(9)<br><br><br>
+                                                            @break
+                                                            @case(1)<br><br>
+                                                            @break
+                                                            @case(4)<br>
+                                                            @break
+                                                            @case(16)
+                                                            <br><br><br><br>
+                                                            @break
+                                                            @case(11)
+                                                            <br><br><br><br>
+                                                            @break
+                                                        @endswitch
+                                                        <div>
+                                                            <a href="#" data-toggle="modal"
+                                                               data-target="#accountDeleteModal{{$account->account_id}}"
+                                                               class="btn text-danger font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12"
+                                                            >Delete
+                                                                Account</a>
+                                                        </div>
+                                                        <!-- end:Delete button -->
 
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- begin::Delete team modal-->
-                                        <div class="modal fade" id="accountDeleteModal{{$account->account_id}}"
-                                             tabindex="-1"
-                                             role="dialog"
-                                             aria-labelledby="teamDeleteModalLabel"
-                                             aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-lg"
-                                                 role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="teamDeleteModalLabel">Delete
-                                                            This Account</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <i aria-hidden="true" class="ki ki-close"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="text-center">
-                                                            <img
-                                                                    src="/media/svg/icons/Communication/Delete-user.svg"/><br>
-                                                            <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>
-                                                        </div>
-                                                        <div class="d-flex justify-content-center">
-                                                            <button type="submit"
-                                                                    onclick="deleteSocialAcc('{{$account->account_id}}','{{$account->account_type}}')"
-                                                                    class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                                    id="{{$account->account_id}}"
-                                                                    data-dismiss="modal">
-                                                                Delete it
+                                            <!-- begin::Delete team modal-->
+                                            <div class="modal fade" id="accountDeleteModal{{$account->account_id}}"
+                                                 tabindex="-1"
+                                                 role="dialog"
+                                                 aria-labelledby="teamDeleteModalLabel"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg"
+                                                     role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="teamDeleteModalLabel">Delete
+                                                                This Account</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <i aria-hidden="true" class="ki ki-close"></i>
                                                             </button>
-                                                            <a href="javascript:;" type="button"
-                                                               class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                               data-dismiss="modal">No
-                                                                thanks.</a>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="text-center">
+                                                                <img
+                                                                        src="/media/svg/icons/Communication/Delete-user.svg"/><br>
+                                                                <span class="font-weight-bolder font-size-h4 ">Are you sure wanna delete this Account?</span>
+                                                            </div>
+                                                            <div class="d-flex justify-content-center">
+                                                                <button type="submit"
+                                                                        onclick="deleteSocialAcc('{{$account->account_id}}','{{$account->account_type}}')"
+                                                                        class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                        id="{{$account->account_id}}"
+                                                                        data-dismiss="modal">
+                                                                    Delete it
+                                                                </button>
+                                                                <a href="javascript:;" type="button"
+                                                                   class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                   data-dismiss="modal">No
+                                                                    thanks.</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- end::Delete account modal-->
+                                            <!-- end::Delete account modal-->
+                                        @endif
                                     @endforeach
                                 @else
                                     <div class="text-center">
@@ -789,6 +845,34 @@
                                     must first give authorization from the
                                     Youtube
                                     Channel.</p>
+                                <p><strong>Important Notes:</strong></p>
+                                <ol class="twitter-add-accounts">
+                                    <li>
+                                        YouTube's Terms of Services link <br/>
+                                        <strong>Please Visit -</strong>
+                                        <a href="https://www.youtube.com/t/terms"> https://www.youtube.com/t/terms</a>
+                                    </li>
+                                    <li>
+                                        Google privacy policy Link <br/>
+                                        <strong>Please Visit -</strong>
+                                        <a href="https://policies.google.com/privacy">
+                                            https://policies.google.com/privacy</a>
+                                    </li>
+                                    <li>
+                                        Google security settings page about revoking user access <br/>
+                                        <strong>Please Visit -</strong>
+                                        <a href="https://myaccount.google.com/permissions?pli=1">
+                                            https://myaccount.google.com/permissions?pli=1</a>
+                                    </li>
+                                    <li>
+                                        Handling YouTube Data and Content <br/>
+                                        <strong>Official Terms -</strong>
+                                        <a href="https://developers.google.com/youtube/terms/developer-policies#e.-handling-youtube-data-and-content">
+                                            https://developers.google.com/youtube/terms/developer-policies#e.-handling-youtube-data-and-content.</a>
+                                    </li>
+                                </ol>
+                                <p>Storing of Data will be max 30 days.</p>
+                                <strong>Please go throw all the links for Terms and Policies</strong>
                                 <div class="d-flex justify-content-center">
                                     <a href="add-accounts/Youtube"
                                        type="button"
@@ -800,39 +884,198 @@
                                  id="pinterest-add-accounts"
                                  role="tabpanel"
                                  aria-labelledby="pinterest-tab-accounts">
-                                {{--                                                            <p>Grant access to your profile to share updates and view--}}
-                                {{--                                                                your feed.</p>--}}
-                                <p>This feature is coming soon, its under
-                                    development</p>
-                                {{--                                                            <div class="d-flex justify-content-center">--}}
-                                {{--                                                                <a href="#" type="button"--}}
-                                {{--                                                                   class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                {{--                                                                    a Pinterest Profile</a>--}}
-                                {{--                                                            </div>--}}
+                                <p>Grant access to your profile to share updates and view
+                                    your feed.</p>
+                                <div class="d-flex justify-content-center">
+                                    <a href="add-accounts/Pinterest" type="button"
+                                       class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                        a Pinterest Profile</a>
+                                </div>
                             </div>
                             <div class="tab-pane fade"
                                  id="tumblr-add-accounts"
                                  role="tabpanel"
                                  aria-labelledby="tumblr-tab-accounts">
-                                {{--                                                            <p>Grant access to your profile to share updates and view--}}
-                                {{--                                                                your feed.</p>--}}
-                                <p>This feature is coming soon, its under
-                                    development</p>
-                                {{--                                                            <div class="d-flex justify-content-center">--}}
-                                {{--                                                                <a href="#" type="button"--}}
-                                {{--                                                                   class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add--}}
-                                {{--                                                                    a Tumblr Profile</a>--}}
-                                {{--                                                            </div>--}}
-
+                                <p>Grant access to your profile to share updates and view your feed.</p>
+                                <div class="d-flex justify-content-center">
+                                    <a href="/add-accounts/Tumblr" type="button"
+                                       class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add a
+                                        Tumblr Profile</a>
+                                </div>
                             </div>
+                            @if($bloggedpages === 1)
+                                <div class="mt-3 tb_page_div" style="display: none;">
+                                    <span>Choose Blooged pages for posting</span>
+                                    <div class="scroll scroll-pull" data-scroll="true"
+                                         data-wheel-propagation="true"
+                                         style="height: 200px; overflow-y: scroll;">
+                                    @for($i=0; $i<count(session()->get('blogs')); $i++)                                                                        <!--begin::Page-->
+                                        <div class="d-flex align-items-center flex-grow-1">
+                                            <!--begin::Facebook Fanpage Profile picture-->
+                                            <div class="symbol symbol-45 symbol-light mr-5">
+                                                <span class="symbol-label">
+                                                    <img src="{{session()->get('blogs')[$i]->ProfilePicture}}"
+                                                         class="h-50 align-self-center" alt=""/>
+                                                </span>
+                                            </div>
+                                            <!--end::Facebook Fanpage Profile picture-->
+                                            <!--begin::Section-->
+                                            <div
+                                                    class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                                                <div class="d-flex flex-column align-items-cente py-2 w-75">
+                                                    <a href="{{session()->get('blogs')[$i]->ProfileUrl}}"
+                                                       class="font-weight-bold text-hover-primary font-size-lg mb-1">
+                                                        {{session()->get('blogs')[$i]->FirstName}}
+                                                    </a>
+                                                    <span class="text-muted font-weight-bold">
+                                                        {{session()->get('blogs')[$i]->FriendCount}} followers
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @if(session()->get('blogs')[$i]->isAlreadyAdded===false)
+                                                <div
+                                                        class="custom-control custom-checkbox"
+                                                        id="checkboxes3">
+                                                    <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4"
+                                                           for="{{session()->get('blogs')[$i]->SocialId}}">
+                                                        <input type="checkbox"
+                                                               id="{{session()->get('blogs')[$i]->SocialId}}"
+                                                               name="{{session()->get('blogs')[$i]->FirstName}}">
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        @endfor
+
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="javascript:;" type="button"
+                                           id="checkedPages4"
+                                           class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Submit
+                                            for adding blogged pages</a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
+
+
                     </div>
 
                 </div>
             </div>
         </div>
     </div>
+    <!-- begin:Invite button Modal-->
+    <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inviteModalLabel">Add Accounts By Invitation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body invite-input-browse">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <div class="card text-center px-2 py-3">
+                                <h6>Download Format</h6>
+                                <i class="icon-xl fas fa-download" onclick="location.href='excel-file'"
+                                >
+                                </i>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card px-4 py-3">
+                                <div class="card-body p-0">
+                                    <h6 class="text-right">Bulk Upload</h6>
+                                    <div class="d-flex">
+                                        <button type="submit" class="btn btn-primary mr-3" onclick="bulkInvite();">
+                                            Send Invite
+                                        </button>
+                                        <div class="custom-file">
+                                            <input accept=".xlsx" class="custom-file-input" id="upload-bulk"
+                                                   name="files[]"
+                                                   type="file">
+                                            <lable for="custom-file" class="custom-file-label w-90" id="lableInvite">
+                                                Choose file
+                                            </lable>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive mt-5 pt-5" id="invitation-table">
+                        <table class="table" id="socialRows">
+                            <tbody>
 
+                            <tr>
+                                <th>
+                                    <button class="table-add btn btn-sm"><i class="fa fa-plus pr-0"
+                                                                            onclick="addRow(1)"></i></button>
+                                </th>
+                                <th>Remove</th>
+                                <th>Social Media</th>
+                                <th>Team Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Account Name</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="">
+                                </td>
+                                <td>
+                                    <select class="form-control h-auto py-4" id="socialMediaSelected1"
+                                            onchange="getSelectedSocialValue()">
+                                        <option selected disabled>Select Account</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="Twitter">Twitter</option>
+                                        <option value="Instagram">Instagram</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                        <option value="InstagramBusiness">Instagram Business</option>
+                                        <option value="Youtube">Youtube</option>
+                                        <option value="LinkedInPage">LinkedInPage</option>
+                                        <option value="FacebookPage">FaceBookPage</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control h-auto py-4" id="teamDropDown1"
+                                            onchange="getSelectedTeamValue()">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input id="userID1" type="text" class="form-control h-auto py-4"
+                                           placeholder="Type User ID">
+                                </td>
+                                <td>
+                                    <input id="emailID1" type="email" class="form-control h-auto py-4"
+                                           placeholder="Email ID">
+                                </td>
+                                <td>
+                                    <input id="accountName1" type="text" class="form-control h-auto py-4"
+                                           placeholder="Account Name">
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="sendInvite()">Send Invite</button>
+                    <button id="bulkInvites" type="button" class="btn btn-primary" onclick="bulkInvite()">Bulk Invite
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end:Invite button Modal -->
     </div>
     <!-- end:Add Accounts Modal -->
 @endsection
@@ -899,7 +1142,9 @@
         }
 
         $fbp =
-        {{$facebookpages}}
+                {{$facebookpages}}
+                    $tbp =
+        {{$bloggedpages}}
         if ($fbp === 1) {
             $('#addAccountsModal').modal('show');
             displayFacebookPages();
@@ -909,8 +1154,23 @@
             $(".fb_page_div").css("display", "block");
         }
 
+        if ($tbp === 1) {
+            $('#addAccountsModal').modal('show');
+            displayTumblrPages();
+            $("#tumblr-tab-accounts").trigger("click");
+
+        }
+
+        function displayTumblrPages() {//It displayes the tumbler pages from facebook account to modal in checkboxes to select
+            $(".tb_page_div").css("display", "block");
+        }
+
         $(document).ready(function () {// This added facebook pages to socioboard whichever is selected from checkboxes on submit.
             $("#home_tab").trigger("click");
+            $("#upload-bulk").change(function () {
+                $('#lableInvite').html('File uploaded Successfully')
+            });
+            appendTeams();
             $("#checkedPages").click(function () {
                 let selected = [];
                 $('#checkboxes input:checked').each(function () {
@@ -1038,6 +1298,14 @@
                                             appendData += '<div class="ribbon-target bg-youtube" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-youtube"></i>\n' +
                                                 '</div>';
+                                        } else if (element.account_type === 16) {
+                                            appendData += '<div class="ribbon-target bg-tumblr" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-tumblr"></i>\n' +
+                                                '</div>';
+                                        } else if (element.account_type === 11) {
+                                            appendData += '<div class="ribbon-target bg-pinterest" style="top: -2px; right: 20px;">\n' +
+                                                '                                                <i class="fab fa-pinterest"></i>\n' +
+                                                '                                                </div>';
                                         }
                                         appendData += '<div\n' +
                                             'class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">\n' +
@@ -1065,25 +1333,28 @@
                                             'style="background-image:url(' + element.profile_pic_url + ')"></div>\n' +
                                             '<i class="symbol-badge bg-success"></i>\n' +
                                             '</div>';
-                                        appendData += '<div>\n' +
-                                            '<a href="' + element.profile_url + '"\n' +
-                                            'target="_blank">\n' +
-                                            '' + element.first_name + " " + element.last_name + '\n' +
-                                            '</a>\n' +
-                                            '<div class="text-muted">\n' +
-                                            '' + element.user_name +
-                                            '</div>';
+                                        appendData += '<div>\n';
+                                        if (element.account_type === 1) {
+                                            appendData += '<a target="_blank">\n' +
+                                                '' + element.first_name + " " + element.last_name + '\n' +
+                                                '</a>\n';
+                                        } else {
+                                            appendData += '<a href="' + element.profile_url + '"\n' +
+                                                'target="_blank">\n' +
+                                                '' + element.first_name + " " + element.last_name + '\n' +
+                                                '</a>\n';
+                                        }
                                         appendData += ' <div class="rating-css">\n' +
                                             '<div class="star-icon">\n' +
                                             '<input type="radio"';
-                                        if (element.rating === 1) appendData += ' checked ';
-                                        appendData += 'name="rating1' + element.account_id + '" id="rating1' + element.account_id + '"\n' +
+                                        if (element.rating === 1) appendData += 'checked';
+                                        appendData += ' name="rating1' + element.account_id + '" id="rating1' + element.account_id + '"\n' +
                                             'onclick="ratingUpdate(\'1\', \'' + element.account_id + '\');">\n' +
                                             '<label\n' +
                                             'for="rating1' + element.account_id + '"\n' +
                                             'class="fas fa-star"></label>\n' +
                                             '<input type="radio"';
-                                        if (element.rating === 2) appendData += ' checked ';
+                                        if (element.rating === 2) appendData += 'checked';
                                         appendData += ' name="rating2' + element.account_id + '" id="rating2' + element.account_id + '"\n' +
                                             'onclick="ratingUpdate(\'2\', \'' + element.account_id + '\');">\n' +
                                             '<label\n' +
@@ -1112,11 +1383,13 @@
                                             'class="fas fa-star"></label>\n' +
                                             '</div>\n' +
                                             '</div>';
-                                        appendData += '<div class="mt-2">\n' +
-                                            '<a href="' + element.profile_url + '"\n' +
-                                            'target="_blank"\n' +
-                                            'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n' +
-                                            '<a href="#"\n' +
+                                        appendData += '<div class="mt-2">\n';
+                                        if (element.account_type !== 1) {
+                                            appendData += '<a href="' + element.profile_url + '"\n' +
+                                                'target="_blank"\n' +
+                                                'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                        }
+                                        appendData += '<a href="#"\n' +
                                             'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"\n' +
                                             'onclick="return false"\n' +
                                             'id="chatDivButton"\n' +
@@ -1173,6 +1446,16 @@
                                                         appendData += '<span class="font-weight-bold mr-2">Subscription Counts:</span>\n' +
                                                             '<a href="#"\n' +
                                                             'class="text-hover-primary">' + data.subscription_count
+                                                        break;
+                                                    case 12:
+                                                        appendData += '<span class="font-weight-bold mr-2">Followers :</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.follower_count
+                                                        break;
+                                                    case 7:
+                                                        appendData += '<span class="font-weight-bold mr-2">Followers :</span>\n' +
+                                                            '<a href="#"\n' +
+                                                            'class="text-hover-primary">' + data.follower_count
                                                         break;
                                                 }
                                             }
@@ -1277,11 +1560,71 @@
                                     '<h6>No Social Account has been found for this search filter</h6>\n' +
                                     '</div>');
                             }
+                        } else if (response.data.code === 400) {
+                            $('#accountsDIv').append('<div class="text-center">\n' +
+                                '<div class="symbol symbol-150">\n' +
+                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                '</div>\n' +
+                                '<h6>' + response.data.error + '</h6>\n' +
+                                '</div>');
+                        }
+                        else{
+                            $('#accountsDIv').append('<div class="text-center">\n' +
+                                '<div class="symbol symbol-150">\n' +
+                                '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                '</div>\n' +
+                                '<h6>' + 'Some error occured,Can not get accounts' + '</h6>\n' +
+                                '</div>');
                         }
                     }
                 });
             }
         }
+
+        $("#checkedPages4").click(function () {
+            let selected = [];
+            $('#checkboxes3 input:checked').each(function () {
+                selected.push($(this).attr('name'));
+            });
+            $.ajax({
+                url: "/tumblrPageAdd",
+                type: 'POST',
+                data: {
+                    "pages": selected,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function () {
+                },
+                success: function (response) {
+                    if (response.code === 200) {
+                        if (response.errorIds.length !== 0) {
+                            $('#addAccountsModal').modal('hide')
+                            Swal.fire({
+                                icon: 'warning',
+                                text: "Could not add Tumblr accounts as " + response.errorIds + "... Already added!!",
+                            });
+                        } else {
+                            toastr.success("Tumblr accounts added successfully!");
+                            $('#addAccountsModal').modal('hide');
+                            location.reload();
+                        }
+                    } else if (response.code == 400) {
+                        $('#addAccountsModal').modal('hide')
+                        toastr.error(response.message);
+                    } else if (response.code == 500) {
+                        $('#addAccountsModal').modal('hide')
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (error) {
+                    toastr.error("Something went wrong.. Not able to add the accounts.")
+//                    $('#error').text("Something went wrong.. Not able to create team");
+                }
+            });
+
+        });
 
         $('#profileDivButton, #chatDivButton').tooltip();
 

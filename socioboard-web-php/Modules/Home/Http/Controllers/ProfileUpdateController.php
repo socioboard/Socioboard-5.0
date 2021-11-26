@@ -93,7 +93,7 @@ class ProfileUpdateController extends Controller
                     "last_name" => 'regex:/^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/',
                     "location" => 'min:3|regex:/^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/',
                     "phone_number" => 'required',
-                    "company_name" => 'required|regex:/^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/'
+                    "company_name" => 'required'
                 ], [
                     'first_name.min' => 'Minimum 3 Characters Required',
                     'first_name.regex' => 'First name should contain Only alphabets',
@@ -101,8 +101,7 @@ class ProfileUpdateController extends Controller
                     'location.regex' => 'Location name should contain Only alphabets',
                     'location.min' => 'Location name should contain Minimum 3 Characters',
                     'phone_number.required' => 'Phone Number is required',
-                    'company_name.required' => 'Company Name is required',
-                    'company_name.regex' => 'Company Name should contain Only alphabets'
+                    'company_name.required' => 'Company Name is required'
                 ]);
             } elseif ($request->profileType == 2) {
                 $validator = Validator::make($request->all(), [

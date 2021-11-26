@@ -17,7 +17,8 @@
             <div class=" container-fluid ">
                 <!--begin::Profile-->
                 <!--begin::Row-->
-                <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@"; ?>
+                <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@\n"; ?>
+                <?php $imageCounts = 0; ?>
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class=" sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
@@ -25,13 +26,11 @@
 
                             <!--begin::Profile-->
                             <div class="card card-custom gutter-b mb-4 mt-3">
-
                                 @if($message=== 'success')
                                     @if(count($accounts)>0)
                                         @if($feeds['code']=== 200)
                                             <div
-                                                    class="card-body py-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
-
+                                                    class="card-body py-3 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
                                                 <div class="ribbon-target bg-twitter" style="top: -2px; right: 20px;">
                                                     <i class="fab fa-twitter dummy"></i>
                                                 </div>
@@ -58,14 +57,14 @@
                                                             <div class="star-icon">
                                                                 <input type="radio"
                                                                        <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                                       id="rating1{{$accounts[0]->account_id}}}"
-                                                                       onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
+                                                                       id="rating1{{$accounts[0]->account_id}}"
+                                                                       onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}');">
                                                                 <label
                                                                         for="rating1{{$accounts[0]->account_id}}"
                                                                         class="fas fa-star"></label>
                                                                 <input type="radio"
                                                                        <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                                       id="rating2{{$accounts[0]->account_id}}}"
+                                                                       id="rating2{{$accounts[0]->account_id}}"
                                                                        onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
                                                                 <label
                                                                         for="rating2{{$accounts[0]->account_id}}"
@@ -265,7 +264,11 @@
                                                 var feedsLength = <?php echo count($feeds['data']->feeds)  ?>;
                                             </script>
                                             @foreach($feeds['data']->feeds as $data)
-                                                <?php $date = date('d-m-Y H:i:s', strtotime($data->publishedDate))?>
+                                                <?php $date = new Datetime($data->publishedDate);
+                                                $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
+                                                ?>
+                                                <?php $string_desc = trim(preg_replace('/\s\s+/', ' ', $data->descritpion));?>
+                                                <?php  $string_desc = str_replace("'", '', $string_desc);?>
                                                 <div class="mb-5">
                                                     <!--begin::Container-->
                                                     <div>
@@ -286,7 +289,7 @@
                                                                    target="_blank"
                                                                    class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                                 <span
-                                                                        class="font-weight-bold">{{$date}}</span>
+                                                                        class="font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                             </div>
                                                             <!--end::Info-->
                                                         </div>
@@ -294,6 +297,11 @@
 
                                                         <!--begin::Body-->
                                                         @if(count($data->mediaUrls)>0)
+                                                            @if(count($data->mediaUrls)>1)
+                                                                <?php $imageCounts = count($data->mediaUrls)?>
+                                                            @else
+                                                                <?php $imageCounts = 0?>
+                                                            @endif
                                                             <div class="pt-4">
                                                                 @foreach($data->mediaUrls as $media)
                                                                     @if($media->type === 'photo')
@@ -311,22 +319,43 @@
                                                                     @endif
                                                                 @endforeach
                                                             <!--begin::Text-->
-                                                                <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                    <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
-                                                                </p>
+                                                                @if(isset($data->urls))
+                                                                    @if(count($data->urls)>0)
+                                                                        <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                            <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                        </strong>
+                                                                        <br>
+                                                                        @foreach($data->urls as $urls)
+                                                                            <a href="{{$urls->expanded_url}}"
+                                                                               class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                               target=_blank>
+                                                                                {{$urls->expanded_url}}</a>
+                                                                            <br>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <p class="font-size-lg font-weight-normal">
+                                                                            <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                        </p>
+                                                                    @endif
+
+                                                                @else
+                                                                    <p class="font-size-lg font-weight-normal">
+                                                                        <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                    </p>
+                                                                @endif
                                                                 @else
                                                                     <div>
                                                                         @if(isset($data->urls))
                                                                             @if(count($data->urls)>0)
+                                                                                <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                    <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
+                                                                                </strong>
+                                                                                <br>
                                                                                 @foreach($data->urls as $urls)
-                                                                                    <strong class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                                        <?php echo preg_replace($regex, ' ', $data->descritpion); ?>
-                                                                                    </strong>
-                                                                                    <br>
-                                                                                    <a href="{{$urls->url}}"
+                                                                                    <a href="{{$urls->expanded_url}}"
                                                                                        class="font-size-lg font-weight-normal pt-5 mb-2"
                                                                                        target=_blank>
-                                                                                        {{$urls->url}}</a>
+                                                                                        {{$urls->expanded_url}}</a>
                                                                                     <br>
                                                                                 @endforeach
                                                                             @else
@@ -397,29 +426,59 @@
                                                                                 @else
                                                                                     <?php $type = 'video'?>
                                                                                 @endif
-                                                                                <a id="reSocioButton"
-                                                                                   href="javascript:;"
-                                                                                   value="<?php echo preg_replace($regex, ' ', $data->descritpion); ?>"
-                                                                                   imageSrc="#"
-                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->descritpion); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,null)">
+                                                                                @if(count($data->urls)>0)
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,'{{$data->urls[0]->expanded_url}}',{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                         <i class="fas fa-pencil-alt"></i>
                                                                 </span>Re-socio
-                                                                                </a>
+                                                                                    </a>
+                                                                                @else
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,null,{{$imageCounts}})">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                    </a>
+                                                                                @endif
                                                                             @else
-                                                                                <a id="reSocioButton"
-                                                                                   href="javascript:;"
-                                                                                   value="<?php echo preg_replace($regex, ' ', $data->descritpion); ?>"
-                                                                                   imageSrc="#"
-                                                                                   class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
-                                                                                   onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->descritpion); ?>',null,null,null,null)">
+                                                                                @if(count($data->urls)>0)
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$data->urls[0]->expanded_url}}')">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                         <i class="fas fa-pencil-alt"></i>
                                                                 </span>Re-socio
-                                                                                </a>
+                                                                                    </a>
+                                                                                @else
+                                                                                    <a id="reSocioButton"
+                                                                                       href="javascript:;"
+                                                                                       value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
+                                                                                       imageSrc="#"
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null)">
+                                                                                    <span
+                                                                                            class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                </span>Re-socio
+                                                                                    </a>
+                                                                                @endif
+
+
                                                                             @endif
                                                                         </div>
                                                                         <!--end::Action-->
@@ -507,6 +566,7 @@
             {{--            <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
             <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
             <script src="{{asset('js/images-grid.js')}}"></script>
+            <script src="{{asset('js/accounts.js')}}"></script>
             <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
             <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
             <script>
@@ -543,7 +603,7 @@
                 /**
                  * TODO we've to dislike the particular feed of twitter.
                  * This function is used for disliking  the particular feed of twitter.
-                 * @param {string} twitterID - twitterID of feed.
+                 * @param {integer} twitterID - twitterID of feed.
                  * ! Do not change this function without referring API format of disliking feed.
                  */
                 function disLikeTweet(twitterID) {
@@ -693,18 +753,14 @@
                         },
                         dataType: 'json',
                         beforeSend: function () {
-                            $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
-                                '<span class="sr-only">Loading...</span>\n' +
-                                '</div></div>');
-                            $(".spinner-border").css("display", "block");
+
                         },
                         success: function (response) {
-                            $(".spinner-border").css("display", "none");
                             if (response.data.code === 200) {
                                 let appendData = '';
                                 let num = 1;
                                 let arrayImages = [];
+                                let multiImageCount = 0;
                                 $(".spinner-border").css("display", "none");
                                 feedsLength = response.data.data.feeds.length;
                                 response.data.data.feeds.map(element => {
@@ -724,6 +780,7 @@
                                         '<span class="font-weight-bold">' + published + '</span>\n' +
                                         '</div></div>\n';
                                     if (element.mediaUrls.length === 1) {
+                                        multiImageCount = 0;
                                         appendData += '<div class="pt-4">';
                                         element.mediaUrls.map(data => {
                                             if (data.type === 'photo') {
@@ -740,17 +797,47 @@
                                                     '</div>';
                                             }
                                         });
-                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
-                                            '</p>';
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
+                                            element.urls.map(urls => {
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                        }
                                     } else if (element.mediaUrls.length > 1) {
+                                        multiImageCount = element.mediaUrls.length;
                                         appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
                                         element.mediaUrls.map(data => {
                                             arrayImages.push(data.url);
                                         });
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
+                                            element.urls.map(urls => {
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                        }
                                     } else {
-                                        appendData += '<div>\n' +
-                                            '<p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
-                                            '</p>\n';
+                                        multiImageCount = 0;
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
+                                            element.urls.map(urls => {
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                        }
                                     }
                                     appendData += '<div class="d-flex align-items-center">\n' +
                                         '<a href="javascript:;"\n' +
@@ -793,19 +880,33 @@
                                         } else {
                                             type = 'video'
                                         }
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
-                                            '<span\n' +
-                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                            '</span>Re-socio</a>\n';
+                                        if (element.urls.length > 0) {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + element.urls[0].expanded_url + '\',\'' + multiImageCount + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        } else {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        }
                                     } else {
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
-                                            '<span\n' +
-                                            'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                            '</span>Re-socio</a>\n';
+                                        if (element.urls.length > 0) {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.urls[0].expanded_url + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        } else {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        }
                                     }
                                     appendData += '</div></div></div>\n' +
                                         '<div class="fb_cmt_div mt-5">\n' +
@@ -829,15 +930,11 @@
                             } else if (response.data.code === 400) {
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
-                                $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
-                                    response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
                                     '<div class="symbol symbol-150">\n' +
                                     '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
                                     '</div></div>');
                             } else {
-                                $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
-                                    response.message + '</div>');
                                 $('#twitterFeeds').append('<div style="color: Red;text-align:center;">\n' +
                                     response.message + '</div>');
                                 $('#twitterFeeds').append('<div class="text-center">\n' +
@@ -866,11 +963,11 @@
                         beforeSend: function () {
                             $('#twitterFeeds,#twitterProfileDiv').empty();
                             $('#twitterFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                                '<div class="spinner-border" role="status" id="' + pageId + '"  style="display: none;">\n' +
                                 '<span class="sr-only">Loading...</span>\n' +
                                 '</div></div>');
                             $('#twitterProfileDiv').append('<div class="d-flex justify-content-center" >\n' +
-                                '<div class="spinner-border" role="status"  style="display: none;">\n' +
+                                '<div class="spinner-border" role="status" id="' + pageId + '"  style="display: none;">\n' +
                                 '<span class="sr-only">Loading...</span>\n' +
                                 '</div></div>');
                             $(".spinner-border").css("display", "block");
@@ -879,9 +976,11 @@
                             $(".spinner-border").css("display", "none");
                             let arrayImages = [];
                             let num = 0;
+                            let append = '';
+                            let multiImageCount;
                             if (response.data.code === 200) {
                                 $('#feeds_count,#following_count,#follower_count').empty();
-                                $('#twitterProfileDiv').append('<div\n' +
+                                append += '<div\n' +
                                     'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                                     '<div class="symbol-label"\n' +
                                     'style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
@@ -893,42 +992,40 @@
                                     '<i\n' +
                                     'class="flaticon2-correct text-primary icon-md ml-2"></i></a>\n' +
                                     '<div class="rating-css">\n' +
-                                    '<div class="star-icon">\n' +
-                                    (
-                                        response.data.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
-                                            '<label for="rating1" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
-                                            '<label for="rating1" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.data.socialAccountDetails.rating === 2 ? ' <input type="radio" checked name="rating2" id="rating2">\n' +
-                                            '<label for="rating2" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating2" id="rating2">\n' +
-                                            '<label for="rating2" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.data.socialAccountDetails.rating === 3 ? ' <input type="radio" checked name="rating3" id="rating3">\n' +
-                                            '<label for="rating3" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating3" id="rating3">\n' +
-                                            '<label for="rating3" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.data.socialAccountDetails.rating === 4 ? ' <input type="radio" checked name="rating4" id="rating4">\n' +
-                                            '<label for="rating4" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating4" id="rating4">\n' +
-                                            '<label for="rating4" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.data.socialAccountDetails.rating === 5 ? ' <input type="radio" checked name="rating5" id="rating5">\n' +
-                                            '<label for="rating5" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
-                                            '<label for="rating5" class="fas fa-star"></label>\n'
-                                    ) +
-                                    '</div></div>\n' +
-                                    '<div class="mt-2"><a href="#"class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
-                                    '</div>\</div>');
+                                    '<div class="star-icon">\n';
+                                (response.data.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                    '<label for="rating1' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                    '<label for="rating1' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.data.socialAccountDetails.rating === 2) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                    '<label for="rating2' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                    '<label for="rating2' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.data.socialAccountDetails.rating === 3) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                    '<label for="rating3' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                    '<label for="rating3' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.data.socialAccountDetails.rating === 4) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                    '<label for="rating4' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                    '<label for="rating4' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                    '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                    '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
+                                append += '</div>\n' +
+                                    '</div>\n' +
+                                    '<div class="mt-2">\n';
+                                append += '<a href="javascript:;"\n' +
+                                    'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
+                                    '</div>\n' +
+                                    '</div>'
+                                $('#twitterProfileDiv').append(append);
                                 let appendData = '';
+                                let description = '';
+                                let urlResocio = '';
                                 $(".spinner-border").css("display", "none");
                                 feedsLength = response.data.data.feeds.length;
                                 response.data.data.feeds.map(element => {
+                                    arrayImages = [];
                                     let createdDate = new Date(element.publishedDate),
                                         published = String(createdDate).substring(0, 25);
-                                    appendData = '<div class="mb-5"><div>\n' +
+                                         description = element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');                                    appendData = '<div class="mb-5"><div>\n' +
                                         '<div class="d-flex align-items-center pb-4">\n' +
                                         '<div class="symbol symbol-40 symbol-light-success mr-5">\n' +
                                         '<span class="symbol-label"><img\n' +
@@ -940,6 +1037,7 @@
                                         'class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
                                         '<span class="font-weight-bold">' + published + '</span></div></div>\n';
                                     if (element.mediaUrls.length === 1) {
+                                        multiImageCount = 0;
                                         appendData += '<div class="pt-4">';
                                         element.mediaUrls.map(data => {
                                             if (data.type === 'photo') {
@@ -951,27 +1049,47 @@
                                                     '<iframe class="embed-responsive-item rounded" src="' + data.url + '"</div>';
                                             }
                                         });
-                                        appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
-                                            '</p>';
-                                    } else if (element.mediaUrls.length > 1) {
-                                        appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
-                                        element.mediaUrls.map(data => {
-                                            arrayImages.push(data.url);
-                                        });
-                                    } else {
-                                        if (element.has("urls")) {
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
-                                                    element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
-                                                    '</strong><br>\n' +
-                                                    '<a href="' + element.urls + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.urls +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
                                             appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
-
                                         }
-                                        appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                    } else if (element.mediaUrls.length > 1) {
+                                        multiImageCount = element.mediaUrls.length;
+                                        appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
+                                        element.mediaUrls.map(data => {
+                                            arrayImages.push(data.url);
+                                        });
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
+                                            element.urls.map(urls => {
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                        }
+                                    } else {
+                                        multiImageCount = 0;
+                                        if (element.urls.length > 0) {
+                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
+                                                element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                '</strong><br>\n';
+                                            element.urls.map(urls => {
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                    '</a><br>\n';
+                                            });
+                                        } else {
+                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
+                                        }
                                     }
                                     appendData += '<div class="d-flex align-items-center">\n' +
                                         '<a href="#"\n' +
@@ -1007,6 +1125,7 @@
                                         'retweet-count="' + element.retweetCount + '">\n' +
                                         '<i class="fas fa-retweet"></i>\n' + element.retweetCount +
                                         '</span></a>\n';
+                                    console.log('mediaLength',multiImageCount);
                                     if (element.mediaUrls.length > 0) {
                                         let type
                                         if (element.mediaUrls[0].type === 'photo') {
@@ -1014,17 +1133,35 @@
                                         } else {
                                             type = 'video'
                                         }
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null)"\n' +
-                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                            '</span>Re-socio</a>\n';
+                                        if (element.urls.length > 0) {
+                                            urlResocio = element.urls[0].expanded_url;
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + urlResocio + '\',\'' + multiImageCount + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        } else {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        }
                                     } else {
-                                        appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion + '\',null,null,null,null)"\n' +
-                                            '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                            '<i class="fas fa-pencil-alt"></i>\n' +
-                                            '</span>Re-socio</a>\n';
+                                        if (element.urls.length > 0) {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',null,null,null,\'' + urlResocio + '\')"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        } else {
+                                            appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description+ '\',null,null,null,null)"\n' +
+                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                '<i class="fas fa-pencil-alt"></i>\n' +
+                                                '</span>Re-socio</a>\n';
+                                        }
+
                                     }
                                     appendData += '</div></div></div>\n' +
                                         '<div class="fb_cmt_div mt-5">\n' +
@@ -1121,8 +1258,9 @@
                  * ! Do not change this function without referring API format of getting the twitter feeds.
                  */
                 function call(data) {
+                    pageId=2;
                     accounId = data.value;//accountid of particular twitter account from dropdown
-                    getTwitterFeeds(data.value, 1);
+                    getTwitterFeeds(accounId, 1);
                 }
 
                 /**
@@ -1170,7 +1308,7 @@
                  * @param {sourceUrl} sourceUrlon post.
                  * ! Do not change this function without referring API format of resocio.
                  */
-                function resocioButton(description, mediaUrl, type, title, sourceUrl) {
+                function resocioButton(description, mediaUrl, type, title, sourceUrl, imagecount) {
                     publishOrFeeds = 1;
                     $('body').find('#resocioModal').remove();
                     let action = '/discovery/content_studio/publish-content/feeds-modal';
@@ -1193,6 +1331,12 @@
                                 pickerPosition: "right",
                                 tonesStyle: "bullet"
                             });
+                            if (imagecount === 0 || imagecount === '0') {
+                                $('.thumb-count').empty();
+                            } else {
+                                $('.thumb-count').html('+' + (parseInt(imagecount) - 1).toString());
+
+                            }
                             setTimeout(function () {
                                 downloadMediaUrl();
                             }, 500);
@@ -1204,7 +1348,6 @@
                         },
                     });
                 };
-
 
                 function searchHashTags() {
                     let currentCountryValue = ($('#countrySelect option:selected').val());
@@ -1242,7 +1385,6 @@
                     }
 
                 }
-
                 $('#chatID').tootip();
             </script>
 @endsection

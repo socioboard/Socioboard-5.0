@@ -42,6 +42,7 @@ class PublishContentController extends Controller
         $facebookAccountsIds = [];
         $linkedinAccountsIds = [];
         $instagramAccountsIds = [];
+        $tumblrAccountsIds = [];
         if(!empty($socialAccounts)){
             foreach ($socialAccounts as $k => $v) {
                 foreach ($v as $key => $value) {
@@ -54,6 +55,8 @@ class PublishContentController extends Controller
                             $linkedinAccountsIds [] = $val->account_id;
                         } else if ($k === 'instagram') {
                             $instagramAccountsIds [] = $val->account_id;
+                        } else if ($k === 'tumblr') {
+                            $tumblrAccountsIds [] = $val->account_id;
                         }
                     }
                 }
@@ -75,10 +78,12 @@ class PublishContentController extends Controller
             'facebookAccountsIds' => $facebookAccountsIds,
             'linkedinAccountsIds' => $linkedinAccountsIds,
             'instagramAccountsIds' => $instagramAccountsIds,
+            'tumblrAccountsIds' => $tumblrAccountsIds,
             'isTwitter' => "false",
             'isFacebook' => "false",
             'isLinkedin' => "false",
             'isInstagram' => "false",
+            'isTumblr' => "false",
         ]);
     }
 
@@ -120,9 +125,7 @@ class PublishContentController extends Controller
                     $result['data'] = $validity;
                     return  $result;
                 }
-            }
-
-            $mediaArr = null;
+            }$mediaArr = null;
             $postType = 'Text';
             if($request->has('mediaUrl') && !empty($request->get('mediaUrl'))){
                 $postType = 'Image';
@@ -223,27 +226,36 @@ class PublishContentController extends Controller
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
 
                     if(!empty($accounts)){
+                        foreach ($accounts as $social){
+                            foreach ($responseData['data']->SocialAccountStats as $stats){
+                                if ($social->account_id === $stats->account_id && $social->account_type !== 9){
+                                    $social->friendship_counts = isset($stats->follower_count) && $stats->follower_count !== null ? $stats->follower_count : "0";
+                                }
+                            }
+                        }
                         foreach ($accounts as $key => $account) {
-                            switch ($account->account_type) {
-                                case 1:
-                                    $socialAccounts['facebook']['user'][] = $account;
-                                    break;
-                                case 2:
-                                    $socialAccounts['facebook']['page'][] = $account;
-                                    break;
-                                case 3:
-                                    $socialAccounts['facebook']['group'][] = $account;
-                                    break;
-                                case 4:
-                                    $socialAccounts['twitter']['account'][] = $account;
-                                    break;
-                                case 6:
-                                case 7:
-                                    $socialAccounts['linkedin']['account'][] = $account;
-                                    break;
-                                case 12:
-                                    $socialAccounts['instagram']['business account'][] = $account;
-                                    break;
+                            if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                switch ($account->account_type) {
+                                    case 1:
+                                        $socialAccounts['facebook']['user'][] = $account;
+                                        break;
+                                    case 2:
+                                        $socialAccounts['facebook']['page'][] = $account;
+                                        break;
+                                    case 3:
+                                        $socialAccounts['facebook']['group'][] = $account;
+                                        break;
+                                    case 4:
+                                        $socialAccounts['twitter']['account'][] = $account;
+                                        break;
+                                    case 6:
+                                    case 7:
+                                        $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 12:
+                                        $socialAccounts['instagram']['business account'][] = $account;
+                                        break;
+                                }
                             }
                         }
                     }
@@ -305,6 +317,12 @@ class PublishContentController extends Controller
                                 case 7:
                                     $socialAccounts['linkedin']['business account'][] = $account;
                                     break;
+                                case 12:
+                                    $socialAccounts['instagram']['business account'][] = $account;
+                                    break;
+                                case 16:
+                                    $socialAccounts['tumblr']['account'][] = $account;
+                                    break;
                             }
                         }
                     }
@@ -331,7 +349,6 @@ class PublishContentController extends Controller
             ],
             'socialAccounts' => $socialAccounts,
         ])->render();
-
         return response()->json(['html' => $html], 200);
     }
     
@@ -413,11 +430,12 @@ class PublishContentController extends Controller
                 'isTwitter' => $isTwitter,
                 'isFacebook' => $isFacebook,
                 'socioQueue' => null,
+                'returntype' => 2,
             ]);
         }
     }
 
-    public function socioQueueEdit( Request $request, $id){
+    public function socioQueueEdit( Request $request, $id, $content = 1){
         $socialAccounts = $this->getTeamSocialAccounts();
         $postUrl = $this->apiUrl . "/schedule/get-schedule-post-by-id?id=" . $id;
         $postData = $this->helper->postApiCallWithAuth('post', $postUrl);
@@ -490,6 +508,7 @@ class PublishContentController extends Controller
                 'isTwitter' => $isTwitter,
                 'isFacebook' => $isFacebook,
                 'socioQueue' => 'socioQueue',
+                'returntype' => $content,
             ]);
         }
     }
@@ -602,19 +621,19 @@ class PublishContentController extends Controller
             $postData = isset($postData['data']->data[0]) ? $postData['data']->data[0] : null;
             $postType = $postData->postType;
             if(!empty($socialAccounts)){
-            foreach ($socialAccounts as $k => $v) {
-                foreach ($v as $key => $value) {
-                    foreach ($value as $val) {
-                        if ($k == 'twitter') {
-                            $twitterAccountsIds [] = $val->account_id;
-                            if(in_array($val->account_id, $postData->accountIds)) $i++;
-                        } else if ($k == 'facebook') {
-                            $facebookAccountsIds [] = $val->account_id;
-                            if(in_array($val->account_id, $postData->accountIds)) $j++;
+                foreach ($socialAccounts as $k => $v) {
+                    foreach ($v as $key => $value) {
+                        foreach ($value as $val) {
+                            if ($k == 'twitter') {
+                                $twitterAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $postData->accountIds)) $i++;
+                            } else if ($k == 'facebook') {
+                                $facebookAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $postData->accountIds)) $j++;
+                            }
                         }
                     }
                 }
-            }
             }
             $isTwitter = $i > 0 ? "true" : "false";
             $isFacebook = $j > 0 ? "true" : "false";
@@ -639,6 +658,7 @@ class PublishContentController extends Controller
                 'isTwitter' => $isTwitter,
                 'isFacebook' => $isFacebook,
                 'socioQueue' => null,
+                'returntype' => 2
             ]);
         }
     }
@@ -725,6 +745,7 @@ class PublishContentController extends Controller
                             'message' => isset($data['message']) ? $data['message'] : null,
                             'type_text' =>  (isset($request->socioQueue) && ($request->socioQueue == 'socioQueue')) ? $request->socioQueue : null,
                             'type_value' =>  $request->has('scheduling_type') ? $request->get('scheduling_type') : null,
+                            'returnto' => $request->returntype
                         ], $data['code']);
                         break;
 
@@ -834,6 +855,13 @@ class PublishContentController extends Controller
                     $responseData = $this->helper->responseHandler($response['data']);
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
                     if(!empty($accounts)){
+                        foreach ($accounts as $social){
+                            foreach ($responseData['data']->SocialAccountStats as $stats){
+                                if ($social->account_id === $stats->account_id && $social->account_type !== 9){
+                                    $social->friendship_counts = isset($stats->follower_count) && $stats->follower_count !== null ? $stats->follower_count : "0";
+                                }
+                            }
+                        }
                         foreach ($accounts as $key => $account) {
                             if (!$account->join_table_teams_social_accounts->is_account_locked) {
                                 switch ($account->account_type) {
@@ -855,6 +883,9 @@ class PublishContentController extends Controller
                                         break;
                                     case 12:
                                         $socialAccounts['instagram']['business account'][] = $account;
+                                        break;
+                                    case 16:
+                                        $socialAccounts['tumblr']['account'][] = $account;
                                         break;
                                 }
                             }
@@ -893,10 +924,12 @@ class PublishContentController extends Controller
 
                     if(!empty($accounts)){
                         foreach ($accounts as $key => $account) {
-                            switch ($account->account_type) {
-                                case 9:
-                                    $socialAccounts['youtube']['account'][] = $account;
-                                    break;
+                            if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                switch ($account->account_type) {
+                                    case 9:
+                                        $socialAccounts['youtube']['account'][] = $account;
+                                        break;
+                                }
                             }
                         }
                     }
@@ -1136,7 +1169,7 @@ class PublishContentController extends Controller
                         "categoryId" => 24,
                         "defaultLanguage" => "en",
                         "defaultAudioLanguage" => "en",
-                        "tags" => isset($request->param ) ? $request->param : [],
+                        "tags" => isset($request->param ) ? $request->param : []
                     ],
                     "status" => $status
                 ],
@@ -1145,6 +1178,97 @@ class PublishContentController extends Controller
         $team = \Session::get('team');
         $apiUrl = $this->apiUrl.'/youtube/publish?accountId='.$request->account_id.'&teamId='.$team['teamid'];
         $response = $this->helper->postApiCallWithAuth('POST', $apiUrl, $requestData);
+        return $this->helper->responseHandler($response['data']);
+    }
+
+    /**
+     * TODO we've to get pinterest accounts.
+     * This function is to get the pinterest accounts in a particular account.
+     * @return  all pinterest accounts in json format.
+     */
+    private function getPinterestAccounts()
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if (isset($response['code']) && $response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->pinterestAccountDetails;
+                } else {
+                    return false;
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+                return false;
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(),$e->getCode(),$e->getMessage(), 'index() {DashboardController}');
+            return false;
+        }
+        return $accounts;
+    }
+
+    /**
+     * TODO we've to show the Pinterest publish view with the accounts.
+     * This function is to get the pinteresr accounts and return the view.
+     * @return  pinterest publish page view blade with all data required to display from controller to view.
+     */
+    public function pinterestView(){
+        $socialAccounts = $this->getPinterestAccounts();
+        return view('contentstudio::scheduling.pinterest_publish', compact('socialAccounts'));
+    }
+
+    /**
+     * TODO we've to publish the video to pinterest.
+     * * This function is used for publishing video to pinterest
+     * By Requesting the /pinterest/publish external NODE API from controller.
+     * @param {string} discription- discription about the image.
+     * @param {number} account id- id of a account to which video to be posted.
+     * !Do not change this function without referring API format getting the particular feeds from feeds servies.
+     * @return {Object} Returns publisged image data in JSON object format.
+     */
+    public function pinterestSchedule(Request $request){
+        $data = [
+            'board_id' => 'required',
+            'discription' => 'required',
+            'mediaUrl' => 'required'
+        ];
+        $validator = Validator::make($request->only('board_id', 'mediaUrl','discription'), $data, [
+            'board_id.required' => 'Pinterest account and boards are Required',
+            'discription.required' => 'Discription is required',
+            'mediaUrl.required' => 'Media for Publishing is Required',
+        ]);
+        if ($validator->fails()) {
+            $response['code'] = 201;
+            $response['msg'] = $validator->errors()->all();
+            $response['data'] = null;
+            return Response::json($response, 200);
+        }
+        for ($i = 0 ; $i< sizeof($request->board_id) ; $i++){
+            $name = explode(',',$request->board_id[$i]);
+            $accounts[$i] = $name[1];
+            $boards[] = [
+                'accountId' => (int)$name[1],
+                'boardId' => [$name[0]]
+            ];
+        }
+
+        $accountIds = array_unique($accounts);
+        $requestData = (object)[
+            'postType' => 'Image',
+            'message' => $request->discription,
+            'mediaPaths' => $request->mediaUrl,
+            'link' =>  '',
+            'accountIds' => $accountIds,
+            'postStatus' => 1,
+            'pinBoards' => $boards
+        ];
+        $team = \Session::get('team');
+        $apiUrl = $this->apiUrl.'/publish/publishPosts?teamId=' . $team['teamid'];
+        $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
         return $this->helper->responseHandler($response['data']);
     }
 }

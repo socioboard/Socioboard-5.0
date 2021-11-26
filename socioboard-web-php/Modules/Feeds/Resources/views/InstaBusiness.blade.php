@@ -41,7 +41,7 @@
                                         </option>
                                     @elseif($message=== 'No Instagram business Pages added yet!')
                                         <option selected value="failed">No
-                                            Instagram business Pages has added yet
+                                            Instagram business Account has added yet or Account has locked.
                                         </option>
                                     @endif
                                 </select>
@@ -49,101 +49,118 @@
                             <!-- end:Accounts list -->
                             <!--begin::Profile-->
                             <div class="card card-custom gutter-b ">
-                                @if(count($accounts)>0)
-                                    <div
-                                            class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
-                                        <div class="ribbon-target bg-instagram" style="top: -2px; right: 20px;">
-                                            <i class="fab fa-instagram"></i>
-                                        </div>
-                                        <!--begin::User-->
-                                        <div class="d-flex align-items-center" id="instaProfileDiv">
-                                            <div
-                                                    class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
-                                                <div class="symbol-label"
-                                                     style="background-image:url('{{$feeds['data']->socialAccountDetails->profile_pic_url}}')"></div>
-                                                <i class="symbol-badge bg-success"></i>
+                                @if($message=== 'success')
+                                    @if(count($accounts)>0)
+                                        <div
+                                                class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
+                                            <div class="ribbon-target bg-instagram" style="top: -2px; right: 20px;">
+                                                <i class="fab fa-instagram"></i>
                                             </div>
-                                            <div>
-                                                <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
-                                                   class="font-weight-bolder font-size-h5 text-hover-primary"
-                                                   target="_blank">
-                                                    {{$accounts[0]->first_name}} <i
-                                                    ></i>
-                                                </a>
-                                                <div class="text-muted">
-                                                    {{$accounts[0]->email}}
+                                            <!--begin::User-->
+                                            <div class="d-flex align-items-center" id="instaProfileDiv">
+                                                <div
+                                                        class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
+                                                    <div class="symbol-label"
+                                                         style="background-image:url('{{$feeds['data']->socialAccountDetails->profile_pic_url}}')"></div>
+                                                    <i class="symbol-badge bg-success"></i>
                                                 </div>
-                                                <!-- begin:account star rating -->
-                                                <div class="rating-css">
-                                                    <div class="star-icon">
-                                                        <input type="radio"
-                                                               <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating1{{$accounts[0]->account_id}}}"
-                                                               onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
-                                                        <label
-                                                                for="rating1{{$accounts[0]->account_id}}"
-                                                                class="fas fa-star"></label>
-                                                        <input type="radio"
-                                                               <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating2{{$accounts[0]->account_id}}}"
-                                                               onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
-                                                        <label
-                                                                for="rating2{{$accounts[0]->account_id}}"
-                                                                class="fas fa-star"></label>
-                                                        <input type="radio"
-                                                               <?php if ($accounts[0]->rating == 3) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating3{{$accounts[0]->account_id}}"
-                                                               onclick="ratingUpdate('3', '{{$accounts[0]->account_id}}');">
-                                                        <label
-                                                                for="rating3{{$accounts[0]->account_id}}"
-                                                                class="fas fa-star"></label>
-                                                        <input type="radio"
-                                                               <?php if ($accounts[0]->rating == 4) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating4{{$accounts[0]->account_id}}"
-                                                               onclick="ratingUpdate('4', '{{$accounts[0]->account_id}}');">
-                                                        <label
-                                                                for="rating4{{$accounts[0]->account_id}}"
-                                                                class="fas fa-star"></label>
-                                                        <input type="radio"
-                                                               <?php if ($accounts[0]->rating == 5) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
-                                                               id="rating5{{$accounts[0]->account_id}}"
-                                                               onclick="ratingUpdate('5', '{{$accounts[0]->account_id}}');">
-                                                        <label
-                                                                for="rating5{{$accounts[0]->account_id}}"
-                                                                class="fas fa-star"></label>
+                                                <div>
+                                                    <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
+                                                       class="font-weight-bolder font-size-h5 text-hover-primary"
+                                                       target="_blank">
+                                                        {{$accounts[0]->first_name}} <i
+                                                        ></i>
+                                                    </a>
+                                                    <div class="text-muted">
+                                                        {{$accounts[0]->email}}
+                                                    </div>
+                                                    <!-- begin:account star rating -->
+                                                    <div class="rating-css">
+                                                        <div class="star-icon">
+                                                            <input type="radio"
+                                                                   <?php if ($accounts[0]->rating === 1) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
+                                                                   id="rating1{{$accounts[0]->account_id}}"
+                                                                   onclick="ratingUpdate('1', '{{$accounts[0]->account_id}}}');">
+                                                            <label
+                                                                    for="rating1{{$accounts[0]->account_id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($accounts[0]->rating == 2) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
+                                                                   id="rating2{{$accounts[0]->account_id}}"
+                                                                   onclick="ratingUpdate('2', '{{$accounts[0]->account_id}}');">
+                                                            <label
+                                                                    for="rating2{{$accounts[0]->account_id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($accounts[0]->rating == 3) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
+                                                                   id="rating3{{$accounts[0]->account_id}}"
+                                                                   onclick="ratingUpdate('3', '{{$accounts[0]->account_id}}');">
+                                                            <label
+                                                                    for="rating3{{$accounts[0]->account_id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($accounts[0]->rating == 4) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
+                                                                   id="rating4{{$accounts[0]->account_id}}"
+                                                                   onclick="ratingUpdate('4', '{{$accounts[0]->account_id}}');">
+                                                            <label
+                                                                    for="rating4{{$accounts[0]->account_id}}"
+                                                                    class="fas fa-star"></label>
+                                                            <input type="radio"
+                                                                   <?php if ($accounts[0]->rating == 5) echo "checked";?> name="rating1{{$accounts[0]->account_id}}"
+                                                                   id="rating5{{$accounts[0]->account_id}}"
+                                                                   onclick="ratingUpdate('5', '{{$accounts[0]->account_id}}');">
+                                                            <label
+                                                                    for="rating5{{$accounts[0]->account_id}}"
+                                                                    class="fas fa-star"></label>
+                                                        </div>
+                                                    </div>
+                                                    <!-- end:account star rating -->
+                                                    <div class="mt-2">
+                                                        <a href="#"
+                                                           class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
+                                                           onclick="return false" id="chatID"
+                                                           title="Coming soon">Chat</a>
                                                     </div>
                                                 </div>
-                                                <!-- end:account star rating -->
-                                                <div class="mt-2">
-                                                    <a href="#"
-                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                       onclick="return false" id="chatID"
-                                                       title="Coming soon">Chat</a>
-                                                </div>
                                             </div>
+                                            <!--end::User-->
+                                            <!--begin::Contact-->
+                                            @if($feeds['data']->SocialAccountStats !== null)
+                                                <div class="py-9">
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <span class="font-weight-bold mr-2">Followers :</span>
+                                                        <a href="#"
+                                                           class="text-hover-primary"
+                                                           id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>
+                                                    </div>
+                                                </div>
+                                        @endif
+                                        <!--end::Contact-->
                                         </div>
-                                        <!--end::User-->
-                                        <!--begin::Contact-->
-                                        @if($feeds['data']->socialAccountDetails !== null)
-                                            <div class="py-9">
-                                                <div class="d-flex align-items-center justify-content-between mb-2">
-                                                    <span class="font-weight-bold mr-2">Followers :</span>
-                                                    <a href="#"
-                                                       class="text-hover-primary"
-                                                       id="follower_count">{{$feeds['data']->socialAccountDetails->friendship_counts}}</a>
-                                                </div>
+                                    @else
+                                        <div class="text-center">
+                                            <div class="symbol symbol-150">
+                                                <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
+                                            <h6>Currently no Instagram Business Account has been added for this team</h6>
+                                        </div>
                                     @endif
-                                    <!--end::Contact-->
-                                    </div>
-                                @else
+                                @elseif($message=== 'No Instagram business Pages added yet!')
                                     <div class="text-center">
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>Currently no Instagram Business Account has been added for this team</h6>
+                                        <h6>NO Instagram  Business Account has added yet or Account has locked</h6>
+                                    </div>
+                                @elseif($message=== 'falied')
+                                    <div class="text-center">
+                                        <div class="symbol symbol-150">
+                                            <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                        </div>
+                                        <h6>Sorry some error ,occurred please reload page</h6>
                                     </div>
                                 @endif
+
                             </div>
                             <!--end::Profile-->
                         </div>
@@ -161,137 +178,170 @@
     display: none;"></span>
                             </div>
                             <div class="card-body" id="instagramFeeds">
-                            @if(count($accounts)>0)
-                                @if($feeds['code']=== 200)
-                                    <!--begin::Video-->
-                                        <script>
-                                            var feedsLength = <?php echo count($feeds['data']->feeds)  ?>;
-                                        </script>
-                                        @if(sizeof($feeds['data']->feeds) !== 0 )
-                                            @foreach($feeds['data']->feeds as $data)
-                                                <?php $count = 0?>
-                                                <?php $arrayImages = []?>
-                                                <?php $date = 0; ?>
-                                                <?php $date = date('d-m-Y H:i:s', strtotime($data->publishedDate))?>
-                                                <div class="mb-5">
-                                                    <!--begin::Top-->
-                                                    <div class="d-flex align-items-center">
-                                                        <!--begin::Symbol-->
-                                                        <div class="symbol symbol-40 symbol-light-success mr-5">
+                            @if($message=== 'success')
+                                @if(count($accounts)>0)
+                                    @if($feeds['code']=== 200)
+                                        <!--begin::Video-->
+                                            <script>
+                                                var feedsLength = <?php echo count($feeds['data']->feeds)  ?>;
+                                            </script>
+                                            @if(sizeof($feeds['data']->feeds) !== 0 )
+                                                @foreach($feeds['data']->feeds as $data)
+                                                    <?php $count = 0?>
+                                                    <?php $arrayImages = []?>
+                                                    <?php $date = 0; ?>
+                                                    <?php $date =  new Datetime($data->publishedDate);
+                                                    $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
+                                                    ?>
+                                                    <div class="mb-5">
+                                                        <!--begin::Top-->
+                                                        <div class="d-flex align-items-center">
+                                                            <!--begin::Symbol-->
+                                                            <div class="symbol symbol-40 symbol-light-success mr-5">
                                                         <span class="symbol-label">
                                                             <img
                                                                     src="{{$feeds['data']->socialAccountDetails->profile_pic_url}}"
                                                                     class="h-75 align-self-end" alt=""/>
                                                         </span>
-                                                        </div>
-                                                        <!--end::Symbol-->
+                                                            </div>
+                                                            <!--end::Symbol-->
 
-                                                        <!--begin::Info-->
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <a href="javascript:;"
-                                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
-                                                            <span
-                                                                    class="text-muted font-weight-bold">{{$date}}</span>
+                                                            <!--begin::Info-->
+                                                            <div class="d-flex flex-column flex-grow-1">
+                                                                <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
+                                                                   target="_blank"
+                                                                   class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
+                                                                <span
+                                                                        class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
+                                                            </div>
+                                                            <!--end::Info-->
                                                         </div>
-                                                        <!--end::Info-->
-                                                    </div>
-                                                    <!--end::Top-->
-                                                    <div class="pt-4">
-                                                        @if($data->mediaType === 'IMAGE')
-                                                            @foreach($data->mediaUrls as $images)
-                                                                <div class="">
-                                                                    <img src="{{$images}}"
-                                                                         class="img-fluid"/>
-                                                                </div>
-                                                            @endforeach
-                                                        @elseif($data->mediaType === 'VIDEO')
-                                                            @foreach($data->mediaUrls as $video)
-                                                                <div
-                                                                        class="embed-responsive embed-responsive-16by9">
-                                                                    <iframe class="embed-responsive-item rounded"
-                                                                            src="{{$video}}"
-                                                                            allowfullscreen=""></iframe>
-                                                                </div>
-                                                            @endforeach
-                                                        @elseif($data->mediaType === 'CAROUSEL_ALBUM')
-                                                            <div class="pt-4">
-                                                                <div id="image-gallery{{$count}}"></div>
-                                                                @foreach($data->mediaUrls as $data2)
+                                                        <!--end::Top-->
+                                                        <div class="pt-4">
+                                                            @if($data->mediaType === 'IMAGE')
+                                                                @foreach($data->mediaUrls as $images)
                                                                     <div class="">
-                                                                        <img src="{{$data2}}"
+                                                                        <img src="{{$images}}"
                                                                              class="img-fluid"/>
                                                                     </div>
-                                                                    <?php $count++;?>;
-                                                            @endforeach
-                                                            @endif
-                                                            <!--begin::Text-->
-                                                                <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                    {{$data->captions}}
-                                                                </p>
-                                                                <!--end::Text-->
+                                                                @endforeach
+                                                            @elseif($data->mediaType === 'VIDEO')
+                                                                @foreach($data->mediaUrls as $video)
+                                                                    <div
+                                                                            class="embed-responsive embed-responsive-16by9">
+                                                                        <iframe class="embed-responsive-item rounded"
+                                                                                src="{{$video}}"
+                                                                                allowfullscreen=""></iframe>
+                                                                    </div>
+                                                                @endforeach
+                                                            @elseif($data->mediaType === 'CAROUSEL_ALBUM')
+                                                                <div class="pt-4">
+                                                                    <div id="image-gallery{{$count}}"></div>
+                                                                    @foreach($data->mediaUrls as $data2)
+                                                                        <div class="">
+                                                                            <img src="{{$data2}}"
+                                                                                 class="img-fluid"/>
+                                                                        </div>
+                                                                        <?php $count++;?>;
+                                                                @endforeach
+                                                                @endif
+                                                                <!--begin::Text-->
+                                                                    <p class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                        {{$data->captions}}
+                                                                    </p>
+                                                                    <!--end::Text-->
 
-                                                                <!--begin::Action-->
-                                                                <div class="d-flex align-items-center">
-                                                                    @if($data->mediaType === 'IMAGE')
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','image',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                    <!--begin::Action-->
+                                                                    <div class="d-flex align-items-center">
+                                                                        @if($data->mediaType === 'IMAGE')
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','image',null,null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
-                                                                        </a>
-                                                                    @elseif($data->mediaType === 'VIDEO')
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','video',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                            </a>
+                                                                        @elseif($data->mediaType === 'VIDEO')
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','video',null,null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
-                                                                        </a>
-                                                                    @elseif($data->mediaType === 'CAROUSEL_ALBUM')
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','{{strtolower($data->mediaUrls[0])}}',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                            </a>
+                                                                        @elseif($data->mediaType === 'CAROUSEL_ALBUM')
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('{{$data->captions}}','{{$data->mediaUrls[0]}}','{{strtolower($data->mediaUrls[0])}}',null,null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
-                                                                        </a>
-                                                                    @else
-                                                                        <a id="reSocioButton"
-                                                                           onclick="resocioButton('{{$data->captions}}',null,null,null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                            </a>
+                                                                        @else
+                                                                            <a id="reSocioButton"
+                                                                               onclick="resocioButton('{{$data->captions}}',null,null,null,null)"
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
-                                                                        </a>
-                                                                    @endif
+                                                                            </a>
+                                                                        @endif
+                                                                    </div>
+                                                                    <!--end::Action-->
                                                                 </div>
-                                                                <!--end::Action-->
-                                                            </div>
-                                                            <!--end::Bottom-->
-                                                    </div>
-                                                    <!--end::Video-->
-                                                    @endforeach
-                                                    @else
-                                                        <div class="text-center">
-                                                            <div class="symbol symbol-150">
-                                                                <img src="/media/svg/illustrations/no-accounts.svg"/>
-                                                            </div>
-                                                            <h6>Currently no Instagram Business feeds found for this
-                                                                account</h6>
+                                                                <!--end::Bottom-->
                                                         </div>
-                                                    @endif
-                                                    @endif
-                                                    @else
-                                                        <div class="text-center">
-                                                            <div class="symbol symbol-150">
-                                                                <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                        <!--end::Video-->
+                                                        @endforeach
+                                                        @else
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Currently no Instagram Business feeds found for this
+                                                                    account</h6>
                                                             </div>
-                                                            <h6>Currently no Instagram Business Accounts has been added
-                                                                for this team</h6>
-                                                        </div>
-                                                    @endif
-                                                </div>
+                                                        @endif
+                                                        @elseif($feeds['code']=== 400)
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Can not get feeds as : {{$feeds['message']}}</h6>
+                                                            </div>
+                                                            @else
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Sorry some error ,occurred please reload page</h6>
+                                                            </div>
+                                                            @endif
+                                                        @else
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Currently no Instagram Business Accounts has been added
+                                                                    for this team</h6>
+                                                            </div>
+                                                        @endif
+                                @elseif($message=== 'falied')
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Sorry some error ,occurred please reload page</h6>
+                                                            </div>
+                                                        @elseif($message=== 'No Instagram business Pages added yet!')
+                                                            <div class="text-center">
+                                                                <div class="symbol symbol-150">
+                                                                    <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                                                </div>
+                                                                <h6>Can not get feeds as :  NO Instagram  Business Account has added yet or Account has locked</h6>
+                                                            </div>
+                                @endif
+
                             </div>
                             <!--end::feeds-->
                         </div>
@@ -310,6 +360,7 @@
         @section('scripts')
             <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
             <script src="{{asset('js/images-grid.js')}}"></script>
+            <script src="{{asset('js/accounts.js')}}"></script>
             <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
             <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
             <script>
@@ -384,9 +435,10 @@
                         success: function (response) {
                             $(".spinner-border").css("display", "none");
                             if (response.code === 200) {
+                                let append = '';
                                 $('#instaProfileDiv,#follower_count').empty();
-                                $('#follower_count').append(response?.data?.socialAccountDetails?.friendship_counts ?? 0);
-                                $('#instaProfileDiv').append('<div\n' +
+                                $('#follower_count').append(response?.data?.SocialAccountStats?.follower_count ?? 0);
+                                append = '<div\n' +
                                     'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                                     '<div class="symbol-label"\n' +
                                     'style="background-image:url(' + response.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
@@ -402,40 +454,30 @@
                                     '<div class="text-muted">\n' + response.data.socialAccountDetails.email +
                                     '</div>' +
                                     '<div class="rating-css">\n' +
-                                    '<div class="star-icon">\n' +
-                                    (
-                                        response.data.socialAccountDetails.rating === 1 ? ' <input type="radio" checked name="rating1" id="rating1">\n' +
-                                            '<label for="rating1" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating1" id="rating1">\n' +
-                                            '<label for="rating1" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.socialAccountDetails.rating === 2 ? ' <input type="radio" checked name="rating2" id="rating2">\n' +
-                                            '<label for="rating2" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating2" id="rating2">\n' +
-                                            '<label for="rating2" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.socialAccountDetails.rating === 3 ? ' <input type="radio" checked name="rating3" id="rating3">\n' +
-                                            '<label for="rating3" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating3" id="rating3">\n' +
-                                            '<label for="rating3" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.socialAccountDetails.rating === 4 ? ' <input type="radio" checked name="rating4" id="rating4">\n' +
-                                            '<label for="rating4" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating4" id="rating4">\n' +
-                                            '<label for="rating4" class="fas fa-star"></label>\n'
-                                    ) +
-                                    (
-                                        response.data.socialAccountDetails.rating === 5 ? ' <input type="radio" checked name="rating5" id="rating5">\n' +
-                                            '<label for="rating5" class="fas fa-star"></label>\n' : ' <input type="radio"  name="rating5" id="rating5">\n' +
-                                            '<label for="rating5" class="fas fa-star"></label>\n'
-                                    ) +
-                                    '                                                </div>\n' +
+                                    '<div class="star-icon">\n';
+                                (response.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                    '<label for="rating1' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
+                                    '<label for="rating1' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.socialAccountDetails.rating === 2) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                    '<label for="rating2' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating2' + accid + '" onclick="ratingUpdate(\'2\', ' + accid + ');">\n' +
+                                    '<label for="rating2' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.socialAccountDetails.rating === 3) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                    '<label for="rating3' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating3' + accid + '" onclick="ratingUpdate(\'3\', ' + accid + ');">\n' +
+                                    '<label for="rating3' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.socialAccountDetails.rating === 4) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                    '<label for="rating4' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating4' + accid + '" onclick="ratingUpdate(\'4\', ' + accid + ');">\n' +
+                                    '<label for="rating4' + accid + '" class="fas fa-star"></label>\n';
+                                (response.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                    '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
+                                    '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
+                                append += '</div>\n' +
                                     '</div>\n' +
                                     '<div class="mt-2">\n' +
                                     '<a id="chatID" href="javascript:;" \n' +
                                     'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" title="Coming soon">Chat</a>\n' +
                                     '</div>\n' +
-                                    '</div>');
-                                $(".spinner-border").css("display", "none");
+                                    '</div>';
+                                $('#instaProfileDiv').append(append);
                                 feedsLength = response.data.feeds.length;
                                 $('#instagramFeeds').empty();
                                 let appendData = '';
@@ -454,7 +496,7 @@
                                             '</span>\n' +
                                             '</div>\n' +
                                             '<div class="d-flex flex-column flex-grow-1">\n' +
-                                            '<a href="javascript:;"\n' +
+                                            '<a href="' + response.data.socialAccountDetails.profile_url + '"  target="_blank"\n' +
                                             'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                             '<span\n' +
                                             'class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
@@ -542,6 +584,18 @@
                                 }
 
                             }
+                            else if (response.code === 400) {
+                                $('#instagramFeeds').append('<div class="text-center">\n' +
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div>\n' +
+                                    '<h6>\n' + "Can not get feeds, as : " + response.message +
+                                    '</h6></div>');
+                            } else {
+                                $('#instagramFeeds').append(' <div style="color: red;text-align:center;">\n' +
+                                    "Some error occured can get feeds" +
+                                    '</div>');
+                            }
                         }
                     });
                 }
@@ -553,27 +607,19 @@
                  * @param {this} pageid- page id of that particular Instagram account.
                  * ! Do not change this function without referring API format of getting the Instagram feeds.
                  */
-                function getNextInstagramFeeds(accid, pageId) {
+                function getNextInstagramFeeds(accid, pageid) {
                     let accounType = 12;
                     $.ajax({
                         type: 'get',
                         url: '/get-next-instgram-feeds',
                         data: {
-                            accid, pageId, accounType
+                            accid, pageid, accounType
                         },
                         dataType: 'json',
                         beforeSend: function () {
-                            $('#instagramFeeds').append('<div class="d-flex justify-content-center" >\n' +
-                                '<div class="spinner-border" role="status"  id="' + pageId + '" style="display: none;">\n' +
-                                '<span class="sr-only">Loading...</span>\n' +
-                                '</div>\n' +
-                                '</div>');
-                            $(".spinner-border").css("display", "block");
                         },
                         success: function (response) {
-                            $(".spinner-border").css("display", "none");
-                            if (response.code === 200)
-                            {
+                            if (response.code === 200) {
                                 feedsLength = response.data.feeds.length;
                                 let appendData = '';
                                 let publishedDate = 0;
@@ -590,8 +636,8 @@
                                             '</span>\n' +
                                             '</div>\n' +
                                             '<div class="d-flex flex-column flex-grow-1">\n' +
-                                            '<a href="javascript:;"\n' +
-                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                            '<a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
+                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder"  target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                             '<span\n' +
                                             'class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
                                             '</div>\n' +
@@ -670,18 +716,20 @@
                                             '</div>\n';
                                         $('#instagramFeeds').append(appendData);
                                     });
-                                } else {
-                                    $('#instagramFeeds').append('<div class="text-center">\n' +
-                                        '<div class="symbol symbol-150">\n' +
-                                        '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
-                                        '</div>\n' +
-                                        '<h6>Currently no Instagram Business  feeds found for this account</h6>\n' +
-                                        '</div>');
                                 }
 
                             }
-                        }
+                            else if (response.code === 400) {
+                                feedsLength=0;
+                                $('#instagramFeeds').append('<div style="color: Red;text-align:center;">\n' +"Can not get next feeds as "+
+                                    response.message + '</div>');
+                                $('#instagramFeeds').append('<div class="text-center">\n' +
+                                    '<div class="symbol symbol-150">\n' +
+                                    '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                                    '</div></div>');
 
+                            }
+                        }
                     });
                 }
 

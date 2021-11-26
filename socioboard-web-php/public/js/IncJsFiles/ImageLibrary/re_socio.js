@@ -40,6 +40,9 @@ function draftPostFunction(postStatus) {
                             case 'Text is required':
                             $('#text_area_error1').html(i);
                             break;
+                        case 'URl format should be valid':
+                            $('#text_area_error2').html(i);
+                            break;
                     }
                 }
             } else if (Number(postStatus) === 0 && resp.code === 200) {

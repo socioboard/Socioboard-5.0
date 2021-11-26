@@ -1,6 +1,15 @@
 @extends('home::layouts.UserLayout')
 <head>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72806503-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-72806503-3');
+    </script>
 </head>
 @section('title')
     <title>{{env('WEBSITE_TITLE')}} | Plan Details</title>

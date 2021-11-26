@@ -24,22 +24,13 @@ class NewsApiController extends Controller
      */
     public function index()
     {
-        $title = 'News_Api';
-        $type = [
-            'business' => 'Business',
-            'techcrunch' => 'Techcrunch',
-            'entertainment' => 'Entertainment',
-            'health' => 'Health',
-            'science' => 'Science',
-            'sports' => 'Sports',
-            'technology' => 'Technology',
-        ];
+        $title = 'News Api';
 
         $rating = ['relevance' => 'Relevance', 'publishedAt' => 'PublishedAt', 'popularity' => 'Popularity'];
 
         $html = view('contentstudio::components.search')
-        ->with(compact('type','rating','title'))
-        ->render();
+            ->with(compact('rating','title'))
+            ->render();
 
         return view('contentstudio::newsApi.index')->with(compact('html'));
     }
@@ -54,15 +45,14 @@ class NewsApiController extends Controller
 
     public function getSearchSessionApi($request)
     {
-        $apiUrl = $this->apiUrl.'/trends/get-news-api?keyword='.$request['keyword'].'&category='.$request['type'].'&pageId='.$request['pageId'].'&sortBy='.$request['rating'];
-        
+        $apiUrl = $this->apiUrl.'/trends/get-news-api?keyword='.$request['keyword'].'&pageId='.$request['pageId'].'&sortBy='.$request['rating'];
+
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, null);
             $data = $this->helper->responseHandler($response['data'])['data'];
-            
-            if (!$data)
-                return response()->json(['error' => '<p id="notification"> No more data </p>']);
-            
+            if (!$data->newsApiDetails)
+                return response()->json(['error'=>'No data available']);
+
             $html = view('contentstudio::newsApi.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
             return response()->json($html);
 

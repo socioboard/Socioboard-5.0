@@ -16,12 +16,13 @@
                 <!--begin::Row-->
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4" >
-                        <div class="card card-custom gutter-b sticky " data-sticky="true" data-margin-top="220px" data-sticky-for="1023" style="overflow-y: auto; height: calc(100vh - 200px); position: fixed; width: 606px; left: 26px; top: 220px;">
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">RSS</h3>
-                            </div>
+                        <div class="card card-custom gutter-b sticky" data-sticky="true" data-margin-top="140px" data-sticky-for="1023" data-sticky-class="kt-sticky">
+                            <!-- <div class="card-header border-0 py-5">
+
+                            </div> -->
                             <!--begin::Body-->
                             <div class="card-body">
+                                <h3 class="card-title font-weight-bolder mb-5">RSS</h3>
                                 <!--begin::Form-->
                                 <form id="search_form">
                                     <!--begin::Social-->
@@ -36,38 +37,20 @@
                                     <button type="reset" class="btn font-weight-bolder px-8">Clear</button>
                                 </form>
                                 <!--end::Form-->
-                            </div>
-                            <!--end::Body-->
-
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">URL List</h3>
-                            </div>
-                            <!--begin::Body-->
-                            <div class="card-body">
-                                <script>
-                                    let url = '{{$url}}' ;
-                                </script>
-                                <!--begin::URL list-->
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-vertical-center">
-                                        <thead>
-                                        <tr>
-                                            <th class="p-0"></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                                <div class="rss-feed-url-lists">
+                                    <script>
+                                        let url = '{{$url}}' ;
+                                    </script>
+                                    <h3 class="card-title font-weight-bolder mt-10">URL list</h3>
+                                    <ul>
                                         @foreach($responseData['data'] as $data)
-                                        <tr>
-                                            <td class="pl-0">
-                                                <div class="text-muted font-weight-bold d-block" id="title_id{{$data->_id}}"  contenteditable="true" onkeyup="editFunction('{{$data->_id}}','{{$data->rssUrl}}','{{$data->description}}')">{{$data->title}}</div>
-                                                <a href="javascript:;" class="font-weight-bolder text-hover-primary mb-1 font-size-lg" onclick="viweFunction('{{$data->rssUrl}}')">{{$data->rssUrl}}</a>
-                                            </td>
-                                        </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            <li>
+                                                <h4 class="text-muted font-weight-bold d-block mt-5" id="title_id{{$data->_id}}" onblur="editFunction('{{$data->_id}}','{{$data->rssUrl}}','{{$data->description}}')">{{$data->title}}</h4>
+                                                <a href="" class="font-weight-bolder text-hover-primary mb-1 font-size-lg"onclick="viweFunction('{{$data->rssUrl}}')">{{$data->rssUrl}}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                                <!--end::URL list-->
                             </div>
                             <!--end::Body-->
                         </div>
@@ -79,18 +62,18 @@
                             @if(isset($responseFeedsData['data']))
                                 @foreach($responseFeedsData['data'] as $feeds )
                                     @php $title = str_replace("'",'',$feeds->title); @endphp
-                            <div class="card">
-                                <div class="card-body">
-                                    <a href="{{$feeds->mediaUrl}}"><h5 class="card-title mb-1 mt-2">{{$feeds->title}}</h5></a>
-                                    <p class="card-text">{{$feeds->description}}</p>
-                                    <hr>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('{{$feeds->mediaUrl}}','{{$title}}')"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <a href="{{$feeds->mediaUrl}}"><h5 class="card-title mb-1 mt-2">{{$feeds->title}}</h5></a>
+                                            <p class="card-text">{{$feeds->description}}</p>
+                                            <hr>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('{{$feeds->mediaUrl}}','{{$title}}')"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
-                                @endif
+                            @endif
                         </div>
                         <!--end::feeds-->
                     </div>
@@ -128,23 +111,23 @@
                             <!-- begin:Accounts list -->
                         @if(isset($socialAccounts) && !empty($socialAccounts))
                             <!-- begin:Accounts list -->
-                                    <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
-                                        @foreach($socialAccounts as $key => $socialAccount)
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
-                                                    <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                    <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>
-                                    <div class="tab-content mt-5" id="AddAccountsTabContent">
-                                        @foreach($socialAccounts as $key => $socialAccountsGroups)
+                                <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
+                                    @foreach($socialAccounts as $key => $socialAccount)
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
+                                                <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>
+                                <div class="tab-content mt-5" id="AddAccountsTabContent">
+                                    @foreach($socialAccounts as $key => $socialAccountsGroups)
 
-                                            <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
-                                                <div class="mt-3">
-                                                    @foreach($socialAccountsGroups as $group => $socialAccountArray)
-                                                        @if(($group == "account") || ($group == "page") || ($group == "business account"))
+                                        <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
+                                            <div class="mt-3">
+                                                @foreach($socialAccountsGroups as $group => $socialAccountArray)
+                                                    @if(($group == "account") || ($group == "page") || ($group == "business account"))
                                                         <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                         @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -169,10 +152,12 @@
                                                                             <!--end::Title-->
 
                                                                             <!--begin::Data-->
-                                                                            <span class="text-muted font-weight-bold">
-                                                                            {{-- 2M followers --}}
-                                                                                {{ $socialAccount->friendship_counts }} followers
+                                                                        @if($socialAccount->account_type !== 6)
+                                                                            <!--begin::Data-->
+                                                                                <span class="text-muted font-weight-bold">
+                                                                            {{ $socialAccount->friendship_counts }} followers
                                                                         </span>
+                                                                        @endif
                                                                             <!--end::Data-->
                                                                         </div>
                                                                         <!--end::Info-->
@@ -189,12 +174,12 @@
                                                                 <!--end::Page-->
                                                             </div>
                                                         @endforeach
-                                                        @endif
-                                                    @endforeach
-                                                </div>
+                                                    @endif
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                                 <!-- end:Accounts list -->
                         @endif
                         <!-- end:Accounts list -->
@@ -388,36 +373,30 @@
                 })
 
                 function editFunction(id, url, description) {
-                    let wage = document.getElementById("title_id"+id);
-                    wage.addEventListener("keydown", function (e) {
-                        if (e.code === "Enter") {
-                            e.preventDefault();
-                            let value = document.getElementById("title_id"+id).innerHTML;
-                            $.ajax({
-                                url: '/discovery/edit-rss-feeds',
-                                type: 'post',
-                                data: {
-                                    id: id,
-                                    title: value,
-                                    url: url,
-                                    description: description
-                                },
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                success: function (response) {
-                                    if (response.code === 200) {
-                                        toastr.success('success')
-                                    }else{
-                                        toastr.error(response.error);
-                                    }
-                                },
-                                error: function (error) {
-                                    toastr.error(error.error);
-                                }
-                            })
+                    let value = document.getElementById("title_id" + id).innerHTML;
+                    $.ajax({
+                        url: '/discovery/edit-rss-feeds',
+                        type: 'post',
+                        data: {
+                            id: id,
+                            title: value,
+                            url: url,
+                            description: description
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            if (response.code === 200) {
+                                toastr.success('success')
+                            } else {
+                                toastr.error(response.error);
+                            }
+                        },
+                        error: function (error) {
+                            toastr.error(error.error);
                         }
-                    });
+                    })
                 }
 
 
