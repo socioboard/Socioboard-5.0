@@ -1,5 +1,11 @@
 import PublishService from './publish.service.js';
 import PublisherLibs from '../../../Common/Models/publish.model.js';
+import bitlyCluster from '../../../Common/Cluster/bitly.cluster.js';
+import TeamLibs from '../../../Common/Models/team.model.js';
+import BITLY_CONSTANTS from '../../../Common/Constants/bitly.constants.js';
+import { CatchResponse } from '../../../Common/Shared/response.shared.js';
+
+const teamLibs = new TeamLibs();
 
 class PublishController {
   async publishPost(req, res, next) {
@@ -152,6 +158,52 @@ class PublishController {
     // Call directly to publish a post to any social networks
 
     return publishLibs.startPublish(postDetails, teamId, socialAccountIds);
+  }
+
+  async publishPostMiddleware(req, res, next) {
+    try {
+      const { link, userScopeId: userId } = req.body;
+
+      req.body.link = link && await this.shortenPostLinkByBitly(link, userId);
+
+      return next();
+    } catch (error) {
+      const errorMessage = error?.error?.message;
+
+      if (errorMessage === BITLY_CONSTANTS.ERROR_MESSAGES.ALREADY_A_BITLY_LINK) {
+        return next();
+      }
+
+      if (errorMessage) {
+        return CatchResponse(res, errorMessage);
+      }
+
+      return CatchResponse(res, error.message);
+    }
+  }
+
+  async shortenPostLinkByBitly(link, userId) {
+    const foundBitlyAccount = await this.findBitlyAccount(userId);
+
+    if (foundBitlyAccount) {
+      return this.shortenLink(link, foundBitlyAccount);
+    }
+
+    return link;
+  }
+
+  async findBitlyAccount(userId) {
+    const foundUserAccounts = await teamLibs.getSocialProfiles(userId);
+
+    return foundUserAccounts.find(({ dataValues }) => dataValues.account_type === BITLY_CONSTANTS.ACCOUNT_TYPE);
+  }
+
+  async shortenLink(longUrl, account) {
+    const { dataValues: { access_token: accessToken }} = account;
+
+    const { link } = await bitlyCluster.shortenLink(accessToken, { long_url: longUrl });
+
+    return link;
   }
 }
 export default new PublishController();

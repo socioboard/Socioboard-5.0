@@ -3,7 +3,7 @@ import PublishController from './publish.controller.js';
 
 const router = Router();
 
-router.post('/publishPosts', PublishController.publishPost);
+router.post('/publishPosts', PublishController.publishPostMiddleware.bind(PublishController), PublishController.publishPost);
 router.get('/get-drafted-posts', PublishController.getDraftedPosts);
 router.get('/get-draft-post-by-id', PublishController.getDraftPostById);
 router.put('/update-draft-post-by-id', PublishController.updateDraftPostById);

@@ -1189,9 +1189,11 @@ class TeamController {
         req.body.userScopeId,
         teamSocialAccount[0]
       );
+      const pinterestAccountDetails = await teamLibs.getTeamBoard(req.body.userScopeId, req.query.teamId)
       const data = {
         teamSocialAccountDetails: teamSocialAccount[0],
         SocialAccountStats,
+        pinterestAccountDetails
       };
 
       return SuccessResponse(res, data);

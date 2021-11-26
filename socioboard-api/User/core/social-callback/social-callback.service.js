@@ -86,6 +86,11 @@ class SocialCallbackService {
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
 
+      await unauthorizedLibs.checkAppSumoActivation(
+        parseData.user.email,
+        userDetails.userInfo.user.user_id
+      );
+
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
         userDetails.userInfo.activations.id
@@ -101,7 +106,7 @@ class SocialCallbackService {
     }
   }
 
-  registerSocialUserToAmember(userDetails = {}) {
+  async registerSocialUserToAmember(userDetails = {}) {
     // Set Details in aMember as well
     /**
        * userName
@@ -119,7 +124,7 @@ class SocialCallbackService {
       email: userData?.email,
     };
 
-    new aMember(config.get('aMember')).addUserToAMember(aMemberData);
+    await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
   }
 
   async googleCallback(req, res, next) {
@@ -174,6 +179,10 @@ class SocialCallbackService {
       this.registerSocialUserToAmember(userDetails);
 
       await unauthorizedLibs.checkTeamInvite(
+        parseData.user.email,
+        userDetails.userInfo.user.user_id
+      );
+      await unauthorizedLibs.checkAppSumoActivation(
         parseData.user.email,
         userDetails.userInfo.user.user_id
       );
@@ -239,6 +248,10 @@ class SocialCallbackService {
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id
       );
+      await unauthorizedLibs.checkAppSumoActivation(
+        userDetails.userInfo.user.email,
+        userDetails.userInfo.user.user_id
+      );
       const userInfo = await unauthorizedLibs.getUserAccessToken(
         userDetails.userInfo.user.user_id,
         userDetails.userInfo.activations.id
@@ -301,6 +314,10 @@ class SocialCallbackService {
 
       this.updateSocialMediaStats(userDetails.socialNetworkDetails);
       await unauthorizedLibs.checkTeamInvite(
+        userDetails.userInfo.user.email,
+        userDetails.userInfo.user.user_id
+      );
+      await unauthorizedLibs.checkAppSumoActivation(
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id
       );

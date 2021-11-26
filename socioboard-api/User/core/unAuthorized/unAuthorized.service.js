@@ -119,8 +119,11 @@ class unauthorizedController {
           country: `${req.body?.country ?? 'NA'}`,
         };
 
-        new aMember(config.get('aMember')).addUserToAMember(aMemberData);
-
+        await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
+        await unauthorizedLibs.checkAppSumoActivation(
+          req.body.email,
+          responseData?.user_name
+        );
         const planDetails = await unauthorizedLibs.getPlanDetails(
           responseData.Activations.user_plan
         );

@@ -21,7 +21,8 @@ export default (request, response, next) => {
   };
   response.end = function (chunk) {
     if (chunk) chunks.push(chunk);
-    if (Buffer.isBuffer(chunks)) body = Buffer.concat(chunks).toString('utf8');
+    //if (Buffer.isBuffer(chunks))
+    body = Buffer.concat(chunks).toString('utf8');
     oldEnd.apply(response, arguments);
   };
   let requestErrorMessage = null;

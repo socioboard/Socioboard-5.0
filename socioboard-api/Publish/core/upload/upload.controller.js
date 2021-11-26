@@ -164,7 +164,6 @@ class UploadController {
                 #swagger.parameters['filterPeriod'] = {
                 in: 'query',
                 description: 'Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range',
-                default: 1,
                 enum: [1,2,3,4,5,6,7]
                 }
                 #swagger.parameters['since'] = {
@@ -186,6 +185,38 @@ class UploadController {
                 description: 'Pagination Id'
                 }*/
     return await UploadService.searchUserMediaDetails(req, res, next);
+  }
+
+  /**
+   * TODO To update rating and title of media file
+   * Route To update rating and title of media file
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @param {import('express').NextFunction} next
+   * @return {object} Returns user media updated details
+   */
+  async updateMedia(req, res, next) {
+    /* 	#swagger.tags = ['Upload']
+            #swagger.description = 'To update user media details' */
+    /* #swagger.security = [{
+               "AccessToken": []
+        }] */
+    /*	    #swagger.parameters['mediaId'] = {
+                in: 'query',
+                description: 'Enter mediaId',
+                }
+                #swagger.parameters['title'] = {
+                in: 'query',
+                description: 'Enter media title',
+                }
+                #swagger.parameters['rating'] = {
+                in: 'query',
+                description: 'Enter mediaId',
+                default:'1',
+                enum: [1,2,3,4,5]
+                }
+                */
+    return await UploadService.updateMedia(req, res, next);
   }
 }
 export default new UploadController();

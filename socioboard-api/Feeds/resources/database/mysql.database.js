@@ -4,7 +4,7 @@ class DbConnect {
   async initialize() {
     try {
       const connection = await db.sequelize.sync({
-        force: false,
+        force: process.env.NODE_ENV === 'test',
         logging: false,
       });
 

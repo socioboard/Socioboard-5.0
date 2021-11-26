@@ -2718,7 +2718,6 @@ class TeamLibs {
         'profile_pic_url',
       ],
     });
-    const pinterestBoards = [];
     const SocialAccountStats = [];
     const res = await Promise.all(
       accounts.map(account => {
@@ -2793,9 +2792,7 @@ class TeamLibs {
             break;
         }
 
-        if (account.account_type == 11) {
-          pinterestIds.push(account.account_id);
-        }
+    
 
         if (fields.length > 0) {
           return updateFriendsTable

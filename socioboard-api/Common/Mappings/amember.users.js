@@ -10,7 +10,7 @@ import logger from '../../User/resources/Log/logger.log.js';
 import plansMapping from './plans.mapping.js';
 
 const userActivation = db.user_activations;
-
+const userDetails = db.user_details;
 class aMember {
   constructor(aMemberConfig = {}) {
     this.aMemberKey = aMemberConfig?.key;
@@ -88,14 +88,18 @@ class aMember {
     planNumber = 0,
     expiryDate = 'NA'
   ) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       let dataToUpdate = {
         user_plan: plansMapping[planNumber],
       };
       if (expiryDate !== 'NA')
         dataToUpdate.account_expire_date = moment(expiryDate, 'YYYY-MM-DD');
+      let activationId = await userDetails.findOne({
+        where: {user_id: userId},
+        raw: true,
+      });
       userActivation
-        .update(dataToUpdate, {where: {id: userId}})
+        .update(dataToUpdate, {where: {id: activationId.user_activation_id}})
         .then(updatedData => {
           resolve(updatedData);
         })
@@ -154,10 +158,11 @@ class aMember {
               response?.data
             )} & Id ${response?.data[0]?.user_id}`
           );
+          if (response?.data?.error) resolve(true);
           // To setup Subscription with Invoices
-          this.addBaseFreeInvoiceToTheUser({
+          return this.addBaseFreeInvoiceToTheUser({
             user_id: response?.data[0]?.user_id,
-          });
+          }).then(resolve(true));
         })
         .catch(error => {
           logger.error(`Error amember addUserToAMember: ${error?.message}`);
@@ -256,6 +261,7 @@ class aMember {
         });
     });
   }
+
   /**
    * TODO Update User Phone number to amember
    * @param {string} userName - user Name
@@ -396,17 +402,6 @@ class aMember {
               billing_plan_id: 2,
             },
           ],
-          // 'invoice-payments': [
-          //   {
-          //     invoice_public_id: 'FREE',
-          //     user_id: user.user_id,
-          //     paysys_id: 'offline',
-          //     receipt_id: 'Free-User',
-          //     transaction_id: 'Free-Plan-subscription',
-          //     currency: 'USD',
-          //     amount: '00.00',
-          //   },
-          // ],
           access: [
             {
               invoice_public_id: 'FREE',
@@ -452,6 +447,215 @@ class aMember {
         resolve(userId);
       }
     });
+  }
+
+  getUserCurrentProducts(userId = 0) {
+    return new Promise(async (resolve, reject) => {
+      let response = await axios.get(
+        `${this.aMemberDomain}/access?_key=${this.aMemberKey}&_filter[user_id]=${userId}`
+      );
+      resolve(response?.data);
+    });
+  }
+
+  removeCurrentProducts(products = []) {
+    return new Promise((resolve, reject) => {
+      Promise.all(
+        products.map(productId => {
+          return new Promise((resolve, reject) => {
+            var config = {
+              method: 'delete',
+              url: `${this.aMemberDomain}/access/${productId}?_key=${this.aMemberKey}`,
+            };
+
+            axios(config)
+              .then(({data}) => {
+                resolve(data);
+              })
+              .catch(error => {
+                reject(error);
+              });
+          });
+        })
+      )
+        .then(() => {
+          resolve(true);
+        })
+        .catch(error => {
+          logger.error(JSON.stringify(error));
+          reject(false);
+        });
+    });
+  }
+
+  async setAMemberPlanForAppSumoUser(userName, plan_type, refund) {
+    let user_id = await this.getAmemberUserId(userName);
+    this.getUserCurrentProducts(user_id).then(products => {
+      if (products?._total > 0) {
+        let productIds = [];
+        for (let i = 0; i < products?._total; i++) {
+          productIds.push(products[i].access_id);
+        }
+        this.removeCurrentProducts(productIds);
+      }
+    });
+
+    let userSubscriptionData;
+    if (!refund) {
+      let first_subtotal = await this.getPlanSubTotal(plan_type);
+      let item_id =
+        plan_type === 'socioboard_tier1'
+          ? 10
+          : plan_type === 'socioboard_tier2'
+          ? 11
+          : 12;
+
+      // To setup subscription
+      userSubscriptionData = qs.stringify({
+        _key: this.aMemberKey,
+        public_id: 'AppSumo',
+        user_id,
+        paysys_id: 'offline',
+        currency: 'USD',
+        first_subtotal,
+        first_discount: '0.00',
+        first_tax: '0.00',
+        first_shipping: '0.00',
+        first_total: '00.00',
+        first_period: `lifetime`,
+        rebill_times: 0,
+        second_subtotal: '00.00',
+        second_discount: '0.00',
+        second_tax: '0.00',
+        second_shipping: '0.00',
+        second_total: '00.00',
+        second_period: `lifetime`,
+        is_confirmed: 1,
+        status: 1,
+        nested: {
+          'invoice-items': [
+            {
+              invoice_public_id: 'AppSumo',
+              item_id,
+              item_type: 'product',
+              item_title: plan_type, //
+              item_description: plan_type, //same
+              qty: 1,
+              first_discount: '0.00',
+              first_price: '00.00',
+              first_tax: '0.00',
+              first_shipping: '0.00',
+              first_total: '00.00',
+              first_period: `lifetime`,
+              rebill_times: 0,
+              second_discount: '0.00',
+              second_tax: '0.00',
+              second_shipping: '0.00',
+              second_total: '00.00',
+              second_price: '00.00',
+              second_period: `lifetime`,
+              currency: 'USD',
+              billing_plan_id: item_id,
+            },
+          ],
+          access: [
+            {
+              invoice_public_id: 'AppSumo',
+              user_id,
+              product_id: item_id,
+              transaction_id: plan_type,
+              begin_date: moment().format('YYYY-MM-DD'),
+              expire_date: refund
+                ? moment().format('YYYY-MM-DD')
+                : '2037-12-31',
+            },
+          ],
+        },
+      });
+    } else {
+      // Set plan to 0 days or expired.
+      userSubscriptionData = qs.stringify({
+        _key: this.aMemberKey,
+        public_id: 'FREE',
+        user_id,
+        paysys_id: 'offline',
+        currency: 'USD',
+        first_subtotal: '00.00',
+        first_discount: '0.00',
+        first_tax: '0.00',
+        first_shipping: '0.00',
+        first_total: '00.00',
+        first_period: '1d',
+        rebill_times: 0,
+        second_subtotal: '00.00',
+        second_discount: '0.00',
+        second_tax: '0.00',
+        second_shipping: '0.00',
+        second_total: '00.00',
+        second_period: '1d',
+        is_confirmed: 1,
+        status: 1,
+        nested: {
+          'invoice-items': [
+            {
+              invoice_public_id: 'FREE',
+              item_id: 2,
+              item_type: 'product',
+              item_title: 'Free Plan',
+              item_description: 'Free Plan',
+              qty: 1,
+              first_discount: '0.00',
+              first_price: '00.00',
+              first_tax: '0.00',
+              first_shipping: '0.00',
+              first_total: '00.00',
+              first_period: '1d',
+              rebill_times: 0,
+              second_discount: '0.00',
+              second_tax: '0.00',
+              second_shipping: '0.00',
+              second_total: '00.00',
+              second_price: '00.00',
+              second_period: '1d',
+              currency: 'USD',
+              billing_plan_id: 2,
+            },
+          ],
+          access: [
+            {
+              invoice_public_id: 'FREE',
+              user_id,
+              product_id: 2,
+              transaction_id: 'Free-Plan-subscription',
+              begin_date: moment().format('YYYY-MM-DD'),
+              expire_date: moment().add(1, 'days').format('YYYY-MM-DD'),
+            },
+          ],
+        },
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      const userSubscriptionConfig = {
+        method: 'post',
+        url: `${this.aMemberDomain}/invoices`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: userSubscriptionData,
+      };
+      axios(userSubscriptionConfig).then(({data}) => {
+        resolve(data);
+      });
+    });
+  }
+
+  async getPlanSubTotal(plan) {
+    return plan === 'socioboard_tier1'
+      ? 59.0
+      : plan === 'socioboard_tier2'
+      ? 119.0
+      : 179.0;
   }
 }
 

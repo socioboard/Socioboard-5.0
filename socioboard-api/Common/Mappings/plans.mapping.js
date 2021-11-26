@@ -7,6 +7,9 @@ export default {
   7: 5,
   8: 6,
   9: 7,
+  10: 101,
+  11: 102,
+  12: 103,
 };
 
 // Left - amember
