@@ -166,7 +166,7 @@ module.exports = (sequelize, Sequelize) => {
       company_name: {
         type: Sequelize.STRING(64),
         allowNull: false,
-        defaultValue: 'socioboard',
+        defaultValue: 'SocioBoard',
       },
       company_logo: {
         type: Sequelize.STRING(64),

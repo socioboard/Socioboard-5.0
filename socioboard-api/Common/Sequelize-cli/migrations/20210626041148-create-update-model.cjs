@@ -8,7 +8,7 @@ module.exports = {
         {
           type: Sequelize.STRING(64),
           allowNull: false,
-          defaultValue: 'socioboard',
+          defaultValue: 'SocioBoard',
         },
         {transaction}
       );
