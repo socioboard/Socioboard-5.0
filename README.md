@@ -100,4 +100,4 @@ Refer this document for explained and elaborated documentation for SOCIOBOARD 4.
 + Please follow the steps of INSTALLATION.md file
 ```
 
-[INSTALLATION of SocioBoard5.0](https://github.com/socioboard/Socioboard-5.0/blob/Socioboard-5.0.2/INSTALLATION.md) file
+[INSTALLATION of SocioBoard5.0](https://github.com/socioboard/Socioboard-5.0/blob/master/INSTALLATION.md) file
