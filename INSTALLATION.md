@@ -117,7 +117,17 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 - Note: In all folders update the configuration files properly.
 ```
 
-## #6. Starting the micro-services
+## #6. Generating swagger files in Micro-Services
+
+    Make sure you're in Root directory.
+
+    For Generating swagger file in User micro service you need to go to User folder Then run `npm run swagger` and it should say success.
+
+```diff
++ We should do this in rest 3 micro services as well.
+```
+
+## #7. Starting the micro-services
 
     Make sure you're in Root directory.
 
@@ -169,7 +179,7 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 
 ## Open cmd prompt in Main Folder.
 
-## `Check the env once carefully`
+## `Check the .env file once carefully`
 
 `For Composer installation & key setup`
 
@@ -177,6 +187,10 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
     
 ```code
     composer install & php artisan key:generate
+```
+
+```diff
++ Updated the .env file properly to connect the Node services for smooth execution.
 ```
 
 `For Normal port running process ( port 8000 default )`
