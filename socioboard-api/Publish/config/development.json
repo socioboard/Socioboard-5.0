@@ -9,12 +9,17 @@
       "port": "3002",
       "host": "localhost:3002"
     },
+    "insta_media_url":"localhost:3002",
+    "insta_image_url":"localhost:3002/images/",
+    "insta_base_path": "../../media",
+    "insta_store_path": "../../media/images/",
     "profile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
     "facebook_api": {
       "app_id": "<< APP ID >>",
       "secret_key": "<< APP SECRET >>",
       "redirect_url": "https://local.socioboard.com/facebook-callback",
-      "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback"
+      "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
+      "maximum_post_per_day": 730
     },
     "google_api": {
       "client_id": "<< APP CLIENT ID >>",
@@ -45,7 +50,8 @@
     "linkedIn_api": {
       "client_id": "<< APP CLIENT ID >>",
       "client_secret": "<< CLIENT SECRET >>",
-      "redirect_url": "https://local.socioboard.com/linkedin/callback"
+      "redirect_url": "https://local.socioboard.com/linkedin/callback",
+      "maximum_post_per_day": 100
     },
     "jest": {
       "access_token": "<< JEST ACCESS TOKEN >>"
@@ -98,6 +104,24 @@
      "notification_socioboard": {
       "status": "on",
       "host_url": "https://localhost:3003"
+    },
+    "instagram_business_api": {
+      "client_id": "",
+      "client_secret": "",
+      "maximum_post_per_day":25
+    },
+    "pinterest": {
+      "client_id": "",
+      "client_secret": "",
+      "maximum_post_per_day": 100
+    },
+    "test_url": "",
+    "instagram_api": {
+      "client_id": "",
+      "client_secret": "",
+      "update_time_frequency_value": "",
+      "update_time_frequency_factor": ""
     }
+  
   }
   

@@ -56,7 +56,9 @@
       "secret_key": "<< APP SECRET >>",
       "redirect_url": "https://local.socioboard.com/facebook-callback",
       "fbprofile_add_redirect_url": "https://local.socioboard.com/facebook/callback",
-      "webhook_token": "<< WebhookToken >>"
+      "webhook_token": "<< WebhookToken >>",
+      "update_time_frequency_value":"",
+      "update_time_frequency_factor": ""
     },
     "google_api": {
       "client_id": "<< APP CLIENT ID >>",
@@ -75,7 +77,10 @@
       "redirect_url": "https://local.socioboard.com/twitter/callback",
       "app_name": "<< App Name >>",
       "webhook_url": "https://localhost:3002/v1/webhooks/twitter",
-      "webhook_environment": "development"
+      "webhook_environment": "development",
+      "version": "",
+      "update_time_frequency_value":"" ,
+      "update_time_frequency_factor":""
     },
     "twitter_data": {
       "bearer_token": "<< Twitter Bearer Token >>",
@@ -87,7 +92,9 @@
       "client_id": "<< APP CLIENT ID >>",
       "client_secret": "<< CLIENT SECRET >>",
       "redirect_url": "https://local.socioboard.com/linkedin/callback",
-      "app_name": "<< App Name >>"
+      "app_name": "<< App Name >>",
+      "update_time_frequency_value": "",
+      "update_time_frequency_factor": ""
     },
     "content_studio": {
       "basePath": "../../media",
@@ -133,6 +140,31 @@
         "count": 15,
         "version": "5.0.0"
       }
-    }
+    },
+    "test_url": "",
+     "rssUrl": {
+       "max_history": 5
+      } ,
+      "instagram_api": {
+        "client_id": "",
+        "client_secret": "",
+        "update_time_frequency_value":"" ,
+        "update_time_frequency_factor":"" 
+      },
+   
+      "instagram_business_api": {
+        "client_id": "",
+        "client_secret": "",
+        "update_time_frequency_value":"" ,
+        "update_time_frequency_factor":"" 
+      },
+      "pinterest": { 
+        "update_time_frequency_value":"" ,
+        "update_time_frequency_factor":"" 
+     },
+     "tumblr_api": { 
+        "update_time_frequency_value": "",
+        "update_time_frequency_factor": ""
+     }
   }
   
