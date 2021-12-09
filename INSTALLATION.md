@@ -128,6 +128,12 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 ```diff
     cd ./socioboard-api/User & npm run swagger & cd ../Feeds & npm run swagger & cd ../Publish & npm run swagger & cd ../Notification & npm run swagger & cd ../Update & npm run swagger
 ```
+
+    For Linux
+```
+    cd ./socioboard-api/User && npm run swagger && cd ../Feeds && npm run swagger && cd ../Publish && npm run swagger && cd ../Notification && npm run swagger && cd ../Update && npm run swagger
+
+```
 ```diff
 + We should do this in rest 3 micro services as well.
 ```
