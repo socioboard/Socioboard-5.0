@@ -10,93 +10,167 @@ Socioboard Api's is created with Node.js, Express, MongoDB and Sequelize ORM. So
 
 > Notification Services – Responsible for sending emails and notify the user activities through Socket.io
 
-**Configuration Setup**
-============
+***
 
-***Step 1: Install all dependency for micro-services*** 
-```shell
-socioboard-api/user> npm install
-socioboard-api/publish> npm install
-socioboard-api/feeds> npm install
-socioboard-api/notification> npm install
-socioboard-api/library> npm install
+## `NODE micro services setup :system:`
+
+
+***
+
+## Pre Requirement
+
+`NODE ^14 OR LATEST`
+
+`NPM ^7 OR LATEST`
+
+`NODEMON ^2 OR LATEST`
+
+`MIN 5 FREE PORTS`
+
+`PM2 – FOR AUTOMATION & EASY MANAGEMENT`
+
+`Mongo Database`
+
+`MySQL Database`
+
+`5 free ports`
+
+## Installation Process
+
+    1. Requirement check.
+        a. Node js ^14 (14 or more)
+        b. Npm version ^6 (6 or more)
+        c. PM2 version (latest)
+        d. Nodemon Latest version (2 or more)
+        e. MySQL Creds
+        f. Mongo Database Creds
+    2. Setting up server environment.
+    3. Installing Node Packages in all folders
+    4. Setting up MySQL Database
+    5. Updating the config files (minimum required should fill with proper details)
+    6. Starting the micro-services (User, Feeds, Publish, Update)
+    7. Checking the Error Logs
+
+
+
+## #1. Requirement Check
+
+    a. To check node installed or not, use `node -v` command in Terminal
+        It should give version number. like: v14.15.2
+        -- If not Please visit the site(https://nodejs.org/) and download the latest stable version.
+
+    b. To check npm version, use `npm -v`. 
+        It should give version number. like: 7.15.1 
+        -- It won't work if there's no node version (above one)
+
+    c. To check pm2 installed or not use `pm2 --version`
+        It should give version number. like: 5.1.0 
+        -- If not Please visit the site(https://pm2.keymetrics.io/) and download the latest stable version.
+                    or
+            use `npm install pm2 -g` command to install the latest stable version.
+    d. To check nodemon version, use `nodemon -v` 
+        It should give version number. like: 2.0.13 
+        -- If not please use `npm i nodemon -g` to install latest one.
+    e. MySQL & Mongo creds are compulsory, so Please follow proper way to install it in local system or use cloud creds.
+    
+
+## #2. Set Environment for NODE
+
+## 1. `Open the Terminal in Root Directory (current folder)`
+
+`For windows environment`
+```code
+    set NODE_ENV=development
 ```
 
-***Step 2: Add the Mysql database creds***
-```shell
-socioboard-api/library\sequelize-cli\config>start config.json
-
-# Setup the db creds on development environment
-#    "username": "<<db_username>>",
-#    "password": null,
-#    "database": "<<db_name>>",
-#    "host": "127.0.0.1",
-#    "dialect": "mysql",
+`For linux || mac environment`
+```code
+    export NODE_ENV=development
 ```
 
-***Step 3: Execute the Seqeulize-cli to initialize the Mysql***
+## #3. Installing Node Packages in all folders
 
-*Please make sure that you have installed sequelize-cli globally, or just isntall it `npm install -g sequelize-cli`*
-```shell
-
-# Set the node_env as development
-socioboard-api/library/sequelize-cli> set node_env=development
-
-# Lets migrate all neccessary tables
-socioboard-api/library/sequelize-cli> sequelize db:migrate
-
-# Lets seeds the initial configuration for the application
-socioboard-api/library/sequelize-cli> sequelize db:seed —seed 20190213051930-initialize_application_info.js
+```code
+cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common & npm install & cd ../Update & npm install & cd ../Publish & npm install & cd ../Notification & npm install
 ```
 
-***Step 4: Add the social network API Keys in config for each services***
-```shell
-# Update the client secrets of all social networks and application
 
-socioboard-api/user/config> start development.json
-socioboard-api/user/config> start default.json
+## #4. Setting up MySQL Database
 
-socioboard-api/publish/config> start development.json
-socioboard-api/publish/config> start default.json
+    A. Setting the config file for Database connections.
 
-socioboard-api/feeds/config> start development.json
-socioboard-api/feeds/config> start default.json
+        Open the config.json file located at `socioboard-api\Common\Sequelize-cli\config\config.json`
 
-socioboard-api/notification/config> start development.json
-socioboard-api/notification/config>start default.json
+        And Update The below mentioned keys in `development` key
+                        "username": "<< DB USER NAME >>",
+                        "database": "<< Database name >>",
+                        "password": "<< password >>",
+                        "host": "127.0.0.1",
+        and save the file.
+
+    B. Creating Tables.
+         run `set NODE_ENV=development & npx sequelize-cli db:migrate` command in `socioboard-api\Common\Sequelize-cli`
+
+         or Run this command in root directory.
+
+         `cd socioboard-api\Common\Sequelize-cli & npx sequelize-cli db:migrate` 
+
+         It should list all the tables it creating without any errors.
+
+    C. Setting up migrations.
+        As you're in the Sequelize-cli folder you can simply run `npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs` command. 
+
+        It will add data into single table.
+
+## #5. Updating the config files (minimum required should fill with proper details)
+        Most important is we need to setup mongo and mysql objects values properly in all config folders. 
+
+        Ex: in `User` folder `config/development.json` file and fill the << Description >> places with correct files.
+
+```diff       
+- Note: In all folders update the configuration files properly.
 ```
 
-***Step 5: Add the redirect urls in social networks***
+## #6. Generating swagger files in Micro-Services
 
-> Facebook - <host_name>/facebook-callback
+    Make sure you're in Root directory.
 
-> Twitter - <host_name>/twitter/callback
+    For Generating swagger file in User micro service you need to go to User folder Then run `npm run swagger` and it should say success.
 
-> Google - <host_name>/google-callback
+###### For generating swagger files in all micro-services you need to run the following command
 
-> LinkedIn - <host_name>/linkedIn-callback
+```diff
+    cd ./socioboard-api/User & npm run swagger & cd ../Feeds & npm run swagger & cd ../Publish & npm run swagger & cd ../Notification & npm run swagger & cd ../Update & npm run swagger
+```
 
-> Pinterest - <host_name>/pinterest-callback
-
-> Instagram - <host_name>/instagram-callback
-
-Also, please add <host_name>/addSocialProfile redirect url to all above networks. 
-
-***Step 6: Run micro services***
-```shell
-# Please verify nodemon has been installed or not.
-
-# Start User micro services
-socioboard-api/user> set node_env=development
-socioboard-api/user> nodemon app.js
-
-socioboard-api/publish> set node_env=development
-socioboard-api/publish> nodemon app.js
-
-socioboard-api/feeds> set node_env=development
-socioboard-api/feeds> nodemon app.js
-
-socioboard-api/notification> set node_env=development
-socioboard-api/notification> nodemon app.js
+    For Linux
+```
+    cd ./socioboard-api/User && npm run swagger && cd ../Feeds && npm run swagger && cd ../Publish && npm run swagger && cd ../Notification && npm run swagger && cd ../Update && npm run swagger
 
 ```
+```diff
++ We should do this in rest 3 micro services as well.
+```
+
+## #7. Starting the micro-services
+
+    Make sure you're in Root directory.
+
+    For starting User micro service you need to go to User folder Then run `nodemon user.server.js` and it should start in port 3000(which is configured in `development.json` file)
+
+```diff
++ We should do this in rest 3 micro services as well.
+```
+
+### `Note:` If you facing any issue, in that same folder you need to go to resources/Log/ResponseLog folder and check the proper log file to fix it.
+
+
+### `If you want to run all with pm2`
+
+    Your Terminal should be in Root Directory. then run the below command.
+
+```code
+set NODE_ENV=development & cd ./socioboard-api/User & pm2 start user.server.js & cd ../Feeds & pm2 start feeds.server.js & cd ../Publish & pm2 start publish.server.js & cd ../Notification & pm2 start notify.server.js & cd ../Update & pm2 start update.server.js & pm2 status
+```
+
+    It will Give you all your services status in a table.

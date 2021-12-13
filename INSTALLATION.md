@@ -128,6 +128,12 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 ```diff
     cd ./socioboard-api/User & npm run swagger & cd ../Feeds & npm run swagger & cd ../Publish & npm run swagger & cd ../Notification & npm run swagger & cd ../Update & npm run swagger
 ```
+
+    For Linux
+```
+    cd ./socioboard-api/User && npm run swagger && cd ../Feeds && npm run swagger && cd ../Publish && npm run swagger && cd ../Notification && npm run swagger && cd ../Update && npm run swagger
+
+```
 ```diff
 + We should do this in rest 3 micro services as well.
 ```
@@ -202,3 +208,26 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
 ```code
     php artisan serve
 ```
+
+
+***
+ # Video Links
+***
+
+## `Installation video links`
+
+
+## `NODE JS setup videos`
+
+[http://somup.com/crlii70AE7](http://somup.com/crlii70AE7)  Node part-1 -> Till DB configuration.
+
+[http://somup.com/crlijY0Amp](http://somup.com/crlijY0Amp)  Node part-2 -> Till Service start
+
+[http://somup.com/crlijm0AJU](http://somup.com/crlijm0AJU) Node part-3 -> Executed with PM2 as well
+
+
+## `PHP setup videos`
+
+
+
+## `Sample Web usage Videos`
