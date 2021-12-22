@@ -3,7 +3,7 @@ import authenticate from '../../middleware/authentication.middleware.js';
 import recentVisited from '../../middleware/recent-visited.middleware.js';
 import team from '../../core/team/team.routes.js';
 import OpenRoutes from './open.routes.js';
-import unauthorized from '../../core/unauthorized/unauthorized.routes.js';
+import unauthorized from '../../core/unAuthorized/unAuthorized.routes.js';
 import socialCallback from '../../core/social-callback/social-callback.routes.js';
 import authorized from '../../core/authorized/authorized.routes.js';
 import recentVistedRoutes from '../../core/recent-visited/recent-visted.routes.js';
