@@ -25,7 +25,7 @@
   "dependencies": {
     "async": "^3.2.0",
     "axios": "^0.21.1",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^5.0.1",
     "compression": "^1.7.4",
     "config": "^3.3.6",
     "cookie-parser": "^1.4.5",
