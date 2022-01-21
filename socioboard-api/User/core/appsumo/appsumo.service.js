@@ -91,7 +91,7 @@ class AppSumoService {
       let user = await unauthorizedLibs.checkEmailAvailability(
         activation_email
       );
-      logger.info(`AppSumo user ${user}`);
+      logger.info(`AppSumo user ${JSON.stringify(user)}`);
       if (user) {
         if (action == 'activate') {
           await appSumoDetails.create({
@@ -156,7 +156,7 @@ class AppSumoService {
         );
         return res.status(201).json({
           message: 'product activated',
-          redirect_url: 'https://appv5.socioboard.com/login',
+          redirect_url: `https://appv5.socioboard.com/appsumo/${activation_email}`,
         });
       }
     } catch (e) {

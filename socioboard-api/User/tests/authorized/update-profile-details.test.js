@@ -71,7 +71,7 @@ describe('Update profile details', () => {
         phoneNo: '1324575248',
         country: 'in',
         timeZone: '+5:30',
-        company_name: 'socioboard',
+        company_name: 'SocioBoard',
         company_logo: 'default.jpg',
       })
       .set('accept', 'application/json')

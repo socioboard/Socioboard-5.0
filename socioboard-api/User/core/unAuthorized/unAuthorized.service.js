@@ -95,6 +95,7 @@ class unauthorizedController {
           req.body.email,
           responseData?.user_id
         );
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
         // Set Details in aMember as well
         /**
          * userName
@@ -118,8 +119,8 @@ class unauthorizedController {
           phone: `${responseData?.phone_code}${responseData?.phone_no}`,
           country: `${req.body?.country ?? 'NA'}`,
         };
-
-        await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
+         await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
+      }
         await unauthorizedLibs.checkAppSumoActivation(
           req.body.email,
           responseData?.user_name
@@ -226,6 +227,13 @@ class unauthorizedController {
           'Username or Email and password Required!.'
         );
       }
+      const checkUserRegistered = await unauthorizedLibs.getUserDetails(
+        req.body.email,
+        req.body.username
+      );
+      if (!checkUserRegistered)
+        return ErrorResponse(res, 'User Not Registered');
+
       const userDetails = await unauthorizedLibs.getUserDetails(
         req.body.email,
         req.body.username,
@@ -237,14 +245,13 @@ class unauthorizedController {
         return ErrorResponse(res, 'Account has been locked.');
       if (!userDetails.Activations.activation_status)
         return ErrorResponse(res, 'Email not yet validated.!');
-
-      // Call aMember to set new details of plan and expiry date
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+       // Call aMember to set new details of plan and expiry date
       // userId, userName & password
-
-      await new aMember(config.get('aMember')).getUserPlanDetail(
+       await new aMember(config.get('aMember')).getUserPlanDetail(
         userDetails?.user_id,
-        userDetails?.user_name
-      );
+        userDetails?.user_name );
+       }
       const remindingDays = moment(
         userDetails.Activations.account_expire_date
       ).diff(moment(), 'days');

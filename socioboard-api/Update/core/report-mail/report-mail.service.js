@@ -515,7 +515,7 @@ class ReportMailService {
    * @description  To run scheduler for sent mail for day wise report
    */
   async cronForDailyReports() {
-    schedule.scheduleJob('00 18 * * *', async () => {
+    schedule.scheduleJob('25 18 * * *', async () => {
       logger.info(
         `Cron started for daily report mail, started time ${moment()}`
       );

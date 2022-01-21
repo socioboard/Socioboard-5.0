@@ -269,14 +269,17 @@ class TeamController {
       const SocialAccountStats = await teamLibs.socialAccountStats(
         req.body.userScopeId
       );
-      const pinterestAccountDetails = await teamLibs.getTeamBoard(req.body.userScopeId, req.query.teamId)
+      const pinterestAccountDetails = await teamLibs.getTeamBoard(
+        req.body.userScopeId,
+        req.query.teamId
+      );
       const data = {
         teamSocialAccountDetails: teamSocialAccount[0],
         SocialAccountStats,
         teamMembers: teamMembers[0],
         memberProfileDetails: teamMemberDetail,
         socialAccounts: memberProfileDetails[0],
-        pinterestAccountDetails
+        pinterestAccountDetails,
       };
       return SuccessResponse(res, data);
     } catch (err) {
@@ -456,7 +459,7 @@ class TeamController {
           .replace('[teamname]', `${teamInfo.team_name ?? ''}`)
           .replace('[inviteduser]', `${req.body.userScopeName}`);
         let emailDetails = {
-          subject: 'SocioBoard Register Mail',
+          subject: `SocioBoard Team Invitation By ${req.body.userScopeName}`,
           toMail: Email,
           htmlContent,
         };
@@ -1189,11 +1192,14 @@ class TeamController {
         req.body.userScopeId,
         teamSocialAccount[0]
       );
-      const pinterestAccountDetails = await teamLibs.getTeamBoard(req.body.userScopeId, req.query.teamId)
+      const pinterestAccountDetails = await teamLibs.getTeamBoard(
+        req.body.userScopeId,
+        req.query.teamId
+      );
       const data = {
         teamSocialAccountDetails: teamSocialAccount[0],
         SocialAccountStats,
-        pinterestAccountDetails
+        pinterestAccountDetails,
       };
 
       return SuccessResponse(res, data);
