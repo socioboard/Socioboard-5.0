@@ -6,8 +6,11 @@ import config from 'config';
 import db from '../../../Common/Sequelize-cli/models/index.js';
 import SchedulePost from '../../../Common/Mongoose/models/schedule-posts.js';
 import publishController from '../publish/publish.controller.js';
+import scheduleServise from '../schedule/schedule.service.js';
 import CoreServices from '../../../Common/Services/core.services.js';
 import logger from '../../resources/Log/logger.log.js';
+
+import SCHEDULE_CONSTANTS from './schedule.constants.js';
 
 const coreServices = new CoreServices(config.get('authorize'));
 
@@ -16,10 +19,18 @@ const scheduleDetails = db.users_schedule_details;
 const Operator = db.Sequelize.Op;
 
 class ScheduleBase {
+  static instance = null;
+
   constructor() {
+    if (ScheduleBase.instance) {
+      return ScheduleBase.instance;
+    }
+
     this.setupCrons();
     this.startDaywiseSchedule();
     this.startTodaySchedule();
+
+    ScheduleBase.instance = this;
   }
 
   setupCrons() {
@@ -124,7 +135,7 @@ class ScheduleBase {
               })
               .then(timings_1 => {
                 if (timings_1.length > 0) {
-                  return this.makeSchedule(scheduleId, timings_1)
+                  return this.makeSchedule(scheduleId, timings_1, currentDayOfWeek)
                     .then(() => {
                       successScheduleIds.push(scheduleId);
                     })
@@ -248,7 +259,7 @@ class ScheduleBase {
     );
   }
 
-  makeSchedule(scheduleId, runningTimes) {
+  makeSchedule(scheduleId, runningTimes, currentDay) {
     return new Promise((resolve, reject) => {
       const todaysTimes = [];
       const scheduleObjects = [];
@@ -301,8 +312,8 @@ class ScheduleBase {
                 this.scheduleObject
               )}`
             );
-            scheduleObjects.map(x => {
-              if (x.scheduler_name == schedulerName) this.runScheduler(x);
+            scheduleObjects.forEach(x => {
+              if (x.scheduler_name == schedulerName) this.runScheduler(x, currentDay);
             });
           });
 
@@ -349,10 +360,12 @@ class ScheduleBase {
     });
   }
 
-  runScheduler(scheduleObject) {
+  runScheduler(scheduleObject, currentDay) {
     logger.info(`\nSchedule Id ${scheduleObject.schedule_id} started...\n`);
     let mongoScheduleId = '';
     let scheduleStatus = 1;
+
+    let scheduleFromTheDb = null;
 
     return scheduleDetails
       .findOne({where: {schedule_id: scheduleObject.schedule_id}})
@@ -386,6 +399,8 @@ class ScheduleBase {
             default:
               break;
           }
+
+          scheduleFromTheDb = scheduleDetailsData;
 
           return scheduledInformations.findOne({
             where: {scheduler_name: scheduleObject.scheduler_name},
@@ -447,15 +462,33 @@ class ScheduleBase {
                     mongoDetails.teamId,
                     postingSocialIds
                   )
-                  .then(details => {
-                    logger.info('Publishing under process..');
+                  .then(() => {
+                    const {
+                      schedule_id: scheduleId,
+                      schedule_type: scheduleType,
+                      running_days_of_weeks: runningDaysOfWeeks,
+                    } = scheduleFromTheDb;
 
-                    return scheduleDetails.update(
-                      {
-                        schedule_status: 6,
-                      },
-                      {where: {schedule_id: scheduleObject.schedule_id}}
-                    );
+                    if (
+                      scheduleType === SCHEDULE_CONSTANTS.SCHEDULE_TYPES.ONETIME
+                    ) {
+                      return this.updateScheduleStatus(
+                        scheduleId,
+                        SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE,
+                      );
+                    }
+
+                    const sortedDays = runningDaysOfWeeks.split(':').sort();
+
+                    const lastDay = lodash.last(sortedDays);
+
+                    if (currentDay === parseInt(lastDay, 10)) {
+                      return this.createSchedulePost(mongoDetails)
+                        .then(() => this.updateScheduleStatus(
+                          scheduleId,
+                          SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE,
+                        ));
+                    }
                   })
                   .catch(error => {
                     logger.info(`failed..\n${error.error.message}`);
@@ -553,6 +586,54 @@ class ScheduleBase {
         reject(new Error('Invalid Inputs'));
       } else resolve();
     });
+  }
+
+  createSchedulePost(mongoDetails) {
+    const mongoObj = mongoDetails.toObject({
+      transform: (doc, ret) => {
+        const {
+          _id,
+          __v,
+          createdDate,
+          ownerId,
+          ownerName,
+          adminResponseStatus,
+          ...args
+        } = ret;
+
+        return args;
+      },
+    });
+
+    const updatedDaywiseScheduleTimer = mongoObj
+      .daywiseScheduleTimer.map(({dayId, timings}) => {
+        const updatedTimings = timings.map(timing => moment(timing).add(7, 'days').utc().toISOString());
+
+        return {dayId, timings: updatedTimings};
+      });
+
+    const updatedPostingSocialIds = mongoObj
+      .postingSocialIds.map(({_id, ...args}) => args);
+
+    const schedulePost = {
+      ...mongoObj,
+      postingSocialIds: updatedPostingSocialIds,
+      daywiseScheduleTimer: updatedDaywiseScheduleTimer,
+    };
+
+    return scheduleServise.getCreatePost({
+      userId: mongoDetails.ownerId,
+      userName: mongoDetails.ownerName,
+    })(schedulePost);
+  }
+
+  updateScheduleStatus(scheduleId, status) {
+    return scheduleDetails.update(
+      {
+        schedule_status: status,
+      },
+      {where: {schedule_id: scheduleId}},
+    );
   }
 }
 

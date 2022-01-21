@@ -30,7 +30,7 @@ class SocialCallbackService {
 
   async facebookCallback(req, res, next) {
     try {
-      const {value, error} = Validating.validateCode(req.query);
+      const {error} = Validating.validateCode(req.query);
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const {code} = req.query;
@@ -57,12 +57,14 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
+       if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
           is_user_register?.user_name
         );
+       }
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
           is_user_register.Activations.id
@@ -83,9 +85,10 @@ class SocialCallbackService {
         userDetails.userInfo.user.user_id
       );
 
-      //   To Store the user Details in aMember
-      this.registerSocialUserToAmember(userDetails);
-
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+       //   To Store the user Details in aMember
+      await this.registerSocialUserToAmember(userDetails);
+      }
       await unauthorizedLibs.checkAppSumoActivation(
         parseData.user.email,
         userDetails.userInfo.user.user_id
@@ -130,38 +133,32 @@ class SocialCallbackService {
   async googleCallback(req, res, next) {
     try {
       const {value, error} = Validating.validateCode(req.query);
-
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const {code} = req.query;
       const g_token = await this.googleConnect.getGoogleAccessToken(
         code,
         config.get('google_api.redirect_url')
       );
-
-      if (!g_token) {
-      }
-
       const googlerawuserInfo =
         await this.googleConnect.getGoogleProfileInformation(g_token);
-
-      if (!googlerawuserInfo) {
-      }
       const parseData = await unauthorizedLibs.parsedataGoogle(
         googlerawuserInfo,
         g_token
       );
       const is_user_register = await unauthorizedLibs.getSocialAccDetail(
-        parseData.user.email
-      );
+        parseData.user.email,
+        parseData.user.username
+  );
 
       if (is_user_register) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
           is_user_register?.user_name
         );
-
+      }
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
           is_user_register.Activations.id
@@ -174,10 +171,10 @@ class SocialCallbackService {
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(parseData);
-
-      //   To Store the user Details in aMember
-      this.registerSocialUserToAmember(userDetails);
-
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+           //   To Store the user Details in aMember
+          await this.registerSocialUserToAmember(userDetails);
+      }
       await unauthorizedLibs.checkTeamInvite(
         parseData.user.email,
         userDetails.userInfo.user.user_id
@@ -198,22 +195,19 @@ class SocialCallbackService {
           .json({code: 200, message: 'success', data: userInfo});
       }
     } catch (error) {
-      return CatchResponse(res, error.message);
+      return CatchResponse(res, error,"Invalid Auth code");
     }
   }
 
   async githubCallback(req, res, next) {
     try {
-      const {value, error} = Validating.validateCode(req.query);
-
+      const {error} = Validating.validateCode(req.query);
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const {code} = req.query;
       const GithubrawuserInfo = await this.githubConnect.getGithubuserData(
         code
       );
 
-      if (!GithubrawuserInfo) {
-      }
       const data = await unauthorizedLibs.parsedatagitHub(
         GithubrawuserInfo.data
       );
@@ -223,12 +217,14 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
           is_user_register?.user_name
         );
+        }
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
           is_user_register.Activations.id
@@ -241,9 +237,10 @@ class SocialCallbackService {
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(data);
-
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
       //   To Store the user Details in aMember
-      this.registerSocialUserToAmember(userDetails);
+      await this.registerSocialUserToAmember(userDetails);
+      }
       await unauthorizedLibs.checkTeamInvite(
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id
@@ -269,8 +266,7 @@ class SocialCallbackService {
 
   async twitterCallback(req, res, next) {
     try {
-      const {value, error} = Validating.validateTwitterData(req.query);
-
+      const {error} = Validating.validateTwitterData(req.query);
       if (error) return ValidateErrorResponse(res, error.details[0].message);
       const {requestToken} = req.query;
       const {requestSecret} = req.query;
@@ -287,12 +283,14 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
           is_user_register.user_id,
           is_user_register?.user_name
         );
+        }
         const userInfo = await unauthorizedLibs.getUserAccessToken(
           is_user_register.user_id,
           is_user_register.Activations.id
@@ -308,11 +306,11 @@ class SocialCallbackService {
       const userDetails = await unauthorizedLibs.registerSocialUser(
         twitterdata
       );
-
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
-
-      this.updateSocialMediaStats(userDetails.socialNetworkDetails);
+      }
+     this.updateSocialMediaStats(userDetails.socialNetworkDetails);
       await unauthorizedLibs.checkTeamInvite(
         userDetails.userInfo.user.email,
         userDetails.userInfo.user.user_id

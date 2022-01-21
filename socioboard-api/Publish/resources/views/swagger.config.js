@@ -45,6 +45,7 @@ const doc = {
         mediaUrl: ['/images/1563348724.jpg'],
         mediaSelectionType: 0,
         shareLink: 'string',
+        isInsta: 'false',
         postingSocialIds: [{accountType: 4, accountId: 12}],
         pinBoards: [{accountId: 0, boardId: ['string']}],
         scheduleCategory: 0,
@@ -109,6 +110,7 @@ const doc = {
             publishAt: '2021-06-21T13:23:31.594Z',
           },
         },
+        thumbnailUrl: '/images/1626692584.jpg',
       },
     },
     mediaDetails: {
@@ -121,6 +123,17 @@ const doc = {
         rating: ['1', '2'],
         imagePrivacyType: ['0', '1'],
         imageTitle: 'imageTitle',
+      },
+    },
+    searchPublishedPost: {
+      searchPublishedPostInfo: {
+        accountId: ['1', '2'],
+        fullPublishContentId: [],
+        postCategory: 'Direct Post',
+        publishedContentDetails: 'message',
+        publishedMediaCount: 0,
+        postShareUrl: '',
+        PublishedUrl: '',
       },
     },
   },

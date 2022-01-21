@@ -3,7 +3,7 @@ import PublisherLibs from '../../../Common/Models/publish.model.js';
 import bitlyCluster from '../../../Common/Cluster/bitly.cluster.js';
 import TeamLibs from '../../../Common/Models/team.model.js';
 import BITLY_CONSTANTS from '../../../Common/Constants/bitly.constants.js';
-import { CatchResponse } from '../../../Common/Shared/response.shared.js';
+import {CatchResponse} from '../../../Common/Shared/response.shared.js';
 
 const teamLibs = new TeamLibs();
 
@@ -162,15 +162,17 @@ class PublishController {
 
   async publishPostMiddleware(req, res, next) {
     try {
-      const { link, userScopeId: userId } = req.body;
+      const {link, userScopeId: userId} = req.body;
 
-      req.body.link = link && await this.shortenPostLinkByBitly(link, userId);
+      req.body.link = link && (await this.shortenPostLinkByBitly(link, userId));
 
       return next();
     } catch (error) {
       const errorMessage = error?.error?.message;
 
-      if (errorMessage === BITLY_CONSTANTS.ERROR_MESSAGES.ALREADY_A_BITLY_LINK) {
+      if (
+        errorMessage === BITLY_CONSTANTS.ERROR_MESSAGES.ALREADY_A_BITLY_LINK
+      ) {
         return next();
       }
 
@@ -195,15 +197,66 @@ class PublishController {
   async findBitlyAccount(userId) {
     const foundUserAccounts = await teamLibs.getSocialProfiles(userId);
 
-    return foundUserAccounts.find(({ dataValues }) => dataValues.account_type === BITLY_CONSTANTS.ACCOUNT_TYPE);
+    return foundUserAccounts.find(
+      ({dataValues}) => dataValues.account_type === BITLY_CONSTANTS.ACCOUNT_TYPE
+    );
   }
 
   async shortenLink(longUrl, account) {
-    const { dataValues: { access_token: accessToken }} = account;
+    const {
+      dataValues: {access_token: accessToken},
+    } = account;
 
-    const { link } = await bitlyCluster.shortenLink(accessToken, { long_url: longUrl });
+    const {link} = await bitlyCluster.shortenLink(accessToken, {
+      long_url: longUrl,
+    });
 
     return link;
+  }
+
+  async filterPublishedPosts(req, res, next) {
+    /* 	#swagger.tags = ['Publish']
+            #swagger.description = 'To get all published posts' */
+    /* #swagger.security = [{
+               "AccessToken": []
+            }] */
+    /*   #swagger.parameters['teamId'] = {
+                in: 'query',
+                description: 'Enter team id',
+                }
+            #swagger.parameters['pageId'] = {
+                in: 'query',
+                description: 'pagination id'
+                }
+                 #swagger.parameters['publishedStatus'] = {
+                in: 'query',
+                description: 'pagination id'
+                }
+                #swagger.parameters['criteria'] = {
+                in: 'body',
+                description: 'Criteria to filter',
+                required: true,
+                schema: { $ref: "#/definitions/searchPublishedPost" }
+                }
+                #swagger.parameters['filterPeriod'] = {
+                in: 'query',
+                description: 'Filter Period 1- Today, 2-Yesterday, 3-Last week, 4-Last 30 days, 5- this month, 6- last month, 7- custom range',
+                enum: [1,2,3,4,5,6,7]
+                }
+                #swagger.parameters['since'] = {
+                in: 'query',
+                description: 'Custom since range in YYYY-MM-DD format'
+                }
+                #swagger.parameters['until'] = {
+                in: 'query',
+                description: 'Custom until range in YYYY-MM-DD format'
+                } 
+                #swagger.parameters['publishedStatus'] = {
+                in: 'query',
+                description: 'Success or failed',
+                enum: ['Success','Failed']
+                } */
+    return await PublishService.filterPublishedPosts(req, res, next);
   }
 }
 export default new PublishController();

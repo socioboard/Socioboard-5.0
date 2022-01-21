@@ -1,7 +1,10 @@
 /**
  * @typedef {import('../../../Common/Shared/response.shared.js')}
  */
-import { SuccessResponse, CatchResponse } from '../../../Common/Shared/response.shared.js';
+import {
+  SuccessResponse,
+  CatchResponse,
+} from '../../../Common/Shared/response.shared.js';
 
 /**
  * @typedef {import('../../../Common/Models/schedule.model.js')}
@@ -19,14 +22,19 @@ const scheduleModel = new ScheduleModel();
  */
 class CalenderViewService {
   /**
-     * TODO To get scheduled details for calender view
-     * @param {import('express').Request} req
-     * @param {import('express').Response} res
-     * @return {object} Returns scheduled details
-     */
+   * TODO To get scheduled details for calender view
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   * @return {object} Returns scheduled details
+   */
   async scheduleDetails(req, res) {
     try {
-      const response = await scheduleModel.getScheduleDetailsForCalenderView(req.body.userScopeId, req.query.scheduleStatus, req.query.scheduleCategory);
+      const response = await scheduleModel.getScheduleDetailsForCalenderView(
+        req.body.userScopeId,
+        req.query.scheduleStatus,
+        req.query.scheduleCategory,
+        req.query.teamId
+      );
 
       SuccessResponse(res, response);
     } catch (error) {

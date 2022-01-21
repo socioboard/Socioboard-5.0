@@ -1,17 +1,23 @@
 import {
-  ErrorResponse, SuccessResponse, CatchResponse, ValidateErrorResponse,
+  ErrorResponse,
+  SuccessResponse,
+  CatchResponse,
+  ValidateErrorResponse,
 } from '../../../Common/Shared/response.shared.js';
 import PublishModel from '../../../Common/Models/publish.model.js';
 
 const publishModel = new PublishModel();
 
 class PublishController {
-  constructor() {
-  }
+  constructor() {}
 
   async publishPost(req, res, next) {
     try {
-      const response = await publishModel.publishPost(req.body, req.query.teamId, req.query.language);
+      const response = await publishModel.publishPost(
+        req.body,
+        req.query.teamId,
+        req.query.language
+      );
 
       SuccessResponse(res, response?.data, response?.message, response?.code);
     } catch (error) {
@@ -21,7 +27,11 @@ class PublishController {
 
   async getDraftedPosts(req, res, next) {
     try {
-      const response = await publishModel.getDraftedPosts(req.query.userScopeId, req.query.teamId, req.query.pageId);
+      const response = await publishModel.getDraftedPosts(
+        req.query.userScopeId,
+        req.query.teamId,
+        req.query.pageId
+      );
 
       SuccessResponse(res, response);
     } catch (error) {
@@ -41,7 +51,10 @@ class PublishController {
 
   async updateDraftPostById(req, res, next) {
     try {
-      const response = await publishModel.updateDraftPostById(req.query.id, req.body.draftPost);
+      const response = await publishModel.updateDraftPostById(
+        req.query.id,
+        req.body.draftPost
+      );
 
       SuccessResponse(res, response);
     } catch (error) {
@@ -81,7 +94,11 @@ class PublishController {
 
   async getApprovalPostStatus(req, res, next) {
     try {
-      const response = await publishModel.getApprovalPostStatus(req.query.userScopeId, req.query.teamId, req.query.pageId);
+      const response = await publishModel.getApprovalPostStatus(
+        req.query.userScopeId,
+        req.query.teamId,
+        req.query.pageId
+      );
 
       SuccessResponse(res, response);
     } catch (error) {
@@ -91,7 +108,30 @@ class PublishController {
 
   async getPublishedPosts(req, res, next) {
     try {
-      const response = await publishModel.getPublishedPosts(req.query.userScopeId, req.query.teamId, req.query.pageId);
+      const response = await publishModel.getPublishedPosts(
+        req.query.userScopeId,
+        req.query.teamId,
+        req.query.pageId
+      );
+
+      SuccessResponse(res, response);
+    } catch (error) {
+      CatchResponse(res, error.message);
+    }
+  }
+
+  async filterPublishedPosts(req, res, next) {
+    try {
+      const response = await publishModel.filterPublishedPosts(
+        req.query.userScopeId,
+        req.query.teamId,
+        req.query.pageId,
+        req.body.searchPublishedPostInfo,
+        req.query.publishedStatus,
+        req.query.filterPeriod,
+        req.query.since,
+        req.query.until
+      );
 
       SuccessResponse(res, response);
     } catch (error) {

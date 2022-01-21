@@ -87,6 +87,7 @@ app.use(morgan('tiny', {stream: Logger.stream}));
 
 if (app.get('env') !== 'local') {
   app.use(morgan('dev'));
+  morgan.token('url', (req, res) => req.path);
   app.use(
     morgan(':method :url :status :res[content-length] :response-time ms', {
       stream,

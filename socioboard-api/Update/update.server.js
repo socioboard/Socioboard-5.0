@@ -25,7 +25,7 @@ import Logger from './resources/log/logger.log.js';
 
 if (process.env.IS_DEBUGGING) console.log(__filename);
 const swaggerFile = JSON.parse(
-  fs.readFileSync('./resources/views/swagger-api-view.json', 'utf-8'),
+  fs.readFileSync('./resources/views/swagger-api-view.json', 'utf-8')
 );
 const __dirname = path.resolve();
 const logDir = `${__dirname}/resources/log/ResponseLog`;
@@ -40,9 +40,9 @@ io.Server;
 
 app.use(Helmet(), Compression());
 // app.use(ExpressRateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: false}));
+app.use(express.json({limit: '100mb'}));
 app.use(express.static('public'));
 app.use(express.static('../../media'));
 app.use(express.static('./resources/log/ResponseLog'));
@@ -69,7 +69,7 @@ app.use(
       httpOnly: true,
       expires: expiryDate,
     },
-  }),
+  })
 );
 
 // Stream information for log name and frequency
@@ -82,25 +82,26 @@ const stream = fileStreamRotator.getStream({
   size: '100M',
 });
 
-app.use(morgan('tiny', { stream: Logger.stream }));
+app.use(morgan('tiny', {stream: Logger.stream}));
 
 if (app.get('env') !== 'local') {
   app.use(morgan('dev'));
+  morgan.token('url', (req, res) => req.path);
   app.use(
     morgan(':method :url :status :res[content-length] :response-time ms', {
       stream,
-    }),
+    })
   );
 }
 
 // for reading req body
 app.use(
-  express.json({ limit: '50mb' }),
+  express.json({limit: '50mb'}),
   express.urlencoded({
     limit: '50mb',
     urlencoded: false,
     extended: true,
-  }),
+  })
 );
 
 // Set response header
@@ -118,18 +119,20 @@ process
   .on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection: ', reason, 'Promise', promise);
     Logger.error(
-      `: ---- : unhandledRejection : ---- : ${reason} : ---- : Unhandled Rejection at Promise : ---- : ${JSON.stringify(promise)} : ---- :`,
+      `: ---- : unhandledRejection : ---- : ${reason} : ---- : Unhandled Rejection at Promise : ---- : ${JSON.stringify(
+        promise
+      )} : ---- :`
     );
   })
   .on('warning', (reason, promise) => {
     Logger.error(
-      `: ---- :warning : ---- : ${reason} : ---- : warning message : ---- : ${promise} : ---- :`,
+      `: ---- :warning : ---- : ${reason} : ---- : warning message : ---- : ${promise} : ---- :`
     );
   })
-  .on('uncaughtException', (err) => {
+  .on('uncaughtException', err => {
     console.log('Uncaught Exception:', err);
     Logger.error(
-      `: ---- : uncaughtException : ---- : ${err} : ---- : Uncaught Exception thrown : ---- :`,
+      `: ---- : uncaughtException : ---- : ${err} : ---- : Uncaught Exception thrown : ---- :`
     );
     process.exit(1);
   });
@@ -137,32 +140,36 @@ process
 app.use('/explorer', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.get('/', (req, res) => res.redirect('/explorer'));
 
-const createFolders = () => new Promise((resolve, reject) => {
-  if (!fs.existsSync(config.get('autoReport.base_path'))) {
-    fs.mkdirSync(config.get('autoReport.base_path'));
-  }
+const createFolders = () =>
+  new Promise((resolve, reject) => {
+    if (!fs.existsSync(config.get('autoReport.base_path'))) {
+      fs.mkdirSync(config.get('autoReport.base_path'));
+    }
 
-  if (!fs.existsSync(config.get('autoReport.autoReport.path'))) {
-    fs.mkdirSync(config.get('autoReport.autoReport.path'));
-  }
-  resolve(true);
-});
-
-const startServer = () => new Promise((resolve, reject) => {
-  const port = config.get('update_socioboard.port');
-
-  server.listen(port, () => {
-    Logger.info(
-      `service listening on ${config.get('update_socioboard.host_url')} with ${process.env.NODE_ENV
-      } Environment!`,
-    );
-    console.log(
-      `service listening on ${config.get('update_socioboard.host_url')} with ${process.env.NODE_ENV
-      } Environment!`,
-    );
+    if (!fs.existsSync(config.get('autoReport.autoReport.path'))) {
+      fs.mkdirSync(config.get('autoReport.autoReport.path'));
+    }
+    resolve(true);
   });
-  resolve(true);
-});
+
+const startServer = () =>
+  new Promise((resolve, reject) => {
+    const port = config.get('update_socioboard.port');
+
+    server.listen(port, () => {
+      Logger.info(
+        `service listening on ${config.get(
+          'update_socioboard.host_url'
+        )} with ${process.env.NODE_ENV} Environment!`
+      );
+      console.log(
+        `service listening on ${config.get(
+          'update_socioboard.host_url'
+        )} with ${process.env.NODE_ENV} Environment!`
+      );
+    });
+    resolve(true);
+  });
 
 const dbConnect = new DbConnect();
 const mongoConnect = new MongoConnect();
@@ -177,6 +184,6 @@ dbConnect
   })
   .then(() => createFolders())
   .then(() => startServer())
-  .catch((error) => {
+  .catch(error => {
     Logger.error(error.message);
   });

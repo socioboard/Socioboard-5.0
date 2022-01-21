@@ -35,7 +35,24 @@ router.post('/publish', youtubePublishController.uploadVideo);
  * @param {import('express').NextFunction} next
  * @return {object} Uploaded and drafted youTube videos details
  */
-router.get('/published-details', youtubePublishController.getYouTubePublishedDetails);
+router.get(
+  '/published-details',
+  youtubePublishController.getYouTubePublishedDetails
+);
+
+/**
+ * TODO To get uploaded and drafted youTube videos details to particular team youTube account
+ * Route To get uploaded and drafted youTube videos details.
+ * @name post/published-details
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @return {object} Uploaded and drafted youTube videos details
+ */
+router.get(
+  '/team-published-details',
+  youtubePublishController.getTeamYouTubePublishedDetails
+);
 
 /**
  * TODO To edit uploaded and drafted youTube videos details to particular youTube account
@@ -46,7 +63,10 @@ router.get('/published-details', youtubePublishController.getYouTubePublishedDet
  * @param {import('express').NextFunction} next
  * @return {object} Edit uploaded and drafted youTube videos details
  */
-router.put('/edit-published-details', youtubePublishController.editPublishedDetails);
+router.put(
+  '/edit-published-details',
+  youtubePublishController.editPublishedDetails
+);
 
 /**
  * TODO To get uploaded and drafted youTube videos details to particular post id
@@ -57,7 +77,10 @@ router.put('/edit-published-details', youtubePublishController.editPublishedDeta
  * @param {import('express').NextFunction} next
  * @return {object} Uploaded and drafted youTube videos details particular post id.
  */
-router.get('/published-details-by-id', youtubePublishController.getPublishedDetailsById);
+router.get(
+  '/published-details-by-id',
+  youtubePublishController.getPublishedDetailsById
+);
 
 /**
  * TODO To delete youTube upload post details
@@ -68,7 +91,10 @@ router.get('/published-details-by-id', youtubePublishController.getPublishedDeta
  * @param {import('express').NextFunction} next
  * @return {object} Deleted youTube upload post details
  */
-router.delete('/published-details', youtubePublishController.deleteYouTubePublishedDetails);
+router.delete(
+  '/published-details',
+  youtubePublishController.deleteYouTubePublishedDetails
+);
 
 /**
  * @exports router for youtube upload
