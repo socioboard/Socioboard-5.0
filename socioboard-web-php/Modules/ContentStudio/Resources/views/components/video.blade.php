@@ -35,8 +35,17 @@ data-type="video"
         <h5 class="card-title">{{ $item->title }}</h5>
         <p class="card-text">{{ $item->description }}</p>
         <div class="d-flex justify-content-center">
-            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i>One-Click</a>
-            <a href="{{ route('publish_content.scheduling')  }}" class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder"><i class="fas fa-history fa-fw"></i> Schedule</a>
+            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i>One Click</a>
+            <form action="{{ route('publish_content.scheduling')  }}" method="POST">
+                @csrf
+                <input type="hidden" name="mediaUrl" value="{{ $item->mediaUrl }}">
+                <input type="hidden" name="sourceUrl" value="{{ isset($item->sourceUrl) && filter_var($item->sourceUrl, FILTER_VALIDATE_URL) ? $item->sourceUrl : null }}">
+                <input type="hidden" name="publisherName" value="{{ isset($item->publisherName) ? $item->publisherName : null }}">
+                <input type="hidden" name="title" value="{{ $item->title }}">
+                <input type="hidden" name="type" value="image">
+                <textarea name="description" style="display: none">{{ $item->description }}</textarea>
+                <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder"><i class="fas fa-history fa-fw"></i> Schedule</button>
+            </form>
         </div>
         </div>
     </div>

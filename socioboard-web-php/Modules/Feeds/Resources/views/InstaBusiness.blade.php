@@ -41,7 +41,7 @@
                                         </option>
                                     @elseif($message=== 'No Instagram business Pages added yet!')
                                         <option selected value="failed">No
-                                            Instagram business Account has added yet or Account has locked.
+                                            Instagram business Account has been added yet for this team or Account has been locked.
                                         </option>
                                     @endif
                                 </select>
@@ -115,12 +115,6 @@
                                                         </div>
                                                     </div>
                                                     <!-- end:account star rating -->
-                                                    <div class="mt-2">
-                                                        <a href="#"
-                                                           class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                           onclick="return false" id="chatID"
-                                                           title="Coming soon">Chat</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <!--end::User-->
@@ -142,7 +136,7 @@
                                             <div class="symbol symbol-150">
                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
-                                            <h6>Currently no Instagram Business Account has been added for this team</h6>
+                                            <h6>Currently no Instagram Business Account has been added for this team or Account has been locked</h6>
                                         </div>
                                     @endif
                                 @elseif($message=== 'No Instagram business Pages added yet!')
@@ -150,7 +144,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>NO Instagram  Business Account has added yet or Account has locked</h6>
+                                        <h6>No Instagram  Business Account has been added yet for this team or Account has been locked</h6>
                                     </div>
                                 @elseif($message=== 'falied')
                                     <div class="text-center">
@@ -170,12 +164,6 @@
                         <div class="card card-custom gutter-b" id="ss-feedsDiv">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <div class="card-body" id="instagramFeeds">
                             @if($message=== 'success')
@@ -323,7 +311,7 @@
                                                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                 </div>
                                                                 <h6>Currently no Instagram Business Accounts has been added
-                                                                    for this team</h6>
+                                                                    for this team or Account has been locked.</h6>
                                                             </div>
                                                         @endif
                                 @elseif($message=== 'falied')
@@ -338,7 +326,7 @@
                                                                 <div class="symbol symbol-150">
                                                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                 </div>
-                                                                <h6>Can not get feeds as :  NO Instagram  Business Account has added yet or Account has locked</h6>
+                                                                <h6>Can not get feeds as :  No Instagram  Business Account has been added yet for team or Account has been locked</h6>
                                                             </div>
                                 @endif
 
@@ -401,6 +389,9 @@
                  * ! Do not change this function without referring API format of getting the twitter feeds.
                  */
                 function call(data) {
+                    $(function() {
+                        $('body').scrollTop(0);
+                    });
                     pageId = 2;
                     accounId = data.value;//accountid of particular twitter account from dropdown
                     getInstagramFeeds(data.value, 1);
@@ -471,10 +462,6 @@
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                                 append += '</div>\n' +
-                                    '</div>\n' +
-                                    '<div class="mt-2">\n' +
-                                    '<a id="chatID" href="javascript:;" \n' +
-                                    'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" title="Coming soon">Chat</a>\n' +
                                     '</div>\n' +
                                     '</div>';
                                 $('#instaProfileDiv').append(append);

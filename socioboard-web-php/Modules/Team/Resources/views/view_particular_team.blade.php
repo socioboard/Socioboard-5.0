@@ -19,12 +19,6 @@
                 <!--begin::Team-->
                 <!--begin::Card-->
                 <div class="card card-custom gutter-b card-stretch">
-                    <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                         title="Add to custom Reports">+
-                        <span node-id="ss-viewTeamDiv_d-flex" class="ss addtcartclose"></span>
-                    </div>
-                    <span  id="ss-viewTeamDiv_d-flex" style="
-    display: none;">Adding...</span>
                     <div class="card-header">
                         <div class="card-title">
                             @if($data['code']===200)
@@ -48,31 +42,19 @@
                         </div>
                         <div class="card-toolbar">
 
-                            <!--begin::Teams Actions Dropdown-->
-                            <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="Quick actions"
-                                 data-placement="left">
-                                <a href="javascript:;" class="btn btn-hover-light-primary btn-sm btn-icon"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="ki ki-bold-more-hor"></i>
-                                </a>
-                                <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
-                                    <!--begin::Navigation-->
-                                    <ul class="navi navi-hover">
-                                        <li class="navi-item">
 
-                                            <a href="javascript:;" class="navi-link" data-toggle="modal"
-                                               data-target="#teamInviteModal{{$team_id}}">
+                                <ul class="navi navi-hover">
+                                    <li class="navi-item">
+
+                                        <a href="javascript:;" class="navi-link" data-toggle="modal" data-target="#teamInviteModal{{$team_id}}">
                                                             <span class="navi-text">
-                                                                <span class="text-info"><i
-                                                                        class="fas fa-user fa-fw text-info"></i>&nbsp; Invite Member</span>
+                                                                <span class="text-info"><i class="fas fa-user fa-fw text-info"></i>&nbsp; Invite a Member</span>
                                                             </span>
-                                            </a>
-                                        </li>
+                                        </a>
+                                    </li>
 
-                                    </ul>
-                                    <!--end::Navigation-->
-                                </div>
-                            </div>
+                                </ul>
+
                             <!--end::Teams Actions Dropdown-->
                         </div>
                     </div>

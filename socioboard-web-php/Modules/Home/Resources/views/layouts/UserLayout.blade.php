@@ -206,6 +206,7 @@
                                 <!--begin::Toggle-->
                                 <div class="topbar-item">
                                     <a id="reportsCart" onclick="planCheck('{{env('APP_URL')}}get-reports-Images')"
+                                       target="_blank"
                                        title="Custom Reports" class="btn btn-icon btn-dropdown btn-lg mr-1 reports-btn">
                                                 <span class="symbol svg-icon svg-icon-xl">
                                                     <i class="fas fa-chart-line"></i>
@@ -222,9 +223,10 @@
                                 <!--begin::Toggle-->
                                 <div id="nofifications" class="topbar-item notificationsIcon" data-toggle="dropdown"
                                      disabled
-                                      data-offset="10px,0px"
+                                     data-offset="10px,0px"
                                      onclick="checkPlanExpiryNotifications()">
-                                    <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-danger" data-placement="bottom" title="Notifications">
+                                    <div class="btn btn-icon btn-dropdown btn-lg mr-1 pulse pulse-danger"
+                                         data-placement="bottom" title="Notifications">
                                                 <span class="symbol svg-icon svg-icon-xl">
                                                     <i class="fas fa-bell"></i>
                                                 <i id="notification-user"></i>
@@ -244,7 +246,7 @@
                                              style="background-image: url("{{asset('media/misc/bg-1.jpg')}}")">
                                         <!--begin::Title-->
                                         <h4 class="d-flex flex-center rounded-top">
-                                            <span class="text-white">User Notifications</span>
+                                            <span>User Notifications</span>
                                         </h4>
                                         <!--end::Title-->
 
@@ -334,7 +336,7 @@
                                     <!--begin::Tabpane-->
                                     <div class="tab-pane" id="topbar_notifications_teams" role="tabpanel">
                                         <!--begin::Nav-->
-                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="300"
+                                        <div class="scroll pr-7" data-scroll="true" data-height="300"
                                              data-mobile-height="200" id="invitation"
                                              style="max-height: 300px;overflow-y: scroll;">
                                             <!--begin::Item-->
@@ -352,7 +354,7 @@
                                     <!--end::Tabpane-->
                                     <div class="tab-pane" id="topbar_activity_log" role="tabpanel">
                                         <!--begin::Scroll-->
-                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="100"
+                                        <div class="scroll pr-7" data-scroll="true" data-height="100"
                                              data-mobile-height="200" id="recent_activities"
                                              style="max-height: 300px;overflow-y: scroll;">
 
@@ -366,7 +368,7 @@
 
                                     <div class="tab-pane" id="topbar_user_log" role="tabpanel">
                                         <!--begin::Scroll-->
-                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="100"
+                                        <div class="scroll pr-7" data-scroll="true" data-height="100"
                                              data-mobile-height="200" id="userNotiFications"
                                              style="max-height: 300px;overflow-y: scroll;">
                                         </div>
@@ -383,7 +385,7 @@
 
                                     <div class="tab-pane" id="topbar_publishing" role="tabpanel">
                                         <!--begin::Scroll-->
-                                        <div class="scroll pr-7 mr-n7" data-scroll="true" data-height="300"
+                                        <div class="scroll pr-7" data-scroll="true" data-height="300"
                                              data-mobile-height="200" id="publishNotiFications"
                                              style="max-height: 300px;overflow-y: scroll;">
                                         </div>
@@ -431,7 +433,9 @@
                                         <?php if (isset(session()->get('team')['teamName'])) $team = session()->get('team')['teamName']; else  $team = 'N/A' ?>
                                     </div>
                                     <span class="symbol symbol-35">
-                                                    <span class="symbol-label font-size-h5 font-weight-bold ">{{strtoupper(substr($team,0,1))}}T</span>
+                                                    <img
+                                                            src="<?php if (isset(session()->get('team')['teamLogo'])) echo session()->get('team')['teamLogo']; else  echo 'https://i.imgur.com/eRkLsuQ.png' ?>"
+                                                            alt="SB">
                                                 </span>
                                 </div>
                             </div>
@@ -562,26 +566,48 @@
                                     <!--begin::Nav-->
                                     <ul class="menu-nav ">
                                         <li class="menu-item " aria-haspopup="true">
-                                            <a onclick="planCheck('{{env('APP_URL')}}dashboard')"
+                                            <a onclick="planCheck('{{env('APP_URL')}}dashboard')" id="dashboard_button"
                                                class="menu-link btn font-weight-bold my-2 my-lg-0 mr-3">
                                                 <span class="menu-text"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</span>
                                             </a>
                                         </li>
 
-                                        <li class="menu-item menu-item-submenu menu-item-rel menu-item-open-dropdown" aria-haspopup="true" data-menu-toggle="click">
-                                            <a href="javascript:;" class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                <span class="menu-text"><i class="fas fa-users fa-fw"></i> Accounts</span>
+                                        <li class="menu-item menu-item-submenu menu-item-rel menu-item-open-dropdown"
+                                            aria-haspopup="true" data-menu-toggle="click">
+                                            <a href="javascript:;" id="account_button"
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                                <span class="menu-text"><i
+                                                            class="fas fa-user-friends"></i>Social Accounts</span>
                                             </a>
-                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left" data-hor-direction="menu-submenu-left">
+                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left"
+                                                 data-hor-direction="menu-submenu-left">
                                                 <ul class="menu-subnav">
-                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
-                                                        <a href="{{env('APP_URL')}}view-accounts" class="menu-link">
+                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}view-accounts" class="menu-link"
+                                                           id="view_accounts_button">
                                                             <span class="menu-text">View Accounts</span>
                                                         </a>
                                                     </li>
-                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
-                                                        <a href="{{env('APP_URL')}}blogged-accounts" class="menu-link">
-                                                            <span class="menu-text">Blogg Accounts</span>
+                                                </ul>
+                                            </div>
+                                        </li>
+
+                                        <li class="menu-item menu-item-submenu menu-item-rel menu-item-open-dropdown"
+                                            aria-haspopup="true" data-menu-toggle="click">
+                                            <a href="javascript:;" id="account_button2"
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                                <span class="menu-text"><i
+                                                            class="icon-lg fab fa-blogger"></i>Blog Accounts</span>
+                                            </a>
+                                            <div class="menu-submenu menu-submenu-classic menu-submenu-left"
+                                                 data-hor-direction="menu-submenu-left">
+                                                <ul class="menu-subnav">
+                                                    <li class="menu-item menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}blogged-accounts" class="menu-link"
+                                                           id="blog_accounts_button">
+                                                            <span class="menu-text">View blog-accounts</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -591,7 +617,8 @@
                                         <li class="menu-item menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="publishing_button">
                                                 <span class="menu-text"><i
                                                             class="fas fa-film fa-fw"></i> Publishing</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
@@ -601,54 +628,67 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a href="{{route('publish_content.scheduling')}}"
+                                                           id="schedule_post"
                                                            class="menu-link">
                                                             <span class="menu-text">Schedule Post</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="{{route('youtube-publish')}}"
+                                                        <a href="/home/publishing/youtube-scheduling" id="youtube_post"
                                                            class="menu-link">
                                                             <span class="menu-text">Youtube Publish</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
+                                                        <a href="{{route('pinterest-publish')}}" class="menu-link"
+                                                           id="pinterest_publish">
+                                                            <span class="menu-text">Pinterest Publish</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
                                                         <a href="{{route('schedule-ready-queue-history')}}"
+                                                           id="Socio_button"
                                                            class="menu-link">
-                                                            <span class="menu-text">SocioQueue</span>
+                                                            <span class="menu-text">Normal SocioQueue</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a href="{{route('schedule-day-wise-history')}}"
+                                                           id="day_wise_button"
                                                            class="menu-link">
                                                             <span class="menu-text">Day Wise SocioQueue</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="{{route('drafts-history')}}" class="menu-link">
+                                                        <a href="{{route('drafts-history')}}" class="menu-link"
+                                                           id="drafts_wise_button">
                                                             <span class="menu-text">Drafts</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="/calendar-view" class="menu-link"
+                                                        <a href="/calendar-view" class="menu-link" id="celendar_button"
                                                         >
                                                             <span class="menu-text">Calendar View</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="{{route('schedule-done-history')}}" class="menu-link">
-                                                            <span class="menu-text">History</span>
+                                                        <a href="{{route('schedule-done-history')}}" class="menu-link"
+                                                           id="history_button">
+                                                            <span class="menu-text">Publish History</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="{{route('pinterest-publish')}}" class="menu-link">
-                                                            <span class="menu-text">Pinterest Publish</span>
+                                                        <a href="{{route('youtube-drafts')}}" class="menu-link"
+                                                           id="pinterest_publish">
+                                                            <span class="menu-text">YouTube Drafts</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -707,7 +747,8 @@
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="discovery2">
                                                 <span class="menu-text"><i
                                                             class="fas fa-search fa-fw"></i> Discovery</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
@@ -716,7 +757,8 @@
                                                 <ul class="menu-subnav">
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="javascript:;" class="menu-link menu-toggle"><i
+                                                        <a href="javascript:;" class="menu-link menu-toggle"
+                                                           id="Social_button"><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i>
                                                             <span class="menu-text">Social</span><i
                                                                     class="menu-arrow"></i>
@@ -725,13 +767,13 @@
                                                             <ul class="menu-subnav">
                                                                 <li class="menu-item" aria-haspopup="true">
 
-                                                                    <a href="/discovery/youtube"
+                                                                    <a href="/discovery/youtube" id="youTubeDisc"
                                                                        class="menu-link "><i
                                                                                 class="menu-bullet menu-bullet-dot"><span></span></i>
                                                                         <span class="menu-text">YouTube</span></a>
                                                                 </li>
                                                                 <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="/discovery/twitter"
+                                                                    <a href="/discovery/twitter" id="Twitter_disc"
                                                                        class="menu-link "><i
                                                                                 class="menu-bullet menu-bullet-dot"><span></span></i>
                                                                         <span class="menu-text">Twitter</span></a>
@@ -741,7 +783,8 @@
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a href="javascript:;" class="menu-link menu-toggle"><i
+                                                        <a href="javascript:;" class="menu-link menu-toggle"
+                                                           id="search_Button"><i
                                                                     class="menu-bullet menu-bullet-dot"><span></span></i>
                                                             <span class="menu-text">Search</span><i
                                                                     class="menu-arrow"></i>
@@ -750,7 +793,8 @@
                                                                 class="menu-submenu menu-submenu-classic menu-submenu-right">
                                                             <ul class="menu-subnav">
                                                                 <li class="menu-item" aria-haspopup="true">
-                                                                    <a href="/discovery/twitter-subscription" id="twitter_subscription"
+                                                                    <a href="/discovery/twitter-subscription"
+                                                                       id="twitter_subscription"
                                                                        class="menu-link "><i
                                                                                 class="menu-bullet menu-bullet-dot"><span></span></i>
                                                                         <span class="menu-text">Twitter Subscription</span></a>
@@ -764,7 +808,8 @@
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="facebook_feeds_button">
                                                 <span class="menu-text"><i class="fas fa-images fa-fw"></i> Feeds</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
                                             </a>
@@ -773,20 +818,15 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}feeds/facebook')"
+                                                           id="facebook_feeds_button2"
                                                            class="menu-link">
                                                             <span class="menu-text">Facebook</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/fbPages')"
-                                                           class="menu-link">
-                                                            <span class="menu-text">Facebook Pages</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}feeds/instagram')"
+                                                           id="instagram_button1"
                                                            class="menu-link"
                                                         >
                                                             <span class="menu-text">Instagram</span>
@@ -794,15 +834,8 @@
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/Business')"
-                                                           class="menu-link"
-                                                        >
-                                                            <span class="menu-text">Instagram Business</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}feeds/twitter')"
+                                                           id="twitter_button"
                                                            class="menu-link">
                                                             <span class="menu-text">Twitter</span>
                                                         </a>
@@ -810,44 +843,73 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}feeds/youtube')"
+                                                           id="youtube_button"
                                                            class="menu-link">
                                                             <span class="menu-text">Youtube</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
-                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/linkedIn')"
-                                                           class="menu-link"
-                                                           id="linkedinFeeds">
-                                                            <span class="menu-text">LinkedIn Pages</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true">
                                                         <a href="{{env('APP_URL')}}show-boards/PinterestFeeds"
+                                                           id="pinterest_button"
                                                            class="menu-link"
                                                            id="linkedinFeeds">
                                                             <span class="menu-text">Pinterest</span>
                                                         </a>
                                                     </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/fbPages')"
+                                                           id="facebook_pages_button2"
+                                                           class="menu-link">
+                                                            <span class="menu-text">Facebook Pages</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/linkedIn')"
+                                                           id="linkedIn_button"
+                                                           class="menu-link"
+                                                           id="linkedinFeeds">
+                                                            <span class="menu-text">LinkedIn Pages</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/Business')"
+                                                           id="instagram_button2"
+                                                           class="menu-link"
+                                                        >
+                                                            <span class="menu-text">Instagram Business</span>
+                                                        </a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click" aria-haspopup="true">
-                                            <a href="#" class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                            <span class="menu-text"><i class="icon-lg fab fa-blogger"></i>
+                                        <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
+                                            aria-haspopup="true">
+                                            <a href="#"
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="blogged_feeds_button">
+                                                            <span class="menu-text"><i
+                                                                        class="icon-lg fab fa-blogger" i></i>
                                                             Blogged Feeds</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
                                             </a>
                                             <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                                                 <ul class="menu-subnav">
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
-                                                        <a href="{{env('APP_URL')}}feeds/medium" class="menu-link">
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}feeds/medium" class="menu-link"
+                                                           id="medium_button">
                                                             <span class="menu-text">Medium</span>
                                                         </a>
                                                     </li>
-                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover" aria-haspopup="true">
-                                                        <a href="{{env('APP_URL')}}feeds/Tumblr" class="menu-link">
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{env('APP_URL')}}feeds/Tumblr" class="menu-link"
+                                                           id="tumblr_button">
                                                             <span class="menu-text">Tumblr</span>
                                                         </a>
                                                     </li>
@@ -857,7 +919,8 @@
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="content_stdudio_btn">
                                                 <span class="menu-text"><i class="far fa-newspaper fa-fw"></i> Content Studio</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
                                             </a>
@@ -866,27 +929,28 @@
                                                     <li id="imgur" class="menu-item  menu-item-submenu"
                                                         data-menu-toggle="hover" aria-haspopup="true">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.imgur')}}')"
-                                                           class="menu-link">
+                                                           class="menu-link" id="imgur_button">
                                                             <span class="menu-text">Imgur</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
-                                                        aria-haspopup="true" id="flickr">
+                                                        aria-haspopup="true">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.flickr')}}')"
-                                                           class="menu-link">
+                                                           class="menu-link" id="flickr_button">
                                                             <span class="menu-text">Flickr</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true" id="dailymotione">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.dailymotione')}}')"
-                                                           class="menu-link">
-                                                            <span class="menu-text">Dailymotion</span>
+                                                           class="menu-link" id="dailymotion_button">
+                                                            <span class="menu-text">DailyMotion</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true" id="newApi">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.news_api')}}')"
+                                                           id="newsApi_button"
                                                            class="menu-link">
                                                             <span class="menu-text">News Api</span>
                                                         </a>
@@ -894,6 +958,7 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true" id="pixabay">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.pixabay')}}')"
+                                                           id="pixabay_button"
                                                            class="menu-link">
                                                             <span class="menu-text">Pixabay</span>
                                                         </a>
@@ -901,6 +966,7 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true" id="giphy">
                                                         <a onclick="planCheck('{{route('discovery.content_studio.giphy')}}')"
+                                                           id="giphy_button"
                                                            class="menu-link">
                                                             <span class="menu-text">Giphy</span>
                                                         </a>
@@ -910,10 +976,10 @@
                                         </li>
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
-                                            <a href="javascript:;"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                <span class="menu-text"><i class="fas fa-rss fa-fw"></i> Automated RSS Feeds</span>
-                                                <span class="menu-desc"></span><i class="menu-arrow"></i>
+                                            <a href="javascript:;" id="autoMated_Rss_feeds_btn"
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                            <span class="menu-text"><i class="fas fa-rss fa-fw"></i> Automated RSS Feeds</span>
+                                            <span class="menu-desc"></span><i class="menu-arrow"></i>
                                             </a>
                                             <div class="menu-submenu menu-submenu-classic menu-submenu-left">
                                                 <ul class="menu-subnav">
@@ -921,20 +987,20 @@
                                                         aria-haspopup="true">
                                                         <a href="/discovery/automated-rss-feeds" class="menu-link"
                                                            id="automated_rss_feeds">
-                                                            <span class="menu-text">Automated RSS Feeds</span>
+                                                            <span class="menu-text">Newspaper Management</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu"
                                                         aria-haspopup="true">
                                                         <a href="/discovery/rss-feeds-article" class="menu-link"
                                                            id="posted_rss_feeds">
-                                                            <span class="menu-text">RSS Feeds Article</span>
+                                                            <span class="menu-text">News Articles</span>
                                                         </a>
                                                     </li>
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a href="/discovery/rss-feeds"
-                                                           class="menu-link">
+                                                           class="menu-link" id="rss_feeds">
                                                             <span class="menu-text">RSS Feeds</span>
                                                         </a>
                                                     </li>
@@ -958,8 +1024,9 @@
                                         <li class="menu-item  menu-item-submenu menu-item-rel" data-menu-toggle="click"
                                             aria-haspopup="true">
                                             <a href="javascript:"
-                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3">
-                                                <span class="menu-text"><i class="icon-md fas fa-chart-bar"></i> Competitor analysis</span>
+                                               class="menu-link menu-toggle btn font-weight-bold my-2 my-lg-0 mr-3"
+                                               id="comepetitor_analysis">
+                                                <span class="menu-text"><i class="icon-md fas fa-chart-bar"></i> Competitor Analysis</span>
                                                 <span class="menu-desc"></span><i class="menu-arrow"></i>
                                             </a>
                                             <div class="menu-submenu menu-submenu-classic menu-submenu-left">
@@ -967,8 +1034,9 @@
                                                     <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
                                                         aria-haspopup="true">
                                                         <a onclick="planCheck('{{env('APP_URL')}}discovery/analytics')"
+                                                           id="comepetitor_analysis2"
                                                            class="menu-link">
-                                                            <span class="menu-text">Competitor analysis</span>
+                                                            <span class="menu-text">Competitor Analysis</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -986,28 +1054,28 @@
                                 <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
                                     <!--begin::Actions-->
                                     <a onclick="planCheck('{{env('APP_URL')}}get-team-reports')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="team_reports_button">
                                         <i class="fas fa-id-badge fa-fw"></i> Team Report
                                     </a>
                                     <!--end::Actions-->
                                     <a onclick="planCheck('{{env('APP_URL')}}get-twitter-reports')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
-                                        <i class="fas fa-id-badge fa-fw"></i> Twitter Report
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="twitter_reports_button">
+                                        <i class="fab fa-twitter"></i> Twitter Report
                                     </a>
                                     <a onclick="planCheck('{{env('APP_URL')}}get-youtube-reports')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0"
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="youtube_reports_button"
                                     >
-                                        <i class="fas fa-id-badge fa-fw"></i> Youtube Report
+                                        <i class="fab fa-youtube"></i> Youtube Report
                                     </a>
                                     <a onclick="planCheck('{{env('APP_URL')}}get-facebook-reports')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0"
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="facebook_reports_button"
                                     >
-                                        <i class="fas fa-id-badge fa-fw"></i> Facebook Report
+                                        <i class="fab fa-facebook-f"></i> Facebook Report
                                     </a>
                                     <a onclick="planCheck('{{env('APP_URL')}}get-linked-reports')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0"
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="linked_reports_button"
                                     >
-                                        <i class="fas fa-id-badge fa-fw"></i>LinkedIn Reports
+                                        <i class="fab fa-linkedin"></i>LinkedIn Report
                                     </a>
                                 </div>
                             </div>
@@ -1018,12 +1086,12 @@
                                 <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
                                     <!--begin::Actions-->
                                     <a onclick="planCheck('{{env('APP_URL')}}boards/view-boards')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="view_boards_buttton">
                                         <i class="fas fa-chalkboard fa-fw"></i> View Boards
                                     </a>
 
                                     <a onclick="planCheck('{{env('APP_URL')}}boards/create-boards')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="create_boards_buttton">
                                         <i class="fas fa-chalkboard-teacher fa-fw"></i> Create Board
                                     </a>
                                     <!--end::Actions-->
@@ -1037,17 +1105,17 @@
                                 <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center">
                                     <!--begin::Actions-->
                                     <a onclick="planCheck('{{env('APP_URL')}}imagelibary/public-images')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="public_images">
                                         <i class="fas fa-eye fa-fw"></i> Public
                                     </a>
 
                                     <a onclick="planCheck('{{env('APP_URL')}}imagelibary/private-images')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="private_images">
                                         <i class="fas fa-eye-slash fa-fw"></i> Private
                                     </a>
 
                                     <a onclick="planCheck('{{env('APP_URL')}}imagelibary/gallery-images')"
-                                       class="btn font-weight-bold mr-3 my-2 my-lg-0">
+                                       class="btn font-weight-bold mr-3 my-2 my-lg-0" id="gallery_images">
                                         <i class="far fa-image"></i> Gallery
                                     </a>
                                     <!--end::Actions-->
@@ -1171,8 +1239,8 @@
                     <!--begin::Item-->
 
                     <!--begin::Item-->
-                    {{--                    <a href="custom/apps/user/profile-2.html" class="navi-item">--}}
-                    <!--end:Item-->
+                {{--                    <a href="custom/apps/user/profile-2.html" class="navi-item">--}}
+                <!--end:Item-->
 
                     <!--begin::Item-->
                     {{--                    <a href="custom/apps/userprofile-1/overview.html" class="navi-item">--}}
@@ -1188,7 +1256,7 @@
                                     Auto Email Reports
                                 </div>
                                 <div class="text-muted">
-                                    Configure report mails
+                                    Configure Report Mails
                                 </div>
                             </div>
                         </div>
@@ -1222,10 +1290,10 @@
                             </div>
                             <div class="navi-text">
                                 <div class="font-weight-bold">
-                                    Reports Settings
+                                    Reports Setting
                                 </div>
                                 <div class="text-muted">
-                                    Reports Settings And More
+                                    Reports Setting And More
                                 </div>
                             </div>
                         </div>
@@ -1242,7 +1310,7 @@
                                     Link Shortening
                                 </div>
                                 <div class="text-muted">
-                                    Configure your link shortener
+                                    Configure Your Link Shortener
                                 </div>
                             </div>
                         </div>
@@ -1737,14 +1805,23 @@
             let publishOrFeeds = 0;
             $(document).ready(function () {
                 getReportsCount();
+                getCurrentURL();
                 getNotifications(1);
                 getNotificationsUser(1);
                 checkNotificationsStatus();
                 const currentTheme = localStorage.getItem('theme');
+                setCookie("themeNow", currentTheme, 365);
                 if (currentTheme === "dark") {
                     $("#checkbox").prop("checked", true);
                 }
-            })
+            });
+
+            function setCookie(cname, cvalue, exdays) {
+                const d = new Date();
+                d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                let expires = "expires=" + d.toGMTString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
 
             function getReportsCount() {
                 $.ajax({
@@ -1816,13 +1893,13 @@
                             }
                             $("#team_count").html("");
                             $("#team_count").append('<div class="col-12">\n' +
-                                '<a href="' + response.env + 'team/' + response.teams[0]['team_id'] + '" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
+                                '<a  class="d-block py-3 px-5 text-center bg-hover-light border-bottom"  onclick="switchTeam(' + response.teams[0]['team_id'] + ')">' +
                                 '<span class="d-block font-weight-bold font-size-h6 mt-2 mb-1">' + response.teams[0]['teamName'] + '</span>\n' +
                                 '<span class="d-block font-size-lg">' + response.teams[0]['members'] + member + ' </span>' +
                                 '</a>' +
                                 '</div>' +
                                 '<div class="col-12">' +
-                                '<a href="' + response.env + 'team/' + response.teams[1]['team_id'] + '" class="d-block py-3 px-5 text-center bg-hover-light border-bottom">' +
+                                '<a  class="d-block py-3 px-5 text-center bg-hover-light border-bottom"  onclick="switchTeam(' + response.teams[1]['team_id'] + ')">' +
                                 '<span\n' +
                                 'class="d-block font-weight-bold font-size-h6 mt-2 mb-1">' + response.teams[1]['teamName'] + '</span>' +
                                 '<span class="d-block font-size-lg">' + response.teams[1]['members'] + member1 + ' </span>' +
@@ -1939,7 +2016,7 @@
                                         break;
 
                                     case "publish" :
-                                        icon += '<i class="fas fa-rss"></i></span></span>';
+                                        icon += '<i class="fas fa-film fa-fw"></i></span></span>';
                                         break;
 
                                     case "report" :
@@ -2005,6 +2082,7 @@
                         let num = 1;
                         let publishMessage;
                         let namesArray = [];
+                        let accountLogo = '';
                         if (response.code === 200) {
                             if (response.data.length > 0) {
                                 response.data.map(element => {
@@ -2014,16 +2092,28 @@
                                         for (let i = 0; i < namesArray.length - 1; i++) {
                                             publishMessage += namesArray[i] + ' ';
                                         }
+                                        if (publishMessage.indexOf('Facebook') >= 0) {
+                                            accountLogo = '<i class="fab fa-facebook"></i>';
+                                        } else if (publishMessage.indexOf('Tumblr') >= 0) {
+                                            accountLogo = '<i class="fab fa-tumblr"></i>';
+
+                                        } else if (publishMessage.indexOf('LinkedIn') >= 0) {
+                                            accountLogo = '<i class="fab fa-linkedin-in"></i>';
+
+                                        } else if (publishMessage.indexOf('Twitter') >= 0) {
+                                            accountLogo = '<i class="fab fa-twitter"></i>';
+
+                                        }
                                         if (element.isRead === true) {
                                             if (element.notifyType === 'publish_failed')
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                             else
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         } else {
                                             if (element.notifyType === 'publish_failed')
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                             else
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         }
                                         publishNotificationCounts++;
                                     } else if (element.notifyType === 'team_leave') {
@@ -2156,16 +2246,29 @@
                             let appendData2 = '';
                             let namesArray = '';
                             let publishMessage = '';
+                            let accountLogo = '';
                             $("#notification-user").addClass("symbol-badge bg-danger");
                             if (message.notifyType === 'publish_publishPosts' || message.notifyType === 'publish_failed') {
                                 namesArray = message.notificationMessage.split(',');
                                 for (let i = 0; i < namesArray.length - 1; i++) {
                                     publishMessage += namesArray[i] + ' ';
                                 }
+                                if (publishMessage.indexOf('Facebook') >= 0) {
+                                    accountLogo = '<i class="fab fa-facebook"></i>';
+                                } else if (publishMessage.indexOf('Tumblr') >= 0) {
+                                    accountLogo = '<i class="fab fa-tumblr"></i>';
+
+                                } else if (publishMessage.indexOf('LinkedIn') >= 0) {
+                                    accountLogo = '<i class="fab fa-linkedin-in"></i>';
+
+                                } else if (publishMessage.indexOf('Twitter') >= 0) {
+                                    accountLogo = '<i class="fab fa-twitter"></i>';
+
+                                }
                                 if (message.notifyType === 'publish_failed')
-                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '" class="mb-1 font-size-lg publish_failed"  data-toggle="tooltip" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
+                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '" class="mb-1 font-size-lg publish_failed"  data-toggle="tooltip" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
                                 else
-                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '"  href="' + getStringUrl(message.notificationMessage) + '"  data-toggle="tooltip" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
+                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '"  href="' + getStringUrl(message.notificationMessage) + '"  data-toggle="tooltip" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
                                 $('#publishNotiFications').prepend(appendData2);
                             } else if (message.notifyType === 'team_invite') {
                                 $.ajax({
@@ -2193,34 +2296,34 @@
                                     }
                                 });
                             } else if (message.notifyType === 'team_accept') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a  href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a  href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_decline') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_removeTeamMember') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_editMemberPermission') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#userNotiFications').prepend(appendData);
                             } else if (message.notifyType === 'team_leave') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'publish_addProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_addProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_deleteTeamSocialProfile') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '"  class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else if (message.notifyType === 'team_leave') {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             } else {
-                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-user"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
+                                appendData = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 "><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-users"></i></span></span><div class="d-flex flex-column font-weight-bold"><a href="{{env('APP_URL')}}view-teams" id="notificationNum' + num + '" class="mb-1 font-size-lg" onclick="changeColorOnRead(' + num + ')" target="_blank">' + message.notificationMessage + '</a></div></div>';
                                 $('#invitation').prepend(appendData);
                             }
                         });
@@ -2409,6 +2512,7 @@
                         let namesArray = '';
                         let publishMessage = '';
                         let num = 1;
+                        let accountLogo = '';
                         if (response.code === 200) {
                             response.data.map(element => {
                                 publishMessage = '';
@@ -2417,16 +2521,28 @@
                                     for (let i = 0; i < namesArray.length - 1; i++) {
                                         publishMessage += namesArray[i] + ' ';
                                     }
+                                    if (publishMessage.indexOf('Facebook') >= 0) {
+                                        accountLogo = '<i class="fab fa-facebook"></i>';
+                                    } else if (publishMessage.indexOf('Tumblr') >= 0) {
+                                        accountLogo = '<i class="fab fa-tumblr"></i>';
+
+                                    } else if (publishMessage.indexOf('linkedIn') >= 0) {
+                                        accountLogo = '<i class="fab fa-linkedin-in"></i>';
+
+                                    } else if (publishMessage.indexOf('Twitter') >= 0) {
+                                        accountLogo = '<i class="fab fa-twitter"></i>';
+
+                                    }
                                     if (element.isRead === true) {
                                         if (element.notifyType === 'publish_failed')
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         else
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                     } else {
                                         if (element.notifyType === 'publish_failed')
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         else
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold"><i class="fas fa-rss"></i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" data-toggle="tooltip" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '"data-toggle="tooltip"  class="mb-1 font-size-lg publish_message" target="_blank"   title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" data-toggle="tooltip" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '"data-toggle="tooltip"  class="mb-1 font-size-lg publish_message" target="_blank"   title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                     }
                                 }
                                 num++;
@@ -2567,7 +2683,12 @@
                 if (expire_date === 'true') {
                     toastr.error('Please upgrade your plan first');
                 } else {
-                    window.location.href = url
+                    if (url.indexOf('get-reports-Images') >= 0) {
+                        window.open(url);
+                    } else {
+                        location.href = url;
+                    }
+
                 }
             }
 
@@ -2643,6 +2764,180 @@
                         }
                     }
                 });
+
+            }
+
+            function switchTeam(id) {
+                $.ajax({
+                    url: 'changeTeamSession',
+                    type: "post",
+                    data: {
+                        teamid: id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.code === 200) {
+                            toastr.success(response.message, "", {
+                                timeOut: 2000,
+                                fadeOut: 2000,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            })
+                        } else if (response.code === 400) {
+                            toastr.error(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            }
+
+            function getCurrentURL() {
+                let currentURL = window.location.href;
+                let feature = currentURL.split("/");
+                if (feature[3] === 'dashboard') {
+                    $("#dashboard_button").addClass("active");
+                } else if (feature[3] === 'view-accounts') {
+                    $("#account_button").addClass("active");
+                    $("#view_accounts_button").addClass("active");
+                } else if (feature[3] === 'blogged-accounts') {
+                    $("#blog_accounts_button").addClass("active");
+                    $("#account_button2").addClass("active");
+                } else if (feature[3] === 'get-team-reports') {
+                    $("#team_reports_button").addClass("active");
+                } else if (feature[3] === 'get-twitter-reports') {
+                    $("#twitter_reports_button").addClass("active");
+                } else if (feature[3] === 'get-youtube-reports') {
+                    $("#youtube_reports_button").addClass("active");
+                } else if (feature[3] === 'get-facebook-reports') {
+                    $("#facebook_reports_button").addClass("active");
+                } else if (feature[3] === 'get-linked-reports') {
+                    $("#linked_reports_button").addClass("active");
+                } else if (feature[4] === 'view-boards') {
+                    $("#view_boards_buttton").addClass("active");
+                } else if (feature[4] === 'create-boards') {
+                    $("#create_boards_buttton").addClass("active");
+                } else if (feature[4] === 'public-images') {
+                    $("#public_images").addClass("active");
+                } else if (feature[4] === 'private-images') {
+                    $("#private_images").addClass("active");
+                } else if (feature[4] === 'gallery-images') {
+                    $("#gallery_images").addClass("active");
+                } else if (feature[4] === 'facebook') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#facebook_feeds_button2").addClass("active");
+                } else if (feature[4] === 'fbPages') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#facebook_pages_button2").addClass("active");
+                } else if (feature[4] === 'instagram') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#instagram_button1").addClass("active");
+                } else if (feature[4] === 'instagram') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#instagram_button1").addClass("active");
+                } else if (feature[4] === 'Business') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#instagram_button2").addClass("active");
+                } else if (feature[4] === 'twitter') {
+                    if (feature[3] === 'discovery') {
+                        $("#discovery2").addClass("active");
+                        $("#Social_button").addClass("active");
+                        $("#Twitter_disc").addClass("active");
+
+                    } else {
+                        $("#facebook_feeds_button").addClass("active");
+                        $("#twitter_button").addClass("active");
+                    }
+
+                } else if (feature[4] === 'youtube') {
+                    if (feature[3] === 'discovery') {
+                        $("#discovery2").addClass("active");
+                        $("#Social_button").addClass("active");
+                        $("#youTubeDisc").addClass("active");
+
+                    } else {
+                        $("#facebook_feeds_button").addClass("active");
+                        $("#youtube_button").addClass("active");
+                    }
+
+                } else if (feature[4] === 'linkedIn') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#linkedIn_button").addClass("active");
+                } else if (feature[4] === 'linkedIn') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#linkedIn_button").addClass("active");
+                } else if (feature[4] === 'PinterestFeeds') {
+                    $("#facebook_feeds_button").addClass("active");
+                    $("#pinterest_button").addClass("active");
+                } else if (feature[4] === 'Tumblr') {
+                    $("#blogged_feeds_button").addClass("active");
+                    $("#tumblr_button").addClass("active");
+                } else if (feature[4] === 'medium') {
+                    $("#blogged_feeds_button").addClass("active");
+                    $("#medium_button").addClass("active");
+                } else if (feature[5] === 'scheduling') {
+                    $("#publishing_button").addClass("active");
+                    $("#schedule_post").addClass("active");
+                } else if (feature[5] === 'youtube-scheduling') {
+                    $("#publishing_button").addClass("active");
+                    $("#youtube_post").addClass("active");
+                } else if (feature[6] === 'ready-queue') {
+                    $("#publishing_button").addClass("active");
+                    $("#Socio_button").addClass("active");
+                } else if (feature[6] === 'day-wise-socioqueue') {
+                    $("#publishing_button").addClass("active");
+                    $("#day_wise_button").addClass("active");
+                } else if (feature[5] === 'drafts') {
+                    $("#publishing_button").addClass("active");
+                    $("#drafts_wise_button").addClass("active");
+                } else if (feature[3] === 'calendar-view') {
+                    $("#publishing_button").addClass("active");
+                    $("#celendar_button").addClass("active");
+                } else if (feature[6] === 'history') {
+                    $("#publishing_button").addClass("active");
+                    $("#history_button").addClass("active");
+                } else if (feature[5] === 'pinterest-scheduling') {
+                    $("#publishing_button").addClass("active");
+                    $("#pinterest_publish").addClass("active");
+                } else if (feature[4] === 'analytics') {
+                    $("#publishing_button").addClass("active");
+                    $("#comepetitor_analysis").addClass("active");
+                    $("#comepetitor_analysis2").addClass("active");
+                } else if (feature[5] === 'imgur') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#imgur_button").addClass("active");
+                } else if (feature[5] === 'flickr') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#flickr_button").addClass("active");
+                } else if (feature[5] === 'dailymotion') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#dailymotion_button").addClass("active");
+                } else if (feature[5] === 'newsapi') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#newsApi_button").addClass("active");
+                } else if (feature[5] === 'pixabay') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#pixabay_button").addClass("active");
+                } else if (feature[5] === 'giphy') {
+                    $("#content_stdudio_btn").addClass("active");
+                    $("#giphy_button").addClass("active");
+                } else if (feature[4] === 'automated-rss-feeds') {
+                    $("#autoMated_Rss_feeds_btn").addClass("active");
+                    $("#automated_rss_feeds").addClass("active");
+                } else if (feature[4] === 'rss-feeds-article') {
+                    $("#autoMated_Rss_feeds_btn").addClass("active");
+                    $("#posted_rss_feeds").addClass("active");
+                } else if (feature[4] === 'rss-feeds') {
+                    $("#autoMated_Rss_feeds_btn").addClass("active");
+                    $("#rss_feeds").addClass("active");
+                } else if (feature[4] === 'twitter-subscription') {
+                    $("#discovery2").addClass("active");
+                    $("#search_Button").addClass("active");
+                    $("#twitter_subscription").addClass("active");
+                }
 
             }
         </script>

@@ -29,4 +29,12 @@ class createBoards extends FormRequest
         return true;
     }
 
+    public function messages()
+    {
+        return [
+            'boardname.max' => 'The Board Name may not be greater than 32 characters',
+            'boardname.min' => 'The Board Name may not be lesser than 2 characters',
+        ];
+    }
+
 }

@@ -40,8 +40,7 @@
                                         <option selected value="failed"> Sorry some error ,occurred please reload page
                                         </option>
                                     @elseif($message=== 'No facebook Accounts added yet!')
-                                        <option selected value="failed">No Facebook account added yet! or Account has
-                                            locked
+                                        <option selected value="failed">Currently no Facebook Account has been added yet for this team or Account has been locked
                                         </option>
                                     @else
                                         <option selected value="failed"> {{$message}}
@@ -127,13 +126,6 @@
                                                         </div>
                                                     </div>
                                                     <!-- end:account star rating -->
-
-                                                    <div class="mt-2">
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                           onclick="return false" id="chatDivButton"
-                                                           title="Coming soon">Chat</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <!--end::User-->
@@ -175,7 +167,7 @@
                                             <div class="symbol symbol-150">
                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
-                                            <h6>Currently no Facebook Account has been added for this team</h6>
+                                            <h6>Currently no Facebook  Account has been added yet for this team or Account has been locked</h6>
                                         </div>
                                     @endif
                                 @elseif($message=== 'falied')
@@ -197,12 +189,6 @@
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <div class="card-body" id="facebookFeeds">
                             @if(count($accounts)>0)
@@ -510,7 +496,7 @@
                                                                     <div class="symbol symbol-150">
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
-                                                                    <h6> Currently no Facebook Feeds has found for this
+                                                                    <h6> Currently no Facebook Feeds has been found for this
                                                                         Account</h6>
                                                                 </div>
                                                             @endif
@@ -528,9 +514,9 @@
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
                                                                     <h6>
-                                                                        Currently no Facebook Account has been added for
+                                                                        Currently no Facebook Account has  been added for
                                                                         this
-                                                                        team</h6>
+                                                                        team yet or Account has been locked</h6>
                                                                 </div>
                                                             @endif
                                                         </div>
@@ -676,10 +662,6 @@
                                         '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                                         '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                                     append += '</div>\n' +
-                                        '</div>\n' +
-                                        '<div class="mt-2">\n';
-                                    append += '<a href="javascript:;"\n' +
-                                        'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
                                         '</div>\n' +
                                         '</div>'
                                     $('#facebookProfileDiv').append(append);
@@ -1300,12 +1282,6 @@
                                         });
                                     }
 
-                                } else if (response.data.code === 400) {
-                                    $('#facebookFeeds').append('<div style="color: Green;text-align:center;">\n' +
-                                        response.data.error +
-                                        '</div>');
-                                } else {
-                                    $('#facebookFeeds').append(' <div style="color: Green;text-align:center;">Some error occured can get feeds</div>');
                                 }
                             }
                         });
@@ -1409,6 +1385,9 @@
                      * ! Do not change this function without referring API format of getting the faecbook feeds.
                      */
                     function call(data) {
+                        $(function() {
+                            $('body').scrollTop(0);
+                        });
                         let accountsData = data.value;
                         let accountsArray = accountsData.split(" ");
                         accounId = accountsArray[0], accountType = accountsArray[1];

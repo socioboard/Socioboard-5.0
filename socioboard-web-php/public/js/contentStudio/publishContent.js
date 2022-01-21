@@ -18,11 +18,11 @@ toastr.options = {
 iterator = 0;
 $('#account_name').tooltip();
 $('#twitter-tab-preview, #facebook-tab-preview, #linkedin-tab-preview').tooltip();
-let twitterAccountsIds = $("#twitterAccountsIds").data('list');
-let facebookAccountsIds = $("#facebookAccountsIds").data('list');
-let linkedinAccountsIds = $("#linkedinAccountsIds").data('list');
-let instagramAccountsIds = $("#instagramAccountsIds").data('list');
-let tumblrAccountsIds = $("#tumblrAccountsIds").data('list');
+let twitterAccountsIds = ($("#twitterAccountsIds").data('list')) ? $("#twitterAccountsIds").data('list') : [];
+let facebookAccountsIds = $("#facebookAccountsIds").data('list') ? $("#facebookAccountsIds").data('list') : [];
+let linkedinAccountsIds = $("#linkedinAccountsIds").data('list') ? $("#linkedinAccountsIds").data('list') : [];
+let instagramAccountsIds = $("#instagramAccountsIds").data('list') ? $("#instagramAccountsIds").data('list') : [];
+let tumblrAccountsIds = $("#tumblrAccountsIds").data('list') ? $("#tumblrAccountsIds").data('list') : [] ;
 let selectedAccountIds = ($("#selectedAccountIds").data('list')) ? $("#selectedAccountIds").data('list') : [];
 selectedAccountIds = selectedAccountIds.map(x => +x);
 let twitter = 0;
@@ -186,6 +186,9 @@ $(document.body).on('click', '.check_social_account', function (e) {
 
 
 $(document).ready(function () {
+    $('.info-list .nav-link').on('click', function(){
+        $('.info-list').find('.active').removeClass('active');
+    })
     $('body').on('click', '.publishContentItemShareBtn', function (e) {
         e.preventDefault();
         publishOrFeeds = 1;
@@ -277,9 +280,16 @@ $(document).ready(function () {
                     data.data.map(element => {
                         toastr.error('Daily limit of posting for account ' + element.first_name + ' is exceeded');
                     })
-                } else {
+                } else if (data.status === "success"){
                     toastr.success(data.message);
+                    location.reload();
+                } else if(data.status === "error"){
+                    toastr.error(data.error)
                 }
+                else {
+                    toastr.error(data.error);
+                }
+
                 if (data.returnto == "1") {
                     window.location.href = "/calendar-view";
                 } else if (data.type_text == "socioQueue") {
@@ -289,7 +299,6 @@ $(document).ready(function () {
             error: function (error) {
                 btn.html(btnText);
                 btn.removeAttr('disabled');
-
                 if (error.status === 422) {
                     let errors = $.parseJSON(error.responseText);
                     $.each(errors, function (key, value) {
@@ -304,13 +313,10 @@ $(document).ready(function () {
                     if (error.responseJSON.error === "Cannot read property 'dayId' of null" || error.responseJSON.error === "Cannot read property 'length' of undefined") {
                         toastr.error("Schedule Type And Respective Date or Day, Timings fields required ");
                     } else {
-                        toastr.error(error.responseJSON.error.message);
+                        toastr.error(error.responseJSON.error);
                     }
-
                 } else {
-
                     toastr.error(error.message);
-
                 }
             },
         });

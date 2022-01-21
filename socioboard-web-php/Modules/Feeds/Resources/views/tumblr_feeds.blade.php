@@ -18,6 +18,8 @@
                 <!--begin::Profile-->
                 <!--begin::Row-->
                 <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@"; ?>
+                <?php $urls = []; ?>
+                <?php $imageCounts = 0; ?>
                 <div class="row" data-sticky-container>
                     <div class="col-xl-4">
                         <div class=" sticky" data-sticky="true" data-margin-top="180px" data-sticky-for="1023"
@@ -41,7 +43,7 @@
                                         <option selected value="failed"> Sorry some error ,occurred please reload page
                                         </option>
                                     @elseif($message=== 'No Tumblr Account has been  added yet!')
-                                        <option selected value="failed">No Tumblr account added yet! or Account has
+                                        <option selected value="failed">No Tumblr account has been added yet! for this team or Account has been
                                             locked
                                         </option>
                                     @else
@@ -67,14 +69,12 @@
                                                             class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
                                                         <div class="symbol-label"
                                                              style="background-image:url('{{$accounts[0]->profile_pic_url}}')"></div>
-                                                        <i class="symbol-badge bg-success"></i>
                                                     </div>
                                                     <div>
                                                         <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
                                                            class="font-weight-bolder font-size-h5 text-hover-primary"
                                                            target="_blank">
-                                                            {{$accounts[0]->first_name}}<i
-                                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>
+                                                            {{$accounts[0]->first_name}}
                                                         </a>
                                                         <div class="text-muted">
                                                             {{$accounts[0]->email}}
@@ -121,34 +121,27 @@
                                                         </div>
                                                         <!-- end:account star rating -->
 
-                                                        <div class="mt-2">
-                                                            <button href="javascript:;"
-                                                                    class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                                    onclick="return false" id="chatID"
-                                                                    title="Coming soon">Chat
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <!--end::User-->
 
                                                 <!--begin::Contact-->
-{{--                                                @if($feeds['data']->SocialAccountStats !== null)--}}
-{{--                                                    <div class="py-9">--}}
-{{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
-{{--                                                            <span class="font-weight-bold mr-2">Followers:</span>--}}
-{{--                                                            <a href="#"--}}
-{{--                                                               class="text-hover-primary"--}}
-{{--                                                               id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>--}}
-{{--                                                        </div>--}}
-{{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
-{{--                                                            <span class="font-weight-bold mr-2">Feeds:</span>--}}
-{{--                                                            <a href="#"--}}
-{{--                                                               class="text-hover-primary"--}}
-{{--                                                               id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                @endif--}}
+                                                {{--                                                @if($feeds['data']->SocialAccountStats !== null)--}}
+                                                {{--                                                    <div class="py-9">--}}
+                                                {{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
+                                                {{--                                                            <span class="font-weight-bold mr-2">Followers:</span>--}}
+                                                {{--                                                            <a href="#"--}}
+                                                {{--                                                               class="text-hover-primary"--}}
+                                                {{--                                                               id="follower_count">{{$feeds['data']->SocialAccountStats->follower_count}}</a>--}}
+                                                {{--                                                        </div>--}}
+                                                {{--                                                        <div class="d-flex align-items-center justify-content-between mb-2">--}}
+                                                {{--                                                            <span class="font-weight-bold mr-2">Feeds:</span>--}}
+                                                {{--                                                            <a href="#"--}}
+                                                {{--                                                               class="text-hover-primary"--}}
+                                                {{--                                                               id="feeds_count">{{$feeds['data']->SocialAccountStats->total_post_count}}</a>--}}
+                                                {{--                                                        </div>--}}
+                                                {{--                                                    </div>--}}
+                                                {{--                                                @endif--}}
                                             </div>
                                         @else
                                             <div style="color: Red;text-align:center;">
@@ -157,7 +150,7 @@
                                         @endif
                                     @else
                                         <div style="color: Green;text-align:center;">
-                                            Currently no Tumblr Account has been added for this team or Account has
+                                            Currently no Tumblr Account has been added yet! for this team or Account has been
                                             locked
                                         </div>
                                     @endif
@@ -166,7 +159,8 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>{{$message}}</h6>
+                                        <h6>Currently no Tumblr Account has been added yet! for this team or Account has been
+                                            locked</h6>
                                     </div>
                                 @elseif($message === 'failed')
                                     <div style="color: Red;text-align:center;">
@@ -177,7 +171,8 @@
                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                     </div>
                                     <div>
-                                        {{$message}} or Account has been locked
+                                        Currently no Tumblr Account has been added yet! for this team or Account has been
+                                        locked
                                     </div>
                                 @endif
                             </div>
@@ -212,6 +207,10 @@
                                                     <?php $date = new Datetime($data->publishedDate);
                                                     $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
                                                     ?>
+                                                    <?php $string_desc = trim(preg_replace('/\r|\n/', ' ', $data->captionText));
+                                                    preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $data->captionText, $urls);
+                                                    ?>
+                                                    <?php  $string_desc = str_replace("'", '', $string_desc);;?>
                                                     <div class="mb-5">
                                                         <!--begin::Container-->
                                                         <div>
@@ -241,57 +240,84 @@
                                                             <!--begin::Body-->
                                                             @if($data->permalink !== '')
                                                                 <div class="pt-4">
-                                                                @if($data->type === 'video')
-                                                                    <div
-                                                                            class="embed-responsive embed-responsive-16by9">
-                                                                        <iframe class="embed-responsive-item rounded"
-                                                                                src="{{$data->permalink}}"
-                                                                                allowfullscreen=""></iframe>
-                                                                    </div>
-                                                                @else
+                                                                    @if($data->type === 'video')
+                                                                        <div
+                                                                                class="embed-responsive embed-responsive-16by9">
+                                                                            <iframe class="embed-responsive-item rounded"
+                                                                                    src="{{$data->permalink}}"
+                                                                                    allowfullscreen=""></iframe>
+                                                                        </div>
+                                                                    @elseif($data->type === 'photo')
                                                                         <div class="">
                                                                             <img src="{{$data->permalink}}"
                                                                                  class="img-fluid"/>
                                                                         </div>
                                                                     @endif
 
-                                                                    <!--begin::Text-->
-                                                                        <p class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                            <?php echo preg_replace($regex, ' ', $data->captionText); ?>
+                                                                <!--begin::Text-->
+                                                                    @if(($data->type==='link'))
+                                                                        <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                            <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                        </strong>
+                                                                        <br>
+                                                                        <a href="{{$data->permalink}}"
+                                                                           class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                           target=_blank>
+                                                                            {{$data->permalink}}</a>
+                                                                        <br>
+                                                                    @else
+                                                                        <p class="font-size-lg font-weight-normal">
+                                                                            <?php echo preg_replace($regex, ' ', $string_desc); ?>
                                                                         </p>
-                                                                        @else
-                                                                            <div>
-                                                                                @if(isset($data->urls))
-                                                                                    @if(count($data->urls)>0)
-                                                                                        @foreach($data->urls as $urls)
-                                                                                            <strong class="font-size-lg font-weight-normal pt-5 mb-2">
-                                                                                                <?php echo preg_replace($regex, ' ', $data->captionText); ?>
-                                                                                            </strong>
-                                                                                            <br>
-                                                                                            <a href="{{$urls->url}}"
-                                                                                               class="font-size-lg font-weight-normal pt-5 mb-2"
-                                                                                               target=_blank>
-                                                                                                {{$urls->url}}</a>
-                                                                                            <br>
-                                                                                        @endforeach
-                                                                                    @else
-                                                                                        <p class="font-size-lg font-weight-normal">
-                                                                                            <?php echo preg_replace($regex, ' ', $data->captionText); ?>
-                                                                                        </p>
-                                                                                    @endif
-
-                                                                                @else
-                                                                                    <p class="font-size-lg font-weight-normal">
-                                                                                        <?php echo preg_replace($regex, ' ', $data->captionText); ?>
-                                                                                    </p>
+                                                                            @if(count($urls[0])>0)
+                                                                                @foreach($urls[0] as $data2)
+                                                                                    <a href="{{$data2}}"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                       target=_blank>
+                                                                                        {{$data2}}</a>
+                                                                                @endforeach
+                                                                            @endif
+                                                                    @endif
+                                                                    @else
+                                                                        <div>
+                                                                            @if(($data->type==='link'))
+                                                                                <strong class="font-size-lg font-weight-normal pt-5 mb-2">
+                                                                                    <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                                </strong>
+                                                                                @if(count($urls[0])>0)
+                                                                                    <a href="{{$urls[0][0]}}"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                       target=_blank>
+                                                                                        {{$urls[0][0]}}</a>
+                                                                                @endif
+                                                                                <br>
+                                                                                <a href="{{$data->permalink}}"
+                                                                                   class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                                   target=_blank>
+                                                                                    {{$data->permalink}}</a>
+                                                                                <br>
+                                                                            @else
+                                                                                <p class="font-size-lg font-weight-normal">
+                                                                                    <?php echo preg_replace($regex, ' ', $string_desc); ?>
+                                                                                </p>
+                                                                                @if(count($urls[0])>0)
+                                                                                    <a href="{{$urls[0][0]}}"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
+                                                                                       target=_blank>
+                                                                                        {{$urls[0][0]}}</a>
+                                                                                @endif
                                                                             @endif
                                                                             @endif
-                                                                            <!--end::Text-->
-                                                                                <div class="d-flex align-items-center">
-                                                                                    @if($data->permalink !== '')
-                                                                                        @if($data->type === 'video')
+                                                                        <!--end::Text-->
+                                                                            @if($data->type === 'link')
+                                                                                <br>
+                                                                            @endif
+                                                                            <div class="d-flex align-items-center">
+                                                                                @if($data->permalink !== '')
+                                                                                    @if($data->type === 'video')
+                                                                                        @if(count($urls[0])>0)
                                                                                             <a id="reSocioButton"
-                                                                                               onclick="resocioButton('{{$data->captionText}}','{{$data->permalink}}','video',null,null)"
+                                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->permalink}}','video',null,'{{$urls[0][0]}}')"
                                                                                                class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
@@ -299,26 +325,64 @@
                                                                                             </a>
                                                                                         @else
                                                                                             <a id="reSocioButton"
-                                                                                               onclick="resocioButton('{{$data->captionText}}','{{$data->permalink}}','image',null,null)"
+                                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->permalink}}','video',null,null)"
                                                                                                class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
                                                                                             </a>
                                                                                         @endif
-                                                                                    @else
+                                                                                    @elseif($data->type === 'photo')
+                                                                                        @if(count($urls[0])>0)
+                                                                                            <a id="reSocioButton"
+                                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->permalink}}','image',null,'{{$urls[0][0]}}')"
+                                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                            </span>Re-socio
+                                                                                            </a>
+                                                                                            @else
+                                                                                            <a id="reSocioButton"
+                                                                                               onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->permalink}}','image',null,null)"
+                                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                            </span>Re-socio
+                                                                                            </a>
+                                                                                            @endif
+                                                                                    @elseif($data->type === 'link')
                                                                                         <a id="reSocioButton"
-                                                                                           onclick="resocioButton('{{$data->captionText}}',null,null,null,null)"
+                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$data->permalink}}')"
                                                                                            class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
                                                                                         </a>
                                                                                     @endif
-                                                                                </div>
+                                                                                @else
+                                                                                    @if((count($urls[0])>0))
+                                                                                        <a id="reSocioButton"
+                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$urls[0][0]}}')"
+                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                            </span>Re-socio
+                                                                                        </a>
+                                                                                        @else
+                                                                                        <a id="reSocioButton"
+                                                                                           onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null)"
+                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
+                                                                    <i class="fas fa-pencil-alt"></i>
+                                                            </span>Re-socio
+                                                                                        </a>
+                                                                                        @endif
+
+                                                                                @endif
                                                                             </div>
-                                                                            <!--end::Body-->
-                                                                    </div>
+                                                                        </div>
+                                                                        <!--end::Body-->
+                                                                </div>
                                                         </div>
                                                         <!--end::Text-->
                                                         <hr>
@@ -349,7 +413,8 @@
                                                                 <div class="symbol symbol-150">
                                                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                 </div>
-                                                                <h6>{{$message}}</h6>
+                                                                <h6>Currently no Tumblr Account has been added yet! for this team or Account has been
+                                                                    locked</h6>
                                                             </div>
                                                         @elseif($message=== 'failed')
                                                             <div class="text-center"
@@ -470,26 +535,16 @@
                                                     'src="' + element.permalink + '"\n' +
                                                     'allowfullscreen=""></iframe>\n' +
                                                     '</div>';
-                                            } else {
+                                            } else if (element.type === 'photo') {
                                                 appendData += '<div class="">\n' +
                                                     '<img src="' + element.permalink + '" class="img-fluid"/>\n' +
                                                     '</div>';
+                                            } else if (element.type === 'link') {
+                                                appendData += '<a href="' + element.permalink + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.permalink +
+                                                    '</a><br>\n';
                                             }
-
                                             appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>'
                                         } else {
-                                            if (element.has("urls")) {
-                                                element.urls.map(urls => {
-                                                    appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n' +
-                                                        element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
-                                                        '</strong><br>\n' +
-                                                        '<a href="' + element.urls + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.urls +
-                                                        '</a><br>\n';
-                                                });
-                                            } else {
-                                                appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
-
-                                            }
                                             appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
                                         }
                                         appendData += '<div class="d-flex align-items-center">\n';
@@ -500,14 +555,19 @@
                                                     '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                     '<i class="fas fa-pencil-alt"></i>\n' +
                                                     '</span>Re-socio</a>\n';
-                                            } else {
+                                            } else if (element.type === 'link') {
+                                                appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',null,null,null,\'' + element.permalink + '\')"\n' +
+                                                    '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                    '</span>Re-socio</a>\n';
+                                            } else if (element.type === 'photo') {
                                                 appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
                                                     'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',\'' + element.permalink + '\',\'' + 'image' + '\',null,null)"\n' +
                                                     '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                     '<i class="fas fa-pencil-alt"></i>\n' +
                                                     '</span>Re-socio</a>\n';
                                             }
-
                                         } else {
                                             appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
                                                 'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',null,null,null,null)"\n' +
@@ -578,13 +638,11 @@
                                     'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                                     '<div class="symbol-label"\n' +
                                     'style="background-image:url(' + response.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
-                                    '<i class="symbol-badge bg-success"></i>\n' +
                                     '</div><div>\n' +
                                     '<a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
                                     'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                     'target="_blank">\n' + response.data.socialAccountDetails.first_name +
-                                    '<i\n' +
-                                    'class="flaticon2-correct text-primary icon-md ml-2"></i></a>\n' +
+                                    '</a>\n' +
                                     '<div class="rating-css">\n' +
                                     '<div class="star-icon">\n';
                                 (response.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
@@ -602,17 +660,19 @@
                                 (response.data.socialAccountDetails.rating === 5) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
-                                append += '</div></div>\n' +
-                                    '<div class="mt-2"><a href="#"class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
-                                    '</div>\</div>';
                                 $('#twitterProfileDiv').append(append);
                                 $('#follower_count').html(response.data.SocialAccountStats.follower_count);
                                 $('#feeds_count').html(response.data.SocialAccountStats.total_post_count);
                                 let appendData = '';
+                                let urlsFromDesc2 = '';
                                 $(".spinner-border").css("display", "none");
                                 feedsLength = response.data.feeds.length;
                                 if (feedsLength !== 0) {
                                     response.data.feeds.map(element => {
+                                        urlsFromDesc2 = '';
+                                        urlsFromDesc2 = getUrlsFromDesc(element.captionText);
+                                        let desc = element.captionText.replace(/(\r\n|\n|\r)/gm, "");
+                                        desc = desc.replace("'", '');
                                         let createdDate = new Date(element.publishedDate),
                                             published = String(createdDate).substring(0, 25);
                                         appendData = '<div class="mb-5"><div>\n' +
@@ -635,36 +695,94 @@
                                                     'src="' + element.permalink + '"\n' +
                                                     'allowfullscreen=""></iframe>\n' +
                                                     '</div>';
-                                            } else {
+                                            } else if (element.type === 'photo') {
                                                 appendData += '<div class="">\n' +
                                                     '<img src="' + element.permalink + '" class="img-fluid"/>\n' +
                                                     '</div>';
+                                            } else if (element.type === 'link') {
+                                                appendData += '<a href="' + element.permalink + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.permalink +
+                                                    '</a><br>\n';
                                             }
-                                            appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>'
+                                            if (urlsFromDesc2 !== null) {
+                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                    + element.captionText.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                    '</strong><br>\n' +
+                                                    '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                    '</a>';
+                                            } else {
+                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.captionText.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                    '</p>';
+                                            }
                                         } else {
-                                            appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.captionText.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
-                                        }
+                                            if (urlsFromDesc2 !== null) {
+                                                appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                    + element.captionText.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                    '</strong><br>\n' +
+                                                    '<a href="' + urlsFromDesc2 + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc2 +
+                                                    '</a>';
+                                            } else {
+                                                appendData += '<p class="font-size-lg font-weight-normal pt-5 mb-2">\n' + element.captionText.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
+                                                    '</p>';
+                                            }                                        }
                                         appendData += '<div class="d-flex align-items-center">\n';
                                         if (element.permalink !== '') {
                                             if (element.type === 'video') {
+                                                if (urlsFromDesc2 !== null) {
+                                                    appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.permalink + '\',\'' + 'video' + '\',null,\'' + urlsFromDesc2[0]
+                                                        + '\')"\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
+                                                }
+                                                else{
+                                                    appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.permalink + '\',\'' + 'video' + '\',null,null)"\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
+                                                }
+
+                                            } else if (element.type === 'photo') {
+                                                if (urlsFromDesc2 !== null) {
+                                                    appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.permalink + '\',\'' + 'image' + '\',null,\'' + urlsFromDesc2[0]
+                                                        + '\')"\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
+                                                }else{
+                                                    appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.permalink + '\',\'' + 'image' + '\',null,null)"\n' +
+                                                        '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                        '<i class="fas fa-pencil-alt"></i>\n' +
+                                                        '</span>Re-socio</a>\n';
+                                                }
+
+                                            } else if (element.type === 'link') {
                                                 appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
-                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',\'' + element.permalink + '\',\'' + 'video' + '\',null,null)"\n' +
-                                                    '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                    '<i class="fas fa-pencil-alt"></i>\n' +
-                                                    '</span>Re-socio</a>\n';
-                                            } else {
-                                                appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
-                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',\'' + element.permalink + '\',\'' + 'image' + '\',null,null)"\n' +
+                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.permalink + '\')"\n' +
                                                     '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                     '<i class="fas fa-pencil-alt"></i>\n' +
                                                     '</span>Re-socio</a>\n';
                                             }
                                         } else {
-                                            appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.captionText + '\',null,null,null,null)"\n' +
-                                                '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
-                                                '<i class="fas fa-pencil-alt"></i>\n' +
-                                                '</span>Re-socio</a>\n';
+                                            if (urlsFromDesc2 !== null) {
+                                                appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
+                                                    + '\')"\n' +
+                                                    '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                    '</span>Re-socio</a>\n';
+                                            }
+                                            else{
+                                                appendData += '<a id="reSocioButton" value="' + element.captionText + '" href="javascript:;"\n' +
+                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                    '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
+                                                    '<i class="fas fa-pencil-alt"></i>\n' +
+                                                    '</span>Re-socio</a>\n';
+                                            }
+
                                         }
                                         appendData += '<hr>';
                                         $('#tumblrFeeds').append(appendData);
@@ -746,6 +864,10 @@
                  * ! Do not change this function without referring API format of getting the twitter feeds.
                  */
                 function call(data) {
+                    $(function() {
+                        $('body').scrollTop(0);
+                    });
+                    pageId = 2;
                     accounId = data.value;//accountid of particular twitter account from dropdown
                     getTumblerFeeds(data.value, 1);
                 }
@@ -829,6 +951,13 @@
                         },
                     });
                 };
+
+                function getUrlsFromDesc(text) {
+                    let replyText = text;
+                    let urls = replyText.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/igm
+                    );
+                    return urls;
+                }
                 $('#chatID').tootip();
             </script>
 @endsection

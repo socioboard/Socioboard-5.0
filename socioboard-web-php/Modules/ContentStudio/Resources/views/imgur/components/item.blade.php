@@ -38,7 +38,7 @@ data-api="imgur">
         <h5 class="card-title">{{ $item->title }}</h5>
         <p class="card-text">{{ $item->description }}</p>
         <div class="d-flex justify-content-center">
-            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> One Click</a>
             <form action="{{ route('publish_content.scheduling')  }}" method="POST">
                 @csrf
                 <input type="hidden" name="mediaUrl" value="{{ $mediaUrl }}">

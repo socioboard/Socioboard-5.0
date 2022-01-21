@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Modules\User\helper;
 use Modules\User\Http\Requests\SignUp;
+use Modules\User\Http\Requests\AppsumoRegister;
 
 
 class RegistrationController extends Controller
@@ -28,7 +29,7 @@ class RegistrationController extends Controller
         $apiUrl = ApiConfig::get('/register');
         try {
             $phone = explode("-", $requestFields['phone']);
-            $otp = $requestFields['otp'];
+//            $otp = $requestFields['otp'];
             $parameters = array(
                 'username' => $requestFields['userName'],
                 'email' => $requestFields['email'],
@@ -46,21 +47,7 @@ class RegistrationController extends Controller
             try {
                 $mobileno = $requestFields['phone'];
                 $mobileCode = "%2B" . $requestFields['code'];
-                $OTP = $otp;
-                $apiUrl2 = ApiConfig::get('/otp/verify-otp-phone-number?countryCode=' . $mobileCode . '&phoneNumber=' . $mobileno . '&otp=' . $OTP);
-                $response2 = $this->helper->postApiCall('post', $apiUrl2);
-                if ($response2['code'] === 200) {
-                    if ($response2['data']['status'] === 'pending') {
-                        $response['code'] = 400;
-                        $response['message'] = 'failed';
-                        $response['error'] = 'You have entered Wrong or expired OTP';
-                        return $response;
-                    } else {
                         $response = $this->helper->postApiCall('post', $apiUrl, $parameters);
-                    }
-                } else {
-                    return $this->helper->responseHandlerWithArray($response2);
-                }
             } catch (Exception $e) {
                 return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), ' signUp() {RegistrationController}');
             }
@@ -88,6 +75,32 @@ class RegistrationController extends Controller
             }
         } catch (Exception $e) {
             return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), ' verify() {RegistrationController}');
+        }
+    }
+
+    public function appsumoRegister($email){
+        return view("user::appsumo",compact('email'));
+    }
+
+    public function saveAppsumo(AppsumoRegister $requeest)
+    {
+        $apiUrl = ApiConfig::get('/register');
+        $parameters = array(
+            'username' => $requeest['userName'],
+            'email' => $requeest['email'],
+            'password' => md5($requeest['password']),
+            'firstName' => $requeest['firstName'],
+            'lastName' => $requeest['lastName'],
+            'rfd' => $requeest['rfd'],
+            'kwd' => $requeest['kwd'],
+            'med' => $requeest['med'],
+            'src' => $requeest['src'],
+        );
+        try {
+            $response = $this->helper->postApiCall('post', $apiUrl, $parameters);
+            return $this->helper->responseHandlerWithArray($response);
+        } catch (Exception $e) {
+            return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), ' saveAppsumo() {RegistrationController}');
         }
     }
 }

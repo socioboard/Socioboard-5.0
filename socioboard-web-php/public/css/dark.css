@@ -8,6 +8,7 @@
     --orange-light-color: #ff5d3d;
     --orange-dark-color: #e04022;
     --blue-dark-color: #104399;
+    --blue-light-color: #3699ff;
 
     /* begin:dark code */
     --primary-color: #191a1b;
@@ -32,6 +33,8 @@
     --shadow-light: #1e2020;
     --shadow-dark: #282c2c;
     --scrollbar-bg: var(--primary-color);
+    --blue-light-color: #3699ff;
+    --text-dark-blue: #244fd2;
 }
 /* end:dark code */
 /* begin:light code */
@@ -58,6 +61,7 @@
     --shadow-light: #c2c2c2;
     --shadow-dark: #ffffff;
     --scrollbar-bg: var(--primary-color);
+    --text-dark-blue: #244fd2;
 }
 /* end: light code */
 
@@ -482,7 +486,7 @@ i {
 }
 .bootstrap-select .dropdown-menu.inner > li.selected > a .text,
 .bootstrap-select .dropdown-menu.inner > li:hover > a .text {
-    color: var(--blue-dark-color);
+    color: var(--blue-light-color);
 }
 
 .bootstrap-select .dropdown-menu {
@@ -551,7 +555,10 @@ i {
             var(--orange-light-color),
             var(--orange-dark-color)
     );
-    color: var(--font-color);
+    color: #fff;
+}
+.btn:not(:disabled):not(.disabled).active i {
+    color: #fff;
 }
 /* end:button */
 
@@ -1613,7 +1620,7 @@ html[data-theme='dark'] .assistant-right-sidebar {
     padding-left: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
-    color: #ffa800;
+    color: var(--blue-light-color);
 }
 .schedule-social-tabs li + li {
     padding-top: 5px;
@@ -1720,20 +1727,10 @@ html[data-theme='dark'] .assistant-right-sidebar {
 .medium-story {
     padding-top: 0px !important;
 }
-.medium-feeds-section {
-    display: flex;
-    align-items: center;
-}
-.medium-feeds-section a .profile-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 15px;
-}
-.medium-story .card-img {
-    border-radius: 10px;
-}
 
+.medium-story .card-columns{
+    column-count:4;
+}
 .imagelibrary-card {
     margin-bottom: 25px !important;
 }
@@ -1746,6 +1743,9 @@ html[data-theme='dark'] .assistant-right-sidebar {
         position: fixed;
         height: calc(100vh - 220px);
         width: calc(50% - 45px);
+    }
+    .info-list .accounts-border {
+        border-right: 1px solid var(--font-color);
     }
 }
 .rss-tags .btn {
@@ -1763,11 +1763,15 @@ html[data-theme='dark'] .assistant-right-sidebar {
 .link-shortening-text .fa-check-circle {
     color: #3699ff;
 }
-
+.link-shortening .bg-colored {
+    background-color:var(--primary-color);
+}
 .login-social-btns .btn {
     min-width:300px;
 }
-
+.text-dark-blue {
+    color: var(--text-dark-blue);
+}
 .image-monero {
     position: absolute;
     right: 0px;
@@ -1919,14 +1923,21 @@ html[data-theme='dark'] .assistant-right-sidebar {
     height: 600px;
 }
 
-.hashtags-by-country {
-    overflow-y: auto;
-    height: 200px;
-}
+/*.hashtags-by-country {*/
+/*    overflow-y: auto;*/
+/*    height: 200px;*/
+/*}*/
 
 .hashtags-by-country {
-    height: 120px;
+    height: 150px;
     overflow: auto;
+}
+.search-hastags {
+    border: 1px solid #000;
+    border-radius: 10px;
+    margin: 0px 10px;
+    padding: 10px !important;
+    text-align: center;
 }
 
 ::-webkit-scrollbar:horizontal {
@@ -1936,17 +1947,11 @@ html[data-theme='dark'] .assistant-right-sidebar {
     width: 8px;
 }
 
-.pinterest-feeds .card-img {
-    height: 340px;
-}
 
 .view-board-pic img {
     width: 60px;
 }
 
-.pinterest-feeds {
-    height: 100%;
-}
 
 .blackfriday-modal {
     background-color: #000;
@@ -2047,4 +2052,135 @@ html[data-theme='dark'] .assistant-right-sidebar {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.account-dropdown-section {
+    width:235px !important;
+}
+.account-dropdown-section .label.label-xl.label-inline {
+    width:100%;
+}
+.social-accounts-dev .profile-name{
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+.post-count {
+    display: block;
+    font-size: 2rem;
+}
+.card.card-custom.appsumo-plan {
+    background-image: none;
+    background-color: #8835a7;
+    color:#fff;
+}
+.card.card-custom.appsumo-plan .fa-clock{
+color:#fff;
+}
+
+.kanban-container .label-inline {
+    width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+.link-shortening-label span {
+    background-color: #fff;
+    border: #b5b5c3 solid 1px;
+}
+
+.appsumo-signup .SB-log {
+    width: 180px;
+}
+.appsumo-banner .appsumo {
+    width: 600px;
+    border-radius: 30px;
+    border: 1px solid #e4e4e4;
+}
+
+.image-input.profile-pic {
+    background-size: 110px 110px;
+    background-position: center center;
+}
+
+.header-menu .menu-nav li a.active,
+.header-menu .menu-submenu .menu-subnav li a.active,
+.header-menu .menu-submenu .menu-subnav li a.active:hover,
+.header-menu .menu-submenu .menu-subnav li.menu-item:hover a.active{
+    background-color:#ff5d3d !important;
+    color: #fff;
+}
+.header-menu .menu-nav > .menu-item > .menu-link.active .menu-text,
+.header-menu .menu-nav > .menu-item .menu-submenu > .menu-subnav > .menu-item > .menu-link.active .menu-text,
+.header-menu .menu-nav > .menu-item:hover > .menu-link.active.active .menu-text,
+.header-menu .menu-submenu .menu-subnav li.menu-item:hover a.active .menu-text{
+    color: #fff !important;
+}
+.appsumo-signup,
+.appsumo-title {
+    color: var(--dark-grey);
+}
+
+.link-shorting-btn {
+    white-space: nowrap;
+}
+
+.competitive-list .compitator-list-container {
+    position:relative;
+    padding-right:60px;
+}
+.competitive-list .competitive-list-div {
+    position:absolute;
+    top:0px;
+    right:0px;
+}
+
+.youtube-publish-btns span {
+    background-color: #fff;
+    flex: none;
+}
+
+.auto-email-report .select2-search__field{
+    color:#fff;
+}
+
+#scheduleViewModal .modal-content {
+    max-width: 350px;
+}
+
+.subheader ::-webkit-input-placeholder {
+    font-size: 16px;
+    color: var(--font-color);
+}
+
+.date-format {
+    padding-left: 10px;
+}
+.profile-personal-info a#user_name_append,
+.profile-personal-info#location_append,
+a.profile-personal-info{
+    width:150px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display: inline-block;
+}
+
+.schedule-div-block span {
+    margin-right: 10px;
+    background-color: var(--white);
+    border: #b5b5c3 solid 1px;
+}
+
+#sb_calendar .fc-time-grid-event,
+#sb_calendar .fc-day-grid-event{
+    cursor: pointer;
+}
+#sb_calendar .fc-content {
+    padding-left: 5px;
+}
+#sb_calendar .fc-content:before {
+    background: none;
 }

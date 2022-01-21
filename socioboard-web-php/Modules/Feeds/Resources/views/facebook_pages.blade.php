@@ -40,7 +40,7 @@
                                         <option selected value="failed"> Sorry some error ,occurred please reload page
                                         </option>
                                     @elseif($message=== 'No facebook pages added yet!')
-                                        <option selected value="failed">No Facebook Pages added yet! or Account pages
+                                        <option selected value="failed">No Facebook Pages added yet! or Facebook Account pages
                                             has
                                             locked
                                         </option>
@@ -66,7 +66,6 @@
                                                         class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
                                                     <div class="symbol-label"
                                                          style="background-image:url('{{$accounts[0]->profile_pic_url}}')"></div>
-                                                    <i class="symbol-badge bg-success"></i>
                                                 </div>
                                                 <div>
                                                     @if($accounts[0]->account_type === 2)
@@ -128,13 +127,6 @@
                                                         </div>
                                                     </div>
                                                     <!-- end:account star rating -->
-
-                                                    <div class="mt-2">
-                                                        <a href="javascript:;"
-                                                           class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                           onclick="return false" id="chatDivButton"
-                                                           title="Coming soon">Chat</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <!--end::User-->
@@ -144,7 +136,7 @@
                                                 @if($feeds['code'] === 200)
                                                     @if($accounts[0]->account_type === 2)
                                                         <div class="d-flex align-items-center justify-content-between mb-2">
-                                                            <span class="font-weight-bold mr-2">like Counts:</span>
+                                                            <span class="font-weight-bold mr-2">Page Like Count:</span>
                                                             <a href="javascript:;"
                                                                class=" text-hover-primary"
                                                                id="like_count">{{$feeds['data']->SocialAccountStats->total_like_count}}</a>
@@ -176,7 +168,7 @@
                                             <div class="symbol symbol-150">
                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
-                                            <h6>Currently no Facebook Account has been added for this team</h6>
+                                            <h6>Currently no Facebook Account pages has been added for this team yet or page accounts has been locked</h6>
                                         </div>
                                     @endif
                                 @elseif($message=== 'falied')
@@ -198,12 +190,6 @@
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <div class="card-body" id="facebookFeeds">
                             @if(count($accounts)>0)
@@ -330,17 +316,10 @@
 
                                                                                     <!--end::Text-->
                                                                                         <!--begin::Action-->
+                                                                                            <br>
+                                                                                            <br>
                                                                                         <div class="d-flex align-items-center">
                                                                                             @if($accounts[0]->account_type === 2)
-                                                                                                <a href="javascript:;"
-                                                                                                   class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">
-                                                                <span
-                                                                        class="svg-icon svg-icon-md svg-icon-primary pr-2">
-                                                                        <i class="fas fa-comments"></i>
-                                                                    {{$data->commentCount}}
-                                                                </span>
-                                                                                                </a>
-
                                                                                                 @if($data->isLiked === false)
                                                                                                     <a href="javascript:;"
                                                                                                        data-value="{{$data->postId}}"
@@ -357,7 +336,7 @@
                                                                                                     <a href="javascript:;"
                                                                                                        data-value="{{$data->postId}}"
                                                                                                        class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
-                                                                                                       onclick="disLikeFeed('{{$data->postId}}')">
+                                                                                                       >
                                                                 <span data-value="{{$data->postId}}"
                                                                       class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"
                                                                       like-count="{{$data->likeCount}}">
@@ -511,7 +490,7 @@
                                                                     <div class="symbol symbol-150">
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
-                                                                    <h6> Currently no Facebook Feeds has found for this
+                                                                    <h6> Currently no Facebook Feeds has been found for this
                                                                         Account</h6>
                                                                 </div>
                                                             @endif
@@ -529,9 +508,7 @@
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
                                                                     <h6>
-                                                                        Currently no Facebook Account has been added for
-                                                                        this
-                                                                        team</h6>
+                                                                        Currently no Facebook Page Account has been added for this team or Account has been locked.</h6>
                                                                 </div>
                                                             @endif
                                                         </div>
@@ -631,30 +608,23 @@
                                         'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                                         '<div class="symbol-label"\n' +
                                         'style="background-image:url(' + response.data.data.socialAccountDetails.profile_pic_url + ')"></div>\n' +
-                                        '<i class="symbol-badge bg-success"></i>\n' +
                                         '</div>\n' +
                                         '<div>\n';
                                     if (response.data.data.socialAccountDetails.account_type === 2) {
                                         append += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"  target="_blank"\n' +
                                             'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                             '>\n' + response.data.data.socialAccountDetails.first_name +
-                                            '<i\n' +
-                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                                             '</a>\n';
                                     } else if (response.data.data.socialAccountDetails.account_type === 1) {
                                         append += '<a \n' +
                                             'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                             '>\n' + response.data.data.socialAccountDetails.first_name +
-                                            '<i\n' +
-                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                                             '</a>\n';
 
                                     } else {
                                         append += '<a href="' + response.data.data.socialAccountDetails.profile_url + '"  target="_blank"\n' +
                                             'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                             '>\n' + response.data.data.socialAccountDetails.first_name +
-                                            '<i\n' +
-                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                                             '</a>\n';
                                     }
                                     append += '<div class="text-muted">\n' + response.data.data.socialAccountDetails.user_name +
@@ -678,10 +648,6 @@
                                         '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                                     append += '</div>\n' +
                                         '</div>\n' +
-                                        '<div class="mt-2">\n';
-                                    append += '<a href="javascript:;"\n' +
-                                        'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
-                                        '</div>\n' +
                                         '</div>'
                                     $('#facebookProfileDiv').append(append);
                                     if (response.data.data.socialAccountDetails.account_type === 1) {
@@ -698,7 +664,7 @@
                                         $('#follower_counts-div').append(appendData2);
                                     } else if (response.data.data.socialAccountDetails.account_type === 2) {
                                         appendData2 = '<div class="d-flex align-items-center justify-content-between mb-2">\n' +
-                                            '<span class="font-weight-bold mr-2">like Counts:</span>\n' +
+                                            '<span class="font-weight-bold mr-2">Page Like Count:</span>\n' +
                                             '<a href="javascript:;"\n' +
                                             'class=" text-hover-primary"\n' +
                                             'id="like_count">' + response.data.data.SocialAccountStats.total_like_count + '</a>\n' +
@@ -765,7 +731,7 @@
                                                     } else if (element.postType === 'album') {
                                                         appendData += '<div class="pt-4"><div id="image-gallery' + num + '"></div>';
                                                         if (urlsFromDesc !== null) {
-                                                            appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
+                                                                 appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
                                                                 + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                                 '</strong><br>\n' +
                                                                 '<a href="' + urlsFromDesc + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urlsFromDesc +
@@ -790,7 +756,7 @@
                                                                 element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                                 '</strong><br>\n' +
                                                                 '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + element.sharedUrl +
-                                                                '</a><br>\n';
+                                                                '</a>\n';
                                                         } else {
                                                             if (urlsFromDesc !== null) {
                                                                 appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
@@ -811,7 +777,7 @@
                                                             element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                             '</strong><br>\n' +
                                                             '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + element.sharedUrl +
-                                                            '</a><br>\n';
+                                                            '</a>\n';
                                                     } else {
                                                         if (urlsFromDesc !== null) {
                                                             appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
@@ -825,15 +791,9 @@
                                                         }
                                                     }
                                                 }
+                                                appendData += '<br><br>';
                                                 appendData += '<div class="d-flex align-items-center">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
-                                                    appendData += '<a href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                                        '<i class="fas fa-comments"></i>\n' +
-                                                        element.commentCount +
-                                                        '</span></a>\n';
                                                     if (element.isLiked === false) {
                                                         appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
                                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
@@ -846,7 +806,7 @@
                                                     } else {
                                                         appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
                                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                            'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
+                                                            '>\n' +
                                                             '<span data-value="' + element.postId + '"\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
                                                             'like-count="' + element.likeCount + '">\n' +
@@ -960,9 +920,6 @@
                                             num++;
                                         });
                                     } else {
-                                        undfinedFeeds++;
-                                    }
-                                    if (undfinedFeeds === feedsLength) {
                                         $('#facebookFeeds').append('<div class="text-center">\n' +
                                             '<div class="symbol symbol-150">\n' +
                                             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
@@ -1097,7 +1054,7 @@
                                                                 element.description +
                                                                 '</strong><br>\n' +
                                                                 '<a href="' + element.sharedUrl + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + element.sharedUrl +
-                                                                '</a><br>\n';
+                                                                '</a>\n';
                                                         } else {
                                                             if (urlsFromDesc2 !== null) {
                                                                 appendData += '<strong class="font-size-lg font-weight-normal pt-5 mb-2">\n'
@@ -1123,15 +1080,9 @@
                                                             '</p>';
                                                     }
                                                 }
+                                                appendData += '<br><br>';
                                                 appendData += '<div class="d-flex align-items-center">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
-                                                    appendData += '<a href="javascript:;"\n' +
-                                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                                        '<span\n' +
-                                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                                        '<i class="fas fa-comments"></i>\n' +
-                                                        element.commentCount +
-                                                        '</span></a>\n';
                                                     if (element.isLiked === false) {
                                                         appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
                                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
@@ -1144,7 +1095,7 @@
                                                     } else {
                                                         appendData += '<a href="javascript:;" data-value="' + element.postId + '"\n' +
                                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
-                                                            'onclick="disLikeFeed(\'' + element.postId + '\')">\n' +
+                                                            '>\n' +
                                                             '<span data-value="' + element.postId + '"\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
                                                             'like-count="' + element.likeCount + '">\n' +
@@ -1333,59 +1284,12 @@
                                     }
                                 }
                             });
-                        } else {
-                            $("span[data-value='" + postID + "']").empty().append('<i class="fas fa-heart"></i>');
-                            let likecount = parseInt($("span[data-value='" + postID + "']").attr('like-count'));
-                            $("span[data-value='" + postID + "']").append(likecount);
-                            $("a[data-value='" + postID + "']").removeClass('btn-icon-danger');
-                            $("a[data-value='" + postID + "']").addClass('btn-hover-icon-danger');
-                            toastr.success('Successfully Disliked Feed');
+                        }else{
+                            toastr.error("This Post has been already Liked by you");
                         }
 
                     }
 
-                    /**
-                     * TODO we've to dislike the particular feed of faceboook.
-                     * This function is used for disliking  the particular feed of twitter.
-                     * @param {integer} postID - postID of feed.
-                     * ! Do not change this function without referring API format of disliking feed.
-                     */
-                    function disLikeFeed(postID) {
-                        if ($("a[data-value='" + postID + "']").hasClass("btn-icon-danger") === true) {
-                            $("span[data-value='" + postID + "']").empty().append('<i class="fas fa-heart"></i>');
-                            let likecount = parseInt($("span[data-value='" + postID + "']").attr('like-count'));
-                            $("span[data-value='" + postID + "']").append(likecount - 1);
-                            $("a[data-value='" + postID + "']").removeClass('btn-icon-danger');
-                            $("a[data-value='" + postID + "']").addClass('btn-hover-icon-danger');
-                        } else {
-                            $.ajax({
-                                type: 'post',
-                                url: '/like-fb-feed',
-                                data: {
-                                    postID, accounId
-                                },
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                },
-                                dataType: 'json',
-                                beforeSend: function () {
-                                },
-                                success: function (response) {
-                                    if (response.code === 200) {
-                                        $("span[data-value='" + postID + "']").empty().append('<i class="fas fa-heart"></i>');
-                                        let likecount = parseInt($("span[data-value='" + postID + "']").attr('like-count'));
-                                        $("span[data-value='" + postID + "']").append(likecount);
-                                        $("a[data-value='" + postID + "']").addClass('btn-icon-danger');
-                                        $("a[data-value='" + postID + "']").removeClass('btn-hover-icon-danger');
-                                    } else if (response.code === 400) {
-                                        toastr.error(response.error);
-                                    } else {
-                                        toastr.error('can not like feed ,some error occured');
-                                    }
-                                }
-                            });
-                        }
-                    }
 
                     let accountType;
 
@@ -1396,6 +1300,9 @@
                      * ! Do not change this function without referring API format of getting the faecbook feeds.
                      */
                     function call(data) {
+                        $(function() {
+                            $('body').scrollTop(0);
+                        });
                         let accountsData = data.value;
                         let accountsArray = accountsData.split(" ");
                         accounId = accountsArray[0], accountType = accountsArray[1];

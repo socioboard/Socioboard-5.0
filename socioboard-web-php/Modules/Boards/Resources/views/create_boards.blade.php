@@ -116,7 +116,7 @@
                         } else if (response.code === 400) {
                             toastr.error(response.error);
                         }else if (response.code === 401){
-                            toastr.error(response.message);
+                            toastr.error("Only alphanumeric values are allowed",response.message);
                         }else {
                             toastr.error(response.message, "error!");
                         }

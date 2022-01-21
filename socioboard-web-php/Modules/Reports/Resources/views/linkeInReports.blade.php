@@ -63,22 +63,26 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-6">
+                    <div class="col-xl-6" id="ss-linkedIn2">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Followers Stats</h3>
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-linkedIn_md6" class="ss addtcartclose"></span>
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                    <span node-id="ss-linkedIn2_md6" class="ss addtcartclose"></span>
                                 </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-linkedIn2_md6" style="
+    display: none;"></span>
                             </div>
+
+
                             <!--end::Header-->
 
 
                             <!--begin::Body-->
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">LinkedIn Page Followers Stats</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="followers-stats" class="card-rounded-bottom " style="height: 200px"></div>
@@ -97,11 +101,11 @@
 
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                        <i class="fas fa-users fa-2x text-success"></i>
-                                                                    </span>
+                                                    <span class="svg-icon svg-icon-lg svg-icon-primary">
+                                                        <i class="fas fa-user-plus fa-2x text-primary"></i>
+                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -121,10 +125,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-chart-line fa-2x text-primary"></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
+                                                                        <i class="fas fa-chart-line fa-2x text-success"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -175,22 +179,26 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-6" id="ss-linkedIn">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">LinkedIn Page Stats</h3>
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-linkedIn_md6" class="ss addtcartclose"></span>
                                 </div>
+                                <span class="spinner spinner-primary spinner-center" id="ss-linkedIn_md6" style="
+    display: none;"></span>
                             </div>
+
+
                             <!--end::Header-->
 
 
                             <!--begin::Body-->
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">LinkedIn Page Stats</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="post-report-stats" class="card-rounded-bottom "
@@ -209,7 +217,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-heart fa-2x text-primary"></i>
+                                                                        <i class="fas fa-thumbs-up fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -229,10 +237,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-chart-line fa-2x text-primary"></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
+                                                                        <i class="fas fa-user-tie fa-2x text-success"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -255,7 +263,7 @@
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                        <i class="fas fa-user-friends fa-2x text-warning"></i>
+                                                                        <i class="fas fa-chart-pie fa-2x text-warning"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -279,9 +287,9 @@
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
-                                                                        <i class="far fa-comment-alt text-danger fa-2x"></i>
-                                                                    </span>
+                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
+                                                        <i class="fas fa-comments text-danger fa-2x"></i>
+                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -297,10 +305,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-info mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                        <i class="fas fa-chart-line fa-2x text-success "></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-info">
+                                                                        <i class="fas fa-user-tag fa-2x text-info "></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -320,7 +328,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-check fa-2x text-primary"></i>
+                                                                        <i class="far fa-hand-point-up fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -373,7 +381,7 @@
             }
         }, function (start, end, label) {
             changeTeamResponseCalendar(start, end);
-            $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
+            $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
         // delete account
@@ -449,17 +457,6 @@
                         data: organicFollowers
                     }
                 ],
-                title: {
-                    text: 'LinkedIn',
-                    align: 'left',
-                    offsetY: 25,
-                    offsetX: 20
-                },
-                subtitle: {
-                    text: 'Statistics',
-                    offsetY: 55,
-                    offsetX: 20
-                },
                 markers: {
                     size: 6,
                     strokeWidth: 0,
@@ -620,17 +617,6 @@
                         data: clicks
                     }
                 ],
-                title: {
-                    text: 'LinkedIn',
-                    align: 'left',
-                    offsetY: 25,
-                    offsetX: 20
-                },
-                subtitle: {
-                    text: 'Statistics',
-                    offsetY: 55,
-                    offsetX: 20
-                },
                 markers: {
                     size: 6,
                     strokeWidth: 0,

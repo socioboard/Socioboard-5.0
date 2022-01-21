@@ -22,12 +22,12 @@
                         <div class="card card-custom gutter-b">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Pinterest Pins</h3>
+                                <h3 class="card-title font-weight-bolder">Pinterest Pins of Board  {{$boardName}}</h3>
                             </div>
                             <!--end::Header-->
                             <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@\n"; ?>
                             <div class="card-body medium-story" id="pinterestPins">
-                                <div class="row mt-7">
+                                <div class="card-columns">
                                     @if($message === 'success')
                                         <script>
                                             let feedsLength = <?php echo count($pins)  ?>;
@@ -35,33 +35,31 @@
                                             let boardId = <?php echo $boardId  ?>;
                                         </script>
                                         @foreach($pins as $data)
-                                            <div class="col-xl-3">
-                                                <div class="card pinterest-feeds">
-                                                    <div class="card-body px-3 py-3">
-                                                        <a href="{{$data->postUrl}}" target="_blank">
-                                                            <img src={{$data->mediaUrl}} alt="image"
-                                                                 class="img-fluid card-img">
-                                                        </a>
-                                                        <div class="mt-5">
-                                                            @if($data->captionText === '')
-                                                                <br>
-                                                            @endif
-                                                            <p class="mt-2">{{$data->captionText}}</p>
-                                                        </div>
-                                                        <div class="medium-feeds-section">
-                                                            <button data-toggle="tooltip" data-placement="top"
-                                                                    title="Re-socio" type="button" class="btn btn-sm"
-                                                                    onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->captionText); ?>','{{$data->mediaUrl}}','image',null,null)">
-                                                                <i class="fas fa-pencil-alt"></i> Re-socio
-                                                            </button>
-                                                        </div>
-
+                                            <div class="card pinterest-feeds">
+                                                <div class="card-body px-3 py-3">
+                                                    <a href="{{$data->postUrl}}" target="_blank">
+                                                        <img src={{$data->mediaUrl}} alt="image"
+                                                             class="img-fluid card-img">
+                                                    </a>
+                                                    <div class="mt-5">
+{{--                                                        @if($data->captionText === '')--}}
+{{--                                                            <br>--}}
+{{--                                                        @endif--}}
+                                                        <p class="mt-2">{{$data->captionText}}</p>
                                                     </div>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button data-toggle="tooltip" data-placement="top"
+                                                                title="Re-socio" type="button" class="btn btn-sm"
+                                                                onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->captionText); ?>','{{$data->mediaUrl}}','image',null,null)">
+                                                            <i class="fas fa-pencil-alt"></i> Re-socio
+                                                        </button>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         @endforeach
                                     @elseif($message === 'failed')
-                                        <h3>Some error occured,Can not show Pins of pinterest Board</h3>
+                                        <h3>Some error occured,Can not show Pins of pinterest Board {{$boardName}}</h3>
                                     @else
                                         <h3>{{$message}}</h3>
                                     @endif
@@ -159,7 +157,7 @@
                                     '<div class="mt-5">\n' +
                                     '<p class="mt-2">' + element.captionText + '</p>\n' +
                                     '</div>\n' +
-                                    '<div class="medium-feeds-section">\n' +
+                                    '<div class="d-flex justify-content-center">\n' +
                                     '<button data-toggle="tooltip" data-placement="top"\n' +
                                     'title="Re-socio" type="button" class="btn btn-sm"\n' +
                                     'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl + '\',\'' + type + '\',null,null)">\n' +

@@ -25,6 +25,11 @@ $(document.body).on('click', '#addToCart', function () {
 
 });
 
+function getContentFromDivWithoutLoader(id, spanId) {
+    $(`#${spanId}`).remove();
+    return document.getElementById(id);
+}
+
 /**
  * TODO We have to convert the particular div to screen shot.
  * This function is used for converting the  particular div into the  Screen shots.
@@ -34,7 +39,7 @@ $(document.body).on('click', '#addToCart', function () {
  * ! Do not change this function without referring API format of upload Screen shot.
  */
 function uploadScreenShots(id, title, spanid) {
-    html2canvas(document.getElementById(id), {
+    html2canvas(getContentFromDivWithoutLoader(id, spanid), {
         scrollY: -window.scrollY,
         useCORS: true,
     }).then(function (canvas) {
@@ -44,7 +49,7 @@ function uploadScreenShots(id, title, spanid) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: 'post',
-            url: 'https://appv5.socioboard.com/upload-screenshots',
+            url: '/upload-screenshots',
             data: {
                 image, title
             },

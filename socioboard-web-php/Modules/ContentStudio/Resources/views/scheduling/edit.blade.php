@@ -18,9 +18,27 @@
         $content = '';
         $content .= isset($mediaData) && isset($mediaData['title']) ? $mediaData['title'].' ' : '';
         $content .= isset($mediaData) && isset($mediaData['description']) ? $mediaData['description'] : '';
+        $normalDate = isset($normalScheduleDate) ? $normalScheduleDate : null;
+        $daywise = isset($daywisetime) ? $daywisetime : null;
+        $timezone = session()->get('timezone');
+        $normalDates = null;
+        $dayDate = null;
+        if ($normalDate !== null){
+             $date = new DateTime($normalDate);
+             $date->setTimezone(new DateTimeZone($timezone));
+             $normalDates = $date->format('Y/m/d H:i:s');
+        }
+       if ($daywise !== null){
+          $day = new DateTime($daywise);
+          $day->setTimezone(new DateTimeZone($timezone));
+          $dayDate = $day->format('Y/m/d H:i:s');
+       }
 
     @endphp
 
+    <script> let normaldate = '<?php echo $normalDates?>'</script>
+    <script> let daywisedate = '<?php echo $dayDate?>'</script>
+    <script> let timezone = '<?php echo $timezone?>'</script>
 	<!--begin::Content-->
 	<div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
 		<!--begin::Entry-->
@@ -49,7 +67,7 @@
                                     <input type="hidden" id="selectedAccountIds" data-list="{{json_encode($accountIds) }}">
                                     <input type="hidden" name="returntype" value="{{$returntype}}">
                                     <!-- begin:Accounts list -->
-                                    <div class="accounts-list mb-4">
+                                    <div class="row info-list">
                                         @include('contentstudio::components.draft_social_accounts')
                                     </div>
                                     <!-- end:Accounts list -->
@@ -148,23 +166,36 @@
                                                         <!-- end::schedule button -->
 
                                                         <!-- begin::Schedule type -->
-                                                        <div class="schedule-div @if($type == 'schedule') {{ 'd-block' }} @endif">
+                                                        <div class="schedule-div mt-5 @if($type == 'schedule') {{ 'd-block' }} @endif">
                                                             <!--begin::Header-->
-                                                            <h3 class="card-title font-weight-bolder">Schedule type</h3>
+                                                            <h3 class="font-weight-bolder">Schedule type</h3>
                                                             <!--end::Header-->
-                                                            <div class="mb-2">
-                                                                <div class="checkbox-list">
-                                                                    <div class="custom-control custom-checkbox mb-5">
-                                                                        <input type="checkbox" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0"
-                                                                        @if(isset($scheduleCategory) && $scheduleCategory == 0) {{ 'checked' }} @endif>
-                                                                        <label class="custom-control-label" for="schedule_post"> &nbsp;&nbsp; Normal Schedule Post</label>
-                                                                    </div>
-
-                                                                    <div class="custom-control custom-checkbox mb-5">
-                                                                        <input type="checkbox" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1" @if(!isset($scheduleCategory) ||$scheduleCategory == 1) {{ 'checked' }} @endif>
-                                                                        <label class="custom-control-label" for="day_schedule"> &nbsp;&nbsp; Day Wise Schedule Post</label>
-                                                                    </div>
+                                                            <div class="my-3">
+                                                                <div class="schedule-div-block">
+                                                                    <label class="radio radio-lg mb-5">
+                                                                        <input type="radio" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0"
+                                                                         @if(isset($scheduleCategory) && $scheduleCategory == 0) {{ 'checked' }} @endif>
+                                                                        <span></span>
+                                                                        Normal Schedule Post
+                                                                    </label>
+                                                                    <label class="radio radio-lg">
+                                                                        <input type="radio" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1" @if(!isset($scheduleCategory) ||$scheduleCategory == 1) {{ 'checked' }} @endif>
+                                                                        <span></span>
+                                                                        Day Wise Schedule Post
+                                                                    </label>
                                                                 </div>
+{{--                                                                <div class="checkbox-list">--}}
+{{--                                                                    <div class="custom-control custom-checkbox mb-5">--}}
+{{--                                                                        <input type="checkbox" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0"--}}
+{{--                                                                        @if(isset($scheduleCategory) && $scheduleCategory == 0) {{ 'checked' }} @endif>--}}
+{{--                                                                        <label class="custom-control-label" for="schedule_post"> &nbsp;&nbsp; Normal Schedule Post</label>--}}
+{{--                                                                    </div>--}}
+
+{{--                                                                    <div class="custom-control custom-checkbox mb-5">--}}
+{{--                                                                        <input type="checkbox" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1" @if(!isset($scheduleCategory) ||$scheduleCategory == 1) {{ 'checked' }} @endif>--}}
+{{--                                                                        <label class="custom-control-label" for="day_schedule"> &nbsp;&nbsp; Day Wise Schedule Post</label>--}}
+{{--                                                                    </div>--}}
+{{--                                                                </div>--}}
                                                             </div>
                                                             <div class="p-1 mb-2" id="schedule_normal_div" @if(!isset($scheduleCategory) || $scheduleCategory != 0) {{ 'style=display:none' }} @endif>
                                                                 <label for="schedule_normal_post">Select Date and Time</label>
@@ -284,6 +315,10 @@
     <!--end::Global Theme Bundle-->
     <!-- facebook , linkedin pages toggle -->
     <script>
+        $(document).ready(function () {
+            $('#schedule_normal_post_daterange').val(normaldate);
+            $('#day_schedule_post_daterange').val(daywisedate)
+        })
         var faIconsForDateTimePicker = {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",

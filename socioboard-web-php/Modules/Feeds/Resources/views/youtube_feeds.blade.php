@@ -43,7 +43,7 @@
                                         </option>
                                     @elseif($message=== 'No Youtube account has been added yet!')
                                         <option selected value="failed">No
-                                            Youtube Account has added yet
+                                            Youtube Account has been added yet for this team yet! or Account has been locked
                                         </option>
                                     @endif
                                 </select>
@@ -69,8 +69,7 @@
                                                 <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
                                                    class="font-weight-bolder font-size-h5 text-hover-primary"
                                                    target="_blank">
-                                                    {{$accounts[0]->first_name}} <i
-                                                            class="flaticon2-correct text-primary icon-md ml-2"></i>
+                                                    {{$accounts[0]->first_name}}
                                                 </a>
                                                 <div class="text-muted">
 {{--                                                    {{$accounts[0]->email}}--}}
@@ -117,12 +116,6 @@
                                                 </div>
                                                 <!-- end:account star rating -->
 
-                                                <div class="mt-2">
-                                                    <a href="#"
-                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                       onclick="return false" id="chatID"
-                                                       title="Coming soon">Chat</a>
-                                                </div>
                                             </div>
                                         </div>
                                         <!--end::User-->
@@ -144,7 +137,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>Currently no Youtube Account has been added for this team</h6>
+                                        <h6>Currently no Youtube Account has been added for this team or Account has been locked.</h6>
                                     </div>
                                 @endif
                             </div>
@@ -158,12 +151,6 @@
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <!--end::Header-->
                             <!--begin::Body-->
@@ -298,7 +285,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>Currently no Youtube Account has been added for this team</h6>
+                                        <h6>Currently no Youtube Account has been added for this team yet or Account has been locked.</h6>
                                     </div>
                                 @endif
                             </div>
@@ -400,6 +387,9 @@
          * ! Do not change this function without referring API format of getting the outube channel feeds.
          */
         function call(data) {
+            $(function() {
+                $('body').scrollTop(0);
+            });
             accounId = data.value;
             getYoutubeFeeds(data.value, 1);
         }
@@ -438,8 +428,6 @@
                             '                                            <a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
                             '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                             '                                               target="_blank">\n' + response.data.socialAccountDetails.first_name +
-                            '                                                <i\n' +
-                            '                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                             '                                            </a>\n' +
                             // '  <div class="text-muted">\n' + response.data.socialAccountDetails.email +
                             // '                                            </div>' +
@@ -461,10 +449,6 @@
                             '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                             '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                         append += '</div></div>\n' +
-                            '                                            <div class="mt-2">\n' +
-                            '                                                <a id="chatID" href="javascript:;" \n' +
-                            '                                                   class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" title="Coming soon">Chat</a>\n' +
-                            '                                            </div>\n' +
                             '                                        </div>';
                         $('#youtubeProfileDiv').append(append);
                         appendData2 = '<div class="d-flex align-items-center justify-content-between mb-2">\n' +

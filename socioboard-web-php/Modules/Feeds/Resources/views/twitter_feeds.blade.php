@@ -46,8 +46,7 @@
                                                         <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
                                                            class="font-weight-bolder font-size-h5 text-hover-primary"
                                                            target="_blank">
-                                                            {{$accounts[0]->first_name}}<i
-                                                                    class="flaticon2-correct text-primary icon-md ml-2"></i>
+                                                            {{$accounts[0]->first_name}}
                                                         </a>
                                                         <div class="text-muted">
                                                             {{$accounts[0]->email}}
@@ -94,13 +93,6 @@
                                                         </div>
                                                         <!-- end:account star rating -->
 
-                                                        <div class="mt-2">
-                                                            <button href="javascript:;"
-                                                                    class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                                    onclick="return false" id="chatID"
-                                                                    title="Coming soon">Chat
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 <!--end::User-->
@@ -136,7 +128,7 @@
                                         @endif
                                     @else
                                         <div style="color: Green;text-align:center;">
-                                            Currently no twitter Account has been added for this team
+                                            Currently No Twitter account has been added for this team yet! or Account has been locked
                                         </div>
                                     @endif
                                 @elseif($message=== 'No Twitter account added yet! or Account has locked')
@@ -144,7 +136,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>{{$message}}</h6>
+                                        <h6>No Twitter account has been added for this team yet! or Account has been locked</h6>
                                     </div>
                                 @elseif($message === 'failed')
                                     <div style="color: Red;text-align:center;">
@@ -157,9 +149,9 @@
                                 @endif
                             </div>
                             <!--end::Profile-->
-                            <div class="card card-custom gutter-b">
+                            <div class="card card-custom gutter-b pb-3">
                                 <div class="card-body px-3 py-3">
-                                    <p style="font-size:14px; margin-bottom:10px; font-weight:600;">First select country from dropdown and Click on Search hashtags by Country button </p>
+                                    <h3>Trending Hashtags</h3>
                                     <!-- begin:Accounts list -->
                                     <div class="row">
                                         <div class="col-6">
@@ -180,8 +172,7 @@
                                                     <option selected value="failed"> Sorry some error ,occurred please reload page
                                                     </option>
                                                 @elseif($message=== 'No Twitter account added yet! or Account has locked')
-                                                    <option selected value="failed">No Twitter account added yet! or Account has
-                                                        locked
+                                                    <option selected value="failed">No Twitter account has been added for this team yet! or Account has been locked
                                                     </option>
                                                 @else
                                                     <option selected value="failed"> {{$message}}
@@ -190,40 +181,46 @@
                                             </select>
                                         </div>
                                         <div class="col-6">
-                                            <select id="countrySelect"
-                                                    class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
-                                                    onchange="call2(this)">
-                                                @if($message === 'success')
-                                                    @if(count($accounts)>0)
-                                                        @if($country['data']->code === 200)
-                                                            @if(count($country['data']->data)>0)
-                                                                <option disabled selected value="Country">Select Country
-                                                                </option>
-                                                                font-size:12px;      @foreach($country['data']->data as $data)
-                                                                    <option value="{{$data->name}}">{{$data->name}}</option>
-                                                                @endforeach
-                                                            @else
-                                                                <option selected value="Country">No country Data found, For
-                                                                    This account
-                                                                </option>
+                                            @if($message=== 'No Twitter account added yet! or Account has locked')
+                                                <select id="countrySelect"
+                                                        class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
+                                                        > <option> Can not show country data as No Twitter account has been added for this team yet! or Account has been locked </option></select>
+                                                @else
+                                                <select id="countrySelect"
+                                                        class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
+                                                        onchange="call2(this)">
+                                                    @if($message === 'success')
+                                                        @if(count($accounts)>0)
+                                                            @if($country['data']->code === 200)
+                                                                @if(count($country['data']->data)>0)
+                                                                    <option disabled selected value="Country">Select Country
+                                                                    </option>
+                                                                    font-size:12px;      @foreach($country['data']->data as $data)
+                                                                        <option value="{{$data->name}}">{{$data->name}}</option>
+                                                                    @endforeach
+                                                                @else
+                                                                    <option selected value="Country">No country Data found, For
+                                                                        This account
+                                                                    </option>
+                                                                @endif
+                                                            @elseif($country['data']->code === 400)
+                                                                <option selected
+                                                                        value="Country">{{$country['data']->message}}</option>
                                                             @endif
-                                                        @elseif($country['data']->code === 400)
-                                                            <option selected
-                                                                    value="Country">{{$country['data']->message}}</option>
+                                                        @else
+                                                            <option selected value="Country">No Twitter Account added yet!
+                                                            </option>
                                                         @endif
-                                                    @else
-                                                        <option selected value="Country">No Twitter Account added yet!
+                                                    @elseif($message=== 'failed')
+                                                        <option selected value="Country">Some error ocuured, Can not get country
+                                                            data
                                                         </option>
                                                     @endif
-                                                @elseif($message=== 'failed')
-                                                    <option selected value="Country">Some error ocuured, Can not get country
-                                                        data
-                                                    </option>
-                                                @endif
-                                            </select>
+                                                </select>
+                                            @endif
                                         </div>
                                     </div>
-                                    <div class="text-center my-4">
+                                    <div class="text-center mt-4">
                                         <button href="javascript:;"
                                                 class="btn btn-lg font-weight-bold  px-xxl-5 my-1 searchButton"
                                                 onclick="searchHashTags()">Search Hashtags By
@@ -231,8 +228,6 @@
                                         </button>
                                     </div>
                                     <!-- end:Accounts list -->
-                                    <h3>Trending Hashtags</h3>
-
                                 </div>
 
                                 <div class="card-body hashtags-by-country pt-0" id="hashTagsDiv">
@@ -247,12 +242,6 @@
                         <div class="card card-custom gutter-b card-stretch" id="ss-feedsDiv">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <div class="card-body" id="twitterFeeds">
                             <?php $date = 0; ?>
@@ -327,7 +316,7 @@
                                                                         <br>
                                                                         @foreach($data->urls as $urls)
                                                                             <a href="{{$urls->expanded_url}}"
-                                                                               class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                               class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
                                                                                target=_blank>
                                                                                 {{$urls->expanded_url}}</a>
                                                                             <br>
@@ -353,7 +342,7 @@
                                                                                 <br>
                                                                                 @foreach($data->urls as $urls)
                                                                                     <a href="{{$urls->expanded_url}}"
-                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2"
+                                                                                       class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links"
                                                                                        target=_blank>
                                                                                         {{$urls->expanded_url}}</a>
                                                                                     <br>
@@ -373,16 +362,9 @@
 
                                                                     @endif
                                                                     <!--end::Text-->
-
+                                                                            <br>
                                                                         <!--begin::Action-->
                                                                         <div class="d-flex align-items-center">
-                                                                            <a href="javascript:;"
-                                                                               class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">
-                                                                <span
-                                                                        class="svg-icon svg-icon-md svg-icon-primary pr-2">
-                                                                        <i class="fas fa-comments"></i>
-                                                                </span>
-                                                                            </a>
                                                                             @if($data->isLiked === false)
                                                                                 <a href="javascript:;"
                                                                                    data-value="{{$data->tweetId}}"
@@ -526,7 +508,7 @@
                                                             <div class="symbol symbol-150">
                                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                             </div>
-                                                            <h6>{{$message}}</h6>
+                                                            <h6>No Twitter account has been added for this team yet! or Account has been locked</h6>
                                                         </div>
                                                     @elseif($message=== 'failed')
                                                         <div class="text-center"
@@ -583,9 +565,9 @@
                         display: "block"
                     });
                 });
-
                 $(document).ready(function () {
                     $("#discovery").trigger("click");
+                    window.scrollTo(0, 0);
                 });
 
 
@@ -802,7 +784,7 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
@@ -819,7 +801,7 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
@@ -832,20 +814,15 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
                                             appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
                                         }
                                     }
-                                    appendData += '<div class="d-flex align-items-center">\n' +
-                                        '<a href="javascript:;"\n' +
-                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                        '<span\n' +
-                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                        '<i class="fas fa-comments"></i>\n' +
-                                        '</span></a>\n';
+                                    appendData += '<br>';
+                                    appendData += '<div class="d-flex align-items-center">\n' ;
                                     if (element.isLiked === false) {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
@@ -989,8 +966,7 @@
                                     '<a href="' + response.data.data.socialAccountDetails.profile_url + '"\n' +
                                     'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                     'target="_blank">\n' + response.data.data.socialAccountDetails.first_name +
-                                    '<i\n' +
-                                    'class="flaticon2-correct text-primary icon-md ml-2"></i></a>\n' +
+                                    '</a>\n' +
                                     '<div class="rating-css">\n' +
                                     '<div class="star-icon">\n';
                                 (response.data.data.socialAccountDetails.rating === 1) ? append += '<input type="radio" checked name="rating1' + accid + '" id="rating1' + accid + '" onclick="ratingUpdate(\'1\', ' + accid + ');">\n' +
@@ -1009,10 +985,6 @@
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                                     '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                                 append += '</div>\n' +
-                                    '</div>\n' +
-                                    '<div class="mt-2">\n';
-                                append += '<a href="javascript:;"\n' +
-                                    'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatDivButton" title="Coming soon">Chat</a>\n' +
                                     '</div>\n' +
                                     '</div>'
                                 $('#twitterProfileDiv').append(append);
@@ -1054,7 +1026,7 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
@@ -1071,7 +1043,7 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
@@ -1084,20 +1056,15 @@
                                                 element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') +
                                                 '</strong><br>\n';
                                             element.urls.map(urls => {
-                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2" target = _blank>\n' + urls.expanded_url +
+                                                appendData += '<a href="' + urls.expanded_url + '" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target = _blank>\n' + urls.expanded_url +
                                                     '</a><br>\n';
                                             });
                                         } else {
                                             appendData += '<div><p class="font-size-lg font-weight-normal">\n' + element.descritpion.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '</p>\n';
                                         }
                                     }
-                                    appendData += '<div class="d-flex align-items-center">\n' +
-                                        '<a href="#"\n' +
-                                        'class="btn btn-hover-text-primary btn-hover-icon-primary btn-sm bg-light-primary rounded font-weight-bolder font-size-sm p-2 mr-5 fb_cmt_btn">\n' +
-                                        '<span\n' +
-                                        'class="svg-icon svg-icon-md svg-icon-primary pr-2">\n' +
-                                        '<i class="fas fa-comments"></i>\n' +
-                                        '</span></a>\n';
+                                    appendData += '<br>';
+                                    appendData += '<div class="d-flex align-items-center">\n';
                                     if (element.isLiked === false) {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
                                             'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
@@ -1125,7 +1092,6 @@
                                         'retweet-count="' + element.retweetCount + '">\n' +
                                         '<i class="fas fa-retweet"></i>\n' + element.retweetCount +
                                         '</span></a>\n';
-                                    console.log('mediaLength',multiImageCount);
                                     if (element.mediaUrls.length > 0) {
                                         let type
                                         if (element.mediaUrls[0].type === 'photo') {
@@ -1149,6 +1115,7 @@
                                         }
                                     } else {
                                         if (element.urls.length > 0) {
+                                            urlResocio = element.urls[0].expanded_url;
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
                                                 'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',null,null,null,\'' + urlResocio + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -1258,6 +1225,9 @@
                  * ! Do not change this function without referring API format of getting the twitter feeds.
                  */
                 function call(data) {
+                    $(function() {
+                        $('body').scrollTop(0);
+                    });
                     pageId=2;
                     accounId = data.value;//accountid of particular twitter account from dropdown
                     getTwitterFeeds(accounId, 1);
@@ -1297,6 +1267,7 @@
                         }
                     });
                 }
+
 
                 /**
                  * TODO We have to publish particular twitter post from particular twitter feed on multiple social account.
@@ -1340,6 +1311,7 @@
                             setTimeout(function () {
                                 downloadMediaUrl();
                             }, 500);
+
                         },
                         error: function (error) {
                             if (error.responseJSON.message) {
@@ -1373,12 +1345,12 @@
                                 let append = '';
                                 if (response.code === 200) {
                                     response.data[0].trends.map(element => {
-                                        console.log(element.name, 'names');
                                         append += '<a href="' + element.url + '" class="font-weight-bolder font-size-h5 text-hover-primary" target="_blank">\n'
                                             + element.name +
                                             '</a> &nbsp';
                                     });
                                     $('#hashTagsDiv').append(append);
+                                    $('#hashTagsDiv').addClass('search-hastags');
                                 }
                             }
                         });

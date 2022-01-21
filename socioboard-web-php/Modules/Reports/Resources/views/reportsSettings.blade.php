@@ -82,7 +82,7 @@
                                     <!--begin::Header-->
                                     <div class="card-header py-3">
                                         <div class="card-title align-items-start flex-column">
-                                            <h3 class="card-label font-weight-bolder">Report Settings</h3>
+                                            <h3 class="card-label font-weight-bolder">Report Setting</h3>
                                             <span class="font-weight-bold font-size-sm mt-1">Update your report settings (These will be your custom report PDF Logo and Brand Name)</span>
                                         </div>
                                         <div class="card-toolbar">

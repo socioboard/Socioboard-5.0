@@ -18,7 +18,7 @@
                 <!--begin::Row-->
                 <div class="row" data-sticky-container="">
                     {!! $html !!}
-                    <p id="notification">Please enter the keyword to find News Api’s </p>
+                    <p id="notification">Please enter the keyword to find News </p>
                     <div class="col-xl-8">
                         <!--begin::Feeds-->
                         <div class="card-columns feeds-container feeds-card-container" id="list"></div>

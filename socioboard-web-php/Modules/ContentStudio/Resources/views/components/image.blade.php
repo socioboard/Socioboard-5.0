@@ -6,7 +6,7 @@ data-title="{{ $item->title }}"
 data-description="{{ $item->description }}"
 data-type="image"
 >
-    <img src="{{ $item->mediaUrl }}" class="card-img-top" alt="...">
+    <img src="{{ $item->mediaUrl }}" class="card-img-top" onerror=" this.onerror=null;this.src='https://i.imgur.com/eRkLsuQ.png';">
     <div class="card-body">
         <div class="board-card">
     	<div class="d-flex align-items-center">
@@ -34,7 +34,7 @@ data-type="image"
         <h5 class="card-title mb-1 mt-2">{{ $item->title }}</h5>
         <p class="card-text">{{ $item->description }}</p>
         <div class="d-flex justify-content-center">
-            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> One-Click</a>
+            <a href="#" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 publishContentItemShareBtn"><i class="far fa-hand-point-up fa-fw"></i> One Click</a>
             <form action="{{ route('publish_content.scheduling')  }}" method="POST">
                 @csrf
                 <input type="hidden" name="mediaUrl" value="{{ $item->mediaUrl }}">

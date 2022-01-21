@@ -71,17 +71,18 @@
                 <div class="row">
                     <div class="col-xl-6" id="ss-scheduled">
                         <div class="card card-custom gutter-b card-stretch">
-                            <div class="card-header border-0 py-5">
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-scheduled_md6" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-scheduled_md6" style="
     display: none;"></span>
                             </div>
-                            <h3 class="card-title font-weight-bolder">Page Fan</h3>
 
-                            <div class="card-body d-flex flex-column">
+
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Page Fan</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="like_unlike_chart" class="card-rounded-bottom "
@@ -149,16 +150,17 @@
                     <div class="col-xl-6" id="ss-page-impressions">
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-page-impressions_md6" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-impressions_md6" style="
     display: none;"></span>
                             </div>
-                            <h3 class="card-title font-weight-bolder">Page Impressions</h3>
-                            <div class="card-body d-flex flex-column">
+
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Page Impressions</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="page_unique_viral_chart" class="card-rounded-bottom "
@@ -177,7 +179,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-chart-line fa-2x text-primary"></i>
+                                                                        <i class="fas fa-user-tie fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -201,8 +203,8 @@
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                        <i class="fas fa-chart-line fa-2x text-success "></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-success-info">
+                                                                        <i class="fas fa-user-tag fa-2x text-success "></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -227,7 +229,7 @@
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                        <i class="fas fa-chart-line fa-2x text-warning"></i>
+                                                                        <i class="fas fa-user-injured fa-2x text-warning"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -259,20 +261,21 @@
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-page-organic_md6" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-organic_md6" style="
     display: none;"></span>
                             </div>
-                            <h3 class="card-title font-weight-bolder">Page Organic & Paid Impressions</h3>
+
                             <!--end::Header-->
 
 
                             <!--begin::Body-->
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Page Organic & Paid Impressions</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="page_organic_paid_chart" class="card-rounded-bottom "
@@ -291,7 +294,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fab fa-creative-commons-nc fa-2x text-primary"></i>
+                                                                        <i class="fas fa-weight fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -347,16 +350,17 @@
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
-                            <div class="card-header border-0 py-5">
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-page-stories_md6" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-page-stories_md6" style="
     display: none;"></span>
                             </div>
-                            <h3 class="card-title font-weight-bolder">Page Stories</h3>
-                            <div class="card-body d-flex flex-column">
+
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Page Stories</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="page_stories_chart" class="card-rounded-bottom "
@@ -375,10 +379,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                        <i class="fas fa-mobile-alt fa-2x text-success "></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-primary">
+                                                                        <i class="fas fa-house-user fa-2x text-primary "></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -401,10 +405,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                            <i class="fas fa-user-friends fa-2x text-warning "></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
+                                                                            <i class="far fa-smile fa-2x text-success "></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -475,7 +479,7 @@
             }
         }, function (start, end, label) {
             changeTeamResponseCalendar(start, end);
-            $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
+            $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
         // delete account

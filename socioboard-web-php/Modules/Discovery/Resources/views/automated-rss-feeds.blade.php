@@ -264,7 +264,11 @@
 
     <script>
         $(document).ready(function () {
-            $("#home_tab").trigger('click');
+            $("#boards").trigger('click');
+        })
+
+        $(document).ready(function () {
+            $("#discovery").trigger('click');
             let readURL = function (input) {
 
                 if (input.files && input.files[0]) {

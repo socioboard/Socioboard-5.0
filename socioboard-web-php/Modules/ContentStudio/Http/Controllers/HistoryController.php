@@ -14,9 +14,11 @@ class HistoryController extends Controller
     protected $apiUrl;
     private $url;
     private $slug;
+    private $publish;
 
     public function __construct(){
         $this->helper = Helper::getInstance();
+        $this->publish = new PublishContentController();
         $this->apiUrl = config('env.PUBLISH_API').env('API_VERSION');
         $this->url = config("env.API_URL");
     }
@@ -56,15 +58,15 @@ class HistoryController extends Controller
                 foreach ($v as $key => $value) {
                     foreach ($value as $val) {
                         if ($k == 'twitter') {
-                            $twitterAccountsIds [] = $val->account_id;
+                            $twitterAccountsIds [$val->account_id] = $val->first_name;
                         } else if ($k == 'facebook') {
-                            $facebookAccountsIds [] = $val->account_id;
+                            $facebookAccountsIds [$val->account_id] = $val->first_name;
                         } else if ($k == 'linkedin') {
-                            $linkedInAccountsIds [] = $val->account_id;
+                            $linkedInAccountsIds [$val->account_id] = $val->first_name;
                         }else if ($k === 'instagram') {
-                            $instagramAccountsIds [] = $val->account_id;
+                            $instagramAccountsIds [$val->account_id] = $val->first_name;
                         }else if ($k === 'tumblr') {
-                            $tumblrAccountsIds [] = $val->account_id;
+                            $tumblrAccountsIds [$val->account_id] = $val->first_name;
                         }
                     }
                 }
@@ -95,22 +97,21 @@ class HistoryController extends Controller
                         $scheduleStatus = $statuses[$request->slug];
                         switch ($request->slug) {
                             case $request->slug == "day-wise-socioqueue":
-                                $api_url = $this->apiUrl . "/schedule/get-schedule-details-by-categories?fetchPageId=". $paginationId . "&scheduleStatus=". $scheduleStatus ."&scheduleCategory=". 1 ;
+                                $api_url = $this->apiUrl . "/schedule/get-schedule-details-by-categories?fetchPageId=". $paginationId . "&scheduleStatus=". $scheduleStatus ."&scheduleCategory=". 1 ."&teamId=".$team['teamid'];
                                 $type = "In progress";
                                 break;
 
                             case $request->slug == "ready-queue":
-                                $api_url = $this->apiUrl . "/schedule/get-schedule-details-by-categories?fetchPageId=". $paginationId . "&scheduleStatus=". $scheduleStatus ."&scheduleCategory=". 0 ;
+                                $api_url = $this->apiUrl . "/schedule/get-schedule-details-by-categories?fetchPageId=". $paginationId . "&scheduleStatus=". $scheduleStatus ."&scheduleCategory=". 0 ."&teamId=".$team['teamid'] ;
                                 $type = "In progress";
                                 break;
 
-                            default : $api_url = $this->apiUrl . "/schedule/get-filtered-schedule-details?fetchPageId=" . $paginationId . "&scheduleStatus=" . $scheduleStatus;
+                            default : $api_url = $this->apiUrl . "/schedule/get-filtered-schedule-details?fetchPageId=" . $paginationId . "&scheduleStatus=" . $scheduleStatus."&teamId=".$team['teamid'];
                                 $type = "Posted";
                         }
 
                     }
                 }
-
                 $response = $this->helper->postApiCallWithAuth("get", $api_url );
                 if($response['code'] == 200){
                     if( $request->page == "schedule" ){
@@ -230,12 +231,53 @@ class HistoryController extends Controller
 
     public function deleteSchedule(Request $request){
         try {
-            $apiUrl =  $this->apiUrl.'/schedule/delete?scheduleId='.$request->id;
-            $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
+            if ($request->type === "draft_schedule"){
+                $apiUrl =  $this->apiUrl.'/schedule/delete?scheduleId='.$request->id;
+                $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
+            } else {
+                $apiUrl =  $this->apiUrl.'/publish/delete-draft-post-by-id';
+                $requestData = ['id' => [$request->id]];
+                $response = $this->helper->postApiCallWithAuth('delete', $apiUrl, $requestData);
+            }
             return $this->helper->responseHandler($response['data']);
         }
         catch (AppException $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'deleteSchedule() {HistoryController}');
+            return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+        }
+    }
+
+    public function youtubeDrafts(){
+        $account_name = '';
+        $team = \Session::get('team');
+        $apiUrl =  $this->apiUrl.'/youtube/team-published-details?teamId='.$team['teamid'].'&pageId=1&postType=1';
+        $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+        $data =  $this->helper->responseHandler($response['data']);
+        return view("contentstudio::history.youtube_drafts",compact('data'));
+
+    }
+
+    public function youtubeDraftsEdit($id){
+        $apiUrl =  $this->apiUrl.'/youtube/published-details-by-id?postId='.$id;
+        $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+        $data =  $this->helper->responseHandler($response['data']);
+        $accounts= $this->publish->getTeamYoutubeAccounts();
+        if (isset($accounts ) && isset($accounts['youtube'])){
+            $socialAccounts = $accounts['youtube'];
+        }else{
+            $socialAccounts = null;
+        }
+        return view("contentstudio::scheduling.youtube_publish",compact('socialAccounts','data'));
+    }
+
+    public function youtubeDraftsDelete($id){
+        try {
+            $apiUrl =  $this->apiUrl.'/youtube/published-details?postId=' . $id;
+            $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
+            return $this->helper->responseHandler($response['data']);
+        }
+        catch (AppException $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'youtubeDraftsDelete() {HistoryController}');
             return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
         }
     }

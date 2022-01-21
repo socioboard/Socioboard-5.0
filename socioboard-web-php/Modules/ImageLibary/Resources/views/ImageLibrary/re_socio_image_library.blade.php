@@ -67,8 +67,7 @@
                                                             <!--begin::Facebook Fanpage Profile picture-->
                                                             <div class="symbol symbol-45 symbol-light mr-5">
                                         <span class="symbol-label">
-                                            <img src="{{isset($socialAccount->profile_pic_url) ?  $socialAccount->profile_pic_url : null}}" class="w-100 align-self-center" alt=""/>
-                                        </span>
+<img src="{{isset($socialAccount->profile_pic_url) ?  $socialAccount->profile_pic_url : null}}"  onerror=" this.onerror=null;this.src='https://s.pinimg.com/images/user/default_600.png';" class="w-100 align-self-center" alt=""/>                                        </span>
                                                             </div>
                                                             <!--end::Facebook Fanpage Profile picture-->
                                                             <!--begin::Section-->
@@ -114,6 +113,7 @@
                 </div>
 
                 <div class="modal-footer">
+                    <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder" form="checkRoute"><i class="fas fa-history fa-fw"></i> Schedule</button>
                     <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(0);">Draft
                     </button>
                     <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(1);">Post
@@ -121,5 +121,38 @@
                 </div>
             </div>
         </div>
+
     </form>
 </div>
+
+<script>
+    let imageLink=$('#image_URLS').attr('src');
+$(".schedule-div").css({
+        display: "none"
+    });
+    $(".schedule-post-btn").click(function () {
+        $(".schedule-div").css({
+            display: "block"
+        });
+    });
+    $(".schedule_normal_post").click(function () {
+        if ($(this).is(":checked")) {
+            $("#schedule_normal_div").show();
+            $("#day_wise_schedule_div").hide();
+            $("#day_schedule").prop("checked", false);
+        } else {
+            $("#schedule_normal_div").hide();
+        }
+    });
+    $("#day_wise_schedule_div").hide();
+    $(".day_schedule_post").click(function () {
+        if ($(this).is(":checked")) {
+            $("#day_wise_schedule_div").show();
+            $("#schedule_normal_div").hide();
+            $("#schedule_post").prop("checked", false);
+        } else {
+            $("#day_wise_schedule_div").hide();
+        }
+    });
+</script>
+

@@ -18,7 +18,10 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Pinerest Boards</h3>
+                                <div>
+                                    <h3 class="card-title font-weight-bolder">Pinerest Boards</h3>
+                                    <p>If You want see latest boards and pins then update the cron in the view accounts section. </p>
+                                </div>
                                 <div class="ml-auto">
                                     <div class="row d-flex align-items-center justify-content-center">
                                         @if($message === 'success')
@@ -66,12 +69,13 @@
                         </div>
                         <!--end::Borad-->
                     </div>
-                    <div id="boardRow" class="row">
+                </div>
+                <div id="boardRow" class="row">
                         @if($message === 'success')
                             @foreach($boards as $data)
-                                <div class="col-xl-6">
+                                <div class="col-xl-4">
                                     <!--begin::Borad-->
-                                    <div class="card card-custom p-2 mb-8 mb-lg-0">
+                                    <div class="card card-custom p-2 mb-8">
                                         <div class="card-body">
                                             <div class="row">
                                                 <!--begin::Content-->
@@ -84,9 +88,9 @@
 
                                                 <!--begin::Button-->
                                                 <div class="col-sm-12 d-flex align-items-center justify-content-sm-end">
-                                                    <a href="get-pinterest-pins?boardId={{$data->board_id}}'&accId={{$data->social_account_id}}"
+                                                    <a href="get-pinterest-pins?boardId={{$data->board_id}}'&accId={{$data->social_account_id}}'&baordname={{$data->board_name}}"
                                                        class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6" target="_blank">View
-                                                        Board</a>
+                                                        Pins</a>
                                                 </div>
                                                 <!--end::Button-->
                                             </div>
@@ -108,7 +112,7 @@
                         @endif
                     </div>
 
-                </div>
+
                 <!--end::Row-->
                 <!--end::Boards-->
             </div>
@@ -161,8 +165,8 @@
                         let appendData = '';
                         if (response.data.length > 0) {
                             response.data.map(element => {
-                                appendData += '<div class="col-xl-6">\n' +
-                                    '<div class="card card-custom p-2 mb-8 mb-lg-0">\n' +
+                                appendData += '<div class="col-xl-4">\n' +
+                                    '<div class="card card-custom p-2 mb-8">\n' +
                                     '<div class="card-body">\n' +
                                     '<div class="row">\n' +
                                     '<div class="col-sm-12">\n' +
@@ -171,7 +175,7 @@
                                     '</h2>\n' +
                                     '</div>\n' +
                                     '<div class="col-sm-12 d-flex align-items-center justify-content-sm-end">\n' +
-                                    '<a href="get-pinterest-pins?boardId=' + element.board_id + '&accId=' + element.social_account_id + '"\n' +
+                                    '<a href="get-pinterest-pins?boardId=' + element.board_id + '&accId=' + element.social_account_id + '&baordname=' + element.board_name + '"\n' +
                                     'class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6" target="_blank">View\n' +
                                     'Board</a>\n' +
                                     '</div>\n' +

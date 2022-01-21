@@ -19,7 +19,7 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Blogged Accounts(Medium & Tumblr)</h3>
+                                <h3 class="card-title font-weight-bolder">Blogging Accounts(Medium & Tumblr)</h3>
                                 <div class="card-toolbar">
                                     <!--begin::Row-->
                                     <a href="javascript:;" class="btn btn-sm font-weight-bold" data-toggle="modal"
@@ -50,14 +50,14 @@
                                     @else
                                     @endif
                                     <div class="col-md-1 col-sm-12 card bg-medium border-0 px-6 py-8 rounded-xl mr-4 mb-7">
-                                                    <span class="svg-icon svg-icon-3x d-block my-2 bitly-image">
+                                                    <span class="svg-icon svg-icon-3x d-block my-2 bitly-image" data-toggle="tooltip" data-placement="top" title="Medium">
                                                         <img src="/media/png/medium-logo.png">
                                                         <b class="font-weight-bold font-size-h2 float-right">{{$medium}}</b>
                                                     </span>
                                     </div>
                                     <div
                                             class="col-md-1 col-sm-12 card bg-tumblr border-0 px-6 py-8 rounded-xl mr-4 mb-7">
-                                                    <span class="svg-icon svg-icon-3x d-block my-2">
+                                                    <span class="svg-icon svg-icon-3x d-block my-2" data-toggle="tooltip" data-placement="top" title="Tumblr">
                                                             <i class="fab fa-tumblr fa-2x"></i>
                                                         <b class="font-weight-bold font-size-h2 float-right">{{$tumblr}}</b>
                                                     </span>
@@ -183,9 +183,6 @@
                                                                         {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                     </a>
                                                                 @endif
-                                                                <div class="text-muted">
-                                                                    {{$account->user_name}}
-                                                                </div>
                                                                 <!-- begin:account star rating -->
                                                                 <div class="rating-css">
                                                                     <div class="star-icon">
@@ -246,11 +243,6 @@
                                                                            title="The Account is  Locked"
                                                                            class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
                                                                     @endif
-                                                                    <a href="#"
-                                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                                       onclick="return false"
-                                                                       id="chatDivButton"
-                                                                       title="Coming soon">Chat</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -427,8 +419,8 @@
                         <div class="tab-content mt-5" id="mediumAccountsTabContent">
                             <div class="medium-profile-info tab-pane fade show active" id="medium-add-accounts"
                                  role="tabpanel" aria-labelledby="medium-tab-accounts">
-                                <p>Socioboard needs permission to access and publish content to Medium account on your
-                                    behalf. To addd a medium account please add your integration token of your medium
+                                <p>Socioboard needs permission to access and publish content to your Medium account on Socioboard's
+                                    behalf. To add a medium account please add your integration token of your medium
                                     account.</p>
                                 <div>
                                     <input type="text"
@@ -470,7 +462,11 @@
             placeholder: 'Select Social Media',
         });
         $("#home_tab").trigger("click");
-
+        $(document).ready(function () {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        });
         function addMediumProfile() {
             let accessToken;
             accessToken = $('#accessTokenValue').val();
@@ -663,9 +659,6 @@
                                                     '' + element.first_name + " " + element.last_name + '\n' +
                                                     '</a>\n';
                                             }
-                                            appendData += '<div class="text-muted">\n' +
-                                                '' + element.user_name +
-                                                '</div>';
                                             appendData += ' <div class="rating-css">\n' +
                                                 '<div class="star-icon">\n' +
                                                 '<input type="radio"';
@@ -715,14 +708,11 @@
                                                     'target="_blank"\n' +
                                                     'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>';
                                             }
-                                            appendData += '<a href="#"\n' +
-                                                'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"\n' +
-                                                'onclick="return false"\n' +
-                                                'id="chatDivButton"\n' +
-                                                'title="Coming soon">Chat</a>\n' +
+                                            appendData +=
                                                 '</div>\n' +
                                                 '</div>\n' +
                                                 '</div>';
+                                            appendData +=`<div class="py-9">`;
                                             appendData += '<div\n' +
                                                 'class="d-flex align-items-center justify-content-between">\n' +
                                                 '<span\n' +
@@ -738,6 +728,7 @@
                                                 '</label>\n' +
                                                 '</span>\n' +
                                                 '</div>' +
+                                                '</div>';
                                                 '</div>';
                                             appendData += '<div>\n' +
                                                 '<a href="javascript:;" class="btn text-danger font-weight-bolder font-size-h6 px-8 py-4 my-3 col-12" data-toggle="modal" data-target="#accountDeleteModal' + element.account_id + '" >Delete account</a> \n' +

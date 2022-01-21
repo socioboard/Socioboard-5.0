@@ -19,7 +19,11 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">BoardMe</h3>
+                                <div>
+                                    <h3 class="card-title font-weight-bolder">BoardMe</h3>
+                                    <p>This feature allows us to save some long search keywords with a conventional naming and provide us to search those keywords in YouTube with one-click</p>
+                                </div>
+
                                 <div class="card-toolbar">
                                     <a href="javascript:;" class="btn btn-sm" data-toggle="modal" data-target="#createBoardModal" >
                                         Create Board
@@ -46,7 +50,7 @@
                         @if(count($accounts['data']) !== 0)
                             @foreach ($accounts['data'] as $account )
 
-                                <div class="col-xl-3" id="board{{$account->id}}">
+                                <div class="col-xl-3 d-flex align-items-stretch board-card" id="board{{$account->id}}">
                                     <!--begin::Borad-->
                                     <div class="card card-custom p-2 mb-8">
                                         <div class="card-body">
@@ -62,7 +66,7 @@
                                                 @php
                                                     $keyword = str_replace("#","",$account->keyword);@endphp
                                                 <!--begin::Button-->
-                                                <div class="col-sm-12 d-flex align-items-center justify-content-sm-end">
+                                                <div class="col-sm-12 d-flex align-items-center justify-content-center">
                                                     <a href="/boards/board-me/{{$keyword}}/{{'real'}}/{{$account->id}}" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" title="Search In youtube">View</a>
                                                     <a href="boardme/board.html" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" data-toggle="modal" data-target="#updateBoardModal{{$account->id}}">Edit</a>
                                                     <a href="javascript:;" class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6" data-toggle="modal" data-target="#deleteBoardModal{{$account->id}}">Delete</a>
@@ -124,7 +128,7 @@
                                                         </div>
                                                         <!--end::Form group-->
                                                         <div class="d-flex justify-content-center">
-                                                            <a class="btn text-primary font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" id="update_button{{$account->id}}" onclick="updateForm('{{$account->id}}');">Update</a>
+                                                            <a class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" id="update_button{{$account->id}}" onclick="updateForm('{{$account->id}}');">Update</a>
                                                             <a href="javascript:;" type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">Close</a>
                                                         </div>
                                                     </div>
@@ -250,7 +254,7 @@
                         } else if (response.code === 400) {
                             toastr.error(response.error);
                         }else if (response.code === 401){
-                            toastr.error(response.message);
+                            toastr.error("Only alphanumeric values are allowed",response.message);
                         }else {
                             toastr.error(response.message, "error!");
                         }

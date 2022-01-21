@@ -46,10 +46,10 @@
                         <div class="card card-custom gutter-b sticky">
                             <div class="competitive-list">
                                         <span class="nav-text">
-                                            <i class="fab fa-facebook fa-2x mt-2"></i>
+                                            <i class="fab fa-facebook fa-2x"></i>
                                         </span>
                                 <div class="competitive-list-block" id="facebookCompetitor">
-                                    <div>
+                                    <div class="d-flex">
                                         <p>Competitor List</p>
                                     </div>
                                     <div class="d-flex" id="fbLoading">
@@ -1172,7 +1172,7 @@
                         $('#competitorVsLoader').remove();
                         data.map(competitor => {
                             let customInfoInHTML = `<b>Followers:</b> ${intToString(competitor?.page_followers) ?? '--'} <br/> <b>Likes:</b> ${intToString(competitor?.page_likes) ?? '--'} <br/> <b>Posts:</b> ${intToString(competitor?.post_count) ?? '--'}`;
-                            $(`#${platform}Competitor`).append(`<div class="d-flex competator-list-container" id="${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name?.replaceAll('/', '-') : competitor?.page_user_names.replaceAll('/', '-')}">
+                            $(`#${platform}Competitor`).append(`<div class="d-flex" id="${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name?.replaceAll('/', '-') : competitor?.page_user_names.replaceAll('/', '-')}">
                                                     <p>${competitor?.status || competitor?.page_user_name ? platform === 'youtube' ? competitor?.page_display_name : competitor?.page_user_name : competitor?.page_user_names ?? 'Name'}${isValidCompetitor(competitor)}</p>
                                                     <div class="ml-auto d-flex">
                                                         <a href="#" data-toggle="tooltip" data-placement="top" title="" data-html="true"
@@ -1441,17 +1441,16 @@
            <div class="form-group">
                </div></div></div>
                <div class="row" id="growthAndHistoryGraphsDiv">
-                    <div class="col-xl-12" id="ss-fanCount">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Fan Count</h3>
                        <div class="card-toolbar flex-nowrap">
-                       <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-fanCount_md12" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-fanCount_md12" style="
-    display: none;"></span>
+                       <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                       <span>
+                       <i class="fas fa-info-circle" aria-hidden="true"></i>
+                       </span>
+                       </button>
                        </div>
                        </div>
 
@@ -1462,17 +1461,14 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-12" id="ss-fanGrowth">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Fan Growth</h3>
                                <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-fanGrowth_md12" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-fanGrowth_md12" style="
-    display: none;"></span>
+                                   <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                                    <span><i class="fas fa-info-circle" aria-hidden="true"></i></span>
+                                   </button>
                                </div>
                            </div>
                                    <div class="card-body d-flex flex-column">
@@ -1492,18 +1488,17 @@
         }
 
         function userEngagement(userEngagement = [], postTypeEngagement = []) {
-            let chartContent = `<div class="row" id="ss-userEngagementDiv">
-                    <div class="col-xl-12" id="ss-userEngagementDiv2">
+            let chartContent = `<div class="row" id="userEngagementDiv">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Engagement By Post Type</h3>
                        <div class="card-toolbar flex-nowrap">
-                       <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-userEngagementDiv2_md6" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-userEngagementDiv2_md6" style="
-    display: none;"></span>
+                       <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                       <span>
+                       <i class="fas fa-info-circle" aria-hidden="true"></i>
+                       </span>
+                       </button>
                        </div>
                        </div>
 
@@ -1514,17 +1509,14 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-12" id="ss-distEngagementDiv">
-                       <div class="card card-custom gutter-b card-stretch" >
+                    <div class="col-xl-12">
+                       <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Distribution of User Engagement</h3>
                                <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-distEngagementDiv_md6" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-distEngagementDiv_md6" style="
-    display: none;"></span>
+                                   <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                                    <span><i class="fas fa-info-circle" aria-hidden="true"></i></span>
+                                   </button>
                                </div>
                            </div>
                                    <div class="card-body d-flex flex-column">
@@ -1545,18 +1537,17 @@
 
         function postEngagement(postEngagement = [], avgEngagement = []) {
             let chartContent = `<div class="row" id="postEngagementDiv">
-                    <div class="col-xl-12" id="ss-postEngagementDiv">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Post Engagement Per Day</h3>
                        <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-postEngagementDiv_md12" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-postEngagementDiv_md12" style="
-    display: none;"></span>
-                               </div>
+                       <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                       <span>
+                       <i class="fas fa-info-circle" aria-hidden="true"></i>
+                       </span>
+                       </button>
+                       </div>
                        </div>
 
                        <div class="card-body d-flex flex-column">
@@ -1566,17 +1557,14 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-12" id="ss-AverageDiv">
+                    <div class="col-xl-12">
                        <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Average Post Engagement Per Day</h3>
                                <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-AverageDiv_md12" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-AverageDiv_md12" style="
-    display: none;"></span>
+                                   <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                                    <span><i class="fas fa-info-circle" aria-hidden="true"></i></span>
+                                   </button>
                                </div>
                            </div>
                                    <div class="card-body d-flex flex-column">
@@ -1588,8 +1576,8 @@
                     </div>
                </div>`;
 
-            $('#ss-userEngagementDiv').next().remove();
-            $('#ss-userEngagementDiv').after(chartContent);
+            $('#userEngagementDiv').next().remove();
+            $('#userEngagementDiv').after(chartContent);
 
             postEngagementChart(postEngagement);
             avgPostEngagementChart(avgEngagement);
@@ -1597,18 +1585,17 @@
 
         function postDistribution(postDistribution = []) {
             let chartContent = `<div class="row" id="postDistributionDiv">
-                    <div class="col-xl-6" id="ss-PostDistributionDiv">
+                    <div class="col-xl-6">
                        <div class="card card-custom gutter-b card-stretch">
                        <div class="card-header border-0 py-5">
                        <h3 class="card-title font-weight-bolder">Post Type Distribution</h3>
                        <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-PostDistributionDiv_md6" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-PostDistributionDiv_md6" style="
-    display: none;"></span>
-                               </div>
+                       <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                       <span>
+                       <i class="fas fa-info-circle" aria-hidden="true"></i>
+                       </span>
+                       </button>
+                       </div>
                        </div>
 
                        <div class="card-body d-flex flex-column">
@@ -1618,19 +1605,14 @@
                            </div>
                         </div>
                    </div>
-                    <div class="col-xl-6" id="ss-mixedPostsDiv">
+                    <div class="col-xl-6">
                        <div class="card card-custom gutter-b card-stretch">
                            <div class="card-header border-0 py-5">
                                <h3 class="card-title font-weight-bolder">Mixed posts data</h3>
                                <div class="card-toolbar flex-nowrap">
-                                   <div class="card-toolbar flex-nowrap">
-                                   <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
-                                    <span node-id="ss-mixedPostsDiv_md6" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-mixedPostsDiv_md6" style="
-    display: none;"></span>
-                               </div>
+                                   <button class="btn btn-icon text-hover-info btn-sm  ml-5 px-5">
+                                    <span><i class="fas fa-info-circle" aria-hidden="true"></i></span>
+                                   </button>
                                </div>
                            </div>
                                    <div class="card-body d-flex flex-column">
@@ -1824,7 +1806,9 @@
                                         <div class="card-header d-flex">
                                             <div><i class="fa fa-user mr-3"></i>
                                            ${SELECTED_PLATFORM === 'instagram' ? 'Fans(Page Followers)' : 'Fans (Page Likes)'}</div>
-
+                                            <div class="ml-auto">
+                                                    <i class="fas fa-info-circle ml-5" data-toggle="tooltip" data-placement="top" title="" data-original-title="Info"></i>
+                                            </div>
                                         </div>
                                         <div class="card-body p-2">
                                             <div class="compare-box-ranking">
@@ -1837,7 +1821,9 @@
                                         <div class="card-header d-flex">
                                             <div><i class="fa fa-user mr-3"></i>
                                                 Total Posts</div>
-
+                                            <div class="ml-auto">
+                                                    <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Info" class="fas fa-info-circle ml-5"></i>
+                                            </div>
                                         </div>
                                         <div class="card-body p-2">
                                             <div class="compare-box-ranking">
@@ -1849,7 +1835,9 @@
                                         <div class="card-header d-flex">
                                             <div><i class="fa fa-user mr-3"></i>
                                                 Average Engagement rate</div>
-
+                                            <div class="ml-auto">
+                                                    <i class="fas fa-info-circle ml-5" data-toggle="tooltip" data-placement="top" title="" data-original-title="Info"></i>
+                                            </div>
                                         </div>
                                         <div class="card-body p-2">
                                             <div class="compare-box-ranking">

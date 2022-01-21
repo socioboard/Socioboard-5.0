@@ -3564,8 +3564,8 @@ input[type="button"].btn-block {
     top: 0.25rem;
     left: -1.5rem;
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 24px;
+    height: 24px;
     pointer-events: none;
     content: "";
     background-color: #ffffff;
@@ -3577,8 +3577,8 @@ input[type="button"].btn-block {
     top: 0.25rem;
     left: -1.5rem;
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 24px;
+    height:24px;
     content: "";
     background: no-repeat 50% / 50% 50%; }
 

@@ -161,7 +161,7 @@ class BoardsController extends Controller
         $pageId = '';
         ($type === "real") ? $pageId = 1 : $pageId = rand(1, 9);
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
-        $apiUrl = $apiUrl.'?keyword='.$keyword.'&pageId='.$pageId.'&sortBy='.$randomElement;
+        $apiUrl = $apiUrl.'?keyword='.$keyword.'&ccode=IN&pageId='.$pageId.'&sortBy='.$randomElement;
         $socialAccounts = $this->getSocialAccounts();
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
@@ -189,7 +189,7 @@ class BoardsController extends Controller
     */
     public function getMoreYoutubeFeeds(Request $request){
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
-        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&pageId='.$request->pageid.'&sortBy=relevance';
+        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&ccode=IN&pageId='.$request->pageid.'&sortBy=relevance';
 
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);

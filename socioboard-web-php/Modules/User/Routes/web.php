@@ -23,6 +23,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
     Route::post('/login', [LoginController::class, 'checkLogin']);
     //  show register page
     Route::get('/register', [RegistrationController::class, 'show'])->name('register')->middleware(['guest', 'CheckUser']);
+    // appsumo register page
+    Route::get('/appsumo/{email}', [RegistrationController::class, 'appsumoRegister'])->name('appsumoRegister')->middleware(['guest', 'CheckUser']);
+    // appsumo register page
+    Route::post('/appsumo-register', [RegistrationController::class, 'saveAppsumo'])->name('saveAppsumo');
     // registration function
     Route::post('/register', [RegistrationController::class, 'signUp']);
     //verify email route

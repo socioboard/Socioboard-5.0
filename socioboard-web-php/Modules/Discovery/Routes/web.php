@@ -9,8 +9,8 @@ Route::group(['module' => 'discovery',  'prefix' => 'discovery', 'middleware' =>
         Route::post('/publish-model', [DiscoveryController::class, 'publishModel'])->name('publish-model');
         Route::post('/search-more-twits', [DiscoveryController::class, 'getMoreTwitterFeeds'])->name('search-more-twits');
         Route::post('/search-more-youtubes', [DiscoveryController::class, 'getMoreYoutubeFeeds'])->name('search-more-youtubes');
-        Route::post('/search-twits', [DiscoveryController::class, 'searchTwitter'])->name('search-twits');
-        Route::post('/search-youtubes', [DiscoveryController::class, 'searchYoutube'])->name('search-youtubes');
+        Route::get('/search-twits', [DiscoveryController::class, 'searchTwitter'])->name('search-twits');
+        Route::get('/search-youtubes', [DiscoveryController::class, 'searchYoutube'])->name('search-youtubes');
         Route::get('/twitter', [DiscoveryController::class, 'showTwitter'])->name('twitter');
         Route::get('/youtube', [DiscoveryController::class,'showYoutube'])->name('youtube');
     });

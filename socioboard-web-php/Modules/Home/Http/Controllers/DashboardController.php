@@ -7,7 +7,9 @@ use App\ApiConfig\ApiConfig;
 use App\Exceptions\AppException;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Modules\User\helper;
 use GuzzleHttp\Exception\RequestException;
 use DateTimeInterface;
@@ -33,7 +35,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
         try {
             $team = Session::get('team');
             $teamID = $team['teamid'];
@@ -162,6 +163,7 @@ class DashboardController extends Controller
     public function getCalendarData(Request $request)
     {
         try {
+            $team = \Session::get('team');
             $url = env('API_URL_PUBLISH') . env('API_VERSION');
             $stie_url = env('APP_URL');
             $returnData = [];
@@ -437,7 +439,7 @@ class DashboardController extends Controller
                 if ($response['data']->code === 200) {
                     if (count($response['data']->pages) > 0) {
                         if (count($response['data']->pages) === count($response['data']->availablePages)) {
-                            return redirect('dashboard')->with("failed", "Instagram businees accounts have Already added!");
+                            return redirect('dashboard')->with("failed", "Instagram business accounts have already been added by you or other users of SocioBoard");
                         } else {
                             Session::put('instagramPages', $response['data']->pages);
                             return redirect('dashboard');
@@ -1716,8 +1718,23 @@ class DashboardController extends Controller
     function getBitlyShortenedLink(Request $request)
     {
         try {
+            $data = [
+                'short_link'=> 'url'
+            ];
+            $validator = Validator::make($request->only('short_link'), $data, [
+                'short_link.url' => 'Link should be a valid URL'
+            ]);
+            if ($validator->fails()) {
+                $response['code'] = 201;
+                $response['message'] = $validator->errors()->all();
+                $response['data'] = null;
+                return Response::json($response, 200);
+            }
             $team = Session::get('team');
-            $account = Session::get('bitly_id');
+            $account = $request->acc_id;
+            if($account === null){
+                $account = Session::get('bitly_id');
+            }
             $url = $request->get('short_link');
             $requestData = (object)[
                 "accountId" => $account,
@@ -1929,7 +1946,7 @@ class DashboardController extends Controller
     }
 
     function setSessioForPlan(){
-        Session::put('offer_session', true);
+        Session::put('review_session', true);
         return true;
     }
 }

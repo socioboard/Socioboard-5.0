@@ -31,7 +31,7 @@
                                             <!--begin::Navigation-->
                                             <ul class="navi navi-hover">
                                                 <li class="navi-item">
-                                                    <a href="{{env('APP_URL')}}boards/board-me/Football/refresh/49" class="navi-link">
+                                                    <a href="{{env('APP_URL')}}boards/board-me/{{$keyword}}/refresh/49" class="navi-link">
                                                                     <span class="navi-text">
                                                                         <span class="text-success"><i class="fas fa-sync-alt fa-fw text-success"></i> Refresh </span>
                                                                     </span>

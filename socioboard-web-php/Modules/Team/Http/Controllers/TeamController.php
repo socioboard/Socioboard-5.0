@@ -579,7 +579,7 @@ class TeamController extends Controller
     {
         $apiUrlupdate = ApiConfig::get('/team/edit?teamId=');
         $apiUrlupdate = $apiUrlupdate . $request->id;
-
+        $logo = '';
         if (isset($request->profile_avatar)) {
             $file = $request->profile_avatar;
             $team = Session::get('team');
@@ -600,6 +600,7 @@ class TeamController extends Controller
                     "name" => $request->team_name,
                     "logoUrl" => $mediaUrl
                 );
+                $logo = $mediaUrl;
             } else {
                 $details['TeamInfo'] = array(
                     "name" => $request->team_name,
@@ -611,11 +612,18 @@ class TeamController extends Controller
                 "name" => $request->team_name,
                 "logoUrl" => $request->old_pic
             );
+            $logo = $request->old_pic;
         }
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrlupdate, $details);
-
-            return $this->helper->responseHandler($response['data']);
+            $respons = $this->helper->responseHandler($response['data']);
+            if ($respons['code'] === 200) {
+                if ($team['teamid'] === (int)$request->id) {
+                    $team['teamLogo'] = $logo;
+                    session()->put('team', $team);
+                }
+            }
+            return $respons;
 
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             $this->helper->logException($e, 'updateTeams() {TeamController}');
@@ -677,8 +685,9 @@ class TeamController extends Controller
             $result['message'] = "Email is required";
             return $result;
         }
+        $name = $request->member_name !== null ? $request->member_name : "";
         $apiUrl = ApiConfig::get('/team/invite?teamId=');
-        $apiUrl = $apiUrl . $request['team_id'] . '&Permission=' . $request['permission'] . '&Email=' . $request['member_email'];
+        $apiUrl = $apiUrl . $request['team_id'] . '&Permission=' . $request['permission'] . '&Email=' . $request['member_email'].'&name='.$name;
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             return $this->helper->responseHandler($response['data']);

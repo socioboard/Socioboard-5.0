@@ -41,7 +41,7 @@
                 <div class="card card-custom">
                     <div class="card-header">
                         <div class="card-title">
-                            <span class="card-icon"><i class="fas fa-receipt text-success"></i></span>
+                            <span class="card-icon"><i class="fas fa-clipboard-list"></i></span>
                             <h3 class="card-label">SocioBoard Plans</h3>
                         </div>
                     </div>

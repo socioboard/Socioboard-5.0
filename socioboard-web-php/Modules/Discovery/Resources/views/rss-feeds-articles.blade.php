@@ -71,7 +71,8 @@
 
     <script>
         $(document).ready(function () {
-            $("#home_tab").trigger('click');
+            $("#boards").trigger('click');
+            $("#discovery").trigger('click');
         });
 
         function showkeywords(id) {

@@ -90,15 +90,15 @@
             </div>
             <!--end::phone number input-->
 
-            <div class="form-group d-flex align-items-center ">
-                <button type="button" id="Sb_login_signup_cancel"
-                        class="btn font-weight-bolder font-size-h6 px-8 otp-button" onclick="sendOTP()">Send OTP</button>
-                <div class="input-icon ml-3">
-                    <input class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6" type="text"
-                           name="otp" id="otp"  placeholder="Enter OTP"/>
-                </div>
-            </div>
-            <span id='otpError' style="font-size: medium"></span>
+{{--            <div class="form-group d-flex align-items-center ">--}}
+{{--                <button type="button" id="Sb_login_signup_cancel"--}}
+{{--                        class="btn font-weight-bolder font-size-h6 px-8 otp-button" onclick="sendOTP()">Send OTP</button>--}}
+{{--                <div class="input-icon ml-3">--}}
+{{--                    <input class="form-control form-control-solid h-auto py-7 rounded-lg font-size-h6" type="text"--}}
+{{--                           name="otp" id="otp"  placeholder="Enter OTP"/>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <span id='otpError' style="font-size: medium"></span>--}}
 
 
             <!--begin::Form group-->
@@ -137,7 +137,7 @@
                 <label class="checkbox mb-0">
                     <input type="checkbox" checked name="agree" id="agree"/>
                     <span class="mr-2"></span>
-                    I Agree to The &nbsp;<a href="#" class="text-primary"> Terms and Conditions</a>.
+                    I Agree to The &nbsp;<a href="https://socioboard.com/privacy-policy/" target="_blank" class="text-primary"> Terms and Conditions</a>.
                 </label>
                 <div id="agreeError" style="font-size: medium"></div>
             </div>

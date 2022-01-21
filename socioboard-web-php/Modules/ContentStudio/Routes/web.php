@@ -44,9 +44,9 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::post('/dailymotion/search', 'DailymotionController@search');
             Route::post('/dailymotion/search/next', 'DailymotionController@searchNext');
 
-            Route::get('/news_api', 'NewsApiController@index')->name('discovery.content_studio.news_api');
-            Route::post('/news_api/search', 'NewsApiController@search');
-            Route::post('/news_api/search/next', 'NewsApiController@searchNext');
+            Route::get('/newsapi', 'NewsApiController@index')->name('discovery.content_studio.news_api');
+            Route::post('/newsapi/search', 'NewsApiController@search');
+            Route::post('/newsapi/search/next', 'NewsApiController@searchNext');
 
             Route::get('/pixabay', 'PixabayController@index')->name('discovery.content_studio.pixabay');
             Route::post('/pixabay/search', 'PixabayController@search');
@@ -78,6 +78,7 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::any('/scheduling', 'PublishContentController@scheduling')->name('publish_content.scheduling');
             Route::get('youtube-scheduling', "PublishContentController@youtubeView")->name('youtube-publish');
             Route::post('youtube-schedule', "PublishContentController@youtubeSchedule")->name('youtube-schedule');
+            Route::get('edit-with-youtube/{id}/{type}', 'PublishContentController@editWithYoutube');
             Route::any('/scheduling/{id}', 'PublishContentController@edit')->name('publish_content.scheduling-edit');
             Route::any('/socioQueue-scheduling/{id}/{content}', 'PublishContentController@socioQueueEdit')->name('publish_content.dayWise-SocioQueue');
             Route::any('/draft/{id}', 'PublishContentController@draftEdit')->name('publish_content.draft-edit');
@@ -95,6 +96,9 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::get('schedule/day-wise-socioqueue', 'HistoryController@index')->name('schedule-day-wise-history');
             Route::delete('schedule/delete', 'HistoryController@deleteSchedule')->name('schedule-day-wise-history-delete');
         });
+        Route::get('youtube-drafts', "HistoryController@youtubeDrafts")->name('youtube-drafts');
+        Route::get('youtube-edit/{id}', "HistoryController@youtubeDraftsEdit")->name('youtube-edit');
+        Route::delete('youtube-delete/{id}', "HistoryController@youtubeDraftsDelete")->name('youtube-delete');
     });
 });
 

@@ -42,6 +42,7 @@ class PublishContentController extends Controller
         $facebookAccountsIds = [];
         $linkedinAccountsIds = [];
         $instagramAccountsIds = [];
+        $bitlyAccountsIds = [];
         $tumblrAccountsIds = [];
         if(!empty($socialAccounts)){
             foreach ($socialAccounts as $k => $v) {
@@ -57,6 +58,8 @@ class PublishContentController extends Controller
                             $instagramAccountsIds [] = $val->account_id;
                         } else if ($k === 'tumblr') {
                             $tumblrAccountsIds [] = $val->account_id;
+                        } else if ($k === 'bitly') {
+                            $bitlyAccountsIds [] = $val->account_id;
                         }
                     }
                 }
@@ -79,6 +82,7 @@ class PublishContentController extends Controller
             'linkedinAccountsIds' => $linkedinAccountsIds,
             'instagramAccountsIds' => $instagramAccountsIds,
             'tumblrAccountsIds' => $tumblrAccountsIds,
+            'bitlyAccountsIds' => $bitlyAccountsIds,
             'isTwitter' => "false",
             'isFacebook' => "false",
             'isLinkedin' => "false",
@@ -94,38 +98,47 @@ class PublishContentController extends Controller
      */
     public function share(PublishRequest $request)
     {
+
         try {
-            if ($request->get('accountTypes') === "true"  && (!isset($request->mediaUrl) && !isset($request->videoUrl))){
+            if ($request->get('accountTypes') === "true"  && (!isset($request->mediaUrl) && !isset($request->videoUrl) )){
                 $result = [];
                 $result['code'] = 422;
                 $result['message'] = "Please select any media for posting";
                 return $result;
             }
+            if($request->get('instagramInResocio') === "true" && $request->get('accountTypes') === null   && (!isset($request->mediaUrl) && !isset($request->videoUrl) ))
+            {
+                $result = [];
+                $result['code'] = 422;
+                $result['message'] = "Please select any media for posting in Instagram";
+                return $result;
+            }
             $team = \Session::get('team');
-            if ($request->get('accountTypes') === "true"){
-                $apiUrl = $apiUrl = $this->feedsUrl.'/feeds/get-insta-business-publish-limit?teamId=' . $team['teamid'];
-                $apidata = $request->get('socialAccount');
-                $responsed = $this->helper->postApiCallWithAuth('post', $apiUrl, $apidata);
-                $datass = $this->helper->responseHandler($responsed['data']);
-                $validity = [];
-                $c = 0;
-               if ( $datass['code'] === 200){
-                   foreach ($datass['data'] as $data){
-                       if ($data->limit == 0){
-                           $validity[$c] = $data;
-                           $c++;
-                       }
-                   }
-               }
-
-                if (sizeof($validity)>0){
-                    $result = [];
-                    $result['code'] = 423;
-                    $result['message'] = "invalid";
-                    $result['data'] = $validity;
-                    return  $result;
-                }
-            }$mediaArr = null;
+//            if ($request->get('accountTypes') === "true"){
+//                $apiUrl = $apiUrl = $this->feedsUrl.'/feeds/get-insta-business-publish-limit?teamId=' . $team['teamid'];
+//                $apidata = $request->get('socialAccount');
+//                $responsed = $this->helper->postApiCallWithAuth('post', $apiUrl, $apidata);
+//                $datass = $this->helper->responseHandler($responsed['data']);
+//                $validity = [];
+//                $c = 0;
+//               if ( $datass['code'] === 200){
+//                   foreach ($datass['data'] as $data){
+//                       if ($data->limit == 0){
+//                           $validity[$c] = $data;
+//                           $c++;
+//                       }
+//                   }
+//               }
+//
+//                if (sizeof($validity)>0){
+//                    $result = [];
+//                    $result['code'] = 423;
+//                    $result['message'] = "invalid";
+//                    $result['data'] = $validity;
+//                    return  $result;
+//                }
+//            }
+            $mediaArr = null;
             $postType = 'Text';
             if($request->has('mediaUrl') && !empty($request->get('mediaUrl'))){
                 $postType = 'Image';
@@ -149,7 +162,7 @@ class PublishContentController extends Controller
                 if ($currentTime > $dateschedule){
                     $result = [];
                     $result['code'] = 422;
-                    $result['message'] = "Please check your Scheduled Time";
+                    $result['message'] = "Schedule time  should be atleast 3 minutes greater than current time.";
                     return $result;
                 }
                 $data = $this->makeSchedule($team['teamid'], $postType, $mediaArr, $request);
@@ -172,21 +185,28 @@ class PublishContentController extends Controller
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
                 $data = $this->helper->responseHandler($response['data']);
             }
-
             if ($data == null)
                 return response()->json([
                     'satus' => 'error',
                     'message' => 'Sorry, something went wrong, please refresh the page. ',
                 ],$e->getCode());
-
             if($data['code']){
                 switch ($data['code']) {
                     case 200:
-                        return response()->json([
-                            'satus' => 'success',
-                            'message' => isset($data['message']) ? $data['message'] : null,
-                        ], $data['code']);
-                        break;
+                        if (isset($data['data']->errors) && sizeof($data['data']->errors) > 0){
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => isset($data['message']) ? $data['message'] : null,
+                                'error' => $data['data']->errors['0']->error
+                            ], $data['code']);
+                            break;
+                        }else{
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => isset($data['message']) ? $data['message'] : null,
+                            ], $data['code']);
+                            break;
+                        }
 
                     default:
                         return response()->json([
@@ -288,6 +308,12 @@ class PublishContentController extends Controller
     public function feedsModal(Request $request)
     {
         $socialAccounts = [];
+        $twitterAccountsIds = [];
+        $facebookAccountsIds = [];
+        $linkedinAccountsIds = [];
+        $instagramAccountsIds = [];
+        $bitlyAccountsIds = [];
+        $tumblrAccountsIds = [];
         try {
             $team = \Session::get('team');
             $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
@@ -297,32 +323,54 @@ class PublishContentController extends Controller
                     $responseData = $this->helper->responseHandler($response['data']);
                     $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
                     if(!empty($accounts)){
-                        foreach ($accounts as $key => $account) {
-                            switch ($account->account_type) {
-                                case 1:
-                                    $socialAccounts['facebook']['user'][] = $account;
-                                    break;
-                                case 2:
-                                    $socialAccounts['facebook']['page'][] = $account;
-                                    break;
-                                case 3:
-                                    $socialAccounts['facebook']['group'][] = $account;
-                                    break;
-                                case 4:
-                                    $socialAccounts['twitter']['account'][] = $account;
-                                    break;
-                                case 6:
-                                    $socialAccounts['linkedin']['personal account'][] = $account;
-                                    break;
-                                case 7:
-                                    $socialAccounts['linkedin']['business account'][] = $account;
-                                    break;
-                                case 12:
-                                    $socialAccounts['instagram']['business account'][] = $account;
-                                    break;
-                                case 16:
-                                    $socialAccounts['tumblr']['account'][] = $account;
-                                    break;
+                            foreach ($accounts as $key => $account) {
+                                if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                    switch ($account->account_type) {
+                                        case 1:
+                                            $socialAccounts['facebook']['user'][] = $account;
+                                            break;
+                                        case 2:
+                                            $socialAccounts['facebook']['page'][] = $account;
+                                            break;
+                                        case 3:
+                                            $socialAccounts['facebook']['group'][] = $account;
+                                            break;
+                                        case 4:
+                                            $socialAccounts['twitter']['account'][] = $account;
+                                            break;
+                                        case 6:
+                                            $socialAccounts['linkedin']['account'][] = $account;
+                                            break;
+                                        case 7:
+                                            $socialAccounts['linkedin']['business account'][] = $account;
+                                            break;
+                                        case 12:
+                                            $socialAccounts['instagram']['business account'][] = $account;
+                                            break;
+                                        case 16:
+                                            $socialAccounts['tumblr']['account'][] = $account;
+                                            break;
+                                    }
+
+                                }
+                            }
+                        foreach ($socialAccounts as $k => $v) {
+                            foreach ($v as $key => $value) {
+                                foreach ($value as $val) {
+                                    if ($k === 'twitter') {
+                                        $twitterAccountsIds [] = $val->account_id;
+                                    } else if ($k === 'facebook') {
+                                        $facebookAccountsIds [] = $val->account_id;
+                                    } else if ($k === 'linkedin') {
+                                        $linkedinAccountsIds [] = $val->account_id;
+                                    } else if ($k === 'instagram') {
+                                        $instagramAccountsIds [] = $val->account_id;
+                                    } else if ($k === 'tumblr') {
+                                        $tumblrAccountsIds [] = $val->account_id;
+                                    } else if ($k === 'bitly') {
+                                        $bitlyAccountsIds [] = $val->account_id;
+                                    }
+                                }
                             }
                         }
                     }
@@ -348,6 +396,18 @@ class PublishContentController extends Controller
                 'isType' => $request->has('isType') ? $request->get('isType') : null,
             ],
             'socialAccounts' => $socialAccounts,
+            'accountIds' => [],
+            'twitterAccountsIds' => $twitterAccountsIds,
+            'facebookAccountsIds' => $facebookAccountsIds,
+            'linkedinAccountsIds' => $linkedinAccountsIds,
+            'instagramAccountsIds' => $instagramAccountsIds,
+            'tumblrAccountsIds' => $tumblrAccountsIds,
+            'bitlyAccountsIds' => $bitlyAccountsIds,
+            'isTwitter' => "false",
+            'isFacebook' => "false",
+            'isLinkedin' => "false",
+            'isInstagram' => "false",
+            'isTumblr' => "false",
         ])->render();
         return response()->json(['html' => $html], 200);
     }
@@ -372,10 +432,13 @@ class PublishContentController extends Controller
                 }
             }
             $daywiseScheduleTimer = null;
+            $daywiseSchedule = null;
             if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
                 foreach ($postData->daywiseScheduleTimer as $key => $value) {
                     $daywiseScheduleTimer[] = $value->dayId;
+                    $daywiseSchedule = $value->timings['0'];
                 }
+
             }
 
             $twitterAccountsIds = [];
@@ -431,6 +494,7 @@ class PublishContentController extends Controller
                 'isFacebook' => $isFacebook,
                 'socioQueue' => null,
                 'returntype' => 2,
+                'daywisetime' => $daywiseSchedule
             ]);
         }
     }
@@ -449,17 +513,26 @@ class PublishContentController extends Controller
                     $accountIds[] = $value->accountId;
                 }
             }
+
             $daywiseScheduleTimer = null;
+            $daywiseSchedule = null;
             if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
                 foreach ($postData->daywiseScheduleTimer as $key => $value) {
                     $daywiseScheduleTimer[] = $value->dayId;
+                    $daywiseSchedule = $value->timings['0'];
                 }
             }
 
             $twitterAccountsIds = [];
             $facebookAccountsIds = [];
+            $linkedInAccountsIds = [];
+            $instagramInAccountsIds = [];
+            $tumblrInAccountsIds = [];
             $i = 0;
             $j = 0;
+            $x = 0;
+            $y = 0;
+            $z = 0;
             if(!empty($socialAccounts)){
                 foreach ($socialAccounts as $k => $v) {
                     foreach ($v as $key => $value) {
@@ -470,6 +543,15 @@ class PublishContentController extends Controller
                             } else if ($k == 'facebook') {
                                 $facebookAccountsIds [] = $val->account_id;
                                 if(in_array($val->account_id, $accountIds)) $j++;
+                            }else if ($k == 'linkedin') {
+                                $linkedInAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $x++;
+                            }else if ($k == 'instagram') {
+                                $instagramInAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $y++;
+                            }else if ($k == 'instagram') {
+                                $tumblrInAccountsIds [] = $val->account_id;
+                                if(in_array($val->account_id, $accountIds)) $z++;
                             }
                         }
                     }
@@ -477,7 +559,9 @@ class PublishContentController extends Controller
             }
             $isTwitter = $i > 0 ? "true" : "false";
             $isFacebook = $j > 0 ? "true" : "false";
-
+            $isLinkedin = $x > 0 ? "true" : "false";
+            $isInstagram = $y > 0 ? "true" : "false";
+            $istumblr = $z > 0 ? "true" : "false";
             return view('contentstudio::scheduling.edit',[
                 'mediaData' => [
                     'description' => isset($postData->description) ? $postData->description : null,
@@ -507,8 +591,12 @@ class PublishContentController extends Controller
                 'facebookAccountsIds' => $facebookAccountsIds,
                 'isTwitter' => $isTwitter,
                 'isFacebook' => $isFacebook,
+                'istumblr' => $istumblr,
+                'isInstagram' => $isInstagram,
+                'isLinkedin' => $isLinkedin,
                 'socioQueue' => 'socioQueue',
                 'returntype' => $content,
+                'daywisetime' => $daywiseSchedule
             ]);
         }
     }
@@ -533,9 +621,11 @@ class PublishContentController extends Controller
                 }
             }
             $daywiseScheduleTimer = null;
+            $daywiseSchedule = null;
             if(isset($postData->daywiseScheduleTimer) && !empty($postData->daywiseScheduleTimer)){
                 foreach ($postData->daywiseScheduleTimer as $key => $value) {
                     $daywiseScheduleTimer[] = $value->dayId;
+                    $daywiseSchedule = $value->timings['0'];
                 }
             }
 
@@ -598,6 +688,7 @@ class PublishContentController extends Controller
                 'isFacebook' => $isFacebook,
                 'isLinkedin' => $isLinkedin,
                 'socioQueue' => null,
+                'daywisetime' => $daywiseSchedule
             ]);
         }
     }
@@ -741,7 +832,7 @@ class PublishContentController extends Controller
                 switch ($data['code']) {
                     case 200:
                         return response()->json([
-                            'satus' => 'success',
+                            'status' => 'success',
                             'message' => isset($data['message']) ? $data['message'] : null,
                             'type_text' =>  (isset($request->socioQueue) && ($request->socioQueue == 'socioQueue')) ? $request->socioQueue : null,
                             'type_value' =>  $request->has('scheduling_type') ? $request->get('scheduling_type') : null,
@@ -751,7 +842,8 @@ class PublishContentController extends Controller
 
                     default:
                         return response()->json([
-                            'satus' => 'error',
+                            'code' => $data['code'],
+                            'status' => 'error',
                             'message' => isset($data['message']) ? $data['message'] : null,
                             'error' => isset($data['error']) ? $data['error'] : null
                         ], $data['code']);
@@ -878,14 +970,19 @@ class PublishContentController extends Controller
                                         $socialAccounts['twitter']['account'][] = $account;
                                         break;
                                     case 6:
-                                    case 7:
                                         $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 7:
+                                        $socialAccounts['linkedin']['page'][] = $account;
                                         break;
                                     case 12:
                                         $socialAccounts['instagram']['business account'][] = $account;
                                         break;
                                     case 16:
                                         $socialAccounts['tumblr']['account'][] = $account;
+                                        break;
+                                    case 13:
+                                        $socialAccounts['bitly']['account'][] = $account;
                                         break;
                                 }
                             }
@@ -910,7 +1007,7 @@ class PublishContentController extends Controller
      * This function is to get the youtube accounts in a particular account.
      * @return  all youtube accounts in json format.
      */
-    private function getTeamYoutubeAccounts()
+    public function getTeamYoutubeAccounts()
     {
         $socialAccounts = [];
         try {
@@ -984,6 +1081,7 @@ class PublishContentController extends Controller
                 "mediaUrl" => $mediaArr,
                 "mediaSelectionType" => $request->has('mediaSelectionType') ? $request->get('mediaSelectionType') : 0,
                 "shareLink" => $request->has('outgoingUrl') ? $request->get('outgoingUrl') : '',
+                "isInsta"=>$request->has('accountTypes') ? $request->get('accountTypes') : false,
                 "postingSocialIds" => $socialAccount,
 
                 "pinBoards" => [
@@ -1123,8 +1221,8 @@ class PublishContentController extends Controller
                 'account_id' => 'required',
                 'title' => 'required',
                 'discription' => 'required',
-                'datetime' => 'required',
                 'videoUrl' => 'required',
+                'thumbnail' => 'max:2048',
             ];
                 $dt = new \DateTime($request->get('datetime'), new \DateTimeZone('Asia/Calcutta'));
                 $dt->setTimeZone(new \DateTimeZone('UTC'));
@@ -1138,15 +1236,15 @@ class PublishContentController extends Controller
                 'account_id' => 'required',
                 'title' => 'required',
                 'discription' => 'required',
-                'videoUrl' => 'required'
+                'videoUrl' => 'required',
+                'thumbnail' => 'max:2048',
             ];
             $status = [
                 "privacyStatus" => "public",
             ];
         }
-        $validator = Validator::make($request->only('account_id', 'title','discription','datetime','videoUrl'), $data, [
+        $validator = Validator::make($request->only('account_id', 'title','discription','videoUrl','thumbnail'), $data, [
             'account_id.required' => 'Youtube Account is Required',
-            'datetime.required' => 'Date and Time for Publishing is Required',
             'videoUrl.required' => 'Video for Publishing is Required',
         ]);
         if ($validator->fails()) {
@@ -1156,12 +1254,13 @@ class PublishContentController extends Controller
             return Response::json($response, 200);
         }
         $mediaUrl = $request->videoUrl;
+        if (isset($request->thumbnail))
         $requestData = [
             "postDetails" => [
+                "postType" => (int)$request->type,
                 "mediaUrls" => [
                     $mediaUrl
                 ],
-                "postType" => 0,
                 "resource" => [
                     "snippet" => [
                         "title" => $request->title,
@@ -1173,11 +1272,40 @@ class PublishContentController extends Controller
                     ],
                     "status" => $status
                 ],
+                "thumbnailUrl" => $request->thumbnail
+                ]
+            ];
+        else
+            $requestData = [
+                "postDetails" => [
+                    "mediaUrls" => [
+                        $mediaUrl
+                    ],
+                    "postType" => (int)$request->type,
+                    "resource" => [
+                        "snippet" => [
+                            "title" => $request->title,
+                            "description" => $request->discription,
+                            "categoryId" => 24,
+                            "defaultLanguage" => "en",
+                            "defaultAudioLanguage" => "en",
+                            "tags" => isset($request->param ) ? $request->param : []
+                        ],
+                        "status" => $status
+                    ],
                 ]
             ];
         $team = \Session::get('team');
-        $apiUrl = $this->apiUrl.'/youtube/publish?accountId='.$request->account_id.'&teamId='.$team['teamid'];
-        $response = $this->helper->postApiCallWithAuth('POST', $apiUrl, $requestData);
+        $method = '';
+        $apiUrl = '';
+        if($request->update === '2'){
+            $apiUrl = $this->apiUrl.'/youtube/publish?accountId='.$request->account_id.'&teamId='.$team['teamid'];
+            $method = 'POST';
+        }else if ($request->update === '1'){
+            $apiUrl = $this->apiUrl.'/youtube/edit-published-details?postId='.$request->id.'&accountId='.$request->account_id.'&teamId='.$team['teamid'];
+            $method = 'PUT';
+        }
+        $response = $this->helper->postApiCallWithAuth($method, $apiUrl,$requestData);
         return $this->helper->responseHandler($response['data']);
     }
 
@@ -1231,16 +1359,31 @@ class PublishContentController extends Controller
      * @return {Object} Returns publisged image data in JSON object format.
      */
     public function pinterestSchedule(Request $request){
-        $data = [
-            'board_id' => 'required',
-            'discription' => 'required',
-            'mediaUrl' => 'required'
-        ];
-        $validator = Validator::make($request->only('board_id', 'mediaUrl','discription'), $data, [
-            'board_id.required' => 'Pinterest account and boards are Required',
-            'discription.required' => 'Discription is required',
-            'mediaUrl.required' => 'Media for Publishing is Required',
-        ]);
+        if ($request['outgoing-url'] !== null){
+            $data = [
+                'board_id' => 'required',
+                'discription' => 'required',
+                'mediaUrl' => 'required',
+                'outgoing-url'=> 'url'
+            ];
+            $validator = Validator::make($request->only('board_id', 'mediaUrl','discription','outgoing-url'), $data, [
+                'board_id.required' => 'Pinterest account and boards are Required',
+                'discription.required' => 'Discription is required',
+                'mediaUrl.required' => 'Media for Publishing is Required',
+                'outgoing-url.url' => 'Outgoing url should be a valid URL'
+            ]);
+        }else{
+            $data = [
+                'board_id' => 'required',
+                'discription' => 'required',
+                'mediaUrl' => 'required',
+            ];
+            $validator = Validator::make($request->only('board_id', 'mediaUrl','discription'), $data, [
+                'board_id.required' => 'Pinterest account and boards are Required',
+                'discription.required' => 'Discription is required',
+                'mediaUrl.required' => 'Media for Publishing is Required'
+            ]);
+        }
         if ($validator->fails()) {
             $response['code'] = 201;
             $response['msg'] = $validator->errors()->all();
@@ -1261,7 +1404,7 @@ class PublishContentController extends Controller
             'postType' => 'Image',
             'message' => $request->discription,
             'mediaPaths' => $request->mediaUrl,
-            'link' =>  '',
+            'link' =>  $request['outgoing-url'],
             'accountIds' => $accountIds,
             'postStatus' => 1,
             'pinBoards' => $boards
@@ -1271,4 +1414,34 @@ class PublishContentController extends Controller
         $response = $this->helper->postApiCallWithAuth('post', $apiUrl, $requestData);
         return $this->helper->responseHandler($response['data']);
     }
+
+    public function editWithYoutube($id, $type){
+        $postUrl = '';
+        if ($type === 'draft'){
+            $postUrl = $this->apiUrl . "/publish/get-draft-post-by-id?id=" . $id;
+            $method = 'get';
+        } else{
+            $postUrl = $this->apiUrl . "/schedule/get-schedule-post-by-id?id=" . $id;
+            $method = 'post';
+        }
+        $postData = $this->helper->postApiCallWithAuth($method, $postUrl);
+        $responseData = $this->helper->responseHandler($postData['data']);
+        $discription = $responseData['data']['0']->description;
+        if ($responseData['data']['0']->postType === 'Video'){
+            $videoData = $responseData['data']['0']->mediaUrl['0'];
+        }else{
+            $videoData = "No";
+        }
+        $accounts= $this->getTeamYoutubeAccounts();
+        if (isset($accounts ) && isset($accounts['youtube'])){
+            $socialAccounts = $accounts['youtube'];
+        }else{
+            $socialAccounts = null;
+        }
+
+        return view('contentstudio::scheduling.youtube_publish',compact('socialAccounts', 'videoData','discription'));
+    }
+
+
+
 }

@@ -107,7 +107,7 @@
                                                     class="close btn btn-xs btn-icon btn-light btn-hover-primary"
                                                     data-dismiss="modal"
                                                     aria-label="Close" id="Sb_quick_user_close">
-                                                <i class="ki ki-close icon-xs text-muted"></i>
+                                                <i class="ki ki-close icon-xs"></i>
                                             </button>
                                         </div>
                                         <form action="" method="post" id="update_data{{$report[0]['id']}}">
@@ -286,7 +286,7 @@
                     <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary"
                             data-dismiss="modal"
                             aria-label="Close" id="Sb_quick_user_close">
-                        <i class="ki ki-close icon-xs text-muted"></i>
+                        <i class="ki ki-close icon-xs"></i>
                     </button>
                 </div>
                 <form action="/save-auto-email-reports" method="POST" id="form_data">
@@ -329,7 +329,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="contents" class="col-form-label font-weight-bolder font-size-lg">Contents
+                            <label for="contents" class="col-form-label font-weight-bolder font-size-lg">Contents to include in Report
                                 :</label>
                             <div class="row">
                                 <div class="col-md-6">
@@ -531,7 +531,12 @@
         $('#recipients_tags').select2({
             placeholder: 'Tags',
             tags: true,
-            width: 'resolve'
+            width: 'resolve',
+            language: {
+                noResults: function () {
+                    return 'Please enter the reciever email';
+                }
+            }
         });
 
         $('#recipients_tagsedit').select2({
