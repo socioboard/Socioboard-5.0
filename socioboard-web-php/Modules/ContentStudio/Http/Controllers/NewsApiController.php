@@ -24,9 +24,9 @@ class NewsApiController extends Controller
      */
     public function index()
     {
-        $title = 'News Api';
+        $title = 'NewsApi';
 
-        $rating = ['relevance' => 'Relevance', 'publishedAt' => 'PublishedAt', 'popularity' => 'Popularity'];
+        $rating = ['entertainment' => 'Entertainment', 'business' => 'Business', 'general' => 'General', 'health' => 'Health', 'science' => 'Science', 'sports' => 'Sports', 'technology' => 'Technology' ];
 
         $html = view('contentstudio::components.search')
             ->with(compact('rating','title'))
@@ -45,8 +45,7 @@ class NewsApiController extends Controller
 
     public function getSearchSessionApi($request)
     {
-        $apiUrl = $this->apiUrl.'/trends/get-news-api?keyword='.$request['keyword'].'&pageId='.$request['pageId'].'&sortBy='.$request['rating'];
-
+        $apiUrl = $this->apiUrl.'/trends/get-news-api?keyword='.$request['keyword'].'&pageId='.$request['pageId'].'&category='.$request['rating'];
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl, null);
             $data = $this->helper->responseHandler($response['data'])['data'];

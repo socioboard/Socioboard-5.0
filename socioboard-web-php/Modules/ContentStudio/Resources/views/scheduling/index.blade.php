@@ -15,7 +15,6 @@
     @php
         $content = '';
         $content .= isset($mediaData) && isset($mediaData['title']) ? $mediaData['title'].' ' : '';
-        $content .= isset($mediaData) && isset($mediaData['description']) ? $mediaData['description'] : '';
         
         $formSubmissionAction = \Request::route()->getName() == "publish_content.scheduling-edit" ? route("publish_content.update", $scheduleId) : route("publish_content.share");
 
@@ -43,38 +42,41 @@
                                 <form action="{{ $formSubmissionAction }}" method="{{$formSubmissionMethod}}"
                                       id="publishContentForm">
                                     <!-- begin:Accounts list -->
-                                    <div class="accounts-list mb-4">
+                                    <div class="row info-list">
                                         @include('contentstudio::components.draft_social_accounts')
                                     </div>
                                     <!-- end:Accounts list -->
                                     <span id="errorText1" class="text-danger"></span>
-                                    <div class="form-group">
+                                    <div class="form-group mt-8">
                                         <textarea name="content"
                                                   class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
                                                   id="normal_post_area" rows="3" placeholder="Write Something here!"
                                                   required>{{ $content  }}</textarea>
                                     </div>
-                                    <p class="text-right">Charecters Remaining : <span id="errorText3" class="text-danger"></span></p>
-                                    <div class="form-group">
+                                    <p class="text-right">Characters Remaining : <span id="errorText3" class="text-danger"></span></p>
+                                    <div class="form-group" id="potgoingurldiv">
                                         <div class="input-icon">
                                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
                                                    type="text" name="outgoingUrl" autocomplete="off"
                                                    placeholder="Enter Outgoing URL"
                                                    value="{!! isset($mediaData) && isset($mediaData['sourceUrl']) ? $mediaData['sourceUrl'] : null !!}"/>
                                             <span><i class="fas fa-link"></i></span>
-                                            @php
-                                            $bitly = Session::get('bitly_id');
-                                            @endphp
                                         </div>
-                                                @if($bitly !== null)
-                                                <div class="form-group mt-5 d-flex" id="input_urls_for_short">
-                                                    <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" autocomplete="off" placeholder="Enter URL To get Short Link" id="link_to_be">
-                                                    <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8" onclick="SortLink()">Get Shortened Link</button>
-                                                </div>
-                                        <div id="OutputURL">
+                                        @if(sizeof($bitlyAccountsIds )!== 0)
+                                            <div class="form-group mt-5 d-flex" id="input_urls_for_short">
+                                                <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6"
+                                                       type="text" autocomplete="off"
+                                                       placeholder="Enter URL To get Short Link" id="link_to_be">
+                                                <input type="hidden" name="account_iddd"
+                                                       value="{{$bitlyAccountsIds[0]}}" id="bitly_id">
+                                                <a id="submitButton"
+                                                   class="btn font-weight-bolder px-3 link-shorting-btn"
+                                                   onclick="SortLink()">Get Shortened Link</a>
+                                            </div>
+                                            <div id="OutputURL">
 
-                                        </div>
-                                                    @endif
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <!-- image and video upload -->
@@ -84,7 +86,6 @@
                                                 @else
                                                     <div class="col-12" id="option_upload">
                                                         @endif
-                                                        <small>Note: Add only 4 items at a time.</small>
                                                         <ul class="btn-nav">
                                                             <li>
                                                     <span>
@@ -178,22 +179,37 @@
                                                         <!-- end::schedule button -->
 
                                     <!-- begin::Schedule type -->
-                                    <div class="schedule-div">
+                                    <div class="schedule-div mt-5">
                                         <!--begin::Header-->
                                         <h3 class="card-title font-weight-bolder">Schedule type</h3>
                                         <!--end::Header-->
                                         <div class="mb-2">
-                                            <div class="checkbox-list">
-                                                <div class="custom-control custom-checkbox mb-5">
-                                                    <input type="checkbox" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0" >
-                                                    <label class="custom-control-label" for="schedule_post"> &nbsp;&nbsp; Normal Schedule Post</label>
-                                                </div>
+                                            <div class="">
+                                                <label class="radio radio-lg mb-2 link-shortening-label">
+                                                    <input type="radio" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0">
+                                                    <span></span>
+                                                    <div class="font-size-lg font-weight-bold ml-4">Normal Schedule Post</div>
+                                                </label>
 
-                                                <div class="custom-control custom-checkbox mb-5">
-                                                    <input type="checkbox" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1" >
-                                                    <label class="custom-control-label" for="day_schedule"> &nbsp;&nbsp; Day Wise Schedule Post</label>
-                                                </div>
+                                                <label class="radio radio-lg mb-2 link-shortening-label">
+                                                    <input type="radio" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1">
+                                                    <span></span>
+                                                    <div class="font-size-lg font-weight-bold ml-4">Day Wise Schedule Post</div>
+
+                                                </label>
+
                                             </div>
+{{--                                            <div class="checkbox-list">--}}
+{{--                                                <div class="custom-control custom-checkbox mb-5">--}}
+{{--                                                    <input type="checkbox" class="custom-control-input schedule_normal_post" id="schedule_post" name="scheduling_type" value="0" >--}}
+{{--                                                    <label class="custom-control-label" for="schedule_post"> &nbsp;&nbsp; Normal Schedule Post</label>--}}
+{{--                                                </div>--}}
+
+{{--                                                <div class="custom-control custom-checkbox mb-5">--}}
+{{--                                                    <input type="checkbox" class="custom-control-input day_schedule_post" id="day_schedule" name="scheduling_type" value="1" >--}}
+{{--                                                    <label class="custom-control-label" for="day_schedule"> &nbsp;&nbsp; Day Wise Schedule Post</label>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
                                         </div>
                                         <div class="p-1 mb-2" id="schedule_normal_div">
                                             <label for="schedule_normal_post">Select Date and Time</label>
@@ -354,9 +370,9 @@
             icons: faIconsForDateTimePicker,
             useCurrent: false
         });
-        $("#schedule_normal_post_daterange").on("change.datetimepicker", function (e) {
-            $('#schedule_normal_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
-        });
+        // $("#schedule_normal_post_daterange").on("change.datetimepicker", function (e) {
+        //     $('#schedule_normal_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
+        // });
 
         // schedule_normal_post daterange
         var start = moment().subtract(29, 'days');
@@ -369,9 +385,9 @@
             icons: faIconsForDateTimePicker,
             useCurrent: false
         });
-        $("#day_schedule_post_daterange").on("change.datetimepicker", function (e) {
-            $('#day_schedule_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
-        });
+        // $("#day_schedule_post_daterange").on("change.datetimepicker", function (e) {
+        //     $('#day_schedule_post_daterange').datetimepicker('minDate', moment().add(3, 'minutes'));
+        // });
 
         // schedule div toggle
         $("#schedule_normal_div").hide();
@@ -406,6 +422,7 @@
         function SortLink() {
             $('#submitButton').empty().append('<i class="fa fa-spinner fa-spin"></i>Processing');
             let short_link = $('#link_to_be').val();
+            let account = $('#bitly_id').val();
             $.ajax({
                 type: "post",
                 url: "/bitly/get-shortened-link",
@@ -413,12 +430,13 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data:{
-                    'short_link' : short_link
+                    'short_link' : short_link,
+                    'acc_id' : account
                 } ,
                 success: function (response) {
-                    $('#submitButton').empty().append('Submit');
+                    $('#submitButton').empty().append('Get Shortened Link');
                     if (response.code === 200){
-                        $('#OutputURL').empty().append('<div class="link-shortening-text" id="responseURL">'+response.data.link+'<span class="ml-auto"><i class="icon-md far fa-file-alt" onclick="myFunction()"></i><i class="icon-md fas fa-check-circle ml-4"></i></span></div>')
+                        $('#OutputURL').empty().append('<div class="link-shortening-text" id="responseURL">'+response.data.link+'<span class="ml-auto"><i class="icon-md far fa-file-alt" onclick="myFunction()"></i></span></div>')
                     }else if (response.error == "\"long_url\" must be a string"){
                         toastr.error("URL field is required");
                     } else {
@@ -426,7 +444,7 @@
                     }
                 },
                 error: function (error) {
-                    $('#submitButton').empty().append('Submit');
+                    $('#submitButton').empty().append('Get Shortened Link');
                     toastr.error(error.message);
                 },
             });

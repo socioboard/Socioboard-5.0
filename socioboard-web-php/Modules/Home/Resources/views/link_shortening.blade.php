@@ -43,7 +43,7 @@
                                 <!--begin::Body-->
                                 <div class="card-body pt-4">
                                     <label class="radio radio-lg mb-2 link-shortening-label">
-                                        <input type="checkbox" name="social" id="usage"/>
+                                        <input type="checkbox" name="social" id="usage" {{session('bitly') === "false" ? "checked" : ""}} />
                                         <span></span>
                                         <div class="font-size-lg font-weight-bold ml-4">No Shortening</div>
                                     </label>
@@ -55,23 +55,22 @@
                         </div>
                         <!--end::Aside-->
                         <!--begin::Content-->
+                        @if(session('bitly') !== "false")
                         <div class="col-md-6 link-shortening" id="inputss">
                             <div class="card card-custom card-stretch">
                                 <!--begin::Body-->
                                 <div class="card-body pt-4">
-
                                     <label class="radio radio-lg mb-2 link-shortening-label">
-                                        <input type="checkbox" name="socialss" id="bitly"/>
-
+                                        <input type="checkbox" name="socialss" id="bitly" {{session('bitly') !== "false" ? "checked" : ""}} />
                                         <span></span>
                                         <div class="font-size-lg font-weight-bold ml-4">bit.ly</div>
                                     </label>
                                     <script>
                                         let visiblity = localStorage.getItem("visible");
                                     </script>
-
-                                    <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
-                                    <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                    @if(session('bitly') !== "false")
+                                    <div class="card-body pt-4 bg-colored" id="visibleId">
+                                    <p class="mt-5">All URLs will be sent as shortened and simplified URLs while publishing.</p>
                                     @if(session('bitly') === "false")
                                     <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
                                     @else
@@ -117,7 +116,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                    <button type="button" class="btn symbol-label font-weight-bolder mr-2  mt-5 px-8">Connected</button>
+                                    <button type="button" class="btn symbol-label font-weight-bolder mr-2  mt-5 px-8" disabled>Connected</button>
                                     @endif
                                     <form id="shortUrl">
                                         @csrf
@@ -132,10 +131,131 @@
 
                                     </div>
                                     </div>
+                                        @else
+                                        <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
+                                            <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                            @if(session('bitly') === "false")
+                                                <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
+                                            @endif
+                                            <form id="shortUrl">
+                                                @csrf
+                                                @if(session('bitly') === "true")
+                                                    <div class="form-group mt-5 d-flex" id="input_urls_for_short">
+                                                        <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" name="short_link" autocomplete="off" placeholder="Enter URL">
+                                                        <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8">Generate</button>
+                                                    </div>
+                                                @endif
+                                            </form>
+                                            <div id="OutputURL">
+
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <!--end::Body-->
                             </div>
                         </div>
+                        @else
+                            <div class="col-md-6 link-shortening" id="inputss">
+                                <div class="card card-custom card-stretch">
+                                    <!--begin::Body-->
+                                    <div class="card-body pt-4">
+                                        <label class="radio radio-lg mb-2 link-shortening-label">
+                                            <input type="checkbox" name="socialss" id="bitly" {{session('bitly') !== "false" ? "checked" : ""}} />
+                                            <span></span>
+                                            <div class="font-size-lg font-weight-bold ml-4">bit.ly</div>
+                                        </label>
+                                        <script>
+                                            let visiblity = localStorage.getItem("visible");
+                                        </script>
+                                        @if(session('bitly') !== "false")
+                                            <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
+                                                <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                                @if(session('bitly') === "false")
+                                                    <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
+                                                @else
+                                                    <div class="mb-3 d-flex align-items-center justify-content-centr">
+                                                        <div class="form-group mr-3 mb-0">
+                                                            <input class="form-control form-control-solid py-7 mr-5 rounded-lg font-size-h6" type="text" autocomplete="off" disabled
+                                                                   placeholder="Enter Account" value="{{$SocialAccounts['bitly']['account'][0]->user_name}}">
+                                                        </div>
+                                                        <div class="form-group mr-3 mb-0">
+                                                            @php
+                                                                $date = new DateTime($SocialAccounts['bitly']['account'][0]->create_on);
+                                                                $new_date_format = $date->format('Y-m-d');
+                                                            @endphp
+                                                            <input type="text" class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 datetimepicker-input" disabled
+                                                                   id="schedule_normal_post_daterange" placeholder="Select date & time" value="{{$new_date_format}}"  />
+                                                        </div>
+                                                        <button type="button" class="btn font-weight-bolder  px-8" data-toggle="modal" data-target="#deleteImageModal">Delete</button>
+
+                                                        <div class="modal fade" id="deleteImageModal" tabindex="-1" role="dialog" aria-labelledby="deleteImageModalLabel"
+                                                             aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="deleteImageModalLabel">Delete Account</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <i aria-hidden="true" class="ki ki-close"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="text-center">
+                                                                            <span class="font-weight-bolder font-size-h4 "> Are you sure wanna delete this Account? </span>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-center">
+                                                                            <a type="submit" onclick="deleteIt('{{$SocialAccounts['bitly']['account'][0]->account_id}}')"
+                                                                               class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                               id="image-delete">Delete it! </a>
+                                                                            <a href="javascript:;" type="button"
+                                                                               class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">No
+                                                                                thanks. </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn symbol-label font-weight-bolder mr-2  mt-5 px-8" disabled>Connected</button>
+                                                @endif
+                                                <form id="shortUrl">
+                                                    @csrf
+                                                    @if(session('bitly') === "true")
+                                                        <div class="form-group mt-5 d-flex" id="input_urls_for_short">
+                                                            <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" name="short_link" autocomplete="off" placeholder="Enter URL">
+                                                            <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8">Generate</button>
+                                                        </div>
+                                                    @endif
+                                                </form>
+                                                <div id="OutputURL">
+
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
+                                                <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                                @if(session('bitly') === "false")
+                                                    <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
+                                                @endif
+                                                <form id="shortUrl">
+                                                    @csrf
+                                                    @if(session('bitly') === "true")
+                                                        <div class="form-group mt-5 d-flex" id="input_urls_for_short">
+                                                            <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" name="short_link" autocomplete="off" placeholder="Enter URL">
+                                                            <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8">Generate</button>
+                                                        </div>
+                                                    @endif
+                                                </form>
+                                                <div id="OutputURL">
+
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <!--end::Body-->
+                                </div>
+                            </div>
+                        @endif
                         <!--end::Content-->
                     </div>
                 </div>
@@ -151,7 +271,7 @@
     <script>
     $('#home_tab').trigger('click');
     $(document).ready(function() {
-        $('#visibleId').hide();
+        // $('#visibleId').hide();
         $(document).on('click','#usage', function () {
             if($("input:checkbox[name='social']").is(":checked")) {
                 $('#inputss').hide();

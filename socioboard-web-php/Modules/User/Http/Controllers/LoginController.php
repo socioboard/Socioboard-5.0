@@ -70,9 +70,9 @@ class LoginController extends Controller
                     AuthUsers::login($user);
                     return redirect('plan-details-view');
                 } else {
-                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === '')|| $user['userDetails']['phone_code'] === 'nil' || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''|| $user['userDetails']['phone_no'] === 'nil')) {
-                        return redirect('login')->with('NocontactNumber', 'NO');
-                    } else {
+//                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === '')|| $user['userDetails']['phone_code'] === 'nil' || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''|| $user['userDetails']['phone_no'] === 'nil')) {
+//                        return redirect('login')->with('NocontactNumber', 'NO');
+//                    } else {
                         AuthUsers::login($user);
                         $result = $this->checkPlanExpiry();
                         if ($result === "true") {
@@ -81,7 +81,7 @@ class LoginController extends Controller
                             $this->helper->getTeamNewSession();
                             return redirect('dashboard');
                         }
-                    }
+//                    }
                 }
             } else if ($response['code'] === 400) {
                 return redirect('login')->with('invalidSocial', $response['error']);
@@ -110,10 +110,10 @@ class LoginController extends Controller
                     AuthUsers::login($user);
                     return redirect('plan-details-view');
                 } else {
-                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
-                            $user['userDetails']['phone_no'] === 'nil')) {
-                        return redirect('login')->with('NocontactNumber', 'NO');
-                    } else {
+//                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
+//                            $user['userDetails']['phone_no'] === 'nil')) {
+//                        return redirect('login')->with('NocontactNumber', 'NO');
+//                    } else {
                         AuthUsers::login($user);
                         $result = $this->checkPlanExpiry();
                         if ($result === "true") {
@@ -122,7 +122,7 @@ class LoginController extends Controller
                             $this->helper->getTeamNewSession();
                             return redirect('dashboard');
                         }
-                    }
+//                    }
                 }
             } else if ($response['code'] === 400) {
                 return redirect('login')->with('invalidSocial', $response['error']);
@@ -152,10 +152,10 @@ class LoginController extends Controller
                     AuthUsers::login($user);
                     return redirect('plan-details-view');
                 } else {
-                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
-                            $user['userDetails']['phone_no'] === 'nil')) {
-                        return redirect('login')->with('NocontactNumber', 'NO');
-                    } else {
+//                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||
+//                            $user['userDetails']['phone_no'] === 'nil')) {
+//                        return redirect('login')->with('NocontactNumber', 'NO');
+//                    } else {
                         AuthUsers::login($user);
                         $result = $this->checkPlanExpiry();
                         if ($result === "true") {
@@ -165,7 +165,7 @@ class LoginController extends Controller
                             return redirect('dashboard');
                         }
                     }
-                }
+//                }
             } else if ($response['data']->code === 400) {
                 return redirect('login')->with('invalidSocial', $response['data']->message);
             } else {
@@ -213,10 +213,10 @@ class LoginController extends Controller
                     $result['code'] = 403;
                     return $result;
                 } else {
-                    if (($data['userDetails']['phone_code'] === '0' || $data['userDetails']['phone_code'] === null || $data['userDetails']['phone_code'] === ''||$data['userDetails']['phone_code'] === 'nil') || ($data['userDetails']['phone_no'] === '0' || $data['userDetails']['phone_no'] === null || $data['userDetails']['phone_no'] === ''||$data['userDetails']['phone_no'] === 'nil')) {
-                        $result['code'] = 501;
-                        return $result;
-                    } else {
+//                    if (($data['userDetails']['phone_code'] === '0' || $data['userDetails']['phone_code'] === null || $data['userDetails']['phone_code'] === ''||$data['userDetails']['phone_code'] === 'nil') || ($data['userDetails']['phone_no'] === '0' || $data['userDetails']['phone_no'] === null || $data['userDetails']['phone_no'] === ''||$data['userDetails']['phone_no'] === 'nil')) {
+//                        $result['code'] = 501;
+//                        return $result;
+//                    } else {
                         AuthUsers::login($data);
                         $expiry_date = $response['data']['user']['Activations']['account_expire_date'];
                         $today = date('d-m-Y');
@@ -233,7 +233,7 @@ class LoginController extends Controller
                             Session::put('expired', 'false');
                             return $response;
                         }
-                    }
+//                    }
                 }
             } else if ($response['code'] == 400 || $response['code'] == 401) {
                 return $response;
@@ -263,9 +263,9 @@ class LoginController extends Controller
                     AuthUsers::login($user);
                     return redirect('plan-details-view');
                 } else {
-                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||$user['userDetails']['phone_no'] === 'nil')) {
-                        return redirect('login')->with('NocontactNumber', 'NO');
-                    } else {
+//                    if (($user['userDetails']['phone_code'] === '0' || $user['userDetails']['phone_code'] === null || $user['userDetails']['phone_code'] === ''||$user['userDetails']['phone_code'] === 'nil') || ($user['userDetails']['phone_no'] === '0' || $user['userDetails']['phone_no'] === null || $user['userDetails']['phone_no'] === ''||$user['userDetails']['phone_no'] === 'nil')) {
+//                        return redirect('login')->with('NocontactNumber', 'NO');
+//                    } else {
                         AuthUsers::login($user);
                         $result = $this->checkPlanExpiry();
                         if ($result === "true") {
@@ -275,7 +275,7 @@ class LoginController extends Controller
                             return redirect('dashboard');
                         }
                     }
-                }
+//                }
             } else if ($response['code'] === 400) {
                 return redirect('login')->with('invalidSocial', $response['data']->error);
             } else {

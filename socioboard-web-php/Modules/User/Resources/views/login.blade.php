@@ -96,7 +96,8 @@
 
                         </div>
                         <div class="d-flex justify-content-end mt-5">
-                            <a href="" class="text-primary font-size-h6 font-weight-bolder text-hover-primary" data-toggle="modal" data-target="#emailActivationModalLabel" >
+                            <a href="" class="text-primary font-size-h6 font-weight-bolder text-hover-primary"
+                               data-toggle="modal" data-target="#emailActivationModalLabel">
                                 Get Activation Link
                             </a>
                         </div>
@@ -366,8 +367,30 @@
          * ! Do not change this function without checking script code of changing theme.
          */
         function changeThemeWhiteDefault() {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
+            if (getCookie('themeNow') === 'light' || getCookie('themeNow') === undefined) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
 
         $(document).ready(function () {//calling function on onload of the page to determine the theme change
@@ -437,7 +460,7 @@
                         if (response.code === 200) {
                             toastr.success('Have sent OTP to mobile number successfully,please check');
                         } else if (response.code === 400) {
-                            toastr.error("Can not send OTP.",response.error);
+                            toastr.error("Can not send OTP.", response.error);
 
                         } else {
                             toastr.error('Some error occured, Can not send the OTP');

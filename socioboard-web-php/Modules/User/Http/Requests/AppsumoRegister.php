@@ -4,7 +4,7 @@ namespace Modules\User\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SignUp extends FormRequest
+class AppsumoRegister extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,9 +18,6 @@ class SignUp extends FormRequest
             "lastName" => 'required|max:32|min:1|regex:/^[a-zA-Z0-9-_]*$/',
             "userName" => 'required|regex:/([a-zA-Z]+)([0-9]*)/',
             "email" => 'required|email',
-            "phone" => 'required',
-            "code" => 'required',
-//            "otp" => 'required',
             "password" => 'required|max:20|min:6|regex:/^(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[\/!@#$%^&*()`~\s_+\-=\[\]{};:"\\\,.<>\?\']).*$/',
             "passwordConfirmation" => 'required_with:password|same:password',
             "agree" => 'required'

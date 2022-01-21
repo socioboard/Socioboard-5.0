@@ -44,7 +44,7 @@
                                         <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                                                data-action="change" data-toggle="tooltip" title=""
                                                data-original-title="Change avatar">
-                                            <i class="fa fa-pen icon-sm text-muted upload-button"></i>
+                                            <i class="fas fa-pen icon-sm text-muted upload-button"></i>
                                             <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" id="profile" class="file-upload"/>
                                             <input type="hidden" name="profile_avatar_remove"/>
                                         </label>
@@ -62,9 +62,6 @@
                                     <div class="d-flex justify-content-center">
                                         <button type="submit" id="create_button"
                                                 class="btn text-warning font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Create
-                                        </button>
-                                        <button type="submit" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                data-dismiss="modal">Close
                                         </button>
                                     </div>
                                 </div>

@@ -43,7 +43,7 @@
                                         </option>
                                     @elseif($message=== 'No LinkedIn Pages account has been added yet!')
                                         <option selected value="failed">No
-                                            LinkedIn Pages has added yet
+                                            LinkedIn Pages has been added yet for this team yet! or LinkedIn pages accounts has been locked
                                         </option>
                                     @endif
                                 </select>
@@ -116,12 +116,6 @@
                                                     </div>
                                                 </div>
                                                 <!-- end:account star rating -->
-                                                <div class="mt-2">
-                                                    <a href="#"
-                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                       onclick="return false" id="chatID"
-                                                       title="Coming soon">Chat</a>
-                                                </div>
                                             </div>
                                         </div>
                                         <!--end::User-->
@@ -143,7 +137,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>Currently no LinkedIn Pages has been added for this team</h6>
+                                        <h6>Currently no LinkedIn Pages has been added for this team yet! or Account has been locked.</h6>
                                     </div>
                                 @endif
                             </div>
@@ -155,12 +149,6 @@
                         <div class="card card-custom gutter-b" id="ss-feedsDiv">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Feeds</h3>
-                                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
-                                    <span node-id="ss-feedsDiv_md8" class="ss addtcartclose"></span>
-                                </div>
-                                <span class="spinner spinner-primary spinner-center" id="ss-feedsDiv_md8" style="
-    display: none;"></span>
                             </div>
                             <div class="card-body" id="linkedInFeeds">
                             @if(count($accounts)>0)
@@ -377,7 +365,7 @@
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
-                                        <h6>Currently no LinkedIn Pages Accounts has been added for this team</h6>
+                                        <h6>Currently no LinkedIn Pages Accounts has been added for this team yet! or Account has been locked.</h6>
                                     </div>
                                 @endif
                             </div>
@@ -443,6 +431,9 @@
             pageId = 2;
             accounId = data.value;//accountid of particular twitter account from dropdown
             getLinkedInFeeds(data.value, 1);
+            $(function() {
+                $('body').scrollTop(0);
+            });
         }
 
         /**
@@ -501,8 +492,7 @@
                             '<label for="rating5' + accid + '" class="fas fa-star"></label>\n' : append += ' <input type="radio"  name="rating1' + accid + '" id="rating5' + accid + '" onclick="ratingUpdate(\'5\', ' + accid + ');">\n' +
                             '<label for="rating5' + accid + '" class="fas fa-star"></label>\n';
                         append += '</div></div>\n' +
-                            '<div class="mt-2"><a href="#"class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1" onclick="return false" id="chatID" title="Coming soon">Chat</a>\n' +
-                            '</div>\</div>';
+                              '</div>';
                         $('#linkedProfileDiv').append(append);
                         append += '<div class="mt-2">\n' +
                             '<a id="chatID" href="javascript:;" \n' +

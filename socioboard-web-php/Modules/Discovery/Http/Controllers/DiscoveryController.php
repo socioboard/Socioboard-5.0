@@ -39,7 +39,7 @@ class DiscoveryController extends Controller
         $keyword = env('YOUTUBE_TRENDS_KEYWORD');
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
         $socialAccounts = $this->getSocialAccounts();
-        $apiUrl = $apiUrl.'?keyword='.$keyword.'&pageId=1&sortBy=relevance';
+        $apiUrl = $apiUrl.'?keyword='.$keyword.'&pageId=1&ccode=IN&sortBy=relevance';
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             if ($response['code'] === 200) {
@@ -91,7 +91,7 @@ class DiscoveryController extends Controller
     {
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
         $socialAccounts = $this->getSocialAccounts();
-        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&pageId=1&sortBy='.$request->sortby;
+        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&ccode=IN&pageId=1&sortBy='.$request->sortby;
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
 
@@ -113,7 +113,7 @@ class DiscoveryController extends Controller
 
     public function getMoreYoutubeFeeds(Request $request){
         $apiUrl = ApiConfig::getFeeds('/trends/get-youtube');
-        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&pageId='.$request->pageid.'&sortBy=relevance';
+        $apiUrl = $apiUrl.'?keyword='.$request->keyword.'&ccode=IN&pageId='.$request->pageid.'&sortBy=relevance';
 
         try {
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);

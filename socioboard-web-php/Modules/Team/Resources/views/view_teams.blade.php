@@ -7,35 +7,32 @@
         <div class="container-fluid  d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
             <!--begin::Details-->
             <div class="d-flex align-items-center flex-wrap mr-2">
-                <!--begin::Title-->
-                <h5 class="font-weight-bold mt-2 mb-2 mr-5">Teams</h5>
-                <!--end::Title-->
 
                 <!--begin::Separator-->
                 <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
                 <!--end::Separator-->
 
                 <!--begin::Search Form-->
-                <div class="d-flex align-items-center" id="">
+                <div class="d-flex align-items-center flex-wrap mr-2 mb-3" >
                     @if(isset($accounts) && isset($accounts['data']->teamSocialAccountDetails))
-                        <span class="text-dark-50 font-weight-bold" id="count_data">{{count($accounts['data']->teamSocialAccountDetails)}}  </span>@if(count($accounts['data']->teamSocialAccountDetails) > 1)&nbspTeams @else &nbspTeam @endif
-                    @endif
-                    <form class="ml-5" action="/search" method="post" >
-                        @csrf
-                        <div class="input-group input-group-sm input-group-solid" style="max-width: 175px">
-                            <input type="text" class="form-control" id="team_name" name="team_name" placeholder="Search..." onkeyup="functionDisable()">
-                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i class="flaticon2-search-1 icon-sm"></i>
-                                                </span>
-                            </div>
 
-                            <input type="submit" class="form-control" id="submit_id" disabled value="submit">
+                            <h5 class="font-weight-bold mt-2 mb-2 mr-5">Teams (<span class="font-weight-bold " id="count_data">{{count($accounts['data']->teamSocialAccountDetails)}})</h5>
+                    @endif
+                             <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+                        <form class="ml-5" action="/search" method="post" >
+                            @csrf
+                        <div class="d-flex align-items-center" id=""    >
+                            <!-- <span class="text-dark-50 font-weight-bold" id="">4 Total </span> -->
+                                <div class="btn input-group input-group-sm input-group-solid" style="max-width: 400px; width:400px">
+                                    <input type="text" class="form-control" id="team_name" name="team_name" placeholder="Search..." onkeyup="functionDisable()">
+                                    <button class="btn" type="submit" id="submit_id"><i class="fas fa-search icon-lg"></i></button>
+                                </div>
                         </div>
-                        @if($errors->has('team_name'))
-                            <div class="text-danger">{{ $errors->first('team_name') }}</div>
-                        @endif
-                    </form>
+                            <br>
+                            @if($errors->has('team_name'))
+                                <div class="text-danger">{{ $errors->first('team_name') }}</div>
+                            @endif
+                        </form>
                 </div>
                 <!--end::Search Form-->
             </div>
@@ -57,12 +54,6 @@
         <div class=" container-fluid ">
             <!--begin::Teams-->
             <div class="card card-custom gutter-b card-stretch" id="ss-viewTeamsDiv">
-                <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                     title="Add to custom Reports">+
-                    <span node-id="ss-viewTeamsDiv_card-custom" class="ss addtcartclose"></span>
-                </div>
-                <span class="spinner spinner-primary spinner-center" id="ss-viewTeamsDiv_card-custom" style="
-    display: none;"></span>
                 <div class="card-body">
                     @if(session()->has('message-success') != "")
                         @if(session()->has('message-success'))
@@ -426,7 +417,7 @@
                                                                             data-action="change" data-toggle="tooltip"
                                                                             title=""
                                                                             data-original-title="Change avatar">
-                                                                        <i class="fa fa-pen icon-sm text-muted upload-button{{$data->team_id}}"></i>
+                                                                        <i class="fas fa-pen icon-sm text-muted upload-button{{$data->team_id}}"></i>
                                                                         <input type="file" name="profile_avatar"
                                                                                id="profile{{$data->team_id}}"
                                                                                class="file-upload"

@@ -43,6 +43,7 @@ function withDrawInvitaion(email) {
 var SBKanbanBoard = function () {
     let id = parseInt(window.location.pathname.split("/")[2]);//to get teamid
     let socialAccounts = [];
+    let allSocialAccounts = [];
     var sb_teams = async function () {
         await jQuery.ajax({
             url: '/get-team-details',
@@ -89,9 +90,12 @@ var SBKanbanBoard = function () {
                             } else {
                                 profilepic = '../' + element.profile_pic_url;
                             }
-                            if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
+                            if (element.account_type === 1) {
                                 acctype = 'Facebook';
-                            } else if (element.account_type === 4) {
+                            } else if (element.account_type === 2) {
+                                acctype = 'Fb Page';
+                            }
+                            else if (element.account_type === 4) {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
@@ -182,16 +186,24 @@ var SBKanbanBoard = function () {
                     }
                     if (response.availableSocialAccounts.length > 0) {
                         let profilepic;
-                        availableSocialAccounts = response.availableSocialAccounts.map(element => {
+                        response.availableSocialAccounts.map(element => {
+                            if (element.account_type !== 13) {
+                                allSocialAccounts.push(element);
+                            }
+                        });
+                        availableSocialAccounts = allSocialAccounts.map(element => {
                             profilepic = element.profile_picture;
                             if (isValidURL(element.profile_pic_url) === true) {
                                 profilepic = element.profile_pic_url;
                             } else {
                                 profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_pic_url);
                             }
-                            if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
+                            if (element.account_type === 1 ) {
                                 acctype = 'Facebook';
-                            } else if (element.account_type === 4) {
+                            }else if (element.account_type === 2) {
+                                acctype = 'Fb Page';
+                            }
+                            else if (element.account_type === 4) {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
@@ -273,7 +285,7 @@ var SBKanbanBoard = function () {
             },
             boards: [{
                 'id': '_admin',
-                'title': 'Admin',
+                'title': 'Admin<br><small>Drag a profile from Team Members to here to make as Admin</small>',
                 'class': 'light-success',
                 'item': adminData
             },
@@ -291,7 +303,7 @@ var SBKanbanBoard = function () {
                 },
                 {
                     'id': '_teamMembers',
-                    'title': 'Team Members',
+                    'title': 'Team Members<br><small>Drag a profile here to make as Team Member</small>',
                     'class': 'light',
                     'item': teamMembersAcceptedDatas
                 },
@@ -303,7 +315,7 @@ var SBKanbanBoard = function () {
                 },
                 {
                     'id': '_leftTeamMembers',
-                    'title': 'Left Team Members<br><small>Drag here to make Team member leave from a team</small>',
+                    'title': 'Left Team Members<br><small>Drag here to make a Team member leave from a team</small>',
                     'class': 'light-warning',
                     'item': leftFromTeamDatas
                 }

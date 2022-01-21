@@ -42,7 +42,7 @@
                                             accounts,Some error occured
                                         </option>
                                     @elseif($message=== 'No Medium Account has been  added yet!')
-                                        <option selected value="failed">No Medium Account has been added yet! or
+                                        <option selected value="failed">No Medium Account has been added for this team yet! or
                                             accounts have been locked
                                         </option>
                                     @endif
@@ -61,14 +61,12 @@
                                             <div class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
                                                 <div class="symbol-label"
                                                      style="background-image:url('{{$accounts[0]->profile_pic_url}}')"></div>
-                                                <i class="symbol-badge bg-success"></i>
                                             </div>
                                             <div>
                                                 <a href="{{$accounts[0]->profile_url}}"
                                                    class="font-weight-bolder font-size-h5 text-hover-primary"
                                                    target="_blank">
-                                                    {{$accounts[0]->first_name}} <i
-                                                            class="flaticon2-correct text-primary icon-md ml-2"></i>
+                                                    {{$accounts[0]->first_name}}
                                                 </a>
                                                 <div class="text-muted">
                                                     {{$accounts[0]->user_name}}
@@ -91,15 +89,10 @@
                                                     Posts
                                                 </button>
                                             </div>
-
-                                            <a href="javascript:;"
-                                               class="btn btn-lg btn-block font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                               onclick="return false" id="chatID"
-                                               title="Coming soon">Chat</a>
                                             <a href="javascript:;"
                                                class="btn btn-lg btn-block font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
                                                data-target="#mediumfeedModal{{$accounts[0]->account_id}}"
-                                               data-toggle="modal">Create post on User's Medium profile</a>
+                                               data-toggle="modal">Create Post On User's Medium Profile</a>
                                         </div>
                                         <!--begin::Contact-->
                                         <div class="py-9">
@@ -190,7 +183,7 @@
                                                             <h6>Can not get User's publications as :Currently no Medium
                                                                 Account has
                                                                 been
-                                                                added for this team or Accounts have locked</h6>
+                                                                added for this team yet! or Accounts has been locked</h6>
                                                         </div>
                                                     @endif
                                                     @endif
@@ -416,6 +409,9 @@
                          * ! Do not change this function without referring API format of getting the twitter feeds.
                          */
                         function call(data) {
+                            $(function() {
+                                $('body').scrollTop(0);
+                            });
                             accounId = data.value;//accountid of particular twitter account from dropdown
                             getUserPublications(data.value);
                         }
@@ -722,14 +718,12 @@
                                         $('#mediumProfileDiv').append('<div class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
                                             '<div class="symbol-label"\n' +
                                             'style="background-image:url(' + response.profileData.imageUrl + ')"></div>\n' +
-                                            '<i class="symbol-badge bg-success"></i>\n' +
                                             '</div>\n' +
                                             '<div>\n' +
                                             '<a href="' + response.profileData.url + '"\n' +
                                             'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
                                             'target="_blank">\n' +
                                             '' + response.profileData.name + ' <i\n' +
-                                            'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
                                             '</a>\n' +
                                             '<div class="text-muted">\n' +
                                             '' + response.profileData.username +

@@ -29,7 +29,7 @@
                             <div class="card-body pt-2">
                                 <div class="row">
                                     <div class="col-md-4 col-lg-3">
-                                        <select class="form-control selectpicker" id="categories">
+                                        <select class="form-control selectpicker " id="categories">
                                             <option value="">All Categories</option>
                                             <option value="0" >SocioQueue</option>
                                             <option value="1">DayWise-Socioqueue</option>
@@ -46,8 +46,8 @@
                             <!--end::Category Selectbox-->
 
                             <!--begin::Body-->
-                            <div class="card-body pt-2 position-relative overflow-hidden">
-                                <div id="sb_calendar" style="max-width: 1100px; margin: 40px auto; "></div>
+                            <div class="card-body pt-2 position-relative">
+                                <div id="sb_calendar" style="max-width: 1350px; margin: 40px auto; "></div>
                             </div>
                             <!--end::Body-->
                         </div>
@@ -61,7 +61,7 @@
                                     <h5 class="modal-title" id="editcalenderbtnLabel">Post Details</h5>
                                     <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary" data-dismiss="modal"
                                             aria-label="Close" id="Sb_quick_user_close">
-                                        <i class="ki ki-close icon-xs text-muted"></i>
+                                        <i class="ki ki-close icon-xs"></i>
                                     </button>
                                 </div>
                                 <div class="modal-body">
@@ -72,7 +72,9 @@
                                             <!--begin::Header-->
                                             <p class="font-size-h6"><strong>Post type: </strong> <span id="title"></span></p>
                                             <p class="font-size-h6"><strong>Post Content: </strong> <span id="description"></span></p>
+                                            <p class="font-size-h6"><strong>Content Type: </strong> <span id="content_type"></span></p>
                                             <p class="font-size-h6"><strong>Created On: </strong><span id="created_date"></span></p>
+                                            <p class="font-size-h6"><strong>Post Date: </strong><span id="post_date"></span></p>
                                             <!--end::Header-->
                                         </div>
                                     </div>

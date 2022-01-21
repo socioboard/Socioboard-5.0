@@ -12,6 +12,7 @@ function getDataNextAjax(pageId) {
     next = false;
     $('.error-message').html('');
     $('#pageId').val(parseInt($('#pageId').val()) + 1);
+    nextUrl === 'news_api' ? nextUrl = 'newsapi' : nextUrl;
     $.ajax({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

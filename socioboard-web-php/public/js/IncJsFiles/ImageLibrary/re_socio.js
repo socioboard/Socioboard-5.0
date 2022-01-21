@@ -3,7 +3,17 @@ let oneClickImage = (imageLink) => {
     $('#add_account_error1, #add_image_error1, #text_area_error1').html("");
     document.getElementById('one_click_form_id').reset();
     selectedImage = imageLink ;
-    $('#selected_image_id').empty().append('<img src="'+ API_URL + imageLink+'">')  ;
+    $('#selected_image_id').empty().append('<img id="image_URLS" src="'+ API_URL + imageLink+'">')  ;
+    let csrf=$('meta[name="csrf-token"]').attr('content');
+    $('#resocioModal').append(`<form action="/home/publishing/scheduling" id="checkRoute" method="POST" >
+        <input type="hidden"  name="mediaUrl" value="`+ API_URL + imageLink+`">
+        <input type="hidden" name="_token" value="`+csrf+`">
+        <input type="hidden" name="sourceUrl" >
+        <input type="hidden" name="publisherName" >
+        <input type="hidden" name="title" >
+        <input type="hidden" name="type">
+        <textarea name="description" style="display: none"></textarea>
+    </form>`);
 };
 
 function draftPostFunction(postStatus) {
@@ -25,6 +35,7 @@ function draftPostFunction(postStatus) {
             if(Number(postStatus) === 1 && resp.code === 200) {
                 $('#resocioModal').modal('hide');
                 toastr.success(resp.message);
+                location.reload();
             } else if (Number(postStatus) === 1 && resp.code === 200 && resp.data.errors.length > 0) {
                 toastr.error(resp.data.errors[0].error);
             } else if (resp.code === 201) {

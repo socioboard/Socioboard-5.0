@@ -24,7 +24,7 @@
     @endif
     <script>
         let plan_id = <?php echo(session()->get('user')['userDetails']['userPlanDetails']['plan_id']);?>;
-        let offerSession = <?php echo(session()->get('offer_session') !== null ? '1' : '0');?>;
+        let offerSession = <?php echo(session()->get('review_session') !== null ? '1' : '0');?>;
     </script>
     <script>
         window.getCookie = function (name) {
@@ -49,12 +49,6 @@
             <div class=" container-fluid ">
                 <!--begin::Dashboard-->
                 <!--begin::Row-->
-                @if(session()->get('user')['userDetails']['userPlanDetails']['plan_id'] === 0)
-                <div class="SB-blackfriday-sale d-flex align-items-center justify-content-center">
-                    <p>Socioboard: BlackFriday sale:  Get upto 30% off on  all  of our Monthly plans.</p>
-                    <a href="/plan-details-view" class="btn">Upgrade Now</a>
-                </div>
-                @endif
                 <div class="row">
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
@@ -100,17 +94,21 @@
                     </div>
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
-                        <a href="/plan-details-view" class="card card-custom gutter-b card-stretch">
-                            <!--begin::Body-->
-                            <div class="card-body position-relative overflow-hidden">
-                                <i class="far fa-clock fa-3x"></i>
-                                <h4 class="mt-3 font-weight-bolder"><?php if (isset(session()->get('user')['userDetails']['userPlanDetails']['plan_name'])) echo session()->get('user')['userDetails']['userPlanDetails']['plan_name']; else  echo '-' ?>
-                                    Plan</h4>
-                                <p id="account_expire_date_id"></p>
-                            </div>
-                            <!--end::Body-->
-                        </a>
-                        <!--end::Accounts-->
+                        @if (in_array(session()->get('user')['userDetails']['userPlanDetails']['plan_id'], [101, 102, 103]))
+                            <a href="https://appsumo.com/" class="card card-custom gutter-b card-stretch appsumo-plan">
+                                @else
+                                    <a href="/plan-details-view" class="card card-custom gutter-b card-stretch">
+                                    @endif
+                                    <!--begin::Body-->
+                                        <div class="card-body position-relative overflow-hidden">
+                                            <i class="far fa-clock fa-3x"></i>
+                                            <h4 class="mt-3 font-weight-bolder"><?php if (isset(session()->get('user')['userDetails']['userPlanDetails']['plan_name'])) echo session()->get('user')['userDetails']['userPlanDetails']['plan_name']; else  echo '-' ?>
+                                                Plan</h4>
+                                            <p id="account_expire_date_id"></p>
+                                        </div>
+                                        <!--end::Body-->
+                                    </a>
+                                    <!--end::Accounts-->
                     </div>
                 </div>
 
@@ -120,7 +118,7 @@
                         <div class="card card-custom gutter-b card-stretch" id="ss-statsDiv">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Stats</h3>
+                                <h3 class="card-title font-weight-bolder">Schedule Stats</h3>
                                 <div class="card-toolbar flex-nowrap">
                                     <select class="form-control selectpicker" onchange="selectDateStats(this)">
                                         <option value="3">Last 7 Days</option>
@@ -130,7 +128,7 @@
                                         <option value="6">Last Month</option>
                                     </select>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-statsDiv_md4" class="ss addtcartclose"></span></div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-statsDiv_md4" style="
     display: none;"></span>
@@ -154,11 +152,11 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                            <i class="far fa-clock fa-2x text-warning"></i>
-                                                                    </span>
+                                                        <span class="svg-icon svg-icon-lg svg-icon-primary">
+                                                                <i class="far fa-clock fa-2x text-primary"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -204,10 +202,10 @@
                                         <div class="col">
                                             <div class="d-flex align-items-center mr-2">
                                                 <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
+                                                <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
-                                                                            <i class="far fa-calendar-times text-danger fa-2x"></i>
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-warning">
+                                                                            <i class="far fa-calendar-times text-warning fa-2x"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -253,7 +251,7 @@
                                         <option value="6">Last Month</option>
                                     </select>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-reportsDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-reportsDiv_md4" style="
@@ -402,7 +400,7 @@
                                         View Accounts
                                     </a>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-viewAccountsDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-viewAccountsDiv_md4"
@@ -414,14 +412,14 @@
 
                             <!--begin::Body-->
                             <div class="card-body pt-2 position-relative" id="accountsSectionDiv">
-                                <div class="d-flex">
+                                <div class="d-flex justify-content-center">
                                     <button data-toggle="modal"
                                             data-target="#inviteModal"
                                             class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6 mr-3">Send
                                         Invite
                                     </button>
                                     <button data-toggle="modal" data-target="#addAccountsModal"
-                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 ml-3 col-6">+ Add
+                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6">Add
                                         Accounts
                                     </button>
                                 </div>
@@ -961,8 +959,31 @@
                                                                     <div class="symbol symbol-50 symbol-light mr-5">
 
                                                     <span class="symbol-label">
-                                                            <img src="{{$account->profile_pic_url}}"
+                                                        @if($account->account_type === 1 || $account->account_type === 2 )
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUSuMWEcCUPi4dy_q-HfMpQYrlwDOxWOILlQ&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
+                                                            @elseif($account->account_type === 4 )
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIy0G6PWiqV0NM13Zd3OBB0H6SixdDsPxcgQ&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 12 || $account->account_type === 5 )
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 11 )
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTldN9DuPhILuicsJc5JDGmDRWCI7Y-BXDLEA&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 9 )
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2p64RiNbHCKAGcrR7ZnOHjaiULOeG1KWpuQ&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 6 || $account->account_type === 7)
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAazafiWiEDZc4wDZ6pSbidJPw4CTOuLwSBA&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 16)
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqlxS7Cw_ggWMFVpVEQv-zWvfXqc36Bt0Lw&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                        @elseif($account->account_type === 18)
+                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOg6a1JGvLre53ishmhjU63uwyz7Ok7_LSAw&usqp=CAU';"
+                                                                 class="h-100 align-self-center" alt="avatar name"/>
+                                                            @endif
                                                     </span>
                                                                     </div>
                                                                     <!--end::profile pic-->
@@ -1063,7 +1084,7 @@
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 11)
                                                                             <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
-                                                                               target="_blank"
+                                                                               target="_blank" id="connectedButton" title="View Profile"
                                                                                class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">Connected</a>
                                                                         @else
                                                                             <a href="{{$account->profile_url}}"
@@ -1090,7 +1111,7 @@
                                                                             <i class="ki ki-bold-more-hor"></i>
                                                                         </a>
                                                                         <div
-                                                                                class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
+                                                                                class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right account-dropdown-section">
                                                                             <!--begin::Navigation-->
                                                                             <ul class="navi navi-hover">
                                                                                 @if($account->join_table_teams_social_accounts->is_account_locked == true)
@@ -1231,7 +1252,7 @@
                                 <div class="card-header border-0 py-5">
                                     <h3 class="card-title font-weight-bolder">Recently Searched Top 5 RSS Links</h3>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-topRssDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-topRssDiv_md4" style="
@@ -1287,9 +1308,9 @@
                             <div class="card card-custom gutter-b card-stretch">
                                 <!--begin::Header-->
                                 <div class="card-header border-0 py-5">
-                                    <h3 class="card-title font-weight-bolder">Publishing History</h3>
+                                    <h3  class="card-title  text-hover-primary font-weight-bolder"> <a href="/home/publishing/schedule/history">Publishing History </a></h3>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-publishHistoryDiv_md8" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-publishHistoryDiv_md8"
@@ -1306,10 +1327,18 @@
                                              style="max-height: 320px;overflow-y: scroll;">
                                             <div class="table-responsive">
                                                 <table class="table table-head-custom table-head-bg table-borderless table-vertical-center history_publishing_mobile">
+                                                    <thead>
+                                                    <tr class="">
+                                                        <th style="min-width: 100px" class="pl-7"><span class="">Post</span></th>
+                                                        <th style="min-width: 150px">Type</th>
+                                                        <th style="min-width: 150px">Date</th>
+                                                        <th style="min-width: 130px">Status</th>
+                                                    </tr>
+                                                    </thead>
                                                     <tbody>
                                                     @foreach($scheduleHistory['data']->postContents as $item)
                                                         <tr>
-                                                            <td class="pl-0 py-8">
+                                                            <td class="pl-0 py-8" >
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="symbol symbol-50 flex-shrink-0 mr-4">
                                                                         <div class="symbol-label">
@@ -1329,10 +1358,10 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="history_publishing">
-                                                                        <a href="#"
-                                                                           class="font-weight-bolder text-hover-primary mb-1 font-size-lg">Post
+                                                                        <div
+                                                                           class="font-weight-bolder mb-1 font-size-lg">Post
                                                                             :
-                                                                            {{$item->description}}</a>
+                                                                            {{$item->description}}</div>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -1354,6 +1383,9 @@
                                                                 <span class="font-weight-bolder d-block font-size-lg">
                                                                     {{date("d-m-Y", strtotime($item->createdDate))}}
                                                                 </span>
+                                                                </td>
+                                                                <td>
+                                                                    Posted
                                                                 </td>
                                                             @endif
                                                         </tr>
@@ -1512,35 +1544,24 @@
         </div>
         <!-- end:Invite button Modal -->
 
-        <!--begin::Blackfriday newsletter modal-->
-        <div class="modal fade" id="blackfridayNewsletter" tabindex="-1" aria-labelledby="blackfridayNewsletterLabel" aria-hidden="true">
-            <div class="modal-dialog modal-md">
+        <div class="modal fade" id="feebdackModel" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header justify-content-center">
-                        <img src="https://socioboard.com/wp-content/uploads/2021/07/SocioBoard_icon.png" alt="SocioBoard" class="logo" />
-                        <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary ml-auto" data-dismiss="modal"
-                                aria-label="Close" id="Sb_quick_user_close"  onclick="setSession()">
-                            <i class="ki ki-close icon-xs text-muted"></i>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Review us</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="setSession()">
+                            <i aria-hidden="true" class="ki ki-close"></i>
                         </button>
                     </div>
-                    <div class="modal-body blackfriday-modal text-center">
-                        <!-- <p>lorem</p> -->
-                        <img src="/media/balckfriday_modal_img.png" alt="blackfriday" class="img-fluid my-10" />
-                        <p>30% Discount <br>For All Monthly Plans</p>
-                        <div class="input-group my-5">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Coupon Code</span>
-                            </div>
-                            <input type="text" class="form-control" value="BFD30" aria-label="BFD30" aria-describedby="basic-addon1">
-                        </div>
-
-                        <a href="/plan-details-view" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="setSession()">GRAB NOW</a>
-
+                    <div class="modal-body text-center">
+                        <img src="media/png/feedback-img.png" style="max-width: 430px; margin-bottom: 16px;">
+                        <p>If you have 1 minute, you can give us a review on AppSumo by clicking on the button below. It helps us a lot!!</p>
+                        <a onclick="setCookie('reviewCoolie', userID);" data-dismiss="modal" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Don't Show it</a>
+                        <a onclick="setTheCookie('reviewCoolie', userID,365);" aria-label="Close" href="https://appsumo.com/products/socioboard/#reviews" target="_blank" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Review us on AppSumo</a>
                     </div>
                 </div>
             </div>
         </div>
-        <!--end::Blackfriday newsletter modal-->
 
     </div>
     <!-- end::Delete account modal-->
@@ -1552,6 +1573,14 @@
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="{{asset('js/accounts.js')}}"></script>
     <script>
+
+        function setTheCookie(cname, cvalue, exdays) {
+            $('#feebdackModel').modal('hide');
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
         function lock(id, type, acctype) {
             var data = id;
             if (type == 1) {
@@ -1641,7 +1670,11 @@
         let firstDate = new Date(current_date);
         let secondDate = new Date(user_expire_date);
         let diffDays = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+        @if (in_array(session()->get('user')['userDetails']['userPlanDetails']['plan_id'], [101, 102, 103]))
+        $('#account_expire_date_id').empty().append('Lifetime Plan');
+        @else
         $('#account_expire_date_id').empty().append(diffDays + ' Days remaining');
+        @endif
 
         //  Plan Details End ****
 
@@ -1713,17 +1746,6 @@
                                     data: postFailed
                                 }
                             ],
-                            title: {
-                                text: 'Schedule',
-                                align: 'left',
-                                offsetY: 25,
-                                offsetX: 20
-                            },
-                            subtitle: {
-                                text: 'Report',
-                                offsetY: 55,
-                                offsetX: 20
-                            },
                             markers: {
                                 size: 6,
                                 strokeWidth: 0,
@@ -1887,17 +1909,29 @@
             }
         }
 
-        function setSession(){
+        function setSession() {
             $.ajax({
                 url: "/setSession",
                 type: 'get',
             });
         }
-
+        function keepTokenAlive() {
+            $.ajax({
+                url: '/keep-token-alive', //https://stackoverflow.com/q/31449434/470749
+                method: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            }).then(function (result) {
+                console.log(new Date() + ' ' + result + ' ' + $('meta[name="csrf-token"]').attr('content'));
+            });
+        }
         $(document).ready(function () {
-            if(offerSession !== 1 && plan_id === 0){
-                $('#blackfridayNewsletter').modal('show');
+            let reviewCookie = getCookie('reviewCoolie');
+            if ((plan_id === 101 || plan_id === 102 || plan_id === 103 ) && (reviewCookie != userID) && offerSession !== 1 ){
+                $('#feebdackModel').modal('show');
             }
+            setInterval(keepTokenAlive, 1000 * 60 * 15); // every 15 mins
 
             $("#upload-bulk").change(function () {
                 $('#lableInvite').html('File uploaded Successfully')
@@ -1938,9 +1972,11 @@
                         } else if (response.code == 400) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         } else if (response.code == 500) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         }
                     },
                     error: function (error) {
@@ -1981,9 +2017,11 @@
                         } else if (response.code == 400) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         } else if (response.code == 500) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         }
                     },
                     error: function (error) {
@@ -2024,9 +2062,11 @@
                         } else if (response.code == 400) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         } else if (response.code == 500) {
                             $('#addAccountsModal').modal('hide')
                             toastr.error(response.message);
+                            document.location.href = '{{env('APP_URL')}}dashboard';
                         }
                     },
                     error: function (error) {
@@ -2107,9 +2147,11 @@
                     } else if (response.code == 400) {
                         $('#addAccountsModal').modal('hide')
                         toastr.error(response.message);
+                        document.location.href = '{{env('APP_URL')}}dashboard';
                     } else if (response.code == 500) {
                         $('#addAccountsModal').modal('hide')
                         toastr.error(response.message);
+                        document.location.href = '{{env('APP_URL')}}dashboard';
                     }
                 },
                 error: function (error) {
@@ -2124,8 +2166,9 @@
             $inp = {{$instagrampages}}
             $linp = {{$LinkedInpages}}
             $tbp =
-        {{$bloggedpages}}
-        if ($fbp === 1) {
+                {{$bloggedpages}}
+                if($fbp === 1)
+        {
             $('#addAccountsModal').modal('show');
             displayFacebookPages();
         }

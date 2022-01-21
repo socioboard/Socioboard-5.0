@@ -27,7 +27,7 @@
                                         <i class="fas fa-plus fa-fw"></i> Add Accounts
                                     </a>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports">+
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                         <span node-id="ss-accountsDiv_md12" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md12"
@@ -130,12 +130,16 @@
                                                         <b class="font-weight-bold font-size-h2 float-right">{{$tumblr}}</b>
                                                     </span>
                                     </div>
-                                    <div
-                                            class="col-md-1 col-sm-12 card bg-google border-0 px-6 py-8 rounded-xl mr-4 mb-7">
-                                                    <span class="svg-icon svg-icon-3x d-block my-2">
-                                                            <i class="fab fa-google fa-2x"></i>
-                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>
-                                                    </span>
+{{--                                    <div--}}
+{{--                                            class="col-md-1 col-sm-12 card bg-google border-0 px-6 py-8 rounded-xl mr-4 mb-7">--}}
+{{--                                                    <span class="svg-icon svg-icon-3x d-block my-2">--}}
+{{--                                                            <i class="fab fa-google fa-2x"></i>--}}
+{{--                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>--}}
+{{--                                                    </span>--}}
+{{--                                    </div>--}}
+                                    <div class="col-md-1 col-sm-12 card border-0 px-3 py-4 rounded-xl mr-4 mb-7 text-center">
+                                        <span class="post-count">{{$facebook+$facebookpage+$twitter+$instagram+$instagramPages+$linkedin+$linkedinBusiness+$ytcount+$pinterest+$tumblr}}</span>
+                                        Total Accounts
                                     </div>
                                 </div>
 
@@ -209,24 +213,39 @@
                                                 <div class="card card-custom gutter-b card-stretch">
                                                     <div
                                                             class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">
-                                                        @if($account->account_type === 1 || $account->account_type === 2 || $account->account_type === 3)
+                                                        @if($account->account_type === 1)
                                                             <div class="ribbon-target bg-facebook"
                                                                  style="top: -2px; right: 20px;">
                                                                 <i class="fab fa-facebook-f"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 2)
+                                                            <div class="ribbon-target bg-facebook"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-facebook-f mr-1">p</i>
                                                             </div>
                                                         @elseif($account->account_type === 4)
                                                             <div class="ribbon-target" style="top: -2px; right: 20px;">
                                                                 <i class="fab fa-twitter"></i>
                                                             </div>
-                                                        @elseif($account->account_type === 5 || $account->account_type === 12)
+                                                        @elseif($account->account_type === 5 )
                                                             <div class="ribbon-target bg-instagram"
                                                                  style="top: -2px; right: 20px;">
                                                                 <i class="fab fa-instagram"></i>
                                                             </div>
-                                                        @elseif($account->account_type === 6 || $account->account_type === 7 )
+                                                        @elseif($account->account_type === 12 )
+                                                            <div class="ribbon-target bg-instagram"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-instagram mr-1"> b</i>
+                                                            </div>
+                                                        @elseif($account->account_type === 6  )
                                                             <div class="ribbon-target bg-linkedin"
                                                                  style="top: -2px; right: 20px;">
                                                                 <i class="fab fa-linkedin"></i>
+                                                            </div>
+                                                        @elseif($account->account_type === 7  )
+                                                            <div class="ribbon-target bg-linkedin"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-linkedin mr-1"></i>Page
                                                             </div>
                                                         @elseif($account->account_type === 9 )
                                                             <div class="ribbon-target bg-youtube"
@@ -272,26 +291,25 @@
                                                                      style="background-image:url({{$account->profile_pic_url}})"></div>
                                                                 <i class="symbol-badge bg-success"></i>
                                                             </div>
-                                                            <div>
+                                                            <div class="social-accounts-dev">
                                                                 @if($account->join_table_teams_social_accounts->is_account_locked === false)
                                                                     @if($account->account_type === 2)
                                                                         <a href="https://www.facebook.com/{{$account->user_name}}"
-                                                                           target="_blank">
+                                                                           target="_blank" class="profile-name">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                         </a>
                                                                     @elseif($account->account_type === 1)
-                                                                        <a>
+                                                                        <a class="profile-name">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                         </a>
                                                                     @else
                                                                         <a href="{{$account->profile_url}}"
-                                                                           target="_blank">
+                                                                           target="_blank" class="profile-name">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                         </a>
                                                                     @endif
                                                                 @else
-                                                                    <a
-                                                                    >
+                                                                    <a class="profile-name">
                                                                         {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                     </a>
                                                             @endif
@@ -367,6 +385,14 @@
                                                                             <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
                                                                                target="_blank"
                                                                                class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 12)
+                                                                            <a href="{{env('APP_URL')}}feeds/Business{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                        @elseif($account->account_type === 7)
+                                                                            <a href="{{env('APP_URL')}}feeds/linkedIn{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
                                                                         @endif
                                                                     @else
                                                                         <a href="#"
@@ -375,11 +401,6 @@
                                                                            title="The Account is  Locked"
                                                                            class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
                                                                     @endif
-                                                                    <a href="#"
-                                                                       class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"
-                                                                       onclick="return false"
-                                                                       id="chatDivButton"
-                                                                       title="Coming soon">Chat</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1132,6 +1153,7 @@
                         } else {
                             toastr.success("Account Deleted Successfully");
                         }
+                        location.reload();
                     } else if (response.code === 400) {
                         toastr.error(response.message, "Unable To Delete Account");
                     } else {
@@ -1144,8 +1166,9 @@
         $fbp =
                 {{$facebookpages}}
                     $tbp =
-        {{$bloggedpages}}
-        if ($fbp === 1) {
+                        {{$bloggedpages}}
+                        if($fbp === 1)
+        {
             $('#addAccountsModal').modal('show');
             displayFacebookPages();
         }
@@ -1278,23 +1301,38 @@
                                             '<div class="card card-custom gutter-b card-stretch">\n' +
                                             '<div\n' +
                                             'class="card-body pt-2 position-relative overflow-hidden rounded  ribbon ribbon-top ribbon-ver">';
-                                        if (element.account_type === 1 || element.account_type === 2 || element.account_type === 3) {
+                                        if (element.account_type === 1) {
                                             appendData += '<div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-facebook-f"></i>\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 4) {
+                                        }
+                                        else if (element.account_type === 2){
+                                            appendData += '<div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-facebook-f mr-1">p</i>\n' +
+                                                '</div>';
+                                        }
+                                        else if (element.account_type === 4) {
                                             appendData += '<div class="ribbon-target" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-twitter"></i>\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 5 || element.account_type === 12) {
+                                        } else if (element.account_type === 5) {
                                             appendData += '<div class="ribbon-target bg-instagram" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-instagram"></i>\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 6 || element.account_type === 7) {
+                                        } else if (element.account_type === 12) {
+                                            appendData += '<div class="ribbon-target bg-instagram mr-1" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-instagram"></i> b\n' +
+                                                '</div>';
+                                        } else if (element.account_type === 6 ) {
                                             appendData += '<div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-linkedin"></i>\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 9) {
+                                        } else if (element.account_type === 7 ) {
+                                            appendData += '<div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
+                                                '<i class="fab fa-linkedin mr-1">Page</i>\n' +
+                                                '</div>';
+                                        }
+                                        else if (element.account_type === 9) {
                                             appendData += '<div class="ribbon-target bg-youtube" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-youtube"></i>\n' +
                                                 '</div>';
@@ -1311,7 +1349,7 @@
                                             'class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">\n' +
                                             '<div id="status' + element.account_id + '">';
                                         if (element.join_table_teams_social_accounts.is_account_locked === true) {
-                                            appendData += ' <div class="ribbon-target" style="top: 12px;"\n' +
+                                             appendData += ' <div class="ribbon-target" style="top: 12px;"\n' +
                                                 'onclick="lock(' + element.account_id + ',0 )">\n' +
                                                 '<span class="ribbon-inner bg-danger"></span>\n' +
                                                 '<i\n' +
@@ -1384,16 +1422,69 @@
                                             '</div>\n' +
                                             '</div>';
                                         appendData += '<div class="mt-2">\n';
-                                        if (element.account_type !== 1) {
-                                            appendData += '<a href="' + element.profile_url + '"\n' +
+                                        if(element.join_table_teams_social_accounts.is_account_locked === false)
+                                        {
+                                            if(element.account_type ===  1)
+                                            {
+                                                appendData += '<a href="feeds/facebook' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  2)
+                                            {
+                                                appendData += '<a href="feeds/fbPages' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  9)
+                                            {
+                                                appendData += '<a href="feeds/youtube' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  4)
+                                            {
+                                                appendData += '<a href="feeds/twitter' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  16)
+                                            {
+                                                appendData += '<a href="feeds/Tumblr' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  11)
+                                            {
+                                                appendData += '<a href="show-boards/Pinterest' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  12)
+                                            {
+                                                appendData += '<a href="feeds/Business' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  7)
+                                            {
+                                                appendData += '<a href="feeds/linkedIn' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                            else if(element.account_type ===  5)
+                                            {
+                                                appendData += '<a href="feeds/instagram' + element.account_id + '"\n' +
+                                                    'target="_blank"\n' +
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                            }
+                                        }
+                                        else{
+                                            appendData += '<a href="#"\n' +
                                                 'target="_blank"\n' +
                                                 'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
                                         }
-                                        appendData += '<a href="#"\n' +
-                                            'class="btn btn-sm font-weight-bold py-2 px-3 px-xxl-5 my-1"\n' +
-                                            'onclick="return false"\n' +
-                                            'id="chatDivButton"\n' +
-                                            'title="Coming soon">Chat</a>\n' +
+                                        appendData +=
                                             '</div>\n' +
                                             '</div>\n' +
                                             '</div>';
@@ -1567,8 +1658,7 @@
                                 '</div>\n' +
                                 '<h6>' + response.data.error + '</h6>\n' +
                                 '</div>');
-                        }
-                        else{
+                        } else {
                             $('#accountsDIv').append('<div class="text-center">\n' +
                                 '<div class="symbol symbol-150">\n' +
                                 '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +

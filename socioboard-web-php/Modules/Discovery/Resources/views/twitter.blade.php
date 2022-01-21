@@ -20,9 +20,8 @@
                             <!--begin::Body-->
                             <div class="card-body">
                                 <!--begin::Form-->
-                                <form id="twitter_form" method="post" action="/discovery/search-twits">
+                                <form id="twitter_form" method="get" action="/discovery/search-twits">
 {{--                                <form id="twitter_form">--}}
-                                    @csrf
                                     <!--begin::search-->
                                     <div class="form-group">
                                         <div class="input-icon">

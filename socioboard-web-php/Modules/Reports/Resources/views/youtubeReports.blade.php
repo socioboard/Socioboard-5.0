@@ -72,16 +72,16 @@
                 <div class="row">
                     <div class="col-xl-8" id="ss-youtube">
                         <div class="card card-custom gutter-b card-stretch">
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Overview Stats</h3>
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-youtube_md8" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-youtube_md8" style="
     display: none;"></span>
                             </div>
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Overview Stats</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="like_count_chart" class="card-rounded-bottom " style="height: 200px"></div>
@@ -99,7 +99,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                            <i class="fas fa-users fa-2x text-primary"></i>
+                                                                            <i class="fas fa-thumbs-up fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -115,29 +115,6 @@
                                         </div>
                                         <!--end::Item-->
 
-                                        <!--begin::Item-->
-                                        <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
-                                                <!--begin::Symbol-->
-                                                <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
-                                                    <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
-                                                                            <i class="fas fa-user-friends fa-2x text-danger "></i>
-                                                                    </span>
-                                                    </div>
-                                                </div>
-                                                <!--end::Symbol-->
-
-                                                <!--begin::Title-->
-                                                <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
-                                                         id="dislikeCount"></div>
-                                                    <div class="font-size-sm font-weight-bold mt-1">Dislike</div>
-                                                </div>
-                                                <!--end::Title-->
-                                            </div>
-                                        </div>
-                                        <!--end::Item-->
 
                                         <!--begin::Item-->
                                         <div class="col">
@@ -146,7 +123,7 @@
                                                 <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                            <i class="fas fa-users fa-2x text-success"></i>
+                                                                            <i class="fas fa-comments fa-2x text-success"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -170,7 +147,7 @@
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                            <i class="fas fa-user-friends fa-2x text-warning "></i>
+                                                                            <i class="fas fa-chart-pie fa-2x text-warning "></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -180,6 +157,30 @@
                                                 <div>
                                                     <div class="font-size-h4 font-weight-bolder" id="sharesCount"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Shares</div>
+                                                </div>
+                                                <!--end::Title-->
+                                            </div>
+                                        </div>
+                                        <!--end::Item-->
+
+                                        <!--begin::Item-->
+                                        <div class="col">
+                                            <div class="d-flex align-items-center mr-2">
+                                                <!--begin::Symbol-->
+                                                <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
+                                                    <div class="symbol-label">
+                                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
+                                                                            <i class="fas fa-thumbs-down fa-2x text-danger "></i>
+                                                                    </span>
+                                                    </div>
+                                                </div>
+                                                <!--end::Symbol-->
+
+                                                <!--begin::Title-->
+                                                <div>
+                                                    <div class="font-size-h4 font-weight-bolder"
+                                                         id="dislikeCount"></div>
+                                                    <div class="font-size-sm font-weight-bold mt-1">Dislike</div>
                                                 </div>
                                                 <!--end::Title-->
                                             </div>
@@ -199,20 +200,21 @@
                         <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
                             <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Engagement Stats</div>
-                                    </div>
-                                </div>
+                            <div class="card-header border-0 pt-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-youtubePublish_md4" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-youtubePublish_md4" style="
     display: none;"></span>
                             </div>
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Engagement Stats</h3>
+{{--                                <div class="card-title">--}}
+{{--                                    <div class="card-label">--}}
+{{--                                        <div class="font-weight-bolder">Engagement Stats</div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="stats-chart" style="height: 200px"></div>
@@ -254,7 +256,7 @@
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                        <i class="fas fa-user-friends fa-2x text-warning"></i>
+                                                                        <i class="fas fa-chart-line fa-2x text-warning"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -308,7 +310,7 @@
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                                                                     <span class="svg-icon svg-icon-lg svg-icon-primary">
-                                                                        <i class="fas fa-retweet fa-2x text-primary"></i>
+                                                                        <i class="far fa-eye fa-2x text-primary"></i>
                                                                     </span>
                                                     </div>
                                                 </div>
@@ -368,7 +370,7 @@
             }
         }, function (start, end, label) {
             changeTeamResponseCalendar(start, end);//get data from onchange calendar.
-            $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
+            $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
         // delete account

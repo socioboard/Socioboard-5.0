@@ -12,7 +12,7 @@ use Modules\ImageLibary\Http\Controllers\ImageLibaryController;
 |
 */
 
-Route::prefix('imagelibary')->middleware('checkPlanAccesses:share_library')->group(function() {
+Route::prefix('imagelibary')->middleware(['authenticateUser', 'checkPlanExpiry'])->group(function() {
     Route::get('/private-images', [ImageLibaryController::class, 'privateImages']);
     Route::post('/private-images', [ImageLibaryController::class, 'privateImages']);
     Route::get('/public-images', [ImageLibaryController::class, 'publicImages']);

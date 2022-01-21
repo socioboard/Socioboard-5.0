@@ -38,7 +38,7 @@ function updateRating(rating, accountId) {
         },
         success: function (response) {
             if (response.code === 200) {
-                toastr.success('Successfully Update Rating', "", {
+                toastr.success('Rating successfully updated', "", {
                     timeOut: 1000,
                     fadeOut: 1000,
                     onHidden: function () {

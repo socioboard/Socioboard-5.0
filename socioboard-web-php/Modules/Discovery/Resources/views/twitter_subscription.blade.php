@@ -130,10 +130,12 @@
             <script type="text/javascript">
                 pageId = 1;
                 $(document).ready(function () {
-                    $("#home_tab").trigger('click');
+                    $("#boards").trigger('click');
+
                 })
 
                 $(document).ready(function () {
+                    $("#discovery").trigger('click');
                     let keywordValue = "politics";
                    getInfluencers(twtId, keywordValue, pageId);
                 })

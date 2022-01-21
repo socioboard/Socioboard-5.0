@@ -1310,6 +1310,7 @@ class FeedsController extends Controller
     {
         $boardID = (int)$request['boardId'];
         $accID = (int)$request['accId'];
+        $baordname = $request['baordname'];
         $pins = [];
         $accountName = '';
         try {
@@ -1320,20 +1321,21 @@ class FeedsController extends Controller
             if ($response['data']->code === 200) {
                 $pins = $response['data']->data->pins;
                 if (count($pins) > 0) {
-                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins, 'message' => 'success', 'accounts' => $response['data']->data->socialAccountDetails, 'accountId' => $accID, 'boardId' => $boardID]);
+                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins, "boardName" => $baordname,'message' => 'success', 'accounts' => $response['data']->data->socialAccountDetails, 'accountId' => $accID, 'boardId' => $boardID]);
                 } else {
-                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins, 'message' => 'No Pinterest Pins found for the Board', 'account' => $response['data']->data->socialAccountDetails]);
+                    return view('feeds::Pinterest.pinterest_pins_feeds')->with(["pins" => $pins,  "boardName" => $baordname ,'message' => 'No Pinterest Pins found for the Board', 'account' => $response['data']->data->socialAccountDetails]);
                 }
             } else if ($response['data']->code === 400) {
-                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => $response['data']->error, 'account' => 'Pinterest Account']);
+                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => $response['data']->error, 'account' => 'Pinterest Account',"boardName" => $baordname]);
 
             } else {
-                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+                return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account' , "boardName" => $baordname]);
 
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
-            return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account']);
+            return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account', "boardName" => $baordname]);
+            return view('feeds::Pinterest.pinterest_pins_feeds')->with(['message' => 'failed', 'account' => 'Pinterest Account', "boardName" => $baordname]);
         }
     }
 

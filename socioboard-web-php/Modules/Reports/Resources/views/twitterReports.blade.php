@@ -70,16 +70,16 @@
                 <div class="row">
                     <div class="col-xl-8" id="ss-twitter">
                         <div class="card card-custom gutter-b card-stretch">
-                            <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Follow Stats</h3>
+                            <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-twitter_md8" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-twitter_md8" style="
     display: none;"></span>
                             </div>
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Twitter Follow Stats</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="follow_count_chart" class="card-rounded-bottom "
@@ -157,14 +157,10 @@
                         <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
                             <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
-                                <div class="card-title">
-                                    <div class="card-label">
-                                        <div class="font-weight-bolder">Stats</div>
-                                    </div>
-                                </div>
+                            <div class="card-header border-0 pt-5 ml-auto">
+
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                     title="Add to custom Reports">+
+                                     title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-twitterPublish_md4" class="ss addtcartclose"></span>
                                 </div>
                                 <span class="spinner spinner-primary spinner-center" id="ss-twitterPublish_md4" style="
@@ -173,7 +169,13 @@
                             <!--end::Header-->
 
                             <!--begin::Body-->
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column pt-0">
+                                <h3 class="card-title font-weight-bolder">Stats</h3>
+{{--                                <div class="card-title">--}}
+{{--                                    <div class="card-label">--}}
+{{--                                        <div class="font-weight-bolder">Stats</div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
                                     <div id="stats-chart" style="height: 200px"></div>
@@ -213,7 +215,7 @@
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
                         <span class="svg-icon svg-icon-lg svg-icon-warning">
-                            <i class="fas fa-user-friends fa-2x text-warning"></i>
+                            <i class="fas fa-user-tag fa-2x text-warning"></i>
                         </span>
                                                     </div>
                                                 </div>
@@ -330,7 +332,7 @@
             }
         }, function (start, end, label) {
             changeTeamResponseCalendar(start, end);
-            $('#twt-daterange .form-control').val(start.format('MMMM DD, YYYY') + ' -> ' + end.format('MMMM DD, YYYY'));
+            $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
         $('#account-delete').click(function (event) {
@@ -429,18 +431,6 @@
                                     data: followingCount
                                 }
                             ],
-                            title: {
-                                text: 'Twitter',
-                                align: 'left',
-                                offsetY: 25,
-                                offsetX: 20
-                            },
-                            subtitle: {
-                                text: 'Reports',
-                                align: 'left',
-                                offsetY: 55,
-                                offsetX: 20
-                            },
                             markers: {
                                 size: 6,
                                 strokeWidth: 0,
@@ -475,7 +465,14 @@
                         var chartLine = new ApexCharts(document.querySelector('#follow_count_chart'), optionsLine);
                         chartLine.render();
                     }
-
+                    else if(response.code === 400){
+                        $('#follow_count_chart').append('<div class="text-center">\n' +
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' +"Can no get Reports data as : "+ response.error + '</h6>\n' +
+                            '</div>');
+                    }
                 }
             });
         }
@@ -493,6 +490,7 @@
                 dataType: 'json',
                 beforeSend: function () {
                     $('#stats-chart').empty();
+                    $('#favCount, #mentionsCount, #postCount,#reTweet').empty();
                     $('#stats-chart').append('<div class="d-flex justify-content-center" >\n' +
                         '<div class="spinner-border" role="status" style="display: none;">\n' +
                         '<span class="sr-only">Loading...</span>\n' +
@@ -561,6 +559,14 @@
                             fontSize: 16,
                             textAnchor: "end"
                         });
+                    }
+                    else if(response.code === 400){
+                        $('#stats-chart').append('<div class="text-center">\n' +
+                            '<div class="symbol symbol-150">\n' +
+                            '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
+                            '</div>\n' +
+                            '<h6>' +"Can no get Reports data as : "+ response.error + '</h6>\n' +
+                            '</div>');
                     }
                 }
             });

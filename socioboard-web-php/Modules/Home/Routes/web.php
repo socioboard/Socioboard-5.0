@@ -96,4 +96,7 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
     Route::post('/bulk-invite', [DashboardController::class, 'BulkInvitation']);
     Route::get('/thankyouPage', [DashboardController::class, 'getThankyouPage']);
     Route::get('/setSession', [DashboardController::class, 'setSessioForPlan']);
+    Route::post('keep-token-alive', function() {
+        return 'Token must have been valid, and the session expiration has been extended.'; //https://stackoverflow.com/q/31449434/470749
+    });
 });

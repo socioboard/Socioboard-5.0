@@ -19,7 +19,7 @@
                                 <span class="card-label font-weight-bolder ">{{ isset($pageTitle) ? $pageTitle : 'Listing' }}</span>
                             </h3>
                             <div class="card-toolbar">
-                                <a href="{{ route('publish_content.scheduling') }}" class="btn btn-success font-weight-bolder font-size-sm">Create Schedule Post</a>
+                                <a href="{{ route('publish_content.scheduling') }}" class="btn font-weight-bolder font-size-sm">Create Schedule Post</a>
                             </div>
                         </div>
                         <!--end::Header-->
@@ -31,13 +31,14 @@
                                     {{-- beigin::Table --}}
 							        <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
 							            <thead>
-							                <tr class="text-uppercase">
-							                    <th style="min-width: 250px" class="pl-7"><span class="">Post</span></th>
+							                <tr class="">
+							                    <th style="max-width: 270px" class="pl-7"><span style="text-transform: capitalize;">Post (Mouse hover on Network Icons to see the Account Name)</span></th>
 							                    <th style="min-width: 150px">Type</th>
-							                    <th style="min-width: 150px">Date</th>
+							                    <th style="min-width: 150px">Created Date</th>
+							                    <th style="min-width: 150px">Post Date / Day(s) and Timings(s)</th>
 							                    <th style="min-width: 130px">Status</th>
 												@if(isset($pageTitle) && $pageTitle != "History")
-							                    <th style="min-width: 100px">Action</th>
+							                    <th style="min-width: 150px">Action</th>
 												@endif
 							                </tr>
 							            </thead>

@@ -22,8 +22,7 @@
                             <!--begin::Body-->
                             <div class="card-body">
                                 <!--begin::Form-->
-                                <form action="/discovery/search-youtubes" method="post">
-                                    @csrf
+                                <form action="/discovery/search-youtubes" method="get">
                                     <!--begin::search-->
                                     <div class="form-group">
                                         <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6" name="sortby" id="sortby">
@@ -115,7 +114,7 @@
                                             <div class="d-flex justify-content-center">
                                                 <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="openModel('{{$account->mediaUrl}}','{{$account->channelTitle}}','{{trim(preg_replace('/\s*\([^)]*\)/', '', $account->title))}}')"
                                                    class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
-                                                        class="far fa-hand-point-up fa-fw"></i> 1 click</a>
+                                                        class="far fa-hand-point-up fa-fw"></i> One-Click</a>
                                                 <a href="{{$account->mediaUrl}}"
                                                    class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder"><i
                                                         class="fab fa-youtube fa-fw"></i> Show Original</a>
@@ -175,11 +174,13 @@
                         <div class="accounts-list-div">
                             <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
                                 @foreach($socialAccounts as $key => $socialAccount)
+                                    @if($key !== 'instagram')
                                     <li class="nav-item">
                                         <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
                                             <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
                                         </a>
                                     </li>
+                                    @endif
                                 @endforeach
                             </ul>
                             <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>
@@ -391,7 +392,7 @@
                                 '<p class="card-text">'+element.description+'<br><br></p><hr>'+
                                 '<div class="d-flex justify-content-center">'+
                                 '<a href="javascript:;" data-toggle="modal" data-target="#resocioModal"class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('+url+','+chaneltitle+','+title.replace(/[{()}]/g, '')+')">'+
-                                '<iclass="far fa-hand-point-up fa-fw"></i> 1 click</a>'+
+                                '<iclass="far fa-hand-point-up fa-fw"></i>  One-Click</a>'+
                                 '<a href="'+element.embed_url+'" class="btn btn-hover-text-danger btn-hover-icon-danger rounded font-weight-bolder">'+
                                 '<i class="fab fa-youtube fa-fw"></i> Show Original</a>'+
                                 '</div>'+

@@ -113,11 +113,13 @@
                             <!-- begin:Accounts list -->
                                 <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
                                     @foreach($socialAccounts as $key => $socialAccount)
+                                        @if($key !== 'instagram')
                                         <li class="nav-item">
                                             <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
                                                 <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
                                             </a>
                                         </li>
+                                        @endif
                                     @endforeach
                                 </ul>
                                 <span id="error-socialAccount" class="error-message form-text text-danger text-center"></span>

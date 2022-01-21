@@ -77,56 +77,56 @@
                     <div class="carousel-item active">
                         <img src="/media/png/dashboard_slider.png" class="d-block w-80 mr-auto ml-auto"  alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/youtube_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/contentstdio_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/discover_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/teams_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/reports_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <img src="/media/png/gallery_slider.png" class="d-block w-80 mr-auto ml-auto" alt="...">
                         <div class="carousel-caption">
-                            <a href="https://socioboard.com/social-media-automation/" target="_blank">
-                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Learn More</button>
+                            <a href="https://socioboard.com/book-a-demo/" target="_blank">
+                                <button type="button" class="btn font-weight-bold text-center py-4 px-5">Book A Demo</button>
                             </a>
                         </div>
                     </div>
