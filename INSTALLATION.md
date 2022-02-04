@@ -80,6 +80,11 @@
 cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common & npm install & cd ../Update & npm install & cd ../Publish & npm install & cd ../Notification & npm install
 ```
 
+For Linux
+```code
+cd socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install
+```
+
 
 ## #4. Setting up MySQL Database
 
