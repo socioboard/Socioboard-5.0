@@ -25,12 +25,14 @@ import AuthorizeServices from '../../../Common/Services/authorize.services.js';
 import UserTeamAccount from '../../../Common/Shared/user-team-accounts.shared.js';
 import BitlyCluster from '../../../Common/Cluster/bitly.cluster.js';
 import BITLY_CONSTANTS from '../../../Common/Constants/bitly.constants.js';
+import TIK_TOK_CONSTANTS from '../../../Common/Constants/tiktok.constants.js';
 import InvitationModel from '../../../Common/Models/invitation.model.js';
 import SendEmailServices from '../../../Common/Services/mail-base.services.js';
 import TinyLinkCluster from '../../../Common/Cluster/tinylink.cluster.js';
 import MediumCluster from '../../../Common/Cluster/medium.cluster.js';
 import TumblerCluster from '../../../Common/Cluster/tumblr.cluster.js';
 import PinterestCluster from '../../../Common/Cluster/pinterest.newcluster.js';
+import TikTokCluster from '../../../Common/Cluster/tiktok.cluster.js';
 
 const teamLibs = new TeamLibs();
 const profileLibs = new ProfileLibs();
@@ -301,6 +303,17 @@ class SocialAccountService {
           );
           SuccessNavigationResponse(res, redirectUrl, tumblerencryptedState);
           break;
+        case 'TikTok':
+          if (
+            userScopeAvailableNetworks.includes(TIK_TOK_CONSTANTS.ACCOUNT_TYPE)
+          ) {
+            return this.getTikTokRedirectUrl(res, encryptedState);
+          }
+
+          ErrorResponse(
+            res,
+            'Sorry, Requested feature not available for your plan.',
+          );
         default:
           throw new Error(
             `${config.get(
@@ -596,6 +609,22 @@ class SocialAccountService {
             );
           }
           break;
+        case 'TikTok':
+          if (
+            userScopeAvailableNetworks.includes(TIK_TOK_CONSTANTS.ACCOUNT_TYPE)
+          ) {
+            return this.addSocialProfileTikTok(res, {
+              code,
+              networkId,
+              teamId: queryInputs.teamId,
+              userId,
+              userName,
+            });
+          }
+          ErrorResponse(
+            res,
+            'Sorry, Requested feature not available for your plan.'
+          );
         default:
           //   reject(new Error('Specified network is invalid.'));
           break;
@@ -1032,6 +1061,53 @@ class SocialAccountService {
         })
         .catch(error => CatchResponse(res, error.message));
     } catch (error) {
+      return CatchResponse(res, error.message);
+    }
+  }
+
+  /**
+   * Return redirect url for TikTok
+   * @param {express.Response} res
+   * @param {string} state - Generated state
+   * @returns {object} Success or Error data
+   */
+   getTikTokRedirectUrl(res, state) {
+    return SuccessNavigationResponse(
+      res,
+      TikTokCluster.getRedirectUrl(state),
+      state
+    );
+  }
+
+  /**
+   * Create a TikTok profile for the db and save it in it
+   * @param {express.Response} res
+   * @param {object} ctx - The data need to add tik-tok
+   * @param {string} ctx.code - Code from authorization callback
+   * @param {string} ctx.networkId - Remote service type
+   * @param {string} ctx.teamId - Id of the team to which the account will be added
+   * @param {string} ctx.userId - User id picked from the access token
+   * @param {string} ctx.userName - User name picked from the access token
+   * @returns {object} res - Suceess or Error data
+   */
+   async addSocialProfileTikTok(res, ctx) {
+    try {
+      const tikTokProfile = await TikTokCluster.addTikTokProfile(ctx);
+
+      const createdProfile = await teamLibs.addProfiles(
+        ctx.userId,
+        ctx.userName,
+        tikTokProfile
+      );
+
+      return AddSocialAccRes(
+        res,
+        createdProfile.teamDetails,
+        createdProfile.profileDetails
+      );
+    } catch (error) {
+      logger.info(`Add social profile TikTok error: ${error.message}`);
+
       return CatchResponse(res, error.message);
     }
   }
