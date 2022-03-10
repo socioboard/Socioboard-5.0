@@ -2,7 +2,7 @@
 
 # Un comment the Below lines to install packages in all Micro-services
 
-# cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common  & npm install & cd ../Update & npm install & cd ../Publush & npm install & cd ../Notification & npm install & cd ..
+# cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common  & npm install & cd ../Update & npm install & cd ../Publish & npm install & cd ../Notification & npm install & cd ..
 
 # end of package install command
 
@@ -31,7 +31,7 @@ NODE_ENV=development
 #  ! mongo database
 
 # All in one command ( Install Packages & setups Data Base )
-cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common & npm install & cd ../Update & npm install & cd ../Publush & npm install & cd ../Notification & npm install & cd ../Common/Sequelize-cli & set NODE_ENV=development & npx sequelize-cli db:migrate & npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
+cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Common & npm install & cd ../Update & npm install & cd ../Publish & npm install & cd ../Notification & npm install & cd ../Common/Sequelize-cli & set NODE_ENV=development & npx sequelize-cli db:migrate & npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
 
 
 #  Once all are success
