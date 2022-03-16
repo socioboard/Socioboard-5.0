@@ -170,7 +170,7 @@ cd ./socioboard-api/User & npm install & cd ../Feeds & npm install & cd ../Commo
     Your Terminal should be in Root Directory. then run the below command.
 
 ```code
-set NODE_ENV=development & cd ./socioboard-api/User & pm2 start user.server.js & cd ../Feeds & pm2 start feeds.server.js & cd ../Publish & pm2 start publish.server.js & cd ../Notification & pm2 start notify.server.js & cd ../Update & pm2 start update.server.js & pm2 status
+set NODE_ENV=development & cd ./socioboard-api/User & pm2 start ./socioboard-api/User/user.server.js & cd ../Feeds & pm2 start ./socioboard-api/Feeds/feeds.server.js & cd ../Publish & pm2 start ./socioboard-api/Publish/publish.server.js & cd ../Notification & pm2 start ./socioboard-api/Notification/notify.server.js & cd ../Update & pm2 start ./socioboard-api/Update/update.server.js & pm2 status
 ```
 
     It will Give you all your services status in a table.
