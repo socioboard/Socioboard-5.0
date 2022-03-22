@@ -3710,7 +3710,7 @@ class MailService extends MailBase {
   sendMails(defaultService, mailingDetails) {
     return new Promise(async (resolve, reject) => {
       switch (defaultService) {
-        case 'gmail':
+        case 'gmailServices':
           try {
             const info = await this.sendEmailByGmail(mailingDetails);
             return resolve(info);
