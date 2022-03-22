@@ -95,36 +95,38 @@ class unauthorizedController {
           req.body.email,
           responseData?.user_id
         );
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
-        // Set Details in aMember as well
-        /**
-         * userName
-          password
-          firstName
-          lastName
-          email
-          Phone = Country code + Number
-          Add Tracking as well
-         */
-        let aMemberData = {
-          userName: req.body.username ?? responseData?.userName,
-          password: responseData?.password,
-          firstName: responseData?.first_name,
-          lastName: responseData?.last_name,
-          email: responseData?.email,
-          rfd: req.body?.rfd,
-          kwd: req.body?.kwd,
-          med: req.body?.med,
-          src: req.body?.src,
-          phone: `${responseData?.phone_code}${responseData?.phone_no}`,
-          country: `${req.body?.country ?? 'NA'}`,
-        };
-         await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
-      }
-        await unauthorizedLibs.checkAppSumoActivation(
-          req.body.email,
-          responseData?.user_name
-        );
+        //#region Amember Integration
+      //   if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      //   // Set Details in aMember as well
+      //   /**
+      //    * userName
+      //     password
+      //     firstName
+      //     lastName
+      //     email
+      //     Phone = Country code + Number
+      //     Add Tracking as well
+      //    */
+      //   let aMemberData = {
+      //     userName: req.body.username ?? responseData?.userName,
+      //     password: responseData?.password,
+      //     firstName: responseData?.first_name,
+      //     lastName: responseData?.last_name,
+      //     email: responseData?.email,
+      //     rfd: req.body?.rfd,
+      //     kwd: req.body?.kwd,
+      //     med: req.body?.med,
+      //     src: req.body?.src,
+      //     phone: `${responseData?.phone_code}${responseData?.phone_no}`,
+      //     country: `${req.body?.country ?? 'NA'}`,
+      //   };
+      //    await new aMember(config.get('aMember')).addUserToAMember(aMemberData);
+      // }
+      //   await unauthorizedLibs.checkAppSumoActivation(
+      //     req.body.email,
+      //     responseData?.user_name
+      //   );
+      //#endregion
         const planDetails = await unauthorizedLibs.getPlanDetails(
           responseData.Activations.user_plan
         );
@@ -245,13 +247,15 @@ class unauthorizedController {
         return ErrorResponse(res, 'Account has been locked.');
       if (!userDetails.Activations.activation_status)
         return ErrorResponse(res, 'Email not yet validated.!');
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
-       // Call aMember to set new details of plan and expiry date
-      // userId, userName & password
-       await new aMember(config.get('aMember')).getUserPlanDetail(
-        userDetails?.user_id,
-        userDetails?.user_name );
-       }
+        //#region Amember Integration
+      //   if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      //  // Call aMember to set new details of plan and expiry date
+      // // userId, userName & password
+      //  await new aMember(config.get('aMember')).getUserPlanDetail(
+      //   userDetails?.user_id,
+      //   userDetails?.user_name );
+      //  }
+      //#endregion
       const remindingDays = moment(
         userDetails.Activations.account_expire_date
       ).diff(moment(), 'days');
