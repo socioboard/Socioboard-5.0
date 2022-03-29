@@ -27,7 +27,7 @@ class SocialAccountController {
             #swagger.parameters['network'] = {
                 in: 'query',
                 default: 'Facebook',
-            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest", "Bitly","Tumblr"]
+            enum: ["Facebook", "FacebookPage","FacebookGroup", "Twitter", "LinkedIn", "LinkedInCompany", "Youtube", "GoogleAnalytics", "Instagram","InstagramBusiness" ,"Pinterest", "Bitly","Tumblr","TikTok"]
 
         } */
     return await SocialAccountService.getProfileRedirectUrl(req, res, next);
