@@ -9,6 +9,7 @@ let leftFromTeamDatas = [];
 let teamSocialAccounts = [];
 let availableSocialAccounts = [];
 let acctype = '';
+let profilePicDefault = '';
 
 function withDrawInvitaion(email) {
     let id = parseInt(window.location.pathname.split("/")[2]);
@@ -40,11 +41,61 @@ function withDrawInvitaion(email) {
     });
 }
 
-var SBKanbanBoard = function () {
+const SocialDefaultImages = [
+    {},
+    {
+        accountType: 'Facebook',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUSuMWEcCUPi4dy_q-HfMpQYrlwDOxWOILlQ&usqp=CAU'
+    }, {
+        accountType: 'Fb Page',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUSuMWEcCUPi4dy_q-HfMpQYrlwDOxWOILlQ&usqp=CAU'
+    },
+    {}, {
+        accountType: 'Twitter',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIy0G6PWiqV0NM13Zd3OBB0H6SixdDsPxcgQ&usqp=CAU'
+    }, {
+        accountType: 'Instagram',
+        profilePicDefault: 'https://i.imgur.com/TMVAonx.png'
+    }, {
+        accountType: 'LinkedIn',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAazafiWiEDZc4wDZ6pSbidJPw4CTOuLwSBA&usqp=CAU'
+    }, {
+        accountType: 'LinkedIn Page',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAazafiWiEDZc4wDZ6pSbidJPw4CTOuLwSBA&usqp=CAU'
+    }, {
+        accountType: 'Google'
+    }, {
+        accountType: 'Youtube',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2p64RiNbHCKAGcrR7ZnOHjaiULOeG1KWpuQ&usqp=CAU'
+    }, {
+        accountType: 'Google'
+    }, {
+        accountType: 'Pinterest',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTldN9DuPhILuicsJc5JDGmDRWCI7Y-BXDLEA&usqp=CAU'
+    }, {
+        accountType: 'Insta-Business',
+        profilePicDefault: 'https://i.imgur.com/TMVAonx.png'
+    },
+    {},
+    {
+        accountType: 'Medium',
+    }, {
+        accountType: 'DailyMotion'
+    },
+    {
+        accountType: 'Tumblr',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqlxS7Cw_ggWMFVpVEQv-zWvfXqc36Bt0Lw&usqp=CAU'
+    },{},
+    {
+        accountType: 'TikTok',
+        profilePicDefault: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOg6a1JGvLre53ishmhjU63uwyz7Ok7_LSAw&usqp=CAU'
+    }
+];
+
+let SBKanbanBoard = function () {
     let id = parseInt(window.location.pathname.split("/")[2]);//to get teamid
-    let socialAccounts = [];
-    let allSocialAccounts = [];
-    var sb_teams = async function () {
+    let socialAccounts = [], allSocialAccounts = [];
+    let sb_teams = async function () {
         await jQuery.ajax({
             url: '/get-team-details',
             type: 'get',
@@ -53,7 +104,7 @@ var SBKanbanBoard = function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function (response) {
-                let profilepic;
+                let profilePicture;
                 if (response.code === 200) {
                     response.teamSocialAccounts.map(element => {
                         if (element.account_type !== 13) {
@@ -62,18 +113,16 @@ var SBKanbanBoard = function () {
                     });
                     if (response.adminData.length > 0) {
                         adminData = response.adminData.map(element => {
-                            profilepic = element.profile_picture;
-                            if (isValidURL(element.profile_picture) === true) {
-                                profilepic = element.profile_picture;
-                            } else {
-                                profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture);
-                            }
+                            profilePicture = element.profile_picture;
+                            if (isValidURL(element.profile_picture) === true) profilePicture = element.profile_picture;
+                            else profilePicture = profilePicture === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_picture;
+
                             return {
                                 'id': element.user_id,
                                 'username': element.email,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    '<img class="symbol-label font-size-h4" src="' + profilePicture + '" alt="ProfilePic"/>' +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
                                     '<span class="text-dark-50 font-weight-bold mb-1">' + element.first_name + ' ' + element.last_name + '</span>' +
@@ -83,53 +132,33 @@ var SBKanbanBoard = function () {
                             };
                         });
                     }
+                    let profile_name;
                     if (response.teamSocialAccounts.length > 0) {
                         teamSocialAccounts = socialAccounts.map(element => {
+                            profilePicDefault = '';
+                            profile_name = element.first_name;
+                            if(element.account_type === 18)
+                            {
+                                profile_name = element.user_name;
+
+                            }
                             if (isValidURL(element.profile_pic_url) === true) {
-                                profilepic = element.profile_pic_url;
+                                profilePicture = element.profile_pic_url;
                             } else {
-                                profilepic = '../' + element.profile_pic_url;
+                                profilePicture = '../' + element.profile_pic_url;
                             }
-                            if (element.account_type === 1) {
-                                acctype = 'Facebook';
-                            } else if (element.account_type === 2) {
-                                acctype = 'Fb Page';
-                            }
-                            else if (element.account_type === 4) {
-                                acctype = 'Twitter';
-                            } else if (element.account_type === 5) {
-                                acctype = 'Instagram';
-                            } else if (element.account_type === 6) {
-                                acctype = 'LinkedIn';
-                            } else if (element.account_type === 8 || element.account_type === 10) {
-                                acctype = 'Google';
-                            } else if (element.account_type === 9) {
-                                acctype = 'Youtube';
-                            } else if (element.account_type === 12) {
-                                acctype = 'Insta-Business';
-                            } else if (element.account_type === 7) {
-                                acctype = 'LinkedIn Page';
-                            } else if (element.account_type === 14) {
-                                acctype = 'Medium';
-                            } else if (element.account_type === 16) {
-                                acctype = 'Tumblr';
-                            } else if (element.account_type === 11) {
-                                acctype = 'Pinterest';
-                            } else if (element.account_type === 15) {
-                                acctype = 'DailyMotion';
-                            } else {
-                                acctype = 'Social Account';
-                            }
+                            let defaultImage = SocialDefaultImages[element.account_type]?.profilePicDefault ?? profilePicture;
+                            let accountType = SocialDefaultImages[element.account_type]?.accountType ?? 'Social Account';
                             return {
                                 'id': element.account_id,
                                 'username': element.first_name,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    `<img class="symbol-label font-size-h4" src="${profilePicture}" onerror=" this.onerror=null;this.src='${defaultImage}';" alt="ProfilePic"/>` +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
-                                    '<span class="text-dark-50 font-weight-bold mb-1">' + element.first_name + '</span>' +
-                                    '<span class="label label-inline label-light-success font-weight-bold">' + acctype + '</span>' +
+                                    '<span class="text-dark-50 font-weight-bold mb-1">' + profile_name + '</span>' +
+                                    '<span class="label label-inline label-light-success font-weight-bold">' + accountType + '</span>' +
                                     '</div>' +
                                     '</div>'
                             };
@@ -149,7 +178,7 @@ var SBKanbanBoard = function () {
                                 'username': element.email,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '" alt="ProfilePic"/>' +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
                                     '<span class="text-dark-50 font-weight-bold mb-1">' + element.user.first_name + ' ' + element.user.last_name + '</span>' +
@@ -173,7 +202,7 @@ var SBKanbanBoard = function () {
                                 'username': element.email,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '" alt="ProfilePic"/>' +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
                                     '<span class="text-dark-50 font-weight-bold mb-1">' + element.first_name + ' ' + element.last_name + '</span>' +
@@ -186,6 +215,7 @@ var SBKanbanBoard = function () {
                     }
                     if (response.availableSocialAccounts.length > 0) {
                         let profilepic;
+                        let profile_name;
                         response.availableSocialAccounts.map(element => {
                             if (element.account_type !== 13) {
                                 allSocialAccounts.push(element);
@@ -193,17 +223,17 @@ var SBKanbanBoard = function () {
                         });
                         availableSocialAccounts = allSocialAccounts.map(element => {
                             profilepic = element.profile_picture;
+                            profile_name = element.first_name;
                             if (isValidURL(element.profile_pic_url) === true) {
                                 profilepic = element.profile_pic_url;
                             } else {
                                 profilepic = (profilepic === "defaultPic.jpg" ? "/media/svg/avatars/001-boy.svg" : '../' + element.profile_pic_url);
                             }
-                            if (element.account_type === 1 ) {
+                            if (element.account_type === 1) {
                                 acctype = 'Facebook';
-                            }else if (element.account_type === 2) {
+                            } else if (element.account_type === 2) {
                                 acctype = 'Fb Page';
-                            }
-                            else if (element.account_type === 4) {
+                            } else if (element.account_type === 4) {
                                 acctype = 'Twitter';
                             } else if (element.account_type === 5) {
                                 acctype = 'Instagram';
@@ -225,18 +255,25 @@ var SBKanbanBoard = function () {
                                 acctype = 'Pinterest';
                             } else if (element.account_type === 15) {
                                 acctype = 'DailyMotion';
-                            } else {
+                            }
+                            else if (element.account_type === 18) {
+                                acctype = 'TikTok';
+                                profile_name=element.user_name;
+                            }
+                            else {
                                 acctype = 'Social Account';
                             }
+                            let defaultImage = SocialDefaultImages[element.account_type]?.profilePicDefault ?? profilePicture;
+                            let accountType = SocialDefaultImages[element.account_type]?.accountType ?? 'Social Account';
                             return {
                                 'id': element.account_id,
                                 'username': element.first_name,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    `<img class="symbol-label font-size-h4" src="${profilepic}" onerror=" this.onerror=null;this.src='${defaultImage}';" alt="ProfilePic"/>` +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
-                                    '<span class="text-dark-50 font-weight-bold mb-1">' + element.first_name + '</span>' +
+                                    '<span class="text-dark-50 font-weight-bold mb-1">' + profile_name + '</span>' +
                                     '<span class="label label-inline label-light-success font-weight-bold">' + acctype + '</span>' +
                                     '</div>' +
                                     '</div>'
@@ -257,7 +294,7 @@ var SBKanbanBoard = function () {
                                 'username': element.email,
                                 'title': '<div class="d-flex align-items-center">' +
                                     '<div class="symbol symbol-success mr-3">' +
-                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '"></img>' +
+                                    '<img class="symbol-label font-size-h4" src="' + profilepic + '" alt="ProfilePic"/>' +
                                     '</div>' +
                                     '<div class="d-flex flex-column align-items-start">' +
                                     '<span class="text-dark-50 font-weight-bold mb-1">' + element.first_name + ' ' + element.last_name + '</span>' +
@@ -278,7 +315,7 @@ var SBKanbanBoard = function () {
             }
 
         });
-        var kanban = new jKanban({
+        let kanban = new jKanban({
             element: '#Sb_teams',
             gutter: '0',
             click: function (el) {
@@ -370,7 +407,7 @@ var SBKanbanBoard = function () {
             },
         });
 
-        var toDoButton = document.getElementById('inviteMembers');
+        const toDoButton = document.getElementById('inviteMembers');
         toDoButton.addEventListener('click', function () {
             kanban.addElement(
                 '_invited', {
@@ -389,7 +426,7 @@ var SBKanbanBoard = function () {
             );
         });
 
-        var addBoardDefault = document.getElementById('addDefault');
+        let addBoardDefault = document.getElementById('addDefault');
         addBoardDefault.addEventListener('click', function () {
             kanban.addBoards(
                 [{
@@ -401,16 +438,16 @@ var SBKanbanBoard = function () {
             )
         });
 
-        var removeBoard = document.getElementById('removeBoard');
+        let removeBoard = document.getElementById('removeBoard');
         removeBoard.addEventListener('click', function () {
             kanban.removeBoard('_admin');
         });
-    }
+    };
 
     // Public functions
     return {
         init: function () {
-            sb_teams();
+            sb_teams().then(r => console.log(r));
         }
     };
 }();
@@ -420,11 +457,7 @@ jQuery(document).ready(function () {
 });
 
 function isValidURL(str) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-    if (!regex.test(str)) {
-        return false;
-    } else {
-        return true;
-    }
+    const regex = /(http|https):\/\/(\w+:?\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%\-\/]))?/;
+    return regex.test(str);
 }
 

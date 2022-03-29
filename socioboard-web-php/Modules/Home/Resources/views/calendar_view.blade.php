@@ -21,25 +21,24 @@
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Calendar view</h3>
                                 <div class="card-toolbar">
-                                    <a href="home/publishing/scheduling" class="btn text-hover-success font-weight-bolder font-size-sm">Add post</a>
+                                    <a href="home/publishing/scheduling" class="btn text-hover-success font-weight-bolder font-size-sm addPostBtn">Add post</a>
                                 </div>
                             </div>
                             <!--end::Header-->
                             <!--begin::Category Selectbox-->
                             <div class="card-body pt-2">
                                 <div class="row">
-                                    <div class="col-md-4 col-lg-3">
+                                    <div class="col-md-4 col-lg-3 categoryButtonsDiv">
                                         <select class="form-control selectpicker " id="categories">
                                             <option value="">All Categories</option>
-                                            <option value="0" >SocioQueue</option>
-                                            <option value="1">DayWise-Socioqueue</option>
+                                            <option value="0" >Normal Publish</option>
+                                            <option value="1">DayWise Publish</option>
                                             <option value="6">history</option>
                                         </select>
                                     </div>
-                                    <div class="d-flex color-descriptive col-md-4 ml-auto">
+                                    <div class="d-flex color-descriptive col-md-4 ml-auto colorDiv">
                                         <div class="red-color d-flex"><span></span>Normal Publish</div>
                                         <div class="yellow-color d-flex"><span></span>Day Wise Publish</div>
-                                        <div class="blue-color d-flex"><span></span>History</div>
                                     </div>
                                 </div>
                             </div>

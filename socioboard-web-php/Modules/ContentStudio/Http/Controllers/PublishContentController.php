@@ -13,6 +13,8 @@ use Illuminate\Routing\Controller;
 use Modules\User\helper;
 use App\ApiConfig\ApiConfig;
 use Exception;
+use Illuminate\Support\Facades\Session;
+
 
 
 class PublishContentController extends Controller
@@ -37,6 +39,7 @@ class PublishContentController extends Controller
      */
     public function scheduling(Request $request)
     {
+        (isset($request->pageType) && $request->pageType === "dailymotion" ? $pagetType = "DailyMotion" : $pagetType = "other");
         $socialAccounts = $this->getTeamSocialAccounts();
         $twitterAccountsIds = [];
         $facebookAccountsIds = [];
@@ -67,12 +70,13 @@ class PublishContentController extends Controller
         }
         return view('contentstudio::scheduling.index',[
             'mediaData' => [
-                'mediaUrl' => $request->mediaUrl ? request()->get('mediaUrl') : null,
+                'mediaUrl' => $pagetType === "DailyMotion" ? null : ($request->mediaUrl ? request()->get('mediaUrl') : null),
                 'sourceUrl' => $request->sourceUrl ? request()->get('sourceUrl') : null,
                 'publisherName' => $request->publisherName ? request()->get('publisherName') : null,
                 'title' => $request->title ? request()->get('title') : null,
                 'description' => $request->description ? request()->get('description') : null,
-                'type' => $request->type ? request()->get('type') : null,
+                'type' =>$pagetType === "DailyMotion" ? null :( $request->type ? request()->get('type') : null),
+                'pageType' => $pagetType,
             ],
             'downloadMedia' => true,
             'socialAccounts' => $socialAccounts,
@@ -152,10 +156,10 @@ class PublishContentController extends Controller
             if($request->get('status') === 'scheduling') {
                 date_default_timezone_set($request->timezone);
                 $currentTime = date('Y-m-d\TH:i:s.ms\Z');
-                if ($request->has('normal_schedule_datetime')){
+                if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime') !== null){
                     $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
                     $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
-                }else if ($request->has('day_wise_datetime')){
+                }else if ($request->has('day_wise_datetime') && $request->get('day_wise_datetime') !== null){
                     $dt = new \DateTime($request->get('day_wise_datetime'), new \DateTimeZone($request->timezone));
                     $dateschedule = $dt->format("Y-m-d\TH:i:s.ms\Z");
                 }
@@ -342,7 +346,7 @@ class PublishContentController extends Controller
                                             $socialAccounts['linkedin']['account'][] = $account;
                                             break;
                                         case 7:
-                                            $socialAccounts['linkedin']['business account'][] = $account;
+                                            $socialAccounts['linkedin-in']['account'][] = $account;
                                             break;
                                         case 12:
                                             $socialAccounts['instagram']['business account'][] = $account;
@@ -957,9 +961,6 @@ class PublishContentController extends Controller
                         foreach ($accounts as $key => $account) {
                             if (!$account->join_table_teams_social_accounts->is_account_locked) {
                                 switch ($account->account_type) {
-                                    case 1:
-                                        $socialAccounts['facebook']['user'][] = $account;
-                                        break;
                                     case 2:
                                         $socialAccounts['facebook']['page'][] = $account;
                                         break;
@@ -1067,7 +1068,7 @@ class PublishContentController extends Controller
             }
         }
 
-        if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime')!== null ){
+        if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime')!== null && $request->get('normal_schedule_datetime')!== "Invalid Date"){
             $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
@@ -1140,7 +1141,7 @@ class PublishContentController extends Controller
                 ];
             }
         }
-        if ($request->has('normal_schedule_datetime')){
+        if ($request->has('normal_schedule_datetime') && $request->get('normal_schedule_datetime') !== "Invalid Date"){
             $dt = new \DateTime($request->get('normal_schedule_datetime'), new \DateTimeZone($request->timezone));
             $dt->setTimeZone(new \DateTimeZone('UTC'));
             $date = $dt->format("Y-m-d\TH:i:s.ms\Z");
@@ -1404,7 +1405,7 @@ class PublishContentController extends Controller
             'postType' => 'Image',
             'message' => $request->discription,
             'mediaPaths' => $request->mediaUrl,
-            'link' =>  $request['outgoing-url'],
+            'link' =>  $request['outgoing-url'] === null ? "" : $request['outgoing-url'],
             'accountIds' => $accountIds,
             'postStatus' => 1,
             'pinBoards' => $boards
@@ -1442,6 +1443,97 @@ class PublishContentController extends Controller
         return view('contentstudio::scheduling.youtube_publish',compact('socialAccounts', 'videoData','discription'));
     }
 
+
+    private function getTeamTikTokAccounts()
+    {
+        $socialAccounts = [];
+        try {
+            $team = \Session::get('team');
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            try {
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if (isset($response['code']) && $response['code'] === 200) {
+                    $responseData = $this->helper->responseHandler($response['data']);
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+
+                    if (!empty($accounts)) {
+                        foreach ($accounts as $key => $account) {
+                            if (!$account->join_table_teams_social_accounts->is_account_locked) {
+                                switch ($account->account_type) {
+                                    case 18:
+                                        $socialAccounts['tiktok']['account'][] = $account;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } catch (AppException $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'index() {DashboardController}');
+                return false;
+            }
+        } catch (AppException $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'index() {DashboardController}');
+            return false;
+        }
+        return $socialAccounts;
+    }
+
+    public function showTikTokPublish()
+    {
+
+        $accounts = $this->getTeamTikTokAccounts();
+        if (isset($accounts) && isset($accounts['tiktok'])) {
+            $socialAccounts = $accounts['tiktok'];
+        } else {
+            $socialAccounts = null;
+        }
+        return view('contentstudio::scheduling.tiktok_publish', compact('socialAccounts'));
+    }
+
+    public function tikTokSchedule(Request $request)
+    {
+        $accids = $request->selectedAccs;
+        $AccIds = [];
+        $extractedAccids = [];
+        $data = [
+            'account_id' => 'required',
+            'videoUrl' => 'required',
+        ];
+        $validator = Validator::make($request->only('account_id', 'title', 'discription', 'videoUrl'), $data, [
+            'account_id.required' => 'TikTok Account is Required',
+            'videoUrl.required' => 'Video for Publishing is Required',
+        ]);
+        if ($validator->fails()) {
+            $response['code'] = 201;
+            $response['msg'] = $validator->errors()->all();
+            $response['data'] = null;
+            return Response::json($response, 200);
+        }
+        if (str_contains($accids, ',') === true) {
+            $extractedAccids = (explode(",", $accids));
+            foreach ($extractedAccids as $value) {
+                array_push($AccIds, (int)$value);
+            }
+        } else {
+            array_push($AccIds, (int)$accids);
+        }
+        $mediaUrl = $request->videoUrl;
+        $accId = (integer)$request->account_id;
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $requestData = (object)[
+            "accountIds" => $AccIds,
+            "teamId" => $teamID,
+            "videoUrl" => $mediaUrl
+        ];
+        $team = \Session::get('team');
+        $apiUrl = $this->feedsUrl . '/feeds/tiktok/videos/upload';
+        $response = $this->helper->postApiCallWithAuth('POST', $apiUrl, $requestData);
+        return $this->helper->responseHandler($response['data']);
+    }
 
 
 }

@@ -27,7 +27,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-center">
                                 <a href="javascript:;" data-toggle="modal" data-target="#resocioModal"
-                                   onclick="oneClickImage('{{$image->media_url}}')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
+                                   onclick="oneClickImage('{{$image->media_url}}','{{$image->title}}')" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
                                             class="far fa-hand-point-up fa-fw"></i> 1 click</a>
                             </div>
                         </div>

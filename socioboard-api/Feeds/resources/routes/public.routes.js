@@ -15,6 +15,7 @@ import demoMediumRoutes from '../../../Common/Demo/medium/medium-demo.routes.js'
 import BitlyFeeds from '../../core/bitly/bitly.routes.js';
 import MediumFeeds from '../../core/medium/medium.routes.js';
 import TumblrFeeds from '../../core/tumblr-feeds/tumblr-feeds.routes.js';
+import TikTokFeeds from '../../core/tiktok/tiktok.routes.js';
 import PinterestPins from '../../core/pinterest-pins/pinterest-pins.routes.js';
 class Routes {
   constructor(app) {
@@ -26,6 +27,7 @@ class Routes {
     app.use('/v1/feeds/', TumblrFeeds);
     app.use('/v1/feeds/', PinterestPins);
     app.use(recentVisited);
+    app.use('/v1/feeds/', TikTokFeeds);
     app.use('/v1/feeds/', TwitterFeeds);
     app.use('/v1/feeds/', FacebookFeeds);
     app.use('/v1/feeds/', YouTubeFeeds);

@@ -144,7 +144,8 @@ class Pinterest {
         const parsedData = JSON.parse(body);
         logger.info(`getBoardData Fetch details ${JSON.stringify(parsedData)}`)
         const parsedItems = parsedData?.items; // need check for if board exist or not
-        parsedItems.map(board => {
+        if(parsedItems){
+        parsedItems?.map(board => {
           let boardDetail = {
             privacy: board?.privacy,
             board_id: board?.id,
@@ -157,7 +158,7 @@ class Pinterest {
           boardDetails.push(boardDetail);
         });
         resolve(boardDetails);
-      });
+      }});
     });
   }
 
@@ -193,9 +194,10 @@ class Pinterest {
               socialId,
               userName: pin?.board_owner?.username,
               boardId:pin?.board_id,
+              outgoingUrl: pin?.link ?? "",
               version:"v5.0"
             };
-            return data
+            return data 
          });
          postDetails =  Promise.all(promises);
        })

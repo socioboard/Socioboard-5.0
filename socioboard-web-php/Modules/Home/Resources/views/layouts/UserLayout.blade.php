@@ -184,6 +184,12 @@
                             <!--begin::Tab Navs-->
                         </div>
                         <!--end::Left-->
+                        <div class="introjs-step-0" id="productTourDiv"  title="Click here to view the product tour of the current viewing page.">
+                            <figure class="swing">
+                                <img src="https://i.imgur.com/X1X2eUe.png" width="110">
+                            </figure>
+
+                        </div>
 
                         <!--begin::Topbar-->
                         <div class="topbar mr-2">
@@ -207,7 +213,7 @@
                                 <div class="topbar-item">
                                     <a id="reportsCart" onclick="planCheck('{{env('APP_URL')}}get-reports-Images')"
                                        target="_blank"
-                                       title="Custom Reports" class="btn btn-icon btn-dropdown btn-lg mr-1 reports-btn">
+                                       title="Custom Reports" class="btn btn-icon btn-dropdown btn-lg mr-1 reports-btn reportsCart">
                                                 <span class="symbol svg-icon svg-icon-xl">
                                                     <i class="fas fa-chart-line"></i>
                                                     <span class="badge badge-danger badge-pill"
@@ -221,7 +227,7 @@
                             <!--begin::Notifications-->
                             <div class="dropdown">
                                 <!--begin::Toggle-->
-                                <div id="nofifications" class="topbar-item notificationsIcon" data-toggle="dropdown"
+                                <div id="nofifications" class="topbar-item notificationsIcon nofificationsDiv" data-toggle="dropdown"
                                      disabled
                                      data-offset="10px,0px"
                                      onclick="checkPlanExpiryNotifications()">
@@ -422,9 +428,9 @@
                             <!--begin::User-->
                             <div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px"
                                  onclick="teamCount()">
-                                <div class="btn btn-icon btn-dropdown w-lg-auto d-flex align-items-center btn-lg px-2"
+                                <div class="btn team_Name_Box btn-icon btn-dropdown w-lg-auto d-flex align-items-center btn-lg px-2"
                                      id="Sb_team">
-                                    <div class="d-flex flex-column text-right pr-lg-3">
+                                    <div class="d-flex flex-column text-right pr-lg-3 ">
                                         <span
                                                 class="font-weight-bold font-size-sm d-none d-md-inline"><?php if (isset(session()->get('team')['teamName'])) echo session()->get('team')['teamName']; else  echo 'N/A' ?></span>
 
@@ -474,7 +480,7 @@
                                     <span
                                             class="font-weight-bolder font-size-sm d-none d-md-inline"><?php if (isset(session()->get('user')['userDetails']['last_name']) && (session()->get('user')['userDetails']['last_name'] != "nil")) echo session()->get('user')['userDetails']['last_name']; else  echo '' ?></span>
                                 </div>
-                                <span class="symbol symbol-35">
+                                <span class="symbol symbol-35 header_image_out">
                                                 <span class="symbol-label font-size-h5 font-weight-bold "><img
                                                             src="<?php echo SquareProfilePic(); ?>"
                                                             id="header_image_out"
@@ -691,6 +697,12 @@
                                                             <span class="menu-text">YouTube Drafts</span>
                                                         </a>
                                                     </li>
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a href="{{route('tiktok-publish')}}" class="menu-link">
+                                                            <span class="menu-text">TikTok Publish</span>
+                                                        </a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </li>
@@ -882,6 +894,16 @@
                                                            class="menu-link"
                                                         >
                                                             <span class="menu-text">Instagram Business</span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="menu-item  menu-item-submenu" data-menu-toggle="hover"
+                                                        aria-haspopup="true">
+                                                        <a onclick="planCheck('{{env('APP_URL')}}feeds/TikTok')"
+                                                           id="tiktok_button2"
+                                                           class="menu-link"
+                                                        >
+                                                            <span class="menu-text">TikTok</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -1146,6 +1168,12 @@
             </div>
             <!--end::Bottom-->
         </div>
+        @if(session()->get('user')['userDetails']['userPlanDetails']['plan_id'] === 0)
+            <div class="SB-blackfriday-sale d-flex align-items-center justify-content-center">
+                <p style="font-size: large">Get 15% off on all plans. Use coupon code "SAVE15"</p>
+                <a href="https://l.linklyhq.com/l/lTOv" class="btn">Upgrade Now</a>
+            </div>
+        @endif
         <br>
         <!--end::Header-->
     {{-- Begin content for login --}}
@@ -2089,8 +2117,15 @@
                                     publishMessage = '';
                                     if (element.notifyType === 'publish_publishPosts' || element.notifyType === 'publish_failed') {
                                         namesArray = element.notificationMessage.split(',');
-                                        for (let i = 0; i < namesArray.length - 1; i++) {
-                                            publishMessage += namesArray[i] + ' ';
+                                        if(element.notificationMessage.includes(','))
+                                        {
+                                            namesArray = element.notificationMessage.split(',');
+                                            for (let i = 0; i < namesArray.length - 1; i++) {
+                                                publishMessage += namesArray[i] + ' ';
+                                            }
+                                        }
+                                        else{
+                                            publishMessage = element.notificationMessage;
                                         }
                                         if (publishMessage.indexOf('Facebook') >= 0) {
                                             accountLogo = '<i class="fab fa-facebook"></i>';
@@ -2104,14 +2139,26 @@
                                             accountLogo = '<i class="fab fa-twitter"></i>';
 
                                         }
+                                        else if (publishMessage.indexOf('TikTok') >= 0) {
+                                            accountLogo = '<i class="fab fa-tiktok"></i>';
+
+                                        }
+                                        else if (publishMessage.indexOf('Pinterest') >= 0) {
+                                            accountLogo = '<i class="fab fa-pinterest"></i>';
+
+                                        }
+                                        else if (publishMessage.indexOf('Instagram') >= 0) {
+                                            accountLogo = '<i class="fab fa-instagram"></i>';
+
+                                        }
                                         if (element.isRead === true) {
-                                            if (element.notifyType === 'publish_failed')
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            if (element.notifyType === 'publish_failed' || element.notificationMessage.includes('TikTok'))
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + element.notificationMessage + '"  onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                             else
                                                 appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         } else {
-                                            if (element.notifyType === 'publish_failed')
-                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            if (element.notifyType === 'publish_failed'|| element.notificationMessage.includes('TikTok'))
+                                                appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + element.notificationMessage + '"  onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                             else
                                                 appendData2 += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                         }
@@ -2250,8 +2297,15 @@
                             $("#notification-user").addClass("symbol-badge bg-danger");
                             if (message.notifyType === 'publish_publishPosts' || message.notifyType === 'publish_failed') {
                                 namesArray = message.notificationMessage.split(',');
-                                for (let i = 0; i < namesArray.length - 1; i++) {
-                                    publishMessage += namesArray[i] + ' ';
+                                if(message.notificationMessage.includes(','))
+                                {
+                                    namesArray = message.notificationMessage.split(',');
+                                    for (let i = 0; i < namesArray.length - 1; i++) {
+                                        publishMessage += namesArray[i] + ' ';
+                                    }
+                                }
+                                else{
+                                    publishMessage = message.notificationMessage;
                                 }
                                 if (publishMessage.indexOf('Facebook') >= 0) {
                                     accountLogo = '<i class="fab fa-facebook"></i>';
@@ -2265,8 +2319,20 @@
                                     accountLogo = '<i class="fab fa-twitter"></i>';
 
                                 }
-                                if (message.notifyType === 'publish_failed')
-                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '" class="mb-1 font-size-lg publish_failed"  data-toggle="tooltip" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
+                                else if (publishMessage.indexOf('TikTok') >= 0) {
+                                    accountLogo = '<i class="fab fa-tiktok"></i>';
+
+                                }
+                                else if (publishMessage.indexOf('Pinterest') >= 0) {
+                                    accountLogo = '<i class="fab fa-pinterest"></i>';
+
+                                }
+                                else if (publishMessage.indexOf('Instagram') >= 0) {
+                                    accountLogo = '<i class="fab fa-instagram"></i>';
+
+                                }
+                                if (message.notifyType === 'publish_failed'|| message.notificationMessage.includes('TikTok'))
+                                    appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + message.notificationMessage + '" class="mb-1 font-size-lg publish_failed"  data-toggle="tooltip" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
                                 else
                                     appendData2 = '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="notificationNum' + num + '" title="' + publishMessage + '"  href="' + getStringUrl(message.notificationMessage) + '"  data-toggle="tooltip" class="mb-1 font-size-lg" target="_blank" onclick="changeColorOnRead(' + num + ')">' + message.notificationMessage + ' </a></div></div>';
                                 $('#publishNotiFications').prepend(appendData2);
@@ -2533,14 +2599,26 @@
                                         accountLogo = '<i class="fab fa-twitter"></i>';
 
                                     }
+                                    else if (publishMessage.indexOf('TikTok') >= 0) {
+                                        accountLogo = '<i class="fab fa-TikTok"></i>';
+
+                                    }
+                                    else if (publishMessage.indexOf('Pinterest') >= 0) {
+                                        accountLogo = '<i class="fab fa-pinterest"></i>';
+
+                                    }
+                                    else if (publishMessage.indexOf('Instagram') >= 0) {
+                                        accountLogo = '<i class="fab fa-instagram"></i>';
+
+                                    }
                                     if (element.isRead === true) {
                                         if (element.notifyType === 'publish_failed')
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a   id="publishMessage"  class="mb-1 font-size-lg publish_failed" data-toggle="tooltip" target="_blank"  title="' + element.notificationMessage + '"  onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                         else
                                             appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications read"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '" data-toggle="tooltip" class="mb-1 font-size-lg publish_message" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                     } else {
                                         if (element.notifyType === 'publish_failed')
-                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg" target="_blank"  title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
+                                            appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage"  class="mb-1 font-size-lg" target="_blank"  title="' + element.notificationMessage + '"  onclick="changeColorOnRead(' + num + ')">' + element.notificationMessage + '</a></div></div>';
                                         else
                                             appendData += '<div id="notificationNum' + num + '" class="d-flex align-items-center py-3 px-5 teamNotifications"><span class="symbol symbol-40 mr-5"><span class="font-size-h5 font-weight-bold">'+accountLogo+'</i></span></span><div class="d-flex flex-column font-weight-bold"><a id="publishMessage" data-toggle="tooltip" title="' + publishMessage + '" href="' + getStringUrl(element.notificationMessage) + '"data-toggle="tooltip"  class="mb-1 font-size-lg publish_message" target="_blank"   title="' + publishMessage + '"  onclick="changeColorOnRead(' + num + ')">' + publishMessage + '</a></div></div>';
                                     }
@@ -2743,7 +2821,7 @@
 
 
             $('#conted_feeds_id, #shereathon_queue, #trending_now, #most_shared, #posted_rss_feeds, #group_chat, #twitter_analyutics, #twitter_inbox, #my_task, #youtube_inbox, #discovery_id, #smart_search_id, #facebook_group_post, #linkedin_group_post, #archiveReports, #primitiveReports, #calendarView , #facebookReports, #ShareathonButton, #Shareathon #youtubereports, #linkedinFeeds, #instagramFeeds, #twitterReports ,#chats').tooltip();
-            $('#my_messages_id, #my_activities_id, #my_task_id, #reportsCart ,#reports_Settings ,#nofifications .btn, .publish_message, #notificationNum1').tooltip();
+            $('#my_messages_id, #my_activities_id, #my_task_id, #reportsCart ,#reports_Settings ,#nofifications .btn, .publish_message, #notificationNum1,#productTourDiv').tooltip();
 
 
             function checkNotificationsStatus() {
@@ -2941,6 +3019,11 @@
 
             }
         </script>
+
+        <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+        <script src="{{asset('/js/productTour/languageMapping.js')}}"></script>
+        <script src="{{asset('/js/productTour/pageMappings.js')}}"></script>
+        <script src="{{asset('/js/productTour/tourGenerator.js')}}"></script>
 {{-- scripts that are used in blades --}}
 @yield('scripts')
 @yield('page-scripts')

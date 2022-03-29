@@ -14,11 +14,12 @@
                 <!--begin::Row-->
                 <div class="row">
                     <div class="col-xl-12 card-stretch" id="ss-accountsDiv">
-                        <div class="card card-custom gutter-b card-stretch">
+                        <div class="card card-custom gutter-b card-stretch acountDivCount">
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Accounts</h3>
                                 <div class="card-toolbar">
-                                    <a href="javascript:;" class="btn btn-sm font-weight-bold mr-5" data-toggle="modal"
+                                    <a href="javascript:;" class="btn btn-sm font-weight-bold mr-5 SendInviteDIv"
+                                       data-toggle="modal"
                                        data-target="#inviteModal">
                                         Send Invite
                                     </a>
@@ -27,7 +28,8 @@
                                         <i class="fas fa-plus fa-fw"></i> Add Accounts
                                     </a>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-accountsDiv_md12" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-accountsDiv_md12"
@@ -40,7 +42,7 @@
                             <!--begin::Body-->
                             <div class="card-body pt-2 position-relative overflow-hidden">
                                 <div class="row d-flex justify-content-center">
-                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $facebookpage = $linkedinBusiness = $instagramPages = $tumblr = $pinterest = 0;
+                                    <?php $ytcount = $facebook = $twitter = $instagram = $linkedin = $facebookpage = $linkedinBusiness = $instagramPages = $tumblr = $pinterest = $tiktok = 0;
                                     ?>
                                     @if(isset($accountsCount))
                                         @if($accountsCount->code === 200)
@@ -75,6 +77,9 @@
                                                     @break
                                                     @case(11)
                                                     <?php $pinterest = $data->count  ?>
+                                                    @break
+                                                    @case(18)
+                                                    <?php $tiktok = $data->count  ?>
                                                     @break
                                                 @endswitch
                                             @endforeach
@@ -130,15 +135,22 @@
                                                         <b class="font-weight-bold font-size-h2 float-right">{{$tumblr}}</b>
                                                     </span>
                                     </div>
-{{--                                    <div--}}
-{{--                                            class="col-md-1 col-sm-12 card bg-google border-0 px-6 py-8 rounded-xl mr-4 mb-7">--}}
-{{--                                                    <span class="svg-icon svg-icon-3x d-block my-2">--}}
-{{--                                                            <i class="fab fa-google fa-2x"></i>--}}
-{{--                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>--}}
-{{--                                                    </span>--}}
-{{--                                    </div>--}}
+                                        <div class="col-md-1 col-sm-12 card bg-tiktok border-0 px-6 py-8 rounded-xl mr-4 mb-7">
+                                      <span class="svg-icon svg-icon-3x d-block my-2">
+                                      <i class="fab fa-tiktok fa-2x"></i>
+                                       <b class="font-weight-bold font-size-h2 float-right">{{$tiktok}}</b>
+                                      </span>
+                                    </div>
+
+                                    {{--                                    <div--}}
+                                    {{--                                            class="col-md-1 col-sm-12 card bg-google border-0 px-6 py-8 rounded-xl mr-4 mb-7">--}}
+                                    {{--                                                    <span class="svg-icon svg-icon-3x d-block my-2">--}}
+                                    {{--                                                            <i class="fab fa-google fa-2x"></i>--}}
+                                    {{--                                                        <b class="font-weight-bold font-size-h2 float-right">0</b>--}}
+                                    {{--                                                    </span>--}}
+                                    {{--                                    </div>--}}
                                     <div class="col-md-1 col-sm-12 card border-0 px-3 py-4 rounded-xl mr-4 mb-7 text-center">
-                                        <span class="post-count">{{$facebook+$facebookpage+$twitter+$instagram+$instagramPages+$linkedin+$linkedinBusiness+$ytcount+$pinterest+$tumblr}}</span>
+                                        <span class="post-count">{{$facebook+$facebookpage+$twitter+$instagram+$instagramPages+$linkedin+$linkedinBusiness+$ytcount+$pinterest+$tumblr+$tiktok}}</span>
                                         Total Accounts
                                     </div>
                                 </div>
@@ -150,7 +162,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row searchFilterDiv">
                     <div class="col-md-3">
                         <div class="form-group">
                             <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
@@ -178,6 +190,7 @@
                                 <option value="9">Youtube</option>
                                 <option value="16">Tumblr</option>
                                 <option value="11">Pinterest</option>
+                                <option value="18">TikTok</option>
                             </select>
                         </div>
                     </div>
@@ -199,16 +212,42 @@
                 </div>
 
                 <div class="row card-stretch" id="accountsDIv">
+                    <?php $count = 1; ?>
+                    <?php $profileURLS = ''; ?>
+                    <?php $profile = ''; ?>
                     @if(isset($ErrorMessage))
                         <div style="color: red;text-align:center;">
                             {{$ErrorMessage}}
                         </div>
                     @else
                         @if(isset($accounts))
+                            <?php $count = 0 ?>
                             @if($accounts->code  === 200 )
-                                @if(count($accounts->data->teamSocialAccountDetails[0]->SocialAccount)!==0)
+                                @if(count($accounts->data->teamSocialAccountDetails[0]->SocialAccount)!==0 )
                                     @foreach($accounts->data->teamSocialAccountDetails[0]->SocialAccount as $account)
                                         @if($account->account_type !== 13 && $account->account_type !== 14)
+                                                <?php $count++; ?>
+                                            <?php $profile = $account->profile_url;?>
+                                            @if($account->account_type === 1)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/facebook" . $account->account_id;?>
+                                            @elseif($account->account_type === 2)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/fbPages" . $account->account_id;?>
+                                                <?php $profile = "https://www.facebook.com/{{$account->user_name}}";?>
+                                            @elseif($account->account_type === 9)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/youtube" . $account->account_id;?>
+                                            @elseif($account->account_type === 4)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/twitter" . $account->account_id;?>
+                                            @elseif($account->account_type === 5)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/instagram" . $account->account_id;?>
+                                            @elseif($account->account_type === 16)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/Tumblr" . $account->account_id;?>
+                                            @elseif($account->account_type === 11)
+                                                <?php $profileURLS = env('APP_URL') . "show-boards/Pinterest" . $account->account_id;?>
+                                            @elseif($account->account_type === 12)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/Business" . $account->account_id;?>
+                                            @elseif($account->account_type === 7)
+                                                <?php $profileURLS = env('APP_URL') . "feeds/linkedIn" . $account->account_id;?>
+                                            @endif
                                             <div class="col-xl-3" id="accountsSection{{$account->account_id}}">
                                                 <div class="card card-custom gutter-b card-stretch">
                                                     <div
@@ -262,22 +301,29 @@
                                                                  style="top: -2px; right: 20px;">
                                                                 <i class="fab fa-pinterest"></i>
                                                             </div>
+                                                        @elseif($account->account_type === 18 )
+                                                            <div class="ribbon-target bg-tiktok"
+                                                                 style="top: -2px; right: 20px;">
+                                                                <i class="fab fa-tiktok"></i>
+                                                            </div>
                                                         @endif
                                                     <!--begin::User-->
                                                         <div
                                                                 class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">
                                                             <div id="status{{$account->account_id}}">
                                                                 @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                                    <div class="ribbon-target" style="top: 12px;"
-                                                                         onclick="lock('{{$account->account_id}}',0 )">
+                                                                    <div class="ribbon-target accounts-lock-unlock lockButtonDiv"
+                                                                         style="top: 12px;"
+                                                                         onclick="lock('{{$account->account_id}}',0 ,'profileDivButton{{$count}}','profile-name{{$count}}','{{$profileURLS}}','{{$profile}}')">
                                                                         <span class="ribbon-inner bg-danger"></span>
                                                                         <i
                                                                                 class="fas fa-user-lock fa-fw mr-2 text-white"></i>
                                                                         Un-Lock
                                                                     </div>
                                                                 @else
-                                                                    <div class="ribbon-target" style="top: 80px;"
-                                                                         onclick="lock('{{$account->account_id}}',1 )">
+                                                                    <div class="ribbon-target accounts-lock-unlock lockButtonDiv"
+                                                                         style="top: 80px;"
+                                                                         onclick="lock('{{$account->account_id}}',1 ,'profileDivButton{{$count}}','profile-name{{$count}}', '{{$profileURLS}}','{{$profile}}')">
                                                                         <span class="ribbon-inner bg-info"></span>
                                                                         <i
                                                                                 class="fas fa-lock-open fa-fw mr-2 text-white"></i>
@@ -291,25 +337,31 @@
                                                                      style="background-image:url({{$account->profile_pic_url}})"></div>
                                                                 <i class="symbol-badge bg-success"></i>
                                                             </div>
-                                                            <div class="social-accounts-dev">
+                                                            <div class="social-accounts-dev ">
                                                                 @if($account->join_table_teams_social_accounts->is_account_locked === false)
                                                                     @if($account->account_type === 2)
                                                                         <a href="https://www.facebook.com/{{$account->user_name}}"
-                                                                           target="_blank" class="profile-name">
+                                                                           target="_blank"
+                                                                           class="profile-name{{$count}} profileLinkDiv">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                         </a>
                                                                     @elseif($account->account_type === 1)
-                                                                        <a class="profile-name">
+                                                                        <a class="profile-name{{$count}} profileLinkDiv">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
+                                                                        </a>
+                                                                    @elseif($account->account_type ===  18)
+                                                                        <a class="profile-name{{$count}} profileLinkDiv">
+                                                                            {{$account->user_name}}
                                                                         </a>
                                                                     @else
                                                                         <a href="{{$account->profile_url}}"
-                                                                           target="_blank" class="profile-name">
+                                                                           target="_blank"
+                                                                           class="profile-name{{$count}} profileLinkDiv">
                                                                             {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                         </a>
                                                                     @endif
                                                                 @else
-                                                                    <a class="profile-name">
+                                                                    <a class="profile-name{{$count}} profileLinkDiv">
                                                                         {{$account->first_name}} {{substr($account->last_name, 0, 7)}}
                                                                     </a>
                                                             @endif
@@ -354,52 +406,74 @@
                                                                     </div>
                                                                 </div>
                                                                 <!-- end:account star rating -->
-
                                                                 <div class="mt-2">
                                                                     @if($account->join_table_teams_social_accounts->is_account_locked === false)
                                                                         @if($account->account_type === 1)
-                                                                            <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/facebook" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 2)
-                                                                            <a href="{{env('APP_URL')}}feeds/fbPages{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/fbPages" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/fbPages{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 9)
-                                                                            <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/youtube" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 4)
-                                                                            <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/twitter" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 5)
-                                                                            <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/instagram" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 16)
-                                                                            <a href="{{env('APP_URL')}}feeds/Tumblr{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/Tumblr" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/Tumblr{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 11)
-                                                                            <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "show-boards/Pinterest" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 12)
-                                                                            <a href="{{env('APP_URL')}}feeds/Business{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/Business{" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/Business{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                         @elseif($account->account_type === 7)
-                                                                            <a href="{{env('APP_URL')}}feeds/linkedIn{{$account->account_id}}"
+                                                                            <?php $profileURLS = env('APP_URL') . "feeds/linkedIn{" . $account->account_id;?>
+                                                                            <a id="profileDivButton"
+                                                                               href="{{env('APP_URL')}}feeds/linkedIn{{$account->account_id}}"
                                                                                target="_blank"
-                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
+                                                                        @elseif($account->account_type === 18)
+                                                                            <a href="{{env('APP_URL')}}feeds/TikTok{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton">Profile</a>
                                                                         @endif
                                                                     @else
                                                                         <a href="#"
-                                                                           target="_blank" id="profileDivButton"
+                                                                           target="_blank"
+                                                                           id="profileDivButton{{$count}}"
                                                                            onclick="return false"
                                                                            title="The Account is  Locked"
-                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>
+                                                                           class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDiv profileDivButton{{$count}}">Profile</a>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -494,7 +568,7 @@
                                                                 @endforeach
                                                             </div>
                                                             <div
-                                                                    class="d-flex align-items-center justify-content-between">
+                                                                    class="d-flex align-items-center justify-content-between cronUpdateDiv">
                                                                     <span
                                                                             class="font-weight-bold mr-2">Cron Update:</span>
                                                                 <span class="switch switch-sm switch-icon"
@@ -593,16 +667,18 @@
                                             </div>
                                             <!-- end::Delete account modal-->
                                         @endif
+                                        <?php $count++; ?>
                                     @endforeach
-                                @else
-                                    <div class="text-center">
-                                        <div class="symbol symbol-150">
-                                            <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                    @endif
+                                    @if($count === 0 )
+                                        <div class="text-center noAccountsDiv">
+                                            <div class="symbol symbol-150">
+                                                <img src="/media/svg/illustrations/no-accounts.svg"/>
+                                            </div>
+                                            <h6>Currently, no social account has added to
+                                                this team yet.</h6>
                                         </div>
-                                        <h6>Currently, no social account has added to
-                                            this team yet.</h6>
-                                    </div>
-                                @endif
+                                    @endif
                             @elseif($accounts['code']  === 400 )
                                 <div style="color: Red;text-align:center;">
                                     Can not get Accounts,please reload the page
@@ -721,6 +797,15 @@
                                                                 <span class="nav-text"><i
                                                                             class="fab fa-tumblr fa-2x"></i></span>
 
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" id="tiktok-tab-accounts"
+                                   data-toggle="tab" href="#tiktok-add-accounts"
+                                   aria-controls="tiktok">
+                                                                <span class="nav-text"><i
+                                                                            class="fab fa-tiktok fa-2x"></i></span>
                                 </a>
                             </li>
                         </ul>
@@ -978,6 +1063,20 @@
                                     </div>
                                 </div>
                             @endif
+                            <div class="tab-pane fade" id="tiktok-add-accounts"
+                                 role="tabpanel" aria-labelledby="tiktok-tab-accounts">
+                                <div class="font-size-lg font-weight-bold ml-4">Grant access to your TikTok profile to share
+                                    updates and view
+                                    your feed.
+                                </div>
+                                <div class="show_tiktok_divs">
+                                    <div class="d-flex justify-content-center">
+                                        <a href="add-accounts/TikTok" type="button"
+                                           class="btn btn-tiktok font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                            a Tiktok Profile</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
 
@@ -1104,6 +1203,8 @@
 @section('scripts')
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{{asset('js/accounts.js')}}"></script>
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+
     <script>
 
         $('#sb_select2_accounts').select2({
@@ -1258,6 +1359,9 @@
             });
             let username = $('#userName').val();
             let selected_star;
+            let count = 1;
+            let profileButtonURls = '';
+            let profileUrls = '';
             if (last_selected === undefined && username === '' && selecteddepartmentNames.length === 0) {
                 toastr.error('Please first select any search filter value');
             } else {
@@ -1297,6 +1401,40 @@
                             let appendData = '';
                             if (response.data.data.teamSocialAccountDetails.length > 0) {
                                 response.data.data.teamSocialAccountDetails[0].SocialAccount.map(element => {
+                                        if (element.account_type === 1) {
+                                            profileButtonURls = 'feeds/facebook' + element.account_id + '';
+                                        } else if (element.account_type === 2) {
+                                            profileButtonURls = 'feeds/fbPages' + element.account_id + '';
+
+                                        } else if (element.account_type === 9) {
+                                            profileButtonURls = 'feeds/youtube' + element.account_id + '';
+
+                                        } else if (element.account_type === 4) {
+                                            profileButtonURls = 'feeds/twitter' + element.account_id + '';
+
+                                        } else if (element.account_type === 16) {
+                                            profileButtonURls = 'feeds/Tumblr' + element.account_id + '';
+
+                                        } else if (element.account_type === 11) {
+                                            profileButtonURls = 'show-boards/Pinterest' + element.account_id + '';
+
+                                        } else if (element.account_type === 12) {
+                                            profileButtonURls = 'feeds/Business' + element.account_id + '';
+
+                                        } else if (element.account_type === 7) {
+                                            profileButtonURls = 'feeds/linkedIn' + element.account_id + '';
+
+                                        } else if (element.account_type === 5) {
+                                            profileButtonURls = 'feeds/instagram' + element.account_id + '';
+                                        }
+                                        else if (element.account_type === 18) {
+                                            profileButtonURls = 'feeds/TikTok' + element.account_id + '';
+                                        }
+                                        if (element.account_type === 1|| element.account_type === 18) {
+                                            profileUrls = '';
+                                        } else {
+                                            profileUrls = element.profile_url;
+                                        }
                                         appendData += '<div class="col-xl-3">\n' +
                                             '<div class="card card-custom gutter-b card-stretch">\n' +
                                             '<div\n' +
@@ -1305,13 +1443,11 @@
                                             appendData += '<div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-facebook-f"></i>\n' +
                                                 '</div>';
-                                        }
-                                        else if (element.account_type === 2){
+                                        } else if (element.account_type === 2) {
                                             appendData += '<div class="ribbon-target bg-facebook" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-facebook-f mr-1">p</i>\n' +
                                                 '</div>';
-                                        }
-                                        else if (element.account_type === 4) {
+                                        } else if (element.account_type === 4) {
                                             appendData += '<div class="ribbon-target" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-twitter"></i>\n' +
                                                 '</div>';
@@ -1323,16 +1459,15 @@
                                             appendData += '<div class="ribbon-target bg-instagram mr-1" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-instagram"></i> b\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 6 ) {
+                                        } else if (element.account_type === 6) {
                                             appendData += '<div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-linkedin"></i>\n' +
                                                 '</div>';
-                                        } else if (element.account_type === 7 ) {
+                                        } else if (element.account_type === 7) {
                                             appendData += '<div class="ribbon-target bg-linkedin" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-linkedin mr-1">Page</i>\n' +
                                                 '</div>';
-                                        }
-                                        else if (element.account_type === 9) {
+                                        } else if (element.account_type === 9) {
                                             appendData += '<div class="ribbon-target bg-youtube" style="top: -2px; right: 20px;">\n' +
                                                 '<i class="fab fa-youtube"></i>\n' +
                                                 '</div>';
@@ -1345,25 +1480,32 @@
                                                 '                                                <i class="fab fa-pinterest"></i>\n' +
                                                 '                                                </div>';
                                         }
+                                        else if (element.account_type === 18) {
+                                            appendData += '<div class="ribbon-target bg-tiktok" style="top: -2px; right: 20px;">\n' +
+                                                '                                                <i class="fab fa-tiktok"></i>\n' +
+                                                '                                                </div>';
+                                        }
                                         appendData += '<div\n' +
                                             'class="d-flex align-items-center  ribbon ribbon-clip ribbon-left">\n' +
                                             '<div id="status' + element.account_id + '">';
                                         if (element.join_table_teams_social_accounts.is_account_locked === true) {
-                                             appendData += ' <div class="ribbon-target" style="top: 12px;"\n' +
-                                                'onclick="lock(' + element.account_id + ',0 )">\n' +
-                                                '<span class="ribbon-inner bg-danger"></span>\n' +
-                                                '<i\n' +
-                                                'class="fas fa-user-lock fa-fw mr-2 text-white"></i>\n' +
-                                                'Un-Lock\n' +
-                                                '</div>';
+                                            appendData += `<div class="ribbon-target accounts-lock-unlock"
+                                                                         style="top: 12px;"
+                                                                         onclick="lock(${element.account_id}, 0,'profileDivButton${count}','profile-name${count}','${profileButtonURls}', '${profileUrls}')">
+                                                                        <span class="ribbon-inner bg-danger"></span>
+                                                                        <i
+                                                                                class="fas fa-user-lock fa-fw mr-2 text-white"></i>
+                                                                        Un-Lock
+                                                                    </div>`;
                                         } else {
-                                            appendData += '<div class="ribbon-target" style="top: 80px;"\n' +
-                                                'onclick="lock(' + element.account_id + ',1 )">\n' +
-                                                '<span class="ribbon-inner bg-info"></span>\n' +
-                                                '<i\n' +
-                                                'class="fas fa-lock-open fa-fw mr-2 text-white"></i>\n' +
-                                                'Lock\n' +
-                                                '</div>';
+                                            appendData += `<div class="ribbon-target accounts-lock-unlock"
+                                                                         style="top: 80px;"
+                                                                         onclick="lock(${element.account_id}, 1,'profileDivButton${count}','profile-name${count}','${profileButtonURls}', '${profileUrls}')">
+                                                                        <span class="ribbon-inner bg-info"></span>
+                                                                        <i
+                                                                                class="fas fa-lock-open fa-fw mr-2 text-white"></i>
+                                                                        Lock
+                                                                    </div>`;
                                         }
                                         appendData += '</div><div\n' +
                                             'class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">\n' +
@@ -1373,11 +1515,17 @@
                                             '</div>';
                                         appendData += '<div>\n';
                                         if (element.account_type === 1) {
-                                            appendData += '<a target="_blank">\n' +
+                                            appendData += '<a class="profile-name' + count + '" target="_blank">\n' +
                                                 '' + element.first_name + " " + element.last_name + '\n' +
                                                 '</a>\n';
-                                        } else {
-                                            appendData += '<a href="' + element.profile_url + '"\n' +
+                                        } else if (element.account_type === 18) {
+                                        appendData += '<a class="profile-name' + count + '" target="_blank">\n' +
+                                            '' + element.user_name + '\n' +
+                                            '</a>\n';
+                                    }
+                                        else {
+                                            profileUrls = element.profile_url;
+                                            appendData += '<a class="profile-name' + count + '"  href="' + element.profile_url + '"\n' +
                                                 'target="_blank">\n' +
                                                 '' + element.first_name + " " + element.last_name + '\n' +
                                                 '</a>\n';
@@ -1422,67 +1570,57 @@
                                             '</div>\n' +
                                             '</div>';
                                         appendData += '<div class="mt-2">\n';
-                                        if(element.join_table_teams_social_accounts.is_account_locked === false)
-                                        {
-                                            if(element.account_type ===  1)
-                                            {
+                                        if (element.join_table_teams_social_accounts.is_account_locked === false) {
+                                            if (element.account_type === 1) {
+                                                profileButtonURls = 'feeds/facebook' + element.account_id + '';
                                                 appendData += '<a href="feeds/facebook' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  2)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + ' ">Profile</a>\n';
+                                            } else if (element.account_type === 2) {
+                                                profileButtonURls = 'feeds/fbPages' + element.account_id + '';
                                                 appendData += '<a href="feeds/fbPages' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  9)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 9) {
+                                                profileButtonURls = 'feeds/youtube' + element.account_id + '';
                                                 appendData += '<a href="feeds/youtube' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  4)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 4) {
+                                                profileButtonURls = 'feeds/twitter' + element.account_id + '';
                                                 appendData += '<a href="feeds/twitter' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  16)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 16) {
+                                                profileButtonURls = 'feeds/Tumblr' + element.account_id + '';
                                                 appendData += '<a href="feeds/Tumblr' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  11)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 11) {
+                                                profileButtonURls = 'show-boards/Pinterest' + element.account_id + '';
                                                 appendData += '<a href="show-boards/Pinterest' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  12)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 12) {
+                                                profileButtonURls = 'feeds/Business' + element.account_id + '';
                                                 appendData += '<a href="feeds/Business' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  7)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 7) {
+                                                profileButtonURls = 'feeds/linkedIn' + element.account_id + '';
                                                 appendData += '<a href="feeds/linkedIn' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
-                                            }
-                                            else if(element.account_type ===  5)
-                                            {
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
+                                            } else if (element.account_type === 5) {
+                                                profileButtonURls = 'feeds/instagram' + element.account_id + '';
                                                 appendData += '<a href="feeds/instagram' + element.account_id + '"\n' +
                                                     'target="_blank"\n' +
-                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                                    'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
                                             }
-                                        }
-                                        else{
+                                        } else {
                                             appendData += '<a href="#"\n' +
                                                 'target="_blank"\n' +
-                                                'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Profile</a>\n';
+                                                'class="btn btn-sm font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1 profileDivButton' + count + '">Profile</a>\n';
                                         }
                                         appendData +=
                                             '</div>\n' +
@@ -1569,6 +1707,7 @@
                                                         break;
                                                 }
                                             }
+                                            count++;
                                         });
                                         appendData += '</div>\n';
                                         appendData += '<div\n' +
@@ -1717,6 +1856,7 @@
         });
 
         $('#profileDivButton, #chatDivButton').tooltip();
+
 
     </script>
 

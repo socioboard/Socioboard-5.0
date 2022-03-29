@@ -16,6 +16,7 @@
                     <script>
                         var linkedINValue = false;
                     </script>
+                    <?php $linkedINValue = false ?>
                     <div class="form-group" id="linkedInReportsDiv">
                         <script>
                             var teamid = <?php echo session()->get('team')['teamid']?>
@@ -29,32 +30,36 @@
                                     <script>
                                         var linkedINValue = true;
                                     </script>
+                                    <?php $linkedINValue = true ?>
                                     <?php $linkedInID = $data->account_id?>
                                     @break
                                 @endif
                             @endforeach
-                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
-                                    onchange="changeLinkedInData(this)">
-                                <option disabled id="selectDropdown2">Select Account</option>
-                                @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
-                                    @if($data->account_type === 7)
-                                        <option
-                                                value="{{$data->account_id }}">{{$data->first_name }}</option>
-                                        <script>
-                                            var twtvalue = true;
-                                        </script>
+                                @if($linkedINValue === true)
+                                    <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 linkedInAccountsData"
+                                            onchange="changeLinkedInData(this)">
+                                        <option disabled id="selectDropdown2">Select Account</option>
+                                        @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
+                                            @if($data->account_type === 7)
+                                                <option
+                                                        value="{{$data->account_id }}">{{$data->first_name }}</option>
+                                                <script>
+                                                    var twtvalue = true;
+                                                </script>
+                                            @endif
+                                        @endforeach
+                                    </select>
                                     @endif
-                                @endforeach
-                            </select>
+
                         @endif
                     </div>
                     <!-- end:Team list -->
                     <div class="ml-auto">
                         <!-- datepicker -->
-                        <div class="form-group">
-                            <div class="input-icon" id='twt-daterange'>
+                        <div class="form-group team_Date_Range">
+                            <div class="input-icon" id='twt-daterange' style="width: 300px">
                                 <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
-                                       type="text" name="datepicker" autocomplete="off"
+                                       type="text" name="datepicker" autocomplete="off" id="twt-daterange_id"
                                        placeholder="Select date range"/>
                                 <span><i class="far fa-calendar-alt"></i></span>
                             </div>
@@ -63,7 +68,7 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-6" id="ss-linkedIn2">
+                    <div class="col-xl-6 linkedInFollowerDiv" id="ss-linkedIn2">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
@@ -99,7 +104,7 @@
                                         <!--begin::Item-->
                                         <div class="col">
 
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex align-items-center mr-2 paid_Followers_Div">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
@@ -111,8 +116,8 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                <div >
+                                                    <div class="font-size-h4 font-weight-bolder "
                                                          id="paidFollower"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Paid Followers</div>
                                                 </div>
@@ -123,7 +128,7 @@
 
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex align-items-center mr-2 total-followers_Div">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
@@ -135,8 +140,8 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                <div >
+                                                    <div class="font-size-h4 font-weight-bolder total-followers_Div"
                                                          id="totalFollower"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Total Followers
                                                     </div>
@@ -148,7 +153,7 @@
 
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex align-items-center mr-2 organic_Followrs_Div">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
@@ -160,8 +165,8 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                <div >
+                                                    <div class="font-size-h4 font-weight-bolder "
                                                          id="organicFollower"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Organic Followers
                                                     </div>
@@ -179,7 +184,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6" id="ss-linkedIn">
+                    <div class="col-xl-6 linkedInPageStatsDiv" id="ss-linkedIn">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
@@ -197,7 +202,7 @@
 
 
                             <!--begin::Body-->
-                            <div class="card-body d-flex flex-column pt-0">
+                            <div class="card-body d-flex flex-column pt-0 linkedInPageStatsDiv">
                                 <h3 class="card-title font-weight-bolder">LinkedIn Page Stats</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -224,7 +229,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="likesDIv">
                                                     <div class="font-size-h4 font-weight-bolder" id="likes"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Likes</div>
                                                 </div>
@@ -247,7 +252,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="uniqueImpressionsDiv">
                                                     <div class="font-size-h4 font-weight-bolder"
                                                          id="uniqueImpressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Unique Impressions
@@ -270,7 +275,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="sharesDiv">
                                                     <div class="font-size-h4 font-weight-bolder" id="shares"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Shares</div>
                                                 </div>
@@ -295,7 +300,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="commentsDiv">
                                                     <div class="font-size-h4 font-weight-bolder" id="comments"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Comments</div>
                                                 </div>
@@ -315,7 +320,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="impressionsDiv">
                                                     <div class="font-size-h4 font-weight-bolder" id="impressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Impressions</div>
                                                 </div>
@@ -335,7 +340,7 @@
                                                 <!--end::Symbol-->
 
                                                 <!--begin::Title-->
-                                                <div>
+                                                <div class="clicksDivs">
                                                     <div class="font-size-h4 font-weight-bolder" id="clicks"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Clicks</div>
                                                 </div>
@@ -361,10 +366,12 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script>
         // team date ranges
         let start = moment().subtract(6, 'days');
         let end = moment();
+        let DefaultRange = `${moment().subtract(6, 'days').format('MMM DD, YYYY')} -> ${moment().format('MMM DD, YYYY')}`;
         $('#twt-daterange').daterangepicker({
             buttonClasses: ' btn',
             applyClass: 'btn-primary',
@@ -384,6 +391,7 @@
             $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
+        $('#twt-daterange_id').attr('value', DefaultRange);
         // delete account
         $('#account-delete').click(function (event) {
             toastr.options = {
@@ -760,7 +768,7 @@
             }, 3000);
         }
 
-        let nolinkedIN = ' <div class="text-center">\n' +
+        let nolinkedIN = ' <div class="text-center noLinkedInDivAdded">\n' +
             '<div class="symbol symbol-150">\n' +
             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
             '</div>\n' +
@@ -802,6 +810,7 @@
                 }, 3000);
             }
         });
+
     </script>
 @endsection
 

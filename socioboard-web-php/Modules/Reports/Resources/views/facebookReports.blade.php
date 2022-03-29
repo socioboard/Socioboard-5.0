@@ -16,6 +16,7 @@
                     <script>
                         var fbValue = false;
                     </script>
+                <?php $fbValue = false ?>
                     <!-- begin:Team list -->
                     <div class="form-group" id="youtubeReports">
                         <script>
@@ -29,10 +30,11 @@
                                         var fbValue = true;
                                     </script>
                                     <?php $fbPageId = $data->account_id?>
+                                    <?php $fbValue = true ?>
                                     @break
                                 @endif
                             @endforeach
-                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 faceBookAccountsData"
                                     onchange="changeFacebookData(this)">
                                 <option disabled id="selectDropdown2">Select Account</option>
                                 @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
@@ -46,7 +48,7 @@
                                 @endforeach
                             </select>
                         @else
-                            <div class="text-center">
+                            <div class="text-center noFbPageAccountsDiv">
                                 <div class="symbol symbol-150">
                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                 </div>
@@ -57,9 +59,9 @@
                     <!-- end:Team list -->
                     <div class="ml-auto">
                         <!-- datepicker -->
-                        <div class="form-group">
+                        <div class="form-group team_Date_Range">
                             <div class="input-icon" id='twt-daterange' style="width: 300px">
-                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
+                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" id="twt-daterange_id"
                                        type="text" name="datepicker" autocomplete="off"
                                        placeholder="Select Date Range"/>
                                 <span><i class="far fa-calendar-alt"></i></span>
@@ -69,7 +71,7 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-6" id="ss-scheduled">
+                    <div class="col-xl-6 facebookChartsDiv" id="ss-scheduled">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
@@ -147,7 +149,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6" id="ss-page-impressions">
+                    <div class="col-xl-6 pageImpressionsDiv" id="ss-page-impressions">
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5 ml-auto">
@@ -187,9 +189,9 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder totalImpressionsCountDiv"
                                                          id="totalImpressions"></div>
-                                                    <div class="font-size-sm font-weight-bold mt-1">Total Impressions
+                                                    <div class="font-size-sm font-weight-bold mt-1 ">Total Impressions
                                                     </div>
                                                 </div>
                                                 <!--end::Title-->
@@ -212,7 +214,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder uniqueImpressionDiv"
                                                          id="uniqueImpressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Unique Impressions
                                                     </div>
@@ -237,7 +239,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder viralImpressionsDiv"
                                                          id="viralImpressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Viral Impressions
                                                     </div>
@@ -257,7 +259,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-6" id="ss-page-organic">
+                    <div class="col-xl-6 pageOrganicDiv" id="ss-page-organic">
                         <!--begin::Mixed Widget 2-->
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
@@ -302,7 +304,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder organicImpressionsDiv"
                                                          id="organicImpressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Organic
                                                         Impressions
@@ -328,7 +330,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder paidImpressionsDiv"
                                                          id="paidImpressions"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Paid Impressions
                                                     </div>
@@ -359,7 +361,7 @@
     display: none;"></span>
                             </div>
 
-                            <div class="card-body d-flex flex-column pt-0">
+                            <div class="card-body d-flex flex-column pt-0 pageStoriesDiv">
                                 <h3 class="card-title font-weight-bolder">Page Stories</h3>
                                 <!--begin::Chart-->
                                 <div class="flex-grow-1">
@@ -390,7 +392,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder pageImpByStoryDivCount"
                                                          id="pagesStoriesByType"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Page Impressions By
                                                         Story Type
@@ -416,7 +418,7 @@
 
                                                 <!--begin::Title-->
                                                 <div>
-                                                    <div class="font-size-h4 font-weight-bolder"
+                                                    <div class="font-size-h4 font-weight-bolder viralImpressionsDivCount"
                                                          id="viralImpressionsStories"></div>
                                                     <div class="font-size-sm font-weight-bold mt-1">Viral Impressions By
                                                         Story Type
@@ -448,6 +450,7 @@
     <!--end::Content-->
 @endsection
 @section('scripts')
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -459,6 +462,7 @@
         var start = moment().subtract(6, 'days');
         $("li[data-range-key='Last 30 Days']").removeAttr('class');
         $("li[data-range-key='Last 7 Days']").attr("class", "active");
+        let DefaultRange = `${moment().subtract(6, 'days').format('MMM DD, YYYY')} -> ${moment().format('MMM DD, YYYY')}`;
         var end = moment();
 
         $('#twt-daterange').daterangepicker({
@@ -481,6 +485,9 @@
             changeTeamResponseCalendar(start, end);
             $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
+
+        $('#twt-daterange_id').attr('value', DefaultRange);
+
 
         // delete account
         $('#account-delete').click(function (event) {
@@ -1035,7 +1042,7 @@
             }, 2000);
         }
 
-        let noFacebookPage = ' <div class="text-center">\n' +
+        let noFacebookPage = ' <div class="text-center noFbPageAccountsDiv">\n' +
             '<div class="symbol symbol-150">\n' +
             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
             '</div>\n' +
@@ -1055,6 +1062,7 @@
                 $('#page_stories_chart').append(noFacebookPage);
             }
         });
+
     </script>
 
 @endsection

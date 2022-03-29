@@ -18,7 +18,7 @@
                         <script>
                             var teamid = '<?php echo $teams['data']->teamSocialAccountDetails[0][0]->team_id;?>';
                         </script>
-                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 teamSelectDiv"
                                 onchange="changeTeamResponse(this)">
                             @if($teams['code']===200)
                                 <option disabled>Select Team</option>
@@ -37,9 +37,9 @@
                     <div class="ml-auto">
                         <!-- datepicker -->
                         <div class="form-group">
-                            <div class="input-icon" id='team-daterange' style="width: 300px">
+                            <div class="input-icon team_Date_Range" id='team-daterange' style="width: 300px">
                                 <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
-                                       type="text" name="datepicker" autocomplete="off"
+                                       type="text" name="datepicker" autocomplete="off" id="team-daterange-input"
                                        placeholder="Select Date Range"/>
                                 <span><i class="far fa-calendar-alt"></i></span>
                             </div>
@@ -92,7 +92,8 @@
                                         <!--end::Contacts-->
                                     </div>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-Div_d-flex" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-Div_d-flex" style="
@@ -101,7 +102,8 @@
 
                                     <!--begin::Teams Actions Dropdown-->
                                     <div class="card-toolbar">
-                                        <a href="team/{{$teams['data']->teamSocialAccountDetails[0][0]->team_id}}" id="viewTeam"
+                                        <a href="team/{{$teams['data']->teamSocialAccountDetails[0][0]->team_id}}"
+                                           id="viewTeam"
                                            class="btn btn-sm">
                                             View This Team
                                         </a>
@@ -129,22 +131,20 @@
                         <!--end::Separator-->
 
                         <!--begin::Bottom-->
-                        <div class="d-flex align-items-center flex-wrap">
+                        <div class="d-flex align-items-center flex-wrap team-members_Info_div">
                             <!--begin: Item-->
-                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1">
+                            <div class="d-flex align-items-center flex-lg-fill mr-5 my-1 ">
                                             <span class="mr-4">
                                                 <i class="fas fa-user fa-2x text-info font-weight-bold"></i>
                                             </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">Team Members List</span>
+                                <div class="d-flex flex-column teamMembersCounts">
+                                    <span class="font-weight-bolder font-size-sm ">Team Members List</span>
                                     @if($memberDetails['code']=== 200)
                                         <span class="font-weight-bolder font-size-h5"
                                               id="invitedList">{{$memberDetails['data']->TeamMemberStats->teamMembersCount}}</span>
                                     @else
                                         <span class="font-weight-bolder font-size-h5">N/A</span>
                                     @endif
-
-
                                 </div>
                             </div>
                             <!--end: Item-->
@@ -154,8 +154,8 @@
                                             <span class="mr-4">
                                                 <i class="fas fa-envelope fa-2x text-danger font-weight-bold"></i>
                                             </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm"
+                                <div class="d-flex flex-column invitePendingCounts">
+                                    <span class="font-weight-bolder font-size-sm "
                                     >Invite Pending</span>
                                     @if($memberDetails['code']=== 200)
                                         <script>
@@ -179,8 +179,8 @@
                                             <span class="mr-4">
                                                 <i class="fas fa-user fa-2x text-danger font-weight-bold"></i>
                                             </span>
-                                <div class="d-flex flex-column">
-                                    <span class="font-weight-bolder font-size-sm">Left From Team</span>
+                                <div class="d-flex flex-column leftFromTeamCounts">
+                                    <span class="font-weight-bolder font-size-sm ">Left From Team</span>
                                     @if($memberDetails['code']=== 200)
                                         <span class="font-weight-bolder font-size-h5"
                                               id="invitees">{{$memberDetails['data']->TeamMemberStats->leftTeamMem}}</span>
@@ -193,7 +193,7 @@
                             </div>
                             <!--end: Item-->
                             <!--begin: Item-->
-                            <div class="d-flex align-items-center flex-lg-fill my-1">
+                            <div class="d-flex align-items-center flex-lg-fill my-1 teamMembersNamesDiv">
                                             <span class="mr-4">
                                                 <i class="fas fa-user fa-2x text-info font-weight-bold"></i>
                                             </span>
@@ -224,7 +224,7 @@
                 <!--end::Teams-->
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-8" id="ss-scheduled">
+                    <div class="col-xl-8 schduledChartsDiv" id="ss-scheduled">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
@@ -235,7 +235,7 @@
     display: none;"></span>
                             </div>
 
-                            <div class="card-body d-flex flex-column pt-0">
+                            <div class="card-body d-flex flex-column pt-0 ">
                                 <h3 class="card-title font-weight-bolder">Schedule Stats</h3>
                                 <div class="flex-grow-1">
                                     <div id="line-adwords" class="card-rounded-bottom " style="height: 200px"></div>
@@ -309,9 +309,9 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-4" id="ss-published">
-                        <div class="card card-custom card-stretch gutter-b">
-                            <div class="card-header border-0 pt-5 ml-auto">
+                    <div class="col-xl-4 published_DIv" id="ss-published">
+                        <div class="card card-custom card-stretch gutter-b ">
+                            <div class="card-header border-0 pt-5">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
                                      title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
                                     <span node-id="ss-published_md4" class="ss addtcartclose"></span>
@@ -468,7 +468,7 @@
                                                 @break
                                             @endif
                                         @endforeach
-                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 twitterAccountsData"
                                                 onchange="changeTwitterData(this)" id="selectDropdownTwitter">
                                             <option disabled id="selectDropdown2">Select Account</option>
 
@@ -494,7 +494,7 @@
                                 <span class="spinner spinner-primary spinner-center" id="ss-twitter_md6" style="
     display: none;"></span>
                             </div>
-                            <div class="card-body p-0 position-relative overflow-hidden">
+                            <div class="card-body p-0 position-relative overflow-hidden twt_stats_chart">
                                 <div id="twt_stats_chart" class="card-rounded-bottom " style="height: 200px"></div>
                             </div>
                             <!--end::Body-->
@@ -522,7 +522,7 @@
                                         @endif
                                     @endforeach
                                     @if(count($teams['data']->teamSocialAccountDetails[0][0]->SocialAccount)>0)
-                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 faceBookAccountsData"
                                                 onchange="changeFacebookData(this)"
                                                 id="selectDropdownFacebook">
                                             <option disabled id="selectDropdown">Select Account</option>
@@ -550,8 +550,8 @@
                             <!--end::Header-->
 
                             <!--begin::Body-->
-                            <div class="card-body p-0 position-relative overflow-hidden">
-                                <div id="fb_stats_chart" class="card-rounded-bottom " style="height: 200px"></div>
+                            <div class="card-body p-0 position-relative overflow-hidden fb_stats_chart">
+                                <div id="fb_stats_chart" class="card-rounded-bottom" style="height: 200px"></div>
                             </div>
                             <!--end::Body-->
                         </div>
@@ -569,6 +569,7 @@
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script>
 
         // fb page list div open
@@ -597,6 +598,8 @@
         // team date ranges
         var start = moment().subtract(6, 'days');
         var end = moment();
+        let DefaultRange = `${moment().subtract(6, 'days').format('MMM DD, YYYY')} -> ${moment().format('MMM DD, YYYY')}`;
+
         $("li[data-range-key='Last 30 Days']").removeAttr('class');
         $("li[data-range-key='Last 7 Days']").attr("class", "active");
         $('#team-daterange').daterangepicker({
@@ -620,6 +623,7 @@
                 $('#team-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
             });
 
+        $('#team-daterange-input').attr('value', DefaultRange);
         // delete account
         $('#account-delete').click(function (event) {
             toastr.options = {
@@ -679,8 +683,9 @@
                 },
                 success: function (response) {
                     let profile_picture;
+                    let socialProfileCount = 0;
                     if (response.teamsData.code === 200) {
-                        $("#viewTeam").attr("href",'team/'+teamid+'');
+                        $("#viewTeam").attr("href", 'team/' + teamid + '');
                         document.getElementById('teamImageLink').src = response.teamsData.data.teamSocialAccountDetails[0].team_logo;
                         $('#teamName, #memberProfileDetails').empty();
                         $('#teamName').append(response.teamsData.data.teamSocialAccountDetails[0].team_name);
@@ -703,8 +708,9 @@
                                 }
 
                             });
+                            socialProfileCount = response.teamsData.data.teamSocialAccountDetails[0].SocialAccount.length;
                             setTimeout(function () {
-                                getScheduleReports(teamid, 3);
+                                getScheduleReports(teamid, 3,0,0,socialProfileCount);
                             }, 2000);
                         }
                         if (response.teamsData.data.teamSocialAccountDetails[0].SocialAccount.length > 0) {
@@ -785,7 +791,7 @@
         }
 
 
-        function getScheduleReports(teamid, filterPeriod, startDate, endDate) {
+        function getScheduleReports(teamid, filterPeriod, startDate, endDate,socialProfileCount) {
             $.ajax({
                 type: 'post',
                 url: '/get-schedule-reports',
@@ -797,7 +803,7 @@
                 },
                 dataType: 'json',
                 beforeSend: function () {
-                    $('#line-adwords, #team-report, #scheduled, #published, #failed, #scheduledPublished, #totalPostCount, #totalpostFailed').empty();
+                    $('#line-adwords, #team-report, #scheduled, #published, #failed, #scheduledPublished, #totalPostCount, #totalpostFailed, #socialProfileCount').empty();
                     $('#team-report').append('<div class="d-flex justify-content-center" >\n' +
                         '<div class="spinner-border" role="status" style="display: none;">\n' +
                         '<span class="sr-only">Loading...</span>\n' +
@@ -830,6 +836,7 @@
                         $('#scheduledPublished').append(response.data.totalschedulePosts);
                         $('#totalPostCount').append(response.data.totalPost);
                         $('#totalpostFailed').append(response.data.totalpostFailed);
+                        $('#socialProfileCount').append(socialProfileCount);
                         var optionsLine = {
                             chart: {
                                 height: 328,
@@ -927,6 +934,7 @@
                         $('#scheduledPublished').append(0);
                         $('#totalPostCount').append(0);
                         $('#totalpostFailed').append(0);
+                        $('#socialProfileCount').append(0);
                         $("#team-report").append(' <div class="text-center">\n' +
                             '<div class="symbol symbol-150">\n' +
                             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
@@ -1284,8 +1292,8 @@
             return [year, month, day].join('-');
         }
 
-        let startDate;
-        let endDate;
+        let startDate=0;
+        let endDate=0;
 
         function changeTeamResponseCalendar(a, b) {
             startDate = formatDate(a);
@@ -1297,7 +1305,7 @@
                 getTwitterReports(teamid, twitterid, 7, startDate, endDate);
             }, 2000);
             setTimeout(function () {
-                getScheduleReports(teamid, 7, startDate, endDate);
+                getScheduleReports(teamid, 7, startDate, endDate,socialProfileCount);
             }, 1000);
         }
 
@@ -1311,7 +1319,7 @@
                 $('#facebookReportsDiv').empty();
                 $('#fb_stats_chart').empty();
                 $("#fb_stats_chart").append(' <div class="text-center">\n' +
-                    '<div class="symbol symbol-150">\n' +
+                    '<div class="symbol symbol-150 noFacebookAccountsAddedDiv">\n' +
                     '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
                     '</div>\n' +
                     '<h6>Currently, no facebook pages added to this team.</h6>\n' +
@@ -1326,7 +1334,7 @@
                 $('#twitterReportsDiv').empty();
                 $('#twt_stats_chart').empty();
                 $("#twt_stats_chart").append(' <div class="text-center">\n' +
-                    '<div class="symbol symbol-150">\n' +
+                    '<div class="symbol symbol-150 noTwitterAccountsAddedDiv">\n' +
                     '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
                     '</div>\n' +
                     '<h6>Currently, no Twitter account added to this team.</h6>\n' +
@@ -1338,7 +1346,7 @@
                 }, 2000);
             }
             setTimeout(function () {
-                getScheduleReports(teamid, 3, 0, 0);
+                getScheduleReports(teamid, 3, 0, 0,socialProfileCount);
             }, 1000);
 
             $('#members_name').tooltip();

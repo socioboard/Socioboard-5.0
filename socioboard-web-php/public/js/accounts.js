@@ -53,10 +53,13 @@ function cronUpdate(accountId, cronvalue) {
                     fadeOut: 1000,
                 });
             } else if (response.code === 400) {
-                toastr.error(response.message, {
+                toastr.error(response.error, {
                     timeOut: 1000,
                     fadeOut: 1000,
                 });
+            }
+            else{
+                toastr.error('Some error occured, cant update cron');
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -64,7 +67,7 @@ function cronUpdate(accountId, cronvalue) {
     });
 }
 
-function lock(id, type) {
+function lock(id, type,className1,className2,url1,url2) {
     var data = id;
     if (type === 1) {
         $.ajax({
@@ -76,15 +79,12 @@ function lock(id, type) {
                 if (response.code === 200) {
                     let append = "";
                     $("#status" + data).empty();
-                    append += '<div class="ribbon-target" style="top: 12px;" onclick="lock(' + data + ',0 );"><span class="ribbon-inner bg-danger"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Un-Lock </div>';
+                    append += '<div class="ribbon-target accounts-lock-unlock" style="top: 12px;" onclick="lock(' + data + ',0 ,\'' + className1+ '\',\'' + className2+ '\',\'' + url1+ '\',\'' + url2+ '\');"><span class="ribbon-inner bg-danger"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Un-Lock </div>';
                     $("#status" + data).append(append);
-                    toastr.success("Account Locked Successfully!", "", {
-                        timeOut: 1000,
-                        fadeOut: 1000,
-                        onHidden: function () {
-                            window.location.reload();
-                        }
-                    });
+                    toastr.success("Account Locked Successfully!");
+                    $("."+className1).attr("onclick","return false");
+                    $("."+className1).attr("title","The Account is  Locked");
+                    $("."+className2).removeAttr("href");
                 } else if (response.code === 400) {
                     toastr.error(response.message, "Locking Error!");
                 } else if (response.code === 401) {
@@ -107,15 +107,13 @@ function lock(id, type) {
                 if (response.code === 200) {
                     let append = "";
                     $("#status" + data).empty();
-                    append += '<div class="ribbon-target" style="top: 80px;" onclick="lock(' + data + ',1 );"><span class="ribbon-inner bg-info"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Lock </div>';
+                    append += '<div class="ribbon-target accounts-lock-unlock" style="top: 80px;" onclick="lock(' + data + ',1 ,\'' + className1+ '\',\'' + className2+ '\',\'' + url1+ '\',\'' + url2+ '\');"><span class="ribbon-inner bg-info"></span><i class="fas fa-user-lock fa-fw mr-2 text-white"></i> Lock </div>';
                     $("#status" + data).append(append);
-                    toastr.success("Account Un-Locked Successfully!", "", {
-                        timeOut: 1000,
-                        fadeOut: 1000,
-                        onHidden: function () {
-                            window.location.reload();
-                        }
-                    });
+                    toastr.success("Account Un-Locked Successfully!");
+                    $("."+className1).removeAttr("onclick");
+                    $("."+className1).removeAttr("title");
+                    $("."+className1).attr('href',url1);
+                    $("."+className2).attr('href',url2);
                 } else if (response.code === 400) {
                     toastr.error(response.message, "Account Un-Locked Successfully!");
                 } else if (response.code === 401) {

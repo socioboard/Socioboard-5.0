@@ -192,6 +192,8 @@ function imageUpload(privacy) {
                 }
             } else if (response.code === 202) {
                 toastr.error(response.msg);
+            } else if(response.code === 400 && response.error === "Data too long for column 'title' at row 1"){
+                toastr.error('Title is too long');
             } else {
                 $('#uploadImageModal').modal('hide');
                 toastr.error(response.message);

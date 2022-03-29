@@ -24,14 +24,14 @@
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder"> Image Library : Total Used Space -
+                                <h3 class="card-title font-weight-bolder publicImageDescDiv"> Image Library : Total Used Space -
                                     <span class="text-primary ml-3" id="usedSize"> @if($images["code"] == 200) {{number_format($images["data"]->usedSize/(1024*1024), 2)}}MB / {{number_format($images["data"]->totalSize/(1024*1024), 2)}}MB </span>
                                     @else  {{$images["message"]}}   @endif
                                 </h3>
 
                                 <div class="card-toolbar">
                                     <!--begin::Teams Actions Dropdown-->
-                                    <a href="javascript:;" class="btn btn-hover-text-success btn-sm" data-toggle="modal"
+                                    <a href="javascript:;" class="btn btn-hover-text-success btn-sm uploadImageButton" data-toggle="modal"
                                        data-target="#uploadImageModal" onclick="clearDataBeforeUpload()">
                                         Upload Images
                                     </a>
@@ -45,7 +45,7 @@
 
                 </div>
                 <!--end::Row-->
-                <form id="search_form" method="POST" action="/imagelibary/search-private-image">
+                <form id="search_form" class="formSerachDiv" method="POST" action="/imagelibary/search-private-image">
                     @csrf
                     <div class="row mb-5 align-items-center">
                         <div class="col-md-3">
@@ -86,10 +86,10 @@
                             <!--begin::Tabs-->
                             <ul class="nav nav-bold nav-pills px-8 justify-content-end" id="type_of_views"
                                 role="tablist">
-                                <li class="nav-item">
+                                <li class="nav-item grid-View_class">
                                     <a class="nav-link active" data-toggle="tab" id="grid" href="#imagelibrary-grid"><i class="fas fa-th"></i></a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item list-View_class">
                                     <a class="nav-link" data-toggle="tab" href="#imagelibrary-list" id="list" ><i class="fas fa-list"></i></a>
                                 </li>
                             </ul>
@@ -108,7 +108,7 @@
                                         <div class="card imagelibrary-card">
                                             <div class="img-card">
                                                 <img src="{{env('API_URL_PUBLISH').$image->media_url}}" class="card-img-top" alt="...">
-                                                <button class="info-btn btn btn-hover-text-success btn-sm" data-toggle="modal" data-target="#imageGalleryInfoss" onclick="imageInfo('{{env('API_URL_PUBLISH')}}','{{$image->media_url}}','{{$image->title}}','{{$image->rating}}','{{$image->created_date}}','{{$image->privacy_type === 1 ? "Private" : "Public"}}','{{$image->media_size}}')">
+                                                <button class="info-btn btn btn-hover-text-success btn-sm description-icon" data-toggle="modal" data-target="#imageGalleryInfoss" onclick="imageInfo('{{env('API_URL_PUBLISH')}}','{{$image->media_url}}','{{$image->title}}','{{$image->rating}}','{{$image->created_date}}','{{$image->privacy_type === 1 ? "Private" : "Public"}}','{{$image->media_size}}')">
                                                     <i class="fas fa-info-circle"></i>
                                                 </button>
                                             </div>
@@ -171,7 +171,7 @@
                                                 </div>
                                                 <hr />
                                                 <div class="d-flex justify-content-center">
-                                                    <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}')"
+                                                    <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}','{{$image->title}}')"
                                                        class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5"><i
                                                                 class="far fa-hand-point-up fa-fw"></i> 1 click</a>
                                                     <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId('{{$image->id}}')"
@@ -255,7 +255,7 @@
                                                 data-toggle="modal" data-target="#imageGalleryInfoss" onclick="imageInfo('{{env('API_URL_PUBLISH')}}','{{$image->media_url}}','{{$image->title}}','{{$image->rating}}','{{$image->created_date}}','{{$image->privacy_type === 1 ? "Private" : "Public"}}','{{$image->media_size}}')">
                                             <i class="fas fa-info-circle"></i> Info
                                         </button>
-                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}')"
+                                        <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" onclick="oneClickImage('{{$image->media_url}}','{{$image->title}}')"
                                            class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5 align-self-start"><i
                                                     class="far fa-hand-point-up fa-fw"></i> 1 click</a>
                                         <a href="javascript:;" data-toggle="modal" data-target="#deleteImageModal" onclick="imageId('{{$image->id}}')"

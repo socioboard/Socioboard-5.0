@@ -69,7 +69,7 @@ class DailymotionController extends Controller
             if ($data->dailymotionDetails == null)
                 return response()->json(['error'=>'No data available']);
             
-            $html = view('contentstudio::dailyMotion.components.listing', ['data' => $data, 'helperClass' => $this->helper])->render();
+            $html = view('contentstudio::dailyMotion.components.listing', ['data' => $data, 'helperClass' => $this->helper, 'pagetype' => 'DailyMotion'])->render();
             return response()->json($html);
             
         } catch (Exception $e) {

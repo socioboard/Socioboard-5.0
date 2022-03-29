@@ -301,9 +301,6 @@
                             appendData += '<div class="card card-custom gutter-b draggable" tabindex="0">\n' +
                                 '<div class="draggable-handle">\n' +
                                 '<div class="button-block mt-2">\n' +
-                                '<button class="btn btn-icon btn-hover-light-primary draggable-handle draggable-btn mr-3">\n' +
-                                '<i class="far fa-hand-paper"></i>\n' +
-                                '</button>\n' +
                                 '<button data-toggle="modal"  data-target="#accountDeleteModal' + element.id + '" title="Remove this from cart" class="btn btn-xs btn-light btn-hover-primary" >\n' +
                                 '<i class="ki ki-close icon-sm text-muted p-0"></i>\n' +
                                 '</button>\n' +

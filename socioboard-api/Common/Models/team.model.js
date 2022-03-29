@@ -23,6 +23,9 @@ import LinkedInPostMongoModels from '../Mongoose/models/linkedIn-post.js';
 import InstagramBusinessMongoPostModel from '../Mongoose/models/instagram-business-posts.js';
 import TumblrMongoPostModel from '../Mongoose/models/tumblr-post.js';
 import TumblrConnect from './../Cluster/tumblr.cluster.js';
+import PinterestMongoPostModel from '../Mongoose/models/pinterest-pins.js';
+import PinterestCluster from '../Cluster/pinterest.newcluster.js';
+const pinConnect = new PinterestCluster();
 const userDetails = db.user_details;
 const Operator = db.Sequelize.Op;
 const userRewardsModel = db.user_rewards;
@@ -281,7 +284,7 @@ class TeamLibs {
 
             if (team == null) {
               throw new Error(
-                "Team not found or You don't have access to add the profile to team"
+                "You dont have access to add the social profile to this team"
               );
             } else {
               // swithing to whichever network is selected by user
@@ -568,7 +571,7 @@ class TeamLibs {
 
             if (team == null) {
               throw new Error(
-                "Team not found or You don't have access to add the profile to team"
+                "You dont have access to add the social profile to this team"
               );
             }
           })
@@ -1036,7 +1039,7 @@ class TeamLibs {
                           isErrorOnNetwork = true;
                         break;
                       case '16':
-                       break;
+                        break;
                       default:
                         isErrorOnNetwork = true;
                         break;
@@ -1277,7 +1280,7 @@ class TeamLibs {
    * @param  {Object} profile - Profile Object of the Specified Network
    * @return {object} Returns object contains Team and Profile details
    */
-  addProfiles(userId, userName, profile,invite) {
+  addProfiles(userId, userName, profile, invite) {
     let ProfileInfo = null;
     let teamDetails = null;
 
@@ -1340,7 +1343,7 @@ class TeamLibs {
                     info: profile.Info,
                     account_admin_id: userId,
                     is_invite: invite,
-                },
+                  },
                   {transaction: t}
                 );
               }
@@ -1355,18 +1358,17 @@ class TeamLibs {
             })
             .then(() => {
               if (ProfileInfo.account_type == 11) {
-                   if (profile.Boards.length > 0) {
-                       profile.Boards.map(boards => {
-                       boards.social_account_id = ProfileInfo.account_id;
-                       });
-                       return pinterestBoard.bulkCreate(profile.Boards, { transaction: t, returning: true });
-                     }
-                 else
-                   return;
-              }
-              else
-                 return;
-             })
+                if (profile.Boards.length > 0) {
+                  profile.Boards.map(boards => {
+                    boards.social_account_id = ProfileInfo.account_id;
+                  });
+                  return pinterestBoard.bulkCreate(profile.Boards, {
+                    transaction: t,
+                    returning: true,
+                  });
+                } else return;
+              } else return;
+            })
             .then(() =>
               this.scheduleNetworkPostFetching(ProfileInfo.account_id).catch(
                 error => {
@@ -1749,30 +1751,24 @@ class TeamLibs {
             .catch(error => {
               reject(error);
             });
+        case 11:
+          let pinterestObject = new PinterestMongoPostModel();
+          pinterestObject
+            .deleteAccountPosts(accountDetails.socialId)
+            .then(() => {
+              resolve();
+            });
         case 12:
-          // return this.fbConnect.unsubscribeWebhooks(accountDetails.accessToken, accountDetails.socialId)
-          //  .then(() => {
-          var instagramStoryMongoModelObject = new InstagramStoryMongoModel();
-
-          return (
-            instagramStoryMongoModelObject
-              .deleteAccountPosts(accountDetails.socialId)
-              //   })
-              .then(() => {
-                const instagramBusinessMongoPostModelObject =
-                  new InstagramBusinessMongoPostModel();
-
-                return instagramBusinessMongoPostModelObject.deleteAccountPosts(
-                  accountDetails.socialId
-                );
-              })
-              .then(() => {
-                resolve();
-              })
-              .catch(error => {
-                reject(error);
-              })
-          );
+          const instagramBusinessMongoPostModelObject =
+            new InstagramBusinessMongoPostModel();
+          instagramBusinessMongoPostModelObject
+            .deleteAccountPosts(accountDetails.socialId)
+            .then(() => {
+              resolve();
+            })
+            .catch(error => {
+              reject(error);
+            });
         default:
           reject(new Error('Invalid Account Type'));
           break;
@@ -2680,7 +2676,7 @@ class TeamLibs {
           default:
             break;
         }
-       if (fields.length > 0) {
+        if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
               where: {account_id: account.account_id},
@@ -2792,8 +2788,6 @@ class TeamLibs {
             break;
         }
 
-    
-
         if (fields.length > 0) {
           return updateFriendsTable
             .findOne({
@@ -2898,10 +2892,6 @@ class TeamLibs {
             break;
           default:
             break;
-        }
-
-        if (account.account_type == 11) {
-          pinterestIds.push(account.account_id);
         }
 
         if (fields.length > 0) {
@@ -3526,26 +3516,32 @@ class TeamLibs {
                     );
                   });
               case 16:
-                    let TumblrMongoPostModelObject = new TumblrMongoPostModel();
-                     return TumblrConnect.getBlogPostDetails(config.get('tumblr_api.OAuth_consumer_Key'),socialAccount.social_id)
-                        .then(response => {
-                        logger.info(`Tumblr Feed Fetched count : ${response.length}`);
-                        return TumblrMongoPostModelObject
-                          .insertManyPosts(response)
-                          .then(result => {
-                            logger.info('Saved  Insta post details');
-                          })
-                          .catch(result => {
-                            logger.error(
-                              `Error in saving Tumblr post details : ${result}`
-                            );
-                          });
+                let TumblrMongoPostModelObject = new TumblrMongoPostModel();
+                return TumblrConnect.getBlogPostDetails(
+                  config.get('tumblr_api.OAuth_consumer_Key'),
+                  socialAccount.social_id
+                )
+                  .then(response => {
+                    logger.info(
+                      `Tumblr Feed Fetched count : ${response.length}`
+                    );
+                    return TumblrMongoPostModelObject.insertManyPosts(response)
+                      .then(result => {
+                        logger.info('Saved  Insta post details');
                       })
-                      .catch(error => {
-                        logger.error(`Error in Fetching Tumblr Post details from Tumblr API ${error.message}`);
+                      .catch(result => {
+                        logger.error(
+                          `Error in saving Tumblr post details : ${result}`
+                        );
                       });
-                      
-             default:
+                  })
+                  .catch(error => {
+                    logger.error(
+                      `Error in Fetching Tumblr Post details from Tumblr API ${error.message}`
+                    );
+                  });
+
+              default:
                 logger.info(
                   `default account type ${socialAccount.account_type}`
                 );
@@ -3897,10 +3893,16 @@ class TeamLibs {
             socialProfile.refresh_token
           );
           break;
+        case 11:
+          updateDetails = await this.getRecentBoard(socialProfile);
+          break;
         case 12:
           updateDetails = await this.fbConnect.getInstaBusinessStats(
             socialProfile.access_token
           );
+          break;
+        case 6:
+          updateDetails = this.getLinkedInProfilePic(socialProfile);
           break;
         default:
           break;
@@ -3947,75 +3949,176 @@ class TeamLibs {
       });
   }
 
-   /**
+  /**
    * TODO To get Pinterst Users with Board details
    * Function To get Pinterst Users with Board details
    * @param  {number} UserId - User Id
-   * @return  {Array} Pinterest Account details 
+   * @return  {Array} Pinterest Account details
    */
-    async getTeamBoard(userId,teamId){
-      let pinterestAccts = await this.getPinterstSocilaAcc(userId,teamId)
-      let boardsData = await this.getBoard(pinterestAccts)
-      return boardsData;  
-   
-   }
+  async getTeamBoard(userId, teamId) {
+    let pinterestAccts = await this.getPinterstSocilaAcc(userId, teamId);
+    let boardsData = await this.getBoard(pinterestAccts);
+    return boardsData;
+  }
 
-   /**
-   * TODO To get User's Pinterst Account 
+  /**
+   * TODO To get User's Pinterst Account
    * Function To get User's Pinterst Account
    * @param  {number} UserId - User Id
    * @param  {number} team_id - Team Id
-   * @return {Array} Users Pinterest Account  
+   * @return {Array} Users Pinterest Account
    */
-    async getPinterstSocilaAcc(userId,team_id){
-      let accIds = []
-      let res = await teamSocialAccountJoinTable.findAll({
-        where:{team_id},
-        raw: true,
-       })
-      res.map(x=>{
-      if(x. is_account_locked == 0){
-           accIds.push(x. account_id)  
-       }
-     })
-     let pinterestAccts =await socialAccount.findAll({
-       where: {
-            account_id: {[Operator.in]: accIds},
-            account_type: '11'                 
-         },
-       raw: true,
-      })
-      return pinterestAccts;
-}
+  async getPinterstSocilaAcc(userId, team_id) {
+    let accIds = [];
+    let res = await teamSocialAccountJoinTable.findAll({
+      where: {team_id},
+      raw: true,
+    });
+    res.map(x => {
+      if (x.is_account_locked == 0) {
+        accIds.push(x.account_id);
+      }
+    });
+    let pinterestAccts = await socialAccount.findAll({
+      where: {
+        account_id: {[Operator.in]: accIds},
+        account_type: '11',
+      },
+      raw: true,
+    });
+    return pinterestAccts;
+  }
 
- /**
-   * TODO To get Pinterst Board deatils 
+  /**
+   * TODO To get Pinterst Board deatils
    * Function To get Pinterst Board deatils
    * @param  {Array} pinterestAccts - Pinterest Accs
    * @return {object} Pinterest Boars  Deatils
-   */  
-  async getBoard(pinterestAccts){
-    let BoardDetials=[]
-    const promises =  pinterestAccts.map(async x=>{
-    let boarddata = await this.getPinterestBoards(x.account_id) 
-    BoardDetials.push({...x,boardDetails:boarddata})
-    })
+   */
+  async getBoard(pinterestAccts) {
+    let BoardDetials = [];
+    const promises = pinterestAccts.map(async x => {
+      let boarddata = await this.getPinterestBoards(x.account_id);
+      BoardDetials.push({...x, boardDetails: boarddata});
+    });
     await Promise.all(promises);
     return BoardDetials;
- }
+  }
 
- /**
-   * TODO To get number of Pinterst Account for User Account 
-   * Function To get number of Pinterst Account for User Account 
+  /**
+   * TODO To get number of Pinterst Account for User Account
+   * Function To get number of Pinterst Account for User Account
    * @param  {number} UserId - User Id
-   * @return {Array} Users Pinterest Account  
+   * @return {Array} Users Pinterest Account
    */
   async getPinterestBoards(userId) {
     const res = await pinterestBoard.findAll({
-    where: {social_account_id: userId},
-    raw:true
+      where: {social_account_id: userId},
+      raw: true,
     });
-   return res;
-}
+    return res;
+  }
+
+  /**
+   * TODO To update linkedin profile pic url for profile
+   * Function To update linkedin profile pic url for profile
+   * @param  {object} socialAccDetails - Social Account details
+   * @return {object} linked in profile url
+   */
+  async getLinkedInProfilePic(socialAccDetails) {
+    try {
+      let accessTokenData =
+        await this.linkedInConnect.getAccessTokenFromRefreshToken(
+          socialAccDetails.refresh_token
+        );
+      let profileDetails = await this.linkedInConnect.getLinkedInProfilePic(
+        accessTokenData.accessToken
+      );
+      if (profileDetails)
+        await socialAccount.update(profileDetails, {
+          where: {account_id: socialAccDetails.account_id},
+        });
+      return {profile_picture: profileDetails?.profile_pic_url ?? ''};
+    } catch (e) {}
+  }
+
+  /**
+   * Note to  get Recent Pinterest Boards
+   * Function to get Recent Pinterest Boards
+   * @param {object} socialProfile - Social Account details
+   * @return {object} blog status count
+   */
+  async getRecentBoard(socialProfile) {
+    let newboard = await pinConnect.getBoards(socialProfile.access_token);
+
+    if (newboard.length > 0) {
+      await this.flushBoard(socialProfile);
+      newboard.map(boards => {
+        boards.social_account_id = socialProfile.account_id;
+      });
+      await db.sequelize.transaction(t =>
+        pinterestBoard.bulkCreate(newboard, {transaction: t, returning: true})
+      );
+    }
+    let data = {
+      board_count: newboard.length ?? 0,
+    };
+    return data;
+  }
+
+  /**
+   * Note to  delete  Pinterest Boards
+   * Function to delete  Pinterest Boards
+   * @param {object} socialProfile - Social Account details
+   */
+  async flushBoard(socialProfile) {
+    pinterestBoard.destroy({
+      where: {
+        social_account_id: socialProfile.account_id,
+      },
+    });
+  }
+
+  /**
+   * Update access token in social accounts db
+   * @param {number} accountId
+   * @param {string} accessToken
+   * @returns {object} Success of Error object
+   */
+  updateAccessToken(accountId, accessToken) {
+    return socialAccount.update(
+      {
+        access_token: accessToken,
+      },
+      {
+        where: {
+          account_id: accountId,
+        },
+      }
+    );
+  }
+
+  /**
+   * Check user and team details
+   * @param {number} userId User id
+   * @param {string} teamId Team id
+   * @returns {object} team details
+   */
+  async otherTeamDetails(userId, teamId) {
+    let result = await userTeamJoinTable.findOne({
+      where: {
+        user_id: userId,
+        team_id: teamId,
+        left_from_team: false,
+      },
+      attributes: ['id', 'user_id', 'permission'],
+      raw: true,
+    });
+
+    if (!result) throw new Error('User not belongs to the team!');
+
+    if (result.permission === 0)
+      throw new Error(`You don't have access to add the profile to the team!`);
+  }
 }
 export default TeamLibs;

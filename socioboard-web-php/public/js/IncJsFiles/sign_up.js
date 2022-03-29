@@ -286,4 +286,66 @@ $(document).ready(function () {
         if (data['passwordConfirmation'] === undefined)
             document.getElementById('passwordConfirmationError').innerHTML = '';
     }
+
+    $(document).on('submit', '#appsumo_form', function (e) {
+        e.preventDefault();
+        let form = document.getElementById('appsumo_form');
+        let formData = new FormData(form);
+        formData.append('rfd', window.getCookie('sbrfd') ?? '');
+        formData.append('kwd', window.getCookie('sbkwd') ?? '');
+        formData.append('med', window.getCookie('sbmed') ?? '');
+        formData.append('src', window.getCookie('sbsrc') ?? '');
+        $.ajax({
+            url: '/appsumo-register',
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                //show_resat(response);
+                if (response['code'] === 200) {
+                    document.getElementById('appsumo_form').reset();
+                    toastr.success(response.message, 'Registered Successfully!');
+
+                    // Append the Function of Google
+                    let callback = function () {
+                        window.location = '/';
+                    };
+                    gtag('event', 'conversion', {
+                        send_to: 'AW-323729849/AIU9CJOlxuICELnzrpoB',
+                        event_callback: callback,
+                    });
+                    return false;
+                    // End of the Function of Google
+                } else if (response['code'] === 400) {
+                    if (response.error === 'Error: The requested resource /Services/VAb998f968120dfd40106eb6ca4bcd39a4/VerificationCheck was not found') {
+                        toastr.error('You have entered wrong or Expired OTP', 'Registration failed!!');
+                    } else {
+                        toastr.error(response.error, 'Registration failed!!');
+                    }
+                } else {
+                    toastr.error(`${response['error']}`);
+                }
+            },
+            error: function (error) {
+                if (error.status === 422) {
+                    let errors = $.parseJSON(error.responseText);
+                    $.each(errors, function (key, value) {
+                        $('#response').addClass('alert alert-danger');
+                        if ($.isPlainObject(value)) {
+                            $.each(value, function (key, value) {
+                                $('#' + key + 'Error')
+                                    .html(`${value}`)
+                                    .css(invalidCss);
+                                toastr.error(`${value}`);
+                            });
+                        }
+                    });
+                    toastr.error(error.message, 'Registration failed!!');
+                } else {
+                    toastr.error(error.message, 'Registration failed!!');
+                }
+            },
+        });
+    });
 });

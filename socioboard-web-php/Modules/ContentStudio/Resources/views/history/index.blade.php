@@ -19,7 +19,7 @@
                                 <span class="card-label font-weight-bolder ">{{ isset($pageTitle) ? $pageTitle : 'Listing' }}</span>
                             </h3>
                             <div class="card-toolbar">
-                                <a href="{{ route('publish_content.scheduling') }}" class="btn font-weight-bolder font-size-sm">Create Schedule Post</a>
+                                <a href="{{ route('publish_content.scheduling') }}" class="btn font-weight-bolder font-size-sm scheduled-create_btn">Create Schedule Post</a>
                             </div>
                         </div>
                         <!--end::Header-->
@@ -39,6 +39,9 @@
 							                    <th style="min-width: 130px">Status</th>
 												@if(isset($pageTitle) && $pageTitle != "History")
 							                    <th style="min-width: 150px">Action</th>
+												@endif
+												@if(isset($pageTitle) && $pageTitle === "History")
+												<th style="min-width: 150px">Post details</th>
 												@endif
 							                </tr>
 							            </thead>

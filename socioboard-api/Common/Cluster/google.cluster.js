@@ -59,15 +59,12 @@ Google.prototype.getGoogleAuthUrl = function (type, state) {
  * @param  {string} code - Youtube Auth Code
  * @return {object} Return User channel details with Access Token
  */
-Google.prototype.getYoutubeChannels = function (code,redirecturl) {
+Google.prototype.getYoutubeChannels = function (code, redirecturl) {
   return new Promise((resolve, reject) => {
     if (!code) {
       reject(new Error('Invalid youtube code'));
     } else {
-      this.getGoogleAccessToken(
-        code,
-        redirecturl
-      )
+      this.getGoogleAccessToken(code, redirecturl)
         .then(tokens => {
           if (!tokens) {
             reject(new Error('Invalid access token'));
@@ -104,8 +101,6 @@ Google.prototype.getYoutubeChannels = function (code,redirecturl) {
 Google.prototype.getGoogleAccessToken = function (code, redirectUrl) {
   return new Promise((resolve, reject) => {
     const requestBody = `code=${code}&redirect_uri=${redirectUrl}&client_id=${this.google_api.client_id}&client_secret=${this.google_api.client_secrets}&scope=&grant_type=authorization_code`;
-    // Hitting google to get accessToken and refreshToken
-
     request.post(
       {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -117,12 +112,13 @@ Google.prototype.getGoogleAccessToken = function (code, redirectUrl) {
           reject(error);
         } else {
           const parsedBody = JSON.parse(body);
+          if (parsedBody?.error_description) {
+            reject(parsedBody?.error_description);
+          }
           const tokens = {
-            access_token: parsedBody.access_token,
-            refresh_token: parsedBody.refresh_token,
+            access_token: parsedBody?.access_token,
+            refresh_token: parsedBody?.refresh_token,
           };
-          // Sending response
-
           resolve(tokens);
         }
       }
@@ -573,8 +569,53 @@ Google.prototype.uploadYouTubeVideo = function (post, refreshToken) {
               body: fs.createReadStream(filePath),
             },
           })
-          .then(() => resolve('Video Uploaded Successfully'))
+          .then(result => {
+            resolve({
+              data: result.data,
+              message: 'Video Uploaded Successfully',
+            });
+          })
           .catch(error => reject(error));
+      }
+    });
+  });
+};
+
+/**
+ * TODO To upload thumbnails to particular youTube video
+ * upload thumbnails to particular youTube video
+ * @param  {object} videoId Youtube Video Id
+ * @param  {string} refreshToken Refresh token for  connect to  youtube
+ * @param  {string} thumbnailUrls Thumbnail url
+ * @return {object} Returns youtube upload message
+ */
+Google.prototype.setThumbnails = function (
+  refreshToken,
+  videoId,
+  thumbnailUrls
+) {
+  return new Promise((resolve, reject) => {
+    this.reconnectGoogle(refreshToken, (error, tokens) => {
+      if (error) {
+        reject('Token Missing.');
+      } else {
+        const basePath = path.resolve(__dirname, '../../..');
+        const filePath = `${basePath}/media/${thumbnailUrls}`;
+        const contentType = require('path').extname(filePath).substr(1);
+        let options = {
+          method: 'POST',
+          url: `https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId=${videoId}&uploadType=media`,
+          headers: {
+            Accept: 'application/vnd.api+json',
+            Authorization: `Bearer ${tokens.access_token}`,
+            'Content-Type': `image/jpeg`,
+          },
+          body: fs.createReadStream(filePath),
+        };
+        request(options, function (error, response) {
+          // if (error) throw new Error(error);
+          resolve(true);
+        });
       }
     });
   });

@@ -6,10 +6,12 @@ import async from 'async';
 import path, {dirname} from 'path';
 import moment from 'moment';
 import logger from '../../Publish/resources/Log/logger.log.js';
-
+import sizeOf from 'image-size';
 import {fileURLToPath} from 'url';
 import fs from 'fs';
 import resizeImg from 'resize-img';
+import axios from'axios';
+import qs from 'qs';
 
 const fbversion = 'v3.3';
 
@@ -1083,9 +1085,10 @@ Facebook.prototype.publishPostInsta = async function (
     try {
       logger.info(`Insta Business Image post started....`);
       let base_image = config.get(`insta_base_path`) + postDetails.mediaPath[0];
+      const dimensions = sizeOf(base_image)
       let updateimagPixel = await resizeImg(fs.readFileSync(base_image), {
-        width: 1080,
-        height: 1350,
+        width: dimensions.width,
+        height: dimensions.height,
       });
       let filename = `${String(moment().unix())}.jpg`;
       fs.writeFileSync(
@@ -1095,7 +1098,7 @@ Facebook.prototype.publishPostInsta = async function (
       let containerId = await new Promise((resolve, reject) => {
         let image_url = config.get(`insta_image_url`) + filename;
         postDetails.message = postDetails.message.replace('#', '%23');
-        let containeUrl = `image_url=${image_url}&caption=${postDetails.message}&+access_token=${accessToken}`;
+        let containeUrl = `image_url=${image_url}&caption=${postDetails.message}+\n${postDetails.link ?? ''}&+access_token=${accessToken}`;
         request.post(
           {
             headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -1148,75 +1151,138 @@ Facebook.prototype.publishPostInsta = async function (
       });
       return instapostId;
     } catch (error) {
-      logger.error(`Error while Publishing Image Insta Business ${error}`);
+       logger.error(`Error while Publishing Image Insta Business ${error}`);
+       throw new Error(error?.message)
     }
   } else if (postDetails.postType == 'Video') {
-    try {
       logger.info(`Insta Business Video post started....`);
-      let videoContainerId = await new Promise((resolve, reject) => {
-        let videoUrl =
-          config.get(`insta_media_url`) + `${postDetails.mediaPath[0]}`;
-        let containeUrl = `media_type=VIDEO&video_url=${videoUrl}&caption=${postDetails.message}&+access_token=${accessToken}`;
-        request.post(
-          {
-            headers: {'content-type': 'application/x-www-form-urlencoded'},
-            url: `https://graph.facebook.com/${social_id}/media?`,
-            body: containeUrl,
-          },
-          (error, response, body) => {
-            if (error) {
-              logger.error(
-                `Error getting conatiner Id publishPostInsta video ${error}`
-              );
-              reject(error);
-            } else {
-              let parsedResponse = JSON.parse(body);
-              logger.info(
-                `parsedResponse while feching the Video Publish Container Id ${JSON.stringify(
-                  parsedResponse
-                )}`
-              );
-              resolve(parsedResponse.id);
-            }
+       try {
+        const InstaVideoContainerId= await getInstaVideoContainerId(postDetails,social_id,accessToken)
+        logger.info(`Insta Container Id ${InstaVideoContainerId} `)
+        setTimeout(async () => {
+          try {
+            const InstaVideoPublishId= await  pushInstaVideo(InstaVideoContainerId,social_id,accessToken)
+            logger.info(`Insta Publish Id ${InstaVideoPublishId}`)
+             return InstaVideoPublishId;
+          } catch (error) {
+            logger.info(`Error while hitting Insta Publish API with container Id ${error}`)
+            throw new Error(error?.message)
           }
-        );
-      });
-      setTimeout(async () => {
-        let instaVideoPostId = await new Promise((resolve, reject) => {
-          let videoReqBody = `creation_id=${videoContainerId}&access_token=${accessToken}`;
-          request.post(
-            {
-              headers: {'content-type': 'application/x-www-form-urlencoded'},
-              url: `https://graph.facebook.com/${social_id}/media_publish?`,
-              body: videoReqBody,
-            },
-            (error, response, body) => {
-              if (error) {
-                logger.error(
-                  `Error getting Published  Id publishPostInsta Video ${error}`
-                );
-                reject(error);
-              } else {
-                let response = JSON.parse(body);
-                logger.info(
-                  `response while feching the Video Publish Id ${JSON.stringify(
-                    response
-                  )}`
-                );
-                resolve(response.id);
-              }
-            }
-          );
-        });
-        return instaVideoPostId;
-      }, 180000);
-    } catch (error) {
-      logger.error(`Error while Publishing Video Insa Business ${error}`);
-    }
-  } else {
+        }, 30000);
+       } catch (error) {
+         logger.info(`Error in Insta publish video Publish ${error} `)
+         throw new Error(error?.message)
+
+       }
+    } else {
     callback({code: 400, status: 'failed', error: 'Not a valid type.'});
-  }
+   }
 };
+
+
+/**
+ * TODO  get the video container id for  InstaBusinessAccount
+ * Function get the video container id for  InstaBusinessAccount
+ * @param {object} postDetails - Post details
+ * @param {number} social_id - Insta Account User Id
+ * @param {string} accessToken - Insta Account token
+ * @return {number}  return video Container Id
+ */
+async function getInstaVideoContainerId(postDetails,social_id,accessToken){
+  let conatinerId=  await new Promise((resolve,reject)=>{
+    let link =config.get(`insta_media_url`) + `${postDetails.mediaPath[0]}`;
+    let data = qs.stringify({
+      video_url: link,
+      access_token: `${accessToken}`,
+      media_type: 'VIDEO',
+      caption: `${postDetails?.message}+\n${postDetails?.link ?? ''}`
+    });
+    let configuration = {
+      method: 'post',
+      url: `https://graph.facebook.com/${social_id}/media`,
+      headers: { 
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data : data
+    };
+     axios(configuration) 
+     .then( (response)=> {
+     resolve (response?.data?.id)
+    })
+    .catch((error)=> {
+      logger.info(`Error in getting the insta Video Container Id ${error}`)
+      reject(error)
+    }); 
+   })
+   return conatinerId;
+}
+
+/**
+ * TODO  get the video publish id for  InstaBusinessAccount
+ * Function get the video publish id for  InstaBusinessAccount
+ * @param {number} con_id - Insta video container id
+ * @param {number} s_id - Insta Account User Id
+ * @param {string} token - Insta Account token
+ * @return {string}  return video publish Id
+ */
+async function pushInstaVideo(con_id,s_id,token){
+  let publishId= await new Promise((resolve,reject)=>{
+  let data = qs.stringify({
+    access_token: `${token}`,
+    creation_id: `${con_id}` 
+  });
+  let publishconfig = {
+    method: 'post',
+    url: `https://graph.facebook.com/${s_id}/media_publish`,
+    headers: { 
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    data : data
+  };
+  axios(publishconfig)
+  .then( (response)=> {
+    logger.info(`Response of the Insta Video publish  with conatiner Id ${response} `)
+    resolve (response?.data?.id)
+  })
+  .catch( (error)=> {
+    logger.info(`Error in getting the insta Video Publish Id ${error}`)
+    reject(error)
+    });
+  })
+  return publishId;
+}
+
+/**
+ * TODO  get the ShortCodeUrl for  InstaBusinessAccount
+ * Function get the get the ShortCodeUrl for  InstaBusinessAccount
+ * @param {number} social_id - Insta Account User Id
+ * @param {string} accessToken - Insta Account token
+ * @param {number} post_id - Insta video Post Id
+ * @return {string}  return Post ShortCodeUrl
+ */
+Facebook.prototype.getShortCodeUrl= async function (social_id,accessToken,post_id){
+  return new Promise ((resolve,reject)=>{
+  let config = {
+    method: 'get',
+    url: `https://graph.facebook.com/${social_id}/media?fields=shortcode&access_token=${accessToken}`,
+  };
+    let res={}
+    axios(config)
+    .then((response)=> {
+             response?.data?.data.map((t)=>{
+              if(t?.id == post_id ){
+                res.id=t?.id,
+                res.url=`https://www.instagram.com/p/${t?.shortcode}`
+              }
+            })
+            resolve(res)
+        })
+    .catch((error)=> {
+      logger.info(`Error while getting the ShortCode Url ${error}`)
+      reject(error?.message) 
+  })
+})
+}
 
 Facebook.prototype.fbPageInsights = function (
   accessToken,
@@ -1434,13 +1500,14 @@ Facebook.prototype.getInstaBusinessPublishLimit = function (
   accessToken
 ) {
   return new Promise((resolve, reject) => {
+  try {
     let url = `https://graph.facebook.com/${userId}/content_publishing_limit?access_token=${accessToken}`;
     return request.get(url, (error, response, body) => {
-      if (error) {
+      let parsedBody = JSON.parse(body);
+      if (parsedBody?.error) {
         logger.error(`Error while getting getPagesConnectWithInsta  ${error}`);
-        reject(error);
+        reject(parsedBody?.error?.message);
       } else {
-        let parsedBody = JSON.parse(body);
         let quota_used = parsedBody?.data[0]?.quota_usage;
         let quota_left =
           config.get('instagram_business_api.maximum_post_per_day') -
@@ -1451,7 +1518,10 @@ Facebook.prototype.getInstaBusinessPublishLimit = function (
         resolve(quota_left);
       }
     });
-  });
+  } catch (error) {
+    reject(error?.message)
+  }
+});
 };
 /**
  * TODO get RecentInstaProfilePicture  From Instagram Business User

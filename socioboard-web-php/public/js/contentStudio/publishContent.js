@@ -193,7 +193,7 @@ $(document).ready(function () {
         e.preventDefault();
         publishOrFeeds = 1;
         let btn = $(this);
-        btn.html("<i class='fa fa-spinner fa-spin'></i> 1 Click");
+        btn.html("<i class='fa fa-spinner fa-spin'></i> One Click");
         btn.attr('disabled', 1);
         $('body').find('#resocioModal').modal('hide');
         $('body').find('#resocioModal').remove();
@@ -224,7 +224,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 btn.removeAttr('disabled');
-                btn.html("<i class='far fa-hand-point-up fa-fw'></i> 1 Click");
+                btn.html("<i class='far fa-hand-point-up fa-fw'></i> One Click");
                 $('body').append(data.html);
                 $('body').find('#resocioModal').modal('show');
                 // begin:normal post emoji
@@ -236,7 +236,7 @@ $(document).ready(function () {
             },
             error: function (error) {
                 btn.removeAttr('disabled');
-                btn.html("<i class='far fa-hand-point-up fa-fw'></i> 1 Click");
+                btn.html("<i class='far fa-hand-point-up fa-fw'></i> One Click");
                 if (error.responseJSON.message) {
                     toastr.error(`${error.responseJSON.message}`);
                 }

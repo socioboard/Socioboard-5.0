@@ -43,7 +43,7 @@ class DashboardController extends Controller
             $linp = 0;
             $tbp = 0;
             $apiUrls = ApiConfig::getFeeds('/feeds/get-recent-rssurls');
-            $apiReports = (env('API_URL_PUBLISH') . env('API_VERSION') . '/schedule/get-filtered-schedule-details?fetchPageId=1&scheduleStatus=6');
+            $apiReports = (env('API_URL_PUBLISH') . env('API_VERSION') . '/schedule/get-filtered-schedule-details?fetchPageId=1&scheduleStatus=6&teamId='.$teamID);
             try {
                 if (Session::has('pages')) {
                     $fbp = 1;
@@ -210,7 +210,19 @@ class DashboardController extends Controller
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
                 if ($response['data']->code === 200) {
                     session::put('state', $response['data']->state);
-                    return redirect($response['data']->navigateUrl);
+                    if ($network === 'TikTok') {
+                        $country = Session::get('user')['userDetails']['country'];
+                        if($country === 'India' || $country === 'Pakistan' || $country === 'Bangladesh' || $country === 'Indonesia')
+                        {
+                            return redirect('dashboard')->with("failed", 'Can not add account as Tik tok has  banned in Your Country');
+                        }
+                        else{
+                            return redirect($response['data']->navigateUrl->responseUrl);
+                        }
+                    } else {
+                        return redirect($response['data']->navigateUrl);
+
+                    }
                 } elseif ($response['data']->code === 400) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
@@ -1770,7 +1782,6 @@ class DashboardController extends Controller
                 }
             }
         } else $socialAccounts = "";
-
         if (!empty($socialAccounts)) {
             \session()->put('bitly', "true");
             \session()->put('bitly_id', $socialAccounts['bitly']['account'][0]->account_id);
@@ -1949,4 +1960,27 @@ class DashboardController extends Controller
         Session::put('review_session', true);
         return true;
     }
+
+    function addTikTokCallBack(Request $request)
+    {
+        try {
+
+            $code = ($request['code']);
+            $state = (session::get('state'));
+            $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . $state . '&code=' . $code . '&flag=1');
+            $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
+            if ($response['data']->code === 200) {
+                return redirect('dashboard')->with("success", 'Account Added Successfully');
+            } else if ($response['data']->code === 400) {
+                return redirect('dashboard')->with("failed", $response['data']->error);
+            } else {
+                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+            }
+        } catch (\Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addTikTokCallBack() {DashboardController}');
+            return redirect('view-accounts')->with("failed", 'Some Error Occured please,reload the page');
+        }
+    }
+
+
 }

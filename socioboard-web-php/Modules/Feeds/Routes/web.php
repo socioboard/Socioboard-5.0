@@ -20,6 +20,7 @@ Route::group(['module' => 'team', 'middleware' => ['authenticateUser', 'checkPla
     Route::get('get-next-youtube-feeds', 'FeedsController@getNextYoutubeFeeds');
     Route::get('get-next-instgram-feeds', 'FeedsController@getNextInstagramFeeds');
     Route::get('get-next-linkedIn-feeds', 'FeedsController@getNextLinkedInFeeds');
+    Route::get('get-next-tiktok-feeds', 'FeedsController@getNextTikTokFeeds');
     Route::post('dislike-tweet', 'FeedsController@disLikeTheTweet');
     Route::post('like-tweet', 'FeedsController@LikeTheTweet');
     Route::post('comment-on-tweet', 'FeedsController@commentOnTweet');

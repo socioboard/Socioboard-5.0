@@ -1,29 +1,29 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
 
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 
 mongoose.set('useCreateIndex', true);
 
 const publishedPost = new Schema({
-  publishedDate: { type: Date, default: Date.now },
-  accountId: { type: Number, index: true },
-  fullPublishContentId: { type: String },
-  postCategory: { type: String },
-  publishedContentDetails: { type: String },
-  publishedMediaUrls: { type: [String] },
-  postShareUrl: { type: String },
-  PublishedId: { type: String, index: true, unique: true },
-  PublishedUrl: { type: String },
-  PublishedStatus: { type: String },
-  TeamId: { type: Number },
+  publishedDate: {type: Date, default: Date.now},
+  accountId: {type: Number, index: true},
+  fullPublishContentId: {type: String},
+  postCategory: {type: String},
+  publishedContentDetails: {type: String},
+  publishedMediaUrls: {type: [String]},
+  postShareUrl: {type: String},
+  PublishedId: {type: String, index: true, unique: true},
+  PublishedUrl: {type: String},
+  PublishedStatus: {type: String},
+  TeamId: {type: Number},
 });
 
 publishedPost.methods.insertManyPosts = function (posts) {
   return this.model('PublishedPosts')
     .insertMany(posts)
-    .then((postdetails) => postdetails.length)
-    .catch((error) => 0);
+    .then(postdetails => postdetails.length)
+    .catch(error => 0);
 };
 
 publishedPost.methods.getTodayPostsCount = function (accountId) {
@@ -37,14 +37,16 @@ publishedPost.methods.getTodayPostsCount = function (accountId) {
 
   return this.model('PublishedPosts')
     .find(query)
-    .then((result) => result.length)
-    .catch((error) => {
+    .then(result => result.length)
+    .catch(error => {
       throw error;
     });
 };
 
 publishedPost.methods.getXdaysPostsCount = function (accountId, dayCount) {
-  const startDate = moment().add(-1 * dayCount, 'days').startOf('day');
+  const startDate = moment()
+    .add(-1 * dayCount, 'days')
+    .startOf('day');
   const query = {
     publishedDate: {
       $gte: startDate,
@@ -53,12 +55,10 @@ publishedPost.methods.getXdaysPostsCount = function (accountId, dayCount) {
     accountId: Number(accountId),
   };
 
-  console.log(query);
-
   return this.model('PublishedPosts')
     .find(query)
-    .then((result) => result.length)
-    .catch((error) => {
+    .then(result => result.length)
+    .catch(error => {
       throw error;
     });
 };
@@ -70,29 +70,38 @@ publishedPost.methods.getAccountPublishCount = function (accountId) {
 
   return this.model('PublishedPosts')
     .find(query)
-    .then((result) => result.length)
-    .catch((error) => {
+    .then(result => result.length)
+    .catch(error => {
       throw error;
     });
 };
 
-publishedPost.methods.getSchedulePublishedReport = function (mongoId, skip, limit) {
+publishedPost.methods.getSchedulePublishedReport = function (
+  mongoId,
+  skip,
+  limit
+) {
   const query = {
     fullPublishContentId: mongoId,
   };
 
   return this.model('PublishedPosts')
     .find(query)
-    .sort({ publishedDate: -1 })
+    .sort({publishedDate: -1})
     .skip(skip)
     .limit(limit)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
 
-publishedPost.methods.getAccountPublishedReport = function (accountId, teamId, skip, limit) {
+publishedPost.methods.getAccountPublishedReport = function (
+  accountId,
+  teamId,
+  skip,
+  limit
+) {
   let query;
 
   if (accountId != 0) {
@@ -112,61 +121,70 @@ publishedPost.methods.getAccountPublishedReport = function (accountId, teamId, s
 
   return this.model('PublishedPosts')
     .find(query)
-    .sort({ publishedDate: -1 })
+    .sort({publishedDate: -1})
     .skip(skip)
     .limit(limit)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
 
-publishedPost.methods.getTeamSchedulerStats = function (socialAccounts, TeamId, since, until) {
+publishedPost.methods.getTeamSchedulerStats = function (
+  socialAccounts,
+  TeamId,
+  since,
+  until
+) {
   let query = {};
   const accountId = [];
 
-  socialAccounts.map((x) => {
+  socialAccounts.map(x => {
     accountId.push(x.account_id);
   });
   query = {
-    accountId: { $in: accountId },
+    accountId: {$in: accountId},
     TeamId,
-    publishedDate: { $gte: new Date(since), $lte: new Date(until) },
+    publishedDate: {$gte: new Date(since), $lte: new Date(until)},
   };
-  query = [{ $match: query },
+  query = [
+    {$match: query},
     {
       $project: {
-        date: { $dateToString: { format: '%Y-%m-%d', date: '$publishedDate' } },
-        postCount: { $cond: [{ $eq: ['$PublishedStatus', 'Success'] }, 1, 0] },
-        postFailed: { $cond: [{ $ne: ['$PublishedStatus', 'Success'] }, 1, 0] },
+        date: {$dateToString: {format: '%Y-%m-%d', date: '$publishedDate'}},
+        postCount: {$cond: [{$eq: ['$PublishedStatus', 'Success']}, 1, 0]},
+        postFailed: {$cond: [{$ne: ['$PublishedStatus', 'Success']}, 1, 0]},
       },
     },
     {
       $group: {
         // _id: "$date",
         _id: '$date',
-        postCount: { $sum: '$postCount' },
-        postFailed: { $sum: '$postFailed' },
+        postCount: {$sum: '$postCount'},
+        postFailed: {$sum: '$postFailed'},
       },
-
     },
-    { $sort: { _id: 1 } },
+    {$sort: {_id: 1}},
     {
       $project: {
-        _id: 0, date: '$_id', postCount: '$postCount', postFailed: '$postFailed',
+        _id: 0,
+        date: '$_id',
+        postCount: '$postCount',
+        postFailed: '$postFailed',
       },
-    }];
+    },
+  ];
 
   return this.model('PublishedPosts')
     .aggregate(query)
-    .then((result) => {
+    .then(result => {
       if (!result) {
         throw new Error('no previous data found.');
       }
 
       return result;
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 };
@@ -178,8 +196,8 @@ publishedPost.methods.removeTeamsPublishedReport = function (teamId) {
 
   return this.model('PublishedPosts')
     .deleteMany(query)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
@@ -191,8 +209,8 @@ publishedPost.methods.removeAccountsPublishedReport = function (accountId) {
 
   return this.model('PublishedPosts')
     .deleteMany(query)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
@@ -205,13 +223,18 @@ publishedPost.methods.getTeamPublishedCount = function (teamId) {
 
   return this.model('PublishedPosts')
     .find(query)
-    .then((result) => result.length)
-    .catch((error) => {
+    .then(result => result.length)
+    .catch(error => {
       throw error;
     });
 };
 
-publishedPost.methods.getPublishedPosts = function (ownerId, TeamId, skip, limit) {
+publishedPost.methods.getPublishedPosts = function (
+  ownerId,
+  TeamId,
+  skip,
+  limit
+) {
   const query = {
     //  ownerId: ownerId,
     TeamId,
@@ -219,11 +242,11 @@ publishedPost.methods.getPublishedPosts = function (ownerId, TeamId, skip, limit
 
   return this.model('PublishedPosts')
     .find(query)
-    .sort({ publishedDate: -1 })
+    .sort({publishedDate: -1})
     .skip(skip)
     .limit(limit)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       console.log(error);
     });
 };
@@ -235,38 +258,127 @@ publishedPost.methods.getPublishedPosts = function (ownerId, TeamId, skip, limit
  * @return {string} Return total scheduled post count for array of team
  */
 publishedPost.methods.getTotalTeamSchedulerStats = function (TeamId) {
-  const query = [{
-    $match: {
-      TeamId: { $in: TeamId },
+  const query = [
+    {
+      $match: {
+        TeamId: {$in: TeamId},
+      },
     },
-  },
-  {
-    $project: {
-      postCount: { $cond: [{ $eq: ['$PublishedStatus', 'Success'] }, 1, 0] },
-      postFailed: { $cond: [{ $ne: ['$PublishedStatus', 'Success'] }, 1, 0] },
+    {
+      $project: {
+        postCount: {$cond: [{$eq: ['$PublishedStatus', 'Success']}, 1, 0]},
+        postFailed: {$cond: [{$ne: ['$PublishedStatus', 'Success']}, 1, 0]},
+      },
     },
-  },
-  {
-    $group: {
-      _id: '$TeamId',
-      postCount: { $sum: '$postCount' },
-      postFailed: { $sum: '$postFailed' },
+    {
+      $group: {
+        _id: '$TeamId',
+        postCount: {$sum: '$postCount'},
+        postFailed: {$sum: '$postFailed'},
+      },
     },
-  },
-  { $sort: { _id: 1 } },
-  { $project: { _id: 0, postCount: '$postCount', postFailed: '$postFailed' } }];
+    {$sort: {_id: 1}},
+    {$project: {_id: 0, postCount: '$postCount', postFailed: '$postFailed'}},
+  ];
 
   return this.model('PublishedPosts')
     .aggregate(query)
-    .then((result) => {
+    .then(result => {
       if (!result) {
         throw new Error('no previous data found.');
       }
 
       return result;
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
+    });
+};
+
+/**
+ * TODO To get all published post for a schedule
+ * @description To get all published post for a schedule
+ * @param  {number} fullPublishContentId -Schedule id
+ * @return {object} Return all published content for a schedule post
+ */
+publishedPost.methods.getPublishedSchedulePostById = function (
+  fullPublishContentId,
+  skip,
+  limit
+) {
+  return this.model('PublishedPosts')
+    .find({fullPublishContentId})
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .sort({publishedDate: -1})
+    .then(result => result)
+    .catch(error => {});
+};
+
+/**
+ * TODO To get all published post for a schedule
+ * @description To get all published post for a schedule
+ * @param  {number} fullPublishContentId -Schedule id
+ * @return {object} Return all published content for a schedule post
+ */
+publishedPost.methods.filterPublishedPosts = function (
+  ownerId,
+  TeamId,
+  skip,
+  limit,
+  searchPublishedPostInfo,
+  publishedStatus,
+  date
+) {
+  const query = {
+    TeamId,
+  };
+  if (searchPublishedPostInfo?.accountId?.length > 0)
+    query.accountId = {$in: searchPublishedPostInfo?.accountId};
+  if (searchPublishedPostInfo?.fullPublishContentId?.length > 0)
+    query.fullPublishContentId = {
+      $in: searchPublishedPostInfo?.fullPublishContentId,
+    };
+  if (searchPublishedPostInfo?.postCategory)
+    query.postCategory = new RegExp(
+      `.*${searchPublishedPostInfo?.postCategory}.*`,
+      'i'
+    );
+  if (searchPublishedPostInfo?.publishedContentDetails)
+    query.publishedContentDetails = new RegExp(
+      `.*${searchPublishedPostInfo?.publishedContentDetails}.*`,
+      'i'
+    );
+  if (searchPublishedPostInfo?.postShareUrl)
+    query.postShareUrl = new RegExp(
+      `.*${searchPublishedPostInfo?.postShareUrl}.*`,
+      'i'
+    );
+  if (searchPublishedPostInfo?.PublishedUrl)
+    query.PublishedUrl = new RegExp(
+      `.*${searchPublishedPostInfo?.PublishedUrl}.*`,
+      'i'
+    );
+  if (publishedStatus)
+    publishedStatus === 'Success'
+      ? (query.PublishedStatus = 'Success')
+      : (query.PublishedStatus = {$ne: 'Success'});
+
+  if (date) {
+    let timestamp = Number(new Date(date.since).setHours(0, 0, 0));
+    let startDate = new Date(timestamp);
+    timestamp = Number(new Date(date.untill).setHours(23, 59, 59));
+    let endDate = new Date(timestamp);
+    query.publishedDate = {$gte: startDate, $lte: endDate};
+  }
+  return this.model('PublishedPosts')
+    .find(query)
+    .sort({publishedDate: -1})
+    .skip(skip)
+    .limit(limit)
+    .then(result => result)
+    .catch(error => {
+      console.log(error);
     });
 };
 

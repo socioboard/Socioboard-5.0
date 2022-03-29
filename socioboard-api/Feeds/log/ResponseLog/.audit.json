@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 7
+    },
+    "auditLog": "/home/vmikhalov/git/socioboard5.0/BackEnd/Feeds/log/ResponseLog/.audit.json",
+    "files": [
+        {
+            "date": 1634809826399,
+            "name": "/home/vmikhalov/git/socioboard5.0/BackEnd/Feeds/log/ResponseLog/2021-10-21-logs.log",
+            "hash": "633ab377f1b6058620602ede993653d9"
+        }
+    ]
+}

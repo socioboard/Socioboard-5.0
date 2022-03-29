@@ -21,7 +21,7 @@
                              <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
                         <form class="ml-5" action="/search" method="post" >
                             @csrf
-                        <div class="d-flex align-items-center" id=""    >
+                        <div class="d-flex align-items-center searchButtonDiv" id=""    >
                             <!-- <span class="text-dark-50 font-weight-bold" id="">4 Total </span> -->
                                 <div class="btn input-group input-group-sm input-group-solid" style="max-width: 400px; width:400px">
                                     <input type="text" class="form-control" id="team_name" name="team_name" placeholder="Search..." onkeyup="functionDisable()">
@@ -41,7 +41,7 @@
             <!--begin::Toolbar-->
             <div class="d-flex align-items-center">
                 <!--begin::Button-->
-                <a href="create-team" class="btn btn-light-primary font-weight-bold ml-2">Create Team</a>
+                <a href="create-team" class="btn btn-light-primary font-weight-bold ml-2 createTeamDiv">Create Team</a>
                 <!--end::Button-->
             </div>
             <!--end::Toolbar-->
@@ -87,13 +87,13 @@
                                                         <span class="ribbon-inner bg-danger"></span> lock
                                                     </div>
                                                     <div class="symbol symbol-50 symbol-lg-120">
-                                                        <img src="/media/logos/sb-icon.svg" alt="SB"/>
+                                                        <img src="/media/logos/sb-icon.svg" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';" alt="SB"/>
                                                     </div>
                                                 </div>
                                             @else
                                                 <div class="flex-shrink-0 mr-7">
                                                     <div class="symbol symbol-50 symbol-lg-120">
-                                                        <img src="/media/logos/sb-icon.svg" alt="SB"/>
+                                                        <img src="/media/logos/sb-icon.svg" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';" alt="SB"/>
                                                     </div>
                                                 </div>
                                         @endif
@@ -104,13 +104,13 @@
                                                             <span class="ribbon-inner bg-danger"></span> lock
                                                         </div>
                                                         <div class="symbol symbol-50 symbol-lg-120">
-                                                            <img src="{{$data->team_logo}}" alt="SB"/>
+                                                            <img src="{{$data->team_logo}}" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';" alt="SB"/>
                                                         </div>
                                                     </div>
                                                 @else
                                                     <div class="flex-shrink-0 mr-7">
                                                         <div class="symbol symbol-50 symbol-lg-120">
-                                                            <img src="{{$data->team_logo}}" alt="SB"/>
+                                                            <img src="{{$data->team_logo}}" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';"  alt="SB"/>
                                                         </div>
                                                     </div>
                                             @endif
@@ -127,7 +127,7 @@
                                                     <div class="mr-3">
                                                         <!--begin::Name-->
                                                         <a href="/team/{{$data->team_id}}"
-                                                           class="d-flex align-items-center text-hover-primary font-size-h5 font-weight-bold mr-3">
+                                                           class="d-flex align-items-center text-hover-primary font-size-h5 font-weight-bold mr-3 teamNameDiv">
                                                             {{$data->team_name}}
                                                         </a>
                                                         <!--end::Name-->
@@ -157,7 +157,7 @@
                                                     <!--begin::User-->
 
                                                     <!--begin::Teams Actions Dropdown-->
-                                                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip"
+                                                    <div class="dropdown dropdown-inline ml-2 quickActionsDiv" data-toggle="tooltip"
                                                          title="Quick actions" data-placement="left">
                                                         <a href="javascript:;"
                                                            class="btn btn-hover-light-primary btn-sm btn-icon"
@@ -169,16 +169,16 @@
                                                                 class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right">
                                                             <!--begin::Navigation-->
                                                             <ul class="navi navi-hover">
-                                                                <li class="navi-item">
+                                                                <li class="navi-item switchTeamDiv">
                                                                     <a href="javascript:;" class="navi-link"
                                                                        onclick="switchTeam({{$data->team_id}})">
                                                                     <span class="navi-text">
                                                                         <span class=" text-primary"><i
-                                                                                    class="fas fa-random fa-fw text-primary"></i>&nbsp; Switch Team</span>
+                                                                                    class="fas fa-random fa-fw text-primary"></i>&nbsp; Switch to {{$data->team_name}} Team</span>
                                                                     </span>
                                                                     </a>
                                                                 </li>
-                                                                <li class="navi-item">
+                                                                <li class="navi-item viewTeamDiv">
                                                                     <a href="/team/{{$data->team_id}}"
                                                                        class="navi-link">
                                                                     <span class="navi-text">
@@ -187,7 +187,7 @@
                                                                     </span>
                                                                     </a>
                                                                 </li>
-                                                                <li class="navi-item">
+                                                                <li class="navi-item updateTeamDiv">
                                                                     <a href="" class="navi-link"
                                                                        data-toggle="modal"
                                                                        data-target="#teamUpdateModal{{$data->team_id}}">
@@ -197,7 +197,7 @@
                                                                     </span>
                                                                     </a>
                                                                 </li>
-                                                                <li class="navi-item">
+                                                                <li class="navi-item deleteTeamDiv">
                                                                     <a href="" class="navi-link"
                                                                        data-toggle="modal"
                                                                        data-target="#teamDeleteModal{{$data->team_id}}">
@@ -208,7 +208,7 @@
                                                                     </a>
                                                                 </li>
                                                                 @if($data->is_team_locked)
-                                                                    <li class="navi-item">
+                                                                    <li class="navi-item holdTeamDiv">
                                                                         <a href="javascript:;" class="navi-link"
                                                                            data-toggle="modal"
                                                                            data-target="#teamLockModal{{$data->team_id}}">
@@ -540,6 +540,8 @@
     <!--end::Entry-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+
     <script>
 
         $(document).ready(function(){
@@ -719,6 +721,7 @@
                 $(".file-upload").click();
             });
         });
+
     </script>
 
 @endsection

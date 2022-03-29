@@ -25,7 +25,7 @@
                              data-sticky-class="kt-sticky">
                             <div class="form-group">
                                 <select
-                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 selectAccountsDiv"
                                         onchange="call(this)">
                                     @if($message=== 'success')
                                         <script>
@@ -163,7 +163,7 @@
                                             <!--end::Contact-->
                                         </div>
                                     @else
-                                        <div class="text-center">
+                                        <div class="text-center noFbFeedsDiv">
                                             <div class="symbol symbol-150">
                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                             </div>
@@ -220,12 +220,12 @@
                                                                 <div class="d-flex flex-column flex-grow-1">
                                                                     @if($accounts[0]->account_type === 2)
                                                                         <a href="https://www.facebook.com/{{$accounts[0]->user_name}}"
-                                                                           class="text-hover-primary mb-1 font-size-lg font-weight-bolder"
+                                                                           class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv"
                                                                            target="_blank">
                                                                             {{$feeds['data']->socialAccountDetails->first_name}}
                                                                         </a>
                                                                     @elseif($accounts[0]->account_type === 1)
-                                                                        <a class="text-hover-primary mb-1 font-size-lg font-weight-bolder">
+                                                                        <a class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">
                                                                             {{$feeds['data']->socialAccountDetails->first_name}}
                                                                         </a>
                                                                     @endif
@@ -369,7 +369,7 @@
                                                                                                            href="javascript:;"
                                                                                                            value="{{$data->description}}"
                                                                                                            imageSrc="#"
-                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                                            onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,'{{$urls[0][0]}}',{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -381,7 +381,7 @@
                                                                                                            href="javascript:;"
                                                                                                            value="{{$data->description}}"
                                                                                                            imageSrc="#"
-                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                                            onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -395,7 +395,7 @@
                                                                                                        href="javascript:;"
                                                                                                        value="{{$data->description}}"
                                                                                                        imageSrc="#"
-                                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$data->sharedUrl}}',{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -408,7 +408,7 @@
                                                                                                            href="javascript:;"
                                                                                                            value="{{$data->description}}"
                                                                                                            imageSrc="#"
-                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                                            onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$urls[0][0]}}',{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -420,7 +420,7 @@
                                                                                                            href="javascript:;"
                                                                                                            value="{{$data->description}}"
                                                                                                            imageSrc="#"
-                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                                            onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -465,7 +465,7 @@
                                                                                        href="javascript:;"
                                                                                        value="{{$data->description}}"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]}}','{{$type}}',null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -477,7 +477,7 @@
                                                                                        href="javascript:;"
                                                                                        value="{{$string_desc}}"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -492,7 +492,7 @@
                                                                 @endif
                                                                 @endforeach
                                                             @else
-                                                                <div class="text-center">
+                                                                <div class="text-center noFbFeedsDiv">
                                                                     <div class="symbol symbol-150">
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
@@ -509,7 +509,7 @@
                                                                 </div>
                                                             @endif
                                                             @else
-                                                                <div class="text-center">
+                                                                <div class="text-center noFbFeedsDiv">
                                                                     <div class="symbol symbol-150">
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
@@ -621,7 +621,7 @@
                                         '<div>\n';
                                     if (response.data.data.socialAccountDetails.account_type === 2) {
                                         append += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"  target="_blank"\n' +
-                                            'class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                                            'class="font-weight-bolder font-size-h5 text-hover-primary postLinkClassDiv"\n' +
                                             '>\n' + response.data.data.socialAccountDetails.first_name +
                                             '<i\n' +
                                             'class="flaticon2-correct text-primary icon-md ml-2"></i>\n' +
@@ -719,7 +719,7 @@
                                                         '<div class="d-flex flex-column flex-grow-1">\n';
                                                     if (response.data.data.socialAccountDetails.account_type === 2) {
                                                         appendData += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                                            'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                            'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
                                                     } else {
                                                         appendData += '<a target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
                                                     }
@@ -849,7 +849,7 @@
                                                             }
                                                             if (urlsFromDesc !== null) {
                                                                 appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,\'' + urlsFromDesc[0]
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,\'' + urlsFromDesc[0]
                                                                     + '\', ' + multiImageCount + ' )"\n' +
                                                                     '<span\n' +
                                                                     'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -857,7 +857,7 @@
                                                                     '</span>Re-socio</a>\n';
                                                             } else {
                                                                 appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
                                                                     '<span\n' +
                                                                     'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                     '<i class="fas fa-pencil-alt"></i>\n' +
@@ -865,7 +865,7 @@
                                                             }
                                                         } else if (element.postType === 'share') {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                 '<i class="fas fa-pencil-alt"></i>\n' +
@@ -873,7 +873,7 @@
                                                         } else {
                                                             if (urlsFromDesc !== null) {
                                                                 appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc[0]
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc[0]
                                                                     + '\')"\n' +
                                                                     '<span\n' +
                                                                     'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -881,7 +881,7 @@
                                                                     '</span>Re-socio</a>\n';
                                                             } else {
                                                                 appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '" href="javascript:;"\n' +
-                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                    'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
                                                                     '<span\n' +
                                                                     'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                     '<i class="fas fa-pencil-alt"></i>\n' +
@@ -919,14 +919,14 @@
                                                             type = 'video';
                                                         }
                                                         appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,' + multiImageCount + ')"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type + '\',null,null,' + multiImageCount + ')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
                                                             '</span>Re-socio</a>\n';
                                                     } else {
                                                         appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null,' + multiImageCount + ')"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null,' + multiImageCount + ')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1036,7 +1036,7 @@
                                                     '<div class="d-flex flex-column flex-grow-1">\n';
                                                 if (response.data.data.socialAccountDetails.account_type === 2) {
                                                     appendData += '<a href="https://www.facebook.com/' + response.data.data.socialAccountDetails.user_name + '"\n' +
-                                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
+                                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
                                                 } else {
                                                     appendData += '<a target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n';
                                                 }
@@ -1160,7 +1160,7 @@
                                                         }
                                                         if (urlsFromDesc2 !== null) {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,\'' + urlsFromDesc2[0]
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,\'' + urlsFromDesc2[0]
                                                                 + '\','+multiImageCount+')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -1168,7 +1168,7 @@
                                                                 '</span>Re-socio</a>\n';
                                                         } else {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null,'+multiImageCount+')"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + postType + '\',null,null,'+multiImageCount+')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                 '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1176,7 +1176,7 @@
                                                         }
                                                     } else if (element.postType === 'share') {
                                                         appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1184,7 +1184,7 @@
                                                     } else {
                                                         if (urlsFromDesc2 !== null) {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
                                                                 + '\')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -1192,7 +1192,7 @@
                                                                 '</span>Re-socio</a>\n';
                                                         } else {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                 '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1229,7 +1229,7 @@
                                                         }
                                                         if (urlsFromDesc2 !== null) {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,\'' + urlsFromDesc2[0]
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,\'' + urlsFromDesc2[0]
                                                                 + '\','+multiImageCount+')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -1237,7 +1237,7 @@
                                                                 '</span>Re-socio</a>\n';
                                                         } else {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null,'+multiImageCount+')"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0] + '\',\'' + type2 + '\',null,null,'+multiImageCount+')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                 '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1246,7 +1246,7 @@
 
                                                     } else if (element.postType === 'share') {
                                                         appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
+                                                            'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.sharedUrl + '\')"\n' +
                                                             '<span\n' +
                                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                             '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1254,7 +1254,7 @@
                                                     } else {
                                                         if (urlsFromDesc2 !== null) {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + urlsFromDesc2[0]
                                                                 + '\')"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
@@ -1262,7 +1262,7 @@
                                                                 '</span>Re-socio</a>\n';
                                                         } else {
                                                             appendData += '<a id="reSocioButton" value="' + element.description.replace(/\n/g, '') + '" href="javascript:;"\n' +
-                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + desc.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
                                                                 '<span\n' +
                                                                 'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                                 '<i class="fas fa-pencil-alt"></i>\n' +
@@ -1491,5 +1491,6 @@
                         );
                         return urls;
                     }
+
                 </script>
 @endsection

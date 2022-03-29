@@ -25,7 +25,7 @@
                                 </div>
 
                                 <div class="card-toolbar">
-                                    <a href="javascript:;" class="btn btn-sm" data-toggle="modal" data-target="#createBoardModal" >
+                                    <a href="javascript:;" class="btn btn-sm createBoardButtonDiv" data-toggle="modal" data-target="#createBoardModal" >
                                         Create Board
                                     </a>
                                 </div>
@@ -57,8 +57,8 @@
                                             <div class="row">
                                                 <!--begin::Content-->
                                                 <div class="col-sm-12">
-                                                    <h2 class="mb-4">{{$account->keyword}}</h2>
-                                                    <h4 class="text-primary line-height-lg">
+                                                    <h2 class="mb-4 keywordNamediv">{{$account->keyword}}</h2>
+                                                    <h4 class="text-primary line-height-lg boardName">
                                                         {{$account->board_name}}
                                                     </h4>
                                                 </div>
@@ -67,9 +67,9 @@
                                                     $keyword = str_replace("#","",$account->keyword);@endphp
                                                 <!--begin::Button-->
                                                 <div class="col-sm-12 d-flex align-items-center justify-content-center">
-                                                    <a href="/boards/board-me/{{$keyword}}/{{'real'}}/{{$account->id}}" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" title="Search In youtube">View</a>
-                                                    <a href="boardme/board.html" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5" data-toggle="modal" data-target="#updateBoardModal{{$account->id}}">Edit</a>
-                                                    <a href="javascript:;" class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6" data-toggle="modal" data-target="#deleteBoardModal{{$account->id}}">Delete</a>
+                                                    <a href="/boards/board-me/{{$keyword}}/{{'real'}}/{{$account->id}}" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5 viewButtonDiv" title="Search In youtube">View</a>
+                                                    <a href="boardme/board.html" class="btn text-warning font-weight-bolder text-uppercase font-size-lg py-3 px-6 mr-5 editButtonDiv" data-toggle="modal" data-target="#updateBoardModal{{$account->id}}">Edit</a>
+                                                    <a href="javascript:;" class="btn text-danger font-weight-bolder text-uppercase font-size-lg py-3 px-6 deleteButtonDiv" data-toggle="modal" data-target="#deleteBoardModal{{$account->id}}">Delete</a>
                                                 </div>
                                                 <!--end::Button-->
                                             </div>
@@ -90,7 +90,7 @@
                                                         <span class="font-weight-bolder font-size-h4 ">Are you sure want to delete this board?</span>
                                                     </div>
                                                     <div class="d-flex justify-content-center">
-                                                        <a href="javascript:;" type="button" onclick=" deleteIt('{{$account->id}}')" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal" id="board-delete">Delete it</a>
+                                                        <a href="javascript:;" type="button" onclick=" deleteIt('{{$account->id}}')" class="btn text-danger font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" id="board-delete">Delete it</a>
                                                         <a href="javascript:;" type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" data-dismiss="modal">No thanks.</a>
                                                     </div>
                                                 </div>
@@ -221,6 +221,7 @@
             toastr.error("Your account has been deleted!", "Deleted");
         });
     </script>
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $("#boards").trigger('click');
@@ -329,6 +330,7 @@
                     if (response['code'] === 200) {
                         toastr.success("", "Board Deleted Successfully");
                         $('#board'+id).remove();
+                        window.location.reload();
                     } else if (response['code'] === 400) {
                         toastr.error(response.error);
                     } else {
@@ -339,6 +341,31 @@
                     toastr.error(error.ErrorMessage);
                 }
             })
+        }
+
+        function getSteps() {
+            let StepsViewBoardsPage = [
+                {
+                    intro: 'Welcome to View Boards  Page'
+                },
+                {
+                    element: document.querySelector('.selectAccountsDiv'),
+                    intro: 'From here you can select Twitter  accounts of which You want to look for Feeds'
+                },
+            ];
+            return StepsViewBoardsPage;
+        }
+
+        $('.introjs-step-0').click(function () {
+            introStart();
+        });
+
+        const introStart = () => {
+            introJs().setOptions({
+                skipLabel: 'Skip',
+                doneLabel: 'Finish',
+                steps: getSteps()
+            }).start();
         }
     </script>
 @endsection

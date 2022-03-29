@@ -47,6 +47,7 @@ class FeedsController extends Controller
         $tumblrAccounts = [];
         $instagramBusinessAccounts = [];
         $mediumAccounts = [];
+        $tiktokAccounts = [];
         $countryData = [];
         if (strpos($network, 'twitter') !== false) {
             try {
@@ -435,6 +436,46 @@ class FeedsController extends Controller
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
                 return view('feeds::tumblr_feeds')->with(['message' => 'failed']);
+            }
+        }
+        else if (strpos($network, 'TikTok') !== false) {
+            try {
+                $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $teamID);
+                $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+                if ($response['data']->code === 200) {
+                    foreach ($response['data']->data->teamSocialAccountDetails[0]->SocialAccount as $data) {
+                        if ($data->account_type === 18 && $data->join_table_teams_social_accounts->is_account_locked === false) {
+                            array_push($tiktokAccounts, $data);
+                        }
+                    }
+                    if (count($tiktokAccounts) > 0) {
+                        if (preg_match('~[0-9]+~', $network)) {
+                            $accId = (integer)substr($network, 6, strlen($network));
+                            for ($i = 0; $i < count($tiktokAccounts); $i++) {
+                                if ($tiktokAccounts[$i]->account_id === $accId) {
+                                    array_push($accounts, $tiktokAccounts[$i]);
+                                    unset($tiktokAccounts[$i]);
+                                    break;
+                                }
+                            }
+                            if (count($tiktokAccounts) > 0) {
+                                foreach ($tiktokAccounts as $data) {
+                                    array_push($accounts, $data);
+                                }
+                            }
+                        } else {
+                            $accId = $tiktokAccounts[0]->account_id;
+                            $accounts = $tiktokAccounts;
+                        }
+                        $feedsData = $this->getTikTokFeeds($accId, 1);
+                        return view('feeds::tik-tok_feeds')->with(["accounts" => $accounts, 'message' => 'success', 'feeds' => $feedsData]);
+                    } else {
+                        return view('feeds::tik-tok_feeds')->with(["accounts" => $accounts, 'message' => 'No Tik-tok Account has been  added yet! or Account has locked']);
+                    }
+                }
+            } catch (Exception $e) {
+                $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getFeedsSocialAccounts() {FeedsController}');
+                return view('feeds::tik-tok_feeds')->with(['message' => 'failed']);
             }
         }
 
@@ -1388,6 +1429,83 @@ class FeedsController extends Controller
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'showPinterestBoards() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+    public function getTikTokFeeds($accID, $pageID)
+    {
+
+        $team = Session::get('team');
+        $teamID = $team['teamid'];
+        $limit = 12;
+        $result = [];
+        try {
+            if ($pageID === 1) {
+                $apiUrl = $this->API_URL_FEEDS . env('API_VERSION') . '/feeds/tiktok/videos?accountId=' . $accID . '&teamId=' . $teamID . '&limit=' . $limit;
+
+            }
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if ($response['data']->code === 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data']->data;
+            } else if ($response['data']->code === 400) {
+                $result['code'] = 400;
+                $result['message'] = $response['data']->error;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured cant get feeds';
+            }
+            return $result;
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getTwitterFeeds() {FeedsController}');
+            $result['code'] = 500;
+            $result['message'] = 'Some error occured cant get feeds';
+            return $result;
+        }
+    }
+
+
+
+    function getNextTikTokFeeds(Request $request)
+    {
+
+        try {
+            $accID = (int)$request->accid;
+            $pageId = (int)$request->pageId;
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $result = [];
+            $userDetails = [];
+            $feedsDetails = [];
+            $apiUrl = ApiConfig::getFeeds('/feeds/tiktok/account?accountId=' . $accID . '&teamId=' . $teamID);
+            $accountData = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            $feedsData = $this->getTikTokFeeds($accID, $pageId);
+            if ($feedsData['code'] === 200 && $accountData['data']->code === 200) {
+                $userDetails = $accountData['data']->data;
+                if (isset($feedsData['data']->videos)) {
+                    $feedsDetails = $feedsData['data']->videos;
+                } else {
+                    $feedsDetails = 'No Feeds for this TikTok account';
+                }
+                $result['code'] = 200;
+                $result['userData'] = $userDetails;
+                $result['feeds'] = $feedsDetails;
+                return $result;
+            } elseif ($feedsData['code'] === 400) {
+                $result['code'] = 400;
+                $result['userData'] = $userDetails;
+                $result['message'] = $feedsData['error'];
+                return $result;
+            } else {
+                $result['code'] = 500;
+                $result['message'] = 'Some error occured can not get feeds';
+                return $result;
+            }
+        } catch (Exception $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'getNextTikTokFeeds() {FeedsController}');
             $result['code'] = 500;
             $result['message'] = 'Some error occured cant get feeds';
             return $result;

@@ -25,6 +25,7 @@
         }
 
         $title = strlen($item->description) > 30 ? substr($item->description, 0, 30)."..." : $item->description;
+        $timezones = session()->get('timezone');
         ?>
         <tr>
             <td class="pl-0 py-8">
@@ -133,8 +134,8 @@
                         {{$date->format('Y-m-d H:i:s')}}
                      </span>
                     @elseif (isset($item->scheduleCategory) && $item->scheduleCategory == 1)
-                    <span data-toggle="modal" data-target="#scheduleViewModal{{$item->_id}}"><i class="far fa-eye mr-2" title="Click here to see the day(s) and Timing(s)"></i></span>
-                    <span class="date-popover">
+                    <span id="viewButton" data-toggle="modal" data-target="#scheduleViewModal{{$item->_id}}"><i class="far fa-eye eyeDiv mr-2" title="Click here to see the day(s) and Timing(s)"></i></span>
+                    <span class="date-popover ">
                         Schedule days
                     </span>
                     <div class="modal fade" id="scheduleViewModal{{$item->_id}}" tabindex="-1" role="dialog" aria-labelledby="scheduleViewModalLabel"
@@ -204,14 +205,14 @@
                 <td class="pr-0">
                     <a  href="{{ $action }}" class="btn btn-icon text-hover-info btn-sm">
                     <span class="svg-icon svg-icon-md svg-icon-info">
-                            <i class="fas fa-pen-square"></i>
+                            <i class="fas fa-pen-square editButton"></i>
                     </span>
                     </a>
                     &nbsp;&nbsp;
                     @if(in_array($item->_id, $scheduled_ids))
                     @foreach($data['schedule_information'] as $scheduled_details)
                         @if($scheduled_details->mongo_schedule_id === $item->_id)
-                            <a href="javascript:;"  class="btn btn-icon text-hover-info btn-sm" onclick="openDeleteModel('{{$scheduled_details->schedule_id}}','draft_schedule')">
+                            <a href="javascript:;"  class="btn btn-icon text-hover-info btn-sm deleteButton" onclick="openDeleteModel('{{$scheduled_details->schedule_id}}','draft_schedule')">
                     <span class="svg-icon svg-icon-md svg-icon-info">
                             <i class="fas fa-trash" data-toggle="modal" data-target="#deleteImageModal" ></i>
                     </span>
@@ -305,6 +306,62 @@
                 </td>
 
             @endif
+            @if($page_title === "history")
+            <td>
+{{--                <p class="font-weight-bold">--}}
+{{--                    <a href="/home/publishing/schedule/post-detail/{{$item->_id}}" class="btn btn-icon btn-sm" title="Post Details">--}}
+{{--                                                                <span class="svg-icon svg-icon-md svg-icon-info">--}}
+{{--                                                                        <i class="fas fa-info-circle"></i>--}}
+{{--                                                                </span>--}}
+{{--                    </a>--}}
+{{--                </p>--}}
+                    <p class="font-weight-bold">
+                        <a href="#" class="btn btn-icon btn-sm" data-toggle="modal" data-target="#tableInformationModal" onclick="openInfoModal('{{$item->_id}}','{{$timezones}}')">
+                                                                    <span class="svg-icon svg-icon-md svg-icon-info">
+                                                                        <i class="fas fa-info-circle"></i>
+                                                                    </span>
+                        </a>
+                    </p>
+                <!-- begin::Table Information modal-->
+                <div class="modal fade info-modal-task" id="tableInformationModal" tabindex="-1" role="dialog"
+                     aria-labelledby="informationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-bolder" id="approveModalLabel">Table Information</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i aria-hidden="true" class="ki ki-close"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive">
+                                    <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                                        <thead>
+                                        <tr class="text-uppercase">
+                                            <th style="min-width: 150px; font-size:13px;" class=""><span class="">Social Account</span></th>
+                                            <th style="min-width: 150px; font-size:13px;">Status</th>
+                                            <th style="min-width: 150px; font-size:13px;">Post Date</th>
+                                            <th style="min-width: 150px; font-size:13px;">Post Link</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody id="lists">
+                                        <div class="d-flex">
+                                            <h4>Discription :  </h4>
+                                            <h4 id="discription">  </h4>
+                                        </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end::Table Information modal-->
+            </td>
+
+                @endif
         </tr>
     @endforeach
 @endif
@@ -313,9 +370,101 @@
     // $('#multiple_urls_tag_id').tooltip();
 
     function openDeleteModel(id,type) {
-        alert(id)
         $('#delete_id').val(id);
         $('#typo').val(type);
+    }
+
+    function openInfoModal(id, timezone){
+        $.ajax({
+            type: "get",
+            url: '/home/publishing/schedule/post-detail/'+id,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                // $("#informationModal").modal("show");
+                if (response.data.code === 200){
+                    let postDetails = '';
+                    if (response.data.data.length > 0){
+                        $('#discription').empty().append(' '+ response.data.data[0].publishedContentDetails);
+                        $('#lists').empty();
+                        let accountData = '';
+                        response.data.data.map(element => {
+                            if (response.account.length > 0){
+                                response.account.map(accounts =>{
+                                    if (accounts.account_id === element.accountId){
+                                        let accountType = '';
+                                        if (accounts.account_type === 1) {
+                                            accountType = 'facebook';
+                                        } else if (accounts.account_type === 2) {
+                                            accountType = 'Facebook Pages';
+
+                                        } else if (accounts.account_type === 9) {
+                                            accountType = 'YouTube';
+
+                                        } else if (accounts.account_type === 4) {
+                                            accountType = 'Twitter';
+
+                                        } else if (accounts.account_type === 16) {
+                                            accountType = 'Tumblr';
+
+                                        } else if (accounts.account_type === 11) {
+                                            accountType = 'Pinterest';
+
+                                        } else if (accounts.account_type === 12) {
+                                            accountType = 'Instagram Business';
+
+                                        } else if (accounts.account_type === 7) {
+                                            accountType = 'LinkedIn';
+
+                                        } else if (accounts.account_type === 5) {
+                                            accountType = 'Instagram';
+                                        }
+                                        accountData = '';
+                                        accountData += '                                                <div class="d-flex">\n' +
+                                            '                                                    <div class="symbol symbol-50 symbol-light mr-5">\n' +
+                                            '                                                <span class="symbol-label">\n' +
+                                            '                                                    <img src="' + accounts.profile_pic_url + '" class="card-img-top" alt="avatar name">\n' +
+                                            '                                                </span>\n' +
+                                            '                                                    </div>\n' +
+                                            '                                                    <div class="SB-accounts-section d-flex flex-column flex-grow-1 mr-2">\n' +
+                                            '                                                        <a class="font-weight-bold font-size-lg mb-1 truncate">' + accounts.first_name + '</a>\n' +
+                                            '                                                        <span class="text-muted font-weight-bold">' + accountType + '</span>\n' +
+                                            '                                                    </div>\n' +
+                                            '                                                </div>\n';
+                                    }
+                                })
+                            }
+                            postDetails = '' +
+                                '<tr>\n' +
+                                '                                            <td class="pl-0 py-8">\n' +
+                                '\n' +accountData+
+                                    '</td>'+
+                                '                                            <td class="pr-0">\n' +
+                                '                                                <p class="font-weight-bold">'+(element.PublishedStatus === "Success" ? "Success" : "-")+'</p>\n' +
+                                '                                            </td>\n' +
+                                '                                            <td class="pr-0">\n' +
+                                '                                                <p class="font-weight-bold">'+new Date(element.publishedDate).toLocaleString("en-US", {timeZone: timezone})+'</p>\n' +
+                                '                                            </td>\n' +
+                                '                                            <td>\n' +
+                                '                                                <p class="font-weight-bold">\n' +
+                                '                                                    <a target="_blank" href="'+element.PublishedUrl+'">Click to view post</a>\n' +
+                                '                                                </p>\n' +
+                                '                                            </td>\n';
+
+                            $('#lists').append(postDetails);
+                        })
+                    }else{
+                        $('#lists').append("No Data Available");
+                    }
+                }else{
+                    toastr.alert(response.message);
+                }
+            },
+            error: function (error) {
+                toastr.alert(error.message);
+            }
+        })
     }
 
     $(document).on('submit','#delete_post_form', function (e) {

@@ -16,6 +16,7 @@ mongoose.set('useCreateIndex', true);
  * @param {{type:String}} captionText - Caption Text
  * @param {{type:String}} type - type of the Feed whether Image or Video
  * @param {{type:String}} postUrl - Url of the Feed
+ * @param {{type:String}} outgoingUrl - Outgoing Url of the Feed
  * @param {{type:Date}} createdDate - Created date of record
  * @param {{type:String}} version - Version of Feed
  */
@@ -29,6 +30,7 @@ const PinterestPins = new Schema({
   captionText: { type: String },
   type: { type: String },
   postUrl: { type: String },
+  outgoingUrl: { type: String },
   createdDate: { type: Date, default: Date.now },
   version: { type: String, index: true },
 });

@@ -46,7 +46,7 @@
                                         @foreach($responseData['data'] as $data)
                                             <li>
                                                 <h4 class="text-muted font-weight-bold d-block mt-5" id="title_id{{$data->_id}}" onblur="editFunction('{{$data->_id}}','{{$data->rssUrl}}','{{$data->description}}')">{{$data->title}}</h4>
-                                                <a href="" class="font-weight-bolder text-hover-primary mb-1 font-size-lg"onclick="viweFunction('{{$data->rssUrl}}')">{{$data->rssUrl}}</a>
+                                                <a href="" class="font-weight-bolder text-hover-primary mb-1 font-size-lg" onclick="viweFunction('{{$data->rssUrl}}')">{{$data->rssUrl}}</a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-xl-8">
                         <!--begin::feeds-->
-                        <div class="card-columns" id="rss_feeds">
+                        <div class="card-columns" id="rss_feedss">
                             @if(isset($responseFeedsData['data']))
                                 @foreach($responseFeedsData['data'] as $feeds )
                                     @php $title = str_replace("'",'',$feeds->title); @endphp
@@ -215,11 +215,13 @@
 
                 let feedsLength;
                 function viweFunction(url){
+                    $("#rss_feedss").empty();
+                    $('#rss_url').val(url);
                     getRssFeeds(url);
                 }
 
                 $(document).on('submit','#search_form', function (e) {
-                    $("#rss_feeds").html("");
+                    $("#rss_feedss").empty();
                     e.preventDefault();
                     url = $('#rss_url').val();
                     getRssFeeds(url);
@@ -239,7 +241,7 @@
                         success: function (response) {
                             $('#search').empty().append('Search');
                             if(response.code === 200 ){
-                                $('#rss_feeds').empty();
+                                $('#rss_feedss').empty();
                                 feedslength = response.data.length;
                                 let appendData = '';
                                 $(".spinner-border").css("display", "none");
@@ -260,7 +262,7 @@
                                         '</div>'+
                                         '</div>'
                                     ;
-                                    $('#rss_feeds').append(appendData);
+                                    $('#rss_feedss').append(appendData);
                                 })
                             } else if (response.code === 401){
                                 if (response.error === "\"rssUrl\" is not allowed to be empty")
@@ -327,7 +329,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         beforeSend: function () {
-                            $('#rss_feeds').append('<div class="d-flex justify-content-center" >\n' +
+                            $('#rss_feedss').append('<div class="d-flex justify-content-center" >\n' +
                                 '        <div class="spinner-border" role="status"  id="' + url + '" style="display: none;">\n' +
                                 '            <span class="sr-only">Loading...</span>\n' +
                                 '        </div>\n' +
@@ -358,7 +360,7 @@
                                         '</div>'+
                                         '</div>'
                                     ;
-                                    $('#rss_feeds').append(appendData);
+                                    $('#rss_feedss').append(appendData);
                                 })
                             }else if (response.code === 401){
                                 toastr.error(response.error);

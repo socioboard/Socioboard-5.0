@@ -21,7 +21,11 @@
         }else if (isset($data) && $data['code'] === 200){
             $video =  $data['data']->postDetails->mediaUrl['0'];
         }
+        $timezone = session()->get('timezone');
+        $publishDate = (isset($data) && $data['code'] === 200 && $data['data']->postDetails->privacy === 'private' && $data['data']->postDetails->publishAt !== null ) ? $data['data']->postDetails->publishAt : "nodetes"
     @endphp
+    <script> let publishldate = '<?php echo $publishDate?>'</script>
+    <script> let timezone = '<?php echo $timezone?>'</script>
     <!--begin::Content-->
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
         <!--begin::Entry-->
@@ -57,7 +61,7 @@
                                         <span id="validPassword" style="color: red;font-size: medium; text-alignment: center" role="alert">
                                             <strong>{{ $errors->first('account_id') }}</strong>
                                         </span>
-                                        <div class="tab-content mt-5" id="AddAccountsTabContent">
+                                        <div class="tab-content mt-5 AddAccountsTabContent" id="AddAccountsTabContent">
                                                 <div class="mt-3">
 
                                                     @if(isset($data) && $data['code'] === 200)
@@ -127,7 +131,7 @@
                                     </div>
                                     <!-- end:Accounts list -->
                                     <div class="form-group">
-                                        <div class="input-icon">
+                                        <div class="input-icon videoClass">
                                             <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
                                                    type="text" name="title" id="title" autocomplete="off" value= "{{(isset($data) && $data['code'] === 200 ? $data['data']->postDetails->title : "")}}"
                                                    placeholder="Video Title"/>
@@ -137,14 +141,14 @@
                                             <strong>{{ $errors->first('title') }}</strong>
                                         </span>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group textAreaDiv">
                                         <textarea
-                                                class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
+                                                class="form-control border border-light h-auto py-4 rounded-lg font-size-h6 normal_post_area"
                                                 id="normal_post_area" rows="3" name="discription"
                                                 placeholder="Write Something !">{{$content}}{{(isset($data) && $data['code'] === 200 ? $data['data']->postDetails->description : "")}}</textarea>
                                     </div>
-                                    <div class="form-group">
-                                        <select class="form-control select2 form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                    <div class="form-group youtube_tags">
+                                        <select class="form-control select2 form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 "
                                                 id="youtube_tags" name="param[]" multiple="multiple">
                                             <option label="Label"></option>
                                             @if(isset($data) && $data['code'] === 200 && sizeof($data['data']->postDetails->tags))
@@ -158,7 +162,7 @@
                                     <!-- image and video upload -->
                                     <h6 class="card-title font-weight-bold mb-1">Upload Video</h6>
                                     <div id="animation"></div>
-                                    <div class="row mb-5" id="new_pic">
+                                    <div class="row mb-5 img-video-option" id="new_pic">
                                         <div class="col-12" id="option_upload">
                                             @if(isset($video) && $video !== '')
                                                 <input type='hidden' name='videoUrl' value="{{$video}}">
@@ -189,7 +193,7 @@
                                         <h6 class="card-title font-weight-bold mb-1">Thumbnail (Optional)</h6>
                                         <div id="animation_thumbnail"></div>
                                         <div id="new_pic_thumbnail">
-                                            @if(isset($data) && $data['code'] === 200 )
+                                            @if(isset($data) && $data['code'] === 200 && $data['data']->postDetails->thumbnailUrl !== "" )
                                             <div id="image_data" style="position: relative; display: inline-block;">
                                                 <img src="{{env('API_URL').$data['data']->postDetails->thumbnailUrl}}" style="width:30%; height:auto">
                                                 <button type="button" id="close_thumbnail" class="btn btn-xs btn-icon btn-light btn-hover-primary" data-dismiss="modal" aria-label="Close" id="Sb_quick_user_close" style="position: absolute; top:0px; margin-left: -10px">
@@ -212,7 +216,7 @@
                                                 @endif
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group videoStatusDiv">
                                         <h4  class="card-title font-weight-bolder">Privacy Status</h4>
                                         <div class="youtube-publish-btns">
                                             <label class="radio radio-lg my-5">
@@ -271,7 +275,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-sm-12">
+                    <div class="col-xl-6 col-sm-12 previewTabClass">
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
@@ -403,6 +407,14 @@
         $(document).ready(function(){
             $("#home_tab").trigger('click');
         });
+
+        if ( publishldate !== "nodetes"){
+            $("#publish_post_div").show();
+            $('#day_publish_post_daterange').val(new Date(publishldate).toLocaleString("en-US", {timeZone: timezone}));
+        }else {
+            $("#publish_post_div").hide();
+        }
+
         $('#youtube_tags').select2({
             placeholder: 'Tags',
             tags: true,
@@ -417,12 +429,14 @@
         });
 
         // schedule div toggle
-        $("#publish_post_div").hide();
+
         $("input[name=privacystatus]").change(function () {
             if ($('input[name=privacystatus]:checked').val() === "private") {
                 $("#publish_post_div").show();
+                $("#publishDates").show();
             } else {
                 $("#publish_post_div").hide();
+                $("#publishDates").hide();
             }
         });
         $(document).on('keyup change paste insert', '#normal_post_area', function (e) {

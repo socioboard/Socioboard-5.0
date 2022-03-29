@@ -1,7 +1,7 @@
 import moment from 'moment';
 import config from 'config';
 import db from '../Sequelize-cli/models/index.js';
-
+import TeamReportModel from './team-report.model.js';
 import AuthorizeServices from '../Services/authorize.services.js';
 import FacebookConnect from '../Cluster/facebook.cluster.js';
 import TwitterConnect from '../Cluster/twitter.cluster.js';
@@ -15,14 +15,17 @@ import logger from '../../Publish/resources/Log/logger.log.js';
 import NotificationServices from '../Shared/notify-services.js';
 import {reject} from 'async';
 import tumblrCluster from '../Cluster/tumblr.cluster.js';
+import sizeOf from 'image-size';
+import  getMediaDimensions from 'get-media-dimensions';
+import fs from 'fs';
+
 const teamSocialAccountJoinTable = db.join_table_teams_social_accounts;
 const teamUserJoinTable = db.join_table_users_teams;
 const socialAccount = db.social_accounts;
 const userMediaDetails = db.user_media_details;
 const Operator = db.Sequelize.Op;
 import lodash from 'lodash';
-
-
+const teamReportModel = new TeamReportModel();
 class PublishModel {
   constructor() {
     this.authorizeServices = new AuthorizeServices(config.get('authorize'));
@@ -299,7 +302,7 @@ class PublishModel {
                     );
                   })
 
-                  .then(teamDetails => {
+                  .then(async teamDetails => {
                     if (!teamDetails) {
                       logger.info('TeamDetails is null!');
                     } else if (teamDetails.is_account_locked == 1)
@@ -343,17 +346,43 @@ class PublishModel {
                             SocialAccount.refresh_token,
                             teamId
                           );
-                          case 11:
-                            this.publishOnPinterest(
-                              clonedPostDetails,
-                              SocialAccount.account_id,
-                              SocialAccount.access_token,
-                              SocialAccount.refresh_token,
-                              teamId
-                            );
-                            break;
+                        case 11:
+                          this.publishOnPinterest(
+                            clonedPostDetails,
+                            SocialAccount.account_id,
+                            SocialAccount.access_token,
+                            SocialAccount.refresh_token,
+                            teamId
+                          );
+                          break;
                         case 12:
-                          return this.publishonInsta(
+                           if(clonedPostDetails.postType == "Image"){
+                            let base_image =config.get(`insta_base_path`) +clonedPostDetails.mediaPath[0];
+                            const dimensions = sizeOf(base_image);
+                            if (dimensions.width != dimensions.height) {
+                            throw new Error('Instagram Post Image Resolution should be 1:1');
+                          }}
+                          else if(clonedPostDetails.postType == "Video"){
+                             let base_video=config.get(`insta_media_url`) + clonedPostDetails.mediaPath[0];
+                             let ratios = await getMediaDimensions(base_video,'video')
+                             let aspectRatio=ratios.height /ratios.width;
+                              logger.info(`video width=>${ratios.width}\n video height =>${ratios.height}\n and Aspect ratio=> ${aspectRatio}`)
+                              if(aspectRatio <= 0.8 || aspectRatio >= 1.77){
+                              throw new Error('Instagram Video aspect ratio should be  between 4/5 to 16/9');
+                             }
+                             let videoFile= config.get('insta_base_path')+clonedPostDetails.mediaPath[0];
+                             const stats = fs.statSync(videoFile);
+                             const fileSizeInBytes = stats.size;
+                             const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
+                             logger.info(`Instagram Video Size in MB ${fileSizeInMegabytes}`)
+                             if(fileSizeInMegabytes>100){
+                               throw new Error('Instagram Video File size should be within 100MB');
+                             }     
+                         }
+                         else{
+                          throw new Error('Instagram PostType is Invalid ');
+                          }
+                         return this.publishonInsta(
                             clonedPostDetails,
                             SocialAccount.account_id,
                             SocialAccount.access_token,
@@ -606,82 +635,44 @@ class PublishModel {
    * @param  {number} social_id - Insta Account User Id
    * @return {object} return status of Insta Publish
    */
-  async publishonInsta(postDetails, accountId, accessToken, teamId, social_id) {
-    const publishedPostObject = new PublishedPost();
-
-    try {
-      await publishedPostObject
-        .getTodayPostsCount(accountId)
-        .then(postCount => {
-          if (
-            postCount <
-            config.get('instagram_business_api.maximum_post_per_day')
-          ) {
-            this.facebookConnect
-              .publishPostInsta(postDetails, accessToken, social_id, status => {
-                logger.info(status);
-                if (status.code == 200) {
-                  const publishedId = status.message.id.split('_')[1];
-                  let publishedDetails = {
-                    publishedDate: moment.utc(),
-                    accountId,
-                    fullPublishContentId: postDetails.mongoScheduleId,
-                    postCategory: postDetails.moduleName,
-                    publishedContentDetails: postDetails.message,
-                    publishedMediaUrls: postDetails.mediaPath,
-                    postShareUrl: postDetails.link,
-                    PublishedId: publishedId,
-                    PublishedUrl: `https://www.instagram.com/${publishedId}`,
-                    PublishedStatus: 'Success',
-                    TeamId: Number(teamId),
-                  };
-                  const publishedPost = new PublishedPost(publishedDetails);
-                  publishedPost.save();
-                } else {
-                  const err = new Error(`${status.message.error.message}`);
-                  return err;
-                }
-                if (config.get('notification_socioboard.status') == 'on') {
-                  return this.teamNotificationData(
-                    teamId,
-                    postDetails,
-                    publishedDetails.PublishedUrl,
-                    'Instagram Business'
-                  ).catch(error => {
-                    logger.error(
-                      `Error while notifing  teamNotificationData  ${error}`
-                    );
-                  });
-                }
-              })
-              .catch(error => error);
-          } else {
-            const publishedDetails = {
-              publishedDate: moment.utc(),
-              accountId,
-              fullPublishContentId: postDetails.mongoScheduleId,
-              postCategory: postDetails.moduleName,
-              publishedContentDetails: postDetails.message,
-              publishedMediaUrls: postDetails.mediaPath,
-              postShareUrl: postDetails.link,
-              PublishedId: 'Na',
-              PublishedUrl: 'Na',
-              PublishedStatus: 'Failed, Maximum limit reached for the day.',
-              TeamId: Number(teamId),
-            };
-            const publishedPost = new PublishedPost(publishedDetails);
-            publishedPost.save();
-          }
-        })
-        .catch(error => {
-          logger.error(`Error saving publishonInsta ${error} `);
-          throw error;
-        });
-    } catch (error) {
-      logger.error(`Error  publishonInsta ${error} `);
-      throw error;
+   async publishonInsta(postDetails, accountId, accessToken, teamId, social_id) {
+     try {
+      let getPublishQuotaLimit= await this.facebookConnect.getInstaBusinessPublishLimit(social_id,accessToken)
+      if(getPublishQuotaLimit <= 0 ) 
+      {
+        this.saveInstaNotification(postDetails,'',"Failed, Maximum Publish limit reached try again after 24 hours",accountId,teamId)
+      }
+      else{
+        let publish_id = await  this.facebookConnect.publishPostInsta(postDetails, accessToken, social_id)
+        let response= await this.facebookConnect.getShortCodeUrl(social_id, accessToken, publish_id)
+         this.saveInstaNotification(postDetails,response,'',accountId,teamId)
     }
+    } catch (error) {
+       this.saveInstaNotification(postDetails,'',error,accountId,teamId)
+       logger.info(`Error in Publishing the Instagram Post ${error}`)
+   }
+}
+
+  /**
+   * TODO to store InstaBusinessAccount Post Details
+   * Function to store InstaBusinessAccount Post Details
+   * @param  {object} postDetails - Post details
+   * @param  {object} response - post publish response
+   * @param  {string} failedreason - post failed reason
+   * @param  {number} accountId - Insta Account Account Id
+   * @param  {number} teamId - socioboard Team Id
+   */
+async saveInstaNotification(postDetails,response,failedreason,accountId,teamId){
+  let data={
+    id_string:response?.id ?? moment().valueOf(), 
+    url: response?.url,
+    reason:failedreason
+   }      
+  let result = await this.savePostInstagramBusiness(accountId,postDetails,data,teamId,data?.url,data?.reason);
+  if (config.get('notification_socioboard.status') == 'on') {
+    this.teamNotificationData(teamId,postDetails,result.PublishedUrl,'Instagram Business',data?.reason);
   }
+}
 
   isUrl(url) {
     const regexp = new RegExp(
@@ -781,7 +772,7 @@ class PublishModel {
         .then(response => {
           if (config.get('notification_socioboard.status') == 'on') {
             this.teamNotificationData(
-              response.TeamId,
+              response?.TeamId,
               postDetails,
               response.PublishedUrl,
               'LinkedIn'
@@ -802,7 +793,7 @@ class PublishModel {
         .then(response => {
           if (config.get('notification_socioboard.status') == 'on') {
             this.teamNotificationData(
-              response.TeamId,
+              response?.TeamId,
               postDetails,
               '',
               'LinkedIn',
@@ -966,7 +957,7 @@ class PublishModel {
     });
   }
 
- /**
+  /**
    * TODO Publish pin on Pinterest
    * Function Publish pin on Pinterest
    * @param  {object} postDetails - Post details
@@ -1369,7 +1360,7 @@ class PublishModel {
     const publishedPost = new PublishedPost(publishedDetails);
     return publishedPost.save();
   }
-   /**
+  /**
    * TODO To save post details on Pinterest
    * Function To save post details on Pinterest
    * @param  {number} accountId -Pinterest account id
@@ -1379,14 +1370,105 @@ class PublishModel {
    * @param  {string} url -Post url from Pinterest
    * @param  {string} reason -Post Failed reason
    */
-    async savePostPinterest(
+  async savePostPinterest(
+    accountId,
+    postDetails,
+    response,
+    teamId,
+    url,
+    reason
+  ) {
+    const publishedDetails = {
+      publishedDate: moment.utc(),
       accountId,
-      postDetails,
-      response,
-      teamId,
-      url,
-      reason
-    ) {
+      fullPublishContentId: postDetails?.mongoScheduleId,
+      postCategory: postDetails?.moduleName,
+      publishedContentDetails: postDetails?.message,
+      publishedMediaUrls: postDetails?.mediaPath,
+      postShareUrl: postDetails?.link,
+      PublishedId: response?.id ?? moment().valueOf(),
+      PublishedUrl: url ?? '',
+      PublishedStatus: reason ?? 'Success',
+      TeamId: Number(teamId),
+    };
+    const publishedPost = new PublishedPost(publishedDetails);
+    return publishedPost.save();
+  }
+
+  /**
+   * TODO To get publish details based on selected criteria
+   * Function To get publish details based on selected criteria
+   * @param  {number} userId -User id
+   * @param  {number} teamId -Team id
+   * @param  {number} pageId -Page id
+   * @param  {object} searchPublishedPostInfo -Search publish details
+   * @param  {string} publishedStatus -Publish status
+   * @param  {number} filterPeriod -PFiltered period
+   * @param  {date} since -Since date
+   * @param  {date} until -Until date
+   */
+  async filterPublishedPosts(
+    userId,
+    teamId,
+    pageId,
+    searchPublishedPostInfo,
+    publishedStatus,
+    filterPeriod,
+    since,
+    until
+  ) {
+    return new Promise(async (resolve, reject) => {
+      logger.info(`${userId}, ${teamId}, ${pageId} `);
+      if (!userId || !teamId || !pageId || pageId < 0) {
+        reject(new Error('Invalid Inputs'));
+      } else {
+        let date;
+        if (filterPeriod)
+          date = await teamReportModel.getFilteredPeriod(
+            filterPeriod,
+            since,
+            until
+          );
+        return this.isTeamValidForUser(userId, teamId)
+          .then(() => {
+            const skip = (Number(pageId) - 1) * config.get('perPageLimit');
+            const publishPost = new PublishedPost();
+
+            return publishPost
+              .filterPublishedPosts(
+                userId,
+                teamId,
+                skip,
+                config.get('perPageLimit'),
+                searchPublishedPostInfo,
+                publishedStatus,
+                date
+              )
+              .then(result => {
+                resolve(result);
+              })
+              .catch(error => {
+                throw error;
+              });
+          })
+          .catch(error => {
+            reject(error);
+          });
+      }
+    });
+  }
+
+ /**
+   * TOD To save post details on Instagram Business 
+   * Function To save post details on Instagram Business 
+   * @param {number} accountId -Instagram Business account id
+   * @param {object} postDetails -Post details
+   * @param {object} response -Response from Instagram Business api after successful upload
+   * @param {number} teamId -Team id
+   * @param {string} url -Post url from Instagram Business
+   * @param {string} reason -Post Failed reason
+   */
+     async savePostInstagramBusiness(accountId, postDetails, response, teamId, url, reason) {
       const publishedDetails = {
         publishedDate: moment.utc(),
         accountId,
@@ -1395,7 +1477,7 @@ class PublishModel {
         publishedContentDetails: postDetails?.message,
         publishedMediaUrls: postDetails?.mediaPath,
         postShareUrl: postDetails?.link,
-        PublishedId: response?.id ?? moment().valueOf(),
+        PublishedId: response?.id_string,
         PublishedUrl: url ?? '',
         PublishedStatus: reason ?? 'Success',
         TeamId: Number(teamId),
