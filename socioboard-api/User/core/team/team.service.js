@@ -531,7 +531,7 @@ class TeamController {
       if (teams == 0)
         return ErrorResponse(
           res,
-          "Sorry, either team not found or you don't have access of those accounts!"
+          "Sorry, either team not found or you dont have access of those accounts!"
         );
       const response = await teamLibs.unlockTeam(teams);
       const updatedProfiles = [];
@@ -893,35 +893,24 @@ class TeamController {
   async addOtherTeamSocialProfiles(req, res, next) {
     try {
       const {accountId, teamId} = req.query;
-      const {value, error} = await validate.addOtherTeamSocialProfiles({
+      const {error} = await validate.addOtherTeamSocialProfiles({
         accountId,
         teamId,
       });
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
 
-      const team = await teamLibs.getTeam(req.body.userScopeId, teamId);
-
-      if (!team)
-        return ErrorResponse(
-          res,
-          "You don't have access to add the profile to the team"
-        );
+      await teamLibs.otherTeamDetails(req.body.userScopeId, teamId);
 
       let addTeam;
       const socialAcc = await teamLibs.getSocialaAccDetails(accountId);
 
-      if (
-        socialAcc &&
-        socialAcc.account_admin_id &&
-        socialAcc.account_admin_id == req.body.userScopeId
-      )
+      if (socialAcc)
         addTeam = await teamLibs.addTeams(
           req.body.userScopeId,
           teamId,
           accountId
         );
-      else return ErrorResponse(res, "You aren't an admin for an account!");
 
       return SuccessResponse(res);
     } catch (err) {
@@ -941,14 +930,10 @@ class TeamController {
       });
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
-      const team = await teamLibs.getTeam(req.body.userScopeId, teamId);
 
-      if (!team)
-        return ErrorResponse(
-          res,
-          "You don't have access to add or remove the profile to the team"
-        );
-      const socialAcc = await teamLibs.getSocialaAcc(userScopeId, accountId);
+      await teamLibs.otherTeamDetails(req.body.userScopeId, teamId);
+
+      const socialAcc = await teamLibs.getSocialaAccDetails(accountId);
 
       if (!socialAcc)
         return ErrorResponse(
@@ -1072,7 +1057,7 @@ class TeamController {
       if (!checkUserAlreadyAdded)
         return ErrorResponse(
           res,
-          "Sorry, either team not found or you don't have access of those accounts!"
+          "Sorry, either team not found or you dont have access of those accounts!"
         );
       const teamsSocialAccount = await teamLibs.getTeamsSocialAccount(
         req.query.teamId
@@ -1118,7 +1103,7 @@ class TeamController {
       if (!checkUserAlreadyAdded)
         return ErrorResponse(
           res,
-          "Sorry, either team not found or you don't have access of those accounts!"
+          "Sorry, either team not found or you dont have access of those accounts!"
         );
       const teamsSocialAccount = await teamLibs.getTeamsSocialAccount(
         req.query.teamId
