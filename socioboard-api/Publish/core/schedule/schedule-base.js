@@ -16,6 +16,7 @@ const coreServices = new CoreServices(config.get('authorize'));
 
 const scheduledInformations = db.scheduled_informations;
 const scheduleDetails = db.users_schedule_details;
+const userDetails = db.user_details;
 const Operator = db.Sequelize.Op;
 
 class ScheduleBase {
@@ -462,36 +463,11 @@ class ScheduleBase {
                     mongoDetails.teamId,
                     postingSocialIds
                   )
-                  .then(() => {
-                    const {
-                      schedule_id: scheduleId,
-                      schedule_type: scheduleType,
-                      running_days_of_weeks: runningDaysOfWeeks,
-                    } = scheduleFromTheDb;
-
-                    if (
-                      scheduleType === SCHEDULE_CONSTANTS.SCHEDULE_TYPES.ONETIME
-                    ) {
-                      return this.updateScheduleStatus(
-                        scheduleId,
-                        SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE,
-                      );
-                    }
-
-                    const sortedDays = runningDaysOfWeeks.split(':').sort();
-
-                    const lastDay = lodash.last(sortedDays);
-
-                    if (currentDay === parseInt(lastDay, 10)) {
-                      return this.createSchedulePost(mongoDetails)
-                        .then(() => this.updateScheduleStatus(
-                          scheduleId,
-                          SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE,
-                        ));
-                    }
-                  })
+                  .then(() => this.changeDayWiseScheduleStatusAndCreateNewOne(scheduleFromTheDb))
                   .catch(error => {
                     logger.info(`failed..\n${error.error.message}`);
+
+                    return this.changeDayWiseScheduleStatusAndCreateNewOne(scheduleFromTheDb);
                   });
               }
             })
@@ -503,6 +479,87 @@ class ScheduleBase {
       .catch(error => {
         logger.info(error.message);
       });
+  }
+
+  changeDayWiseScheduleStatusAndCreateNewOne(scheduleFromTheDb) {
+    const {
+      schedule_id: scheduleId,
+      schedule_type: scheduleType,
+      user_id: userId,
+    } = scheduleFromTheDb;
+
+    logger.info(`Start to change daywise schedule status of ${scheduleId}`);
+
+    if (
+      scheduleType === SCHEDULE_CONSTANTS.SCHEDULE_TYPES.ONETIME
+    ) {
+      logger.info(`Schedule ${scheduleId} is onetime. Changing status to done...`);
+      return this.updateScheduleStatus(
+        scheduleId,
+        SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE,
+      );
+    }
+
+    logger.info(`Schedule ${scheduleId} is daywise. Updating the status and adding a new shedule to the queue...`);
+
+    return this.updateScheduleStatus(scheduleId, SCHEDULE_CONSTANTS.SCHEDULE_STATUSES.DONE)
+      .then(() => {
+        logger.info(`Schedule ${scheduleId}. Updated the status of the old schedule. Checking is the owner is not expired...`);
+
+        return this.checkIsUserExpired(userId);
+      })
+      .then(isUserExpired => {
+        if (isUserExpired) {
+          logger.info(`Schedule ${scheduleId}. The owner account is expired. Stopping the script to add a new schedule to the queue...`);
+
+          return;
+        }
+
+        logger.info(`Schedule ${scheduleId}. The owner account is valid. Adding a new schedule to the queue...`);
+
+        return this.addExistedScheduleToQueue(scheduleFromTheDb);
+      })
+      .then(data => {
+        if (!data) {
+          logger.info(`Schedule ${scheduleId}. Only status was changed`);
+
+          return;
+        }
+
+        logger.info(`Schedule ${scheduleId}. New schedule was created.`);
+      })
+      .catch(error => {
+        logger.info(`Schedule ${scheduleId}. Adding schedule error ${error.message}`);
+        logger.info(error);
+      });
+  }
+
+  addExistedScheduleToQueue({
+    schedule_type,
+    module_name,
+    schedule_status,
+    mongo_schedule_id,
+    one_time_schedule_date,
+    running_days_of_weeks,
+    user_id,
+    team_id,
+  }) {
+    const createdDate = moment().toISOString();
+
+    const endDate = moment().add(1, 'year').toISOString();
+
+    return scheduleDetails.create({
+      schedule_type,
+      module_name,
+      schedule_status,
+      mongo_schedule_id,
+      one_time_schedule_date,
+      running_days_of_weeks,
+      user_id,
+      team_id,
+      created_date: createdDate,
+      end_date: endDate,
+    });
   }
 
   removeScheduleInfo(scheduleType) {
@@ -627,12 +684,43 @@ class ScheduleBase {
     })(schedulePost);
   }
 
+  async checkIsUserExpired(userId) {
+    const user = await this.getUserActivationDetailsProfile(userId);
+
+    const {account_expire_date: expireDate} = user.Activations;
+
+    const overtime = moment(expireDate).diff(moment(), 'days');
+
+    return overtime < 0;
+  }
+
   updateScheduleStatus(scheduleId, status) {
     return scheduleDetails.update(
       {
         schedule_status: status,
       },
       {where: {schedule_id: scheduleId}},
+    );
+  }
+
+  getUserActivationDetailsProfile(userId) {
+    return userDetails.findOne(
+      {
+        where: {
+          user_id: userId,
+        },
+        include: [
+          {
+            model: db.user_activations,
+            where: {
+              id: {[Operator.col]: 'user_activation_id'},
+            },
+            as: 'Activations',
+          },
+        ],
+        raw: true,
+        nest: true,
+      },
     );
   }
 }

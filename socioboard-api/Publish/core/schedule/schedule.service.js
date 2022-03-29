@@ -184,7 +184,9 @@ class ScheduleService {
       if (!req?.query?.scheduleId)
         ValidateErrorResponse(res, 'Schedule id required.');
       const result = await scheduleModel.getPublishedSchedulePostById(
-        req?.query?.scheduleId
+        req?.query?.scheduleId,
+        req.query.skip,
+        req.query.limit
       );
       SuccessResponse(res, result);
     } catch (error) {
@@ -261,8 +263,8 @@ class ScheduleService {
    * @param {string} userName
    * @returns {Promise<object[]>}
    */
-   getCreatePost({userId, userName}) {
-    return async (post) => {
+  getCreatePost({userId, userName}) {
+    return async post => {
       const savedPost = await scheduleModel.savePost({
         ...post,
         ownerId: userId,
@@ -270,11 +272,12 @@ class ScheduleService {
         adminResponseStatus: post.scheduleStatus === 5 ? 'draft' : 'fillrights',
       });
 
-      const {runningDays, todaysTiming, oneTimeScheduleDateTime} = await this.getTimings({
-        scheduleCategory: post.scheduleCategory,
-        oneTimeScheduleDateTime: savedPost.normalScheduleDate,
-        daywiseScheduleTimer: post.daywiseScheduleTimer,
-      });
+      const {runningDays, todaysTiming, oneTimeScheduleDateTime} =
+        await this.getTimings({
+          scheduleCategory: post.scheduleCategory,
+          oneTimeScheduleDateTime: savedPost.normalScheduleDate,
+          daywiseScheduleTimer: post.daywiseScheduleTimer,
+        });
 
       let scheduleStatusValue = post.scheduleStatus;
 
@@ -300,7 +303,9 @@ class ScheduleService {
       });
 
       if (post.scheduleStatus === 5) {
-        return {message: SCHEDULE_CONSTANTS.SUCCESS_MESSAGES.SCHEDULE_SAVE_AS_DRAFT};
+        return {
+          message: SCHEDULE_CONSTANTS.SUCCESS_MESSAGES.SCHEDULE_SAVE_AS_DRAFT,
+        };
       }
 
       if (post.permission === 1) {
@@ -316,10 +321,17 @@ class ScheduleService {
         return {message: createdResponse};
       }
 
-      await scheduleModel.createScheduleTask(post.teamId, userId, userName, queue.schedule_id);
+      await scheduleModel.createScheduleTask(
+        post.teamId,
+        userId,
+        userName,
+        queue.schedule_id
+      );
 
       return {
-        message: SCHEDULE_CONSTANTS.SUCCESS_MESSAGES.SUBMITTED_REQUEST_TO_ADMIN_FOR_SCHEDULE_POST,
+        message:
+          SCHEDULE_CONSTANTS.SUCCESS_MESSAGES
+            .SUBMITTED_REQUEST_TO_ADMIN_FOR_SCHEDULE_POST,
       };
     };
   }
@@ -331,11 +343,14 @@ class ScheduleService {
    * @param {number} daywiseScheduleTimer
    * @returns {Promise<object>}
    */
-  async getTimings({scheduleCategory, oneTimeScheduleDateTime, daywiseScheduleTimer}) {
+  async getTimings({
+    scheduleCategory,
+    oneTimeScheduleDateTime,
+    daywiseScheduleTimer,
+  }) {
     if (scheduleCategory === 1) {
-      const {
-        runningDays, todaysTiming,
-      } = await scheduleModel.getRunningDayAndTodayTimings(daywiseScheduleTimer);
+      const {runningDays, todaysTiming} =
+        await scheduleModel.getRunningDayAndTodayTimings(daywiseScheduleTimer);
 
       return {
         todaysTiming,
@@ -348,11 +363,14 @@ class ScheduleService {
 
     scheduleTimings.push(oneTimeScheduleDateTime);
 
-    const {
-      runningDays, todaysTiming,
-    } = await scheduleModel.getRunningDayAndTodayTimings(scheduleTimings);
+    const {runningDays, todaysTiming} =
+      await scheduleModel.getRunningDayAndTodayTimings(scheduleTimings);
 
-    return {todaysTiming, runningDays: runningDays || 'onetimeschedule', oneTimeScheduleDateTime};
+    return {
+      todaysTiming,
+      runningDays: runningDays || 'onetimeschedule',
+      oneTimeScheduleDateTime,
+    };
   }
 }
 

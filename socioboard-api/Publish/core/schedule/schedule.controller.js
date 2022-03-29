@@ -184,15 +184,29 @@ class ScheduleController {
    * @return {object} Returns scheduled details
    */
   async getPublishedSchedulePostById(req, res, next) {
-    /* 	#swagger.tags = ['Schedule']
-            #swagger.description = 'To edit a scheduled post job  ' */
-    /* #swagger.security = [{
-               "AccessToken": []
-        }] */
-    /* #swagger.parameters['scheduleId'] = {
-                 in: 'query',
-                 description: 'schedule id from get-schedule-details '
-                 } */
+    /*
+      #swagger.tags = ['Schedule']
+      #swagger.description = 'To edit a scheduled post job' 
+    */
+    /*
+      #swagger.security = [{
+        "AccessToken": []
+        }] 
+    */
+    /*
+      #swagger.parameters['scheduleId'] = {
+        in: 'query',
+        description: 'schedule id from get-schedule-details '
+      }
+      #swagger.parameters['skip'] = {
+        in: 'query',
+        description: 'skip'
+      }
+      #swagger.parameters['limit'] = {
+        in: 'query',
+        description: 'limit'
+      } 
+    */
     return await ScheduleService.getPublishedSchedulePostById(req, res, next);
   }
 
