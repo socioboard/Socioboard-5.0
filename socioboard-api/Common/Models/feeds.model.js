@@ -379,6 +379,7 @@ class FeedModel {
             )
           )
           .then(response => {
+            this.updateLikeCount(postId, 'increment');
             resolve(response);
           })
           .catch(error => {
@@ -403,6 +404,7 @@ class FeedModel {
             )
           )
           .then(response => {
+            this.updateCommentCountFb(postId, 'increment');
             resolve(response);
           })
           .catch(error => {
@@ -778,7 +780,7 @@ class FeedModel {
     );
   }
 
-  getChannels({ userId, skip = 0, limit = 10, size = 5 }) {
+  getChannels({userId, skip = 0, limit = 10, size = 5}) {
     return rssChannels.findAll({
       include: [
         {
@@ -800,7 +802,7 @@ class FeedModel {
     });
   }
 
-  getChannelById({ userId, channelId, skip = 0, limit = 10 }) {
+  getChannelById({userId, channelId, skip = 0, limit = 10}) {
     return rssChannels.findOne({
       include: [
         {
@@ -874,7 +876,7 @@ class FeedModel {
     });
   }
 
-  updateChannel(channelId, { title, logo_url}, trx) {
+  updateChannel(channelId, {title, logo_url}, trx) {
     return rssChannels.update(
       {
         title,
@@ -885,7 +887,7 @@ class FeedModel {
           id: channelId,
         },
         transaction: trx,
-      },
+      }
     );
   }
 
@@ -902,7 +904,7 @@ class FeedModel {
     });
   }
 
-  updateLink({ id, url, category }, trx) {
+  updateLink({id, url, category}, trx) {
     return rssLinks.update(
       {
         url,
@@ -913,8 +915,18 @@ class FeedModel {
           id,
         },
         transaction: trx,
-      },
+      }
     );
+  }
+
+  async updateLikeCount(postId, method) {
+    const facebookMongoPostModelObject = new FacebookMongoPostModel();
+    await facebookMongoPostModelObject.updateLikeCount(postId, method);
+    await facebookMongoPostModelObject.updateIsLike(postId, method);
+  }
+  async updateCommentCountFb(postId, method) {
+    const facebookMongoPostModelObject = new FacebookMongoPostModel();
+    await facebookMongoPostModelObject.updateCommentCount(postId, method);
   }
 }
 export default FeedModel;

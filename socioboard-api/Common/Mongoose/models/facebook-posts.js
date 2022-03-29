@@ -166,6 +166,26 @@ facebookPost.methods.updateCommentCount = function (postId, method) {
     });
 };
 
+facebookPost.methods.updateIsLike = function (postId, method) {
+  const query = {
+    postId: new RegExp(postId, 'i'),
+  };
+  let updateObject = '';
+
+  if (method == 'increment') {
+    updateObject = {isLiked: true};
+  } else {
+    updateObject = {isLiked: false};
+  }
+
+  return this.model('FacebookPosts')
+    .findOneAndUpdate(query, updateObject)
+    .then(result => result)
+    .catch(error => {
+      throw error;
+    });
+};
+
 const facebookPostModel = mongoose.model('FacebookPosts', facebookPost);
 
 export default facebookPostModel;

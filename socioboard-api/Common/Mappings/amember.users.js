@@ -15,7 +15,7 @@ class aMember {
   constructor(aMemberConfig = {}) {
     this.aMemberKey = aMemberConfig?.key;
     this.aMemberDomain = aMemberConfig?.domain;
-    this.expiryDays = 14;
+    this.expiryDays = 7;
   }
 
   /**
@@ -410,7 +410,7 @@ class aMember {
               transaction_id: 'Free-Plan-subscription',
               begin_date: moment().format('YYYY-MM-DD'),
               expire_date: moment()
-                .add(this.expiryDays ?? 14, 'days')
+                .add(this.expiryDays ?? 7, 'days')
                 .format('YYYY-MM-DD'),
             },
           ],
@@ -490,16 +490,15 @@ class aMember {
 
   async setAMemberPlanForAppSumoUser(userName, plan_type, refund) {
     let user_id = await this.getAmemberUserId(userName);
-    this.getUserCurrentProducts(user_id).then(products => {
-      if (products?._total > 0) {
-        let productIds = [];
-        for (let i = 0; i < products?._total; i++) {
-          productIds.push(products[i].access_id);
-        }
-        this.removeCurrentProducts(productIds);
-      }
-    });
 
+    let products = await this.getUserCurrentProducts(user_id);
+    if (products?._total > 0) {
+      let productIds = [];
+      for (let i = 0; i < products?._total; i++) {
+        productIds.push(products[i].access_id);
+      }
+      await this.removeCurrentProducts(productIds);
+    }
     let userSubscriptionData;
     if (!refund) {
       let first_subtotal = await this.getPlanSubTotal(plan_type);

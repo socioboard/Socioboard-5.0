@@ -136,7 +136,7 @@ exports.languageTranslate = [
   },
   {
     id: '28',
-    en: "Team not found or You don't have access to add the profile to team",
+    en: "You dont have access to add the social profile to this team",
     arabic: 'لم يتم العثور على الفريق أو ليس لديك حق الوصول لإضافة ملف التعريف إلى الفريق',
   },
   {

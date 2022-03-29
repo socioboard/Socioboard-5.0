@@ -3265,12 +3265,12 @@ class MailService extends MailBase {
                                                                           </tr>
                                                                           <tr>
                                                                                <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px; mso-line-height-rule: exactly; text-align: left; padding: 0 5px 12px;" align="left">
-                                                                                   <b>Hi [FirstName],</b>
+                                                                                   <b>Hi [FirstName]</b>
                                                                                </td>
                                                                           </tr>
                                                                           <tr>
                                                                               <td class="left" style="background: #fff; margin: 0; margin:0; font-family: Open sans, Arial, Helvetica, sans-serif; font-size: 17px; color: #383737; line-height: 24px;mso-line-height-rule: exactly; text-align: left; padding: 0 5px; padding-bottom:20px; " align="left">
-                                                                                  <p>We are pleased to acquaint you that [inviteduser] requested you to join the [teamname] team and be a part of the SocioBoard family.
+                                                                                  <p>We are pleased to acquaint you that <b>[inviteduser]</b> requested you to join the <b>[teamname]</b> team and be a part of the <b>SocioBoard</b> family.
                                                                                   </p>
                                                                                   <p>
                                                                                   The step of joining is just a few clicks away. Please click on the Register button down at the end of this mail to register into the team instantly.
@@ -3710,7 +3710,7 @@ class MailService extends MailBase {
   sendMails(defaultService, mailingDetails) {
     return new Promise(async (resolve, reject) => {
       switch (defaultService) {
-        case 'gmailServices':
+        case 'gmail':
           try {
             const info = await this.sendEmailByGmail(mailingDetails);
             return resolve(info);

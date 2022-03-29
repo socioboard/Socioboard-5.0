@@ -38,14 +38,19 @@ LinkedIn.prototype.getOAuthUrl = function (state, redirectUrl) {
     this.linkedIn_api.client_id
   }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
 };
-LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code,redirectUrl) {
+LinkedIn.prototype.addLinkedInProfile = function (
+  network,
+  teamId,
+  code,
+  redirectUrl
+) {
   let accessTokenData;
   return new Promise((resolve, reject) => {
     if (!code) {
       reject("Can't get code from linkedIn!");
     } else {
       // Calling a function to fetch the accessToken by giving user code
-      return this.getProfileAccessToken(code,redirectUrl)
+      return this.getProfileAccessToken(code, redirectUrl)
         .then(response => {
           accessTokenData = response;
           // Checking whether it gave user accessToken or not
@@ -86,7 +91,7 @@ LinkedIn.prototype.addLinkedInProfile = function (network, teamId, code,redirect
   });
 };
 
-LinkedIn.prototype.getProfileAccessToken = function (code,redirectUrl) {
+LinkedIn.prototype.getProfileAccessToken = function (code, redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -120,7 +125,7 @@ LinkedIn.prototype.getProfileAccessToken = function (code,redirectUrl) {
  * @param  {string} code -Code from linkedIn redirect url
  * @returns {string} access_token -Access token of a page
  */
-LinkedIn.prototype.getCompanyPageAccessToken = function (code,redirectUrl) {
+LinkedIn.prototype.getCompanyPageAccessToken = function (code, redirectUrl) {
   return new Promise((resolve, reject) => {
     const postParameters = {
       method: 'POST',
@@ -278,10 +283,10 @@ LinkedIn.prototype.getOAuthLinkedPageUrl = function (redirectUrl) {
   }&redirect_uri=${redirectUrl}&scope=${config.get('linkedIn_api.scope')}`;
 };
 
-LinkedIn.prototype.getCompanyProfileDetails = function (code,redirectUrl) {
+LinkedIn.prototype.getCompanyProfileDetails = function (code, redirectUrl) {
   let accessTokenData;
   return new Promise((resolve, reject) =>
-    this.getCompanyPageAccessToken(code,redirectUrl)
+    this.getCompanyPageAccessToken(code, redirectUrl)
       .then(response => {
         accessTokenData = response;
         if (!response.access_token)
@@ -1162,6 +1167,32 @@ LinkedIn.prototype.getAccessTokenFromRefreshToken = function (refreshToken) {
       resolve({accessToken: JSON.parse(response)?.access_token});
     } catch (e) {}
   });
+};
+
+/**
+ * TODO To get linkedin profile pic url for profile
+ * Function To get linkedin profile pic url for profile
+ * @param  {string} refresh_token - Social Account refresh token
+ * @return {object} linked in profile url
+ */
+LinkedIn.prototype.getLinkedInProfilePic = async function (refresh_token) {
+  try {
+    const requestInfo = {
+      method: 'GET',
+      uri: 'https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams),emailAddress,vanityName,headline)',
+      headers: {Authorization: `Bearer ${refresh_token}`},
+    };
+    let profileDetails = await requestPromise(requestInfo);
+    profileDetails = JSON.parse(profileDetails);
+    let data = {
+      profile_pic_url: profileDetails.profilePicture
+        ? profileDetails?.profilePicture['displayImage~']?.elements[3]
+            ?.identifiers[0]?.identifier ?? ''
+        : '',
+      info: profileDetails?.headline?.localized?.en_US ?? '',
+    };
+    return data;
+  } catch (e) {}
 };
 
 export default LinkedIn;

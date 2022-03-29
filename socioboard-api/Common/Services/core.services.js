@@ -1,6 +1,8 @@
 // const uuid = require('uuid/v1');
 import uuidv1 from 'uuidv1';
 
+import TIK_TOK_CONSTANTS from '../Constants/tiktok.constants.js';
+
 function CoreServices() {
   this.userPlans = {
     Basic: 0,
@@ -47,7 +49,8 @@ function CoreServices() {
     Pinterest: 11,
     InstagramBusiness: 12,
     Bitly: 13,
-    Tumblr: 16
+    Tumblr: 16,
+    TikTok: TIK_TOK_CONSTANTS.ACCOUNT_TYPE,
   };
 }
 

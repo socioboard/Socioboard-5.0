@@ -285,6 +285,87 @@ const UserTeamAccount = {
       return difference > frequencyValue;
     }
   },
+
+  /**
+   * Get specific team accounts from the db
+   * @param {number[]} accountIds
+   * @param {number} teamId
+   * @returns {Promise<object[]>}
+   */
+  getManyTeamSocialAccounts(accountIds, teamId) {
+    return teamSocialAccountJoinTable
+      .findAll({
+        where: {
+          account_id: accountIds,
+          team_id: teamId,
+          is_account_locked: 0,
+        },
+        raw: true,
+      });
+  },
+
+  /**
+   * Get specific accounts from the db
+   * @param {number[]} accountIds
+   * @returns {Promise<object[]>}
+   */
+  getManySocialAccounts(accountIds) {
+    return socialAccount.findAll({
+      where: {
+        account_id: accountIds,
+      },
+      raw: true,
+    });
+  },
+
+  async isNeedToFetchRecentPin(
+    account_id,
+    boardId,
+    frequencyValue,
+    frequencyFactor
+  ) {
+    try {
+      if (!account_id || !boardId || !frequencyValue || !frequencyFactor) {
+        throw new Error('Please verify account id valid or not!');
+      } else {
+        let result = await accountFeedsUpdateTable.findOne({
+          where: {
+            account_id,
+            boardId,
+          },
+          raw: true,
+        });
+        if (!result) return true;
+        else {
+          const difference = moment
+            .tz(new Date(), 'GMT')
+            .diff(moment.tz(result.updated_at, 'GMT'), frequencyFactor);
+          return difference > frequencyValue;
+        }
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
+  async createOrEditPinUpdateTime(account_id, social_id, boardId) {
+    try {
+      let result = await accountFeedsUpdateTable.findOne({
+        where: {account_id, boardId},
+      });
+      if (!result) {
+        return accountFeedsUpdateTable.create({
+          account_id,
+          social_id,
+          boardId,
+          updated_at: moment.utc().format(),
+        });
+      }
+      return result.update({updated_at: moment.utc().format()});
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
 };
 
 export default UserTeamAccount;

@@ -133,15 +133,17 @@ class Trends {
             const imgurDetails = [];
 
             parsedBody.data.forEach((element) => {
-              const media_type = element.type ? element.type : element.images[0].type;
+              const media_type = element?.type ?? element?.images[0]?.type;
               const mediaUrls = [];
 
-              if (element.images) {
-                element.images.forEach((medias) => {
+              if (element?.images) {
+                element?.images.forEach((medias) => {
                   const media = medias.link;
-
-                  mediaUrls.push(media);
+                   mediaUrls.push(media);
                 });
+              }
+              else{
+                mediaUrls.push(element.link)
               }
               const details = {
                 imgurId: element.id,
@@ -157,11 +159,9 @@ class Trends {
                 createdDate: utc(),
                 version: imgurApi.version,
               };
-
               imgurDetails.push(details);
             });
-
-            return imgurModelObject.insertManyPosts(imgurDetails)
+           return imgurModelObject.insertManyPosts(imgurDetails)
               .then(() => {
                 imgurResponse.imgurDetails = imgurDetails;
                 resolve(imgurResponse);
@@ -615,13 +615,13 @@ class Trends {
     });
   }
 
-  fetchYoutube(youtube, pageId, keyword, sortby) {
+  fetchYoutube(youtube, pageId, keyword, sortby,ccode) {
     return new Promise((resolve, reject) => {
       const youtubeModelObject = new YoutubeMongoModel();
       const offset = (pageId) * youtube.count;
 
       get({
-        url: `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${offset}&order=${sortby}&q=${encodeURI(keyword)}&key=${youtube.api_key}`,
+        url: `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=${offset}&order=${sortby}&q=${encodeURI(keyword)}&key=${youtube.api_key}&regionCode=${ccode}`,
       }, (error, response, body) => {
         const batchId = String(moment().unix());
         const youtubeResponse = {

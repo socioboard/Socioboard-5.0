@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const {Model} = require('sequelize');
 module.exports = (sequelize, Sequelize) => {
   class social_account_feeds_updates extends Model {
     /**
@@ -12,45 +10,52 @@ module.exports = (sequelize, Sequelize) => {
     static associate(models) {
       // define association here
     }
-  };
-  social_account_feeds_updates.init({
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
-    },
-    account_id: {
-      type: Sequelize.INTEGER,
-      references: {
-        model: 'social_accounts',
-        key: 'account_id'
+  }
+  social_account_feeds_updates.init(
+    {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
       },
-      onUpdate: 'cascade',
-      onDelete: 'cascade'
+      account_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'social_accounts',
+          key: 'account_id',
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
+      },
+      social_id: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
+      },
+      boardId: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
+      },
+      updated_date: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+      },
     },
-    social_id: {
-      type: Sequelize.STRING(50),
-      allowNull: true
-    },
-    updated_date: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
-    },
-    created_at: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
-    },
-    updated_at: {
-      allowNull: false,
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW
+    {
+      sequelize,
+      modelName: 'social_account_feeds_updates',
     }
-  }, {
-    sequelize,
-    modelName: 'social_account_feeds_updates',
-  });
+  );
   return social_account_feeds_updates;
 };

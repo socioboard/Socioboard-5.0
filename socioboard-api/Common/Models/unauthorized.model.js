@@ -104,11 +104,8 @@ class userLibs {
 
   async getSocialAccDetail(email, user_name) {
     let query = {};
-
-    if (user_name) query = {...query, user_name};
     if (email) query = {...query, email};
-
-    if (email || user_name) {
+    if (email) {
       const response = await userDetails.findOne({
         where: query,
         attributes: [
@@ -201,7 +198,7 @@ class userLibs {
       userPlan: config.get('user_base_plan'),
       expireDate: moment
         .utc()
-        .add(config.get('user_base_plan_expiry_days') ?? 14, 'days'),
+        .add(config.get('user_base_plan_expiry_days') ?? 7, 'days'),
     };
     const info = requestBody;
 
@@ -1088,7 +1085,7 @@ class userLibs {
           signup_type: info.activations.signupType,
           account_expire_date: moment
             .utc()
-            .add(config.get('user_base_plan_expiry_days') ?? 14, 'days'),
+            .add(config.get('user_base_plan_expiry_days') ?? 7, 'days'),
           user_plan: info.activations.userPlan,
           //  payment_type: info.activations.paymentType
         },

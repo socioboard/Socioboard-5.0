@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-
-const { Schema } = mongoose;
-
+const {Schema} = mongoose;
 mongoose.set('useCreateIndex', true);
 
 /**
@@ -23,22 +21,24 @@ mongoose.set('useCreateIndex', true);
  * @param  {{type:Date}} createdDate -Created date of record
  */
 const youtubeUploadPosts = new Schema({
-  postType: { type: String },
-  description: { type: String },
-  ownerId: { type: Number },
-  teamId: { type: Number },
+  postType: {type: String},
+  description: {type: String},
+  ownerId: {type: Number},
+  teamId: {type: Number},
   // To specify the collection of media url
-  mediaUrl: [{ type: String }],
+  mediaUrl: [{type: String}],
   // To specify the targeting social profiles
-  postingSocialIds: [{ type: Number }],
-  title: { type: String },
-  privacy: { type: String },
-  publishAt: { type: Date },
-  tags: { type: [String] },
-  categoryId: { type: Number },
-  defaultLanguage: { type: String },
-  defaultAudioLanguage: { type: String },
-  createdDate: { type: Date, default: Date.now },
+  postingSocialIds: [{type: Number}],
+  title: {type: String},
+  privacy: {type: String},
+  publishAt: {type: Date},
+  tags: {type: [String]},
+  categoryId: {type: Number},
+  defaultLanguage: {type: String},
+  defaultAudioLanguage: {type: String},
+  thumbnailUrl: {type: String},
+  publishedUrl: {type: String},
+  createdDate: {type: Date, default: Date.now},
 });
 
 /**
@@ -47,14 +47,13 @@ const youtubeUploadPosts = new Schema({
  * @param  {Array} postIds -Array of ids
  * @return {object} Returns set of records matches post ids
  */
-youtubeUploadPosts.methods.getPostsById = (postIds) => {
-  const query = { _id: { $in: postIds } };
-
+youtubeUploadPosts.methods.getPostsById = postIds => {
+  const query = {_id: {$in: postIds}};
   return this.model('youtubeUploadPosts')
     .find(query)
-    .sort({ createdDate: -1 })
-    .then((result) => result)
-    .catch((error) => {
+    .sort({createdDate: -1})
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
@@ -76,12 +75,15 @@ youtubeUploadPosts.methods.updateDraft = function (post_id, post) {
 
   return this.model('youtubeUploadPosts')
     .updateOne(query, updateObject)
-    .then((result) => result)
-    .catch((error) => {
+    .then(result => result)
+    .catch(error => {
       throw error;
     });
 };
 
-const YouTubeUploadPosts = mongoose.model('youtubeUploadPosts', youtubeUploadPosts);
+const YouTubeUploadPosts = mongoose.model(
+  'youtubeUploadPosts',
+  youtubeUploadPosts
+);
 
 export default YouTubeUploadPosts;
