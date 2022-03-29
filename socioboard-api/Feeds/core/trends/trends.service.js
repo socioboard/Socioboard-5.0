@@ -108,12 +108,12 @@ class TrendsService {
 
   async getYoutube(req, res, next) {
     try {
-      const { keyword, pageId, sortBy } = req.query;
-      const { value, error } = TrendsValidate.validateYoutube({ keyword, pageId, sortBy });
+      const { keyword, pageId, sortBy,ccode } = req.query;
+      const { value, error } = TrendsValidate.validateYoutube({ keyword, pageId, sortBy,ccode });
 
       if (error) return ValidateErrorResponse(res, error.details[0].message);
 
-      const response = await this.trendsServices.fetchYoutube(config.get('content_studio.youtube'), pageId, keyword, sortBy);
+      const response = await this.trendsServices.fetchYoutube(config.get('content_studio.youtube'), pageId, keyword, sortBy,ccode);
 
       SuccessResponse(res, response);
     } catch (error) {

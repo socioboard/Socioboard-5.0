@@ -6,6 +6,7 @@ class TrendValidator {
       keyword: Joi.string().required(),
       pageId: Joi.string().required(),
       sortBy: Joi.string().required(),
+      ccode:Joi.string().required(),
     }).options({ abortEarly: false });
 
     return JoiSchema.validate(data);
