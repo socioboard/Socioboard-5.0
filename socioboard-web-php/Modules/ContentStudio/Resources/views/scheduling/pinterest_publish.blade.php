@@ -57,7 +57,7 @@
                                                     <div class="d-flex mt-3 align-items-center flex-grow-1">
                                                         <div class="w-100 accordion accordion-toggle-arrow" id="accordionExample1">
                                                             <div class="card mb-5">
-                                                                <div class="card-header rounded-sm">
+                                                                <div id="boardsNameDiv" class="card-header rounded-sm boardDiv">
                                                                     <div class="card-title collapsed" data-toggle="collapse" data-target="#pinterest-post1{{$accounts->account_id}}">
                                                                         {{$accounts->user_name}}
                                                                     </div>
@@ -94,20 +94,20 @@
                                 </div>
                                 <div class="form-group mt-5">
                                    <textarea
-                                           class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
+                                           class="form-control border border-light h-auto py-4 rounded-lg font-size-h6 normal_post_area"
                                            id="normal_post_area" rows="3" name="discription"
                                            placeholder="Write Something !"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-icon">
-                                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoing-url" autocomplete="off" placeholder="Enter Outgoing url"/>
+                                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 outGoingUrlDiv" type="text" name="outgoing-url" autocomplete="off" placeholder="Enter Outgoing url"/>
                                         <span><i class="fas fa-link"></i></span>
                                     </div>
                                 </div>
 
                                 <!-- image and video upload -->
                                 <div id="animation"></div>
-                                <div class="row mb-5" id="new_pic">
+                                <div class="row mb-5 new_pic" id="new_pic">
                                     <div class="col-12" id="option_upload">
                                         <small>Note: Add only 1 items at a single time.</small>
                                         <ul class="btn-nav">
@@ -131,7 +131,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-sm-12">
+                    <div class="col-xl-6 col-sm-12 previewTabClass">
                         <div class="card card-custom gutter-b card-stretch">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">

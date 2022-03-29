@@ -31,7 +31,7 @@
                                             <!--begin::Navigation-->
                                             <ul class="navi navi-hover">
                                                 <li class="navi-item">
-                                                    <a href="{{env('APP_URL')}}boards/board-me/{{$keyword}}/refresh/49" class="navi-link">
+                                                      <a href="{{env('APP_URL')}}boards/board-me/{{$keyword}}/refresh/{{$id}}" class="navi-link">
                                                                     <span class="navi-text">
                                                                         <span class="text-success"><i class="fas fa-sync-alt fa-fw text-success"></i> Refresh </span>
                                                                     </span>
@@ -200,6 +200,37 @@
                                         <div class="tab-pane" id="{{$key}}-add-accounts" role="tabpanel" aria-labelledby="{{$key}}-tab-accounts">
                                             <div class="mt-3">
                                                 @foreach($socialAccountsGroups as $group => $socialAccountArray)
+                                                    @if(ucwords($key) === "Twitter")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 280.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Facebook")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 5000.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Instagram")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 2200.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                            <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
+                                                            <li class="font-size-md font-weight-normal">Image Pixel should be 1:1 resolution.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Linkedin" || ($key) === "linkedin-in")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 700.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Tumblr")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @endif
                                                     <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                     <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
                                                     @foreach($socialAccountArray as $group_key => $socialAccount)
@@ -258,6 +289,7 @@
                         <button type="button" name="status" value="0" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Draft</button>
                         <button type="button" name="status" value="1" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Post</button>
                     </div>
+                </form>
             </div>
         </div>
     </div>
@@ -399,6 +431,7 @@
         }
 
         function openModel(mediaUrl, publisherName, title ) {
+            $('input:checkbox').prop('checked', false);
             let sourceUrl = mediaUrl;
             $.ajax({
                 type: 'post',

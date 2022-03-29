@@ -36,16 +36,20 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="aspect_ratio"></div>
                     <div class="error text-danger" id="add_image_error1"></div>
                     <!-- end of image and video upload -->
                     <!-- begin:Accounts list -->
                     <div class="error text-danger" id="add_account_error1"></div>
                     @if(isset($socialAccounts) && !empty($socialAccounts))
-                        <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
+                        <ul class="nav justify-content-center nav-pills AddAccountsTab" id="AddAccountsTab" role="tablist">
                             @foreach($socialAccounts as $key => $socialAccount)
                                 <li class="nav-item">
                                     <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
                                         <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
+                                        @if($key === 'linkedin-in')
+                                            [pages]
+                                        @endif
                                     </a>
                                 </li>
                             @endforeach
@@ -58,6 +62,37 @@
                                         <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="height: 180px;overflow-y: scroll;">
                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                 @if(($group == "account") || ($group == "page") || ($group == "business account"))
+                                                    @if(ucwords($key) === "Twitter")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 280.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Facebook")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 5000.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Instagram")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 2200.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                            <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
+                                                            <li class="font-size-md font-weight-normal">Image Pixel should be 1:1 resolution.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Linkedin" || ($key) === "linkedin-in")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 700.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Tumblr")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @endif
                                                     <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                                                     @foreach($socialAccountArray as $group_key => $socialAccount)
                                                         @if($key == 'facebook')
@@ -113,9 +148,8 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder" form="checkRoute"><i class="fas fa-history fa-fw"></i> Schedule</button>
-                    <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(0);">Draft
-                    </button>
+                    <button type="submit"  class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" form="checkRoute"><i class="fas fa-history fa-fw"></i>Schedule</button>
+                    <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(0);">Draft</button>
                     <button type="button" class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" onclick="draftPostFunction(1);">Post
                     </button>
                 </div>

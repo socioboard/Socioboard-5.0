@@ -38,7 +38,7 @@
                 @if(isset($rating))
                     <div class="form-group">
                         <label for="sortBy" style="display: none"></label>
-                        <select id="sortBy" name="rating" class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6">
+                        <select id="sortBy" name="rating" class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 ratingCLass">
                             <option disabled="">Sort by</option>
                             @php $i = 0; @endphp
                             @foreach($rating as $key => $value)

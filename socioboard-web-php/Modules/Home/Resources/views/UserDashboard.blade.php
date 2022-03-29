@@ -42,7 +42,6 @@
         //    Check if plan is clicked or not
     </script>
     <div class="content  d-flex flex-column flex-column-fluid" id="Sb_content">
-
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
@@ -53,7 +52,7 @@
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
                         <a href="{{env('APP_URL')}}home/publishing/scheduling"
-                           class="card card-custom gutter-b card-stretch"
+                           class="card card-custom gutter-b card-stretch introjs-step-1"
                         >
                             <!--begin::Body-->
                             <div class="card-body position-relative overflow-hidden">
@@ -67,7 +66,7 @@
                     </div>
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
-                        <a href="{{env('APP_URL')}}calendar-view" class="card card-custom gutter-b card-stretch"
+                        <a href="{{env('APP_URL')}}calendar-view" class="card card-custom gutter-b card-stretch introjs-step-2"
                            id="calendarPost" title="">
                             <!--begin::Body-->
                             <div class="card-body position-relative overflow-hidden">
@@ -81,7 +80,7 @@
                     </div>
                     <div class="col-xl-3 col-sm-12">
                         <!--begin::Accounts-->
-                        <a href="{{env('APP_URL')}}get-team-reports" class="card card-custom gutter-b card-stretch">
+                        <a href="{{env('APP_URL')}}get-team-reports" class="card card-custom gutter-b card-stretch introjs-step-3">
                             <!--begin::Body-->
                             <div class="card-body position-relative overflow-hidden">
                                 <i class="fas fa-chart-line fa-3x"></i>
@@ -97,7 +96,7 @@
                         @if (in_array(session()->get('user')['userDetails']['userPlanDetails']['plan_id'], [101, 102, 103]))
                             <a href="https://appsumo.com/" class="card card-custom gutter-b card-stretch appsumo-plan">
                                 @else
-                                    <a href="/plan-details-view" class="card card-custom gutter-b card-stretch">
+                                    <a href="/plan-details-view" class="card card-custom gutter-b card-stretch introjs-step-4">
                                     @endif
                                     <!--begin::Body-->
                                         <div class="card-body position-relative overflow-hidden">
@@ -115,20 +114,23 @@
                 <div class="row">
                     <div class="col-xl-4">
                         <!--begin::Mixed Widget 2-->
-                        <div class="card card-custom gutter-b card-stretch" id="ss-statsDiv">
+                        <div class="card card-custom gutter-b card-stretch introjs-step-5" id="ss-statsDiv">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Schedule Stats</h3>
-                                <div class="card-toolbar flex-nowrap">
-                                    <select class="form-control selectpicker" onchange="selectDateStats(this)">
+                                <div class="card-toolbar flex-nowrap ">
+                                    <select class="form-control selectpicker changeDateFilterDiv"
+                                            onchange="selectDateStats(this)">
                                         <option value="3">Last 7 Days</option>
                                         <option value="1">Today</option>
                                         <option value="2">Yesterday</option>
                                         <option value="4">This Month</option>
                                         <option value="6">Last Month</option>
                                     </select>
-                                    <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                    <div id="addToCart"
+                                         class="btn btn-icon text-hover-info btn-sm  ml-5 px-5 addToCartDIv"
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-statsDiv_md4" class="ss addtcartclose"></span></div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-statsDiv_md4" style="
     display: none;"></span>
@@ -233,13 +235,13 @@
 
                     <div class="col-xl-4">
                         <!--begin::Mixed Widget 16-->
-                        <div class="card card-custom card-stretch gutter-b" id="ss-reportsDiv">
+                        <div class="card card-custom card-stretch gutter-b introjs-step-6" id="ss-reportsDiv">
                             <!--begin::Header-->
-                            <div class="card-header border-0 pt-5">
+                            <div class="card-header border-0 pt-5 ">
                                 <div class="card-title">
                                     <div class="card-label">
                                         <div class="font-weight-bolder">Team Report</div>
-                                        <div class="font-size-sm text-muted mt-2">{{session()->get('team')['teamName']}}</div>
+                                        <div class="font-size-sm mt-2">{{session()->get('team')['teamName']}}</div>
                                     </div>
                                 </div>
                                 <div class="card-toolbar flex-nowrap">
@@ -251,7 +253,8 @@
                                         <option value="6">Last Month</option>
                                     </select>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-reportsDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-reportsDiv_md4" style="
@@ -390,17 +393,18 @@
 
                     <div class="col-xl-4 flex-nowrap">
                         <!--begin::Accounts-->
-                        <div class="card card-custom gutter-b card-stretch" id="ss-viewAccountsDiv">
+                        <div class="card card-custom gutter-b card-stretch introjs-step-7" id="ss-viewAccountsDiv">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Accounts</h3>
 
                                 <div class="card-toolbar">
-                                    <a href="{{url('view-accounts')}}" class="btn btn-sm">
+                                    <a href="{{url('view-accounts')}}" class="btn btn-sm view_accounts_btn">
                                         View Accounts
                                     </a>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-viewAccountsDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-viewAccountsDiv_md4"
@@ -411,15 +415,16 @@
                             <!--end::Header-->
 
                             <!--begin::Body-->
-                            <div class="card-body pt-2 position-relative" id="accountsSectionDiv">
+                            <div class="card-body pt-2 position-relative accountsSectionDiv" id="accountsSectionDiv">
                                 <div class="d-flex justify-content-center">
                                     <button data-toggle="modal"
                                             data-target="#inviteModal"
-                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6 mr-3">Send
+                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6 mr-3 sendInviteDiv">
+                                        Send
                                         Invite
                                     </button>
                                     <button data-toggle="modal" data-target="#addAccountsModal"
-                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6">Add
+                                            class="btn font-weight-bolder font-size-h6 px-8 py-4 my-3 col-6 addAccountsModal">Add
                                         Accounts
                                     </button>
                                 </div>
@@ -429,7 +434,7 @@
                                 </small>
                                 <!-- begin:Add Accounts Modal-->
                                 <div class="modal fade" id="addAccountsModal" tabindex="-1"
-                                <div class="modal fade" id="addAccountsModal" tabindex="-1"
+                                <div class="modal fade " id="addAccountsModal" tabindex="-1"
                                      role="dialog"
                                      aria-labelledby="addAccountsModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-lg"
@@ -449,7 +454,7 @@
                                                         id="AddAccountsTab"
                                                         role="tablist">
                                                         <li class="nav-item">
-                                                            <a class="nav-link"
+                                                            <a class="nav-link active"
                                                                id="facebook-tab-accounts"
                                                                data-toggle="tab"
                                                                href="#facebook-add-accounts">
@@ -523,28 +528,40 @@
 
                                                             </a>
                                                         </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="tiktok-tab-accounts"
+                                                               data-toggle="tab" href="#tiktok-add-accounts"
+                                                               aria-controls="tiktok">
+                                                                <span class="nav-text"><i
+                                                                            class="fab fa-tiktok fa-2x"></i></span>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                     <div class="tab-content mt-5"
                                                          id="AddAccountsTabContent">
                                                         <div class="tab-pane fade show active"
                                                              id="facebook-add-accounts" role="tabpanel"
                                                              aria-labelledby="facebook-tab-accounts">
-                                                            <p>Socioboard needs permission to access and
-                                                                publish content
-                                                                to Facebook on your behalf. To grant
-                                                                permission, you
-                                                                must be an admin for your brand’s
-                                                                Facebook page.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="/add-accounts/Facebook"
-                                                                   type="button"
-                                                                   class="btn btn-facebook font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Facebook Profile</a>
-                                                                <a href="/add-accounts/FacebookPage"
-                                                                   type="button"
-                                                                   class="btn btn-facebook fb_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
-                                                                >Add
-                                                                    a Facebook FanPage</a>
+
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post" id="schedule_post" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_fb_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="/add-accounts/Facebook"
+                                                                       type="button"
+                                                                       class="btn btn-facebook font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Facebook Profile</a>
+                                                                    <a href="/add-accounts/FacebookPage"
+                                                                       type="button"
+                                                                       class="btn btn-facebook fb_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3"
+                                                                    >Add
+                                                                        a Facebook FanPage</a>
+                                                                </div>
                                                             </div>
                                                             @if($facebookpages === 1)
                                                                 <div class="mt-3 fb_page_div" style="display: none;">
@@ -620,38 +637,59 @@
                                                              id="twitter-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="twitter-tab-accounts">
-                                                            <p>Please make sure you are logged in with
-                                                                the proper
-                                                                account when you authorize
-                                                                Socioboard.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="/add-accounts/Twitter" id="twitterButton"
-                                                                   type="button"
-                                                                   class="btn btn-twitter font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Twitter Profile</a>
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post2" id="schedule_post2" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv2();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Please make sure you are logged in with
+                                                                        the proper
+                                                                        account when you authorize
+                                                                        Socioboard.</div>
+                                                                </label>
                                                             </div>
-                                                            <label class="checkbox mb-0 pt-5">
-                                                                <input class="checkboxes2" type="checkbox" name="sb-twt"
-                                                                       onclick="followSBTwitter();">
-                                                                <span class="mr-2"></span>
-                                                                Follow Socioboard on twitter for update
-                                                                & announcements
-                                                            </label>
+                                                            <div class="show_tw_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="/add-accounts/Twitter" id="twitterButton"
+                                                                       type="button"
+                                                                       class="btn btn-twitter font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Twitter Profile</a>
+                                                                </div>
+                                                                <label class="checkbox mb-0 pt-5">
+                                                                    <input class="checkboxes2" type="checkbox" name="sb-twt"
+                                                                           onclick="followSBTwitter();">
+                                                                    <span class="mr-2"></span>
+                                                                    Follow Socioboard on twitter for update
+                                                                    & announcements
+                                                                </label>
+                                                            </div>
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="instagram-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="instagram-tab-accounts">
-                                                            <p>To allow Socioboard access to your Instagram account, you
-                                                                must first give authorization from the Instagram
-                                                                website.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="/add-accounts/Instagram" type="button"
-                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Instagram Profile</a>
-                                                                <a href="/add-accounts/InstagramBusiness" type="button"
-                                                                   class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Business Account</a>
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post3" id="schedule_post3" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv3();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">To allow Socioboard access to your Instagram account, you
+                                                                        must first give authorization from the Instagram
+                                                                        website.</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_insta_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="/add-accounts/Instagram" type="button"
+                                                                       class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Instagram Profile</a>
+                                                                    <a type="button"
+                                                                       class="btn btn-instagram font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 instagram_page">Add
+                                                                        a Business Account</a>
+                                                                </div>
+                                                                <div class="instagram_page_div">
+                                                                    <h5><strong>Important Note:</strong></h5>
+                                                                    <p><strong>Check this video on how to add instagram business account step step by step.</strong><a  target="_blank" href="https://screencast-o-matic.com/watch/c3e2DhVFvqj">- https://screencast-o-matic.com/watch/c3e2DhVFvqj</a></p>
+                                                                    <a type="button" href="/add-accounts/InstagramBusiness"  class="btn btn-instagram">Connect to insta business account</a>
+                                                                </div>
                                                             </div>
                                                             @if($instagrampages === 1)
                                                                 <div class="mt-3 insta_page_div" style="display: none;">
@@ -723,17 +761,25 @@
                                                              id="linkedin-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="linkedin-tab-accounts">
-                                                            <p>Grant access to your profile to share
-                                                                updates and view
-                                                                your feed.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="/add-accounts/LinkedIn"
-                                                                   type="button"
-                                                                   class="btn btn-linkedin font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a LinkedIn Profile</a>
-                                                                <a href="/add-accounts/LinkedInCompany" type="button"
-                                                                   class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a LinkedIn page</a>
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post4" id="schedule_post4" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv4();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Grant access to your profile to share
+                                                                        updates and view
+                                                                        your feed.</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_linkedIn_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center ">
+                                                                    <a href="/add-accounts/LinkedIn"
+                                                                       type="button"
+                                                                       class="btn btn-linkedin font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a LinkedIn Profile</a>
+                                                                    <a href="/add-accounts/LinkedInCompany" type="button"
+                                                                       class="btn btn-linkedin linkedin_page_btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a LinkedIn page</a>
+                                                                </div>
                                                             </div>
                                                             @if($LinkedInpages === 1)
                                                                 <div class="mt-3 linkedIn_Pages_div"
@@ -800,11 +846,20 @@
                                                              id="youtube-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="youtube-tab-accounts">
-                                                            <p>To allow Socioboard access to your
-                                                                Youtube account, you
-                                                                must first give authorization from the
-                                                                Youtube
-                                                                Channel.</p>
+
+                                                                <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                        <input type="checkbox" class="custom-control-input schedule_post7" id="schedule_post7" name="scheduling_type"  value="0"
+                                                                               onclick="checkToShowAccountsAddDiv7();">
+                                                                        <span></span>
+                                                                        <div class="font-size-lg font-weight-bold ml-4">To allow Socioboard access to your
+                                                                            Youtube account, you
+                                                                            must first give authorization from the
+                                                                            Youtube
+                                                                            Channel.
+                                                                        </div>
+                                                                    </label>
+
+                                                            </div>
                                                             <p><strong>Important Notes:</strong></p>
                                                             <ol class="twitter-add-accounts">
                                                                 <li>
@@ -836,36 +891,54 @@
                                                             <p>Storing of Data will be max 30 days.</p>
                                                             <strong>Please go throw all the links for Terms and
                                                                 Policies</strong>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="add-accounts/Youtube"
-                                                                   type="button"
-                                                                   class="btn btn-youtube font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Connect
-                                                                    to
-                                                                    your YouTube Channel</a>
+                                                            <div class="show_youtube_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="add-accounts/Youtube"
+                                                                       type="button"
+                                                                       class="btn btn-youtube font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Connect
+                                                                        to
+                                                                        your YouTube Channel</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="pinterest-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="pinterest-tab-accounts">
-                                                            <p>Grant access to your profile to share updates and view
-                                                                your feed.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="add-accounts/Pinterest" type="button"
-                                                                   class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Pinterest Profile</a>
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post5" id="schedule_post4" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv5();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Grant access to your profile to share updates and view
+                                                                        your feed..</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_pinterest_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="add-accounts/Pinterest" type="button"
+                                                                       class="btn btn-pinterest font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Pinterest Profile</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="tab-pane fade"
                                                              id="tumblr-add-accounts"
                                                              role="tabpanel"
                                                              aria-labelledby="tumblr-tab-accounts">
-                                                            <p>Grant access to your profile to share updates and view
-                                                                your feed.</p>
-                                                            <div class="d-flex justify-content-center">
-                                                                <a href="/add-accounts/Tumblr" type="button"
-                                                                   class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
-                                                                    a Tumblr Profile</a>
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post6" id="schedule_post6" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv6();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Grant access to your profile to share updates and view
+                                                                        your feed.</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_tumblr_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="/add-accounts/Tumblr" type="button"
+                                                                       class="btn btn-tumblr font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Tumblr Profile</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         @if($bloggedpages === 1)
@@ -922,6 +995,24 @@
                                                                 </div>
                                                             </div>
                                                         @endif
+                                                        <div class="tab-pane fade" id="tiktok-add-accounts"
+                                                             role="tabpanel" aria-labelledby="tiktok-tab-accounts">
+                                                            <div class="mt-8 mb-5"><label class="checkbox checkbox-lg mb-2 add-account-label">
+                                                                    <input type="checkbox" class="custom-control-input schedule_post8" id="schedule_post8" name="scheduling_type"  value="0"
+                                                                           onclick="checkToShowAccountsAddDiv8();">
+                                                                    <span></span>
+                                                                    <div class="font-size-lg font-weight-bold ml-4">Grant access to your TikTok profile to share updates and view
+                                                                        your feed.</div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="show_tiktok_divs" style="display: none;">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="add-accounts/TikTok" type="button"
+                                                                       class="btn btn-tiktok font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3">Add
+                                                                        a Tiktok Profile</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -960,30 +1051,46 @@
 
                                                     <span class="symbol-label">
                                                         @if($account->account_type === 1 || $account->account_type === 2 )
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUSuMWEcCUPi4dy_q-HfMpQYrlwDOxWOILlQ&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUSuMWEcCUPi4dy_q-HfMpQYrlwDOxWOILlQ&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
-                                                            @elseif($account->account_type === 4 )
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIy0G6PWiqV0NM13Zd3OBB0H6SixdDsPxcgQ&usqp=CAU';"
+                                                        @elseif($account->account_type === 4 )
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIy0G6PWiqV0NM13Zd3OBB0H6SixdDsPxcgQ&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 12 || $account->account_type === 5 )
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://i.imgur.com/TMVAonx.png';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 11 )
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTldN9DuPhILuicsJc5JDGmDRWCI7Y-BXDLEA&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTldN9DuPhILuicsJc5JDGmDRWCI7Y-BXDLEA&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 9 )
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2p64RiNbHCKAGcrR7ZnOHjaiULOeG1KWpuQ&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2p64RiNbHCKAGcrR7ZnOHjaiULOeG1KWpuQ&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 6 || $account->account_type === 7)
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAazafiWiEDZc4wDZ6pSbidJPw4CTOuLwSBA&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAazafiWiEDZc4wDZ6pSbidJPw4CTOuLwSBA&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 16)
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqlxS7Cw_ggWMFVpVEQv-zWvfXqc36Bt0Lw&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIqlxS7Cw_ggWMFVpVEQv-zWvfXqc36Bt0Lw&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
                                                         @elseif($account->account_type === 18)
-                                                            <img src="{{$account->profile_pic_url}}" class="card-img-top" onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOg6a1JGvLre53ishmhjU63uwyz7Ok7_LSAw&usqp=CAU';"
+                                                            <img src="{{$account->profile_pic_url}}"
+                                                                 class="card-img-top"
+                                                                 onerror=" this.onerror=null;this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOg6a1JGvLre53ishmhjU63uwyz7Ok7_LSAw&usqp=CAU';"
                                                                  class="h-100 align-self-center" alt="avatar name"/>
-                                                            @endif
+                                                        @endif
                                                     </span>
                                                                     </div>
                                                                     <!--end::profile pic-->
@@ -991,52 +1098,77 @@
                                                                     <!--begin::Text-->
                                                                     <div class="SB-accounts-section d-flex flex-column flex-grow-1 mr-2">
                                                                         @if($account->join_table_teams_social_accounts->is_account_locked == true)
-                                                                            <a class="font-weight-bold font-size-lg mb-1 truncate"
-                                                                               id="name" data-toggle="tooltip"
-                                                                               title="{{$account->first_name}}{{$account->last_name}}"
-                                                                               disabled
-                                                                            >{{$account->first_name}}{{$account->last_name}}  </a>
+                                                                            @if($account->account_type === 18 )
+                                                                                <a class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                                   id="name" data-toggle="tooltip"
+                                                                                   title="{{$account->user_name}}"
+                                                                                   disabled
+                                                                                >{{$account->user_name}}</a>
+                                                                                @else
+                                                                                <a class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                                   id="name" data-toggle="tooltip"
+                                                                                   title="{{$account->first_name}}{{$account->last_name}}"
+                                                                                   disabled
+                                                                                >{{$account->first_name}}{{$account->last_name}}  </a>
+                                                                                @endif
                                                                         @else
-                                                                            <a id="name"
-                                                                               class="font-weight-bold font-size-lg mb-1 truncate"
-                                                                               data-toggle="tooltip"
-                                                                               title="{{$account->first_name}}{{$account->last_name}}"
-                                                                            >{{$account->first_name}}{{$account->last_name}}</a  id="name">
+                                                                            @if($account->account_type === 1 )
+                                                                                <a class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                                   id="name" data-toggle="tooltip"
+                                                                                   title="{{$account->first_name}}{{$account->last_name}}"
+                                                                                   disabled
+                                                                                >{{$account->first_name}}{{$account->last_name}}  </a>
+                                                                                @elseif($account->account_type === 18 )
+                                                                                    <a class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                                       id="name" data-toggle="tooltip"
+                                                                                       title="{{$account->user_name}}"
+                                                                                       disabled
+                                                                                    >{{$account->user_name}}</a>
+                                                                                @else
+                                                                                <a id="name" href="{{$account->profile_url}}" target="_blank"
+                                                                                   class="font-weight-bold font-size-lg mb-1 truncate"
+                                                                                   data-toggle="tooltip"
+                                                                                   title="{{$account->first_name}}{{$account->last_name}}"
+                                                                                >{{$account->first_name}}{{$account->last_name}}</a>
+                                                                                @endif
                                                                         @endif
                                                                         @if($account->account_type === 1 || $account->account_type === 3)
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Facebook</span>
+                                                                                    class="font-weight-bold">Facebook</span>
                                                                         @elseif($account->account_type === 2 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Facebook page</span>
+                                                                                    class="font-weight-bold">Facebook page</span>
                                                                         @elseif($account->account_type === 4 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Twitter</span>
+                                                                                    class="font-weight-bold">Twitter</span>
                                                                         @elseif($account->account_type === 5 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Instagram</span>
+                                                                                    class="font-weight-bold">Instagram</span>
                                                                         @elseif($account->account_type === 6 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">LinkedIn</span>
+                                                                                    class="font-weight-bold">LinkedIn</span>
                                                                         @elseif($account->account_type === 7 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">LinkedIn page</span>
+                                                                                    class="font-weight-bold">LinkedIn page</span>
                                                                         @elseif($account->account_type === 9 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Youtube</span>
+                                                                                    class="font-weight-bold">Youtube</span>
                                                                         @elseif($account->account_type === 8 || $account->account_type === 10 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Google</span>
+                                                                                    class="font-weight-bold">Google</span>
                                                                         @elseif( $account->account_type === 12 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Instagram Business</span>
+                                                                                    class="font-weight-bold">Instagram Business</span>
                                                                         @elseif( $account->account_type === 16 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Tumblr</span>
+                                                                                    class="font-weight-bold">Tumblr</span>
                                                                         @elseif( $account->account_type === 11 )
                                                                             <span
-                                                                                    class="text-muted font-weight-bold">Pinterest</span>
-                                                                        @endif
+                                                                                    class="font-weight-bold">Pinterest</span>
+                                                                        @elseif( $account->account_type === 18 )
+                                                                                <span
+                                                                                        class="text-muted font-weight-bold">TikTok</span>
+                                                                         @endif
                                                                     </div>
                                                                     <!--end::Text-->
                                                                     @if($account->join_table_teams_social_accounts->is_account_locked === false)
@@ -1044,62 +1176,68 @@
                                                                             <a href="{{env('APP_URL')}}feeds/facebook{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 2)
                                                                             <a href="{{env('APP_URL')}}feeds/fbPages{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 9)
                                                                             <a href="{{env('APP_URL')}}feeds/youtube{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 4)
                                                                             <a href="{{env('APP_URL')}}feeds/twitter{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 5)
                                                                             <a href="{{env('APP_URL')}}feeds/instagram{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 7)
                                                                             <a href="{{env('APP_URL')}}feeds/linkedIn{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 12)
                                                                             <a href="{{env('APP_URL')}}feeds/Business{{$account->account_id}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @elseif($account->account_type === 11)
                                                                             <a href="{{env('APP_URL')}}show-boards/Pinterest{{$account->account_id}}"
                                                                                target="_blank" id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">Connected</a>
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">Connected</a>
+                                                                        @elseif($account->account_type === 18)
+                                                                            <a href="{{env('APP_URL')}}feeds/TikTok{{$account->account_id}}"
+                                                                               target="_blank"
+                                                                               id="connectedButton" title="View Profile"
+                                                                               class="btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                Connected</a>
                                                                         @else
                                                                             <a href="{{$account->profile_url}}"
                                                                                target="_blank"
                                                                                id="connectedButton" title="View Profile"
-                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                               class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                                 Connected</a>
                                                                         @endif
                                                                     @else
                                                                         <a
-                                                                                class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder">
+                                                                                class="add-account-section-btns btn label label-xl label-inline my-lg-0 my-2 font-weight-bolder connectedButton">
                                                                             Not Connected</a>
                                                                 @endif
                                                                 <!--begin::Account Dropdown-->
-                                                                    <div class="dropdown dropdown-inline ml-2"
+                                                                    <div class="dropdown dropdown-inline ml-2 quickActionsButton"
                                                                          id="quick_actions"
                                                                          title="Quick actions"
                                                                          data-placement="left">
@@ -1207,15 +1345,15 @@
                                                                 </div>
                                                             @endif
                                                             @endforeach
-                                                            @else
-                                                                <div class="text-center">
+                                                            @if($count === 0 )
+                                                                <div class="text-center noAccountsDiv">
                                                                     <div class="symbol symbol-150">
                                                                         <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                                     </div>
-                                                                    <h6>Currently, no social account has added to
+                                                                    <h6>Currently, no social account has been added to
                                                                         this team yet.</h6>
-
                                                                 </div>
+                                                            @endif
                                                             @endif
                                                             @elseif($accounts['code'] === 400)
                                                                 <div class="text-center">
@@ -1245,14 +1383,15 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-4 card-stretch">
+                        <div class="col-xl-4 card-stretch introjs-step-9">
                             <!--begin::Rss-->
-                            <div class="card card-custom gutter-b card-stretch" id="ss-topRssDiv">
+                            <div class="card card-custom gutter-b card-stretch " id="ss-topRssDiv">
                                 <!--begin::Header-->
                                 <div class="card-header border-0 py-5">
                                     <h3 class="card-title font-weight-bolder">Recently Searched Top 5 RSS Links</h3>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-topRssDiv_md4" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-topRssDiv_md4" style="
@@ -1305,12 +1444,14 @@
                         <div class="col-xl-8 card-stretch"
                              id="ss-publishHistoryDiv">
                             <!--begin::Rss-->
-                            <div class="card card-custom gutter-b card-stretch">
+                            <div class="card card-custom gutter-b card-stretch introjs-step-8">
                                 <!--begin::Header-->
-                                <div class="card-header border-0 py-5">
-                                    <h3  class="card-title  text-hover-primary font-weight-bolder"> <a href="/home/publishing/schedule/history">Publishing History </a></h3>
+                                <div class="card-header border-0 py-5 ">
+                                    <h3 class="card-title  text-hover-primary font-weight-bolder"><a
+                                                href="/home/publishing/schedule/history">Publishing History </a></h3>
                                     <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
-                                         title="Add to custom Reports"><i class="fa fa-plus fa-md" aria-hidden="true"></i>
+                                         title="Add to custom Reports"><i class="fa fa-plus fa-md"
+                                                                          aria-hidden="true"></i>
                                         <span node-id="ss-publishHistoryDiv_md8" class="ss addtcartclose"></span>
                                     </div>
                                     <span class="spinner spinner-primary spinner-center" id="ss-publishHistoryDiv_md8"
@@ -1354,12 +1495,17 @@
                                                                                     the
                                                                                     video tag.
                                                                                 </video>
+                                                                                @else
+                                                                                <img src="/media/png/broken-img.jpg"
+                                                                                     alt=""
+                                                                                     style="height: inherit; width: inherit; object-fit: contain;">
                                                                             @endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="history_publishing">
                                                                         <div
-                                                                           class="font-weight-bolder mb-1 font-size-lg">Post
+                                                                                class="font-weight-bolder mb-1 font-size-lg">
+                                                                            Post
                                                                             :
                                                                             {{$item->description}}</div>
                                                                     </div>
@@ -1573,6 +1719,7 @@
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="{{asset('js/accounts.js')}}"></script>
     <script>
+
 
         function setTheCookie(cname, cvalue, exdays) {
             $('#feebdackModel').modal('hide');
@@ -2165,30 +2312,162 @@
         $fbp = {{$facebookpages}}
             $inp = {{$instagrampages}}
             $linp = {{$LinkedInpages}}
-            $tbp =
-                {{$bloggedpages}}
-                if($fbp === 1)
+            $tbp = {{$bloggedpages}}
+
+        if($fbp === 1)
         {
             $('#addAccountsModal').modal('show');
+            $('.schedule_post').prop('checked', true);
             displayFacebookPages();
         }
         if ($inp === 1) {
             $('#addAccountsModal').modal('show');
+            $('.schedule_post3').prop('checked', true);
             displayInstagramPages();
         }
         if ($linp === 1) {
             $('#addAccountsModal').modal('show');
+            $('.schedule_post4').prop('checked', true);
             displayLinkedInPages();
         }
 
         if ($tbp === 1) {
             $('#addAccountsModal').modal('show');
+            $('.schedule_post6').prop('checked', true);
             displayTumblrPages();
             $("#tumblr-tab-accounts").trigger("click");
 
         }
         $('#calendarPost,#scheduledPost').tooltip();
 
+        function checkToShowAccountsAddDiv()
+        {
+
+            if ($('input.schedule_post').is(':checked')) {
+                $(".show_fb_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_fb_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv2()
+        {
+
+            if ($('input.schedule_post2').is(':checked')) {
+                $(".show_tw_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_tw_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv3()
+        {
+
+            if ($('input.schedule_post3').is(':checked')) {
+                $(".show_insta_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_insta_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv4()
+        {
+
+            if ($('input.schedule_post4').is(':checked')) {
+                $(".show_linkedIn_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_linkedIn_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv5()
+        {
+
+            if ($('input.schedule_post5').is(':checked')) {
+                $(".show_pinterest_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_pinterest_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+
+        function checkToShowAccountsAddDiv6()
+        {
+
+            if ($('input.schedule_post6').is(':checked')) {
+                $(".show_tumblr_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_tumblr_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv7()
+        {
+            if ($('input.schedule_post7').is(':checked')) {
+                $(".show_youtube_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_youtube_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        function checkToShowAccountsAddDiv8()
+        {
+            if ($('input.schedule_post8').is(':checked')) {
+                $(".show_tiktok_divs").css({
+                    display: "block"
+                });
+            } else {
+                $(".show_tiktok_divs").css({
+                    display: "none"
+                });
+
+            }
+        }
+
+        // instagram page list div open
+        $(".instagram_page_div").css({
+            display: "none"
+        });
+        $(".instagram_page").click(function () {
+            $(".instagram_page_div").css({
+                display: "block"
+            });
+        });
     </script>
 
 

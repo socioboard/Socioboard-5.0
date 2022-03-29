@@ -39,6 +39,7 @@ Route::group(['module' => 'Home', 'middleware' => ['authenticateUser'], 'namespa
         Route::get('/instagram/callback', [DashboardController::class, 'addInstagramCallback']);
         Route::get('/tumblr-callback', [DashboardController::class, 'addTumblrCallback']);
         Route::get('/pinterest-callback', [DashboardController::class, 'addPinterestCallback']);
+        Route::get('/add-tiktok/callback', [DashboardController::class, 'addTikTokCallBack']);
         Route::post('tumblrPageAdd', [DashboardController::class, 'addtumblrInPageBulkInBulk']);
         Route::get('/instagram-business/callback', [DashboardController::class, 'addInstagramBusinessCallback']);
         Route::get('/linkedIn-pages/callback', [DashboardController::class, 'addLinkedInPagesCallback']);

@@ -24,9 +24,9 @@
 {{--                                <form id="twitter_form">--}}
                                     <!--begin::search-->
                                     <div class="form-group">
-                                        <div class="input-icon">
+                                        <div class="input-icon InKwywordDiv">
                                             <div id="InKwyword">
-                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" autocomplete="off" id="keyword_name" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword or Topics""/>
+                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 keywordTextDIvs" type="text" name="keyword" autocomplete="off" id="keyword_name" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword or Topics"/>
                                             <span><i class="far fa-keyboard"></i></span>
                                             </div>
                                         </div>
@@ -195,13 +195,13 @@
                                             </p>
                                             <div class="d-flex align-items-center mb-2">
 
-                                                <a href="javascript:;" class="font-weight-bolder font-size-sm p-2" data-toggle="tooltip" title="I like this">
+                                                <a href="javascript:;" class="font-weight-bolder font-size-sm p-2 likeDiv" data-toggle="tooltip" title="I like this">
                                                             <span class="svg-icon svg-icon-md svg-icon-danger pr-1">
                                                                     <i class="fas fa-thumbs-up "></i>
                                                             </span> {{$twits->favoriteCount}}
                                                 </a>
 
-                                                <a href="javascript:;" class="font-weight-bolder font-size-sm p-2" data-toggle="tooltip" title="Retweet">
+                                                <a href="javascript:;" class="font-weight-bolder font-size-sm p-2 Retweetdiv" data-toggle="tooltip" title="Retweet">
                                                             <span class="svg-icon svg-icon-md svg-icon-danger pr-1">
                                                                     <i class="fas fa-retweet"></i>
                                                             </span> {{$twits->retweetCount}}
@@ -209,7 +209,7 @@
                                             </div>
                                             <hr>
                                             <div class="d-flex justify-content-center">
-                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('{{$twits->tweetUrl}}','{{$twits->postedAccountScreenName}}','{{$twits->description}}')"><i class="far fa-hand-point-up fa-fw" ></i> 1 click</a>
+                                                <a href="javascript:;" data-toggle="modal" data-target="#resocioModal" class="btn btn-hover-text-success btn-hover-icon-success rounded font-weight-bolder mr-5" onclick="openModel('{{$twits->tweetUrl}}','{{$twits->postedAccountScreenName}}','{{$twits->description}}')"><i class="far fa-hand-point-up fa-fw" ></i> One-Click</a>
                                                 <a href="{{$twits->tweetUrl}}" class="btn btn-hover-text-primary btn-hover-icon-primary rounded font-weight-bolder"><i class="fab fa-twitter fa-fw"></i> Show Original</a>
                                             </div>
                                         </div>
@@ -245,6 +245,17 @@
                                     <i aria-hidden="true" class="ki ki-close"></i>
                                 </button>
                             </div>
+
+                            <form action="{{ route('publish_content.scheduling')  }}" method="POST" id="checkRoute">
+                                @csrf
+                                <input type="hidden" name="mediaUrl" id="mediaUrls" value={{null}}>
+                                <input type="hidden" name="sourceUrl" id="sourceUrl" value={{ null}}>
+                                <input type="hidden" name="publisherName" id="publisherName" value="{{ null }}">
+                                <input type="hidden" name="title" id="title" value="{{ null }}">
+                                <input type="hidden" name="type"  id="type" value="{{ null }}">
+                                <textarea name="description"  id="description" value="{{ null }}" style="display: none">{{ null }}</textarea>
+                            </form>
+
                             <form action="{{ route('publish_content.share') }}" id="publishContentForm" method="POST">
                                 <div class="modal-body">
                                     <div class="form-group" id="normal_post_area">
@@ -284,6 +295,37 @@
                                                         <div class="mt-3">
                                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                                 <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
+                                                                    @if(ucwords($key) === "Twitter")
+                                                                        <ul class="schedule-social-tabs">
+                                                                            <li class="font-size-md font-weight-normal">The Character limit is 280.</li>
+                                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                                        </ul>
+                                                                    @elseif(ucwords($key) === "Facebook")
+                                                                        <ul class="schedule-social-tabs">
+                                                                            <li class="font-size-md font-weight-normal">The Character limit is 5000.</li>
+                                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                                        </ul>
+                                                                    @elseif(ucwords($key) === "Instagram")
+                                                                        <ul class="schedule-social-tabs">
+                                                                            <li class="font-size-md font-weight-normal">The Character limit is 2200.</li>
+                                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                                            <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
+                                                                            <li class="font-size-md font-weight-normal">Image Pixel should be 1:1 resolution.</li>
+                                                                        </ul>
+                                                                    @elseif(ucwords($key) === "Linkedin")
+                                                                        <ul class="schedule-social-tabs">
+                                                                            <li class="font-size-md font-weight-normal">The Character limit is 700.</li>
+                                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                                        </ul>
+                                                                    @elseif(ucwords($key) === "Tumblr")
+                                                                        <ul class="schedule-social-tabs">
+                                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                                            <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                                        </ul>
+                                                                    @endif
                                                                 <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                                 @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -340,6 +382,7 @@
                                 </div>
 
                                 <div class="modal-footer">
+                                    <button type="submit"  class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" form="checkRoute"><i class="fas fa-history fa-fw"></i>Schedule</button>
                                     <button type="button" name="status" value="0" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Draft</button>
                                     <button type="button" name="status" value="1" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Post</button>
                                 </div>
@@ -499,6 +542,8 @@
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+response.title +'</textarea>');
                     $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+response.sourceUrl +'"/><span><i class="fas fa-link"></i></span>');
                     $('#mediaUrl').empty();
+                    $('#title').attr('value',response.title);
+                    $('#sourceUrl').attr('value',response.sourceUrl);
                 }
             });
         }
@@ -506,7 +551,11 @@
         function openImageModel(mediaUrl, mediatype, title,media,count ) {
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+title +'</textarea>');
                     $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+mediaUrl+'"/><span><i class="fas fa-link"></i></span>');
+                    $('#title').attr('value',title);
+                    $('#sourceUrl').attr('value',mediaUrl);
                     if(mediatype === "photo") {
+                        $('#mediaUrls').attr('value',media);
+                        $('#type').attr('value','image');
                         if (count === "single") {
                             $('#mediaUrl').empty().append('<div class="col-12" id="">' +
                                 '                                            <ul id="media-list" class="clearfix">' +
@@ -527,6 +576,7 @@
                                 '                                        </div>');
                         }
                     }else{
+                        $('#type').attr('value','video');
                         $('#mediaUrl').empty().append('<div class="col-12" id="">' +
                             '                                            <ul id="media-list" class="clearfix">' +
                             '                                                <li>' +

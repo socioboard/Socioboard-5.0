@@ -323,6 +323,7 @@
                         $("#teamInviteModal"+team_id).modal('hide');
                         $('#invite_button').empty().append('Invite');
                         if (response['code'] == 200) {
+                            $('#invite_form').trigger("reset");
                             toastr.success(response.message);
                         } else if (response['code'] == 204) {
                             toastr.error(response.message)

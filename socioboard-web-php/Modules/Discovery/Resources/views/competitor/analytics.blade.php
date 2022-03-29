@@ -52,7 +52,7 @@
                                     <div>
                                         <p>Competitor List</p>
                                     </div>
-                                    <div class="d-flex" id="fbLoading">
+                                    <div class="d-flex" id="facebookLoading">
                                         <p>Loading ...</p>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                     <div class="d-flex">
                                         <p>Competitor List</p>
                                     </div>
-                                    <div class="d-flex" id="fbLoading">
+                                    <div class="d-flex" id="twitterLoading">
                                         <p>Loading ...</p>
                                     </div>
                                 </div>
@@ -82,6 +82,9 @@
                                     <div class="d-flex">
                                         <p> Competitor List</p>
                                     </div>
+                                    <div class="d-flex" id="youtubeLoading">
+                                        <p>Loading ...</p>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -92,6 +95,9 @@
                                 <div class="competitive-list-block" id="instagramCompetitor">
                                     <div class="d-flex">
                                         <p> Competitor List</p>
+                                    </div>
+                                    <div class="d-flex" id="instagramLoading">
+                                        <p>Loading ...</p>
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +110,9 @@
                                     <div class="d-flex">
                                         <p> Competitor List</p>
                                     </div>
+                                    <div class="d-flex" id="linkedinLoading">
+                                        <p>Loading ...</p>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
@@ -114,6 +123,9 @@
                                 <div class="competitive-list-block" id="redditCompetitor">
                                     <div class="d-flex">
                                         <p> Competitor List</p>
+                                    </div>
+                                    <div class="d-flex" id="redditLoading">
+                                        <p>Loading ...</p>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +139,7 @@
                             <form class="d-flex align-items-center">
                                 <div class="inline-flex flex-wrap pr-5">
                                     <div class="competitor-overview">
-                                        <button type="button" class="btn active" id="facebookTitle"
+                                        <button type="button" class="btn active fbButtonDIv" id="facebookTitle"
                                                 onclick="activateMe('#facebookTitle')">
                                             <span><i class="fab fa-facebook"></i></span>
                                             <span>facebook</span>
@@ -162,6 +174,7 @@
                                         </button>
                                     </div>
                                 </div>
+
                                 <div class="inline-flex flex-wrap px-5">
                                     <div class="competitor-overview">
                                         <button type="button" class="btn" id="linkedinTitle"
@@ -182,8 +195,8 @@
                                 </div>
                                 <!-- datepicker -->
                                 <div class="ml-auto">
-                                    <div class="input-icon" id='analytics-date-range' style='width: 270px;'>
-                                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
+                                    <div class="input-icon analytics-date-range-input" id='analytics-date-range' style='width: 270px;'>
+                                        <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 "
                                                type="text" id="analytics-date-range-input"
                                                name="datepicker" autocomplete="off" placeholder="Select date range"/>
                                         <span><i class="far fa-calendar-alt"></i></span>
@@ -1165,7 +1178,9 @@
                 },
                 success: function ({data}) {
                     TOTAL_COMPETITORS[platform] = data;
+                    let loaderIds = '#facebookLoading, #youtubeLoading, #instagramLoading, #redditLoading, #linkedinLoading, #twitterLoading';
                     if (data.length > 0) {
+                        loaderIds.replace(`${platform}Loading`, '');
                         isCompetitorExist = true;
                         // Start for competitors
                         $(`#${platform}Competitor`).empty();
@@ -1177,20 +1192,20 @@
                                                     <div class="ml-auto d-flex">
                                                         <a href="#" data-toggle="tooltip" data-placement="top" title="" data-html="true"
                                                            data-original-title="${customInfoInHTML}"><i
-                                                                    class="fas fa-info-circle mx-5"></i></a>
+                                                                    class="fas fa-info-circle mx-5 infoButtonClass"></i></a>
                                                         <a href="#" data-toggle="modal"
                                                            onclick="deleteCompetitor('${competitor?.status || competitor?.page_user_name ? competitor?.page_user_name?.replaceAll('/', '-') : competitor?.page_user_names.replaceAll('/', '-')}', '${platform}')"
                                                            data-target="#deleteCompetitorModal">
-                                                            <i class="far fa-trash-alt"></i>
+                                                            <i class="far fa-trash-alt deleteComptetitor"></i>
                                                         </a>
                                                     </div>
                                                 </div>`);
                             PROFILES[competitor?.status || competitor?.page_user_name ? competitor?.page_user_name : competitor?.page_user_names] = competitor?.status ? competitor?.page_logo : '../media/icons/user.png';
                         });
-
+                        $(loaderIds).html('<p>List not Found.</p>');
                         if (!competitorAppended) appendCompetitorsBasedOnNetwork(TOTAL_COMPETITORS[SELECTED_PLATFORM]) , competitorAppended = 1;
                     } else {
-                        $('#fbLoading').html('<p>List not Found.</p>');
+                        $(loaderIds).html('<p>List not Found.</p>');
                         $('#competitorVsLoader').html('<span><img src="../media/icons/user.png" alt="user-image"></span>\n' +
                             '                                    <span>No Data Found. </span>')
                     }
@@ -1658,6 +1673,7 @@
                                         ${top_posts.map((post, index) => postsGridContent(post, index)).join('')}
                                         </div>
                                     </div>`);
+            if(SELECTED_PLATFORM === 'instagram') $('span.iframe-container.top-posts-image').css('height', '380px');
         }
 
         function postBreakDown(content = '', indexValue = 0) {

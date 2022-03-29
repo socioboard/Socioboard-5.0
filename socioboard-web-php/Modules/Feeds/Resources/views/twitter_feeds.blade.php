@@ -156,7 +156,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <select
-                                                    class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6"
+                                                    class="form-control form-control-solid form-control-lg h-auto py-2 rounded-lg font-size-h6 selectAccountsDiv"
                                                     onchange="call(this)">
                                                 @if($message=== 'success')
                                                     <script>
@@ -276,9 +276,9 @@
                                                             <div class="d-flex flex-column flex-grow-1">
                                                                 <a href="{{$data->tweetUrl}}"
                                                                    target="_blank"
-                                                                   class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
+                                                                   class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                                 <span
-                                                                        class="font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
+                                                                        class="font-weight-bold dateClass">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                             </div>
                                                             <!--end::Info-->
                                                         </div>
@@ -294,7 +294,7 @@
                                                             <div class="pt-4">
                                                                 @foreach($data->mediaUrls as $media)
                                                                     @if($media->type === 'photo')
-                                                                        <div class="">
+                                                                        <div class="mb-4">
                                                                             <img src="{{$media->url}}"
                                                                                  class="img-fluid"/>
                                                                         </div>
@@ -368,7 +368,7 @@
                                                                             @if($data->isLiked === false)
                                                                                 <a href="javascript:;"
                                                                                    data-value="{{$data->tweetId}}"
-                                                                                   class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5"
+                                                                                   class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 likeButtonDiv"
                                                                                    onclick="likeTweet('{{$data->tweetId}}')">
                                                                 <span data-value="{{$data->tweetId}}"
                                                                       class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"
@@ -393,7 +393,7 @@
                                                                             @endif
                                                                             <a href="javascript:;"
                                                                                data-value2="{{$data->tweetId}}"
-                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 retweetButton"
                                                                                onclick="retweetThisTweet('{{$data->tweetId}}')">
                                                                 <span data-value2="{{$data->tweetId}}"
                                                                       class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"
@@ -413,7 +413,7 @@
                                                                                        href="javascript:;"
                                                                                        value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,'{{$data->urls[0]->expanded_url}}',{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -425,7 +425,7 @@
                                                                                        href="javascript:;"
                                                                                        value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>','{{$data->mediaUrls[0]->url}}','{{$type}}',null,null,{{$imageCounts}})">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -439,7 +439,7 @@
                                                                                        href="javascript:;"
                                                                                        value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,'{{$data->urls[0]->expanded_url}}')">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -451,7 +451,7 @@
                                                                                        href="javascript:;"
                                                                                        value="<?php echo preg_replace($regex, ' ', $string_desc); ?>"
                                                                                        imageSrc="#"
-                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "
+                                                                                       class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 reSocioButtonClass"
                                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $string_desc); ?>',null,null,null,null)">
                                                                                     <span
                                                                                             class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
@@ -471,7 +471,7 @@
                                                                 <!--end::Container-->
                                                                 <!--begin::Editor-->
                                                                 <form class="position-relative">
-                                                    <textarea class="form-control border-0 pr-10 resize-none"
+                                                    <textarea class="form-control border-0 pr-10 resize-none sendCommentDiv"
                                                               rows="1" placeholder="Reply..."
                                                               name="{{$data->tweetId}}"></textarea>
 
@@ -504,14 +504,14 @@
                                                         </div>
                                                     @endif
                                                     @elseif($message=== 'No Twitter account added yet! or Account has locked')
-                                                        <div class="text-center">
+                                                        <div class="text-center noTwitterFeedsDiv">
                                                             <div class="symbol symbol-150">
                                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                             </div>
                                                             <h6>No Twitter account has been added for this team yet! or Account has been locked</h6>
                                                         </div>
                                                     @elseif($message=== 'failed')
-                                                        <div class="text-center"
+                                                        <div class="text-center "
                                                              style="color: Red;text-align:center;">
                                                             <div class="symbol symbol-150">
                                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
@@ -547,6 +547,7 @@
         @section('scripts')
             {{--            <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
             <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+            <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
             <script src="{{asset('js/images-grid.js')}}"></script>
             <script src="{{asset('js/accounts.js')}}"></script>
             <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
@@ -758,7 +759,7 @@
                                         '</span>' +
                                         '</div><div class="d-flex flex-column flex-grow-1">\n' +
                                         '<a href="' + element.tweetUrl + '"\n' +
-                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                        'target="_blank" class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
                                         '<span class="font-weight-bold">' + published + '</span>\n' +
                                         '</div></div>\n';
                                     if (element.mediaUrls.length === 1) {
@@ -825,7 +826,7 @@
                                     appendData += '<div class="d-flex align-items-center">\n' ;
                                     if (element.isLiked === false) {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 likeButtonDiv"\n' +
                                             'onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
                                             '<span data-value="' + element.tweetId + '"\n' +
                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
@@ -834,7 +835,7 @@
                                             '</span></a>\n';
                                     } else {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 likeButtonDiv"\n' +
                                             'onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
                                             '<span data-value="' + element.tweetId + '"\n' +
                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
@@ -843,7 +844,7 @@
                                             '</span></a>\n';
                                     }
                                     appendData += '<a href="javascript:;" data-value2="' + element.tweetId + '"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 retweetButton"\n' +
                                         'onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
                                         '<span data-value2="' + element.tweetId + '"\n' +
                                         'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
@@ -859,13 +860,13 @@
                                         }
                                         if (element.urls.length > 0) {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + element.urls[0].expanded_url + '\',\'' + multiImageCount + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + element.urls[0].expanded_url + '\',\'' + multiImageCount + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
                                         } else {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
@@ -873,13 +874,13 @@
                                     } else {
                                         if (element.urls.length > 0) {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.urls[0].expanded_url + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,\'' + element.urls[0].expanded_url + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
                                         } else {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' + element.descritpion.replace(/\n/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '').replace(/(?:https?|ftp):\/\/[\n\S]+/g, '') + '\',null,null,null,null)"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
@@ -888,7 +889,7 @@
                                     appendData += '</div></div></div>\n' +
                                         '<div class="fb_cmt_div mt-5">\n' +
                                         '<form class="position-relative">\n' +
-                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                        '<textarea class="form-control border-0 pr-10 resize-none sendCommentDiv"\n' +
                                         'rows="1" placeholder="Reply..."\n' +
                                         'name="' + element.tweetId + '"></textarea>\n' +
                                         '<div name="' + element.tweetId + '"\n' +
@@ -1006,7 +1007,7 @@
                                         '</span></div>\n' +
                                         '<div class="d-flex flex-column flex-grow-1">\n' +
                                         '<a href="' + element.tweetUrl + '"\n' +
-                                        'class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
+                                        'class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv" target="_blank">' + response.data.data.socialAccountDetails.first_name + '</a>\n' +
                                         '<span class="font-weight-bold">' + published + '</span></div></div>\n';
                                     if (element.mediaUrls.length === 1) {
                                         multiImageCount = 0;
@@ -1067,7 +1068,7 @@
                                     appendData += '<div class="d-flex align-items-center">\n';
                                     if (element.isLiked === false) {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'class="btn btn-hover-text-danger btn-hover-icon-danger btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 likeButtonDiv"\n' +
                                             'onclick="likeTweet(\'' + element.tweetId + '\')">\n' +
                                             '<span data-value="' + element.tweetId + '"\n' +
                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
@@ -1076,7 +1077,7 @@
                                             '</span></a>\n';
                                     } else {
                                         appendData += '<a href="javascript:;" data-value="' + element.tweetId + '"\n' +
-                                            'class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                            'class="btn btn-icon-danger btn-sm  bg-hover-light-danger btn-hover-text-danger rounded font-weight-bolder font-size-sm p-2 mr-5 likeButtonDiv"\n' +
                                             'onclick="disLikeTweet(\'' + element.tweetId + '\')">\n' +
                                             '<span data-value="' + element.tweetId + '"\n' +
                                             'class="svg-icon svg-icon-md svg-icon-dark-25 pr-2"\n' +
@@ -1085,7 +1086,7 @@
                                             '</span></a>\n';
                                     }
                                     appendData += '<a href="javascript:;" data-value2="' + element.tweetId + '"\n' +
-                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 "\n' +
+                                        'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 mr-5 retweetButton"\n' +
                                         'onclick="retweetThisTweet(\'' + element.tweetId + '\')">\n' +
                                         '<span data-value2="' + element.tweetId + '"\n' +
                                         'class="svg-icon svg-icon-md svg-icon-dark-25 pr-1"\n' +
@@ -1102,13 +1103,13 @@
                                         if (element.urls.length > 0) {
                                             urlResocio = element.urls[0].expanded_url;
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + urlResocio + '\',\'' + multiImageCount + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,\'' + urlResocio + '\',\'' + multiImageCount + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
                                         } else {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' +  description + '\',\'' + element.mediaUrls[0].url + '\',\'' + type + '\',null,null,\'' + multiImageCount + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
@@ -1117,13 +1118,13 @@
                                         if (element.urls.length > 0) {
                                             urlResocio = element.urls[0].expanded_url;
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description + '\',null,null,null,\'' + urlResocio + '\')"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' +  description + '\',null,null,null,\'' + urlResocio + '\')"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
                                         } else {
                                             appendData += '<a id="reSocioButton" value="' + element.descritpion + '" href="javascript:;"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2" onclick="resocioButton(\'' +  description+ '\',null,null,null,null)"\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass" onclick="resocioButton(\'' +  description+ '\',null,null,null,null)"\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio</a>\n';
@@ -1133,7 +1134,7 @@
                                     appendData += '</div></div></div>\n' +
                                         '<div class="fb_cmt_div mt-5">\n' +
                                         '<form class="position-relative">\n' +
-                                        '<textarea class="form-control border-0 pr-10 resize-none"\n' +
+                                        '<textarea class="form-control border-0 pr-10 resize-none sendCommentDiv"\n' +
                                         'rows="1" placeholder="Reply..."\n' +
                                         'name="' + element.tweetId + '"></textarea>\n' +
                                         '<div name="' + element.tweetId + '"\n' +
@@ -1280,6 +1281,9 @@
                  * ! Do not change this function without referring API format of resocio.
                  */
                 function resocioButton(description, mediaUrl, type, title, sourceUrl, imagecount) {
+                    $(".schedule-div").css({
+                        display: "none"
+                    });
                     publishOrFeeds = 1;
                     $('body').find('#resocioModal').remove();
                     let action = '/discovery/content_studio/publish-content/feeds-modal';
@@ -1320,7 +1324,6 @@
                         },
                     });
                 };
-
                 function searchHashTags() {
                     let currentCountryValue = ($('#countrySelect option:selected').val());
                     if (currentCountryValue === 'Country') {

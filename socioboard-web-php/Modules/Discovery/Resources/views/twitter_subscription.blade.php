@@ -21,10 +21,10 @@
                 </script>
                 @endif
                 @if($twitterAccounts !== null)
-                <div class="row d-flex align-items-center justify-content-center">
+                <div class="row d-flex align-items-center justify-content-center filterDiv">
                     <div class="col-md-3">
                         <div class="form-group mb-0">
-                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6" name="twitter_id" id="twitter_id" onchange="change(this)">
+                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 selectDiv" name="twitter_id" id="twitter_id" onchange="change(this)">
                                 @foreach($twitterAccounts['account'] as $twitter)
                                     <option value="{{$twitter->account_id}}">{{$twitter->user_name}}</option>
                                 @endforeach
@@ -46,10 +46,10 @@
                     <div class="col-md-2">
                         <ul class="nav nav-bold nav-pills px-8 subscription-view" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active show" data-toggle="tab" href="#twittersubscription-grid"><i class="fas fa-th"></i></a>
+                                <a class="nav-link active show" data-toggle="tab" href="#twittersubscription-grid"><i class="fas fa-th gridView"></i></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#twittersubscription-list"><i class="fas fa-list"></i></a>
+                                <a class="nav-link" data-toggle="tab" href="#twittersubscription-list"><i class="fas fa-list listView"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -106,7 +106,7 @@
                     <!--end::Twitter subscription list view-->
                 </div>
                 @else
-                    <div class="card-body">
+                    <div class="card-body noTwitterAccountsDivAdded">
                         <div class="text-center">
                             <div class="symbol symbol-150">
                                 <img src="/media/svg/illustrations/no-feeds.svg" class="">
@@ -201,7 +201,7 @@
                                     '                                        <hr />\n' +
                                     '                                        <div class="twitter-social-icons mb-3">\n' +
                                     '<div id="follow_status'+data.screen_name+'">' +
-                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class=\"btn social-icons\"><i class=\"fas fa-user-check\" ></i>following</a>\n' : ' <a onclick="followUser('+screenname+')" class="btn social-icons"><i class="fas fa-user-plus" ></i>follow</a>\n') +
+                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class=\"btn social-icons followButtonDiv\"><i class=\"fas fa-user-check\" ></i>following</a>\n' : ' <a onclick="followUser('+screenname+')" class="btn social-icons"><i class="fas fa-user-plus" ></i>follow</a>\n') +
                                     '</div>' +
                                     '                                       </div>\n' +
                                     '                                    </div>\n' +
@@ -228,7 +228,7 @@
                                     '                                    <div class="col-md-2">\n' +
                                     '                                        <div class="twitter-social-icons mb-3">\n' +
                                     '<div id="follow_statuss'+data.screen_name+'">' +
-                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class="social-icons"><i class="fas fa-user-check"></i> Following</a>\n' : '<a onclick="followUser('+screenname+')" class="social-icons"><i class="fas fa-user-plus"></i> follow</a>\n')+
+                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class="social-icons followButtonDiv"><i class="fas fa-user-check"></i> Following</a>\n' : '<a onclick="followUser('+screenname+')" class="social-icons"><i class="fas fa-user-plus"></i> follow</a>\n')+
                                     '</div>' +
                                     '            </div>\n' +
                                     '                                    </div>\n' +
@@ -289,8 +289,8 @@
                         success: function (response) {
                             if (response.code === 200){
                                 toastr.success(response.message);
-                                $('#follow_status'+screenName).empty().append('<a onclick="unfollowUser('+name+')" class="btn social-icons"><i class="fas fa-user-check" ></i>Following</a>')
-                                $('#follow_statuss'+screenName).empty().append('<a onclick="unfollowUser('+name+')" class="social-icons"><i class="fas fa-user-check"></i> Following</a>')
+                                $('#follow_status'+screenName).empty().append('<a onclick="unfollowUser('+name+')" class="btn social-icons followButtonDiv"><i class="fas fa-user-check" ></i>Following</a>')
+                                $('#follow_statuss'+screenName).empty().append('<a onclick="unfollowUser('+name+')" class="social-icons followButtonDiv"><i class="fas fa-user-check"></i> Following</a>')
                             }
                         },
                         error: function (error) {
@@ -429,7 +429,7 @@
                                     '                                        <hr />\n' +
                                     '                                        <div class="twitter-social-icons mb-3">\n' +
                                     '<div id="follow_status'+data.screen_name+'">' +
-                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class=\"btn social-icons\"><i class=\"fas fa-user-check\" ></i>following</a>\n' : ' <a onclick="followUser('+screenname+')" class="btn social-icons"><i class="fas fa-user-plus" ></i>follow</a>\n') +
+                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class=\"btn social-icons followButtonDiv\"><i class=\"fas fa-user-check\" ></i>following</a>\n' : ' <a onclick="followUser('+screenname+')" class="btn social-icons"><i class="fas fa-user-plus" ></i>follow</a>\n') +
                                     '</div>' +
                                     '                                       </div>\n' +
                                     '                                    </div>\n' +
@@ -456,7 +456,7 @@
                                     '                                    <div class="col-md-2">\n' +
                                     '                                        <div class="twitter-social-icons mb-3">\n' +
                                     '<div id="follow_statuss'+data.screen_name+'">' +
-                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class="social-icons"><i class="fas fa-user-check"></i> Following</a>\n' : '<a onclick="followUser('+screenname+')" class="social-icons"><i class="fas fa-user-plus"></i> follow</a>\n')+
+                                    (data.following === true ? '<a onclick=\"unfollowUser('+screenname+')\" class="social-icons followButtonDiv"><i class="fas fa-user-check"></i> Following</a>\n' : '<a onclick="followUser('+screenname+')" class="social-icons"><i class="fas fa-user-plus"></i> follow</a>\n')+
                                     '</div>' +
                                     '            </div>\n' +
                                     '                                    </div>\n' +

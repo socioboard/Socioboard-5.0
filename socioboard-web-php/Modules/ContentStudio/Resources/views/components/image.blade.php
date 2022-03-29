@@ -42,6 +42,11 @@ data-type="image"
                 <input type="hidden" name="publisherName" value="{{ isset($item->publisherName) ? $item->publisherName : null }}">
                 <input type="hidden" name="title" value="{{ $item->title }}">
                 <input type="hidden" name="type" value="image">
+                @if(isset($pagetype) && $pagetype === 'DailyMotion')
+                    <input type="hidden" name="pageType" value="dailymotion">
+                @else
+                    <input type="hidden" name="pageType" value="other">
+                @endif
                 <textarea name="description" style="display: none">{{ $item->description }}</textarea>
                 <button type="submit"  class="btn btn-hover-text-info btn-hover-icon-info rounded font-weight-bolder"><i class="fas fa-history fa-fw"></i> Schedule</button>
             </form>

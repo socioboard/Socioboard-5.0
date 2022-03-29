@@ -239,11 +239,16 @@ class BoardsController extends Controller
                                         $socialAccounts['twitter']['account'][] = $account;
                                         break;
                                     case 6:
-                                    case 7:
                                         $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 7:
+                                        $socialAccounts['linkedin']['page'][] = $account;
                                         break;
                                     case 12:
                                         $socialAccounts['instagram']['business account'][] = $account;
+                                        break;
+                                    case 16:
+                                        $socialAccounts['tumblr']['account'][] = $account;
                                         break;
                                 }
                             }

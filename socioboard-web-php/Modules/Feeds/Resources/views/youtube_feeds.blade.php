@@ -25,7 +25,7 @@
                             <!-- begin:Accounts list -->
                             <div class="form-group">
                                 <select
-                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 selectAccountsDiv"
                                         onchange="call(this)">
                                     @if($message=== 'success')
                                         <script>
@@ -67,7 +67,7 @@
                                             </div>
                                             <div>
                                                 <a href="{{$feeds['data']->socialAccountDetails->profile_url}}"
-                                                   class="font-weight-bolder font-size-h5 text-hover-primary"
+                                                   class="font-weight-bolder font-size-h5 text-hover-primary "
                                                    target="_blank">
                                                     {{$accounts[0]->first_name}}
                                                 </a>
@@ -133,7 +133,7 @@
                                         <!--end::Contact-->
                                     </div>
                                 @else
-                                    <div class="text-center">
+                                    <div class="text-center youtubeNoDIv">
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
@@ -182,7 +182,7 @@
                                                         <!--begin::Info-->
                                                         <div class="d-flex flex-column flex-grow-1">
                                                             <a href="{{$feeds['data']->socialAccountDetails->profile_url}}" target="_blank"
-                                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
+                                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                             <span
                                                                     class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                         </div>
@@ -230,7 +230,7 @@
                                                             </a>
                                                             <a id="reSocioButton"
                                                                onclick="resocioButton('{{$data->description}}',null,'video',null,'{{$data->mediaUrl}}')"
-                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-retweet"></i>
                                                             </span>Re-socio
@@ -252,7 +252,7 @@
 
                                                         <!--begin::Editor-->
                                                         <form class="position-relative">
-                                                    <textarea id="" class="form-control border-0 pr-10 resize-none"
+                                                    <textarea id="" class="form-control border-0 pr-10 resize-none sendCommentDiv"
                                                               rows="1" placeholder="Reply..."
                                                               name="{{$data->videoId}}"></textarea>
 
@@ -281,7 +281,7 @@
                                         @endif
                                     @endif
                                 @else
-                                    <div class="text-center">
+                                    <div class="text-center youtubeNoDIv">
                                         <div class="symbol symbol-150">
                                             <img src="/media/svg/illustrations/no-accounts.svg"/>
                                         </div>
@@ -308,6 +308,7 @@
 
 @section('scripts')
     {{--    <script src="{{asset('js/contentStudio/search.js')}}"></script>--}}
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script src="/plugins/custom/dropify/dist/js/dropify.min.js"></script>
     <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
     <script src="{{asset('js/accounts.js')}}"></script>
@@ -426,7 +427,7 @@
                             '                                        </div>\n' +
                             '                                        <div>\n' +
                             '                                            <a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
-                            '                                               class="font-weight-bolder font-size-h5 text-hover-primary"\n' +
+                            '                                               class="font-weight-bolder font-size-h5 text-hover-primary "\n' +
                             '                                               target="_blank">\n' + response.data.socialAccountDetails.first_name +
                             '                                            </a>\n' +
                             // '  <div class="text-muted">\n' + response.data.socialAccountDetails.email +
@@ -475,7 +476,7 @@
                                     '                                                </div>\n' +
                                     '                                                <div class="d-flex flex-column flex-grow-1" >\n' +
                                     '                                                    <a href="' + response.data.socialAccountDetails.profile_url + '" \n' +
-                                    '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                    '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                     '                                                    <span\n' +
                                     '                                                        class="text-muted font-weight-bold">' + published + '</span>\n' +
                                     '                                                </div>\n' +
@@ -509,7 +510,7 @@
                                     '                                                            </a>';
                                 appendData += '<a id="reSocioButton"\n' +
                                     '                                                               onclick="resocioButton(\'' + element.description.replace(/\n/g, '') + '\',null,\'' + 'video' + '\',null,\'' + element.mediaUrl + '\')"\n' +
-                                    '                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                    '                                                               class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                     '                                                            <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                     '                                                                    <i class="fas fa-retweet"></i>\n' +
                                     '                                                            </span>Re-socio\n' +
@@ -519,7 +520,7 @@
                                     '                                            <div class="fb_cmt_div">\n' +
                                     '                                                <div class="separator separator-solid mt-5 mb-4"></div>\n' +
                                     '                                                <form class="position-relative">\n' +
-                                    '                                                    <textarea id="" class="form-control border-0 pr-10 resize-none"\n' +
+                                    '                                                    <textarea id="" class="form-control border-0 pr-10 resize-none sendCommentDiv"\n' +
                                     '                                                              rows="1" placeholder="Reply..." name="' + element.videoId + '"></textarea>\n' +
                                     '\n' +
                                     '                                                    <div class="position-absolute top-0 right-0 mt-1 mr-n2" name ="' + element.videoId + '" id="commentButton" onclick="commentOnFeed(\'' + element.videoId + '\')">\n' +
@@ -636,7 +637,7 @@
                                 '                                                </div>\n' +
                                 '                                                <div class="d-flex flex-column flex-grow-1">\n' +
                                 '                                                    <a href="' + response.data.socialAccountDetails.profile_url + '"\n' +
-                                '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                '                                                       class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv" target="_blank">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                 '                                                    <span\n' +
                                 '                                                        class="text-muted font-weight-bold">' + element.publishedDate + '</span>\n' +
                                 '                                                </div>\n' +
@@ -679,7 +680,7 @@
                                 '                                            <div class="fb_cmt_div">\n' +
                                 '                                                <div class="separator separator-solid mt-5 mb-4"></div>\n' +
                                 '                                                <form class="position-relative">\n' +
-                                '                                                    <textarea id="" class="form-control border-0 pr-10 resize-none"\n' +
+                                '                                                    <textarea id="" class="form-control border-0 pr-10 resize-none sendCommentDiv"\n' +
                                 '                                                              rows="1" placeholder="Reply..." name="' + element.videoId + '"></textarea>\n' +
                                 '\n' +
                                 '                                                    <div class="position-absolute top-0 right-0 mt-1 mr-n2" name ="' + element.videoId + '" id="commentButton">\n' +
@@ -777,6 +778,11 @@
          * @param {integer} id - video id of feed.
          * ! Do not change this function without referring API format of liking feed.
          */
+
+        function getSteps()
+        {
+            return StepsYoutube;
+        }
         function likeTweet(videoId) {
             $.ajax({
                 type: 'post',
@@ -801,7 +807,17 @@
                 }
             });
         }
+        $('.introjs-step-0').click(function () {
+            introStart();
+        });
 
+        const introStart = () => {
+            introJs().setOptions({
+                skipLabel: 'Skip',
+                doneLabel: 'Finish',
+                steps: getSteps()
+            }).start();
+        }
         /**
          * TODO We have to publish particular twitter post from particular twitter feed on multiple social account.
          * This function is used for publishing  particular twitter post from particular twitter feed on multiple social account

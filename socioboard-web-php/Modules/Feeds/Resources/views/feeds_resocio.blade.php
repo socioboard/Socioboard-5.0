@@ -83,11 +83,16 @@
                     <!-- end of image and video upload -->
                 @if(isset($socialAccounts) && !empty($socialAccounts))
                     <!-- begin:Accounts list -->
-                            <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
+
+                        <ul class="nav justify-content-center nav-pills" id="AddAccountsTab" role="tablist">
                                 @foreach($socialAccounts as $key => $socialAccount)
-                                        <li class="nav-item">
+                                    <li class="nav-item">
                                             <a class="nav-link" id="{{$key}}-tab-accounts" data-toggle="tab" href="#{{$key}}-add-accounts">
-                                                <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i></span>
+                                                <span class="nav-text"><i class="fab fa-{{$key}} fa-2x"></i>
+                                                    @if($key === 'linkedin-in')
+                                                        [pages]
+                                                    @endif
+                                                </span>
                                             </a>
                                         </li>
                                 @endforeach
@@ -116,7 +121,7 @@
                                                                 <li class="font-size-md font-weight-normal">You can post max 1 image or 1 video at a time.</li>
                                                                 <li class="font-size-md font-weight-normal">Image or video for posting is required.</li>
                                                             </ul>
-                                                        @elseif(ucwords($key) === "Linkedin")
+                                                        @elseif(ucwords($key) === "Linkedin" || ($key) === "linkedin-in")
                                                             <ul class="schedule-social-tabs">
                                                                 <li class="font-size-md font-weight-normal">Character limit is 700.</li>
                                                                 <li class="font-size-md font-weight-normal">You can post max 1 image or 1 video at a time.</li>
@@ -127,7 +132,10 @@
                                                                 <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
                                                             </ul>
                                                         @endif
-                                                        <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
+                                                    @if($key === 'linkedin-in')
+                                                        <?php $key='LinkedIn Pages'?>
+                                                            @endif
+                                                            <span>Choose {{ucwords($key)}} {{$group}} for posting </span>
                                                         @foreach($socialAccountArray as $group_key => $socialAccount)
                                                             @if($socialAccount->join_table_teams_social_accounts->is_account_locked == false)
                                                             <!--begin::Page-->
@@ -198,7 +206,7 @@
                 </div>
 
                 <!-- begin::Schedule type -->
-                <div class="schedule-div mt-5">
+                <div class="schedule-div mt-5 px-5" style="display:none;">
                     <!--begin::Header-->
                     <h3 class="card-title font-weight-bolder">Schedule type</h3>
                     <!--end::Header-->
@@ -281,7 +289,7 @@
                         <hr>
                     </div>
 
-                    <div class="d-flex justify-content-around">
+                    <div class="d-flex justify-content-end mb-5">
                         <button type="button" name="status"
                                 value="draft_scheduling"
                                 class="publishContentSubmit btn text-hover-success font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4">
@@ -301,8 +309,8 @@
 
 </div>
 <script>
-    let instagramInResocio=false;
     $(document.body).on('click', '.check_social_account2', function (e) {
+        let instagramInResocio=false;
         let append = '';
         SelectedId = "";
         let twitter = 0;
@@ -351,13 +359,11 @@
         }
     });
 
-    $(".schedule-div").css({
-        display: "none"
-    });
+
+
     $(".schedule-post-btn").click(function () {
-        $(".schedule-div").css({
-            display: "block"
-        });
+        $(".schedule-div").removeAttr( 'style' );
+        $(".schedule-div").attr("style","display:block;");
     });
 
 

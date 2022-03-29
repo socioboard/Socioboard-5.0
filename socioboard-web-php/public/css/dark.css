@@ -208,6 +208,18 @@ i {
     background-image: linear-gradient(145deg, #e55d21, #f36021) !important;
     color: var(--white) !important;
 }
+.btn-tiktok {
+    background-image: linear-gradient(145deg, #000, #000) !important;
+    color: var(--white) !important;
+}
+
+.bg-tiktok {
+    background-image: linear-gradient(145deg, #000, #000) !important;
+    color: var(--white) !important;
+}
+.bg-tiktok i {
+    color: var(--white);
+}
 /* end:bg color */
 
 /* header */
@@ -453,6 +465,11 @@ i {
     color: var(--white); !importantar
 }
 .btn-medium {
+    background-image: linear-gradient(145deg, #000, #000) !important;
+    color: var(--white) !important;
+}
+
+.btn-tiktok {
     background-image: linear-gradient(145deg, #000, #000) !important;
     color: var(--white) !important;
 }
@@ -1233,13 +1250,13 @@ html[data-theme='dark'] .assistant-right-sidebar {
         margin-right: 5px;
     }
     .color-descriptive .yellow-color span {
-        background-color: #ffa800;
+        background-color: #fb8a0a;
     }
     .color-descriptive .red-color span {
-        background-color: #f64e60;
+        background-color: #ff3e05;
     }
     .color-descriptive .blue-color span {
-        background-color: #3699ff;
+        background-color: #f4d527;
     }
 
     .history_publishing_mobile .history_publishing a {
@@ -1377,11 +1394,11 @@ html[data-theme='dark'] .assistant-right-sidebar {
 }
 
 .top-posts .iframe-container > iframe {
-    transform: scale(0.13);
+    transform: scale(0.3);
 }
 
 .top-posts-image .iframe-container > iframe {
-    transform: scale(0.13);
+    transform: scale(0.3);
 }
 
 .compare-box-competitor .iframe-container > iframe {
@@ -2047,7 +2064,7 @@ html[data-theme='dark'] .assistant-right-sidebar {
 .add-account-section-btns {
     width:122px !important;
 }
-.SB-accounts-section span.text-muted{
+.SB-accounts-section span{
     width: 120px;
     white-space: nowrap;
     overflow: hidden;
@@ -2158,6 +2175,157 @@ color:#fff;
 .date-format {
     padding-left: 10px;
 }
+
+.swing {
+    animation: swing ease-in-out 1s infinite alternate;
+    transform-origin: center -20px;
+    float: left;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 15px;
+    cursor:pointer;
+}
+.swing img {
+    border: 2px solid #ff5d3d;
+    display: block;
+}
+.swing:after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ff5d3d;
+    top: -10px;
+    left: 50%;
+    z-index: 0;
+    border-bottom: none;
+    border-right: none;
+    transform: rotate(45deg);
+}
+/* nail */
+.swing:before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    top: -14px;
+    left: 54%;
+    z-index: 5;
+    border-radius: 50% 50%;
+    background: #e04022;
+}
+
+@keyframes swing {
+    0% {
+        transform: rotate(3deg);
+    }
+    100% {
+        transform: rotate(-3deg);
+    }
+}
+
+
+/* begin::product tour*/
+
+.introjs-tooltip {
+    font-family: Poppins, Helvetica, 'sans-serif';
+    background: var(--primary-color);
+}
+.introjs-button {
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+    background-image: linear-gradient(
+            145deg,
+            var(--card-body-grid-1),
+            var(--card-body-grid-2)
+    );
+    background-position: 0% 0%, 100% 100%;
+    background-size: 200% 200%;
+    background-origin: padding-box, border-box;
+    color: var(--font-color);
+    text-shadow: inherit;
+    transition: 0.5s ease-in-out;
+    border: 0px solid transparent !important;
+    padding: 0.8rem 1rem 0.5rem 1rem;
+}
+
+html[data-theme='dark'] .introjs-tooltip {
+    color: var(--heading-color);
+    background: var(--primary-color) !important;
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+}
+html[data-theme='dark'] .introjs-arrow {
+    background-color: red important;
+}
+.introjs-tooltiptext {
+    font-family: poppins;
+    color: var(--grey);
+    font-size: 16px;
+    font-weight: 600;
+}
+html[data-theme='dark'] .introjs-tooltiptext {
+    color: var(--white) !important;
+}
+.introjs-tooltip .introjs-skipbutton {
+    position: absolute;
+    bottom: 15px;
+    transform: translateX(-50%);
+    left: 50%;
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+    background-image: linear-gradient(
+            145deg,
+            var(--card-body-grid-1),
+            var(--card-body-grid-2)
+    ) !important;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0.8rem 1rem 0.5rem 1rem;
+    border-radius: 5px;
+    height: 34px;
+    line-height: normal;
+    box-sizing: border-box;
+}
+.introjs-tooltipbuttons {
+    padding: 15px;
+}
+.introjs-arrow.left-bottom,
+.introjs-arrow.left {
+    border-right-color: var(--secondary-color);
+}
+.introjs-arrow.top {
+    border-bottom-color: var(--secondary-color);
+}
+.introjs-arrow.right {
+    border-left-color: var(--secondary-color);
+}
+.introjs-button:focus {
+    border: 0px none;
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+}
+html[data-theme='dark'] .introjs-button:focus {
+    color: var(--font-color);
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+}
+.introjs-helperLayer {
+    box-shadow: rgb(33 33 33 / 0%) 0px 0px 1px 2px,
+    rgb(33 33 33 / 50%) 0px 0px 0px 5000px !important;
+}
+html[data-theme='dark'] .introjs-disabled:hover {
+    box-shadow: 6px 6px 10px var(--shadow-light),
+    -6px -6px 10px var(--shadow-dark);
+    background-image: linear-gradient(
+            145deg,
+            var(--card-body-grid-1),
+            var(--card-body-grid-2)
+    ) !important;
+}
+.introjs-tooltipbuttons {
+    border: 0px none;
+}
+/* ends::product tour*/
 .profile-personal-info a#user_name_append,
 .profile-personal-info#location_append,
 a.profile-personal-info{
@@ -2183,4 +2351,48 @@ a.profile-personal-info{
 }
 #sb_calendar .fc-content:before {
     background: none;
+}
+.accounts-lock-unlock{
+    cursor:pointer;
+}
+.add-account-label span {
+    background-color: #fff;
+    border: #b5b5c3 solid 1px;
+}
+.checkbox.add-account-label div {
+    flex: 0 calc(100% - 24px);
+}
+
+.checkbox.add-account-label {
+    align-items: flex-start !important;
+}
+.checkbox.add-account-label > input:focus ~ span {
+    border: 1px solid #b5b5c3 !important;
+}
+
+
+
+.tiktok-info {
+    display: flex;
+    flex-direction: column;
+}
+.tiktok-info .tiktok-links {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+.tiktok-info .tiktok-comment-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.tiktok-info .tiktok-comment-info .tiktok-links {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(100% - 120px);
+}
+.tiktok-comment-info .btn {
+    background-color: #f64e60 !important;
+    background-image: none;
+    color: #fff;
 }

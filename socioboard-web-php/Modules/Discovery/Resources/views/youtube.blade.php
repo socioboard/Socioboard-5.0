@@ -25,7 +25,7 @@
                                 <form action="/discovery/search-youtubes" method="get">
                                     <!--begin::search-->
                                     <div class="form-group">
-                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6" name="sortby" id="sortby">
+                                        <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 sortby" name="sortby" id="sortby">
                                             <option selected disabled>Sort by</option>
                                             <option value="relevance" {{ isset($sortBy) ? $sortBy === 'relevance'? 'selected' : '' : 'selected'}} selected>Relevance</option>
                                             <option value="title" {{ isset($sortBy) ? $sortBy === 'title'? 'selected' : '':''}}>Title</option>
@@ -35,8 +35,8 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="input-icon">
-                                            <div id="InKwyword">
-                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="keyword" id="keyword" autocomplete="off" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword"/>
+                                            <div id="InKwyword ">
+                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 InKwywordDiv" type="text" name="keyword" id="keyword" autocomplete="off" value="@if(isset($keyword)){{$keyword}} @endif" placeholder="Enter Keyword"/>
                                             <span><i class="far fa-keyboard"></i></span>
                                             </div>
                                         </div>
@@ -154,6 +154,17 @@
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
                 </div>
+
+                <form action="{{ route('publish_content.scheduling')  }}" method="POST" id="checkRoute">
+                    @csrf
+                    <input type="hidden" name="mediaUrl" id="mediaUrl" value={{null}}>
+                    <input type="hidden" name="sourceUrl" id="sourceUrl" value={{ null}}>
+                    <input type="hidden" name="publisherName" id="publisherName" value="{{ null }}">
+                    <input type="hidden" name="title" id="title" value="{{ null }}">
+                    <input type="hidden" name="type"  id="type" value="{{ null }}">
+                    <textarea name="description"  id="description" value="{{ null }}" style="display: none">{{ null }}</textarea>
+                </form>
+
                 <form action="{{ route('publish_content.share') }}" id="publishContentForm" method="POST">
                 <div class="modal-body">
                     <div class="form-group" id="normal_post_area">
@@ -190,6 +201,37 @@
                                         <div class="mt-3">
                                             @foreach($socialAccountsGroups as $group => $socialAccountArray)
                                                 <div class="scroll scroll-pull" data-scroll="true" data-wheel-propagation="true" style="overflow-y: scroll;">
+                                                    @if(ucwords($key) === "Twitter")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 280.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Facebook")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 5000.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post four Images at a time.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Instagram")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 2200.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                            <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
+                                                            <li class="font-size-md font-weight-normal">Image Pixel should be 1:1 resolution.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Linkedin")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">The Character limit is 700.</li>
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @elseif(ucwords($key) === "Tumblr")
+                                                        <ul class="schedule-social-tabs">
+                                                            <li class="font-size-md font-weight-normal">You can only post one Image or a video at a time.</li>
+                                                            <li class="font-size-md font-weight-normal">Media size should be less than 10MB .</li>
+                                                            <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
+                                                        </ul>
+                                                    @endif
                                                 <span>Choose {{ucwords($key)}} {{$group}} for posting</span>
                                                 @foreach($socialAccountArray as $group_key => $socialAccount)
 
@@ -249,6 +291,7 @@
                 </div>
 
                 <div class="modal-footer">
+                    <button type="submit"  class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3" form="checkRoute"><i class="fas fa-history fa-fw"></i>Schedule</button>
                     <button type="button" name="status" value="0" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Draft</button>
                     <button type="button" name="status" value="1" class="publishContentSubmit btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 ">Post</button>
                 </div>
@@ -415,7 +458,9 @@
 
         function openModel(id, cheaneltitle, title ) {
                     $('#normal_post_area').empty().append(' <textarea class="form-control border border-light h-auto py-4 rounded-lg font-size-h6" id="normal_post_area" name="content" rows="3" placeholder="Write something !" required >'+title +'</textarea>');
-                    $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id+'"/><span><i class="fas fa-link"></i></span>');
+            $('#outgoingUrl').empty().append(' <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="outgoingUrl" autocomplete="off" placeholder="Enter Outgoing url" value="'+id+'"/><span><i class="fas fa-link"></i></span>');
+            $('#title').attr('value',title);
+            $('#sourceUrl').attr('value',id);
         }
 
         function clearFunction() {

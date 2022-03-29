@@ -21,18 +21,8 @@
         $normalDate = isset($normalScheduleDate) ? $normalScheduleDate : null;
         $daywise = isset($daywisetime) ? $daywisetime : null;
         $timezone = session()->get('timezone');
-        $normalDates = null;
-        $dayDate = null;
-        if ($normalDate !== null){
-             $date = new DateTime($normalDate);
-             $date->setTimezone(new DateTimeZone($timezone));
-             $normalDates = $date->format('Y/m/d H:i:s');
-        }
-       if ($daywise !== null){
-          $day = new DateTime($daywise);
-          $day->setTimezone(new DateTimeZone($timezone));
-          $dayDate = $day->format('Y/m/d H:i:s');
-       }
+        $normalDates = $normalDate!== null ? $normalDate : null;
+        $dayDate = $daywise !== null ? $daywise : null;
 
     @endphp
 
@@ -316,8 +306,8 @@
     <!-- facebook , linkedin pages toggle -->
     <script>
         $(document).ready(function () {
-            $('#schedule_normal_post_daterange').val(normaldate);
-            $('#day_schedule_post_daterange').val(daywisedate)
+            $('#schedule_normal_post_daterange').val(new Date(normaldate).toLocaleString("en-US", {timeZone: timezone}));
+            $('#day_schedule_post_daterange').val(new Date(daywisedate).toLocaleString("en-US", {timeZone: timezone}))
         })
         var faIconsForDateTimePicker = {
             time: "fa fa-clock-o",

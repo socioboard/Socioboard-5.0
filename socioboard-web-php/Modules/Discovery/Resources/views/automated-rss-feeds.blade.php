@@ -25,23 +25,23 @@
                                             <div class="image-input-wrapper"></div>
                                             <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change"
                                                    data-toggle="tooltip" title="" data-original-title="Change avatar">
-                                                <i class="fas fa-camera icon-md "></i>
+                                                <i class="fas fa-camera icon-md cameraIcon"></i>
                                                 <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" id="profile" class="file-upload" onchange="readURL(this);" />
                                                 <input type="hidden" name="profile_avatar_remove" />
                                             </label>
                                         </div>
                                         <div class="mt-5">
-                                            <button type="submit" id="newsAdd" class="btn btn-block" style="width: inherit">Add newspaper</button>
+                                            <button type="submit" id="newsAdd" class="btn btn-block newsAdd" style="width: inherit">Add newspaper</button>
                                         </div>
                                     </div>
-                                    <div class="col-md-8">
-                                            <div class="form-group">
+                                    <div class="col-md-8 ">
+                                            <div class="form-group newsPaperName">
                                                 <label>Newspaper</label>
-                                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" type="text" name="newspaper" placeholder="ALARABIYA">
+                                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 " type="text" name="newspaper" placeholder="ALARABIYA">
                                             </div>
                                             <div class="newspaper-container">
                                                 <div class="row newspaper-keyword">
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-2 addPlusButton">
                                                         <button type="button" class="add-rss-info-btn btn btn-sm"><i class="fa fa-plus pr-0"></i></button>
                                                     </div>
                                                     <div class="col-md-5">
@@ -90,7 +90,7 @@
 
                     </div>
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card added addedNewsDivs">
                             <div class="card-body">
                                 <h5 class="text-center ">Added Newspapers</h5>
                                 <div class="rss-tags mt-5">
@@ -98,7 +98,7 @@
                                         @foreach($channels['data'] as $data)
                                                 <button type="button" class="btn" id="news{{$data->id}}">{{$data->title}}
                                                     <span class="nwsp-icon">
-                                                    <a href="" class="btn-icon text-hover-info ml-2" data-toggle="modal" data-target="#deleteRssModal{{$data->id}}">
+                                                    <a href="" class="btn-icon text-hover-info ml-2 deleteButton" data-toggle="modal" data-target="#deleteRssModal{{$data->id}}">
                                                     <i data-toggle="tooltip" data-placement="top" class="fas fa-trash" data-original-title="Delete"></i>
                                                     </a>
                                                 </span>

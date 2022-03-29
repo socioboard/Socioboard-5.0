@@ -5,6 +5,7 @@
 <!--begin::Page Vendors Styles(used by this page)-->
 <link href="{{asset('/plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css"/>
 <!--end::Page Vendors Styles-->
+<link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet" type="text/css" />
 
 
 <!--begin::Global Theme Styles(used by all pages)-->

@@ -15,19 +15,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="rss-feed-articles">
-                        <div class="card">
+                        <div class="card rss-feed-articlesDiv">
                             <div class="card-body">
                                 <h5 class="text-center mb-5">Added Newspapers</h5>
                                 <div class="rss-tags">
                                     @if(isset($channels) && sizeof($channels['data']) > 0)
                                         @foreach($channels['data'] as $data)
-                                    <button type="button" class="btn" onclick="showkeywords('{{$data->id}}')">{{$data->title}}</button>
+                                    <button id="showKeywordButton" type="button" class="btn newsPaperButton" onclick="showkeywords('{{$data->id}}')">{{$data->title}}</button>
                                         @endforeach
                                         @endif
                                 </div>
                             </div>
                         </div>
-                        <div class="card mt-7">
+                        <div class="card mt-7 keywordDiv">
                             <div class="card-body">
                                 <div>
                                 <h5 class="text-center mb-5">Keywords</h5>
@@ -77,7 +77,7 @@
 
         function showkeywords(id) {
             $('#keywordsss').empty();
-            $('#spinnig').empty().append('<i class="fa fa-spinner fa-spin"></i>Loading');
+            $('#spinnig').empty().append('<i class="fa fa-spinner fa-spin"></i> Loading');
             $.ajax({
                 url: "/discovery/get-keywords/"+id,
                 type: "get",
@@ -122,7 +122,7 @@
                     $('#rss_news').empty().append('<div class="card mt-7">\n' +
                         '                            <div class="card-body">\n' +
                         '                                <div class="row">\n' +
-                        '                                    <div class="col-md-12" id="loader_news" style="text-align: center"><i class="fa fa-spinner fa-spin"></i>Loading\n' +
+                        '                                    <div class="col-md-12" id="loader_news" style="text-align: center"><i class="fa fa-spinner fa-spin"> </i> Loading\n' +
                         '                                        <p class="mt-3" > </p>\n' +
                         '                                    </div>\n' +
                         '                                </div>\n' +

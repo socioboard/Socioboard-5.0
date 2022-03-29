@@ -184,7 +184,7 @@
             success: function (response) {
                 $("#deleteImageModal").modal("hide");
                 if (response.code === 200){
-                    toastr.success(response.data.message);
+                    toastr.success(response.data);
                     window.location.reload();
                 }else{
                     toastr.alert(response.data.message);

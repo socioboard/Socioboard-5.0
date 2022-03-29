@@ -16,6 +16,7 @@
                     <script>
                         var youtubeValue = false;
                     </script>
+                    <?php $youtubeValue = false ?>
                     <div class="form-group" id="youtubeReportsDiv">
                         <script>
                             var teamid = <?php echo session()->get('team')['teamid']?>
@@ -29,25 +30,28 @@
                                     <script>
                                         var youtubeValue = true;
                                     </script>
+                                    <?php $youtubeValue = true ?>
                                     <?php $youtubeID = $data->account_id?>
                                     @break
                                 @endif
                             @endforeach
-                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
-                                    onchange="changeYoutubeData(this)">
-                                <option disabled id="selectDropdown2">Select Account</option>
-                                @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
-                                    @if($data->account_type === 9)
-                                        <option
-                                                value="{{$data->account_id }}">{{$data->first_name }}</option>
-                                        <script>
-                                            var twtvalue = true;
-                                        </script>
-                                    @endif
-                                @endforeach
-                            </select>
+                        @if($youtubeValue === true)
+                                    <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 youtubeAccountsData"
+                                            onchange="changeYoutubeData(this)">
+                                        <option disabled id="selectDropdown2">Select Account</option>
+                                        @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
+                                            @if($data->account_type === 9)
+                                                <option
+                                                        value="{{$data->account_id }}">{{$data->first_name }}</option>
+                                                <script>
+                                                    var twtvalue = true;
+                                                </script>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                @endif
                         @else
-                            <div class="text-center">
+                            <div class="text-center noYoutubeDiv">
                                 <div class="symbol symbol-150">
                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                 </div>
@@ -59,8 +63,8 @@
                     <div class="ml-auto">
                         <!-- datepicker -->
                         <div class="form-group">
-                            <div class="input-icon" id='twt-daterange' style="width: 300px">
-                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
+                            <div class="input-icon team_Date_Range" id='twt-daterange' style="width: 300px">
+                                <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6" id="twt-daterange_id"
                                        type="text" name="datepicker" autocomplete="off"
                                        placeholder="Select Date Range"/>
                                 <span><i class="far fa-calendar-alt"></i></span>
@@ -70,7 +74,7 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-8" id="ss-youtube">
+                    <div class="col-xl-8 youtubeChartsDiv" id="ss-youtube">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
@@ -196,7 +200,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-4" id="ss-youtubePublish">
+                    <div class="col-xl-4 youtubeOverViewStats" id="ss-youtubePublish">
                         <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
                             <!--begin::Header-->
@@ -227,13 +231,13 @@
 
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex mr-2">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-danger mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                        <span class="svg-icon svg-icon-lg svg-icon-danger">
-                                                                            <i class="far fa-heart text-danger fa-2x"></i>
-                                                                        </span>
+                                                    <span class="svg-icon svg-icon-lg svg-icon-danger">
+                                                        <i class="fas fa-user-minus text-danger fa-2x"></i>
+                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -251,13 +255,13 @@
                                         <!--end::Item-->
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex mr-2">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-warning mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-warning">
-                                                                        <i class="fas fa-chart-line fa-2x text-warning"></i>
-                                                                    </span>
+                                                    <span class="svg-icon svg-icon-lg svg-icon-warning">
+                                                        <i class="fas fa-clock fa-2x text-warning"></i>
+                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -280,13 +284,13 @@
                                     <div class="row row-paddingless">
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex mr-2">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-success mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
-                                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
-                                                                        <i class="far fa-id-card fa-2x text-success"></i>
-                                                                    </span>
+                                                    <span class="svg-icon svg-icon-lg svg-icon-success">
+                                                        <i class="fas fa-user-plus fa-2x text-success"></i>
+                                                    </span>
                                                     </div>
                                                 </div>
                                                 <!--end::Symbol-->
@@ -305,7 +309,7 @@
 
                                         <!--begin::Item-->
                                         <div class="col">
-                                            <div class="d-flex align-items-center mr-2">
+                                            <div class="d-flex mr-2">
                                                 <!--begin::Symbol-->
                                                 <div class="symbol symbol-45 symbol-light-primary mr-4 flex-shrink-0">
                                                     <div class="symbol-label">
@@ -346,11 +350,12 @@
     <!--end::Content-->
 @endsection
 @section('scripts')
-
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script>
         // team date ranges
         var start = moment().subtract(6, 'days');
         var end = moment();
+        let DefaultRange = `${moment().subtract(6, 'days').format('MMM DD, YYYY')} -> ${moment().format('MMM DD, YYYY')}`;
 
         $('#twt-daterange').daterangepicker({
             buttonClasses: ' btn',
@@ -373,6 +378,7 @@
             $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
+        $('#twt-daterange_id').attr('value', DefaultRange);
         // delete account
         $('#account-delete').click(function (event) {
             toastr.options = {
@@ -623,7 +629,7 @@
         }
 
 
-        let noYoutube = ' <div class="text-center">\n' +
+        let noYoutube = ' <div class="text-center noYoutubeDiv">\n' +
             '<div class="symbol symbol-150">\n' +
             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
             '</div>\n' +

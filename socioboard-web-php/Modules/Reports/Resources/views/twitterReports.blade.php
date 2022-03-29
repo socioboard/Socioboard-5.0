@@ -16,6 +16,7 @@
                     <script>
                         var twtvalue = false;
                     </script>
+                    <?php $twtvalue = false ?>
                     <div class="form-group" id="twitterReportsDiv">
                         <script>
                             var teamid = <?php echo session()->get('team')['teamid']?>
@@ -26,26 +27,29 @@
                                     <script>
                                         var twitterid = <?php echo $data->account_id ?>;
                                         var twtvalue = true;
+                                        <?php $twtvalue = true ?>
                                     </script>
                                     <?php $twitterid = $data->account_id?>
                                     @break
                                 @endif
                             @endforeach
-                            <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
-                                    onchange="changeTwitterData(this)">
-                                <option disabled id="selectDropdown2">Select Account</option>
-                                @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
-                                    @if($data->account_type === 4)
-                                        <option
-                                                value="{{$data->account_id }}">{{$data->first_name }}</option>
-                                        <script>
-                                            var twtvalue = true;
-                                        </script>
-                                    @endif
-                                @endforeach
-                            </select>
+                        @if($twtvalue ===  true)
+                                    <select class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 twitterAccountsData"
+                                            onchange="changeTwitterData(this)">
+                                        <option disabled id="selectDropdown2">Select Account</option>
+                                        @foreach($teamsSocialAccounts->data->teamSocialAccountDetails[0]->SocialAccount as $data)
+                                            @if($data->account_type === 4)
+                                                <option
+                                                        value="{{$data->account_id }}">{{$data->first_name }}</option>
+                                                <script>
+                                                    var twtvalue = true;
+                                                </script>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                            @endif
                         @else
-                            <div class="text-center">
+                            <div class="text-center noTwitterAccountsDiv">
                                 <div class="symbol symbol-150">
                                     <img src="/media/svg/illustrations/no-accounts.svg"/>
                                 </div>
@@ -57,9 +61,9 @@
                     <div class="ml-auto">
                         <!-- datepicker -->
                         <div class="form-group">
-                            <div class="input-icon" id='twt-daterange' style="width: 300px">
+                            <div class="input-icon team_Date_Range" id='twt-daterange' style="width: 300px">
                                 <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
-                                       type="text" name="datepicker" autocomplete="off"
+                                       type="text" name="datepicker" autocomplete="off" id="twt-daterange_id"
                                        placeholder="Select Date Range"/>
                                 <span><i class="far fa-calendar-alt"></i></span>
                             </div>
@@ -68,7 +72,7 @@
                 </div>
                 <!--begin::Row-->
                 <div class="row">
-                    <div class="col-xl-8" id="ss-twitter">
+                    <div class="col-xl-8 twitterChartsDiv" id="ss-twitter">
                         <div class="card card-custom gutter-b card-stretch">
                             <div class="card-header border-0 py-5 ml-auto">
                                 <div id="addToCart" class="btn btn-icon text-hover-info btn-sm  ml-5 px-5"
@@ -153,7 +157,7 @@
                         </div>
                         <!--end::Mixed Widget 2-->
                     </div>
-                    <div class="col-xl-4" id="ss-twitterPublish">
+                    <div class="col-xl-4 twitterOverViewStats" id="ss-twitterPublish">
                         <!--begin::Mixed Widget 16-->
                         <div class="card card-custom card-stretch gutter-b">
                             <!--begin::Header-->
@@ -299,6 +303,7 @@
     <!--end::Content-->
 @endsection
 @section('scripts')
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -314,6 +319,7 @@
         var end = moment();
         $("li[data-range-key='Last 30 Days']").removeAttr('class');
         $("li[data-range-key='Last 7 Days']").attr("class", "active");
+        let DefaultRange = `${moment().subtract(6, 'days').format('MMM DD, YYYY')} -> ${moment().format('MMM DD, YYYY')}`;
         $('#twt-daterange').daterangepicker({
             buttonClasses: ' btn',
             applyClass: 'btn-primary',
@@ -335,6 +341,7 @@
             $('#twt-daterange .form-control').val(start.format('MMM DD, YYYY') + ' -> ' + end.format('MMM DD, YYYY'));
         });
 
+        $('#twt-daterange_id').attr('value', DefaultRange);
         $('#account-delete').click(function (event) {
             toastr.options = {
                 "closeButton": true,
@@ -470,7 +477,7 @@
                             '<div class="symbol symbol-150">\n' +
                             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
                             '</div>\n' +
-                            '<h6>' +"Can no get Reports data as : "+ response.error + '</h6>\n' +
+                            '<h6>' +"Can not get Reports data as : "+ response.error + '</h6>\n' +
                             '</div>');
                     }
                 }
@@ -565,7 +572,7 @@
                             '<div class="symbol symbol-150">\n' +
                             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
                             '</div>\n' +
-                            '<h6>' +"Can no get Reports data as : "+ response.error + '</h6>\n' +
+                            '<h6>' +"Can not get Reports data as : "+ response.error + '</h6>\n' +
                             '</div>');
                     }
                 }
@@ -609,7 +616,7 @@
 
         }
 
-        let noTwitter = ' <div class="text-center">\n' +
+        let noTwitter = ' <div class="text-center noTwitterAccountsDiv">\n' +
             '<div class="symbol symbol-150">\n' +
             '<img src="/media/svg/illustrations/no-accounts.svg"/>\n' +
             '</div>\n' +
@@ -629,6 +636,7 @@
                 $('#stats-chart').append(noTwitter);
             }
         });
+
     </script>
 @endsection
 

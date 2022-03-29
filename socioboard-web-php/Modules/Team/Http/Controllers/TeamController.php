@@ -580,9 +580,9 @@ class TeamController extends Controller
         $apiUrlupdate = ApiConfig::get('/team/edit?teamId=');
         $apiUrlupdate = $apiUrlupdate . $request->id;
         $logo = '';
+        $team = Session::get('team');
         if (isset($request->profile_avatar)) {
             $file = $request->profile_avatar;
-            $team = Session::get('team');
             $pathToStorage = public_path('media/uploads');
             if (!file_exists($pathToStorage))
                 mkdir($pathToStorage, 0777, true);

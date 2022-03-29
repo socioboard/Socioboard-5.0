@@ -467,6 +467,10 @@ function socialNetworksFunction(socialData) {
         social_networks +=
           '<i class="fab fa-youtube fa-fw" data-toggle="tooltip" data-placement="top" title="YouTube" data-original-title="YouTube"></i>';
         break;
+      case '18':
+        social_networks +=
+            '<i class="fab fa-tiktok fa-fw" data-toggle="tooltip" data-placement="top" title="Tiktok" data-original-title="Tiktok"></i>';
+        break;
       // case '10':
       //   social_networks +=
       //     '<i class="fas fa-chart-line fa-fw" data-toggle="tooltip" data-placement="top" title="Google Analytics" data-original-title="Google Analytics"></i>';

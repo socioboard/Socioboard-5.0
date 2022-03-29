@@ -6,6 +6,7 @@ use App\ApiConfig\ApiConfig;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Session;
 use Modules\User\helper;
 
 class HistoryController extends Controller
@@ -202,8 +203,10 @@ class HistoryController extends Controller
                                         $socialAccounts['twitter']['account'][] = $account;
                                         break;
                                     case 6:
-                                    case 7:
                                         $socialAccounts['linkedin']['account'][] = $account;
+                                        break;
+                                    case 7:
+                                        $socialAccounts['linkedin-in']['account'][] = $account;
                                         break;
                                     case 12:
                                         $socialAccounts['instagram']['business account'][] = $account;
@@ -275,6 +278,33 @@ class HistoryController extends Controller
             $apiUrl =  $this->apiUrl.'/youtube/published-details?postId=' . $id;
             $response = $this->helper->postApiCallWithAuth('delete', $apiUrl);
             return $this->helper->responseHandler($response['data']);
+        }
+        catch (AppException $e) {
+            $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'youtubeDraftsDelete() {HistoryController}');
+            return response()->json(["ErrorMessage" => 'Can not fetch accounts, please reload page'], 401);
+        }
+    }
+
+    public function scheduleDetails($id){
+        try {
+            $apiUrl =  $this->apiUrl.'/schedule/get-published-schedule-post-by-id?scheduleId=' .$id;
+            $responses = $this->helper->postApiCallWithAuth('post', $apiUrl);
+            $team = Session::get('team');
+            $teamID = $team['teamid'];
+            $apiUrl = ApiConfig::get('/team/get-team-details?teamId=' . $team['teamid']);
+            $response = $this->helper->postApiCallWithAuth('get', $apiUrl);
+            if (isset($response['code']) && $response['code'] === 200) {
+                $responseData = $this->helper->responseHandler($response['data']);
+                if (isset($responseData['data'])) {
+                    $accounts = $responseData['data']->teamSocialAccountDetails[0]->SocialAccount;
+                }
+            } else {
+                $accounts = [];
+            }
+            $data['data'] =  $this->helper->responseHandler($responses['data']);
+            $data['account'] =  $accounts;
+            return $data;
+//            return view('contentstudio::history.postDetails',compact('data','accounts'));
         }
         catch (AppException $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'youtubeDraftsDelete() {HistoryController}');

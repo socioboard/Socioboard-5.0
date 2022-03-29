@@ -34,6 +34,10 @@
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
                                 <h3 class="card-title font-weight-bolder">Create Post</h3>
+                                <a href="#" class="btn btn-sm font-weight-bold p-3 infoDiv" data-toggle="modal"
+                                   data-target="#schedulePostModal">
+                                    <i class="icon-md fas fa-info-circle"></i> Info
+                                </a>
                             </div>
                             <!--end::Header-->
 
@@ -42,21 +46,21 @@
                                 <form action="{{ $formSubmissionAction }}" method="{{$formSubmissionMethod}}"
                                       id="publishContentForm">
                                     <!-- begin:Accounts list -->
-                                    <div class="row info-list">
+                                    <div class="row info-list socialAccountsDiv">
                                         @include('contentstudio::components.draft_social_accounts')
                                     </div>
                                     <!-- end:Accounts list -->
                                     <span id="errorText1" class="text-danger"></span>
-                                    <div class="form-group mt-8">
+                                    <div class="form-group mt-8 normal_post_area">
                                         <textarea name="content"
-                                                  class="form-control border border-light h-auto py-4 rounded-lg font-size-h6"
+                                                  class="form-control border border-light h-auto py-4 rounded-lg font-size-h6 "
                                                   id="normal_post_area" rows="3" placeholder="Write Something here!"
                                                   required>{{ $content  }}</textarea>
                                     </div>
                                     <p class="text-right">Characters Remaining : <span id="errorText3" class="text-danger"></span></p>
                                     <div class="form-group" id="potgoingurldiv">
                                         <div class="input-icon">
-                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6"
+                                            <input class="form-control form-control-solid h-auto py-4 rounded-lg font-size-h6 outGoingUrlDiv"
                                                    type="text" name="outgoingUrl" autocomplete="off"
                                                    placeholder="Enter Outgoing URL"
                                                    value="{!! isset($mediaData) && isset($mediaData['sourceUrl']) ? $mediaData['sourceUrl'] : null !!}"/>
@@ -64,7 +68,7 @@
                                         </div>
                                         @if(sizeof($bitlyAccountsIds )!== 0)
                                             <div class="form-group mt-5 d-flex" id="input_urls_for_short">
-                                                <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6"
+                                                <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6 link_to_be"
                                                        type="text" autocomplete="off"
                                                        placeholder="Enter URL To get Short Link" id="link_to_be">
                                                 <input type="hidden" name="account_iddd"
@@ -90,7 +94,7 @@
                                                             <li>
                                                     <span>
                                                         <i class="far fa-image fa-2x"></i>
-                                                        <input type="file" name="" click-type="img-video-option" class="picupload"
+                                                        <input type="file" name="" click-type="img-video-option" class="picupload picClass"
                                                             multiple accept=".jpg, .png, .jpeg" />
                                                         @if(isset($mediaData['type']) && $mediaData['type'] == 'image')
                                                             <input type="hidden" name="mediaUrl[]" id="media_url"
@@ -102,7 +106,7 @@
                                                     <span>
                                                         <i class="fas fa-video fa-2x"></i>
                                                         <input type="file" name="" click-type="img-video-option"
-                                                               class="picupload"
+                                                               class="picupload videoClass"
                                                                multiple accept="video/*"/>
                                                     </span>
                                                             </li>
@@ -164,15 +168,15 @@
                                                         <!-- begin::schedule button -->
                                                         <div class="d-flex justify-content-around">
                                                             <button type="button" name="status" value="1"
-                                                                    class="publishContentSubmit btn text-hover-success font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4">
+                                                                    class="publishContentSubmit btn text-hover-success font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4 postButton">
                                                                 Post Now
                                                             </button>
                                                             <button type="button"
-                                                                    class="btn text-hover-warning font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4 schedule-post-btn">
+                                                                    class="btn text-hover-warning font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4 schedule-post-btn scheduledButton">
                                                                 Schedule Post
                                                             </button>
                                                             <button type="button" name="status" value="0"
-                                                                    class="publishContentSubmit btn text-hover-success font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4">
+                                                                    class="publishContentSubmit btn text-hover-success font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 col-4 draftButton">
                                                                 Draft
                                                             </button>
                                                         </div>
@@ -264,17 +268,17 @@
                                                 <label>Select types</label>
                                                 <div class="radio-inline">
                                                     <label class="radio radio-rounded">
-                                                        <input type="radio" checked="checked" name="mediaSelectionType" value="1" />
+                                                        <input type="radio" checked="checked" name="mediaSelectionType" value="0" />
                                                         <span></span>
                                                         All images
                                                     </label>
                                                     <label class="radio radio-rounded">
-                                                        <input type="radio" name="mediaSelectionType" value="2" />
+                                                        <input type="radio" name="mediaSelectionType" value="1" />
                                                         <span></span>
                                                         Single image
                                                     </label>
                                                     <label class="radio radio-rounded">
-                                                        <input type="radio" name="mediaSelectionType" value="3" />
+                                                        <input type="radio" name="mediaSelectionType" value="2" />
                                                         <span></span>
                                                         Random images
                                                     </label>
@@ -300,7 +304,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-sm-12">
+                    <div class="col-xl-6 col-sm-12 previewTabClass">
                         @include('contentstudio::scheduling.components._draft_preview')
                     </div>
                 </div>
@@ -310,6 +314,86 @@
         </div>
         <!--end::Entry-->
     </div>
+
+    <!-- begin:schedule post Modal-->
+    <div class="modal fade schedul-post-modal" id="schedulePostModal" tabindex="-1" role="dialog" aria-labelledby="schedulePostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schedulePostModalLabel">Schedule Post</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="50%">Available Networks</th>
+                                <th width="50%">Un-Available Network</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Twitter</td>
+                                <td>Facebook normal profile</td>
+                            </tr>
+                            <tr>
+                                <td>Facebook Pages</td>
+                                <td>Instagram normal profile</td>
+                            </tr>
+                            <tr>
+                                <td>Instagram Business Accounts</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>LinkedIn Accounts</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>LinkedIn Pages</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Tumblr</td>
+                                <td>-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="50%">Add-Ons</th>
+                                <th width="50%">Reasons why accounts not visible</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><a href="#">Pinterest Publish</a></td>
+                                <td>
+                                    <ul>
+                                        <li>Your accounts are not as available</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">Youtube Publish</a></td>
+                                <td>
+                                    <ul>
+                                        <li>Your accounts are locked</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end:schedule post Modal -->
 @endsection
 
 @section('scripts')

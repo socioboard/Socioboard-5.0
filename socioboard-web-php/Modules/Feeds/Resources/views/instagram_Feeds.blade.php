@@ -23,7 +23,7 @@
                             <!-- begin:Accounts list -->
                             <div class="form-group">
                                 <select
-                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6"
+                                        class="form-control form-control-solid form-control-lg h-auto py-4 rounded-lg font-size-h6 selectAccountsDiv"
                                         onchange="call(this)">
                                     @if($message=== 'success')
                                         <script>
@@ -41,7 +41,7 @@
                                         </option>
                                     @elseif($message=== 'No Instagram account has been added yet!')
                                         <option selected value="failed">
-                                            No Instagram Account has been added yet! for this team or Account has been locked.
+                                            No Instagram Account to show.
                                         </option>
                                     @endif
                                 </select>
@@ -131,22 +131,7 @@
                                             <h6>Currently no Instagram Account has been added for this team or Account has been locked</h6>
                                         </div>
                                     @endif
-                                @elseif($message=== 'falied')
-                                    <div class="text-center">
-                                        <div class="symbol symbol-150">
-                                            <img src="/media/svg/illustrations/no-accounts.svg"/>
-                                        </div>
-                                        <h6>Sorry some error ,occurred please reload page</h6>
-                                    </div>
-                                @elseif($message=== 'No Instagram account has been added yet!')
-                                    <div class="symbol symbol-150">
-                                        <img src="/media/svg/illustrations/no-accounts.svg"/>
-                                    </div>
-                                    <option selected value="failed">
-                                        No Instagram Account has been added yet for this team! or Account has been locked.
-                                    </option>
                                 @endif
-
                             </div>
                             <!--end::Profile-->
                         </div>
@@ -187,7 +172,7 @@
                                                         <!--begin::Info-->
                                                         <div class="d-flex flex-column flex-grow-1">
                                                             <a href="{{$feeds['data']->socialAccountDetails->profile_url}}" target="_blank"
-                                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder">{{$feeds['data']->socialAccountDetails->first_name}}</a>
+                                                               class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">{{$feeds['data']->socialAccountDetails->first_name}}</a>
                                                             <span
                                                                     class="text-muted font-weight-bold">{{$date->format('Y-m-d')}} {{$date->format('H:i:s')}}</span>
                                                         </div>
@@ -242,7 +227,7 @@
                                                                     @if($data->type === 'IMAGE')
                                                                         <a id="reSocioButton"
                                                                            onclick="resocioButton('{{$data->captionText}}','{{$data->mediaUrl[0]->media_url}}','image',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
@@ -250,7 +235,7 @@
                                                                     @elseif($data->type === 'VIDEO')
                                                                         <a id="reSocioButton"
                                                                            onclick="resocioButton('{{$data->captionText}}','{{$data->mediaUrl[0]->media_url}}','video',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
@@ -258,7 +243,7 @@
                                                                     @elseif($data->type === 'CAROUSEL_ALBUM')
                                                                         <a id="reSocioButton"
                                                                            onclick="resocioButton('{{$data->captionText}}','{{$data->mediaUrl[0]->media_url}}','{{strtolower($data->mediaUrl[0]->media_type)}}',null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
@@ -266,7 +251,7 @@
                                                                     @else
                                                                         <a id="reSocioButton"
                                                                            onclick="resocioButton('{{$data->captionText}}',null,null,null,null)"
-                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">
+                                                                           class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">
                                                             <span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">
                                                                     <i class="fas fa-pencil-alt"></i>
                                                             </span>Re-socio
@@ -298,7 +283,7 @@
                                                         </div>
                                                     @endif
                                                     @else
-                                                        <div class="text-center">
+                                                        <div class="text-center noInstagramDiv">
                                                             <div class="symbol symbol-150">
                                                                 <img src="/media/svg/illustrations/no-accounts.svg"/>
                                                             </div>
@@ -324,6 +309,7 @@
 
         @section('scripts')
             <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+            <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
             <script src="{{asset('js/images-grid.js')}}"></script>
             <script src="{{asset('js/accounts.js')}}"></script>
             <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
@@ -462,7 +448,7 @@
                                             '</div>\n' +
                                             '<div class="d-flex flex-column flex-grow-1" >\n' +
                                             '<a href="' + response.data.socialAccountDetails.profile_url + '" target="_blank"\n' +
-                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                             '<span\n' +
                                             'class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
                                             '</div>\n' +
@@ -507,7 +493,7 @@
                                         if (element.type === 'IMAGE') {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + 'image' + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -515,7 +501,7 @@
                                         } else if (element.type === 'VIDEO') {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + 'video' + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -523,7 +509,7 @@
                                         } else {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + element.mediaUrl[0].media_type.toLowerCase() + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -603,7 +589,7 @@
                                             '</div>\n' +
                                             '<div class="d-flex flex-column flex-grow-1" >\n' +
                                             '<a href="' + response.data.socialAccountDetails.profile_url + '" target="_blank"\n' +
-                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder">' + response.data.socialAccountDetails.first_name + '</a>\n' +
+                                            'class="text-hover-primary mb-1 font-size-lg font-weight-bolder postLinkClassDiv">' + response.data.socialAccountDetails.first_name + '</a>\n' +
                                             '<span\n' +
                                             'class="text-muted font-weight-bold">' + publishedDate + '</span>\n' +
                                             '</div>\n' +
@@ -654,7 +640,7 @@
                                         if (element.type === 'IMAGE') {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + 'image' + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -662,7 +648,7 @@
                                         } else if (element.type === 'VIDEO') {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + 'video' + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -670,7 +656,7 @@
                                         } else {
                                             appendData += '<a id="reSocioButton"\n' +
                                                 'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl[0].media_url + '\',\'' + element.mediaUrl[0].media_type.toLowerCase() + '\',null,null)"\n' +
-                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2">\n' +
+                                                'class="btn btn-hover-text-success btn-hover-icon-success btn-sm bg-hover-light-danger rounded font-weight-bolder font-size-sm p-2 reSocioButtonClass">\n' +
                                                 '<span class="svg-icon svg-icon-md svg-icon-dark-25 pr-1">\n' +
                                                 '<i class="fas fa-pencil-alt"></i>\n' +
                                                 '</span>Re-socio\n' +
@@ -740,6 +726,7 @@
                         },
                     });
                 };
+
             </script>
 
 @endsection

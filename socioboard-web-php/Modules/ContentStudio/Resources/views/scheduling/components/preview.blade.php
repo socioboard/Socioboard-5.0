@@ -4,11 +4,11 @@
         <h3 class="card-title font-weight-bolder">Preview</h3>
         <ul class="nav nav-light-warning nav-pills" id="preview-tabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="desktop-preview" data-toggle="tab" href="#desktop-preview" role="tab"
+                <a class="nav-link active desktopClassDiv" id="desktop-preview" data-toggle="tab" href="#desktop-preview" role="tab"
                    aria-controls="desktop-preview">Desktop</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="mobile-preview" data-toggle="tab" href="#mobile-preview" role="tab"
+                <a class="nav-link mobileClassDiv" id="mobile-preview" data-toggle="tab" href="#mobile-preview" role="tab"
                    aria-controls="mobile-preview">Mobile</a>
             </li>
 

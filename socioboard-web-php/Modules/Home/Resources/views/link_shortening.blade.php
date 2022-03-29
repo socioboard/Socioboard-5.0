@@ -42,8 +42,8 @@
                             <div class="card card-custom card-stretch">
                                 <!--begin::Body-->
                                 <div class="card-body pt-4">
-                                    <label class="radio radio-lg mb-2 link-shortening-label">
-                                        <input type="checkbox" name="social" id="usage" {{session('bitly') === "false" ? "checked" : ""}} />
+                                    <label class="radio radio-lg mb-2 link-shortening-label radioButtonShortening">
+                                        <input type="checkbox" name="social" id="usage" />
                                         <span></span>
                                         <div class="font-size-lg font-weight-bold ml-4">No Shortening</div>
                                     </label>
@@ -63,7 +63,7 @@
                                     <label class="radio radio-lg mb-2 link-shortening-label">
                                         <input type="checkbox" name="socialss" id="bitly" {{session('bitly') !== "false" ? "checked" : ""}} />
                                         <span></span>
-                                        <div class="font-size-lg font-weight-bold ml-4">bit.ly</div>
+                                        <div class="font-size-lg font-weight-bold ml-4 bityRadioBtn">bit.ly</div>
                                     </label>
                                     <script>
                                         let visiblity = localStorage.getItem("visible");
@@ -76,7 +76,7 @@
                                     @else
                                             <div class="mb-3 d-flex align-items-center justify-content-centr">
                                                 <div class="form-group mr-3 mb-0">
-                                                    <input class="form-control form-control-solid py-7 mr-5 rounded-lg font-size-h6" type="text" autocomplete="off" disabled
+                                                    <input class="form-control form-control-solid py-7 mr-5 rounded-lg font-size-h6 nameTextBoxDiv" type="text" autocomplete="off" disabled
                                                            placeholder="Enter Account" value="{{$SocialAccounts['bitly']['account'][0]->user_name}}">
                                                 </div>
                                                 <div class="form-group mr-3 mb-0">
@@ -122,7 +122,7 @@
                                         @csrf
                                         @if(session('bitly') === "true")
                                     <div class="form-group mt-5 d-flex" id="input_urls_for_short">
-                                        <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6" type="text" name="short_link" autocomplete="off" placeholder="Enter URL">
+                                        <input class="form-control form-control-solid py-7 mr-6 rounded-lg font-size-h6 short_link_URL" type="text" name="short_link" autocomplete="off" placeholder="Enter URL">
                                         <button type="submit" id="submitButton" class="btn font-weight-bolder mr-2  px-8">Generate</button>
                                     </div>
                                             @endif
@@ -132,8 +132,8 @@
                                     </div>
                                     </div>
                                         @else
-                                        <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
-                                            <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                        <div class="card-body pt-4 link-shortening" id="visibleId">
+                                            <p class="mt-5">All URLs will be sent as shortened and simplified URLs while publishing.</p>
                                             @if(session('bitly') === "false")
                                                 <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
                                             @endif
@@ -163,14 +163,14 @@
                                         <label class="radio radio-lg mb-2 link-shortening-label">
                                             <input type="checkbox" name="socialss" id="bitly" {{session('bitly') !== "false" ? "checked" : ""}} />
                                             <span></span>
-                                            <div class="font-size-lg font-weight-bold ml-4">bit.ly</div>
+                                            <div class="font-size-lg font-weight-bold ml-4 bityRadioBtn">bit.ly</div>
                                         </label>
                                         <script>
                                             let visiblity = localStorage.getItem("visible");
                                         </script>
                                         @if(session('bitly') !== "false")
-                                            <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
-                                                <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
+                                            <div class="card-body pt-4" id="visibleId">
+                                                <p class="mt-5">All URLs will be sent as shortened and simplified URLs while publishing.</p>
                                                 @if(session('bitly') === "false")
                                                     <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>
                                                 @else
@@ -232,7 +232,7 @@
                                                 </div>
                                             </div>
                                         @else
-                                            <div class="card-body pt-4" id="visibleId" style="background-color:#c9f7f5;">
+                                            <div class="card-body pt-4" id="visibleId">
                                                 <p class="mt-5">All URLs will be sent as it is without simplify while publishing.</p>
                                                 @if(session('bitly') === "false")
                                                     <a href="/add-accounts/Bitly" type="button" class="btn font-weight-bolder mr-2 px-8">Connect</a><br>

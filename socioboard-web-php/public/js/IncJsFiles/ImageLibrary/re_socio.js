@@ -1,21 +1,36 @@
 let selectedImage;
-let oneClickImage = (imageLink) => {
+let oneClickImage = (imageLink,title) => {
+    $("#normal_post_area_id").empty();
     $('#add_account_error1, #add_image_error1, #text_area_error1').html("");
     document.getElementById('one_click_form_id').reset();
     selectedImage = imageLink ;
+    let img = new Image();
+    img.onload = function() {
+        $('#aspect_ratio').empty().append("<h6>Height : width =  "+ this.height + " : " +this.width +"</h6>")
+    };
+    img.src = API_URL + imageLink;
     $('#selected_image_id').empty().append('<img id="image_URLS" src="'+ API_URL + imageLink+'">')  ;
     let csrf=$('meta[name="csrf-token"]').attr('content');
+    let text_to_scheduleData=$("#normal_post_area_id").append(title);
     $('#resocioModal').append(`<form action="/home/publishing/scheduling" id="checkRoute" method="POST" >
         <input type="hidden"  name="mediaUrl" value="`+ API_URL + imageLink+`">
         <input type="hidden" name="_token" value="`+csrf+`">
         <input type="hidden" name="sourceUrl" >
         <input type="hidden" name="publisherName" >
-        <input type="hidden" name="title" >
-        <input type="hidden" name="type">
+        <input type="hidden" id="titleFormValue" name="title"  value="`+title+`">
+        <input type="hidden" name="type" value="image">
         <textarea name="description" style="display: none"></textarea>
     </form>`);
 };
-
+if($("#normal_post_area_id").val() === '')
+{
+    $("#titleFormValue").attr('value','');
+}
+$( "#normal_post_area_id" ).keyup(function() {
+    let text_to_scheduleData2='';
+     text_to_scheduleData2+=$("#normal_post_area_id").val();
+    $("#titleFormValue").attr('value',text_to_scheduleData2);
+});
 function draftPostFunction(postStatus) {
     $('#add_account_error1, #add_image_error1, #text_area_error1').html("");
     let formData = new FormData(document.getElementById('one_click_form_id'));
@@ -32,11 +47,13 @@ function draftPostFunction(postStatus) {
             $('#resocioModal').modal('show');
         },
         success: function (resp) {
-            if(Number(postStatus) === 1 && resp.code === 200) {
+            if(resp.message === "Saved as draft"){
+                toastr.success(resp.message);
+            }else if(Number(postStatus) === 1 && resp.code === 200 && resp.data.errors.length === 0) {
                 $('#resocioModal').modal('hide');
                 toastr.success(resp.message);
                 location.reload();
-            } else if (Number(postStatus) === 1 && resp.code === 200 && resp.data.errors.length > 0) {
+            } else if (resp.code === 200 && resp.data.errors.length > 0) {
                 toastr.error(resp.data.errors[0].error);
             } else if (resp.code === 201) {
                 let i;
@@ -56,7 +73,7 @@ function draftPostFunction(postStatus) {
                             break;
                     }
                 }
-            } else if (Number(postStatus) === 0 && resp.code === 200) {
+            } else if (resp.code === 200 && resp.data.errors.length === 0) {
                 $('#resocioModal').modal('hide');
                 toastr.success(resp.message);
             } else if (Number(postStatus) === 0 && resp.code !== 200)  toastr.success(resp.error);

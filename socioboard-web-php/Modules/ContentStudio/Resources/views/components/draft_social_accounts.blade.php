@@ -1,4 +1,5 @@
-@if(isset($socialAccounts) && !empty($socialAccounts))
+
+@if(isset($socialAccounts) && !empty($socialAccounts) && count($socialAccounts) > 0)
 
     <div class="col-md-8 px-0 accounts-border text-center">
         <h5>Social accounts</h5>
@@ -82,6 +83,8 @@
                                         <li class="font-size-md font-weight-normal">If You Select Multiple media files, then only first selected media will be published.</li>
                                         <li class="font-size-md font-weight-normal">An Image or video for posting is required.</li>
                                         <li class="font-size-md font-weight-normal">Image Pixel should be 1:1 resolution.</li>
+                                        <li class="font-size-md font-weight-normal">Video aspect ratio should be from 4/5 to 16/9.</li>
+                                        <li class="font-size-md font-weight-normal">Maximum video File size should be 100MB.</li>
                                     </ul>
                                 @elseif(ucwords($key) === "Linkedin" && $group === "page")
                                     <ul class="schedule-social-tabs">
@@ -151,5 +154,9 @@
             </div>
         @endforeach
     </div>
+    </div>
+    @else
+    <div class="col-md-12 px-0 text-center">
+        <h4>Please add Social Accounts to Publish Posts  </h4>
     </div>
 @endif

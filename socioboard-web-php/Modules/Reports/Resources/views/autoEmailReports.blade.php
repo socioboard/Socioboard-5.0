@@ -14,7 +14,7 @@
                     <!--begin::Actions-->
                     <button type="button" data-toggle="modal" data-target="#autoEmailReport"
                             class="btn font-weight-bolder font-size-h6 px-4 py-4 mr-3 my-3 "><i
-                                class="fa fa-envelope text-info"></i>Create New
+                                class="fa fa-envelope"></i>Create New
                         Reports
                     </button>
                     <!--end::Actions-->
@@ -283,7 +283,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="autoEmailReportLabel">Add/Edit Email Reports</h5>
-                    <button type="button" class="close btn btn-xs btn-icon btn-light btn-hover-primary"
+                    <button type="button" class="close"
                             data-dismiss="modal"
                             aria-label="Close" id="Sb_quick_user_close">
                         <i class="ki ki-close icon-xs"></i>
@@ -510,10 +510,10 @@
             </div>
         </div>
     </div>
-
-    <!--end::Table-->
 @endsection
 @section('scripts')
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+
     <script>
         // multi select
         $('.multi-select-control').select2({

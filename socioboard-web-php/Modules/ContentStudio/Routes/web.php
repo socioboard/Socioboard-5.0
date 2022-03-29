@@ -85,7 +85,8 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::any('/draft-schedule/{id}', 'PublishContentController@draftScheduleEdit')->name('publish_content.draft-schedule-edit');
             Route::get('pinterest-scheduling', "PublishContentController@pinterestView")->name('pinterest-publish');
             Route::post('pinterest-schedule', "PublishContentController@pinterestSchedule")->name('pinterest-schedule');
-
+            Route::get('tiktok-publish', "PublishContentController@showTikTokPublish")->name('tiktok-publish');;
+            Route::post('tiktok-schedule', "PublishContentController@tikTokSchedule")->name('tiktok-schedule');
             Route::post('history-show', "HistoryController@historyShow");
 
             Route::get('{page}/{slug?}', "HistoryController@index");
@@ -95,6 +96,9 @@ Route::group(['middleware' => ['authenticateUser', 'checkPlanExpiry']], function
             Route::get('schedule/history', 'HistoryController@index')->name('schedule-done-history');
             Route::get('schedule/day-wise-socioqueue', 'HistoryController@index')->name('schedule-day-wise-history');
             Route::delete('schedule/delete', 'HistoryController@deleteSchedule')->name('schedule-day-wise-history-delete');
+            Route::get('schedule/post-detail/{id}', 'HistoryController@scheduleDetails')->name('schedule-day-wise-history-post-detail');
+
+
         });
         Route::get('youtube-drafts', "HistoryController@youtubeDrafts")->name('youtube-drafts');
         Route::get('youtube-edit/{id}', "HistoryController@youtubeDraftsEdit")->name('youtube-edit');

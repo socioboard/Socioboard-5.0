@@ -22,12 +22,12 @@
                         <div class="card card-custom gutter-b">
                             <!--begin::Header-->
                             <div class="card-header border-0 py-5">
-                                <h3 class="card-title font-weight-bolder">Pinterest Pins of Board  {{$boardName}}</h3>
+                                <h3 class="mb-0 font-weight-bolder">Pinterest Pins of Board  {{$boardName}}</h3>
                             </div>
                             <!--end::Header-->
                             <?php $regex = "@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?).*$)@\n"; ?>
                             <div class="card-body medium-story" id="pinterestPins">
-                                <div class="card-columns">
+                                <div class="row">
                                     @if($message === 'success')
                                         <script>
                                             let feedsLength = <?php echo count($pins)  ?>;
@@ -35,28 +35,44 @@
                                             let boardId = <?php echo $boardId  ?>;
                                         </script>
                                         @foreach($pins as $data)
-                                            <div class="card pinterest-feeds">
-                                                <div class="card-body px-3 py-3">
-                                                    <a href="{{$data->postUrl}}" target="_blank">
-                                                        <img src={{$data->mediaUrl}} alt="image"
-                                                             class="img-fluid card-img">
-                                                    </a>
-                                                    <div class="mt-5">
-{{--                                                        @if($data->captionText === '')--}}
-{{--                                                            <br>--}}
-{{--                                                        @endif--}}
-                                                        <p class="mt-2">{{$data->captionText}}</p>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center">
-                                                        <button data-toggle="tooltip" data-placement="top"
-                                                                title="Re-socio" type="button" class="btn btn-sm"
-                                                                onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->captionText); ?>','{{$data->mediaUrl}}','image',null,null)">
-                                                            <i class="fas fa-pencil-alt"></i> Re-socio
-                                                        </button>
-                                                    </div>
+                                            <div class="col-xl-3">
+                                                <div class="card pinterest-feeds">
+                                                    <div class="card-body px-3 py-3">
+                                                        <a href="{{$data->postUrl}}" target="_blank">
+                                                            <img src={{$data->mediaUrl}} alt="image"
+                                                                 class="img-fluid card-img">
+                                                        </a>
+                                                        <div class="mt-5">
+                                                            {{--                                                        @if($data->captionText === '')--}}
+                                                            {{--                                                            <br>--}}
+                                                            {{--                                                        @endif--}}
+                                                            <p class="mt-2">{{$data->captionText}}</p>
+                                                            @if($data->outgoingUrl !== '')
+                                                                <a href="{{$data->outgoingUrl}}" class="font-size-lg font-weight-normal pt-5 mb-2 linkedin-links" target="_blank">
+                                                                    {{$data->outgoingUrl}}</a>
+                                                                @endif
+                                                        </div>
+                                                        <br>
+                                                        <div class="d-flex justify-content-center">
+                                                            @if($data->outgoingUrl!=='')
+                                                                <button data-toggle="tooltip" data-placement="top"
+                                                                        title="Re-socio" type="button" class="btn btn-sm"
+                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->captionText); ?>','{{$data->mediaUrl}}','image',null,'{{$data->outgoingUrl}}')">
+                                                                    <i class="fas fa-pencil-alt"></i> Re-socio
+                                                                </button>
+                                                                @else
+                                                                <button data-toggle="tooltip" data-placement="top"
+                                                                        title="Re-socio" type="button" class="btn btn-sm"
+                                                                        onclick="resocioButton('<?php echo preg_replace($regex, ' ', $data->captionText); ?>','{{$data->mediaUrl}}','image',null,null)">
+                                                                    <i class="fas fa-pencil-alt"></i> Re-socio
+                                                                </button>
+                                                            @endif
+                                                        </div>
 
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         @endforeach
                                     @elseif($message === 'failed')
                                         <h3>Some error occured,Can not show Pins of pinterest Board {{$boardName}}</h3>
@@ -80,6 +96,7 @@
 @endsection
 @section('scripts')
     <script src="{{asset('js/contentStudio/publishContent.js')}}"></script>
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <script src="{{asset('js/images-grid.js')}}"></script>
     <script src="{{asset('plugins/custom/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{asset('plugins/custom/emojionearea/js/emojionearea.min.js') }}"></script>
@@ -159,9 +176,16 @@
                                     '</div>\n' +
                                     '<div class="d-flex justify-content-center">\n' +
                                     '<button data-toggle="tooltip" data-placement="top"\n' +
-                                    'title="Re-socio" type="button" class="btn btn-sm"\n' +
-                                    'onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl + '\',\'' + type + '\',null,null)">\n' +
-                                    '<i class="fas fa-pencil-alt"></i> Re-socio\n' +
+                                    'title="Re-socio" type="button" class="btn btn-sm"\n' ;
+                                if(element.outgoingUrl!==''){
+                                    appendData +='onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl + '\',\'' + type + '\',null,\'' + element.outgoingUrl + '\')">\n' ;
+
+                                }
+                                else{
+                                    appendData +='onclick="resocioButton(\'' + element.captionText + '\',\'' + element.mediaUrl + '\',\'' + type + '\',null,null)">\n' ;
+
+                                }
+                                appendData +=  '<i class="fas fa-pencil-alt"></i> Re-socio\n' +
                                     '</button>\n' +
                                     '</div>\n' +
                                     '</div>\n' +

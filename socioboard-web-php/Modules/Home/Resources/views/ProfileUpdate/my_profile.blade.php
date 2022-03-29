@@ -174,10 +174,7 @@
                                             <button type="reset" class="btn mr-2" id="save_button_id"
                                                     onclick="updateProfileData(1)">Save Changes
                                             </button>
-                                            <button type="reset" class="btn mr-2" data-toggle="tooltip"
-                                                    id="personal_info_note"
-                                                    title="Please save the changes before you leave this section, other wise changes will be lost."
-                                                    id="save_button_id"><i class="fas fa-comment-dots ml-2"></i>
+                                            <button type="reset" class="btn mr-2 personal_info_note" data-toggle="tooltip" id="personal_info_note" title="Please save the changes before you leave this section, other wise changes will be lost." id="save_button_id"><i class="fas fa-comment-dots ml-2"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -203,13 +200,13 @@
                                                         <div class="image-input-wrapper"></div>
                                                         <input type="hidden" value="" id="profile_pic">
                                                         <label
-                                                                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow upload-button"
-                                                                data-action="change" data-toggle="tooltip" title=""
-                                                                data-original-title="Change avatar">
+                                                            class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow upload-button changeAvatarClass"
+                                                            data-action="change" data-toggle="tooltip" title=""
+                                                            data-original-title="Change avatar">
                                                             <i class="fas fa-pen icon-sm "></i>
                                                             <input type="file" id="profile_avatar" name="profile_avatar"
-                                                                   class="file-upload" accept=".png, .jpg, .jpeg"/>
-                                                            <input type="hidden" name="profile_avatar_remove"/>
+                                                                   class="file-upload " accept=".png, .jpg, .jpeg"/>
+                                                            <input type="hidden"  name="profile_avatar_remove"/>
                                                         </label>
 
                                                         <span
@@ -223,7 +220,7 @@
                                                               class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                                                               data-action="remove" data-toggle="tooltip"
                                                               title="Remove avatar">
-                                                                            <i class="ki ki-bold-close icon-xs "></i>
+                                                                            <i class="ki ki-bold-close icon-xs profile_avatar_remove "></i>
                                                                         </span>
                                                     </div>
                                                     <span class="form-text ">Allowed file types:  png, jpg, jpeg.</span>
