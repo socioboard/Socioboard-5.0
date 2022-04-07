@@ -1,6 +1,7 @@
 <base href="">
 <meta charset="utf-8"/>
 @yield('title')
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 <meta name="api-url" content="{{ \App\ApiConfig\ApiConfig::get() }}"/>
 <meta name="google-site-verification" content="" />
