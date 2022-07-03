@@ -22,11 +22,11 @@ cp example.env .env
 sed -i "s;<<Laravel Key>>;${LARAVEL_KEY};g" .env
 sed -i "s;APP_ENV=local;APP_ENV=development;g" .env
 sed -i "s;<<php domain>>;https://${DOMAIN}/;g" .env
-sed -i "s;<<USER NODE SERIVE>>;http://${DOMAIN}:3000/;g" .env
-sed -i "s;<<FEEDS NODE SERIVE>>;http://${DOMAIN}:3001/;g" .env
+sed -i "s;<<USER NODE SERVICE>>;http://${DOMAIN}:3000/;g" .env
+sed -i "s;<<FEEDS NODE SERVICE>>;http://${DOMAIN}:3001/;g" .env
 sed -i "s;<<PUBLISH NODE SERVICE>>;http://${DOMAIN}:3002/;g" .env
 sed -i "s;<<UPDATE NODE SERVICE>>;http://${DOMAIN}:3003/;g" .env
-sed -i "s;# API_URL_NOTIFICATION=http://localhost:3004/;API_URL_NOTIFICATION=http://${DOMAIN}:3004/;g" .env
+sed -i "s;<<NOTIFICATION NODE SERVICE>>;http://${DOMAIN}:3004/;g" .env
 
 # init mysql db
 while [ ! -e "/data/db.init" ];do
