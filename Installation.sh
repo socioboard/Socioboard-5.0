@@ -1,47 +1,43 @@
-#  We need to update Folders case
+# This Script was tested on Linux
 
-# Un comment the Below lines to install packages in all Micro-services
+# Make sure you have MySQL & MongoDB Setup, and the Database details are updated in the Config File (Common/Sequelize-cli/config) before running this Script
 
-# cd ./socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common  && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ..
+echo -e "$(tput setaf 1)Make sure you have MySQL & MongoDB Setup, and the Database details are updated in the Config File (Common/Sequelize-cli/config) before running this Script$(tput setaf 7)"
 
-# end of package install command
-
-
-# Chat service will be added soon
-
-# Setting up DataBase - Sequelize
-# NODE_ENV is set to  development as default.
-
-
-#  un comment the below line to set-up DataBase.
-# cd ./socioboard-api/Common/Sequelize-cli && set NODE_ENV=development && npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
-# end of DataBase configuration command
+# Script Countdown
+for (( i=15; i>0; i--)); do
+    printf "\rStarting script in $i seconds.  Hit any key to cancel."
+    read -s -n 1 -t 1 key
+    if [ $? -eq 0 ]
+    then
+        printf "\nScript Cancelled\n"
+        exit  
+    fi
+done
 
 
-# If you want all in one simple click, Please use the following command.
-# ! Note: Node ENV default is developement.
+echo -e "$(tput setaf 7)\nResuming script"
 
-# Pre Requirements
+# 0) Installs all npm dependencies
 
-NODE_ENV=development
+echo -e "$(tput setaf 1)0) Installs Swagger-Autogen npm dependency"
 
-# DataBase Requirements
- 
-#  ! MySQL database
-#  ! mongo database
+npm i swagger-autogen@latest -g
 
-# All in one command ( Install Packages & setups Data Base )
-cd ./socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ../Common/Sequelize-cli && set NODE_ENV=development && npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
+# 1) All-in-One Command - Installs all microservices and updates Database
 
+echo -e "$(tput setaf 1)1) All-in-One Command - Installs all microservices and updates Database Tables$(tput setaf 7)"
 
-#  Once all are success
+cd socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ../Common/Sequelize-cli && export NODE_ENV=development && npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
 
-# To start services with pm2
+# 2) All-in-One Command - Generates all Swagger Files
 
-npm i pm2 -g && set NODE_ENV=development && cd ./socioboard-api/User && pm2 user.server.js && cd ../Feeds && pm2 feeds.server.js && ../Publish && pm2 publish.server.js && cd ../Notification && pm2 notify.server.js && cd ../Update && pm2 update.server.js && pm2 status
+echo -e "$(tput setaf 1)2) All-in-One Command - Generates all Swagger Files$(tput setaf 7)"
 
-# ! NOTE: For linux user use export NODE_ENV=developement inplace of set NODE_ENV=development
+cd ../../../socioboard-api/User && npm run swagger && cd ../Feeds && npm run swagger && cd ../Publish && npm run swagger && cd ../Notification && npm run swagger && cd ../Update && npm run swagger && cd ../../
 
+# 3) All-in-One Command - Starts all Microservices in PM2
 
+echo -e "$(tput setaf 1)3) All-in-One Command - Starts all Microservices in PM2$(tput setaf 7)"
 
-
+npm i pm2 -g && export NODE_ENV=development && cd socioboard-api/User && pm2 start user.server.js && cd ../Feeds && pm2 start feeds.server.js && cd ../Publish && pm2 start publish.server.js && cd ../Notification && pm2 start notify.server.js && cd ../Update && pm2 start update.server.js && pm2 status && cd ../../
