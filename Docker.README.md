@@ -23,7 +23,7 @@ vi docker/.env
 
 NOTE: Twilio API is required for the user API(registration, login etc.) to work. Fill correct details(You can create a free acount here: https://www.twilio.com/try-twilio)
 
-Twilio `Account SID` and `Auth Key` can be found in the api section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard services.
+Twilio `Account SID` and `Auth Key` can be found in the API section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard service.
 
 Create and start containers:
 ```bash
