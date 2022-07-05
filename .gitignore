@@ -97,3 +97,8 @@ Thumbs.db
 *.wmv
 
 socioboard-api/Notification/package-lock.json
+
+# Ignoring Docker development files
+docker/.env
+docker/data
+docker/init-mongo.js

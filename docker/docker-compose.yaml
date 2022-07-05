@@ -1,0 +1,114 @@
+version: '3.7'
+
+services:
+  socioboard:
+    image: socioboard/socioboard:latest
+    container_name: socioboard
+    depends_on:
+      - socioboard-mysql
+      - socioboard-mongo
+    ports:
+      - "8000:8000"
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3004:3004"
+    environment:
+      DOMAIN: ${DOMAIN_NAME}
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
+      SQL_DB_NAME: ${SQL_DB_NAME}
+      SQL_DB_USER: ${SQL_DB_USER}
+      SQL_DB_PASS: ${SQL_DB_PASS}
+      SQL_DB_ROOT_PASS: ${SQL_DB_ROOT_PASS}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASS: ${MONGO_PASS}
+      LARAVEL_KEY: ${LARAVEL_KEY}
+      FACEBOOK_API_APP_ID: ${FACEBOOK_API_APP_ID}
+      FACEBOOK_API_APP_SECRET: ${FACEBOOK_API_APP_SECRET}
+      GOOGLE_API_ID: ${GOOGLE_API_ID}
+      GOOGLE_API_SECRET: ${GOOGLE_API_SECRET}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GITHUB_API_ID: ${GITHUB_API_ID}
+      GITHUB_API_SECRET: ${GITHUB_API_SECRET}
+      TWITTER_API_KEY: ${TWITTER_API_KEY}
+      TWITTER_API_SECRET: ${TWITTER_API_SECRET}
+      TWITTER_API_APP_NAME: ${TWITTER_API_APP_NAME}
+      LINKEDIN_API_ID: ${LINKEDIN_API_ID}
+      LINKEDIN_API_SECRET: ${LINKEDIN_API_SECRET}
+      IG_API_ID: ${IG_API_ID}
+      IG_API_SECRET: ${IG_API_SECRET}
+      IG_BUSINESS_API_ID: ${IG_BUSINESS_API_ID}
+      IG_BUSINESS_API_SECRET: ${IG_BUSINESS_API_SECRET}
+      PINTEREST_API_ID: ${PINTEREST_API_ID}
+      PINTEREST_API_SECRET: ${PINTEREST_API_SECRET}
+      BITLY_API_ID: ${BITLY_API_ID}
+      BITLY_API_SECRET: ${BITLY_API_SECRET}
+      BITLY_REDIRECT_URI: ${BITLY_REDIRECT_URI}
+      BITLY_ACCESS_TOKEN: ${BITLY_ACCESS_TOKEN}
+      TINY_LINK_API_KEY: ${TINY_LINK_API_KEY}
+      TUMBLR_API_KEY: ${TUMBLR_API_KEY}
+      TUMBLR_API_SECRET: ${TUMBLR_API_SECRET}
+      JEST_ACCESS_TOKEN: ${JEST_ACCESS_TOKEN}
+      MAIL_HANDLER: ${MAIL_HANDLER}
+      SENDGRID_USERNAME: ${SENDGRID_USERNAME}
+      SENDGRID_PASSWORD: ${SENDGRID_PASSWORD}
+      SENDGRID_FROM_MAIL: ${SENDGRID_FROM_MAIL}
+      SENDGRID_CC_ADDR: ${SENDGRID_CC_ADDR}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      GOOGLE_EMAIL: ${GOOGLE_EMAIL}
+      GOOGLE_EMAIL_PASSWORD: ${GOOGLE_EMAIL_PASSWORD}
+      SOCIOBOARD_TWITTER_HANDLER: ${SOCIOBOARD_TWITTER_HANDLER}
+      AMEMBER_KEY: ${AMEMBER_KEY}
+      AMEMBER_DOMAIN: ${AMEMBER_DOMAIN}
+      TWILIO_ACC_SID: ${TWILIO_ACC_SID}
+      TWILIO_AUTH_KEY: ${TWILIO_AUTH_KEY}
+      TWILIO_SERVICE_ID: ${TWILIO_SERVICE_ID}
+    volumes:
+      - ./data/api:/data
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      scb-net:
+        ipv4_address: 172.16.32.2
+  socioboard-mysql:
+    image: library/mysql:latest
+    container_name: socioboard-mysql
+    environment:
+      MYSQL_DATABASE: ${SQL_DB_NAME}
+      MYSQL_USER: ${SQL_DB_USER}
+      MYSQL_PASSWORD: ${SQL_DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${SQL_DB_ROOT_PASS}
+    restart: unless-stopped
+    volumes:
+      - scb-mysql:/var/lib/mysql
+    networks:
+      scb-net:
+        ipv4_address: 172.16.32.3
+  socioboard-mongo:
+    image: mongo:latest
+    container_name: socioboard-mongo
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - scb-mongo:/data/db
+    restart: unless-stopped
+    networks:
+      scb-net:
+        ipv4_address: 172.16.32.4
+volumes:
+  scb-mongo: {}
+  scb-mysql: {}
+networks:
+  scb-net:
+    external: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.32.0/16
+          gateway: 172.16.32.1
