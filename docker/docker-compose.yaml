@@ -84,6 +84,7 @@ services:
     restart: unless-stopped
     volumes:
       - scb-mysql:/var/lib/mysql
+      - ./perma-act-users.sql:/perma-act-users.sql
     networks:
       scb-net:
         ipv4_address: 172.16.32.3

@@ -102,3 +102,4 @@ socioboard-api/Notification/package-lock.json
 docker/.env
 docker/data
 docker/init-mongo.js
+docker-dev-build.sh

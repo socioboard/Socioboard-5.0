@@ -127,6 +127,10 @@ while [[ $(echo $config | jq '.aMember') != 'null' ]];do
     config=$(echo $config | jq --arg a "$AMEMBER_DOMAIN" '.aMember.domain = $a')
     break;
 done
+while [[ $(echo $config | jq '.aMember_enabled') != 'null' ]];do
+    config=$(echo $config | jq --arg a "$AMEMBER_ENABLED" '.aMember_enabled = $a')
+    break;
+done
 # twilio
 while [[ $(echo $config | jq '.twilio') != 'null' ]];do
     config=$(echo $config | jq --arg a "$TWILIO_ACC_SID" '.twilio.account_sid = $a')

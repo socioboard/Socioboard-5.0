@@ -141,6 +141,7 @@
       "key": "<< aMember Key >>",
       "domain": "https://<< DOMAIN >>/amember/api"
     },
+    "aMember_enabled": "true",
     "notification_socioboard": {
       "status": "on",
       "host_url": "https://notifyv5.socioboard.com"
