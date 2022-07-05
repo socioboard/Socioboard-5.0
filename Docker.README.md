@@ -21,9 +21,11 @@ cp docker/.env.example docker/.env
 vi docker/.env
 ```
 
-NOTE: Twilio API is required for the user API(registration, login etc.) to work. Fill correct details(You can create a free acount here: https://www.twilio.com/try-twilio)
+NOTE 1: Twilio API is required for the user API(registration, login etc.) to work. Fill correct details(You can create a free acount here: https://www.twilio.com/try-twilio)
 
 Twilio `Account SID` and `Auth Key` can be found in the API section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard service.
+
+NOTE 2: If running behind a reverse proxy or similar setup be sure to change the URL scheme in the `# apply configs to config files` section of `docker/socioboard/init.sh`
 
 Create and start containers:
 ```bash

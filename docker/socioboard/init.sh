@@ -21,7 +21,7 @@ cd /usr/socioboard/app/socioboard-web-php/
 cp example.env .env
 sed -i "s;<<Laravel Key>>;${LARAVEL_KEY};g" .env
 sed -i "s;APP_ENV=local;APP_ENV=development;g" .env
-sed -i "s;<<php domain>>;https://${DOMAIN}/;g" .env
+sed -i "s;<<php domain>>;http://${DOMAIN}:8000/;g" .env
 sed -i "s;<<USER NODE SERVICE>>;http://${DOMAIN}:3000/;g" .env
 sed -i "s;<<FEEDS NODE SERVICE>>;http://${DOMAIN}:3001/;g" .env
 sed -i "s;<<PUBLISH NODE SERVICE>>;http://${DOMAIN}:3002/;g" .env
