@@ -53,8 +53,8 @@ class App {
 
     app.use(
       session({
-        name: 'session_name_from_config',
-        keys: ['key1_from_config', 'key2_from_config'],
+        name: config.get('session.name'),
+        keys: [config.get('session.key_1'), config.get('session.key_2')],
         resave: false,
         saveUninitialized: true,
         cookie: {

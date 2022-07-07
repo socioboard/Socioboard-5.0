@@ -2,6 +2,11 @@
     "user_socioboard": {
       "host_url": "http://localhost:3000"
     },
+    "session": {
+      "name": "SBCS",
+      "key_1": "somerandomkey",
+      "key_2": "somerandomkey"
+    },
     "swagger_host_url": "localhost:3002",
     "publish_socioboard": {
       "mail_url": "https://localhost:3002",

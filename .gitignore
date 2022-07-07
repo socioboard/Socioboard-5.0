@@ -36,6 +36,8 @@ socioboard-api/publish/public/videos/
 socioboard-api/user/coverage/
 socioboard-api/Chat
 
+socioboard-api/Admin/node_modules
+socioboard-api/Admin/package-lock.json
 
 socioboard-web-php/storage/uploadimages/
 socioboard-web-php/storage/uploadvideos/

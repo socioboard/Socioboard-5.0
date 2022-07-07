@@ -15,13 +15,13 @@
 ### To Install Node packages Please run the below command.
 
 ```diff
-    cd ./socioboard-api/User; npm install; cd ../Feeds; npm install; cd ../Common ; npm install; cd ../Update; npm install; cd ../Publish; npm install; cd ../Notification; npm install; cd ..
+    cd ./socioboard-api/User; npm install; cd ../Feeds; npm install; cd ../Common ; npm install; cd ../Update; npm install; cd ../Publish; npm install; cd ../Notification; npm install; cd ../Admin; npm install; cd ..
 ```
 
 ### `OR you can use the following command`
 
 ```diff
-    cd ./socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common  && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ..
+    cd ./socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common  && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ../Admin && npm install && cd ..
 ```
 
 ## Update Your Config files

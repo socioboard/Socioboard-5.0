@@ -1,0 +1,33 @@
+{
+  "name": "socioboard-admin",
+  "version": "1.0.0",
+  "description": "Socioboard 5.0 admin panel",
+  "main": "admin.server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon admin.server.js",
+    "start": "node admin.server.js"
+  },
+  "keywords": [
+    "Admin",
+    "Sociboard",
+    "5.0",
+    "vaughngx4",
+    "express",
+    "administration",
+    "sequelize",
+    "languages"
+  ],
+  "author": "vaughngx4 (vaughng@pm.me)",
+  "license": "ISC",
+  "dependencies": {
+    "admin-bro": "^3.2.5",
+    "admin-bro-expressjs": "^2.1.1",
+    "admin-bro-sequelizejs": "^0.5.1",
+    "config": "^3.3.7",
+    "express": "^4.18.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3"
+  }
+}

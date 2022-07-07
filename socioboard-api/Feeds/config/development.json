@@ -4,6 +4,11 @@
       "port": "3001",
       "host": "localhost:3001"
     },
+    "session": {
+      "name": "SBCS",
+      "key_1": "somerandomkey",
+      "key_2": "somerandomkey"
+    },
     "swagger_host_url": "localhost:3001",
     "user_socioboard": {
       "host_url": "http://localhost:3000"

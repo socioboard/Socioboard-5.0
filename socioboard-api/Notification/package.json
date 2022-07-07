@@ -1,7 +1,7 @@
 {
-  "name": "notification",
+  "name": "socioboard-notifications",
   "version": "5.0.0",
-  "description": "Socioboard 5.0 Notification service services",
+  "description": "Socioboard 5.0 Notification services",
   "main": "notify.server.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "live": "node ./resources/views/swagger.config.js && nodemon notify.server.js",
     "swagger": "node ./resources/views/swagger.config.js"
   },
-  "author": "",
+  "author": "Suresh Babu G",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",

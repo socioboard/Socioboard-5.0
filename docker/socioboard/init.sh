@@ -16,6 +16,7 @@ cd /
 ./config.sh "/usr/socioboard/app/socioboard-api/Feeds/config/development.json"
 ./config.sh "/usr/socioboard/app/socioboard-api/Notification/config/development.json"
 ./config.sh "/usr/socioboard/app/socioboard-api/Publish/config/development.json"
+./config.sh "/usr/socioboard/app/socioboard-api/Admin/config/development.json"
 
 cd /usr/socioboard/app/socioboard-web-php/
 cp example.env .env

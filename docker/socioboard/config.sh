@@ -138,12 +138,34 @@ while [[ $(echo $config | jq '.twilio') != 'null' ]];do
     config=$(echo $config | jq --arg a "$TWILIO_SERVICE_ID" '.twilio.service_id = $a')
     break;
 done
+# test url
+while [[ $(echo $config | jq '.test_url') != 'null' ]];do
+    config=$(echo $config | jq --arg a "http://${DOMAIN}/" '.test_url = $a')
+    break;
+done
+# session
+while [[ $(echo $config | jq '.session') != 'null' ]];do
+    config=$(echo $config | jq --arg a "$SESSION_NAME" '.session.name = $a')
+    config=$(echo $config | jq --arg a "$SESSION_KEY_1" '.session.key_1 = $a')
+    config=$(echo $config | jq --arg a "$SESSION_KEY_2" '.session.key_2 = $a')
+    break;
+done
 
 # user config specific additions
 while [[ $1 == "/usr/socioboard/app/socioboard-api/User/config/development.json" ]];do
     config=$(echo $config | jq '. += { "base_path": "../../media" }')
     config=$(echo $config | jq '. += { "payment_path": "../../media/payments" }')
     config=$(echo $config | jq '. += { "template": "public/template/paymentTemplate.html" }')
+    break;
+done
+
+# admin
+while [[ $1 == "/usr/socioboard/app/socioboard-api/Admin/config/development.json" ]];do
+    config=$(echo $config | jq --arg a "$ADMIN_PANEL_ENABLED" '.enabled = $a')
+    config=$(echo $config | jq --arg a "$ADMIN_EMAIL" '.auth.email = $a')
+    config=$(echo $config | jq --arg a "$ADMIN_PASSWORD" '.auth.password = $a')
+    config=$(echo $config | jq --arg a "$ADMIN_SESSION_NAME" '.auth.session_name = $a')
+    config=$(echo $config | jq --arg a "$ADMIN_SESSION_KEY" '.auth.session_key = $a')
     break;
 done
 

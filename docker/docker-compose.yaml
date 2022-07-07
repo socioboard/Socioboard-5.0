@@ -9,6 +9,7 @@ services:
       - socioboard-mongo
     ports:
       - "8000:8000"
+      - "8080:8080"
       - "3000:3000"
       - "3001:3001"
       - "3002:3002"
@@ -60,16 +61,25 @@ services:
       GOOGLE_EMAIL: ${GOOGLE_EMAIL}
       GOOGLE_EMAIL_PASSWORD: ${GOOGLE_EMAIL_PASSWORD}
       SOCIOBOARD_TWITTER_HANDLER: ${SOCIOBOARD_TWITTER_HANDLER}
+      AMEMBER_ENABLED: ${AMEMBER_ENABLED}
       AMEMBER_KEY: ${AMEMBER_KEY}
       AMEMBER_DOMAIN: ${AMEMBER_DOMAIN}
       TWILIO_ACC_SID: ${TWILIO_ACC_SID}
       TWILIO_AUTH_KEY: ${TWILIO_AUTH_KEY}
       TWILIO_SERVICE_ID: ${TWILIO_SERVICE_ID}
+      ADMIN_PANEL_ENABLED: ${ADMIN_PANEL_ENABLED}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_SESSION_NAME: ${ADMIN_SESSION_NAME}
+      ADMIN_SESSION_KEY: ${ADMIN_SESSION_KEY}
+      SESSION_NAME: ${API_SESSION_NAME}
+      SESSION_KEY_1: ${API_SESSION_KEY_1}
+      SESSION_KEY_2: ${API_SESSION_KEY_2}
     volumes:
       - ./data/api:/data
     security_opt:
       - no-new-privileges:true
-    restart: unless-stopped
+    restart: always
     networks:
       scb-net:
         ipv4_address: 172.16.32.2
@@ -81,7 +91,7 @@ services:
       MYSQL_USER: ${SQL_DB_USER}
       MYSQL_PASSWORD: ${SQL_DB_PASS}
       MYSQL_ROOT_PASSWORD: ${SQL_DB_ROOT_PASS}
-    restart: unless-stopped
+    restart: always
     volumes:
       - scb-mysql:/var/lib/mysql
       - ./perma-act-users.sql:/perma-act-users.sql
@@ -98,7 +108,7 @@ services:
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - scb-mongo:/data/db
-    restart: unless-stopped
+    restart: always
     networks:
       scb-net:
         ipv4_address: 172.16.32.4

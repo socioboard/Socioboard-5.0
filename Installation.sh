@@ -28,7 +28,7 @@ npm i swagger-autogen@latest -g
 
 echo -e "$(tput setaf 1)1) All-in-One Command - Installs all microservices and updates Database Tables$(tput setaf 7)"
 
-cd socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ../Common/Sequelize-cli && export NODE_ENV=development && npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
+cd socioboard-api/User && npm install && cd ../Feeds && npm install && cd ../Common && npm install && cd ../Update && npm install && cd ../Publish && npm install && cd ../Notification && npm install && cd ../Admin && npm install && cd ../Common/Sequelize-cli && export NODE_ENV=development && npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20210303111816-initialize_application_informations.cjs
 
 # 2) All-in-One Command - Generates all Swagger Files
 
@@ -40,4 +40,4 @@ cd ../../../socioboard-api/User && npm run swagger && cd ../Feeds && npm run swa
 
 echo -e "$(tput setaf 1)3) All-in-One Command - Starts all Microservices in PM2$(tput setaf 7)"
 
-npm i pm2 -g && export NODE_ENV=development && cd socioboard-api/User && pm2 start user.server.js && cd ../Feeds && pm2 start feeds.server.js && cd ../Publish && pm2 start publish.server.js && cd ../Notification && pm2 start notify.server.js && cd ../Update && pm2 start update.server.js && pm2 status && cd ../../
+npm i pm2 -g && export NODE_ENV=development && cd socioboard-api/User && pm2 start user.server.js && cd ../Feeds && pm2 start feeds.server.js && cd ../Publish && pm2 start publish.server.js && cd ../Notification && pm2 start notify.server.js && cd ../Update && pm2 start update.server.js && cd ../Admin && pm2 start admin.server.js && pm2 status && cd ../../

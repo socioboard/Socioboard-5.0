@@ -1,0 +1,12 @@
+{
+    "enabled": "true",
+    "auth": {
+        "email": "admin@scb.example",
+        "password": "scb1234",
+        "session_name": "SCBADM",
+        "session_key": "somerandomlygeneratedkey"
+    },
+    "environment": {
+        "domain": "localhost"
+    }
+}
