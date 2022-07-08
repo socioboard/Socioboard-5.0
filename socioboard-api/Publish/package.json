@@ -1,7 +1,7 @@
 {
-  "name": "suresh-babu-g",
+  "name": "socioboard-publish",
   "version": "1.0.0",
-  "description": "Socioboard 5.0 user services",
+  "description": "Socioboard 5.0 publish services",
   "main": "publish.server.js",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "swagger": "node ./resources/views/swagger.config.js"
   },
   "keywords": [
-    "User",
+    "Publish",
     "Sociboard",
     "5.0",
     "Suresh",

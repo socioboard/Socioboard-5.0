@@ -1,7 +1,7 @@
 {
-  "name": "suresh-babu-g",
+  "name": "socioboard-feeds",
   "version": "1.0.0",
-  "description": "Socioboard 5.0 user services",
+  "description": "Socioboard 5.0 feeds services",
   "main": "feeds.server.js",
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
     "test": "env NODE_ENV=test npx start-test dev 5001 jest"
   },
   "keywords": [
-    "User",
+    "Feeds",
     "Sociboard",
     "5.0",
     "Suresh",

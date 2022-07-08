@@ -5,6 +5,11 @@
     "port": "3003",
     "host": "localhost:3003"
   },
+  "session": {
+    "name": "SBCS",
+    "key_1": "somerandomkey",
+    "key_2": "somerandomkey"
+  },
   "swagger_host_url": "localhost:3003",
   "user_socioboard": {
     "host_url": "http://localhost:3000"
@@ -58,5 +63,6 @@
     "password": "<< Database password >>",
     "host": "<< host >>",
     "db_name": "<< Database name >>"
-  }
+  },
+  "test_url": ""
 }

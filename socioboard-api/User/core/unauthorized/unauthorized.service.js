@@ -95,7 +95,7 @@ class unauthorizedController {
           req.body.email,
           responseData?.user_id
         );
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+        if ( process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
         // Set Details in aMember as well
         /**
          * userName
@@ -245,7 +245,7 @@ class unauthorizedController {
         return ErrorResponse(res, 'Account has been locked.');
       if (!userDetails.Activations.activation_status)
         return ErrorResponse(res, 'Email not yet validated.!');
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+        if ( process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true'  ) {
        // Call aMember to set new details of plan and expiry date
       // userId, userName & password
        await new aMember(config.get('aMember')).getUserPlanDetail(

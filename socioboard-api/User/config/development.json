@@ -5,6 +5,11 @@
       "port": "3000",
       "host": "localhost:3000"
     },
+    "session": {
+      "name": "SBCS",
+      "key_1": "somerandomkey",
+      "key_2": "somerandomkey"
+    },
     "profile_page_invite_redirect_url": "",
     "invite_redirect_url_web": "",
     "swagger_host_url": "localhost:3000",
@@ -141,6 +146,7 @@
       "key": "<< aMember Key >>",
       "domain": "https://<< DOMAIN >>/amember/api"
     },
+    "aMember_enabled": "true",
     "notification_socioboard": {
       "status": "on",
       "host_url": "https://notifyv5.socioboard.com"

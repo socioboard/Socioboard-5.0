@@ -1,5 +1,5 @@
 {
-  "name": "suresh-babu-g",
+  "name": "socioboard-users",
   "version": "1.0.0",
   "description": "Socioboard 5.0 user services",
   "main": "user.server.js",

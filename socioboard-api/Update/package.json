@@ -1,7 +1,7 @@
 {
-  "name": "suresh-babu-g",
+  "name": "socioboard-update",
   "version": "1.0.0",
-  "description": "Socioboard 5.0 user services",
+  "description": "Socioboard 5.0 update services",
   "main": "update.server.js",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "swagger": "node ./resources/views/swagger.config.js"
   },
   "keywords": [
-    "User",
+    "Update",
     "Sociboard",
     "5.0",
     "Suresh",
