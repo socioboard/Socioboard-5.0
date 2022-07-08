@@ -43,19 +43,21 @@ docker exec -it socioboard su-exec socioboard pm2 logs
 ```
 CTRL+C to exit
 
-
 A `data/api` directory will be created inside the `docker` folder(you can change the docker mount in `docker-compose.yaml` to put it elsewhere). This is only for init files so that a new container would not try to initialize an existing database.
 
 The docker network IP is not important and can be changed freely.
 
-## Creating a user
+### Changing Exposed Ports:
+If for example port 8000 on your machine is in use and you want to change the frontend to port 8989. You will need to edit `docker/docker-compose.yaml` and change `"8000:8000"` to `"8989:8000"`. You will also need to change the URL scheme in `docker/socioboard/init.sh` to match.
+
+## Creating an Account
 Navigate to your endpoint(`http://localhost:8000 by default) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
 
 There are 2 ways to edit users:
 ### Method 1 - CLI:
 The following command will manually activate ALL users as well as assign the highest available package and set expiry date to a much later date (30th December 2999 i.e ~never). Replace username, password and database with those set in .env earlier:
 ```bash
-docker exec -it socioboard-mysql sh -c "mysql --username=scbadmin --password=sqlpass --database=scbsql < /perma-act-users.sql"
+docker exec -it socioboard-mysql sh -c "mysql --user=scbadmin --password=sqlpass --database=scbsql < /perma-act-users.sql"
 ```
 
 ### Method 2 - GUI:
