@@ -7,15 +7,10 @@ services:
     depends_on:
       - socioboard-mysql
       - socioboard-mongo
-    ports:
-      - "8000:8000"
-      - "8080:8080"
-      - "3000:3000"
-      - "3001:3001"
-      - "3002:3002"
-      - "3004:3004"
     environment:
-      DOMAIN: ${DOMAIN_NAME}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTP_PORT: ${HTTP_PORT}
+      HTTPS_PORT: ${HTTPS_PORT}
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       SQL_DB_NAME: ${SQL_DB_NAME}
@@ -77,6 +72,7 @@ services:
       SESSION_KEY_2: ${API_SESSION_KEY_2}
     volumes:
       - ./data/api:/data
+      - ./nginx/ssl:/ssl
     security_opt:
       - no-new-privileges:true
     restart: always
@@ -112,6 +108,28 @@ services:
     networks:
       scb-net:
         ipv4_address: 172.16.32.4
+  socioboard-nginx:
+    image: nginx:latest
+    container_name: socioboard-nginx
+    depends_on:
+      - socioboard
+      - socioboard-mysql
+      - socioboard-mongo
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+      - "${HTTPS_PORT}:${HTTPS_PORT}"
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTP_PORT: ${HTTP_PORT}
+      HTTPS_PORT: ${HTTPS_PORT}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx-socioboard.conf:/etc/nginx/templates/socioboard.conf.template
+      - ./nginx/ssl:/ssl
+    restart: always
+    networks:
+      scb-net:
+        ipv4_address: 172.16.32.5
 volumes:
   scb-mongo: {}
   scb-mysql: {}

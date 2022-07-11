@@ -105,3 +105,5 @@ docker/.env
 docker/data
 docker/init-mongo.js
 docker-dev-build.sh
+docker/nginx/ssl/cert.pem
+docker/nginx/ssl/key.pem

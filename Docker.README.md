@@ -1,6 +1,10 @@
 # Socioboard Docker Containers
 Docker version developed and maintained by https://github.com/vaughngx4.
-PLEASE NOTE: Currently, the application is created to run in development mode WITH debugging on by default, as well as having several API vulnerabilities. This is a potential security issue and I would advise to not expose the application(ports 8000 and 8080) or the API(ports 3000 - 3004) to the internet.
+
+NOTE 1: Currently, the application is created to run in development mode WITH debugging on by default, as well as having several API vulnerabilities. This is a potential security risk and I would advise to not expose the application or the API to the internet.
+
+NOTE 2: Running on the `localhost` domain is no longer supported due to the addition of SSL and how the application is built. If you would like to run on your local machine, you will need to have an external DNS(setting in your hosts file doesn't work as the socioboard container also needs to be able to resolve hostnames) like your router, AdGuard or PiHole for example, set to the external IP of your local machine(i.e. 192.168.1.101). You will also need to expose ports 80 and 443 on your local machine. See `docker/nginx/ssl/SSL.README.md` for a list of subdomains.
+
 ## Installation
 Clone source code and cd into directory:
 ```bash
@@ -25,7 +29,9 @@ NOTE 1: Twilio API is required for the user API(registration, login etc.) to wor
 
 Twilio `Account SID` and `Auth Key` can be found in the API Keys section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard service.
 
-NOTE 2: If running behind a reverse proxy or exposing ports other than the default, be sure to change the URL scheme in the `# apply configs to config files` section of `docker/socioboard/init.sh`
+NOTE 2: If you would like to change the subdomains, be sure to change the URL scheme in the `# apply configs to config files` section of `docker/socioboard/init.sh`, in `docker/socioboard/config.sh` and in `docker/nginx/nginx-socioboard.conf`.
+
+You can also provide your own SSL certificate if necessary(see `docker/nginx/ssl/SSL.README.md`)
 
 Create and start containers:
 ```bash
@@ -48,10 +54,12 @@ A `data/api` directory will be created inside the `docker` folder(you can change
 The docker network IP is not important and can be changed freely.
 
 ### Changing Exposed Ports:
-If for example port 8000 on your machine is in use and you want to change the frontend to port 8989. You will need to edit `docker/docker-compose.yaml` and change `"8000:8000"` to `"8989:8000"`. You will also need to change the URL scheme in `docker/socioboard/init.sh` to match.
+If port(s) 80 and/or 443 are in use on your system you will need to edit `docker/docker-compose.yaml` and change `"443:443"` to `"8443:8443"` for example. You will also need to change the port(s) in your docker `.env` file.
+
+NOTE: When serving https on a port other than 443, the http redirect will no longer work. You will either have to modify the redirect in `docker/nginx/nginx-socioboard.conf` or handle it with your own reverse proxy(if you're using your own reverse proxy AND non standard ports I'd suggest handling the redirect there).
 
 ## Creating an Account
-Navigate to your endpoint(`http://localhost:8000 by default) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
+Navigate to your endpoint(`https://socio.mydomain.example) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
 
 There are 2 ways to edit users:
 ### Method 1 - CLI:
@@ -61,7 +69,7 @@ docker exec -it socioboard-mysql sh -c "mysql --user=scbadmin --password=sqlpass
 ```
 
 ### Method 2 - GUI:
-There is now an optional admin panel(enabled by default, but can be disabled via `.env`) that is served on port 8080 at `/admin` (http://localhost:8080/admin by default). Default login details are - email: `admin@scb.example` and password: `scb@123`. I recommend you change these in the `.env` file as well.
+There is now an optional admin panel(enabled by default, but can be disabled via `.env`) that is served at `/admin` (https://socio.mydomain.example/admin). Default login details are - email: `admin@scb.example` and password: `scb@123`. I recommend you change these in the `.env` file as well.
 
 After logging in, click on your database(there should only be 1 database). Scroll down to the `User Activations` section(table), find your user(you can match users based on the data in `User Details` section(table)), click the 3 dots to the right of the user and click on `edit`. Here you can set `Activation Status` (`0` means not activated, `1` means activated), `User Plan` (ranges from `0` to `7`) and `Account Expire Date`.
 

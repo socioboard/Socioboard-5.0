@@ -4,6 +4,8 @@ WORKDIR /
 RUN addgroup -S socioboard && adduser -S socioboard -G socioboard
 RUN mkdir -p /usr/socioboard/app
 RUN apk add --no-cache --upgrade \
+    openssl \
+    ca-certificates \
     su-exec \
     bash \
     jq \
@@ -33,15 +35,10 @@ RUN cd /usr/socioboard/app/socioboard-api/User && npm install && \
     cd ../Publish && npm install && \
     cd ../Notification && npm install && \
     cd ../Admin && npm install
-RUN cd ./socioboard-api/User && npm run swagger && \
-    cd ../Feeds && npm run swagger && \
-    cd ../Publish && npm run swagger && \
-    cd ../Notification && npm run swagger && \
-    cd ../Update && npm run swagger
 RUN cd ./socioboard-web-php && composer install
 RUN chown -R socioboard /usr/socioboard/app
+COPY ./sql-ping.php /sql-ping.php
 COPY ./entrypoint.sh /docker-entrypoint.sh
 COPY ./init.sh /init.sh
 COPY ./config.sh /config.sh
-COPY ./sql-ping.php /sql-ping.php
 ENTRYPOINT ["/docker-entrypoint.sh"]
