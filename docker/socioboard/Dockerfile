@@ -1,7 +1,6 @@
 FROM node:lts-alpine3.15
 LABEL maintainer="vaughngx4 (vaughng@pm.me)"
 WORKDIR /
-RUN addgroup -S socioboard && adduser -S socioboard -G socioboard
 RUN mkdir -p /usr/socioboard/app
 RUN apk add --no-cache --upgrade \
     openssl \
@@ -36,7 +35,7 @@ RUN cd /usr/socioboard/app/socioboard-api/User && npm install && \
     cd ../Notification && npm install && \
     cd ../Admin && npm install
 RUN cd ./socioboard-web-php && composer install
-RUN chown -R socioboard /usr/socioboard/app
+RUN chown -R node /usr/socioboard/app
 COPY ./sql-ping.php /sql-ping.php
 COPY ./entrypoint.sh /docker-entrypoint.sh
 COPY ./init.sh /init.sh

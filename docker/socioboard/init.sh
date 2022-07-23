@@ -39,13 +39,16 @@ sed -i "s;<<NOTIFICATION NODE SERVICE>>;https://socio-notifications.${BASE_DOMAI
 # init mysql db
 while [ ! -e "/data/db.init" ];do
     echo "Initializing MySQL Database"
-    cd /usr/socioboard/app/
-    cd ./socioboard-api/Common/Sequelize-cli && \
+    cd /usr/socioboard/app/socioboard-api/Common/Sequelize-cli
+    dbi=$(ls seeders | grep '[0-9]*initialize_application_informations.cjs')
     export NODE_ENV=development && \
-    npx sequelize-cli db:migrate && \
-    npx sequelize-cli db:seed --seed seeders/20210303111816-initialize_application_informations.cjs
+    su-exec node npx sequelize-cli db:migrate && \
+    su-exec node npx sequelize-cli db:seed --seed seeders/$dbi && \
     touch /data/db.init
-    break;
+    while [ ! -e "/data/db.init" ];do
+        echo "MySQL Database Initialization Failed, Retrying"
+        break;
+    done
 done
 
 # init certificates
