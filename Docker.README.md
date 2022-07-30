@@ -25,6 +25,11 @@ cp docker/.env.example docker/.env
 vi docker/.env
 ```
 
+Prepare MongoDB files(this needs to be done whenever you change any mongo related settings in .env i.e new database):
+```bash
+./docker-set-mongo-init.sh
+```
+
 NOTE 1: Twilio API is required for the user API(registration, login etc.) to work. Fill correct details(You can create a free acount here: https://www.twilio.com/try-twilio)
 
 Twilio `Account SID` and `Auth Key` can be found in the API Keys section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard service.
@@ -54,9 +59,11 @@ A `data/api` directory will be created inside the `docker` folder(you can change
 The docker network IP is not important and can be changed freely.
 
 ### Changing Exposed Ports:
-If port(s) 80 and/or 443 are in use on your system you will need to edit `docker/docker-compose.yaml` and change `"443:443"` to `"8443:8443"` for example. You will also need to change the port(s) in your docker `.env` file.
+If port(s) 80 and/or 443 are in use on your system, but your proxy frontend still expects traffic on port(s) 80 and/or 443 you will need to edit `docker/docker-compose.yaml` and change `"${HTTPS_PORT}:${HTTPS_PORT}"` to `"8443:${HTTPS_PORT}"` for example.
 
-NOTE: When serving https on a port other than 443, the http redirect will no longer work. You will either have to modify the redirect in `docker/nginx/nginx-socioboard.conf` or handle it with your own reverse proxy(if you're using your own reverse proxy AND non standard ports I'd suggest handling the redirect there).
+If you would like to change the ports the application is served on(i.e you would visit socio.mydomain.com:8443 to use the application) simply change the port(s) in your docker `.env` file.
+
+NOTE: When serving https on a port other than 443, the http redirect will no longer work. You will either have to modify the redirect in `docker/nginx/nginx-socioboard.conf` or handle it with your own reverse proxy(if you're using your own reverse proxy AND non standard ports I'd suggest handling the redirect there or leaving the http port out entirely).
 
 ## Creating an Account
 Navigate to your endpoint(`https://socio.mydomain.example) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
