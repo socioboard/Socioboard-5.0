@@ -1,0 +1,33 @@
+---
+
+- name: Make temporary copy of source
+  ansible.builtin.script:
+    cmd: files/build_copy-source.sh
+    chdir: "{{ socioboard_base_data_path }}"
+
+- name: Ensure SocioBoard Docker image is built
+  community.docker.docker_image:
+    name: socioboard/socioboard
+    tag: latest
+    source: build
+    build:
+      path: "{{ socioboard_base_data_path }}/docker/socioboard"
+      pull: no
+      platform: "{{ socioboard_architecture }}"
+    state: present
+
+- name: Delete temporary copy of source code
+  ansible.builtin.script:
+    cmd: files/build_remove-source.sh
+    chdir: "{{ socioboard_base_data_path }}/docker"
+
+- name: Ensure Docker network is created
+  community.docker.docker_network:
+    name: scb-net
+    state: present
+
+- name: Ensure SocioBoard is deployed
+  community.docker.docker_compose:
+    project_src: "{{ socioboard_base_data_path }}/docker"
+    files:
+      - docker-compose.yaml

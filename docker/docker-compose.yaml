@@ -77,8 +77,7 @@ services:
       - no-new-privileges:true
     restart: always
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.2
+      - scb-net
   socioboard-mysql:
     image: library/mysql:latest
     container_name: socioboard-mysql
@@ -92,8 +91,7 @@ services:
       - scb-mysql:/var/lib/mysql
       - ./perma-act-users.sql:/perma-act-users.sql
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.3
+      - scb-net
   socioboard-mongo:
     image: mongo:latest
     container_name: socioboard-mongo
@@ -106,8 +104,7 @@ services:
       - scb-mongo:/data/db
     restart: always
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.4
+      - scb-net
   socioboard-nginx:
     image: nginx:latest
     container_name: socioboard-nginx
@@ -128,16 +125,10 @@ services:
       - ./nginx/ssl:/ssl
     restart: always
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.5
+      - scb-net
 volumes:
   scb-mongo: {}
   scb-mysql: {}
 networks:
   scb-net:
     external: true
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.16.32.0/16
-          gateway: 172.16.32.1

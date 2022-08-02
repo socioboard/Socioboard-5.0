@@ -1,0 +1,3 @@
+---
+# tasks file for socio-docker
+- import_tasks: docker.yml

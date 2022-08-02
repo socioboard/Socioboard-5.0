@@ -1,0 +1,3 @@
+---
+# tasks file for socio-base
+- import_tasks: deploy.yml
