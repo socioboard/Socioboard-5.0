@@ -1,0 +1,48 @@
+---
+
+- name: Ensure SocioBoard is down
+  community.docker.docker_compose:
+    project_src: "{{ socioboard_base_data_path }}/docker"
+    files:
+      - docker-compose.yaml
+    state: absent
+  tags:
+    - remove
+    - remove-all
+    - update
+
+- name: Ensure SocioBoard Docker image is removed
+  community.docker.docker_image:
+    name: socioboard/socioboard
+    tag: latest
+    state: absent
+  tags: 
+    - remove-all
+    - update
+
+- name: Ensure Docker network is removed
+  community.docker.docker_network:
+    name: scb-net
+    state: absent
+  tags: 
+    - remove
+    - remove-all
+    - update
+
+- name: Ensure Docker volume (MongoDB) is removed
+  community.docker.docker_volume:
+    volume_name: docker_scb-mongo
+    state: absent
+  tags: remove-all
+
+- name: Ensure Docker volume (MySQL) is removed
+  community.docker.docker_volume:
+    volume_name: docker_scb-mysql
+    state: absent
+  tags: remove-all
+
+- name: Ensure remaining data is removed
+  file:
+    path: "{{ socioboard_base_data_path }}/docker/data"
+    state: absent
+  tags: remove-all

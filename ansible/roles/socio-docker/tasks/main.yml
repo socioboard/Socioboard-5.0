@@ -1,3 +1,11 @@
 ---
 # tasks file for socio-docker
-- import_tasks: docker.yml
+- name: RHEL Docker Setup
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
+  tags: setup-all
+
+- name: Debian Docker Setup
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+  tags: setup-all

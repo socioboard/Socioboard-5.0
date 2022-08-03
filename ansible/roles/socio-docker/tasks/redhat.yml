@@ -1,6 +1,6 @@
 ---
 
-- name: Ensure Docker repository is enabled
+- name: Ensure Docker repository is enabled (RHEL)
   ansible.builtin.template:
     src: "{{ role_path }}/files/yum.repos.d/docker-ce-centos.repo"
     dest: "/etc/yum.repos.d/docker-ce.repo"
@@ -8,27 +8,21 @@
     group: "{{ socioboard_user_groupname }}"
     mode: 0644
 
-- name: Ensure Docker's RPM key is trusted
+- name: Ensure Docker's RPM key is trusted (RHEL)
   ansible.builtin.rpm_key:
     state: present
     key: https://download.docker.com/linux/centos/gpg
 
-#- name: Ensure EPEL is installed
-#  ansible.builtin.yum:
-#    name:
-#      - epel-release
-#    state: present
-#    update_cache: true
-
-- name: Ensure Docker is installed
+- name: Ensure Docker & dependencies are installed (RHEL)
   ansible.builtin.yum:
     name:
       - docker-ce
       - docker-ce-cli
       - python3-pip
+      - git
     state: present
 
-- name: Ensure Docker & Docker Compose API's are installed
+- name: Ensure Docker & Docker Compose API's are installed (RHEL)
   pip:
     name:
       - docker
@@ -37,7 +31,7 @@
     executable: pip3
     extra_args: --no-cache-dir
       
-- name: Ensure Docker is running
+- name: Ensure Docker is running (RHEL)
   ansible.builtin.service:
     name: docker
     state: started

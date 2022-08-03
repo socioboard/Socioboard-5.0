@@ -1,3 +1,4 @@
 ---
 # tasks file for socio-base
+- import_tasks: remove.yml
 - import_tasks: deploy.yml

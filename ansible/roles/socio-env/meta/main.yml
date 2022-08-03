@@ -12,8 +12,6 @@ galaxy_info:
 #      versions:
 #        - all
 
-  galaxy_tags: 
-    - setup-all
-    - setup
+  galaxy_tags: []
 
 dependencies: []
