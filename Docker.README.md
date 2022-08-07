@@ -12,13 +12,6 @@ git clone https://github.com/socioboard/Socioboard-5.0.git
 cd Socioboard-5.0
 ```
 
-Build docker images from source:
-```bash
-chmod +x docker-build.sh
-./docker-build.sh
-```
-Building images may take some time depending on your internet speed. Build can fail due to slow connections.
-
 Create .env and change variables(I use vi but use whatever text editor you have):
 ```bash
 cp docker/.env.example docker/.env
@@ -34,9 +27,14 @@ NOTE 1: Twilio API is required for the user API(registration, login etc.) to wor
 
 Twilio `Account SID` and `Auth Key` can be found in the API Keys section. To get a `Service ID` you will need to go the `Twilio Console` click on `Verify`, then `Services` and create a SocioBoard service.
 
-NOTE 2: If you would like to change the subdomains, be sure to change the URL scheme in the `# apply configs to config files` section of `docker/socioboard/init.sh`, in `docker/socioboard/config.sh` and in `docker/nginx/nginx-socioboard.conf`.
+NOTE 2: If you would like to change the subdomains, be sure to change the URL scheme in `docker/socioboard/init.sh`, `docker/socioboard/config.sh`, `docker/socioboard-web/init.sh` and in `docker/nginx/nginx-socioboard.conf`.
 
 You can also provide your own SSL certificate if necessary(see `docker/nginx/ssl/SSL.README.md`)
+
+Pull Docker images:
+```bash
+docker-compose -f docker/docker-compose.yaml Pull
+```
 
 Create and start containers:
 ```bash
@@ -81,6 +79,13 @@ There is now an optional admin panel(enabled by default, but can be disabled via
 After logging in, click on your database(there should only be 1 database). Scroll down to the `User Activations` section(table), find your user(you can match users based on the data in `User Details` section(table)), click the 3 dots to the right of the user and click on `edit`. Here you can set `Activation Status` (`0` means not activated, `1` means activated), `User Plan` (ranges from `0` to `7`) and `Account Expire Date`.
 
 Done! You can now log in :)
+
+## Building from source
+Build docker images from source:
+```bash
+./docker-build.sh
+```
+Building images may take some time depending on your internet speed. Build can fail due to slow connections.
 
 ## Uninstalling:
 ### Keeping Data:

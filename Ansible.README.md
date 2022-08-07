@@ -39,11 +39,19 @@ cd ansible
 ansible-playbook -b -K socioboard-deploy.yml --tags=setup-all
 ```
 
-Run the playbook with `setup` tag to do a basic deployment(you need to run with `setup-all` at least once, this tag does not build the SocioBoard Docker image. Use this if you want redeploy after using the `remove` tag documented below)
+Run the playbook with `setup` tag to do a basic deployment:
 ```bash
 cd ansible
 ansible-playbook -b -K socioboard-deploy.yml --tags=setup
 ```
+WARNING: You need to run with `setup-all` at least once, this tag does not build or pull the SocioBoard Docker images! Use this if you want redeploy after using the `remove` tag documented below.
+
+You can build and setup the Docker images yourself using:
+```bash
+cd ansible
+ansible-playbook -b -K socioboard-deploy.yml --tags=build,setup
+```
+We don't use the `setup-all` tag when building as this will force pull the images from Docker Hub. WARNING: You need to run with `setup-all` at least once, this tag does not install dependancies!
 
 ## Uninstalling
 Run the playbook with `remove` tag to remove only the containers and networks(data is not touched)

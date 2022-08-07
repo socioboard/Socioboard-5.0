@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   socioboard:
-    image: socioboard/socioboard:latest
+    image: sintelli/socioboard:latest
     container_name: socioboard
     depends_on:
       - socioboard-mysql
@@ -70,11 +70,24 @@ services:
       SESSION_NAME: ${API_SESSION_NAME}
       SESSION_KEY_1: ${API_SESSION_KEY_1}
       SESSION_KEY_2: ${API_SESSION_KEY_2}
+      NODE_ENV: "production"
     volumes:
       - ./data/api:/data
       - ./nginx/ssl:/ssl
     security_opt:
       - no-new-privileges:true
+    restart: always
+    networks:
+      - scb-net
+  socioboard-web:
+    image: sintelli/socioboard-web:latest
+    container_name: socioboard-web
+    depends_on:
+      - socioboard
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTPS_PORT: ${HTTPS_PORT}
+      LARAVEL_KEY: ${LARAVEL_KEY}
     restart: always
     networks:
       - scb-net
@@ -131,4 +144,4 @@ volumes:
   scb-mysql: {}
 networks:
   scb-net:
-    external: true
+    driver: bridge

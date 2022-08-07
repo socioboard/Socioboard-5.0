@@ -8,13 +8,7 @@ config=$(echo $config | jq --arg a "$SQL_DB_PASS" '.development.password = $a')
 config=$(echo $config | jq --arg a "socioboard-mysql" '.development.host = $a')
 rm -f config.json
 echo $config > config.json
-
-# if non standard https port, change URL scheme, else leave blank
-port=""
-while [[ $HTTPS_PORT != "443" ]];do
-    port=":$HTTPS_PORT"
-    break;
-done
+sed -i "s;development;production;g" config.json
 
 # apply configs to config files
 cd /
@@ -25,23 +19,26 @@ cd /
 ./config.sh "/usr/socioboard/app/socioboard-api/Publish/config/development.json"
 ./config.sh "/usr/socioboard/app/socioboard-api/Admin/config/development.json"
 
-cd /usr/socioboard/app/socioboard-web-php/
-cp example.env .env
-sed -i "s;<<Laravel Key>>;${LARAVEL_KEY};g" .env
-sed -i "s;APP_ENV=local;APP_ENV=development;g" .env
-sed -i "s;<<php domain>>;https://socio.${BASE_DOMAIN}${port}/;g" .env
-sed -i "s;<<USER NODE SERVICE>>;https://socio-api.${BASE_DOMAIN}${port}/;g" .env
-sed -i "s;<<FEEDS NODE SERVICE>>;https://socio-feeds.${BASE_DOMAIN}${port}/;g" .env
-sed -i "s;<<PUBLISH NODE SERVICE>>;https://socio-publish.${BASE_DOMAIN}${port}/;g" .env
-sed -i "s;<<UPDATE NODE SERVICE>>;https://socio-update.${BASE_DOMAIN}${port}/;g" .env
-sed -i "s;<<NOTIFICATION NODE SERVICE>>;https://socio-notifications.${BASE_DOMAIN}${port}/;g" .env
+# rename config files
+cd /usr/socioboard/app/socioboard-api
+cd ./User/config
+mv development.json production.json
+cd ../../Update/config
+mv development.json production.json
+cd ../../Feeds/config
+mv development.json production.json
+cd ../../Notification/config
+mv development.json production.json
+cd ../../Publish/config
+mv development.json production.json
+cd ../../Admin/config
+mv development.json production.json
 
 # init mysql db
 while [ ! -e "/data/db.init" ];do
     echo "Initializing MySQL Database"
     cd /usr/socioboard/app/socioboard-api/Common/Sequelize-cli
     dbi=$(ls seeders | grep '[0-9]*initialize_application_informations.cjs')
-    export NODE_ENV=development && \
     su-exec node npx sequelize-cli db:migrate && \
     su-exec node npx sequelize-cli db:seed --seed seeders/$dbi && \
     touch /data/db.init

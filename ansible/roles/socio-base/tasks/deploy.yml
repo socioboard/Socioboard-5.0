@@ -5,12 +5,11 @@
     cmd: files/build_copy-source.sh
     chdir: "{{ socioboard_base_data_path }}"
   tags: 
-    - setup-all
-    - update
+    - build
 
-- name: Ensure SocioBoard Docker image is built
+- name: Ensure Docker image is built (socioboard)
   community.docker.docker_image:
-    name: socioboard/socioboard
+    name: sintelli/socioboard
     tag: latest
     source: build
     build:
@@ -19,23 +18,43 @@
       platform: "{{ socioboard_architecture }}"
     state: present
   tags: 
-    - setup-all
-    - update
+    - build
+
+- name: Ensure Docker image is built (socioboard-web)
+  community.docker.docker_image:
+    name: sintelli/socioboard-web
+    tag: latest
+    source: build
+    build:
+      path: "{{ socioboard_base_data_path }}/docker/socioboard-web"
+      pull: no
+      platform: "{{ socioboard_architecture }}"
+    state: present
+  tags: 
+    - build
 
 - name: Delete temporary copy of source code
   ansible.builtin.script:
     cmd: files/build_remove-source.sh
     chdir: "{{ socioboard_base_data_path }}/docker"
   tags: 
+    - build
+
+- name: Ensure Docker image is present and up-to-date (socioboard)
+  community.docker.docker_image:
+    name: sintelli/socioboard
+    source: pull
+    force_source: yes
+  tags:
     - setup-all
     - update
 
-- name: Ensure Docker network is created
-  community.docker.docker_network:
-    name: scb-net
-    state: present
-  tags: 
-    - setup
+- name: Ensure Docker image is present and up-to-date (socioboard-web)
+  community.docker.docker_image:
+    name: sintelli/socioboard-web
+    source: pull
+    force_source: yes
+  tags:
     - setup-all
     - update
 
