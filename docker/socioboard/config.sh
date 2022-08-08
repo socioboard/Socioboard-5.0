@@ -76,7 +76,7 @@ while [[ $(echo $config | jq '.jest') != 'null' ]];do
 done
 # mail titles
 while [[ $(echo $config | jq '.mailTitles') != 'null' ]];do
-    config=$(echo $config | jq --arg a "Activation link" '.mailTitles.activation_link = $a')
+    config=$(echo $config | jq --arg a "Account Activation" '.mailTitles.activation_link = $a')
     config=$(echo $config | jq --arg a "Invitation from SocioBoard to Add Account" '.mailTitles.Invitation_user = $a')
     config=$(echo $config | jq --arg a "Reset Password" '.mailTitles.forgot_password_request = $a')
     config=$(echo $config | jq --arg a "Payment Invoice" '.mailTitles.payment_invoice = $a')

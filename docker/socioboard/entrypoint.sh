@@ -10,8 +10,6 @@ ready=""
 while [[ $(echo $ready | grep -o 'Ready') != 'Ready' ]];do
     echo "Waiting for MySQL database to be ready"
     ready=$(php8 /sql-ping.php)
-#    echo "Latest response:"
-#    echo $ready
     sleep 5;
 done
 echo "MySQL database is ready"
