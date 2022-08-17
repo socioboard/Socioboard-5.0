@@ -257,13 +257,13 @@ class DashboardController extends Controller
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
                 if ($response['data']->code === 200) {
                     Session::forget('twitterChecked');
-                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                    return redirect('dashboard')->with("success", 'Account added successfully!');
                 } else if ($response['data']->code === 400) {
                     Session::forget('twitterChecked');
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
                     Session::forget('twitterChecked');
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 Session::forget('twitterChecked');
@@ -290,11 +290,11 @@ class DashboardController extends Controller
                 $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
                 if ($response['data']->code === 200) {
-                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                    return redirect('dashboard')->with("success", 'Account added successfully!');
                 } else if ($response['data']->code === 400) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookCallback() {DashboardController}');
@@ -318,17 +318,17 @@ class DashboardController extends Controller
                 $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
                 if ($response['data']->code === 200) {
-                    return redirect('dashboard')->with("success", 'Added Account Successfully');
+                    return redirect('dashboard')->with("success", 'Account added successfully!');
                 } else if ($response['data']->code === 400) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else if ($response['data']->code === 401) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
-                return redirect('dashboard')->with(["failed" => 'Some Error Occurred please,reload the page']);
+                return redirect('dashboard')->with(["failed" => 'An error occurred! Please reload the page.']);
             }
         }
 
@@ -349,7 +349,7 @@ class DashboardController extends Controller
                 $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
                 if ($response['data']->code === 200) {
                     if (count($response['data']->pages) === count($response['data']->availablePages)) {
-                        return redirect('dashboard')->with("failed", "Facebook Pages have Already added!");
+                        return redirect('dashboard')->with("failed", "Facebook pages have already been added, or none are available.");
                     } else {
                         Session::put('pages', $response['data']->pages);
                         return redirect('dashboard');
@@ -357,7 +357,7 @@ class DashboardController extends Controller
                 } else if ($response['data']->code === 400) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookPageCallBack() {DashboardController}');
@@ -428,15 +428,15 @@ class DashboardController extends Controller
             $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             if ($response['data']->code === 200) {
-                return redirect('dashboard')->with("success", 'Added Account Successfully');
+                return redirect('dashboard')->with("success", 'Account added successfully!');
             } else if ($response['data']->code === 400) {
                 return redirect('dashboard')->with("failed", $response['data']->error);
             } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('dashboard')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
         }
     }
 
@@ -451,7 +451,7 @@ class DashboardController extends Controller
                 if ($response['data']->code === 200) {
                     if (count($response['data']->pages) > 0) {
                         if (count($response['data']->pages) === count($response['data']->availablePages)) {
-                            return redirect('dashboard')->with("failed", "Instagram business accounts have already been added by you or other users of SocioBoard");
+                            return redirect('dashboard')->with("failed", "Instagram business accounts have already been added, or none are available.");
                         } else {
                             Session::put('instagramPages', $response['data']->pages);
                             return redirect('dashboard');
@@ -462,7 +462,7 @@ class DashboardController extends Controller
                 } else if ($response['data']->code === 400) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addInstagramBusinessCallback() {DashboardController}');
@@ -483,7 +483,7 @@ class DashboardController extends Controller
                 if ($response['data']->code === 200) {
                     if (count($response['data']->company) > 0) {
                         if (count($response['data']->company) === count($response['data']->availablePages)) {
-                            return redirect('dashboard')->with("failed", "LinkedIn Pages have Already added!");
+                            return redirect('dashboard')->with("failed", "LinkedIn pages have already been added, or none are available.");
                         } else {
                             Session::put('LinkedInpages', $response['data']->company);
                             return redirect('dashboard');
@@ -496,11 +496,11 @@ class DashboardController extends Controller
                 } else if ($response['data']->code === 403) {
                     return redirect('dashboard')->with("failed", $response['data']->error);
                 } else {
-                    return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                    return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addLinkedInCallback() {DashboardController}');
-                return redirect('dashboard')->with(["failed" => 'Some Error Occurred please,reload the page']);
+                return redirect('dashboard')->with(["failed" => 'An error occurred! Please reload the page.']);
             }
         }
     }
@@ -511,15 +511,15 @@ class DashboardController extends Controller
             $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             if ($response['data']->code === 200) {
-                return redirect('shortening-links')->with("success", 'Added Account Successfully');
+                return redirect('shortening-links')->with("success", 'Account added successfully!');
             } else if ($response['data']->code === 400) {
                 return redirect('shortening-links')->with("failed", $response['data']->error);
             } else {
-                return redirect('shortening-links')->with("failed", 'Some Error Occurred please,reload the page');
+                return redirect('shortening-links')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addBitlyCallback() {DashboardController}');
-            return redirect('shortening-links')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('shortening-links')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
         }
     }
 
@@ -644,7 +644,7 @@ class DashboardController extends Controller
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             return $this->helper->responseHandler($response['data']);
         } catch (Exception $e) {
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('dashboard')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
         }
     }
 
@@ -678,7 +678,7 @@ class DashboardController extends Controller
             $result['data'] = $this->helper->responseHandler($response['data']);
             return $result;
         } catch (Exception $e) {
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('dashboard')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
 
         }
     }
@@ -719,7 +719,7 @@ class DashboardController extends Controller
                 return $teamDetail;
             }
         } catch (Exception $e) {
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('dashboard')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
         }
     }
 
@@ -1262,7 +1262,7 @@ class DashboardController extends Controller
             } else if ($response['data']->code === 400) {
                 return view('home::thankYouPage')->with("failed", $response['data']->error);
             } else {
-                return view('home::thankYouPage')->with("failed", 'Some Error Occurred please,reload the page');
+                return view('home::thankYouPage')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (\Exception $e) {
             return $this->helper->errorHandler($e->getLine(), $e->getCode(), $e->getMessage(), 'addAccountUsingCallback() {DashboardController}');
@@ -1282,7 +1282,7 @@ class DashboardController extends Controller
                 } else if ($response['code'] === 400) {
                     return view('home::thankYouPage')->with("failed", $response['error']);
                 } else {
-                    return view('home::thankYouPage')->with("failed", 'Some Error Occurred please,reload the page');
+                    return view('home::thankYouPage')->with("failed", 'An error occurred! Please reload the page.');
                 }
             } catch (Exception $e) {
                 $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addFacebookCallback() {DashboardController}');
@@ -1377,7 +1377,7 @@ class DashboardController extends Controller
                 if ($response['code'] === 200) {
                     if (count($response['pages']) > 0) {
                         if (count($response['pages']) === count($response['availablePages'])) {
-                            return view('home::thankYouPage')->with(["failed" => "Instagram businees accounts have Already added!", 'instagramPageValue' => $inp]);
+                            return view('home::thankYouPage')->with(["failed" => "Instagram businees accounts have already been added, or none are available.", 'instagramPageValue' => $inp]);
                         } else {
                             $inp = 1;
                             Session::put('instaPages', $response['pages']);
@@ -1548,7 +1548,7 @@ class DashboardController extends Controller
                 if ($response['code'] === 200) {
                     if (count($response['company']) > 0) {
                         if (count($response['company']) === count($response['availablePages'])) {
-                            return view('home::thankYouPage')->with(["failed" => "LinkedIn pages accounts have Already added!", 'linkedInPageValue' => $inp]);
+                            return view('home::thankYouPage')->with(["failed" => "LinkedIn pages have already been added, or none are available.", 'linkedInPageValue' => $inp]);
                         } else {
                             $inp = 1;
                             Session::put('linkedInPages', $response['company']);
@@ -1581,7 +1581,7 @@ class DashboardController extends Controller
                 if ($response['code'] === 200) {
                     if (count($response['pages']) > 0) {
                         if (count($response['pages']) === count($response['availablePages'])) {
-                            return view('home::thankYouPage')->with(["failed" => "Facebook pages accounts have Already added!", 'facebookPageValue' => $inp]);
+                            return view('home::thankYouPage')->with(["failed" => "Facebook pages have already been added, or none are available.", 'facebookPageValue' => $inp]);
                         } else {
                             $inp = 1;
                             Session::put('FbInvitePages', $response['pages']);
@@ -1848,7 +1848,7 @@ class DashboardController extends Controller
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl2);
             if ($response['data']->code === 200) {
                 if (count($response['data']->blogs) === count($response['data']->availableBlogs)) {
-                    return redirect('view-accounts')->with("failed", "Tumblr Blogged Accounts have Already added!");
+                    return redirect('view-accounts')->with("failed", "Tumblr accounts have already been added, or none are available.");
                 } else {
                     Session::put('blogs', $response['data']->blogs);
                     return redirect('view-accounts');
@@ -1856,7 +1856,7 @@ class DashboardController extends Controller
             } else if ($response['data']->code === 400) {
                 return redirect('view-accounts')->with("failed", $response['data']->error);
             } else {
-                return redirect('view-accounts')->with("failed", 'Some Error Occurred please,reload the page');
+                return redirect('view-accounts')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (\Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addTumblrCallback() {DashboardController}');
@@ -1944,15 +1944,15 @@ class DashboardController extends Controller
             $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . session::get('state') . '&code=' . $request['code']);
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             if ($response['data']->code === 200) {
-                return redirect('dashboard')->with("success", 'Added Account Successfully');
+                return redirect('dashboard')->with("success", 'Account added successfully!');
             } else if ($response['data']->code === 400) {
                 return redirect('dashboard')->with("failed", $response['data']->error);
             } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addPinterestCallback() {DashboardController}');
-            return redirect('dashboard')->with(["Errormessage" => 'Some Error Occurred please,reload the page']);
+            return redirect('dashboard')->with(["Errormessage" => 'An error occurred! Please reload the page.']);
         }
     }
 
@@ -1970,11 +1970,11 @@ class DashboardController extends Controller
             $apiUrl = ApiConfig::get('/socialaccount/add-social-profile?state=' . $state . '&code=' . $code . '&flag=1');
             $response = $this->helper->postApiCallWithAuth('post', $apiUrl);
             if ($response['data']->code === 200) {
-                return redirect('dashboard')->with("success", 'Account Added Successfully');
+                return redirect('dashboard')->with("success", 'Account added successfully!');
             } else if ($response['data']->code === 400) {
                 return redirect('dashboard')->with("failed", $response['data']->error);
             } else {
-                return redirect('dashboard')->with("failed", 'Some Error Occurred please,reload the page');
+                return redirect('dashboard')->with("failed", 'An error occurred! Please reload the page.');
             }
         } catch (\Exception $e) {
             $this->helper->logException($e->getLine(), $e->getCode(), $e->getMessage(), 'addTikTokCallBack() {DashboardController}');

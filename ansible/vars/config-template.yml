@@ -1,0 +1,15 @@
+---
+
+# SocioBoard GIT repo
+socioboard_git_repo: 'https://github.com/vaughngx4/Socioboard-5.0.git'
+
+# Architecture the Docker image should be built for 
+socioboard_architecture: "amd64"
+
+# Base path for Docker files and data
+socioboard_base_data_path: "/deployments/socioboard"
+
+# SocioBoard username and group(will be created if they don't already exist)
+socioboard_user_username: "socioboard"
+socioboard_user_groupname: "socioboard"
+socioboard_user_gid: 2122

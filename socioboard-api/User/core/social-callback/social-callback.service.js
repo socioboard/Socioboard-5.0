@@ -57,7 +57,7 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
-       if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+       if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
@@ -85,7 +85,7 @@ class SocialCallbackService {
         userDetails.userInfo.user.user_id
       );
 
-      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
        //   To Store the user Details in aMember
       await this.registerSocialUserToAmember(userDetails);
       }
@@ -151,7 +151,7 @@ class SocialCallbackService {
   );
 
       if (is_user_register) {
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
@@ -171,7 +171,7 @@ class SocialCallbackService {
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(parseData);
-      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
            //   To Store the user Details in aMember
           await this.registerSocialUserToAmember(userDetails);
       }
@@ -217,7 +217,7 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
@@ -237,7 +237,7 @@ class SocialCallbackService {
         }
       }
       const userDetails = await unauthorizedLibs.registerSocialUser(data);
-      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
       //   To Store the user Details in aMember
       await this.registerSocialUserToAmember(userDetails);
       }
@@ -283,7 +283,7 @@ class SocialCallbackService {
       );
 
       if (is_user_register) {
-        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+        if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
         // Call aMember to set new details of plan and expiry date
         // userId, userName & password
         await new aMember(config.get('aMember')).getUserPlanDetail(
@@ -306,7 +306,7 @@ class SocialCallbackService {
       const userDetails = await unauthorizedLibs.registerSocialUser(
         twitterdata
       );
-      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' ) {
+      if (process.env.NODE_ENV === 'production'|| process.env.NODE_ENV === 'development' && config.get('aMember_enabled') === 'true' ) {
       //   To Store the user Details in aMember
       this.registerSocialUserToAmember(userDetails);
       }
