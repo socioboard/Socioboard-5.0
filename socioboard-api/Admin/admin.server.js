@@ -37,5 +37,5 @@ const router = AdminBroExpress.buildAuthenticatedRouter(adminBro, {
 
 if( config.get('enabled') === "true" ){
     app.use(adminBro.options.rootPath, router);
-    app.listen(8080, () => console.log(`admin panel listening on http://${config.get('environment.domain')}:8080/admin with ${process.env.NODE_ENV} Environment!`) );
+    app.listen(8080, () => console.log(`admin panel listening on http://${config.get('environment.domain')}/admin with ${process.env.NODE_ENV} Environment!`) );
 }else{ console.log('admin panel disabled.') }

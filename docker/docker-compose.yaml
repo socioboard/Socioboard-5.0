@@ -2,20 +2,15 @@ version: '3.7'
 
 services:
   socioboard:
-    image: socioboard/socioboard:latest
+    image: sintelli/socioboard:latest
     container_name: socioboard
     depends_on:
       - socioboard-mysql
       - socioboard-mongo
-    ports:
-      - "8000:8000"
-      - "8080:8080"
-      - "3000:3000"
-      - "3001:3001"
-      - "3002:3002"
-      - "3004:3004"
     environment:
-      DOMAIN: ${DOMAIN_NAME}
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTP_PORT: ${HTTP_PORT}
+      HTTPS_PORT: ${HTTPS_PORT}
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET}
       SQL_DB_NAME: ${SQL_DB_NAME}
@@ -75,14 +70,27 @@ services:
       SESSION_NAME: ${API_SESSION_NAME}
       SESSION_KEY_1: ${API_SESSION_KEY_1}
       SESSION_KEY_2: ${API_SESSION_KEY_2}
+      NODE_ENV: "production"
     volumes:
       - ./data/api:/data
+      - ./nginx/ssl:/ssl
     security_opt:
       - no-new-privileges:true
     restart: always
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.2
+      - scb-net
+  socioboard-web:
+    image: sintelli/socioboard-web:latest
+    container_name: socioboard-web
+    depends_on:
+      - socioboard
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTPS_PORT: ${HTTPS_PORT}
+      LARAVEL_KEY: ${LARAVEL_KEY}
+    restart: always
+    networks:
+      - scb-net
   socioboard-mysql:
     image: library/mysql:latest
     container_name: socioboard-mysql
@@ -96,8 +104,7 @@ services:
       - scb-mysql:/var/lib/mysql
       - ./perma-act-users.sql:/perma-act-users.sql
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.3
+      - scb-net
   socioboard-mongo:
     image: mongo:latest
     container_name: socioboard-mongo
@@ -110,16 +117,31 @@ services:
       - scb-mongo:/data/db
     restart: always
     networks:
-      scb-net:
-        ipv4_address: 172.16.32.4
+      - scb-net
+  socioboard-nginx:
+    image: nginx:latest
+    container_name: socioboard-nginx
+    depends_on:
+      - socioboard
+      - socioboard-mysql
+      - socioboard-mongo
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+      - "${HTTPS_PORT}:${HTTPS_PORT}"
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN}
+      HTTP_PORT: ${HTTP_PORT}
+      HTTPS_PORT: ${HTTPS_PORT}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/nginx-socioboard.conf:/etc/nginx/templates/socioboard.conf.template
+      - ./nginx/ssl:/ssl
+    restart: always
+    networks:
+      - scb-net
 volumes:
   scb-mongo: {}
   scb-mysql: {}
 networks:
   scb-net:
-    external: true
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.16.32.0/16
-          gateway: 172.16.32.1

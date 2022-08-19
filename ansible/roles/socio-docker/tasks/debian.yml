@@ -1,0 +1,47 @@
+---
+
+- name: Ensure APT usage dependencies are installed (Debian)
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+    state: present
+    update_cache: true
+
+- name: Ensure Docker's APT key is trusted (Debian)
+  ansible.builtin.apt_key:
+    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+  register: add_repository_key
+  ignore_errors: true
+
+- name: Ensure Docker repository is enabled (Debian)
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ socioboard_architecture }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: true
+
+- name: Ensure Docker is installed (Debian)
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - python3-pip
+      - git
+    state: present
+
+- name: Ensure Docker & Docker Compose API's are installed (Debian)
+  pip:
+    name:
+      - docker
+      - docker-compose
+    state: latest
+    executable: pip3
+    extra_args: --no-cache-dir
+      
+- name: Ensure Docker is running (Debian)
+  ansible.builtin.service:
+    name: docker
+    state: started

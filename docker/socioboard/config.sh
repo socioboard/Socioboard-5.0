@@ -76,7 +76,7 @@ while [[ $(echo $config | jq '.jest') != 'null' ]];do
 done
 # mail titles
 while [[ $(echo $config | jq '.mailTitles') != 'null' ]];do
-    config=$(echo $config | jq --arg a "Activation link" '.mailTitles.activation_link = $a')
+    config=$(echo $config | jq --arg a "Account Activation" '.mailTitles.activation_link = $a')
     config=$(echo $config | jq --arg a "Invitation from SocioBoard to Add Account" '.mailTitles.Invitation_user = $a')
     config=$(echo $config | jq --arg a "Reset Password" '.mailTitles.forgot_password_request = $a')
     config=$(echo $config | jq --arg a "Payment Invoice" '.mailTitles.payment_invoice = $a')
@@ -140,7 +140,7 @@ while [[ $(echo $config | jq '.twilio') != 'null' ]];do
 done
 # test url
 while [[ $(echo $config | jq '.test_url') != 'null' ]];do
-    config=$(echo $config | jq --arg a "http://${DOMAIN}/" '.test_url = $a')
+    config=$(echo $config | jq --arg a "https://socio.${BASE_DOMAIN}/" '.test_url = $a')
     break;
 done
 # session
@@ -173,7 +173,25 @@ done
 rm -f $1
 echo $config > $1
 
-# replace localhost with env domain
-sed -i "s;local.socioboard.com;$DOMAIN;g" $1
-sed -i "s;localhost;$DOMAIN;g" $1
-sed -i "s;notifyv5.socioboard.com;$DOMAIN:3004;g" $1
+# replace http with https
+sed -i "s;https;http;g" $1 # https to http so we avoid adding an extra 's' in the next command
+sed -i "s;http;https;g" $1
+
+# if non standard https port, change URL scheme, else leave blank
+port=""
+while [[ $HTTPS_PORT != "443" ]];do
+    port=":$HTTPS_PORT"
+    break;
+done
+
+# change api domains first to avoid mixing 'localhost' replacements
+sed -i "s;localhost:3000;socio-api.${BASE_DOMAIN}${port};g" $1
+sed -i "s;localhost:3001;socio-feeds.${BASE_DOMAIN}${port};g" $1
+sed -i "s;localhost:3002;socio-publish.${BASE_DOMAIN}${port};g" $1
+sed -i "s;localhost:3003;socio-update.${BASE_DOMAIN}${port};g" $1
+sed -i "s;localhost:3004;socio-notifications.${BASE_DOMAIN}${port};g" $1
+
+# change remaining domains
+sed -i "s;local.socioboard.com;socio.${BASE_DOMAIN}${port};g" $1
+sed -i "s;localhost;socio.${BASE_DOMAIN}${port};g" $1
+sed -i "s;notifyv5.socioboard.com;socio-notifications.${BASE_DOMAIN}${port};g" $1
