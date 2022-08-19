@@ -1,0 +1,12 @@
+ #SocioBoard Docker Ansible Deploy
+- name: SocioBoard Docker Ansible Deploy
+  hosts: 
+    - socioboard
+  become: true
+  become_user: root
+  vars_files:
+    - vars/config.yml
+  roles:
+    - socio-docker
+    - socio-env
+    - socio-base

@@ -8,6 +8,7 @@ config=$(echo $config | jq --arg a "$SQL_DB_PASS" '.development.password = $a')
 config=$(echo $config | jq --arg a "socioboard-mysql" '.development.host = $a')
 rm -f config.json
 echo $config > config.json
+sed -i "s;development;production;g" config.json
 
 # apply configs to config files
 cd /
@@ -18,25 +19,51 @@ cd /
 ./config.sh "/usr/socioboard/app/socioboard-api/Publish/config/development.json"
 ./config.sh "/usr/socioboard/app/socioboard-api/Admin/config/development.json"
 
-cd /usr/socioboard/app/socioboard-web-php/
-cp example.env .env
-sed -i "s;<<Laravel Key>>;${LARAVEL_KEY};g" .env
-sed -i "s;APP_ENV=local;APP_ENV=development;g" .env
-sed -i "s;<<php domain>>;http://${DOMAIN}:8000/;g" .env
-sed -i "s;<<USER NODE SERVICE>>;http://${DOMAIN}:3000/;g" .env
-sed -i "s;<<FEEDS NODE SERVICE>>;http://${DOMAIN}:3001/;g" .env
-sed -i "s;<<PUBLISH NODE SERVICE>>;http://${DOMAIN}:3002/;g" .env
-sed -i "s;<<UPDATE NODE SERVICE>>;http://${DOMAIN}:3003/;g" .env
-sed -i "s;<<NOTIFICATION NODE SERVICE>>;http://${DOMAIN}:3004/;g" .env
+# rename config files
+cd /usr/socioboard/app/socioboard-api
+cd ./User/config
+mv development.json production.json
+cd ../../Update/config
+mv development.json production.json
+cd ../../Feeds/config
+mv development.json production.json
+cd ../../Notification/config
+mv development.json production.json
+cd ../../Publish/config
+mv development.json production.json
+cd ../../Admin/config
+mv development.json production.json
 
 # init mysql db
 while [ ! -e "/data/db.init" ];do
     echo "Initializing MySQL Database"
-    cd /usr/socioboard/app/
-    cd ./socioboard-api/Common/Sequelize-cli && \
-    export NODE_ENV=development && \
-    npx sequelize-cli db:migrate && \
-    npx sequelize-cli db:seed --seed seeders/20210303111816-initialize_application_informations.cjs
+    cd /usr/socioboard/app/socioboard-api/Common/Sequelize-cli
+    dbi=$(ls seeders | grep '[0-9]*initialize_application_informations.cjs')
+    su-exec node npx sequelize-cli db:migrate && \
+    su-exec node npx sequelize-cli db:seed --seed seeders/$dbi && \
     touch /data/db.init
+    while [ ! -e "/data/db.init" ];do
+        echo "MySQL Database Initialization Failed, Retrying"
+        break;
+    done
+done
+
+# init certificates
+while [ ! -e "/ssl/cert.pem" ];do
+    echo "No SSL certificate found, generating"
+    openssl req -subj "/CN=*.$BASE_DOMAIN/O=SocioBoard/C=US" -new -newkey rsa:2048 -sha256 -days 365 -nodes -x509 -keyout /ssl/key.pem -out /ssl/cert.pem
     break;
 done
+
+# trust cert to avoid curl errors
+echo "Updating certificate store"
+cp /ssl/cert.pem /usr/local/share/ca-certificates/
+update-ca-certificates
+
+# generate swagger files for api endpoints
+echo "Generating Swagger files"
+cd /usr/socioboard/app/socioboard-api/User && npm run swagger
+cd ../Feeds && npm run swagger
+cd ../Publish && npm run swagger
+cd ../Notification && npm run swagger
+cd ../Update && npm run swagger

@@ -10,8 +10,6 @@ ready=""
 while [[ $(echo $ready | grep -o 'Ready') != 'Ready' ]];do
     echo "Waiting for MySQL database to be ready"
     ready=$(php8 /sql-ping.php)
-#    echo "Latest response:"
-#    echo $ready
     sleep 5;
 done
 echo "MySQL database is ready"
@@ -30,18 +28,11 @@ done
 cd /usr/socioboard/app/
 echo "Starting API"
 npm i pm2 -g && \
-export NODE_ENV=development && \
-cd ./socioboard-api/User && su-exec socioboard pm2 start user.server.js && \
-cd ../Feeds && su-exec socioboard pm2 start feeds.server.js && \
-cd ../Publish && su-exec socioboard pm2 start publish.server.js && \
-cd ../Notification && su-exec socioboard pm2 start notify.server.js && \
-cd ../Update && su-exec socioboard pm2 start update.server.js && \
-cd ../Admin && su-exec socioboard pm2 start admin.server.js
+cd ./socioboard-api/User && su-exec node pm2 start user.server.js && \
+cd ../Feeds && su-exec node pm2 start feeds.server.js && \
+cd ../Publish && su-exec node pm2 start publish.server.js && \
+cd ../Notification && su-exec node pm2 start notify.server.js && \
+cd ../Update && su-exec node pm2 start update.server.js && \
+cd ../Admin && su-exec node pm2 start admin.server.js
 
-# start frontend
-echo "Starting Frontend"
-cd /usr/socioboard/app/socioboard-web-php
-php8 artisan key:generate
-su-exec socioboard php8 artisan serve --host=0.0.0.0 --port=8000
-echo "Running"
 tail -f > /dev/null

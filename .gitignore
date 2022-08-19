@@ -100,8 +100,15 @@ Thumbs.db
 
 socioboard-api/Notification/package-lock.json
 
-# Ignoring Docker development files
+# Docker development files
 docker/.env
 docker/data
 docker/init-mongo.js
 docker-dev-build.sh
+docker/nginx/ssl/cert.pem
+docker/nginx/ssl/key.pem
+
+# Ansible development files
+ansible/inventory.yml
+ansible/roles/socio-env/files/docker.env
+ansible/vars/config.yml

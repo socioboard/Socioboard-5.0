@@ -1,0 +1,69 @@
+---
+
+- name: Make temporary copy of source
+  ansible.builtin.script:
+    cmd: files/build_copy-source.sh
+    chdir: "{{ socioboard_base_data_path }}"
+  tags: 
+    - build
+
+- name: Ensure Docker image is built (socioboard)
+  community.docker.docker_image:
+    name: sintelli/socioboard
+    tag: latest
+    source: build
+    build:
+      path: "{{ socioboard_base_data_path }}/docker/socioboard"
+      pull: no
+      platform: "{{ socioboard_architecture }}"
+    state: present
+  tags: 
+    - build
+
+- name: Ensure Docker image is built (socioboard-web)
+  community.docker.docker_image:
+    name: sintelli/socioboard-web
+    tag: latest
+    source: build
+    build:
+      path: "{{ socioboard_base_data_path }}/docker/socioboard-web"
+      pull: no
+      platform: "{{ socioboard_architecture }}"
+    state: present
+  tags: 
+    - build
+
+- name: Delete temporary copy of source code
+  ansible.builtin.script:
+    cmd: files/build_remove-source.sh
+    chdir: "{{ socioboard_base_data_path }}/docker"
+  tags: 
+    - build
+
+- name: Ensure Docker image is present and up-to-date (socioboard)
+  community.docker.docker_image:
+    name: sintelli/socioboard
+    source: pull
+    force_source: yes
+  tags:
+    - setup-all
+    - update
+
+- name: Ensure Docker image is present and up-to-date (socioboard-web)
+  community.docker.docker_image:
+    name: sintelli/socioboard-web
+    source: pull
+    force_source: yes
+  tags:
+    - setup-all
+    - update
+
+- name: Ensure SocioBoard is deployed
+  community.docker.docker_compose:
+    project_src: "{{ socioboard_base_data_path }}/docker"
+    files:
+      - docker-compose.yaml
+  tags: 
+    - setup
+    - setup-all
+    - update

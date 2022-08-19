@@ -1,0 +1,17 @@
+galaxy_info:
+  author: vaughngx4 (vaughng@pm.me)
+  description: Ansible Docker deployment. Installs and enables Docker and dependencies required for ansible-docker.
+  company: SiNtelli Technologies (Pty) Ltd
+
+  license: GPL-3.0-only
+
+  min_ansible_version: 2.1
+
+#  platforms:
+#    - name: RHEL
+#      versions:
+#        - all
+
+  galaxy_tags: []
+
+dependencies: []
