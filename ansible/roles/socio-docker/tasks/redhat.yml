@@ -4,8 +4,8 @@
   ansible.builtin.template:
     src: "{{ role_path }}/files/yum.repos.d/docker-ce-centos.repo"
     dest: "/etc/yum.repos.d/docker-ce.repo"
-    owner: "{{ socioboard_user_username }}"
-    group: "{{ socioboard_user_groupname }}"
+    owner: "root"
+    group: "root"
     mode: 0644
 
 - name: Ensure Docker's RPM key is trusted (RHEL)

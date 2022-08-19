@@ -7,6 +7,6 @@
   vars_files:
     - vars/config.yml
   roles:
-    - socio-env
     - socio-docker
+    - socio-env
     - socio-base
