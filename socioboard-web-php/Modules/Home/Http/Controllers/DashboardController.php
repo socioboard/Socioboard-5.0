@@ -240,7 +240,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to add Twitter accounts from dashboard page to socioboard and display.
      * This function is adding twitter accounts from front end and hit API to store in socioboard database.
-     * @return  dashbaord page view blade with all data required to display from controller to view.
+     * @return  dashboard page view blade with all data required to display from controller to view.
      */
     public function addTwitterCallback(Request $request)
     {
@@ -278,7 +278,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to add Faceboook accounts from dashboard page to socioboard and display.
      * This function is adding Faceboook accounts from front end and hit API to store in socioboard database.
-     * @return  dashbaord page view blade with all data required to display from controller to view.
+     * @return  dashboard page view blade with all data required to display from controller to view.
      */
     public function addFacebookCallback(Request $request)
     {
@@ -307,7 +307,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to add Linked in accounts from dashboard page to socioboard and display.
      * This function is adding Linked in accounts from front end and hit API to store in socioboard database.
-     * @return  dashbaord page view blade with all data required to display from controller to view.
+     * @return  dashboard page view blade with all data required to display from controller to view.
      */
     public function addLinkedInCallback(Request $request)
     {
@@ -337,7 +337,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to add Facebook pages accounts from dashboard page to socioboard and display.
      * This function is adding Facebook pages  in accounts from front end and hit API to store in socioboard database.
-     * @return  dashbaord page view blade with all data required to display from controller to view.
+     * @return  dashboard page view blade with all data required to display from controller to view.
      */
     public function addFacebookPageCallBack(Request $request)
     {
@@ -370,7 +370,7 @@ class DashboardController extends Controller
     /**
      * TODO we've to add Youtube accounts from dashboard page to socioboard and display.
      * This function is adding Youtube Accounts  in accounts from front end and hit API to store in socioboard database.
-     * @return  dashbaord page view blade with all data required to display from controller to view.
+     * @return  dashboard page view blade with all data required to display from controller to view.
      */
     public function addYoutubeCallback(Request $request)
     {
