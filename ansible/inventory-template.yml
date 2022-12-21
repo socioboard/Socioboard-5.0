@@ -1,0 +1,9 @@
+# Sample inventory.yml, copy to 'inventory.yml' before making changes
+# Add host IP and SSH user
+# The ansible machine needs to have SSH access to the specified host.
+all:
+  hosts:
+    socioboard:
+      ansible_host: < host_ip_address >
+      ansible_user: < host_ssh_user >
+      ansible_python_interpreter: /usr/bin/python3

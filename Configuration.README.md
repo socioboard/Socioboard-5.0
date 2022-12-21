@@ -40,10 +40,10 @@ In order to use facebook functionality(i.e. schedule a post to facebook) we will
 - YouTube: https://developers.google.com/youtube/v3/getting-started
 
 ### URL, Scheme & Ports:
-You must also change all instances of urls to that of your setup(this is done mostly automatically in the Docker setup, see `Docker.README.md for details).
+You must also change all instances of urls to that of your setup(this is done mostly automatically in the Docker setup, see `Docker.README.md` for details).
 
 ## Creating an Account
-Navigate to your endpoint(`http://localhost:8000 by default) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
+Navigate to your endpoint(`http://localhost:8000` by default) and create a new user by signing up. You will receive a message in the top right corner stating "Registration Failed - Unauthorized", this means you've registered but the activation link could not be emailed(no email set up).
 
 There are 2 ways to finish setting up users:
 
