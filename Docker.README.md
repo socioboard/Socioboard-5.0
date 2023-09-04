@@ -33,7 +33,7 @@ You can also provide your own SSL certificate if necessary(see `docker/nginx/ssl
 
 Pull Docker images:
 ```bash
-docker-compose -f docker/docker-compose.yaml Pull
+docker-compose -f docker/docker-compose.yaml pull
 ```
 
 Create and start containers:
