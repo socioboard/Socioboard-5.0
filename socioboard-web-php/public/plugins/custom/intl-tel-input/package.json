@@ -38,7 +38,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^21.0.0",
     "grunt-exec": "^1.0.1",
-    "grunt-replace": "^1.0.1",
+    "grunt-replace": "^2.0.2",
     "grunt-responsive-images": "^1.10.1",
     "grunt-sass": "^3.0.0",
     "grunt-shell": "^2.1.0",
@@ -46,7 +46,7 @@
     "grunt-template": "^1.0.0",
     "jasmine-jquery": "^2.1.1",
     "jquery": "^3.1.1",
-    "load-grunt-config": "^0.19.2",
+    "load-grunt-config": "^4.0.1",
     "node-sass": "^7.0.0",
     "region-flags": "^1.1.0",
     "time-grunt": "^1.4.0"
