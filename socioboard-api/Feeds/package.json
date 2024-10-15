@@ -37,7 +37,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^5.2.6",
-    "fast-xml-parser": "4.2.5",
+    "fast-xml-parser": "4.4.1",
     "fb": "^2.0.0",
     "file-stream-rotator": "^0.5.7",
     "helmet": "^4.4.1",
