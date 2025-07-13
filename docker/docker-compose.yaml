@@ -118,27 +118,27 @@ services:
     restart: always
     networks:
       - scb-net
-  socioboard-nginx:
-    image: nginx:latest
-    container_name: socioboard-nginx
-    depends_on:
-      - socioboard
-      - socioboard-mysql
-      - socioboard-mongo
-    ports:
-      - "${HTTP_PORT}:${HTTP_PORT}"
-      - "${HTTPS_PORT}:${HTTPS_PORT}"
-    environment:
-      BASE_DOMAIN: ${BASE_DOMAIN}
-      HTTP_PORT: ${HTTP_PORT}
-      HTTPS_PORT: ${HTTPS_PORT}
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx-socioboard.conf:/etc/nginx/templates/socioboard.conf.template
-      - ./nginx/ssl:/ssl
-    restart: always
-    networks:
-      - scb-net
+#  socioboard-nginx:
+#    image: nginx:latest
+#    container_name: socioboard-nginx
+#    depends_on:
+#      - socioboard
+ #     - socioboard-mysql
+#      - socioboard-mongo
+#    ports:
+#      - "${HTTP_PORT}:${HTTP_PORT}"
+#      - "${HTTPS_PORT}:${HTTPS_PORT}"
+#    environment:
+#      BASE_DOMAIN: ${BASE_DOMAIN}
+ #     HTTP_PORT: ${HTTP_PORT}
+ #     HTTPS_PORT: ${HTTPS_PORT}
+ #   volumes:
+ #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#      - ./nginx/nginx-socioboard.conf:/etc/nginx/templates/socioboard.conf.template
+ #     - ./nginx/ssl:/ssl
+ #   restart: always
+ #   networks:
+#      - scb-net
 volumes:
   scb-mongo: {}
   scb-mysql: {}
