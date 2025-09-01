@@ -46,7 +46,7 @@
     "moment-timezone": "^0.5.33",
     "mongoose": "^6.13.6",
     "morgan": "^1.10.0",
-    "multer": "2.0.0",
+    "multer": "2.0.2",
     "mysql2": ">=3.9.8",
     "node-twitter-api": "^1.8.0",
     "sequelize": "^6.5.1",
