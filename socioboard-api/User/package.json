@@ -46,7 +46,7 @@
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "morgan": "^1.10.0",
-    "mysql2": "^2.2.5",
+    "mysql2": "^3.9.7",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
     "node-twitter-api": "^1.8.0",
