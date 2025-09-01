@@ -37,7 +37,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.33",
     "morgan": "^1.10.0",
-    "mysql2": "^2.2.5",
+    "mysql2": "^3.9.7",
     "node-schedule": "^2.0.0",
     "node-twitter-api": "^1.8.0",
     "pdfkit": "^0.12.1",
