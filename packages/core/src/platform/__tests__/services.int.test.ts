@@ -5,6 +5,8 @@ import { pino } from 'pino';
 import { afterAll, describe, expect, it } from 'vitest';
 
 import { loadConfig } from '../config';
+import { createLogger } from '../logger';
+import { createPlatform } from '../services';
 import { createDb } from '../db';
 import { createMailer } from '../mailer';
 import { createQueues, defineQueue } from '../queue';
@@ -39,6 +41,34 @@ describe('queue (Valkey/Redis)', () => {
     queues.startWorker(echo);
     await queues.get(echo).add('say', { text: 'hello' });
     expect(await done).toBe('hello');
+  });
+
+  it('close() forces shutdown when an active job outlives the timeout', async () => {
+    const own = createQueues({ url: config.redis.url, logger, prefix: `sb-test-${randomUUID()}` });
+    let started: () => void = () => undefined;
+    const running = new Promise<void>((r) => (started = r));
+    const slow = defineQueue('slow', async () => {
+      started();
+      await new Promise((r) => setTimeout(r, 60_000));
+    });
+    own.startWorker(slow);
+    await own.get(slow).add('wait', {});
+    await running;
+    const t0 = Date.now();
+    await own.close(500);
+    expect(Date.now() - t0).toBeLessThan(5_000);
+  });
+});
+
+describe('createPlatform', () => {
+  it('builds every client from config and closes them all', async () => {
+    const platform = createPlatform(config, createLogger({ level: 'silent' }));
+    expect(await platform.db.ping()).toBe(true);
+    expect(await platform.queues.ping()).toBe(true);
+    expect(await platform.mailer.verify()).toBe(true);
+    expect(platform.crypto.decrypt(platform.crypto.encrypt('x'))).toBe('x');
+    expect(Boolean(platform.storage)).toBe(Boolean(config.storage));
+    await platform.close();
   });
 });
 
