@@ -111,8 +111,10 @@ export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions
         }, timeoutMs).unref(),
       );
       if ((await Promise.race([stopWorkers, timeout])) === 'timeout') {
-        logger.warn('workers did not finish active jobs in time; forcing close');
-        await Promise.all(workers.map((w) => w.close(true)));
+        // BullMQ's close(true) returns the close already in progress, so it cannot cut a
+        // running job short. Stop waiting instead: once the process exits, the job's lock
+        // expires and BullMQ hands it to another worker as a stalled job.
+        logger.warn({ timeoutMs }, 'active jobs still running at shutdown; they will be retried');
       }
       await Promise.all([...queues.values()].map((q) => q.close()));
       healthClient?.disconnect();

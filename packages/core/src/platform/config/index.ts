@@ -35,7 +35,25 @@ const envSchema = z.object({
   S3_FORCE_PATH_STYLE: bool,
 
   /** Comma-separated `id:base64key` pairs, 32-byte keys; the first one encrypts. */
-  ENCRYPTION_KEYS: z.string().min(1),
+  ENCRYPTION_KEYS: z
+    .string()
+    .min(1)
+    .transform((raw, ctx) => {
+      const keys: EncryptionKey[] = [];
+      for (const entry of raw.split(',')) {
+        const [id, b64] = entry.trim().split(':');
+        const key = b64 ? Buffer.from(b64, 'base64') : Buffer.alloc(0);
+        if (!id || key.length !== 32) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `"${id ?? '?'}" must be id:base64 with a 32-byte key`,
+          });
+        } else {
+          keys.push({ id, key });
+        }
+      }
+      return keys;
+    }),
 
   STRIPE_SECRET_KEY: optional,
   AI_SERVICE_URL: optional,
@@ -80,42 +98,39 @@ export class ConfigError extends Error {
   }
 }
 
-function parseEncryptionKeys(raw: string, problems: string[]): EncryptionKey[] {
-  const keys: EncryptionKey[] = [];
-  for (const entry of raw.split(',')) {
-    const [id, b64] = entry.trim().split(':');
-    const key = b64 ? Buffer.from(b64, 'base64') : Buffer.alloc(0);
-    if (!id || key.length !== 32) {
-      problems.push(`ENCRYPTION_KEYS: "${id ?? '?'}" must be id:base64 with a 32-byte key`);
-      continue;
-    }
-    keys.push({ id, key });
-  }
-  return keys;
-}
-
 /** Validates the environment once at startup; throws ConfigError listing every problem. */
 export function loadConfig(source: Record<string, string | undefined> = process.env): Config {
-  const parsed = envSchema.safeParse(source);
-  if (!parsed.success) {
-    throw new ConfigError(
-      parsed.error.issues.map((i) => `${i.path.join('.') || 'env'}: ${i.message}`),
-    );
-  }
-  const e = parsed.data;
+  // Rules that span several variables read the raw values, so they are reported together
+  // with per-field problems instead of only after those are fixed.
+  const raw = (name: string) => {
+    const value = source[name]?.trim();
+    return value === '' ? undefined : value;
+  };
   const problems: string[] = [];
-
-  const keys = parseEncryptionKeys(e.ENCRYPTION_KEYS, problems);
-  if (e.NODE_ENV === 'production' && e.ENCRYPTION_KEYS.includes(EXAMPLE_ENCRYPTION_KEY)) {
+  if (raw('S3_BUCKET')) {
+    if (!raw('S3_REGION')) problems.push('S3_REGION: required when S3_BUCKET is set');
+    if (Boolean(raw('S3_ACCESS_KEY_ID')) !== Boolean(raw('S3_SECRET_ACCESS_KEY'))) {
+      problems.push('S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set together');
+    }
+  }
+  if (
+    raw('NODE_ENV') === 'production' &&
+    raw('ENCRYPTION_KEYS')?.includes(EXAMPLE_ENCRYPTION_KEY)
+  ) {
     problems.push('ENCRYPTION_KEYS: the example dev key must not be used in production');
   }
 
+  const parsed = envSchema.safeParse(source);
+  if (!parsed.success) {
+    problems.unshift(
+      ...parsed.error.issues.map((i) => `${i.path.join('.') || 'env'}: ${i.message}`),
+    );
+  }
+  if (!parsed.success || problems.length > 0) throw new ConfigError(problems);
+  const e = parsed.data;
+
   let storage: Config['storage'];
   if (e.S3_BUCKET) {
-    if (!e.S3_REGION) problems.push('S3_REGION: required when S3_BUCKET is set');
-    if (Boolean(e.S3_ACCESS_KEY_ID) !== Boolean(e.S3_SECRET_ACCESS_KEY)) {
-      problems.push('S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set together');
-    }
     storage = {
       bucket: e.S3_BUCKET,
       region: e.S3_REGION ?? '',
@@ -129,8 +144,6 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     };
   }
 
-  if (problems.length > 0) throw new ConfigError(problems);
-
   return {
     env: e.NODE_ENV,
     isProduction: e.NODE_ENV === 'production',
@@ -141,7 +154,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     redis: { url: e.REDIS_URL },
     mail: { smtpUrl: e.SMTP_URL, from: e.MAIL_FROM },
     storage,
-    encryption: { keys },
+    encryption: { keys: e.ENCRYPTION_KEYS },
     billing: { enabled: Boolean(e.STRIPE_SECRET_KEY) },
     ai: { enabled: Boolean(e.AI_SERVICE_URL), url: e.AI_SERVICE_URL },
   };

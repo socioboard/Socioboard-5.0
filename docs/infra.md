@@ -6,7 +6,7 @@ Everything that isn't application code but still has to be built: repo tooling, 
 
 | Item | Path / tool | Phase | Task |
 | --- | --- | --- | --- |
-| Monorepo tooling | pnpm workspaces, Turborepo, `tsconfig` base, ESLint, Prettier, dependency-cruiser, Changesets | 0 | P0-I1, P0-I2 |
+| Monorepo tooling | pnpm workspaces, Turborepo, `tsconfig` base, ESLint, Prettier, dependency-cruiser (Changesets arrives with releases, P5-I5) | 0 | P0-I1, P0-I2 |
 | Dev environment | `docker/compose.dev.yml`: Postgres 17, Valkey 8, Mailpit, and MinIO as an optional profile (`COMPOSE_PROFILES=minio`) for developers without S3. api, worker and web run on the host with `pnpm dev` (fast hot reload) | 0 | P0-I3 |
 | Dockerfiles | `apps/api`, `apps/worker`, `apps/web` (nginx static), `packages/db` (migrate); multi-stage, multi-arch | 0 | P0-I4 |
 | CI | GitHub Actions: install → lint → typecheck → unit → integration (Postgres/Valkey services) → build images → Playwright E2E on PRs to main | 0 | P0-I4 |

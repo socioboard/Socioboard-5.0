@@ -63,6 +63,28 @@ describe('logger', () => {
     expect(lines[0]?.user).toEqual({ password: '[redacted]' });
   });
 
+  it('redacts secrets at any depth, including inside errors, and keeps error details', () => {
+    const { lines, stream } = capture();
+    const logger = createLogger({ level: 'info', destination: stream });
+    const err = Object.assign(new Error('LinkedIn returned 401'), {
+      response: { status: 401, headers: { Authorization: 'Bearer LEAK1', 'Set-Cookie': 'LEAK2' } },
+    });
+    logger.error(
+      {
+        err,
+        connection: { tokens: { access_token: 'LEAK3', refreshToken: 'LEAK4', expiresIn: 60 } },
+      },
+      'provider call failed',
+    );
+    const line = JSON.stringify(lines[0]);
+    for (const leak of ['LEAK1', 'LEAK2', 'LEAK3', 'LEAK4']) expect(line).not.toContain(leak);
+    expect(lines[0]).toMatchObject({
+      err: { type: 'Error', message: 'LinkedIn returned 401', response: { status: 401 } },
+      connection: { tokens: { expiresIn: 60 } },
+    });
+    expect(line).toContain('"stack"');
+  });
+
   it('adds nested request context to lines, across awaits', async () => {
     const { lines, stream } = capture();
     const logger = createLogger({ level: 'info', destination: stream });

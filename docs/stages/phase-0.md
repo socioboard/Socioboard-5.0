@@ -19,7 +19,7 @@
 - [ ] P0-C2 Schemas: me, workspaces, members, invitations, media uploads
 
 ## Backend
-- [ ] P0-B1 Prisma schema v1: User/Session/Account/Verification/TwoFactor, Workspace, Member, Invitation, MemberAccountAccess, MediaAsset, MediaFolder, AuditLog
+- [ ] P0-B1 Prisma schema v1: User/Session/Account/Verification/TwoFactor, Workspace, Member, Invitation, MemberAccountAccess, MediaAsset, MediaFolder, AuditLog. Relations between workspace-owned tables use composite foreign keys `(xId, workspaceId)`; add each workspace-owned model to `WORKSPACE_SCOPED_MODELS`
 - [ ] P0-B2 Better Auth: email/password, verification, reset, magic link, Google + Microsoft (if keys), 2FA plugin, organization plugin with 5 roles
 - [ ] P0-B3 Middleware chain: requestId, rateLimit, session, workspace, requirePermission, validate, errorHandler
 - [ ] P0-B4 `/api/v1/me`, sessions endpoints; first-user bootstrap
@@ -27,7 +27,7 @@
 - [ ] P0-B6 Media upload (presigned multipart), complete, list, get, update, delete; `media-process` job (dimensions, thumbnail)
 - [ ] P0-B7 Audit `record()` + listeners for member events
 - [ ] P0-B8 OpenAPI generation (zod-to-openapi) served at `/api/docs` in dev
-- [ ] P0-B9 Tenant isolation test harness
+- [ ] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column
 - [ ] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
 - [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
 - [ ] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))

@@ -38,13 +38,15 @@ describe('loadConfig', () => {
 
   it('reports every problem at once', () => {
     try {
-      loadConfig({ REDIS_URL: 'http://wrong', ENCRYPTION_KEYS: 'k1:short' });
+      loadConfig({ REDIS_URL: 'http://wrong', ENCRYPTION_KEYS: 'k1:short', S3_BUCKET: 'm' });
       expect.unreachable();
     } catch (err) {
       expect(err).toBeInstanceOf(ConfigError);
       const problems = (err as ConfigError).problems.join('\n');
       expect(problems).toContain('DATABASE_URL');
       expect(problems).toContain('REDIS_URL');
+      expect(problems).toContain('ENCRYPTION_KEYS: "k1" must be id:base64 with a 32-byte key');
+      expect(problems).toContain('S3_REGION');
     }
   });
 
