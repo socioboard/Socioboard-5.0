@@ -40,7 +40,7 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | --- | --- |
 | Project name / version | Socioboard 6.0, the official successor; Socioboard owns the brand and 5.0 code (repo folder `Socioboard-6.0`) |
 | Delivery model | Single edition: one open-source codebase, run as our hosted cloud or self-hosted |
-| License | Everything MIT/Apache; no paid or closed code |
+| License | AGPL-3.0-only for the whole repo (changed from MIT/Apache on 2026-09-24); no paid or closed code. Needs a contributor agreement (CLA) before outside PRs are accepted |
 | Repository | One public monorepo; billing activates only when Stripe keys are set |
 | Architecture | Modular monolith: one Node.js + TypeScript codebase, api + worker processes; split modules out only if load demands |
 | Frontend | React + Vite; UI built on shadcn/ui (no designer for now) |

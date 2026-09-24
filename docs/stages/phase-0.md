@@ -50,6 +50,7 @@
 - [ ] P0-R4 LinkedIn apps + Community Management access form
 - [ ] P0-R5 Google Cloud projects, OAuth consent screen, verification + YouTube audit form
 - [ ] P0-R6 TikTok app + media domain verification; Pinterest trial; X project + billing cap; Tumblr, Bitly, Microsoft apps
+- [ ] P0-R7 Contributor agreement for AGPL-3.0: pick a CLA (e.g. CLA Assistant bot) so Socioboard can keep running the hosted cloud on contributed code; required before accepting outside PRs
 
 ## Quality
 - [ ] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image
