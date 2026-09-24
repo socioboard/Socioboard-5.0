@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+dist/
+.turbo/
+coverage/
+# Docs are hand-formatted; keep table diffs readable.
+docs/
