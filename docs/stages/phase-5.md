@@ -29,10 +29,10 @@
 - [ ] P5-F6 Design system additions: UsageMeter, PlanCard, KpiTile
 
 ## Infra & release
-- [ ] P5-I1 Production environment on the chosen cloud (managed Postgres with backups, Valkey, S3/R2, CDN for web)
+- [ ] P5-I1 Production environment on the chosen cloud (managed Postgres with backups, Valkey, Amazon S3, CDN for web)
 - [ ] P5-I2 Monitoring: Sentry, OpenTelemetry → Grafana, uptime checks
 - [ ] P5-I3 Load test: 10k scheduled posts in one hour across accounts; queue stays healthy
-- [ ] P5-I4 Self-host package: production Compose (Postgres, Valkey, MinIO, Caddy, optional `ai` profile), `.env` reference, per-network setup guides, upgrade notes
+- [ ] P5-I4 Self-host package: production Compose (Postgres, Valkey, Caddy, optional `ai` profile; S3 bucket supplied by the installer), `.env` reference, per-network setup guides, upgrade notes
 - [ ] P5-I5 Versioned release: images on GHCR, changelog, `v6.0.0` tag
 
 ## Quality

@@ -3,7 +3,7 @@
 **Phase:** 0 (uploads) – 1 (processing) · **Path:** `packages/core/src/modules/media` · **Depends on:** platform (storage, queue), workspaces, billing (storage limit, optional)
 
 ## Purpose
-The workspace media library: uploads straight from the browser to S3-compatible storage, metadata extraction, thumbnails, and public URLs that networks can fetch. AI-generated and discovery-imported files land here too.
+The workspace media library: uploads straight from the browser to Amazon S3, metadata extraction, thumbnails, and public URLs that networks can fetch. AI-generated and discovery-imported files land here too.
 
 ## Data
 | Table | Key fields | Notes |
