@@ -1,0 +1,11 @@
+// Socioboard 6.0 database schema. Models arrive task by task:
+// P0-B1 adds auth, workspaces, media and audit (see docs/traceability.md).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}

@@ -6,7 +6,15 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['**/dist/**', '**/.turbo/**', '**/node_modules/**', '**/coverage/**'] },
+  {
+    ignores: [
+      '**/dist/**',
+      '**/.turbo/**',
+      '**/node_modules/**',
+      '**/coverage/**',
+      '**/src/generated/**',
+    ],
+  },
 
   js.configs.recommended,
 

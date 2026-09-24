@@ -2,4 +2,7 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
+  '@prisma/engines': true
   esbuild: true
+  msgpackr-extract: false
+  prisma: true

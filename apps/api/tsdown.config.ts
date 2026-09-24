@@ -1,10 +1,14 @@
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: ['src/main.ts'],
   platform: 'node',
   target: 'node24',
   format: 'esm',
-  // Workspace packages ship TypeScript source, so bundle them into the app.
-  noExternal: [/^@socioboard\//],
+  deps: {
+    // Workspace packages ship TypeScript source, so they are always bundled, and with them
+    // their npm dependencies. The app's own dependencies stay external (installed in the image).
+    alwaysBundle: [/^@socioboard\//],
+    onlyBundle: false,
+  },
 });

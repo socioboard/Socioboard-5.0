@@ -1,22 +1,12 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "typecheck": {
-      "dependsOn": ["^typecheck"]
-    },
-    "test": {
-      "dependsOn": ["^build"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "clean": {
-      "cache": false
-    }
+    "generate": { "inputs": ["prisma/**"], "outputs": ["src/generated/**"] },
+    "build": { "dependsOn": ["^generate", "^build"], "outputs": ["dist/**"] },
+    "typecheck": { "dependsOn": ["generate", "^generate", "^typecheck"] },
+    "test": { "dependsOn": ["generate", "^generate"] },
+    "test:int": { "dependsOn": ["^generate"], "cache": false },
+    "dev": { "dependsOn": ["^generate"], "cache": false, "persistent": true },
+    "clean": { "cache": false }
   }
 }

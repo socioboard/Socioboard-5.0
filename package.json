@@ -14,7 +14,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
-    "lint": "eslint .",
+    "lint": "pnpm generate && eslint .",
     "deps:check": "depcruise apps packages --config .dependency-cruiser.cjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -22,7 +22,9 @@
     "services:up": "docker compose -f docker/compose.dev.yml --env-file .env up -d --wait",
     "services:down": "docker compose -f docker/compose.dev.yml --env-file .env down",
     "services:logs": "docker compose -f docker/compose.dev.yml --env-file .env logs -f",
-    "services:reset": "docker compose -f docker/compose.dev.yml --env-file .env down -v"
+    "services:reset": "docker compose -f docker/compose.dev.yml --env-file .env down -v",
+    "generate": "turbo run generate",
+    "test:int": "turbo run test:int"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

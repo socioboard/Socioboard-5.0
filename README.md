@@ -34,6 +34,7 @@ pnpm dev                  # api :3000, web :5173
 | `pnpm lint`                          | ESLint (type-aware)                                     |
 | `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)        |
 | `pnpm format`                        | Format with Prettier                                    |
+| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services   |
 | `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck |
 
 ## Layout
