@@ -1,0 +1,15 @@
+{
+  "name": "@socioboard/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Domain modules shared by api and worker",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo"
+  }
+}

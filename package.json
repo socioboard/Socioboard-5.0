@@ -1,0 +1,23 @@
+{
+  "name": "socioboard",
+  "private": true,
+  "description": "Socioboard 6.0: open-source social media management",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "turbo": "^2.11.3",
+    "typescript": "~6.0.3"
+  }
+}

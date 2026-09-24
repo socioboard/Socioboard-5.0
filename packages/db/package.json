@@ -1,0 +1,15 @@
+{
+  "name": "@socioboard/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Prisma schema, migrations, seed and client",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo"
+  }
+}

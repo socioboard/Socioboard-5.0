@@ -1,0 +1,15 @@
+{
+  "name": "@socioboard/billing",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Stripe billing, plans and limits (on only when Stripe keys are set)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo"
+  }
+}

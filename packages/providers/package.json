@@ -1,0 +1,15 @@
+{
+  "name": "@socioboard/providers",
+  "version": "0.0.0",
+  "private": true,
+  "description": "One adapter per social network and content source",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo"
+  }
+}
