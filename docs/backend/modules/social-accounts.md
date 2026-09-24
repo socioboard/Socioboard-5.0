@@ -1,0 +1,71 @@
+# Module: social-accounts
+
+**Phase:** 1 · **Path:** `packages/core/src/modules/social-accounts` · **Depends on:** providers, workspaces, platform (crypto, queue), audit, notifications, billing (account limit, optional)
+
+## Purpose
+Connecting social accounts (Facebook Pages, Instagram accounts, LinkedIn profiles/orgs, channels, boards…) to a workspace through each network's OAuth flow. Stores tokens encrypted, keeps them fresh, and tracks account health.
+
+**Multi-account on every network:** a workspace can connect **any number of logins per network** (e.g. three different Facebook users), and **any number of assets per login** (e.g. all the Pages each Facebook user manages). Every network works this way; there is no one-account-per-network limit anywhere in the product (only the plan's total account limit on the hosted cloud).
+
+## Two levels: connection and account
+| Level | What it is | Examples |
+| --- | --- | --- |
+| **SocialConnection** | One login to a network, holding that login's OAuth tokens | Facebook user "Priya", Facebook user "Brand Admin", Google account `ops@brand.com`, LinkedIn member "Chethan" |
+| **SocialAccount** | One postable asset reached through a connection | Facebook Pages, Instagram professional accounts, LinkedIn profile + company pages, YouTube channels, Pinterest account, TikTok account, Tumblr blogs, X account, Snapchat profile |
+
+A connection has one or more accounts. For networks where the login *is* the account (X, TikTok, Pinterest, Snapchat), the connection has exactly one account.
+
+## Data
+| Table | Key fields | Notes |
+| --- | --- | --- |
+| `SocialConnection` | id, workspaceId, network, externalUserId, displayName, avatarUrl, accessTokenEnc, refreshTokenEnc, tokenExpiresAt, scopes, status (active/reauth_required/revoked), connectedById, lastCheckedAt | Unique (workspaceId, network, externalUserId) |
+| `SocialAccount` | id, workspaceId, connectionId, network, externalId, displayName, username, avatarUrl, assetTokenEnc?, assetTokenExpiresAt?, meta JSON, status (active/reauth_required/disconnected/paused), lastCheckedAt | Unique (workspaceId, network, externalId). `assetTokenEnc` only where the network issues per-asset tokens (e.g. Facebook Page tokens) |
+| `SocialAccountGroup` | id, workspaceId, name | Saved sets, e.g. "Brand A all channels" |
+| `SocialAccountGroupItem` | groupId, socialAccountId | |
+| `OAuthState` | state, workspaceId, userId, network, pkceVerifier, connectionId? (for reconnect), expiresAt | 10-minute expiry, single use |
+
+`meta` holds network extras (Pinterest default board, LinkedIn org URN, TikTok creator info cache).
+
+## API
+| Method | Path | Permission | Description |
+| --- | --- | --- | --- |
+| GET | `/api/v1/networks` | signed in | Enabled networks + capabilities/rules/preview spec + how account switching works |
+| POST | `/api/v1/workspaces/:wid/accounts/connect/:network` | `accounts:connect` | Start OAuth (body: `{ forceAccountSelection: true }` when adding another login); returns the network's auth URL |
+| GET | `/api/oauth/:network/callback` | (state) | OAuth redirect target; creates or updates the SocialConnection, redirects to the asset picker |
+| GET | `/api/v1/workspaces/:wid/connections/:cid/assets` | `accounts:connect` | Connectable assets for this login, marking ones already connected |
+| POST | `/api/v1/workspaces/:wid/connections/:cid/assets` | `accounts:connect` | Add the chosen assets as SocialAccounts |
+| GET | `/api/v1/workspaces/:wid/connections?network=` | `accounts:manage` | Logins per network, each with its accounts |
+| POST | `/api/v1/workspaces/:wid/connections/:cid/reconnect` | `accounts:connect` | Re-run OAuth for this login (must return the same user) |
+| DELETE | `/api/v1/workspaces/:wid/connections/:cid` | `accounts:manage` | Remove a login and all its accounts |
+| GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts (respects member account access) |
+| GET | `/api/v1/workspaces/:wid/accounts/:aid` | `posts:read` | Details + health + which login it comes through |
+| DELETE | `/api/v1/workspaces/:wid/accounts/:aid` | `accounts:manage` | Disconnect one account; cancels its scheduled targets |
+| CRUD | `/api/v1/workspaces/:wid/account-groups` | `accounts:manage` | Account groups |
+
+## Services
+- `startConnect(workspace, user, network, { forceAccountSelection })` → signed `state` + PKCE saved in `OAuthState`; adapter adds the network's account-picker/force-login parameter where supported.
+- `handleCallback(network, code, state)` → exchange code, fetch the login's identity (`externalUserId`):
+  - **new login** → create a SocialConnection;
+  - **login already connected** → refresh its tokens and tell the user "You're signed in to Facebook as Priya, who is already connected" with steps to switch accounts (below);
+  - **reconnect** → must match the original `externalUserId`, otherwise reject with `RECONNECT_WRONG_ACCOUNT`.
+- `saveAssets(connectionId, assetIds)` → encrypt tokens (AES-256-GCM), create SocialAccounts, respect `checkLimit('accounts')`.
+- `getTokens(accountId)` → the asset token if the network uses one, else the connection's token; **only** for publishing/analytics workers.
+- `markReauthRequired(connectionId, reason)` → marks the connection and all its accounts, notifies admins.
+
+## Adding a second login of the same network
+Networks sign the user in with whatever account the browser is already logged into, so a second "Connect" usually returns the same login. We handle it in three ways:
+1. **Force the account picker** where the network supports it (adapter declares `supportsAccountSelection`; e.g. Google/YouTube `prompt=select_account`; other networks' parameters to be verified when building each adapter).
+2. **Detect a duplicate** login in the callback and explain it, instead of silently doing nothing.
+3. **Guide the user** where the network has no picker: "Sign out of Facebook in this browser (or use a private window), then click Connect again." The network chooser shows this tip before redirecting.
+
+## Jobs
+- `token-refresh` (hourly): refresh connection tokens (and asset tokens) expiring within 72 hours. On failure, mark the connection `reauth_required` and emit `account.reauth_required` for each of its accounts.
+- `account-health` (daily): lightweight "who am I" call per connection; per-asset access check (e.g. still admin of the Page).
+
+## Rules
+- No per-network account limit. Plan limits (hosted cloud) count **SocialAccounts**, not connections.
+- Two logins can reach the same asset (e.g. two Facebook users both admin the same Page). The asset is stored once per workspace, and the login that most recently connected it becomes its connection (the picker shows "already connected via Priya; switch to this login?").
+- Tokens never leave the server and are never logged. They're decrypted only inside publishing and analytics workers.
+- The same external login or asset may be connected to several workspaces; each workspace keeps its own tokens.
+- Disconnecting an account or connection cancels pending PostTargets for the affected accounts and notifies their authors.
+- Emits `connection.added`, `connection.removed`, `account.connected`, `account.disconnected`, `account.reauth_required` (audit + notifications).

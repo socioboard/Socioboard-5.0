@@ -1,0 +1,58 @@
+# Phase 0 · Foundation (3 weeks)
+
+**Goal:** the project skeleton runs locally and in CI; a user can sign up, create a workspace, invite a teammate and upload media. All developer-app applications are submitted.
+
+**Modules:** [auth](../backend/modules/auth.md), [workspaces](../backend/modules/workspaces.md), [media](../backend/modules/media.md) (upload), [audit](../backend/modules/audit.md) (write path) · **Areas:** [auth-onboarding](../frontend/areas/auth-onboarding.md) (steps 1 only), [app-shell](../frontend/areas/app-shell.md), [workspace-settings](../frontend/areas/workspace-settings.md), [media-library](../frontend/areas/media-library.md)
+
+## Infra & tooling
+- [ ] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
+- [ ] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
+- [ ] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, MinIO, Mailpit (catches emails), api, worker, web
+- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images
+- [ ] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client), mailer, events, crypto, http errors
+- [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
+- [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
+- [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
+
+## Contracts
+- [ ] P0-C1 Error envelope, pagination, ID and date types
+- [ ] P0-C2 Schemas: me, workspaces, members, invitations, media uploads
+
+## Backend
+- [ ] P0-B1 Prisma schema v1: User/Session/Account/Verification/TwoFactor, Workspace, Member, Invitation, MemberAccountAccess, MediaAsset, MediaFolder, AuditLog
+- [ ] P0-B2 Better Auth: email/password, verification, reset, magic link, Google + Microsoft (if keys), 2FA plugin, organization plugin with 5 roles
+- [ ] P0-B3 Middleware chain: requestId, rateLimit, session, workspace, requirePermission, validate, errorHandler
+- [ ] P0-B4 `/api/v1/me`, sessions endpoints; first-user bootstrap
+- [ ] P0-B5 Workspaces, members, invitations endpoints + invitation email
+- [ ] P0-B6 Media upload (presigned multipart), complete, list, get, update, delete; `media-process` job (dimensions, thumbnail)
+- [ ] P0-B7 Audit `record()` + listeners for member events
+- [ ] P0-B8 OpenAPI generation (zod-to-openapi) served at `/api/docs` in dev
+- [ ] P0-B9 Tenant isolation test harness
+- [ ] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
+- [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
+- [ ] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
+- [ ] P0-B13 `packages/emails` base layout + auth/invitation templates
+
+## Frontend
+- [ ] P0-F1 Vite app, TanStack Router/Query, typed API client, i18n setup, theme tokens (light/dark)
+- [ ] P0-F2 Design system base in `packages/ui` (shadcn/ui): Button, Input, Select, Dialog, Drawer, Toast, DataTable, EmptyState, Skeleton, Avatar, Badge
+- [ ] P0-F3 Sign up, sign in, verify email, reset password, 2FA, invitation accept
+- [ ] P0-F4 Onboarding step 1 (create workspace)
+- [ ] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, route guards, banners
+- [ ] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions)
+- [ ] P0-F7 Media library: uploader with progress, grid, details drawer, folders
+- [ ] P0-F8 Component catalog (Ladle) for `packages/ui` ([design system](../frontend/design-system.md))
+
+## Platform reviews (Chethan) — see [developer-apps.md](../developer-apps.md)
+- [ ] P0-R1 Publish `socioboard.com/privacy`, `/terms`, `/data-deletion`
+- [ ] P0-R2 Meta Business Manager verification + prod/dev apps
+- [ ] P0-R3 Snapchat partner access application
+- [ ] P0-R4 LinkedIn apps + Community Management access form
+- [ ] P0-R5 Google Cloud projects, OAuth consent screen, verification + YouTube audit form
+- [ ] P0-R6 TikTok app + media domain verification; Pinterest trial; X project + billing cap; Tumblr, Bitly, Microsoft apps
+
+## Quality
+- [ ] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image
+
+## Done when
+A new user signs up, verifies email, creates a workspace, invites a teammate who joins with a role, and both see an uploaded image in the media library, locally and on staging. CI is green. All network applications are submitted.
