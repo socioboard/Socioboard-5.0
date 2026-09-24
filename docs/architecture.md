@@ -136,6 +136,8 @@ Without a framework enforcing structure, we enforce it by convention and lint:
 | `docker/` | Compose files for dev, self-host, and production images |
 | `docs/` | This documentation |
 
+The Python AI service is **not** in this repo. It lives in its own repository, `socioboard/socioboard-ai`, owned by the Python team (decided 2026-09-24): separate language, tooling, CI and release cycle, and the only link between the two is its HTTP API and signed webhook.
+
 ## Tech stack
 
 The stack below includes the agreed decisions (React + Vite, Node TS, Postgres + Prisma, BullMQ + Redis, Express + Zod, Better Auth, Stripe). The rest are proposed defaults, marked with an asterisk; override any of them.
@@ -260,7 +262,9 @@ Build order is by user value and approval lead time: Meta (FB Pages + IG) → Li
 
 ## AI content integration
 
-The Python team designs and owns the AI API. We consume it through a single `AiGateway` module, so their contract can change without affecting the rest of the app. Until their spec arrives, we build against a mock service that follows the expectations below.
+The Python team designs and owns the AI API, in its own repository `socioboard/socioboard-ai`. We consume it through a single `AiGateway` module, so their contract can change without affecting the rest of the app. Until their spec arrives, we build against a mock service that follows the expectations below.
+
+**Contract between the two repos:** an OpenAPI file in `socioboard-ai` is the source of truth for the AI API and webhook payloads. Our `apps/ai-mock` implements that file, and CI in this repo checks the mock against the latest published spec so a change on their side shows up as a failing check here, not as a production error. Their service ships as a Docker image (`ghcr.io/socioboard/socioboard-ai`) with semver tags; we pin a version in our Compose files and bump it deliberately.
 
 ```mermaid
 sequenceDiagram
@@ -292,7 +296,8 @@ sequenceDiagram
 - [ ] **Tenant and idempotency keys**: we send `workspaceId` and an `Idempotency-Key`, so retries don't create duplicate jobs.
 - [ ] **Errors** as `{code, message, retryable}`, including content-policy refusals the user should see.
 - [ ] **Auth** between services (API key or mTLS) and a sandbox environment.
-- [ ] **Self-hostable packaging** (decided: the Python service is open source too): a Docker image that self-hosters run with their own model provider keys, included in our Compose file as an optional `ai` profile.
+- [ ] **Self-hostable packaging** (decided: the Python service is open source too, in `socioboard/socioboard-ai`): a Docker image (`ghcr.io/socioboard/socioboard-ai`) that self-hosters run with their own model provider keys, included in our Compose file as an optional `ai` profile.
+- [ ] **OpenAPI spec** in their repo, versioned with the service, for the API and the webhook payloads.
 
 ## Auth, roles & billing
 

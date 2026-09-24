@@ -36,4 +36,4 @@ The only code that talks to the Python AI service (the `AiGateway`). Users gener
 - Webhook signature (HMAC) is verified; unknown or duplicate job IDs are ignored.
 - If the AI service is not configured (self-host without it), AI features are hidden (`GET /ai/templates` returns empty).
 - Content-policy refusals are shown to the user with the AI service's message and don't use credits.
-- **Waiting on:** the Python team's API spec. The mock (`apps/ai-mock`) implements the contract listed in [architecture.md](../../architecture.md#ai-content-integration).
+- **Waiting on:** the Python team's API spec, published as OpenAPI in their repo `socioboard/socioboard-ai`. The mock (`apps/ai-mock`) implements the contract listed in [architecture.md](../../architecture.md#ai-content-integration) until then, and that spec afterwards; CI checks the mock against it.
