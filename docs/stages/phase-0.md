@@ -5,7 +5,7 @@
 **Modules:** [auth](../backend/modules/auth.md), [workspaces](../backend/modules/workspaces.md), [media](../backend/modules/media.md) (upload), [audit](../backend/modules/audit.md) (write path) · **Areas:** [auth-onboarding](../frontend/areas/auth-onboarding.md) (steps 1 only), [app-shell](../frontend/areas/app-shell.md), [workspace-settings](../frontend/areas/workspace-settings.md), [media-library](../frontend/areas/media-library.md)
 
 ## Infra & tooling
-- [ ] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
+- [x] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
 - [ ] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [ ] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, MinIO, Mailpit (catches emails), api, worker, web
 - [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images

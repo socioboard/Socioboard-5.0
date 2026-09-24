@@ -1,0 +1,24 @@
+{
+  "name": "@socioboard/worker",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsdown",
+    "start": "node dist/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@socioboard/core": "workspace:*",
+    "@socioboard/db": "workspace:*",
+    "@socioboard/providers": "workspace:*"
+  },
+  "devDependencies": {
+    "tsdown": "^0.23.0",
+    "tsx": "^4.23.15",
+    "unrun": "^0.3.1"
+  }
+}
