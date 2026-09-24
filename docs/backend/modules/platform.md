@@ -31,4 +31,6 @@ The shared building blocks every feature module uses. No business logic lives he
 ## Rules
 - Nothing in `platform` imports from `modules`.
 - Every external client (DB, Valkey, S3, SMTP) is created once at startup and injected, never imported as a global.
-- Graceful shutdown: stop accepting requests/jobs, finish in-flight work (30 s max), close connections.
+- Graceful shutdown: stop accepting requests/jobs, finish in-flight work (30 s max), close connections. Jobs still running after 30 s are left to BullMQ, which retries them on another worker once their lock expires.
+- Workspace isolation has two layers: `db.forWorkspace(id)` scopes every top-level query (reads, updates, deletes, creates; unknown operations fail closed), and relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Both were verified against Postgres on 2026-09-24: without the composite key, a nested `connect` linked another workspace's row.
+- Logs never contain secrets: any field named like a token, password, secret, API key, cookie or authorization header is redacted at any depth, including inside error objects.

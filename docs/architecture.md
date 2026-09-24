@@ -162,7 +162,7 @@ The stack below includes the agreed decisions (React + Vite, Node TS, Postgres +
 
 ## Data model
 
-Every domain table has a `workspaceId`, and all queries go through a Prisma extension that adds the workspace scope automatically. A **Post** is the content a user writes once. Each **PostTarget** is one delivery of that post to one social account. Scheduling, status and results all live on the PostTarget.
+Every domain table has a `workspaceId`, and all queries go through a Prisma extension that adds the workspace scope automatically. The extension only sees top-level queries, so nested writes (`connect`, raw foreign-key values) are covered in the database instead: relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. A **Post** is the content a user writes once. Each **PostTarget** is one delivery of that post to one social account. Scheduling, status and results all live on the PostTarget.
 
 | Entity | Key fields | Notes |
 | --- | --- | --- |
@@ -382,7 +382,7 @@ The web app and API share one origin per environment, with the API served under 
 - **Webhooks:** Stripe and AI webhooks are verified by signature, and OAuth `state` is signed.
 - **Web security:** CSRF protection on cookie sessions and a strict CSP.
 - **Dependencies and releases:** Renovate for updates, CodeQL in CI, SBOM published with releases.
-- **Tenant isolation:** a Prisma extension scopes every query to the workspace, and tests check that data can't leak across workspaces.
+- **Tenant isolation:** two layers. A Prisma extension scopes every top-level query to the workspace, and relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Tests check that data can't leak across workspaces, including through nested writes.
 - **Platform compliance:** Meta data-deletion callback, GDPR account export and deletion, a retention policy for tokens and metrics, and public privacy policy / terms pages that app reviews require.
 - **AI content labels:** assets from an `AiJob` are marked as AI-generated, and adapters set the network's AI-disclosure flag where the API offers one (verify TikTok, YouTube and Meta fields at build time).
 

@@ -83,6 +83,7 @@ requestId → logger → rateLimit → session (Better Auth) → workspace(:work
 - `requirePermission` checks the member's role against the permission map below.
 - `requireFeature` / `checkLimit` come from billing and always pass when billing is off.
 - Every Prisma call goes through a client extension that injects `workspaceId`; queries without a workspace scope fail in tests.
+- The extension does not see nested writes, so relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Never link rows by a foreign key alone.
 
 ## Permissions
 
