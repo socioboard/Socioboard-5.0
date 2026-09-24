@@ -1,3 +1,2 @@
-// @socioboard/core: Domain modules shared by api and worker.
-// Filled in by later phase tasks; see docs/traceability.md.
-export {};
+// @socioboard/core: platform services and domain modules shared by api and worker.
+export * from './platform';

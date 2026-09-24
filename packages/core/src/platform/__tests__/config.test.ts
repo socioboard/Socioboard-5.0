@@ -1,0 +1,92 @@
+import { describe, expect, it } from 'vitest';
+
+import { ConfigError, EXAMPLE_ENCRYPTION_KEY, loadConfig } from '../config';
+
+const key = (id: string, fill: number) => `${id}:${Buffer.alloc(32, fill).toString('base64')}`;
+
+const base = {
+  DATABASE_URL: 'postgresql://u:p@localhost:5440/db',
+  REDIS_URL: 'redis://localhost:6380',
+  ENCRYPTION_KEYS: key('k1', 1),
+};
+
+describe('loadConfig', () => {
+  it('applies defaults and derives feature toggles from which keys are set', () => {
+    const config = loadConfig(base);
+    expect(config.env).toBe('development');
+    expect(config.api.port).toBe(3000);
+    expect(config.logLevel).toBe('debug');
+    expect(config.storage).toBeUndefined();
+    expect(config.mail.smtpUrl).toBeUndefined();
+    expect(config.billing.enabled).toBe(false);
+    expect(config.ai.enabled).toBe(false);
+
+    const withKeys = loadConfig({
+      ...base,
+      STRIPE_SECRET_KEY: 'sk_test',
+      AI_SERVICE_URL: 'http://ai',
+    });
+    expect(withKeys.billing.enabled).toBe(true);
+    expect(withKeys.ai.enabled).toBe(true);
+  });
+
+  it('treats empty strings as unset (the .env.example leaves S3 blank)', () => {
+    const config = loadConfig({ ...base, S3_BUCKET: '', SMTP_URL: '' });
+    expect(config.storage).toBeUndefined();
+    expect(config.mail.smtpUrl).toBeUndefined();
+  });
+
+  it('reports every problem at once', () => {
+    try {
+      loadConfig({ REDIS_URL: 'http://wrong', ENCRYPTION_KEYS: 'k1:short' });
+      expect.unreachable();
+    } catch (err) {
+      expect(err).toBeInstanceOf(ConfigError);
+      const problems = (err as ConfigError).problems.join('\n');
+      expect(problems).toContain('DATABASE_URL');
+      expect(problems).toContain('REDIS_URL');
+    }
+  });
+
+  it('parses S3 settings for MinIO', () => {
+    const config = loadConfig({
+      ...base,
+      S3_BUCKET: 'media',
+      S3_REGION: 'us-east-1',
+      S3_ENDPOINT: 'http://localhost:9000',
+      S3_FORCE_PATH_STYLE: 'true',
+      S3_ACCESS_KEY_ID: 'a',
+      S3_SECRET_ACCESS_KEY: 'b',
+    });
+    expect(config.storage).toEqual({
+      bucket: 'media',
+      region: 'us-east-1',
+      endpoint: 'http://localhost:9000',
+      forcePathStyle: true,
+      credentials: { accessKeyId: 'a', secretAccessKey: 'b' },
+    });
+  });
+
+  it('requires a region with a bucket, and both S3 keys or neither', () => {
+    expect(() => loadConfig({ ...base, S3_BUCKET: 'media' })).toThrow(/S3_REGION/);
+    expect(() =>
+      loadConfig({ ...base, S3_BUCKET: 'media', S3_REGION: 'eu-west-1', S3_ACCESS_KEY_ID: 'a' }),
+    ).toThrow(/set together/);
+    // No keys at all is fine: the SDK uses the IAM role.
+    expect(
+      loadConfig({ ...base, S3_BUCKET: 'm', S3_REGION: 'eu-west-1' }).storage?.credentials,
+    ).toBeUndefined();
+  });
+
+  it('parses several encryption keys in order and rejects bad ones', () => {
+    const config = loadConfig({ ...base, ENCRYPTION_KEYS: `${key('k2', 2)},${key('k1', 1)}` });
+    expect(config.encryption.keys.map((k) => k.id)).toEqual(['k2', 'k1']);
+    expect(() => loadConfig({ ...base, ENCRYPTION_KEYS: 'k1:dG9vLXNob3J0' })).toThrow(/32-byte/);
+  });
+
+  it('refuses the example dev key in production', () => {
+    const env = { ...base, ENCRYPTION_KEYS: `k1:${EXAMPLE_ENCRYPTION_KEY}` };
+    expect(() => loadConfig(env)).not.toThrow();
+    expect(() => loadConfig({ ...env, NODE_ENV: 'production' })).toThrow(/example dev key/);
+  });
+});
