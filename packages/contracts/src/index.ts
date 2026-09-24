@@ -1,3 +1,5 @@
-// @socioboard/contracts: Zod schemas and types shared by API and web.
-// Filled in by later phase tasks; see docs/traceability.md.
-export {};
+// @socioboard/contracts: what the API accepts and returns, shared by api and web.
+// No imports from other workspace packages (enforced by dependency-cruiser).
+export * from './common';
+export * from './permissions';
+export * from './route';

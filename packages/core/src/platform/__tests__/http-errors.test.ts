@@ -4,9 +4,12 @@ import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
-import { createErrorHandler, notFound, notFoundHandler, type ErrorBody } from '../http';
+import { ErrorEnvelope } from '@socioboard/contracts';
 
-const errorOf = (res: request.Response) => (res.body as ErrorBody).error;
+import { createErrorHandler, notFound, notFoundHandler } from '../http';
+
+// Parsing with the shared schema also proves every response matches the contract.
+const errorOf = (res: request.Response) => ErrorEnvelope.parse(res.body).error;
 
 function app() {
   const logged: unknown[] = [];

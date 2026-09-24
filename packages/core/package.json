@@ -17,6 +17,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "~3.1138.0",
     "@aws-sdk/s3-request-presigner": "~3.1138.0",
+    "@socioboard/contracts": "workspace:*",
     "@socioboard/db": "workspace:*",
     "bullmq": "^6.3.8",
     "express": "^5.2.1",

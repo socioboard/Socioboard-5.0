@@ -226,7 +226,15 @@ importers:
 
   packages/billing: {}
 
-  packages/contracts: {}
+  packages/contracts:
+    dependencies:
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      vitest:
+        specifier: ^5.0.1
+        version: 5.0.1(@types/node@24.13.6)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0))
 
   packages/core:
     dependencies:
@@ -236,6 +244,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ~3.1138.0
         version: 3.1138.0
+      '@socioboard/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@socioboard/db':
         specifier: workspace:*
         version: link:../db
