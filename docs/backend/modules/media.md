@@ -8,7 +8,7 @@ The workspace media library: uploads straight from the browser to Amazon S3, met
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `MediaAsset` | id, workspaceId, kind (image/video/gif), storageKey, mime, sizeBytes, width, height, durationSec, thumbnailKey, source (upload/ai/discovery), aiJobId?, altText?, status (pending/ready/failed), uploadedById, createdAt | Soft delete; files purged by a nightly job |
+| `MediaAsset` | id, workspaceId, name, folderId?, kind (image/video/gif), storageKey, mime, sizeBytes, width, height, durationSec, thumbnailKey, source (upload/ai/discovery), aiJobId?, altText?, status (uploading/processing/ready/failed), uploadId? (multipart), uploadedById, createdAt | Soft delete; files purged by a nightly job; `uploading` rows older than a day are abandoned and purged |
 | `MediaFolder` | id, workspaceId, name, parentId? | Optional grouping |
 
 ## API
@@ -20,7 +20,12 @@ The workspace media library: uploads straight from the browser to Amazon S3, met
 | GET | `/api/v1/workspaces/:wid/media/:assetId` | `media:read` | Details + signed view URL |
 | PATCH | `/api/v1/workspaces/:wid/media/:assetId` | `media:upload` | Rename, alt text, folder |
 | DELETE | `/api/v1/workspaces/:wid/media/:assetId` | `media:upload` | Delete (blocked if used by a scheduled post) |
-| CRUD | `/api/v1/workspaces/:wid/media/folders` | `media:upload` | Folders |
+| GET | `/api/v1/workspaces/:wid/media/folders` | `media:read` | All folders |
+| POST | `/api/v1/workspaces/:wid/media/folders` | `media:upload` | Create a folder |
+| PATCH | `/api/v1/workspaces/:wid/media/folders/:folderId` | `media:upload` | Rename or move |
+| DELETE | `/api/v1/workspaces/:wid/media/folders/:folderId` | `media:upload` | Delete; its assets and subfolders move to its parent |
+
+Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigned PUT; larger files use multipart (16 MB parts) and `complete` sends each part's ETag. Folder routes are registered before `/media/:assetId`.
 
 ## Services
 - `createUpload(kind, mime, size)`: validates type and size, returns presigned URLs.
