@@ -22,10 +22,13 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 | Method | Path | Who | Description |
 | --- | --- | --- | --- |
 | GET | `/api/v1/me` | signed in | Current user, memberships, active workspace |
-| PATCH | `/api/v1/me` | signed in | Update name, avatar, timezone, locale |
+| PATCH | `/api/v1/me` | signed in | Update name, avatar (`avatarKey`), timezone, locale |
+| POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB); then PATCH `avatarKey` |
 | POST | `/api/v1/me/active-workspace` | signed in | Switch the active workspace |
 | GET | `/api/v1/me/sessions` | signed in | List active sessions |
-| DELETE | `/api/v1/me/sessions/:id` | signed in | Revoke a session |
+| DELETE | `/api/v1/me/sessions/:sessionId` | signed in | Revoke a session |
+
+Request and response schemas: `packages/contracts/src/auth.ts`.
 
 ## Services
 - `getSession(req)`: used by the `session` middleware.
@@ -43,6 +46,7 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 | sso | SAML/OIDC | 6.1 |
 
 ## Rules
+- Better Auth is configured to generate **UUIDv7** ids (`advanced.database.generateId`), so users, sessions and workspaces follow the API's id rule.
 - Email verification is required before creating a workspace (cloud); optional when self-hosted with no SMTP.
 - 2FA is optional for users and **mandatory for platform admins** (enforced when opening `/admin`).
 - Rate limits: sign-in 10/min per IP + email; sign-up 5/hour per IP.
