@@ -15,7 +15,7 @@
 - [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
 
 ## Contracts
-- [ ] P0-C1 Error envelope, pagination, ID and date types
+- [x] P0-C1 Error envelope, pagination, ID and date types
 - [ ] P0-C2 Schemas: me, workspaces, members, invitations, media uploads
 
 ## Backend
@@ -30,7 +30,7 @@
 - [ ] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column
 - [ ] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
 - [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
-- [ ] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
+- [x] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
 - [ ] P0-B13 `packages/emails` base layout + auth/invitation templates
 
 ## Frontend

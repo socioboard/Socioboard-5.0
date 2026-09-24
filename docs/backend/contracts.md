@@ -7,9 +7,10 @@ The single source of truth for what the API accepts and returns. Shared by backe
 ## Layout
 ```
 packages/contracts/src/
-├─ common.ts          ids (UUIDv7), ISO dates, pagination, error envelope, money
-├─ permissions.ts     permission keys + role → permission map (used by API and UI)
-├─ events.ts          Socket.IO event names + payload schemas
+├─ common.ts          ids (UUIDv7), ISO dates (UTC), pagination, error envelope + common codes, money
+├─ permissions.ts     roles, permission keys, role → permission map, can() (used by API and UI)
+├─ route.ts           defineRoute() and the types derived from a route
+├─ events.ts          Socket.IO event names + payload schemas (phase 2, with realtime)
 ├─ <module>.ts        one file per backend module: request/response schemas + route definitions
 └─ index.ts
 ```
@@ -20,11 +21,15 @@ Each endpoint is declared once:
 export const createPost = defineRoute({
   method: 'POST',
   path: '/api/v1/workspaces/:workspaceId/posts',
-  permission: 'posts:create',
+  access: 'posts:create',
+  summary: 'Create a post',
+  params: z.object({ workspaceId: Id }),
   body: CreatePostBody,
-  response: { 201: PostSchema },
+  responses: { 201: PostSchema },
 });
 ```
+- `access` is `'public'`, `'user'` (any signed-in user), `'member'` (any member of `:workspaceId`) or a permission key. Finer rules from the module docs ("`members:manage` or self", "owner", "matching email") are checked in the service on top. `defineRoute` refuses workspace access on a path without `:workspaceId`, and non-camelCase params.
+- `responses` maps success statuses to schemas; `null` means no body (204).
 - Backend: `router.route(createPost, handler)` applies `validate()` + `requirePermission()` from the definition.
 - Frontend: the typed client is generated from the same definitions (`api.posts.create({ workspaceId, body })`).
 - OpenAPI: generated from the definitions with zod-to-openapi.
