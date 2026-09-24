@@ -95,7 +95,7 @@ flowchart LR
   web[React SPA<br/>Vite] -->|REST + WS| api[Express api]
   api --> pg[(PostgreSQL)]
   api --> redis[(Redis)]
-  api --> s3[(Amazon S3<br/>media)]
+  api --> s3[(Amazon S3 / MinIO<br/>media)]
   redis -->|BullMQ| worker[Node worker]
   worker --> pg
   worker --> s3
@@ -152,7 +152,7 @@ The stack below includes the agreed decisions (React + Vite, Node TS, Postgres +
 | Queue / jobs | BullMQ on a Redis-compatible store (Valkey 8 by default; Redis works too) | Agreed. Delayed jobs, retries with backoff, per-queue rate limits, repeatable cron jobs. Valkey is BSD-licensed, which avoids Redis 8's license terms for self-hosters |
 | Auth | Better Auth (organization plugin) | Self-hostable. Covers email/password, magic link, OAuth login, orgs, invitations and roles |
 | Billing (hosted cloud) | Stripe (Better Auth Stripe plugin + metered usage) | Subscriptions, customer portal, AI-credit metering |
-| Media storage | Amazon S3 (decided 2026-09-24); self-hosters bring their own S3 bucket, or any S3-compatible service via `S3_ENDPOINT` | Uploads go straight to storage through presigned URLs; the API never proxies large files |
+| Media storage | Amazon S3 by default; MinIO when there is no S3 account (dev and self-host), or any S3-compatible service via `S3_ENDPOINT`. Same S3 client in every case | Uploads go straight to storage through presigned URLs; the API never proxies large files |
 | Realtime* | Socket.IO on the api server, Redis adapter | Notifications and live job status; scales across api instances |
 | Email* | Nodemailer (SMTP) + React Email templates | Any SMTP provider works; no vendor lock-in like 5.0's SendGrid |
 | PDF reports* | Headless Chromium (Playwright) rendering React pages | Reports reuse the dashboard components |
@@ -356,7 +356,7 @@ The whole repo is MIT/Apache, with no private or license-keyed code. Billing liv
 ### Deployment
 
 - **Images:** `web` (static files on nginx or Caddy), `api`, `worker`, `migrate` (one-off `prisma migrate deploy`). They are multi-arch and published to GHCR.
-- **Self-host:** one `docker compose up`, including Postgres, Valkey and Caddy with automatic HTTPS; media goes to the installer's own S3 bucket. Configuration is one `.env` validated at startup, and missing network keys just hide that network. This replaces 5.0's five separate JSON config files.
+- **Self-host:** one `docker compose up`, including Postgres, Valkey and Caddy with automatic HTTPS. Media goes to the installer's S3 bucket, or to the bundled MinIO (optional profile) if they have none; MinIO is then served publicly through Caddy at the media domain so networks can fetch files. Configuration is one `.env` validated at startup, and missing network keys just hide that network. This replaces 5.0's five separate JSON config files.
 - **Cloud:** the same images, hosted on a provider chosen later. api and worker scale separately.
 
 ### Environments and domains
