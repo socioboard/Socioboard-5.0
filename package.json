@@ -18,7 +18,11 @@
     "deps:check": "depcruise apps packages --config .dependency-cruiser.cjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm format:check && pnpm lint && pnpm deps:check && pnpm typecheck"
+    "check": "pnpm format:check && pnpm lint && pnpm deps:check && pnpm typecheck",
+    "services:up": "docker compose -f docker/compose.dev.yml --env-file .env up -d --wait",
+    "services:down": "docker compose -f docker/compose.dev.yml --env-file .env down",
+    "services:logs": "docker compose -f docker/compose.dev.yml --env-file .env logs -f",
+    "services:reset": "docker compose -f docker/compose.dev.yml --env-file .env down -v"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

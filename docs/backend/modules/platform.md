@@ -13,7 +13,7 @@ The shared building blocks every feature module uses. No business logic lives he
 | db | `packages/db` + `platform/db` | Prisma schema, migrations, generated client; workspace-scope client extension; **seed scripts** (dev users, demo workspace, sample posts) | 0 |
 | http | `platform/http` | Express app factory, error classes + `errorHandler`, `validate()`, `requestId`, `rateLimit` (Valkey-backed), `session`, `workspace`, `requirePermission`, `/api/health` (db + valkey + storage checks), OpenAPI generation from contracts, served at `/api/docs` in dev | 0 |
 | queue | `platform/queue` | One connection string, `REDIS_URL` (`redis://:password@host:6379/0`, or `rediss://` for TLS), pointing at **Valkey or Redis**; both speak the same protocol, so no code or credential differences. BullMQ connection, queue registry, `defineQueue(name, processor, opts)`, group rate limiter helpers, Bull Board adapter | 0 |
-| storage | `platform/storage` | S3-compatible client (MinIO/S3/R2): presigned upload/download, multipart, public media URLs | 0 |
+| storage | `platform/storage` | S3 client (AWS S3; optional `S3_ENDPOINT` for S3-compatible services): presigned upload/download, multipart, public media URLs | 0 |
 | mailer | `platform/mailer` + `packages/emails` | Nodemailer SMTP transport; React Email templates (verification, reset, magic link, invitation, publish failed, account reconnect, review request, digest, report ready, export ready, payment failed); logs links when no SMTP | 0 (base), each phase adds templates |
 | events | `platform/events` | Typed in-process event bus; `emitDurable()` also enqueues to BullMQ | 0 |
 | realtime | `platform/realtime` | Socket.IO server on api, Valkey adapter, auth on connect, room helpers (`user:`, `workspace:`) | 2 |

@@ -8,16 +8,33 @@ Open-source social media management: publish and schedule to every major network
 
 - Node 24 (see `.nvmrc`)
 - pnpm 12 (`corepack enable`)
-- Docker for local Postgres, Valkey, MinIO and Mailpit (arrives in P0-I3)
+- Docker for local Postgres, Valkey and Mailpit
+- An S3 bucket and credentials for media (dev bucket)
+
+## Getting started
+
+```sh
+corepack enable
+pnpm install
+cp .env.example .env      # then fill in the S3 dev bucket values
+pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI http://localhost:8025)
+pnpm dev                  # api :3000, web :5173
+```
 
 ## Commands
 
-| Command          | What it does                          |
-| ---------------- | ------------------------------------- |
-| `pnpm install`   | Install all workspaces                |
-| `pnpm dev`       | Run api, worker and web in watch mode |
-| `pnpm build`     | Build every app                       |
-| `pnpm typecheck` | Type-check every workspace            |
+| Command                              | What it does                                            |
+| ------------------------------------ | ------------------------------------------------------- |
+| `pnpm install`                       | Install all workspaces                                  |
+| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit        |
+| `pnpm services:reset`                | Stop services and delete their data                     |
+| `pnpm dev`                           | Run api, worker and web in watch mode                   |
+| `pnpm build`                         | Build every app                                         |
+| `pnpm typecheck`                     | Type-check every workspace                              |
+| `pnpm lint`                          | ESLint (type-aware)                                     |
+| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)        |
+| `pnpm format`                        | Format with Prettier                                    |
+| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck |
 
 ## Layout
 
