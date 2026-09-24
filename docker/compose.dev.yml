@@ -1,0 +1,50 @@
+# Local services for development. The apps (api, worker, web) run on the
+# host with `pnpm dev`; media goes to the dev S3 bucket set in .env.
+# Host ports can be changed in .env if they clash with something else.
+name: socioboard-dev
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: socioboard
+      POSTGRES_PASSWORD: socioboard
+      POSTGRES_DB: socioboard
+    ports:
+      - '${POSTGRES_PORT:-5440}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U socioboard -d socioboard']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    # BullMQ needs noeviction: evicted keys would silently drop jobs.
+    command: ['valkey-server', '--appendonly', 'yes', '--maxmemory-policy', 'noeviction']
+    ports:
+      - '${VALKEY_PORT:-6380}:6379'
+    volumes:
+      - valkey-data:/data
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.31
+    ports:
+      - '${MAILPIT_SMTP_PORT:-1025}:1025'
+      - '${MAILPIT_UI_PORT:-8025}:8025'
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres-data:
+  valkey-data:
