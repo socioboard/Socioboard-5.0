@@ -4,3 +4,4 @@ dist/
 coverage/
 # Docs are hand-formatted; keep table diffs readable.
 docs/
+packages/db/src/generated/

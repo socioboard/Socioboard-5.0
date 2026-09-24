@@ -5,9 +5,9 @@
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --env-file-if-exists=../../.env src/main.ts",
     "build": "tsdown",
-    "start": "node dist/index.mjs",
+    "start": "node dist/main.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },

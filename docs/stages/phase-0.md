@@ -9,7 +9,7 @@
 - [x] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [x] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, Mailpit (catches emails); optional MinIO profile for developers without S3; apps run on the host with `pnpm dev`
 - [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images
-- [ ] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
+- [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
 - [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
