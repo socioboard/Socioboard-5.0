@@ -1,5 +1,6 @@
 # Local services for development. The apps (api, worker, web) run on the
-# host with `pnpm dev`; media goes to the dev S3 bucket set in .env.
+# host with `pnpm dev`. Media goes to Amazon S3 by default; without an S3
+# account, set COMPOSE_PROFILES=minio in .env to run MinIO here instead.
 # Host ports can be changed in .env if they clash with something else.
 name: socioboard-dev
 
@@ -45,6 +46,38 @@ services:
       timeout: 3s
       retries: 10
 
+  # --- Optional: MinIO instead of Amazon S3 (COMPOSE_PROFILES=minio) ---
+  # MinIO no longer publishes to Docker Hub; quay.io is its official registry.
+  minio:
+    profiles: [minio]
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z.hotfix.7aa24e772
+    environment:
+      MINIO_ROOT_USER: socioboard
+      MINIO_ROOT_PASSWORD: socioboard-dev-secret
+      MC_HOST_local: http://socioboard:socioboard-dev-secret@localhost:9000
+    # Starts the server, then creates the media bucket once it is ready.
+    entrypoint:
+      - sh
+      - -c
+      - |
+        minio server /data --console-address :9001 &
+        pid=$$!
+        trap 'kill $$pid' TERM INT
+        until mc ready local >/dev/null 2>&1; do sleep 1; done
+        mc mb --ignore-existing local/socioboard-media
+        wait $$pid
+    ports:
+      - '${MINIO_API_PORT:-9000}:9000'
+      - '${MINIO_CONSOLE_PORT:-9001}:9001'
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'mc ls local/socioboard-media >/dev/null']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
 volumes:
   postgres-data:
   valkey-data:
+  minio-data:

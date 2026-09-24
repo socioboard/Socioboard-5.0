@@ -9,15 +9,15 @@ Open-source social media management: publish and schedule to every major network
 - Node 24 (see `.nvmrc`)
 - pnpm 12 (`corepack enable`)
 - Docker for local Postgres, Valkey and Mailpit
-- An S3 bucket and credentials for media (dev bucket)
+- For media: an S3 dev bucket, or local MinIO if you have no S3 (see `.env.example`)
 
 ## Getting started
 
 ```sh
 corepack enable
 pnpm install
-cp .env.example .env      # then fill in the S3 dev bucket values
-pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI http://localhost:8025)
+cp .env.example .env      # fill in your S3 dev bucket, or enable the MinIO block
+pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI :8025), MinIO :9000 (console :9001) if enabled
 pnpm dev                  # api :3000, web :5173
 ```
 
