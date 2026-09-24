@@ -1,6 +1,6 @@
 # Socioboard 6.0 — Documentation
 
-Socioboard 6.0 is a from-scratch rebuild of [Socioboard 5.0](https://github.com/socioboard/Socioboard-5.0) as a single-edition, fully open-source (MIT/Apache) social media management platform.
+Socioboard 6.0 is a from-scratch rebuild of [Socioboard 5.0](https://github.com/socioboard/Socioboard-5.0) as a single-edition, fully open-source (AGPL-3.0) social media management platform.
 
 **Tech lead:** Chethan
 

@@ -1,6 +1,6 @@
 # Socioboard 6.0
 
-Open-source social media management: publish and schedule to every major network, with team workflows and AI-generated media. MIT licensed; the same code runs as the hosted cloud or self-hosted.
+Open-source social media management: publish and schedule to every major network, with team workflows and AI-generated media. Licensed under AGPL-3.0; the same code runs as the hosted cloud or self-hosted.
 
 **Start with the docs:** [docs/README.md](docs/README.md)
 
@@ -55,3 +55,7 @@ pnpm dev                  # api :3000, web :5173
 ## Working rules
 
 Every change belongs to a task in [docs/stages](docs/stages/README.md). Branch `p<phase>/<module>/<task-id>-<name>`, commit `type(module): summary` with a `Task: <ID>` line, PR title starts with the task ID.
+
+## License
+
+[GNU Affero General Public License v3.0](LICENSE). If you run a modified version as a network service, you must make your source changes available to its users under the same license.

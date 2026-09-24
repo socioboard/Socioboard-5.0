@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Zod schemas and types shared by API and web",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
