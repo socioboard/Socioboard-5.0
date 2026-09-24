@@ -6,7 +6,7 @@
 
 ## Infra & tooling
 - [x] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
-- [ ] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
+- [x] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [ ] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, MinIO, Mailpit (catches emails), api, worker, web
 - [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images
 - [ ] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client), mailer, events, crypto, http errors

@@ -1,0 +1,115 @@
+// Architecture boundaries (docs/architecture.md, docs/backend/README.md).
+// Run with `pnpm deps:check`; CI fails on any violation.
+
+const SERVER_PACKAGES = '^packages/(core|db|providers|billing)/';
+
+/** @type {import('dependency-cruiser').IConfiguration} */
+module.exports = {
+  forbidden: [
+    {
+      name: 'no-circular',
+      severity: 'error',
+      comment: 'Circular imports make module wiring order-dependent.',
+      from: {},
+      to: { circular: true },
+    },
+    {
+      name: 'module-public-surface-only',
+      severity: 'error',
+      comment:
+        'A core module may import another module only through its index.ts, never its internals.',
+      from: { path: '^packages/core/src/modules/([^/]+)/' },
+      to: {
+        path: '^packages/core/src/modules/([^/]+)/.+',
+        pathNot: ['^packages/core/src/modules/$1/', '^packages/core/src/modules/[^/]+/index\\.ts$'],
+      },
+    },
+    {
+      name: 'platform-not-to-modules',
+      severity: 'error',
+      comment: 'Shared platform code sits below feature modules and must not depend on them.',
+      from: { path: '^packages/core/src/platform/' },
+      to: { path: '^packages/core/src/modules/' },
+    },
+    {
+      name: 'packages-not-to-apps',
+      severity: 'error',
+      comment: 'Packages are libraries; only apps wire things together.',
+      from: { path: '^packages/' },
+      to: { path: '^apps/' },
+    },
+    {
+      name: 'apps-not-to-each-other',
+      severity: 'error',
+      comment: 'Apps share code through packages, never by importing each other.',
+      from: { path: '^apps/([^/]+)/' },
+      to: { path: '^apps/', pathNot: '^apps/$1/' },
+    },
+    {
+      name: 'web-no-server-code',
+      severity: 'error',
+      comment: 'The browser bundle may use contracts and ui only (no db, secrets or providers).',
+      from: { path: '^(apps/web|packages/ui)/' },
+      to: { path: SERVER_PACKAGES },
+    },
+    {
+      name: 'contracts-standalone',
+      severity: 'error',
+      comment:
+        'Contracts are shared with the browser, so they depend on no other workspace package.',
+      from: { path: '^packages/contracts/' },
+      to: { path: '^packages/(?!contracts/)' },
+    },
+    {
+      name: 'providers-standalone',
+      severity: 'error',
+      comment: 'Network adapters talk to external APIs only; core calls them, not the reverse.',
+      from: { path: '^packages/providers/' },
+      to: { path: '^packages/(core|db|billing|ui|emails)/' },
+    },
+    {
+      name: 'no-deep-package-imports',
+      severity: 'error',
+      comment: 'Import a workspace package by name (@socioboard/x), not by path into its src.',
+      from: { path: '^(apps|packages)/([^/]+)/' },
+      to: {
+        path: '^packages/([^/]+)/src/.+',
+        pathNot: ['^packages/$2/', '^packages/[^/]+/src/index\\.tsx?$'],
+      },
+    },
+    {
+      name: 'not-to-dev-dep',
+      severity: 'error',
+      comment: 'Runtime code must not import devDependencies.',
+      from: { path: '^(apps|packages)/[^/]+/src/', pathNot: '__tests__|\\.test\\.tsx?$' },
+      to: { dependencyTypes: ['npm-dev'], dependencyTypesNot: ['type-only'] },
+    },
+    {
+      name: 'not-to-unresolvable',
+      severity: 'error',
+      comment: 'Every import must resolve; an unresolved one usually means a missing dependency.',
+      from: {},
+      to: { couldNotResolve: true },
+    },
+    {
+      name: 'no-undeclared-package',
+      severity: 'error',
+      comment: "Import only packages listed in the importing workspace's own package.json.",
+      from: {},
+      to: { dependencyTypes: ['npm-no-pkg', 'npm-unknown'] },
+    },
+  ],
+  options: {
+    doNotFollow: { path: 'node_modules' },
+    exclude: { path: '(^|/)(dist|\\.turbo)/' },
+    tsPreCompilationDeps: true,
+    // Check each workspace against its own package.json, not the root's.
+    combinedDependencies: false,
+    tsConfig: { fileName: 'tsconfig.depcruise.json' },
+    enhancedResolveOptions: {
+      exportsFields: ['exports'],
+      conditionNames: ['import', 'require', 'node', 'default', 'types'],
+      extensions: ['.ts', '.tsx', '.js', '.mjs', '.cjs', '.json'],
+    },
+  },
+};
