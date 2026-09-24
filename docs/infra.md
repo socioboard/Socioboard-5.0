@@ -18,7 +18,7 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | Observability | Sentry (api, worker, web), OpenTelemetry traces → Grafana, uptime checks, alerts for failed-publish spikes and queue backlog | 2 (Sentry), 5 (full) | P2-I1, P5-I2 |
 | Production | Chosen cloud: managed Postgres, Valkey, Amazon S3, CDN for web, api + worker autoscaling | 5 | P5-I1 |
 | Load test | k6 script: 10k scheduled posts/hour against a mock network | 5 | P5-I3 |
-| Self-host package | `docker/compose.selfhost.yml` (Postgres, Valkey, Caddy HTTPS; optional `minio` profile when the installer has no S3 bucket; optional `ai` profile), `.env.example`, install + upgrade guides, per-network setup guides | 5 | P5-I4 |
+| Self-host package | `docker/compose.selfhost.yml` (Postgres, Valkey, Caddy HTTPS; optional `minio` profile when the installer has no S3 bucket; optional `ai` profile running the pinned `ghcr.io/socioboard/socioboard-ai` image), `.env.example`, install + upgrade guides, per-network setup guides | 5 | P5-I4 |
 | Releases | Semver tags, changelog (Changesets), images on GHCR | 5 | P5-I5 |
 
 ## Environments

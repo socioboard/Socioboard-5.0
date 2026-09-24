@@ -14,7 +14,7 @@
 - [ ] P4-B3 Comments with @mentions; notifications for review events
 - [ ] P4-B4 Member account access enforced across posts, scheduling, calendar
 - [ ] P4-B5 Tasks CRUD + due reminders
-- [ ] P4-B6 **AI mock service** (`apps/ai-mock`) implementing the expected contract (async jobs, webhook, sample outputs)
+- [ ] P4-B6 **AI mock service** (`apps/ai-mock`) implementing the expected contract (async jobs, webhook, sample outputs); once `socioboard/socioboard-ai` publishes its OpenAPI spec, a CI check that the mock still matches it
 - [ ] P4-B7 AI gateway: templates sync, job create, webhook (HMAC), `ai-result` import to media, `ai-poll` fallback
 - [ ] P4-B8 Switch from mock to the real Python service once the spec is ready
 - [ ] P4-B9 AI content labels: mark assets, set network disclosure flags where supported

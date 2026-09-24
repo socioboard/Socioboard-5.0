@@ -21,7 +21,7 @@ This totals about 30 weeks: roughly 25 to the 6.0 launch, then about 5 for 6.1. 
 ## Open questions
 
 - [ ] Git repository: URL and access to be provided.
-- [ ] AI service API spec: coming soon from the Python team. Until then we build against a mock of the expected contract.
+- [ ] AI service API spec: coming soon from the Python team, as an OpenAPI file in `socioboard/socioboard-ai` (repo to be created by the Python team). Until then we build against a mock of the expected contract.
 - [ ] Cloud hosting provider: to be decided before launch (phase 5); not a blocker.
 
 ## Later (parked, not in the current plan)
@@ -50,7 +50,7 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Media storage | Amazon S3 by default; MinIO when the user has no S3 account (decided 2026-09-24). Same S3 client for both. MinIO no longer publishes to Docker Hub, so its image comes from `quay.io/minio/minio` (pinned) |
 | Auth | Better Auth (organization, two-factor, magic-link, admin, stripe, sso plugins); re-confirmed over Clerk on 2026-09-24 to keep self-hosting free of third-party accounts. Payment admin (invoices, refunds, disputes) uses the Stripe dashboard plus the admin console |
 | Billing | Stripe |
-| AI | Python team's service, also open source; self-hosters run it with their own model keys |
+| AI | Python team's service, also open source, in its own repo `socioboard/socioboard-ai` (decided 2026-09-24); self-hosters run its Docker image with their own model keys. Its OpenAPI spec is the contract; our `apps/ai-mock` follows it |
 | Post content | Users type and edit text freely; media is uploaded or AI-generated; AI output is editable |
 | Networks | Everything 5.0 had that still works; dead APIs dropped |
 | Developer apps | New apps created and reviewed on every network |
