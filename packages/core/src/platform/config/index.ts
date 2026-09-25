@@ -1,3 +1,5 @@
+import { isIP } from 'node:net';
+
 import { z } from 'zod';
 
 /** Dev-only values shipped in .env.example; rejected in production. */
@@ -21,10 +23,33 @@ const envSchema = z.object({
   API_PORT: z.coerce.number().int().positive().default(3000),
   APP_URL: z.url().default('http://localhost:5173'),
   /**
-   * Which proxies may set X-Forwarded-For (Express `trust proxy`): "loopback" (dev: the Vite
-   * proxy), a hop count such as "1" behind one load balancer, or comma-separated IPs/CIDRs.
+   * Proxies whose X-Forwarded-For we believe: comma-separated IPs or CIDR ranges, or "loopback"
+   * (dev: the Vite proxy). The client IP is the nearest address not in this list; it drives every
+   * rate limit, so production must list its real proxies (a load balancer's range, Caddy's IP).
    */
-  TRUST_PROXY: z.string().default('loopback'),
+  TRUST_PROXY: z
+    .string()
+    .default('loopback')
+    .transform((raw, ctx) => {
+      const entries = raw
+        .split(',')
+        .map((e) => e.trim())
+        .filter(Boolean);
+      for (const entry of entries) {
+        const [ip = '', prefix] = entry.split('/');
+        const version = isIP(ip);
+        const prefixOk =
+          prefix === undefined ||
+          (/^\d+$/.test(prefix) && Number(prefix) <= (version === 6 ? 128 : 32));
+        if (entry !== 'loopback' && (version === 0 || !prefixOk)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `"${entry}" is not "loopback", an IP or a CIDR range`,
+          });
+        }
+      }
+      return entries;
+    }),
   /** Requests per minute per client IP on /api/v1. */
   API_RATE_LIMIT_PER_MIN: z.coerce.number().int().positive().default(300),
 
@@ -92,7 +117,7 @@ export interface Config {
   env: 'development' | 'test' | 'production';
   isProduction: boolean;
   logLevel: string;
-  api: { port: number; trustProxy: string | number; rateLimitPerMin: number };
+  api: { port: number; trustedProxies: string[]; rateLimitPerMin: number };
   appUrl: string;
   db: { url: string; poolSize: number };
   redis: { url: string };
@@ -151,6 +176,11 @@ export function loadConfig(source: Record<string, string | undefined> = process.
   if (raw('NODE_ENV') === 'production' && raw('AUTH_SECRET') === EXAMPLE_AUTH_SECRET) {
     problems.push('AUTH_SECRET: the example dev secret must not be used in production');
   }
+  if (raw('NODE_ENV') === 'production' && !raw('TRUST_PROXY')) {
+    problems.push(
+      'TRUST_PROXY: required in production (the IPs or CIDR ranges of your proxies), otherwise every client shares one rate limit',
+    );
+  }
   for (const provider of ['GOOGLE', 'MICROSOFT']) {
     if (Boolean(raw(`${provider}_CLIENT_ID`)) !== Boolean(raw(`${provider}_CLIENT_SECRET`))) {
       problems.push(`${provider}_CLIENT_ID and ${provider}_CLIENT_SECRET must be set together`);
@@ -187,7 +217,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     logLevel: e.LOG_LEVEL ?? (e.NODE_ENV === 'development' ? 'debug' : 'info'),
     api: {
       port: e.API_PORT,
-      trustProxy: /^\d+$/.test(e.TRUST_PROXY) ? Number(e.TRUST_PROXY) : e.TRUST_PROXY,
+      trustedProxies: e.TRUST_PROXY,
       rateLimitPerMin: e.API_RATE_LIMIT_PER_MIN,
     },
     appUrl: e.APP_URL,

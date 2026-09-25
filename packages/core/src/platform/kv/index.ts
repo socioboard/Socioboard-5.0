@@ -29,11 +29,12 @@ export function createKv({ url, prefix = 'sb:' }: { url: string; prefix?: string
       await client.del(key);
     },
     async incr(key, windowSec) {
-      const [[, count]] = (await client.multi().incr(key).expire(key, windowSec, 'NX').exec()) as [
-        [Error | null, number],
-        [Error | null, number],
-      ];
-      return count;
+      const results = await client.multi().incr(key).expire(key, windowSec, 'NX').exec();
+      const [incrResult] = results ?? [];
+      if (!incrResult) throw new Error(`kv.incr(${key}): transaction was aborted`);
+      const [err, count] = incrResult;
+      if (err) throw err;
+      return Number(count);
     },
     close: () => {
       client.disconnect();

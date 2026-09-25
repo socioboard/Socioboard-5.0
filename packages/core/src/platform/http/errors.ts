@@ -48,7 +48,13 @@ export const notFoundHandler: RequestHandler = (req, _res, next) => {
 
 /** Turns any thrown error into the error envelope. Unknown errors are logged and hidden. */
 export function createErrorHandler(logger: Logger): ErrorRequestHandler {
-  return (err: unknown, _req, res, _next) => {
+  return (err: unknown, _req, res, next) => {
+    if (res.headersSent) {
+      // Too late to send an error body: log it and let Express close the connection.
+      logger.error({ err }, 'error after the response started');
+      next(err);
+      return;
+    }
     // Set by the requestId middleware (P0-B3).
     const requestId: unknown = res.locals.requestId;
     let status: number;
@@ -71,8 +77,13 @@ export function createErrorHandler(logger: Logger): ErrorRequestHandler {
         details,
       };
     } else if (isBodyParserError(err)) {
-      status = err.status;
-      error = { code: CommonErrorCode.INVALID_BODY, message: 'Request body could not be read' };
+      if (err.type === 'entity.too.large') {
+        status = 413;
+        error = { code: CommonErrorCode.PAYLOAD_TOO_LARGE, message: 'Request body is too large' };
+      } else {
+        status = 400;
+        error = { code: CommonErrorCode.INVALID_BODY, message: 'Request body could not be read' };
+      }
     } else {
       status = 500;
       error = { code: CommonErrorCode.INTERNAL_ERROR, message: 'Something went wrong on our side' };
@@ -86,14 +97,26 @@ export function createErrorHandler(logger: Logger): ErrorRequestHandler {
   };
 }
 
-function isBodyParserError(err: unknown): err is { status: number; type: string } {
+/** Errors raised by express.json() (body-parser); other errors with a `type` are not ours to relabel. */
+const BODY_PARSER_TYPES = new Set([
+  'entity.parse.failed',
+  'entity.verify.failed',
+  'entity.too.large',
+  'encoding.unsupported',
+  'charset.unsupported',
+  'request.aborted',
+  'request.size.invalid',
+  'parameters.too.many',
+  'stream.encoding.set',
+  'stream.not.readable',
+]);
+
+function isBodyParserError(err: unknown): err is { type: string } {
   return (
     typeof err === 'object' &&
     err !== null &&
     'type' in err &&
-    'status' in err &&
-    typeof err.status === 'number' &&
-    err.status >= 400 &&
-    err.status < 500
+    typeof err.type === 'string' &&
+    BODY_PARSER_TYPES.has(err.type)
   );
 }

@@ -31,7 +31,10 @@ export interface RouteContext<R extends RouteDefinition> {
   res: Response;
 }
 
-/** Returns the response body; the router sends it with the route's success status. */
+/**
+ * Returns the response body; the router sends it with the route's success status. Handlers may set
+ * headers on `ctx.res` (cookies, caching) but must never send a response themselves.
+ */
 export type RouteHandler<R extends RouteDefinition> = (
   ctx: RouteContext<R>,
 ) => RouteResponse<R> | Promise<RouteResponse<R>>;
@@ -82,6 +85,12 @@ export function createApiRouter({ lookupMembership }: ApiRouterDeps): ApiRouter 
     if (mounted.has(def)) throw new Error(`Route mounted twice: ${def.method} ${def.path}`);
     mounted.add(def);
     const workspaceAccess = def.access === 'member' || isPermission(def.access);
+    const paramShape = (def.params as { shape?: Record<string, unknown> } | undefined)?.shape;
+    if (workspaceAccess && !paramShape?.workspaceId) {
+      throw new Error(
+        `${def.method} ${def.path}: workspace access needs a params schema with workspaceId`,
+      );
+    }
 
     const run: RequestHandler = async (req, res) => {
       const auth = res.locals.auth ?? null;

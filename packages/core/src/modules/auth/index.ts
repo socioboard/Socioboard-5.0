@@ -3,7 +3,7 @@
 import { toNodeHandler } from 'better-auth/node';
 import { Router } from 'express';
 
-import { notFound, type EventBus, type SessionResolver } from '../../platform';
+import { notFound, type AuthContext, type EventBus, type SessionResolver } from '../../platform';
 import { createAuth, type Auth, type AuthDeps } from './auth';
 import type { AuthEvents } from './events';
 
@@ -31,13 +31,24 @@ export function createAuthModule(
   router.use('/api/auth/organization', (_req, _res, next) => {
     next(notFound('ROUTE_NOT_FOUND', 'Use the /api/v1/workspaces endpoints'));
   });
-  router.all('/api/auth/{*path}', toNodeHandler(auth));
+  const handler = toNodeHandler(auth);
+  router.all('/api/auth/{*path}', (req, res) => {
+    // Better Auth reads the client IP (for its rate limits and session records) from
+    // X-Forwarded-For. Hand it the one Express already resolved under TRUST_PROXY, so there is a
+    // single rule for who the client is and a client can't spoof it.
+    req.headers['x-forwarded-for'] = req.ip ?? '';
+    return handler(req, res);
+  });
 
   const resolveSession: SessionResolver = async (headers) => {
-    const found = await auth.api.getSession({ headers });
-    if (!found) return null;
+    const { headers: responseHeaders, response: found } = await auth.api.getSession({
+      headers,
+      returnHeaders: true,
+    });
+    const setCookies = responseHeaders.getSetCookie();
+    if (!found) return { auth: null, setCookies };
     const { user, session } = found;
-    return {
+    const context: AuthContext = {
       user: {
         id: user.id,
         email: user.email,
@@ -47,6 +58,7 @@ export function createAuthModule(
       },
       session: { id: session.id, activeWorkspaceId: session.activeOrganizationId ?? null },
     };
+    return { auth: context, setCookies };
   };
 
   return { auth, router, resolveSession };

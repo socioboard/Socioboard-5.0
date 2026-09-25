@@ -35,6 +35,8 @@ for (const name of ['user.signed_up', 'user.signed_in', 'user.password_changed']
 
 const { auth, router } = createAuthModule({ config, db, kv, mailer, logger, events });
 const app = express();
+// Tests give each client its own X-Forwarded-For; trust it from the local test client.
+app.set('trust proxy', 'loopback');
 app.use(router);
 app.use(createErrorHandler(logger));
 
@@ -170,6 +172,25 @@ describe('sign in', () => {
       );
     }
     expect(statuses.slice(0, 10).every((s) => s === 401)).toBe(true);
+    expect(statuses[10]).toBe(429);
+  });
+});
+
+describe('client IP for rate limits', () => {
+  it('ignores X-Forwarded-For from clients that are not trusted proxies', async () => {
+    // Same auth instance, but an app that trusts no proxy: rotating the header must not help.
+    const direct = express();
+    direct.set('trust proxy', false);
+    direct.use(router);
+    const statuses: number[] = [];
+    for (let i = 0; i < 11; i++) {
+      const res = await request(direct)
+        .post('/api/auth/sign-in/email')
+        .set('Origin', config.appUrl)
+        .set('X-Forwarded-For', `198.51.100.${String(i)}`)
+        .send({ email: email('spoof'), password: 'x'.repeat(12) });
+      statuses.push(res.status);
+    }
     expect(statuses[10]).toBe(429);
   });
 });
