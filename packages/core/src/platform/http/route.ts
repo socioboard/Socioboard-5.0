@@ -35,9 +35,11 @@ export interface RouteContext<R extends RouteDefinition> {
  * Returns the response body; the router sends it with the route's success status. Handlers may set
  * headers on `ctx.res` (cookies, caching) but must never send a response themselves.
  */
-export type RouteHandler<R extends RouteDefinition> = (
-  ctx: RouteContext<R>,
-) => RouteResponse<R> | Promise<RouteResponse<R>>;
+export type RouteHandler<R extends RouteDefinition> = (ctx: RouteContext<R>) => [
+  RouteResponse<R>,
+] extends [undefined]
+  ? void | Promise<void> // bodiless (204) routes
+  : RouteResponse<R> | Promise<RouteResponse<R>>;
 
 function validationError(location: string, error: z.ZodError): AppError {
   const details: ValidationDetails = {
@@ -113,15 +115,18 @@ export function createApiRouter({ lookupMembership }: ApiRouterDeps): ApiRouter 
       const query = parse(def.query, req.query, 'query');
       const body = parse(def.body, req.body, 'body');
 
-      const result = await handler({
-        params,
-        query,
-        body,
-        auth,
-        member,
-        req,
-        res,
-      } as RouteContext<R>);
+      // Handlers may return a value, a promise, or nothing (bodiless routes).
+      const result: unknown = await Promise.resolve(
+        handler({
+          params,
+          query,
+          body,
+          auth,
+          member,
+          req,
+          res,
+        } as RouteContext<R>),
+      );
 
       const [statusKey, schema] = Object.entries(def.responses)[0] ?? ['200', null];
       const status = Number(statusKey) as SuccessStatus;

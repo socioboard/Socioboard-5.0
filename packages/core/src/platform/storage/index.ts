@@ -25,8 +25,15 @@ export interface ObjectInfo {
 
 export interface Storage {
   readonly bucket: string;
-  /** Single-request browser upload (small files). */
-  presignPut(key: string, contentType: string, expiresInSec?: number): Promise<string>;
+  /**
+   * Single-request browser upload (small files). With `contentLength`, the signature only accepts
+   * a body of exactly that size, so a URL issued for a 2 MB image can't carry 1 GB.
+   */
+  presignPut(
+    key: string,
+    contentType: string,
+    options?: { expiresInSec?: number; contentLength?: number },
+  ): Promise<string>;
   /** Large files: start, presign each part, then complete (or abort). */
   createMultipart(key: string, contentType: string): Promise<string>;
   presignPart(
@@ -66,10 +73,18 @@ export function createStorage(config: StorageConfig): Storage {
   return {
     bucket: Bucket,
 
-    presignPut: (key, contentType, expiresIn = FIFTEEN_MINUTES) =>
-      getSignedUrl(client, new PutObjectCommand({ Bucket, Key: key, ContentType: contentType }), {
-        expiresIn,
-      }),
+    presignPut: (key, contentType, { expiresInSec = FIFTEEN_MINUTES, contentLength } = {}) =>
+      getSignedUrl(
+        client,
+        new PutObjectCommand({
+          Bucket,
+          Key: key,
+          ContentType: contentType,
+          ...(contentLength === undefined ? {} : { ContentLength: contentLength }),
+        }),
+        // Sign the length header too, or S3 would accept any size.
+        { expiresIn: expiresInSec, signableHeaders: new Set(['content-type', 'content-length']) },
+      ),
 
     async createMultipart(key, contentType) {
       const res = await client.send(
@@ -134,5 +149,18 @@ export function createStorage(config: StorageConfig): Storage {
     close: () => {
       client.destroy();
     },
+  };
+}
+
+/**
+ * Turns a stored image reference into a URL the browser can load: storage keys become short-lived
+ * signed URLs (objects are private); absolute URLs (e.g. a Google avatar) pass through; without
+ * storage or a value, null.
+ */
+export function createUrlSigner(storage: Storage | undefined, expiresInSec = 60 * 60) {
+  return async (value: string | null | undefined): Promise<string | null> => {
+    if (!value) return null;
+    if (/^https?:\/\//.test(value)) return value;
+    return storage ? storage.presignGet(value, expiresInSec) : null;
   };
 }
