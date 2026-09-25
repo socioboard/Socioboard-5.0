@@ -1,5 +1,6 @@
 // The real API app (createApiApp): wiring that only shows up when everything is put together.
 import { ErrorEnvelope } from '@socioboard/contracts';
+import request from 'supertest';
 import { afterAll, describe, expect, it } from 'vitest';
 
 import { createWorkspaceAuthPort } from '../modules/auth';
@@ -13,6 +14,16 @@ afterAll(async () => {
 describe('createApiApp', () => {
   it('mounts every contract route', () => {
     expect(t.missingRoutes).toEqual([]);
+  });
+
+  it('reports real dependency health at /api/health', async () => {
+    const res = await request(t.app).get('/api/health');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      status: 'ok',
+      checks: { db: 'ok', valkey: 'ok', storage: t.platform.storage ? 'ok' : 'disabled' },
+    });
+    expect((await request(t.app).get('/api/health/live')).status).toBe(200);
   });
 
   it('records sign-ups in the audit log and sends rate-limit headers', async () => {

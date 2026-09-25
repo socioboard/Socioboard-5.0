@@ -20,6 +20,7 @@ import {
 import {
   createApiRouter,
   createErrorHandler,
+  createHealth,
   notFoundHandler,
   originCheck,
   rateLimit,
@@ -28,6 +29,7 @@ import {
   requestLogger,
   session,
   type ApiRouter,
+  type Health,
   type Platform,
 } from './platform';
 
@@ -42,6 +44,8 @@ export interface ApiApp {
   app: Express;
   api: ApiRouter;
   authModule: AuthModule;
+  /** Health endpoints; the entrypoint marks it shutting down before closing the server. */
+  health: Health;
   /** Contract routes that have no handler yet (should be empty). */
   missingRoutes: RouteDefinition[];
 }
@@ -117,10 +121,8 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   );
   app.use(api.router);
 
-  // Liveness only; P0-B11 adds db, Valkey and storage checks.
-  app.get('/api/health', (_req, res) => {
-    res.json({ status: 'ok' });
-  });
+  const health = createHealth(platform);
+  app.use(health.router);
 
   options.extend?.(app);
   app.use('/api', notFoundHandler);
@@ -130,5 +132,5 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     .flatMap((m) => Object.values(m) as RouteDefinition[])
     .filter((r) => !api.mounted.has(r));
 
-  return { app, api, authModule, missingRoutes };
+  return { app, api, authModule, health, missingRoutes };
 }

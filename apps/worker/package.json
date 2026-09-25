@@ -14,7 +14,8 @@
   "dependencies": {
     "@socioboard/core": "workspace:*",
     "@socioboard/db": "workspace:*",
-    "@socioboard/providers": "workspace:*"
+    "@socioboard/providers": "workspace:*",
+    "sharp": "~0.35.4"
   },
   "devDependencies": {
     "tsdown": "^0.23.0",

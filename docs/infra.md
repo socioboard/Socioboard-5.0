@@ -9,7 +9,8 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | Monorepo tooling | pnpm workspaces, Turborepo, `tsconfig` base, ESLint, Prettier, dependency-cruiser (Changesets arrives with releases, P5-I5) | 0 | P0-I1, P0-I2 |
 | Dev environment | `docker/compose.dev.yml`: Postgres 17, Valkey 8, Mailpit, and MinIO as an optional profile (`COMPOSE_PROFILES=minio`) for developers without S3. api, worker and web run on the host with `pnpm dev` (fast hot reload) | 0 | P0-I3 |
 | Dockerfiles | `apps/api`, `apps/worker` (includes ffmpeg/ffprobe for video processing), `apps/web` (nginx static), `packages/db` (migrate); multi-stage, multi-arch | 0 | P0-I4 |
-| CI | GitHub Actions: install → lint → typecheck → unit → integration (Postgres/Valkey services) → build images → Playwright E2E on PRs to main | 0 | P0-I4 |
+| CI | GitHub Actions: install → lint → typecheck → unit → integration (Postgres/Valkey services) → build images → smoke test of the built images (`/api/health`, SIGTERM) → Playwright E2E on PRs to main | 0 | P0-I4 |
+| Health checks | Load balancer and uptime checks use `GET /api/health` (readiness: 503 when Postgres or Valkey is down or while shutting down); container restart policies use `GET /api/health/live`, which never checks dependencies, so a database outage doesn't restart every api instance | 0 | P0-B11 |
 | Dev tunnels | Cloudflare Tunnel: `dev1..dev3.dev.socioboard.com` | 0 | P0-I8 |
 | Staging | `app.staging.socioboard.com`, `media.staging.socioboard.com`; auto-deploy from `main` | 0 | P0-I7 |
 | Backups | Daily + point-in-time Postgres backups; storage bucket versioning; one tested restore; bucket lifecycle rule aborting incomplete multipart uploads after 1 day | 0 (staging), 5 (production) | P0-I6, P5-I1 |
