@@ -1,11 +1,11 @@
-import { bootstrap, createApiApp, createPlatform, onShutdown } from '@socioboard/core';
+import { bootstrap, closeServer, createApiApp, createPlatform, onShutdown } from '@socioboard/core';
 
 import { createDocsRouter } from './docs';
 
 const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
-const { app, missingRoutes } = createApiApp(platform, {
+const { app, health, missingRoutes } = createApiApp(platform, {
   // API reference generated from the contracts: development only.
   extend: (a) => {
     if (!config.isProduction) a.use(createDocsRouter());
@@ -20,10 +20,8 @@ const server = app.listen(config.api.port, () => {
 });
 
 onShutdown(logger, async () => {
-  await new Promise<void>((resolve) => {
-    server.close(() => {
-      resolve();
-    });
-  });
+  // Readiness turns 503 first, then in-flight requests get up to 25 s to finish.
+  health.markShuttingDown();
+  await closeServer(server);
   await platform.close();
 });

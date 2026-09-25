@@ -11,6 +11,11 @@ import {
 
 const { config, logger } = bootstrap('worker');
 const platform = createPlatform(config, logger);
+// Registered before anything starts, so a stop signal during startup still shuts down cleanly:
+// workers finish their current jobs (up to 30 s), then connections close.
+onShutdown(logger, async () => {
+  await platform.close();
+});
 const audit = createAuditLog(platform);
 registerAuditListeners(platform.events, audit, logger);
 
@@ -31,7 +36,3 @@ await platform.queues
   .upsertJobScheduler('nightly', { pattern: '30 3 * * *', tz: 'UTC' }, { name: 'purge' });
 
 logger.info('worker started');
-
-onShutdown(logger, async () => {
-  await platform.close();
-});

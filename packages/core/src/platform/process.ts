@@ -1,3 +1,5 @@
+import type { Server } from 'node:http';
+
 import { ConfigError, loadConfig, type Config } from './config';
 import { createLogger, type Logger } from './logger';
 
@@ -21,7 +23,51 @@ export function bootstrap(name: string): { config: Config; logger: Logger } {
     name,
     pretty: config.env === 'development' && process.stdout.isTTY,
   });
+  // A crash is logged as one JSON line (with the stack) before exiting, instead of Node's raw
+  // stderr dump. The state is unknown after an uncaught error, so no graceful shutdown: the
+  // orchestrator restarts the process, and BullMQ retries any job it held.
+  process.on('uncaughtException', (err) => {
+    logger.fatal({ err }, 'uncaught exception');
+    process.exit(1);
+  });
+  process.on('unhandledRejection', (err) => {
+    logger.fatal({ err }, 'unhandled promise rejection');
+    process.exit(1);
+  });
   return { config, logger };
+}
+
+/**
+ * Stops an HTTP server: no new connections, idle keep-alive connections closed now, in-flight
+ * requests allowed to finish for up to `graceMs`, then any connection still open is cut.
+ */
+export async function closeServer(server: Server, graceMs = 25_000): Promise<void> {
+  const closed = new Promise<void>((resolve, reject) => {
+    server.close((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+  // A keep-alive connection whose request finishes would otherwise stay open (and accept more
+  // requests) until its keep-alive timeout: ask clients to close, and close idle ones as they appear.
+  const closeAfterResponse = (_req: unknown, res: { setHeader(n: string, v: string): void }) => {
+    res.setHeader('Connection', 'close');
+  };
+  server.on('request', closeAfterResponse);
+  server.closeIdleConnections();
+  const sweep = setInterval(() => {
+    server.closeIdleConnections();
+  }, 100);
+  const timer = setTimeout(() => {
+    server.closeAllConnections();
+  }, graceMs);
+  try {
+    await closed;
+  } finally {
+    clearInterval(sweep);
+    clearTimeout(timer);
+    server.off('request', closeAfterResponse);
+  }
 }
 
 /** Runs `shutdown` once on SIGINT/SIGTERM; a second signal or a 35 s hang forces exit. */

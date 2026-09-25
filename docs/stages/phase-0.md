@@ -8,7 +8,7 @@
 - [x] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
 - [x] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [x] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, Mailpit (catches emails); optional MinIO profile for developers without S3; apps run on the host with `pnpm dev`
-- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe)
+- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe); smoke test that starts the built api and worker images and waits for `/api/health` 200 (a bundling bug once broke only the built app), and sends SIGTERM to check graceful shutdown
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
@@ -29,7 +29,7 @@
 - [x] P0-B8 OpenAPI generation (Zod 4 JSON Schema, validated against OpenAPI 3.1) served at `/api/docs` in dev
 - [x] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column
 - [x] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
-- [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
+- [x] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
 - [x] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
 - [ ] P0-B13 `packages/emails` base layout + auth/invitation templates
 
