@@ -20,6 +20,13 @@ const envSchema = z.object({
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).optional(),
   API_PORT: z.coerce.number().int().positive().default(3000),
   APP_URL: z.url().default('http://localhost:5173'),
+  /**
+   * Which proxies may set X-Forwarded-For (Express `trust proxy`): "loopback" (dev: the Vite
+   * proxy), a hop count such as "1" behind one load balancer, or comma-separated IPs/CIDRs.
+   */
+  TRUST_PROXY: z.string().default('loopback'),
+  /** Requests per minute per client IP on /api/v1. */
+  API_RATE_LIMIT_PER_MIN: z.coerce.number().int().positive().default(300),
 
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   DATABASE_POOL_SIZE: z.coerce.number().int().positive().default(10),
@@ -85,7 +92,7 @@ export interface Config {
   env: 'development' | 'test' | 'production';
   isProduction: boolean;
   logLevel: string;
-  api: { port: number };
+  api: { port: number; trustProxy: string | number; rateLimitPerMin: number };
   appUrl: string;
   db: { url: string; poolSize: number };
   redis: { url: string };
@@ -178,7 +185,11 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     env: e.NODE_ENV,
     isProduction: e.NODE_ENV === 'production',
     logLevel: e.LOG_LEVEL ?? (e.NODE_ENV === 'development' ? 'debug' : 'info'),
-    api: { port: e.API_PORT },
+    api: {
+      port: e.API_PORT,
+      trustProxy: /^\d+$/.test(e.TRUST_PROXY) ? Number(e.TRUST_PROXY) : e.TRUST_PROXY,
+      rateLimitPerMin: e.API_RATE_LIMIT_PER_MIN,
+    },
     appUrl: e.APP_URL,
     db: { url: e.DATABASE_URL, poolSize: e.DATABASE_POOL_SIZE },
     redis: { url: e.REDIS_URL },

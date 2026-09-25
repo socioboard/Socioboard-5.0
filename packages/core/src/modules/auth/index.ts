@@ -3,7 +3,7 @@
 import { toNodeHandler } from 'better-auth/node';
 import { Router } from 'express';
 
-import { notFound, type EventBus } from '../../platform';
+import { notFound, type EventBus, type SessionResolver } from '../../platform';
 import { createAuth, type Auth, type AuthDeps } from './auth';
 import type { AuthEvents } from './events';
 
@@ -19,6 +19,8 @@ export interface AuthModule {
    * through our /api/v1 routes so permissions, limits and audit logging stay in one place.
    */
   router: Router;
+  /** Reads the signed-in user from the request cookie, for the session middleware. */
+  resolveSession: SessionResolver;
 }
 
 export function createAuthModule(
@@ -30,5 +32,22 @@ export function createAuthModule(
     next(notFound('ROUTE_NOT_FOUND', 'Use the /api/v1/workspaces endpoints'));
   });
   router.all('/api/auth/{*path}', toNodeHandler(auth));
-  return { auth, router };
+
+  const resolveSession: SessionResolver = async (headers) => {
+    const found = await auth.api.getSession({ headers });
+    if (!found) return null;
+    const { user, session } = found;
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        emailVerified: user.emailVerified,
+        isPlatformAdmin: user.isPlatformAdmin === true,
+      },
+      session: { id: session.id, activeWorkspaceId: session.activeOrganizationId ?? null },
+    };
+  };
+
+  return { auth, router, resolveSession };
 }
