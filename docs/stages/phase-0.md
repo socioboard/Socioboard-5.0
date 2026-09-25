@@ -8,7 +8,7 @@
 - [x] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
 - [x] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [x] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, Mailpit (catches emails); optional MinIO profile for developers without S3; apps run on the host with `pnpm dev`
-- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images
+- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe)
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
@@ -24,7 +24,7 @@
 - [x] P0-B3 Middleware chain: requestId, rateLimit, session, workspace, requirePermission, validate, errorHandler
 - [x] P0-B4 `/api/v1/me`, avatar upload, sessions endpoints; first-user bootstrap
 - [x] P0-B5 Workspaces (incl. logo upload, transfer ownership), members, invitations (incl. public preview) endpoints + invitation email
-- [ ] P0-B6 Media upload (single PUT or multipart), complete, list, get, update, delete, folders; `media-process` job (dimensions, thumbnail)
+- [x] P0-B6 Media upload (single PUT or multipart), complete, list, get, update, delete, folders; `media-process` job (dimensions, thumbnail)
 - [ ] P0-B7 Audit `record()` + listeners for member events
 - [ ] P0-B8 OpenAPI generation (zod-to-openapi) served at `/api/docs` in dev
 - [ ] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column

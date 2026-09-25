@@ -1,9 +1,17 @@
-import { bootstrap, createPlatform, onShutdown, workspacePurgeQueue } from '@socioboard/core';
+import {
+  bootstrap,
+  createPlatform,
+  mediaProcessQueue,
+  onShutdown,
+  workspacePurgeQueue,
+} from '@socioboard/core';
 
 const { config, logger } = bootstrap('worker');
 const platform = createPlatform(config, logger);
 
 // Queue processors, one per module that owns background work.
+platform.queues.startWorker(mediaProcessQueue({ ...platform, tools: config.media }));
+
 const purge = workspacePurgeQueue(platform);
 platform.queues.startWorker(purge);
 // Nightly at 03:00 UTC; upserting keeps a single schedule however many workers start.
