@@ -16,7 +16,7 @@
 - [ ] P5-B4 Grace period, read-only mode, downgrade handling (pause over-limit accounts)
 - [ ] P5-B5 Admin v2: users (Better Auth admin plugin: search, ban, revoke sessions), workspaces (suspend, plan, trial, credits, **invoices and payment history from Stripe**), view-as (read-only), network quotas, AI costs, billing, flags, announcements, maintenance, abuse flags, audit
 - [ ] P5-B6 Compliance: data export, account deletion, workspace export, Meta data-deletion callback + status page, retention job
-- [ ] P5-B7 Security pass: rate limits review (client IP via `TRUST_PROXY` done in phase 0), CSP, CSRF, secrets audit, dependency scan
+- [ ] P5-B7 Security pass: rate limits review (client IP via `TRUST_PROXY` done in phase 0), CSP, CSRF, secrets audit, dependency scan; decide on sign-up email enumeration (Better Auth says an address is taken)
 - [ ] P5-B8 Prisma: Subscription, PlanLimit, CreditLedger, UsageRecord, Announcement, MaintenanceWindow, AbuseFlag, DataRequest
 - [ ] P5-B9 Email templates: payment failed, export ready, account deletion confirmation
 

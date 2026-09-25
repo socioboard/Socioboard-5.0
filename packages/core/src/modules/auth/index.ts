@@ -1,9 +1,11 @@
 // Public surface of the auth module (docs/backend/modules/auth.md). Other modules import only
 // from here.
+import { isAPIError } from 'better-auth/api';
 import { toNodeHandler } from 'better-auth/node';
 import { Router } from 'express';
 
 import {
+  conflict,
   notFound,
   typedEvents,
   type AuthContext,
@@ -82,12 +84,23 @@ export function createWorkspaceAuthPort(auth: Auth) {
       slug: string;
       timezone: string;
     }) {
-      const { headers, response } = await auth.api.createOrganization({
-        body: { name: input.name, slug: input.slug, timezone: input.timezone },
-        headers: input.headers,
-        returnHeaders: true,
-      });
-      return { id: response.id, setCookies: headers.getSetCookie() };
+      try {
+        const { headers, response } = await auth.api.createOrganization({
+          body: { name: input.name, slug: input.slug, timezone: input.timezone },
+          headers: input.headers,
+          returnHeaders: true,
+        });
+        return { id: response.id, setCookies: headers.getSetCookie() };
+      } catch (err) {
+        // Two requests racing for the same slug: our check passed for both, Better Auth caught one.
+        const code = isAPIError(err)
+          ? (err.body as { code?: string } | undefined)?.code
+          : undefined;
+        if (code === 'ORGANIZATION_SLUG_ALREADY_TAKEN' || code === 'ORGANIZATION_ALREADY_EXISTS') {
+          throw conflict('SLUG_TAKEN', 'That address is already taken');
+        }
+        throw err;
+      }
     },
     async setActiveWorkspace(headers: Headers, workspaceId: string) {
       const result = await auth.api.setActiveOrganization({

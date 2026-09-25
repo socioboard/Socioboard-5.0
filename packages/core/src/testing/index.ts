@@ -4,7 +4,8 @@ import { createHmac } from 'node:crypto';
 /** Latest email Mailpit received for `to` (polls briefly: auth emails are sent in the background). */
 export async function latestEmail(to: string, uiPort = process.env.MAILPIT_UI_PORT ?? '8025') {
   const base = `http://localhost:${uiPort}/api/v1`;
-  for (let i = 0; i < 40; i++) {
+  // Up to 15 s: busy test runs can delay delivery; returns as soon as the email arrives.
+  for (let i = 0; i < 150; i++) {
     const res = await fetch(`${base}/search?query=${encodeURIComponent(`to:"${to}"`)}&limit=1`);
     const body = (await res.json()) as { messages: { ID: string; Subject: string }[] };
     const first = body.messages[0];

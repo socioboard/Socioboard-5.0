@@ -29,14 +29,23 @@ export interface Platform {
   close(): Promise<void>;
 }
 
-export function createPlatform(config: Config, logger: Logger): Platform {
+export interface PlatformOptions {
+  /** Prefix for Valkey keys and queues; tests use their own so they don't touch dev data. */
+  prefix?: string;
+}
+
+export function createPlatform(
+  config: Config,
+  logger: Logger,
+  { prefix = 'sb' }: PlatformOptions = {},
+): Platform {
   const db = createDb({
     url: config.db.url,
     poolSize: config.db.poolSize,
     scopedModels: WORKSPACE_SCOPED_MODELS,
   });
-  const queues = createQueues({ url: config.redis.url, logger });
-  const kv = createKv({ url: config.redis.url });
+  const queues = createQueues({ url: config.redis.url, logger, prefix });
+  const kv = createKv({ url: config.redis.url, prefix: `${prefix}:` });
   const storage = config.storage ? createStorage(config.storage) : undefined;
   const mailer = createMailer({ smtpUrl: config.mail.smtpUrl, from: config.mail.from, logger });
 

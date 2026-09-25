@@ -8,7 +8,7 @@ The workspace media library: uploads straight from the browser to Amazon S3, met
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `MediaAsset` | id, workspaceId, name, folderId?, kind (image/video/gif), storageKey, mime, sizeBytes, width, height, durationSec, thumbnailKey, source (upload/ai/discovery), aiJobId?, altText?, status (uploading/processing/ready/failed), uploadId? (multipart), uploadedById, createdAt | Soft delete; files purged by a nightly job; `uploading` rows older than a day are abandoned and purged |
+| `MediaAsset` | id, workspaceId, name, folderId?, kind (image/video/gif), storageKey, mime, sizeBytes, width, height, durationSec, thumbnailKey, source (upload/ai/discovery), aiJobId?, altText?, status (uploading/processing/ready/failed), uploadId? (multipart), uploadedById, createdAt | Soft delete; files purged by the nightly `media-purge` (P1-B10), which also removes uploads left in `uploading` for over a day and aborts their multipart uploads |
 | `MediaFolder` | id, workspaceId, name, parentId? | Optional grouping |
 
 ## API
