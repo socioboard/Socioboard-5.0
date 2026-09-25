@@ -111,6 +111,18 @@ describe('seedDevData', () => {
     expect(signIn.status).toBe(200);
   });
 
+  it('completes sample media left unfinished by an interrupted run', async () => {
+    if (!t.platform.storage) return;
+    const scoped = t.db.forWorkspace(first.workspace.id);
+    await scoped.mediaAsset.deleteMany({ where: { name: 'Logo loop.gif' } });
+    const again = await seedDevData(platform, options);
+    expect(again.media).toBe(1);
+    const assets = await scoped.mediaAsset.findMany();
+    expect(assets).toHaveLength(4);
+    expect(assets.every((a) => a.status === 'ready')).toBe(true);
+    expect(await scoped.mediaFolder.count()).toBe(1);
+  });
+
   it('refuses to run in production', async () => {
     const production = { ...platform, config: { ...platform.config, isProduction: true } };
     await expect(seedDevData(production, options)).rejects.toThrow(/production/);
