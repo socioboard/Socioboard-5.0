@@ -14,13 +14,15 @@
     "migrate:deploy": "prisma migrate deploy",
     "studio": "prisma studio",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .turbo src/generated"
+    "clean": "rm -rf .turbo src/generated",
+    "test": "vitest run"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0"
   },
   "devDependencies": {
+    "@types/node": "^24.13.6",
     "prisma": "^7.10.0"
   }
 }

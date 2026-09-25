@@ -24,7 +24,10 @@
     "services:logs": "docker compose -f docker/compose.dev.yml --env-file .env logs -f",
     "services:reset": "docker compose -f docker/compose.dev.yml --env-file .env down -v",
     "generate": "turbo run generate",
-    "test:int": "turbo run test:int"
+    "test:int": "turbo run test:int",
+    "db:migrate": "pnpm --filter @socioboard/db migrate:dev",
+    "db:deploy": "pnpm --filter @socioboard/db migrate:deploy",
+    "db:studio": "pnpm --filter @socioboard/db studio"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -38,6 +41,7 @@
     "prettier": "^3.9.9",
     "turbo": "^2.11.3",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.70.1"
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.1"
   }
 }
