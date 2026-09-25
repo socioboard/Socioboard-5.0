@@ -23,18 +23,46 @@ export interface SeedOptions {
 export interface SeedResult {
   users: { email: string; role: Role; created: boolean }[];
   workspace: { id: string; slug: string; created: boolean };
-  /** Sample files added; "no-storage" when S3/MinIO isn't configured, "exists" when already seeded. */
+  /** Sample files added; "no-storage" when S3/MinIO isn't configured, "exists" when all are there. */
   media: number | 'no-storage' | 'exists';
 }
 
 const ROLES: readonly Role[] = ['owner', 'admin', 'editor', 'contributor', 'viewer'];
 
 /** Sample images drawn as SVG, so the seed needs no binary files in the repo. */
-const SAMPLES: { name: string; mime: MediaMime; width: number; height: number; hue: number }[] = [
-  { name: 'Launch banner.png', mime: 'image/png', width: 1200, height: 628, hue: 210 },
-  { name: 'Square post.jpg', mime: 'image/jpeg', width: 1080, height: 1080, hue: 330 },
-  { name: 'Story background.webp', mime: 'image/webp', width: 1080, height: 1920, hue: 150 },
-  { name: 'Logo loop.gif', mime: 'image/gif', width: 480, height: 480, hue: 40 },
+const SAMPLES: {
+  name: string;
+  mime: MediaMime;
+  width: number;
+  height: number;
+  hue: number;
+  inFolder: boolean;
+}[] = [
+  {
+    name: 'Launch banner.png',
+    mime: 'image/png',
+    width: 1200,
+    height: 628,
+    hue: 210,
+    inFolder: true,
+  },
+  {
+    name: 'Square post.jpg',
+    mime: 'image/jpeg',
+    width: 1080,
+    height: 1080,
+    hue: 330,
+    inFolder: true,
+  },
+  {
+    name: 'Story background.webp',
+    mime: 'image/webp',
+    width: 1080,
+    height: 1920,
+    hue: 150,
+    inFolder: false,
+  },
+  { name: 'Logo loop.gif', mime: 'image/gif', width: 480, height: 480, hue: 40, inFolder: false },
 ];
 const FOLDER = 'Brand kit';
 
@@ -136,36 +164,47 @@ export async function seedDevData(platform: Platform, options: SeedOptions): Pro
   if (!storage) {
     media = 'no-storage';
     logger.warn('S3 is not configured: skipping sample media');
-  } else if ((await scoped.mediaAsset.count()) > 0) {
-    media = 'exists';
   } else {
-    const folder = await scoped.mediaFolder.create({
-      data: { id: newId(), workspaceId, name: FOLDER },
-    });
-    const deps = { ...platform, tools: config.media };
-    for (const [i, s] of SAMPLES.entries()) {
-      const id = newId();
-      const bytes = await drawSample(s);
-      const key = mediaKeys(workspaceId, id, s.mime).original;
-      await storage.put(key, bytes, s.mime);
-      await scoped.mediaAsset.create({
-        data: {
-          id,
-          workspaceId,
-          name: s.name,
-          // The first two go in the folder, the rest stay at the top level.
-          folderId: i < 2 ? folder.id : null,
-          kind: MEDIA_MIME_KINDS[s.mime],
-          mime: s.mime,
-          storageKey: key,
-          sizeBytes: bytes.length,
-          status: 'processing',
-          uploadedById: owner.id,
-        },
-      });
-      await processMedia(deps, id, true);
+    // Adds whichever samples are missing (by name), so an interrupted run is completed next time.
+    const present = new Set(
+      (
+        await scoped.mediaAsset.findMany({
+          where: { name: { in: SAMPLES.map((s) => s.name) } },
+          select: { name: true },
+        })
+      ).map((a) => a.name),
+    );
+    const missing = SAMPLES.filter((s) => !present.has(s.name));
+    if (missing.length === 0) {
+      media = 'exists';
+    } else {
+      const folder =
+        (await scoped.mediaFolder.findFirst({ where: { name: FOLDER, parentId: null } })) ??
+        (await scoped.mediaFolder.create({ data: { id: newId(), workspaceId, name: FOLDER } }));
+      const deps = { ...platform, tools: config.media };
+      for (const s of missing) {
+        const id = newId();
+        const bytes = await drawSample(s);
+        const key = mediaKeys(workspaceId, id, s.mime).original;
+        await storage.put(key, bytes, s.mime);
+        await scoped.mediaAsset.create({
+          data: {
+            id,
+            workspaceId,
+            name: s.name,
+            folderId: s.inFolder ? folder.id : null,
+            kind: MEDIA_MIME_KINDS[s.mime],
+            mime: s.mime,
+            storageKey: key,
+            sizeBytes: bytes.length,
+            status: 'processing',
+            uploadedById: owner.id,
+          },
+        });
+        await processMedia(deps, id, true);
+      }
+      media = missing.length;
     }
-    media = SAMPLES.length;
   }
 
   return {

@@ -1,5 +1,5 @@
 import { createServer, request as httpRequest, type Server } from 'node:http';
-import type { AddressInfo } from 'node:net';
+import { connect, type AddressInfo } from 'node:net';
 
 import express from 'express';
 import request from 'supertest';
@@ -138,6 +138,30 @@ describe('closeServer', () => {
     // Its keep-alive connection is closed right after, not left open until the keep-alive timeout.
     expect(Date.now() - started).toBeLessThan(1_000);
     await expect(get(port)).rejects.toThrow();
+  });
+
+  it('handles a request answered synchronously during shutdown without crashing', async () => {
+    // Two pipelined requests on one connection: the second is handled while the server is
+    // closing, by a handler that responds synchronously (like Express routes that res.json()).
+    const { server, port } = await listen((req, res) => {
+      if (req.url === '/slow') setTimeout(() => res.end('slow'), 150);
+      else res.end('fast');
+    });
+    const socket = connect(port, '127.0.0.1');
+    let received = '';
+    socket.on('data', (c: Buffer) => (received += c.toString()));
+    const ended = new Promise((r) => socket.on('close', r));
+    await new Promise((r) => socket.on('connect', r));
+    socket.write('GET /slow HTTP/1.1\r\nHost: x\r\n\r\n');
+    await new Promise((r) => setTimeout(r, 50));
+    const closing = closeServer(server, 5_000);
+    // Sent after shutdown began, on a connection kept busy by /slow, so it isn't closed as idle.
+    socket.write('GET /fast HTTP/1.1\r\nHost: x\r\n\r\n');
+    await closing;
+    await ended;
+    expect(received).toContain('slow');
+    expect(received).toContain('fast');
+    expect(received).toMatch(/Connection: close/i);
   });
 
   it('cuts requests still running after the grace period', async () => {

@@ -1,4 +1,4 @@
-import type { Server } from 'node:http';
+import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
 import { ConfigError, loadConfig, type Config } from './config';
 import { createLogger, type Logger } from './logger';
@@ -50,10 +50,12 @@ export async function closeServer(server: Server, graceMs = 25_000): Promise<voi
   });
   // A keep-alive connection whose request finishes would otherwise stay open (and accept more
   // requests) until its keep-alive timeout: ask clients to close, and close idle ones as they appear.
-  const closeAfterResponse = (_req: unknown, res: { setHeader(n: string, v: string): void }) => {
-    res.setHeader('Connection', 'close');
+  // Prepended so it runs before the app's handler: a handler that answers synchronously has
+  // already sent its headers by the time a later listener runs, and setHeader would throw.
+  const closeAfterResponse = (_req: IncomingMessage, res: ServerResponse) => {
+    if (!res.headersSent) res.setHeader('Connection', 'close');
   };
-  server.on('request', closeAfterResponse);
+  server.prependListener('request', closeAfterResponse);
   server.closeIdleConnections();
   const sweep = setInterval(() => {
     server.closeIdleConnections();
