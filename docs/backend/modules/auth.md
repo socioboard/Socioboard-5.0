@@ -54,7 +54,7 @@ Request and response schemas: `packages/contracts/src/auth.ts`.
 - Google and Microsoft login register only if both their client ID and secret are set (Google always shows the account picker).
 - Better Auth's organization endpoints (`/api/auth/organization/*`) are not exposed: workspaces, members and invitations go through our `/api/v1` routes, which call Better Auth server-side, so permissions, limits and audit stay in one place.
 - Sessions are stored in Postgres (listed and revoked from `/me/sessions`) and cached in Valkey. Cookies use the `sb` prefix; OAuth tokens of login accounts are stored encrypted.
-- Auth emails are sent in the background, so response times don't reveal whether an address has an account. First versions are plain; P0-B13 moves them to React Email templates.
+- Auth emails are sent in the background, so response times don't reveal whether an address has an account. Templates live in `@socioboard/emails` (P0-B13).
 - Events: `user.signed_up` (user created), `user.signed_in` (session created), `user.password_changed` (reset or change).
 - Config: `AUTH_SECRET` (32+ characters; the example value is refused in production), `AUTH_BREACHED_PASSWORD_CHECK`, `GOOGLE_CLIENT_ID/SECRET`, `MICROSOFT_CLIENT_ID/SECRET/TENANT_ID`.
 - Emits `user.signed_up`, `user.signed_in`, `user.password_changed` (audit).

@@ -13,6 +13,7 @@
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "exactOptionalPropertyTypes": true,
+    "jsx": "react-jsx",
     "skipLibCheck": true,
     "noEmit": true
   }

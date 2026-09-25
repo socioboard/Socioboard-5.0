@@ -31,7 +31,7 @@
 - [x] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
 - [x] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
 - [x] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
-- [ ] P0-B13 `packages/emails` base layout + auth/invitation templates
+- [x] P0-B13 `packages/emails` base layout + auth/invitation templates
 
 ## Frontend
 - [ ] P0-F1 Vite app, TanStack Router/Query, typed API client, i18n setup, theme tokens (light/dark)
