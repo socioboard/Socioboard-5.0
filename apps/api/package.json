@@ -9,7 +9,8 @@
     "build": "tsdown",
     "start": "node dist/main.mjs",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist .turbo"
+    "clean": "rm -rf dist .turbo",
+    "seed": "tsx --env-file-if-exists=../../.env src/seed.ts"
   },
   "dependencies": {
     "@socioboard/contracts": "workspace:*",

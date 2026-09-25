@@ -28,7 +28,7 @@
 - [x] P0-B7 Audit `record()` + listeners for member events
 - [x] P0-B8 OpenAPI generation (Zod 4 JSON Schema, validated against OpenAPI 3.1) served at `/api/docs` in dev
 - [x] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column
-- [ ] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
+- [x] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
 - [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker
 - [x] P0-B12 `packages/contracts` base: `defineRoute`, permissions map, error envelope ([contracts](../backend/contracts.md))
 - [ ] P0-B13 `packages/emails` base layout + auth/invitation templates

@@ -125,7 +125,7 @@ Without a framework enforcing structure, we enforce it by convention and lint:
 | `apps/web` | React + Vite SPA: TanStack Router and Query, Tailwind + shadcn/ui, calendar and composer |
 | `apps/api` | Express 5 HTTP + Socket.IO entrypoint; mounts each module's routes |
 | `apps/worker` | Node process that runs the BullMQ processors and repeatable jobs, importing the same modules as api |
-| `packages/db` | Prisma schema, migrations, seed, generated client |
+| `packages/db` | Prisma schema, migrations, generated client (the seed runs through core: `pnpm db:seed`) |
 | `packages/core` | Domain modules shared by api and worker (posts, scheduling, accounts, media) |
 | `packages/providers` | One adapter per social network and per content source |
 | `packages/contracts` | Zod schemas and TS types shared by API and web; the OpenAPI spec is generated from these |

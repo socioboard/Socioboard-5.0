@@ -6,3 +6,4 @@ export * from './modules/audit';
 export * from './modules/auth';
 export * from './modules/media';
 export * from './modules/workspaces';
+export * from './seed';

@@ -27,6 +27,7 @@
     "test:int": "turbo run test:int",
     "db:migrate": "pnpm --filter @socioboard/db migrate:dev",
     "db:deploy": "pnpm --filter @socioboard/db migrate:deploy",
+    "db:seed": "pnpm --filter @socioboard/api seed",
     "db:studio": "pnpm --filter @socioboard/db studio"
   },
   "devDependencies": {
