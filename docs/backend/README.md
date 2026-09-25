@@ -93,7 +93,8 @@ per route signed in (401) → params (400) → workspace(:workspaceId) (404) →
 - The API warns at startup about contract routes that are not implemented yet; by the end of phase 0 every route is mounted.
 - `requireFeature` / `checkLimit` come from billing and always pass when billing is off.
 - Every Prisma call goes through a client extension that injects `workspaceId`; queries without a workspace scope fail in tests.
-- The extension does not see nested writes, so relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Never link rows by a foreign key alone.
+- The extension does not see nested writes, so relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Never link rows by a foreign key alone. On a workspace-scoped client, link rows by setting the foreign key field; nested relation writes (`connect`, `create`, …) are refused because a composite-key `connect` would move the row to the target's workspace.
+- **Tenant isolation harness** (`packages/core/src/__tests__/tenant-isolation.int.test.ts`): every contract route must be classified there; it attacks each one as a member of another workspace (outsider, foreign ids in path or body, list leaks) and checks the database layer.
 
 ## Permissions
 

@@ -72,6 +72,34 @@ describe('scopeArgs', () => {
     ).not.toThrow();
   });
 
+  it('refuses nested relation writes, which could move a row to another workspace', () => {
+    const connect = { folder: { connect: { id_workspaceId: { id: 'f', workspaceId: 'other' } } } };
+    expect(() => scopeArgs('update', { where: { id: 'a' }, data: connect }, W)).toThrow(
+      /Nested relation write on "folder"/,
+    );
+    expect(() => scopeArgs('create', { data: { name: 'x', ...connect } }, W)).toThrow(
+      TenantScopeError,
+    );
+    expect(() =>
+      scopeArgs(
+        'upsert',
+        { where: { id: 'a' }, create: {}, update: { workspace: { connect: { id: 'other' } } } },
+        W,
+      ),
+    ).toThrow(TenantScopeError);
+    // Plain values, dates, arrays and JSON are fine; so is setting the foreign key field.
+    expect(() =>
+      scopeArgs(
+        'update',
+        {
+          where: { id: 'a' },
+          data: { folderId: 'f', at: new Date(), tags: ['x'], meta: { note: 'y' } },
+        },
+        W,
+      ),
+    ).not.toThrow();
+  });
+
   it('fails closed on operations it does not know', () => {
     expect(() => scopeArgs('$queryRaw', {}, W)).toThrow(/not supported/);
   });
