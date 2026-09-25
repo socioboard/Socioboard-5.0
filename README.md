@@ -19,8 +19,17 @@ pnpm install
 cp .env.example .env      # fill in your S3 dev bucket, or enable the MinIO block
 pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI :8025), MinIO :9000 (console :9001) if enabled
 pnpm db:migrate           # create or update the database tables
+pnpm db:seed              # optional: demo users, workspace and media (see below)
 pnpm dev                  # api :3000, web :5173
 ```
+
+### Demo data
+
+`pnpm db:seed` adds one user per workspace role (`owner@socioboard.test`, `admin@`, `editor@`,
+`contributor@`, `viewer@`, all with the password in `SEED_PASSWORD`, default
+`socioboard-dev-password`), a **Demo Workspace** (`demo`) with all of them as members, and four
+sample images when storage is configured. On an empty database the owner becomes platform admin.
+Running it again only adds what is missing. It refuses to run with `NODE_ENV=production`.
 
 ## Commands
 
@@ -30,6 +39,7 @@ pnpm dev                  # api :3000, web :5173
 | `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit              |
 | `pnpm services:reset`                | Stop services and delete their data                           |
 | `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data |
+| `pnpm db:seed`                       | Add development data (safe to run again)                      |
 | `pnpm dev`                           | Run api, worker and web in watch mode                         |
 | `pnpm build`                         | Build every app                                               |
 | `pnpm typecheck`                     | Type-check every workspace                                    |

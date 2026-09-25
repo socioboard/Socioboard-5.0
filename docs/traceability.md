@@ -17,7 +17,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | --- | --- | --- | --- |
 | Platform (config, logger, http, queue, storage, mailer, events, crypto, clock) | `packages/core/src/platform` | [platform](backend/modules/platform.md) | 0 · P0-I5, P0-B3, P0-B8 (OpenAPI), P0-B9 (tenant-isolation harness), P0-B11 · 5 · P5-B7 (security pass) |
 | Platform realtime + flags | `packages/core/src/platform` | [platform](backend/modules/platform.md) | 2 · P2-B11 |
-| Database schema, migrations, seeds | `packages/db` | [platform](backend/modules/platform.md) | 0 · P0-B1, P0-B10; each phase adds its tables (P1-B1, P2-B1, P4-B1, P5-B8, P6-B1) |
+| Database schema, migrations, seeds | `packages/db`; seed in `packages/core/src/seed.ts` | [platform](backend/modules/platform.md) | 0 · P0-B1, P0-B10; each phase adds its tables (P1-B1, P2-B1, P4-B1, P5-B8, P6-B1) |
 | Contracts | `packages/contracts` | [contracts](backend/contracts.md) | 0 · P0-B12, P0-C1–C2 · 1 · P1-C1–C2 · 2 · P2-C1–C3 · 3 · P3-C1 · 4 · P4-C1–C2 · 5 · P5-C1 · 6.1 · P6-C1 |
 | Email templates | `packages/emails` | [platform](backend/modules/platform.md) | 0 · P0-B13; 2 · P2-B12; 4 · P4-B11; 5 · P5-B9; 6.1 · P6-B11 |
 | Design system | `packages/ui` | [design system](frontend/design-system.md) | 0 · P0-F2, P0-F8; 1 · P1-F9; 4 · P4-F7; 5 · P5-F6; 6.1 · P6-F8 |
