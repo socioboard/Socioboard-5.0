@@ -1,4 +1,4 @@
-// Shared test utilities (Mailpit, TOTP). Only tests import this folder.
+// Shared test utilities (Mailpit, TOTP, a full test app). Only tests import this folder.
 import { createHmac } from 'node:crypto';
 
 /** Latest email Mailpit received for `to` (polls briefly: auth emails are sent in the background). */
@@ -48,3 +48,5 @@ export function totp(base32Secret: string, now = Date.now()): string {
   const code = (hmac.readUInt32BE(offset) & 0x7fffffff) % 1_000_000;
   return code.toString().padStart(6, '0');
 }
+
+export { createTestApp } from './app';

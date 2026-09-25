@@ -80,8 +80,11 @@ module.exports = {
     {
       name: 'not-to-dev-dep',
       severity: 'error',
-      comment: 'Runtime code must not import devDependencies.',
-      from: { path: '^(apps|packages)/[^/]+/src/', pathNot: '__tests__|\\.test\\.tsx?$' },
+      comment: 'Runtime code must not import devDependencies (tests and src/testing may).',
+      from: {
+        path: '^(apps|packages)/[^/]+/src/',
+        pathNot: '__tests__|\\.test\\.tsx?$|/src/testing/',
+      },
       to: { dependencyTypes: ['npm-dev'], dependencyTypesNot: ['type-only'] },
     },
     {
