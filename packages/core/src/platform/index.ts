@@ -5,6 +5,8 @@ export * from './crypto';
 export * from './db';
 export * from './events';
 export * from './http';
+export * from './ids';
+export * from './kv';
 export * from './logger';
 export * from './mailer';
 export * from './queue';

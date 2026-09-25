@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-/** Dev-only key shipped in .env.example; rejected in production. */
+/** Dev-only values shipped in .env.example; rejected in production. */
 export const EXAMPLE_ENCRYPTION_KEY = 'ZGV2LW9ubHkta2V5LW5vdC1mb3ItcHJvZHVjdGlvbiE=';
+export const EXAMPLE_AUTH_SECRET = 'dev-only-auth-secret-do-not-use-in-production';
 
 const optional = z
   .string()
@@ -55,6 +56,20 @@ const envSchema = z.object({
       return keys;
     }),
 
+  /** Signs sessions and auth tokens; at least 32 characters. */
+  AUTH_SECRET: z.string().min(32, 'must be at least 32 characters'),
+  /** Check new passwords against the Have I Been Pwned range API (off for offline installs). */
+  AUTH_BREACHED_PASSWORD_CHECK: z
+    .enum(['true', 'false', '1', '0', ''])
+    .optional()
+    .transform((v) => v === undefined || v === '' || v === 'true' || v === '1'),
+  GOOGLE_CLIENT_ID: optional,
+  GOOGLE_CLIENT_SECRET: optional,
+  MICROSOFT_CLIENT_ID: optional,
+  MICROSOFT_CLIENT_SECRET: optional,
+  /** "common" (any Microsoft account) unless limited to one tenant. */
+  MICROSOFT_TENANT_ID: z.string().default('common'),
+
   STRIPE_SECRET_KEY: optional,
   AI_SERVICE_URL: optional,
 });
@@ -86,6 +101,13 @@ export interface Config {
       }
     | undefined;
   encryption: { keys: EncryptionKey[] };
+  auth: {
+    secret: string;
+    breachedPasswordCheck: boolean;
+    /** Social sign-in providers register only when both id and secret are set. */
+    google: { clientId: string; clientSecret: string } | undefined;
+    microsoft: { clientId: string; clientSecret: string; tenantId: string } | undefined;
+  };
   /** Features switch on when their keys are present (self-host without Stripe = no billing). */
   billing: { enabled: boolean };
   ai: { enabled: boolean; url: string | undefined };
@@ -118,6 +140,14 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     raw('ENCRYPTION_KEYS')?.includes(EXAMPLE_ENCRYPTION_KEY)
   ) {
     problems.push('ENCRYPTION_KEYS: the example dev key must not be used in production');
+  }
+  if (raw('NODE_ENV') === 'production' && raw('AUTH_SECRET') === EXAMPLE_AUTH_SECRET) {
+    problems.push('AUTH_SECRET: the example dev secret must not be used in production');
+  }
+  for (const provider of ['GOOGLE', 'MICROSOFT']) {
+    if (Boolean(raw(`${provider}_CLIENT_ID`)) !== Boolean(raw(`${provider}_CLIENT_SECRET`))) {
+      problems.push(`${provider}_CLIENT_ID and ${provider}_CLIENT_SECRET must be set together`);
+    }
   }
 
   const parsed = envSchema.safeParse(source);
@@ -155,6 +185,22 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     mail: { smtpUrl: e.SMTP_URL, from: e.MAIL_FROM },
     storage,
     encryption: { keys: e.ENCRYPTION_KEYS },
+    auth: {
+      secret: e.AUTH_SECRET,
+      breachedPasswordCheck: e.AUTH_BREACHED_PASSWORD_CHECK,
+      google:
+        e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET
+          ? { clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET }
+          : undefined,
+      microsoft:
+        e.MICROSOFT_CLIENT_ID && e.MICROSOFT_CLIENT_SECRET
+          ? {
+              clientId: e.MICROSOFT_CLIENT_ID,
+              clientSecret: e.MICROSOFT_CLIENT_SECRET,
+              tenantId: e.MICROSOFT_TENANT_ID,
+            }
+          : undefined,
+    },
     billing: { enabled: Boolean(e.STRIPE_SECRET_KEY) },
     ai: { enabled: Boolean(e.AI_SERVICE_URL), url: e.AI_SERVICE_URL },
   };
