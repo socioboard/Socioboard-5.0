@@ -52,6 +52,10 @@ export interface Storage {
   presignGet(key: string, expiresInSec?: number): Promise<string>;
   head(key: string): Promise<ObjectInfo | undefined>;
   delete(key: string): Promise<void>;
+  /** Server-side write (thumbnails and other generated files). */
+  put(key: string, body: Buffer, contentType: string): Promise<void>;
+  /** Server-side read into memory; refuses objects larger than `maxBytes`. */
+  getBytes(key: string, maxBytes: number): Promise<Buffer>;
   /** Bucket reachable with our credentials (health endpoint). */
   ping(): Promise<boolean>;
   close(): void;
@@ -131,6 +135,24 @@ export function createStorage(config: StorageConfig): Storage {
         if (err instanceof NotFound) return undefined;
         throw err;
       }
+    },
+
+    async put(key, body, contentType) {
+      await client.send(
+        new PutObjectCommand({ Bucket, Key: key, Body: body, ContentType: contentType }),
+      );
+    },
+
+    async getBytes(key, maxBytes) {
+      const res = await client.send(new GetObjectCommand({ Bucket, Key: key }));
+      if ((res.ContentLength ?? 0) > maxBytes) {
+        res.Body?.transformToWebStream()
+          .cancel()
+          .catch(() => undefined);
+        throw new Error(`Object ${key} is larger than ${String(maxBytes)} bytes`);
+      }
+      if (!res.Body) throw new Error(`Object ${key} has no body`);
+      return Buffer.from(await res.Body.transformToByteArray());
     },
 
     async delete(key) {

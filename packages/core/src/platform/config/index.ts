@@ -102,6 +102,10 @@ const envSchema = z.object({
   /** "common" (any Microsoft account) unless limited to one tenant. */
   MICROSOFT_TENANT_ID: z.string().default('common'),
 
+  /** ffmpeg/ffprobe for video duration and thumbnails; without them videos get neither. */
+  FFMPEG_PATH: z.string().default('ffmpeg'),
+  FFPROBE_PATH: z.string().default('ffprobe'),
+
   STRIPE_SECRET_KEY: optional,
   AI_SERVICE_URL: optional,
 });
@@ -133,6 +137,7 @@ export interface Config {
       }
     | undefined;
   encryption: { keys: EncryptionKey[] };
+  media: { ffmpegPath: string; ffprobePath: string };
   auth: {
     secret: string;
     breachedPasswordCheck: boolean;
@@ -226,6 +231,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     mail: { smtpUrl: e.SMTP_URL, from: e.MAIL_FROM },
     storage,
     encryption: { keys: e.ENCRYPTION_KEYS },
+    media: { ffmpegPath: e.FFMPEG_PATH, ffprobePath: e.FFPROBE_PATH },
     auth: {
       secret: e.AUTH_SECRET,
       breachedPasswordCheck: e.AUTH_BREACHED_PASSWORD_CHECK,

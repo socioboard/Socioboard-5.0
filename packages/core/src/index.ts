@@ -2,4 +2,5 @@
 export * from './platform';
 
 export * from './modules/auth';
+export * from './modules/media';
 export * from './modules/workspaces';

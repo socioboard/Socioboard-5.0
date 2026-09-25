@@ -3,16 +3,19 @@ import {
   bootstrap,
   createApiRouter,
   createAuthModule,
+  createMediaService,
   createWorkspaceAuthPort,
   createWorkspaceService,
   createErrorHandler,
   createMembershipLookup,
   createMeService,
   createPlatform,
+  mediaProcessQueue,
   notFoundHandler,
   onShutdown,
   originCheck,
   registerAuthRoutes,
+  registerMediaRoutes,
   registerWorkspaceRoutes,
   rateLimit,
   requestId,
@@ -51,6 +54,23 @@ registerWorkspaceRoutes(
     appUrl: config.appUrl,
     // Verification can only be required when the server can send the email.
     requireVerifiedEmail: Boolean(config.mail.smtpUrl),
+  }),
+);
+const mediaProcess = mediaProcessQueue({ ...platform, tools: config.media });
+registerMediaRoutes(
+  api,
+  createMediaService({
+    db: platform.db,
+    storage: platform.storage,
+    clock: platform.clock,
+    logger,
+    events: platform.events,
+    // One job per asset: completing the same upload twice can't queue it twice.
+    enqueueProcessing: async (assetId) => {
+      await platform.queues
+        .get(mediaProcess)
+        .add('process', { assetId }, { jobId: `media-${assetId}` });
+    },
   }),
 );
 

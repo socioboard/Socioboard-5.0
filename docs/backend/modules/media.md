@@ -35,10 +35,14 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 - `prepareVariant(assetId, rules)`: resize or transcode for a network (called from publishing's `media-prepare`).
 
 ## Jobs
-- `media-process`: read dimensions/duration (sharp, ffprobe), make a thumbnail, mark `ready`.
+- `media-process` (P0-B6): images and GIFs through sharp (dimensions as displayed, EXIF rotation applied; first frame of GIFs); videos through ffprobe (dimensions, duration) and ffmpeg (a frame 1 s in), both reading a signed URL so large files never load into memory. Stores a 480 px WebP thumbnail and marks the asset `ready`. 3 attempts with backoff; after the last it marks the asset `failed`. One job per asset (job id `media-<assetId>`). Without ffprobe/ffmpeg (`FFPROBE_PATH`, `FFMPEG_PATH`) videos become `ready` without duration or thumbnail and the worker logs a warning.
 - `media-purge` (nightly): delete storage objects for soft-deleted assets older than 7 days.
 
 ## Rules
+- Files live under `workspaces/<workspaceId>/media/<assetId>/` (`original.<ext>`, `thumb.webp`), so a workspace's files share one prefix.
+- Uploads up to 16 MB use one presigned PUT locked to the declared size and type; larger files use multipart (16 MB parts). `complete` checks the stored object's size and type against what was declared (else 422 `UPLOAD_INVALID` and the asset is `failed`), and only one `complete` moves it to `processing`.
+- Deleting is soft; phase 1 adds the "used by a scheduled post" block (`MEDIA_IN_USE`) and `media-purge` for the stored files.
+- Error codes: `STORAGE_NOT_CONFIGURED`, `MEDIA_NOT_FOUND`, `FOLDER_NOT_FOUND`, `FOLDER_CYCLE`, `UPLOAD_ALREADY_COMPLETED`, `PARTS_REQUIRED`, `UPLOAD_INCOMPLETE`, `UPLOAD_INVALID`, `INVALID_CURSOR`.
 - Allowed: JPEG, PNG, WebP, GIF, MP4, MOV. Max 20 MB per image, 1 GB per video (configurable).
 - Objects are private; the browser views them through signed URLs.
 - Storage used counts against `checkLimit('storage')` when billing is on.
