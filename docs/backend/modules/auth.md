@@ -23,16 +23,16 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 | --- | --- | --- | --- |
 | GET | `/api/v1/me` | signed in | Current user, memberships, active workspace |
 | PATCH | `/api/v1/me` | signed in | Update name, avatar (`avatarKey`), timezone, locale |
-| POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB); then PATCH `avatarKey` |
-| POST | `/api/v1/me/active-workspace` | signed in | Switch the active workspace |
+| POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB; the URL only accepts the declared size); then PATCH `avatarKey`, which checks the object exists under the caller's own prefix. Replacing or removing an avatar deletes the old file. 503 `STORAGE_NOT_CONFIGURED` without S3/MinIO |
+| POST | `/api/v1/me/active-workspace` | signed in | Switch the active workspace (404 if not a member); `/me` reports null when the active one was deleted or left |
 | GET | `/api/v1/me/sessions` | signed in | List active sessions |
-| DELETE | `/api/v1/me/sessions/:sessionId` | signed in | Revoke a session |
+| DELETE | `/api/v1/me/sessions/:sessionId` | signed in | Revoke one of your own sessions (another user's id is 404) |
 
 Request and response schemas: `packages/contracts/src/auth.ts`.
 
 ## Services
 - `getSession(req)`: used by the `session` middleware.
-- `bootstrapFirstUser()`: on an empty install, the first registered user becomes platform admin and workspace owner.
+- `promoteFirstUser()`: on an empty install, the first registered user becomes platform admin (they become workspace owner by creating the first workspace). Runs after every sign-up under a Postgres advisory lock and promotes only if no admin exists and the user is the oldest account, so racing first sign-ups yield exactly one admin and an install that lost its admin never promotes a later sign-up (restore an admin with SQL instead).
 - `sendVerificationEmail`, `sendResetEmail`, `sendMagicLink`: through `platform/mailer`. If no SMTP is configured, the link is written to the server log (self-host convenience).
 
 ## Better Auth plugins used

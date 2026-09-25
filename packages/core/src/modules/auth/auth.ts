@@ -16,6 +16,7 @@ import {
   type MailMessage,
   type Mailer,
 } from '../../platform';
+import { promoteFirstUser } from './bootstrap';
 import * as emails from './emails';
 import type { AuthEvents } from './events';
 import { workspaceAc, workspaceRoles } from './roles';
@@ -127,6 +128,7 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
       user: {
         create: {
           after: async (user) => {
+            await promoteFirstUser(db, user.id, logger);
             await events.emit('user.signed_up', { userId: user.id, email: user.email });
           },
         },

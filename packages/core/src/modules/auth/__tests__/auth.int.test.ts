@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { WORKSPACE_SCOPED_MODELS } from '@socioboard/db';
 import express from 'express';
 import request from 'supertest';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import {
   createDb,
@@ -71,6 +71,14 @@ async function signUp(label: string) {
   await clearEmails(address);
   return { c, address, userId: (res.body as { user: { id: string } }).user.id };
 }
+
+// An existing platform admin, so the first-user bootstrap never promotes this file's users
+// (that behaviour has its own test on an empty database).
+beforeAll(async () => {
+  await db.client.user.create({
+    data: { name: 'Guard', email: `guard-${run}@example.test`, isPlatformAdmin: true },
+  });
+});
 
 beforeEach(() => {
   emitted.length = 0;

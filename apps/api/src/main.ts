@@ -5,10 +5,12 @@ import {
   createAuthModule,
   createErrorHandler,
   createMembershipLookup,
+  createMeService,
   createPlatform,
   notFoundHandler,
   onShutdown,
   originCheck,
+  registerAuthRoutes,
   rateLimit,
   requestId,
   requestLogger,
@@ -20,8 +22,19 @@ const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
 const authModule = createAuthModule(platform);
-const api = createApiRouter({ lookupMembership: createMembershipLookup(platform.db) });
-// Module routes are mounted on `api` from P0-B4 onward.
+const lookupMembership = createMembershipLookup(platform.db);
+const api = createApiRouter({ lookupMembership });
+registerAuthRoutes(
+  api,
+  createMeService({
+    auth: authModule.auth,
+    db: platform.db,
+    storage: platform.storage,
+    lookupMembership,
+    clock: platform.clock,
+    logger,
+  }),
+);
 
 const app = express();
 app.disable('x-powered-by');
