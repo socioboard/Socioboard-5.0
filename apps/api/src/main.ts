@@ -27,6 +27,8 @@ import {
 } from '@socioboard/core';
 import express from 'express';
 
+import { createDocsRouter } from './docs';
+
 const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
@@ -102,6 +104,9 @@ app.use(api.router);
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
+
+// API reference generated from the contracts: development only.
+if (!config.isProduction) app.use(createDocsRouter());
 
 app.use('/api', notFoundHandler);
 app.use(createErrorHandler(logger));

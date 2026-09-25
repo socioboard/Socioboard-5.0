@@ -32,7 +32,7 @@ export const createPost = defineRoute({
 - `responses` maps success statuses to schemas; `null` means no body (204).
 - Backend: `router.route(createPost, handler)` applies `validate()` + `requirePermission()` from the definition.
 - Frontend: the typed client is generated from the same definitions (`api.posts.create({ workspaceId, body })`).
-- OpenAPI: generated from the definitions with zod-to-openapi.
+- OpenAPI: `buildOpenApi(apiRoutes)` turns the definitions into an OpenAPI 3.1 document with Zod 4's built-in JSON Schema output (request schemas as clients send them, responses as the API returns them; each operation carries `x-access`). A test validates it against the official OpenAPI 3.1 schema. The API serves it in development at `/api/docs/openapi.json`, with a browsable reference at `/api/docs`; production doesn't serve it. Better Auth's `/api/auth/*` endpoints are not in it.
 
 ## Rules
 - Changing a contract is a reviewed change; breaking changes need both sides updated in the same PR.

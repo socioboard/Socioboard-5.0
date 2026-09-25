@@ -148,7 +148,7 @@ The stack below includes the agreed decisions (React + Vite, Node TS, Postgres +
 | Routing / data* | TanStack Router + TanStack Query | Type-safe routes; caching and invalidation for server data |
 | UI | Tailwind CSS + shadcn/ui, FullCalendar for the calendar | Decided: no designer, so we build our own design system (tokens + components) on shadcn/ui; it can be re-skinned later |
 | Backend | Express 5 on Node 24 LTS, TypeScript | Agreed. Familiar to the team; Express 5 handles async errors properly. Structure comes from our module convention (below) |
-| API docs | `zod-to-openapi` | OpenAPI spec generated from the same Zod schemas that validate requests |
+| API docs | OpenAPI 3.1 from Zod 4's built-in JSON Schema (`buildOpenApi` in contracts; `zod-to-openapi` was the plan, not needed) | Generated from the same Zod schemas that validate requests, so it can't drift; validated against the official OpenAPI 3.1 schema in tests |
 | Validation* | Zod schemas shared in `packages/contracts` | One schema validates both the web forms and the API |
 | Database | PostgreSQL 17+ + Prisma | Agreed. Replaces MySQL + MongoDB; JSONB covers the flexible per-network payloads |
 | Queue / jobs | BullMQ on a Redis-compatible store (Valkey 8 by default; Redis works too) | Agreed. Delayed jobs, retries with backoff, per-queue rate limits, repeatable cron jobs. Valkey is BSD-licensed, which avoids Redis 8's license terms for self-hosters |

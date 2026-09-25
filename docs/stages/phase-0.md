@@ -26,7 +26,7 @@
 - [x] P0-B5 Workspaces (incl. logo upload, transfer ownership), members, invitations (incl. public preview) endpoints + invitation email
 - [x] P0-B6 Media upload (single PUT or multipart), complete, list, get, update, delete, folders; `media-process` job (dimensions, thumbnail)
 - [x] P0-B7 Audit `record()` + listeners for member events
-- [ ] P0-B8 OpenAPI generation (zod-to-openapi) served at `/api/docs` in dev
+- [x] P0-B8 OpenAPI generation (Zod 4 JSON Schema, validated against OpenAPI 3.1) served at `/api/docs` in dev
 - [ ] P0-B9 Tenant isolation test harness: every endpoint from a second workspace returns 404/empty; nested `connect` and foreign-key writes across workspaces are rejected; `WORKSPACE_SCOPED_MODELS` matches every model with a `workspaceId` column
 - [ ] P0-B10 Seed scripts: dev users (one per role), demo workspace, sample media ([platform](../backend/modules/platform.md))
 - [ ] P0-B11 `/api/health` (db, Valkey, storage), graceful shutdown for api and worker

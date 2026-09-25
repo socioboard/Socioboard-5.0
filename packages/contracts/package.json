@@ -15,5 +15,8 @@
   },
   "dependencies": {
     "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@seriousme/openapi-schema-validator": "^2.10.0"
   }
 }
