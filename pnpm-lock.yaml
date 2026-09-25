@@ -163,6 +163,9 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1(supports-color@7.2.0)
+      sharp:
+        specifier: ~0.35.4
+        version: 0.35.4(@types/node@24.13.6)
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -216,6 +219,9 @@ importers:
       '@socioboard/providers':
         specifier: workspace:*
         version: link:../../packages/providers
+      sharp:
+        specifier: ~0.35.4
+        version: 0.35.4(@types/node@24.13.6)
     devDependencies:
       tsdown:
         specifier: ^0.23.0
