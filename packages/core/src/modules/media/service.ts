@@ -125,8 +125,9 @@ export function createMediaService(deps: MediaServiceDeps) {
     member: MemberContext,
     body: z.infer<typeof CreateUploadBody>,
   ): Promise<{ asset: MediaAsset; upload: UploadInstructions; expiresAt: string }> {
-    const store = requireStorage();
+    // References first, so a foreign folder is "not found" whether or not storage is set up.
     if (body.folderId) await assertFolder(member, body.folderId);
+    const store = requireStorage();
     const id = newId();
     const keys = mediaKeys(member.workspaceId, id, body.mime);
     const multipart = body.sizeBytes > MULTIPART_THRESHOLD_BYTES;
@@ -181,8 +182,8 @@ export function createMediaService(deps: MediaServiceDeps) {
     assetId: string,
     parts: { partNumber: number; etag: string }[] | undefined,
   ): Promise<MediaAsset> {
-    const store = requireStorage();
     const asset = await findAsset(member, assetId);
+    const store = requireStorage();
     if (asset.status !== 'uploading') {
       throw unprocessable('UPLOAD_ALREADY_COMPLETED', 'This upload was already completed');
     }

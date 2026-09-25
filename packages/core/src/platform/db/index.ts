@@ -32,8 +32,46 @@ const WHERE_OPS = new Set([
 const UNIQUE_WHERE_OPS = new Set(['findUnique', 'findUniqueOrThrow', 'update', 'delete']);
 const CREATE_MANY_OPS = new Set(['createMany', 'createManyAndReturn']);
 
+/** Prisma's nested relation operations inside `data`. */
+const RELATION_OPS = new Set([
+  'connect',
+  'connectOrCreate',
+  'create',
+  'createMany',
+  'set',
+  'disconnect',
+  'delete',
+  'deleteMany',
+  'update',
+  'updateMany',
+  'upsert',
+]);
+
+/**
+ * Refuses nested relation writes. Connecting a relation whose foreign key includes workspaceId
+ * copies the target's workspaceId onto the row, silently moving it to another workspace; the
+ * foreign key can't catch that because the result is consistent. Set the foreign key field
+ * (e.g. `folderId`) instead: the composite key then rejects a foreign workspace's id.
+ */
+function assertNoNestedWrites(row: Args) {
+  for (const [field, value] of Object.entries(row)) {
+    if (
+      value !== null &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      !(value instanceof Date) &&
+      Object.keys(value).some((k) => RELATION_OPS.has(k))
+    ) {
+      throw new TenantScopeError(
+        `Nested relation write on "${field}" is not allowed on a workspace-scoped client; set the foreign key field instead`,
+      );
+    }
+  }
+}
+
 function stampData(data: unknown, workspaceId: string): Args {
   const row = (data ?? {}) as Args;
+  assertNoNestedWrites(row);
   if (row.workspaceId !== undefined && row.workspaceId !== workspaceId) {
     throw new TenantScopeError('Cannot write a row for another workspace');
   }
@@ -42,6 +80,7 @@ function stampData(data: unknown, workspaceId: string): Args {
 
 function guardUpdate(data: unknown, workspaceId: string): unknown {
   const row = (data ?? {}) as Args;
+  assertNoNestedWrites(row);
   if (row.workspaceId !== undefined && row.workspaceId !== workspaceId) {
     throw new TenantScopeError('Cannot move a row to another workspace');
   }
