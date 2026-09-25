@@ -106,6 +106,9 @@ const envSchema = z.object({
   FFMPEG_PATH: z.string().default('ffmpeg'),
   FFPROBE_PATH: z.string().default('ffprobe'),
 
+  /** How long audit entries are kept (2 years on the hosted cloud). */
+  AUDIT_RETENTION_DAYS: z.coerce.number().int().positive().default(730),
+
   STRIPE_SECRET_KEY: optional,
   AI_SERVICE_URL: optional,
 });
@@ -138,6 +141,7 @@ export interface Config {
     | undefined;
   encryption: { keys: EncryptionKey[] };
   media: { ffmpegPath: string; ffprobePath: string };
+  audit: { retentionDays: number };
   auth: {
     secret: string;
     breachedPasswordCheck: boolean;
@@ -232,6 +236,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     storage,
     encryption: { keys: e.ENCRYPTION_KEYS },
     media: { ffmpegPath: e.FFMPEG_PATH, ffprobePath: e.FFPROBE_PATH },
+    audit: { retentionDays: e.AUDIT_RETENTION_DAYS },
     auth: {
       secret: e.AUTH_SECRET,
       breachedPasswordCheck: e.AUTH_BREACHED_PASSWORD_CHECK,
