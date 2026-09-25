@@ -12,7 +12,7 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | CI | GitHub Actions: install → lint → typecheck → unit → integration (Postgres/Valkey services) → build images → Playwright E2E on PRs to main | 0 | P0-I4 |
 | Dev tunnels | Cloudflare Tunnel: `dev1..dev3.dev.socioboard.com` | 0 | P0-I8 |
 | Staging | `app.staging.socioboard.com`, `media.staging.socioboard.com`; auto-deploy from `main` | 0 | P0-I7 |
-| Backups | Daily + point-in-time Postgres backups; storage bucket versioning; one tested restore | 0 (staging), 5 (production) | P0-I6, P5-I1 |
+| Backups | Daily + point-in-time Postgres backups; storage bucket versioning; one tested restore; bucket lifecycle rule aborting incomplete multipart uploads after 1 day | 0 (staging), 5 (production) | P0-I6, P5-I1 |
 | Secrets | Env files locally; secret manager in staging/production; no secrets in the repo (gitleaks in CI) | 0 | P0-I4 |
 | Dependency hygiene | Renovate, CodeQL, SBOM on release | 0 (Renovate, CodeQL), 5 (SBOM) | P0-I4, P5-I5 |
 | Observability | Sentry (api, worker, web), OpenTelemetry traces → Grafana, uptime checks, alerts for failed-publish spikes and queue backlog | 2 (Sentry), 5 (full) | P2-I1, P5-I2 |

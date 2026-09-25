@@ -56,6 +56,8 @@ packages/core/src/modules/posts/
 
 Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod), shared with the frontend.
 
+**Composition root:** `createApiApp(platform)` in `packages/core/src/app.ts` builds the whole API (modules, routes, request pipeline). `apps/api` runs it and integration tests build the same app through `createTestApp()`, so tests exercise the real wiring.
+
 **Wiring:** each module exports a `createXModule(deps)` factory that receives its dependencies (db, queue, storage, other modules' services, config). `apps/api` and `apps/worker` call the factories at startup. No module creates its own singletons.
 
 **Boundaries:** a module imports another module only through its `index.ts`. `dependency-cruiser` fails CI on any deep import or circular dependency.
@@ -68,6 +70,7 @@ Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod),
 - **Time:** ISO-8601 UTC in and out. The client converts to the workspace or user timezone.
 - **Success:** return the resource (or `{ items, nextCursor }` for lists) with 200/201; 204 for deletes.
 - **Pagination:** cursor-based, `?cursor=<opaque>&limit=<1..100>` (default 25).
+- **Errors from below the service layer:** a database constraint that answers first (usually a race) becomes 409 `ALREADY_EXISTS` / `REFERENCE_CONFLICT` or 404 `NOT_FOUND`; errors carrying their own 4xx status (Better Auth's) keep it and their code; anything else is a logged 500 with no details.
 - **Errors:** always `{ "error": { "code": "POST_NOT_FOUND", "message": "…", "details": { … } } }`. Codes are `SCREAMING_SNAKE`, defined per module. HTTP status: 400 validation, 401 no session, 403 no permission or plan limit, 404 not found or not in workspace, 409 conflict, 422 business-rule violation, 429 rate limit.
 - **Idempotency:** POSTs that create external side effects (publish now, AI generate) accept an `Idempotency-Key` header.
 
