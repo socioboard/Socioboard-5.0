@@ -31,7 +31,7 @@ import {
   type MemberContext,
   type Storage,
 } from '../../platform';
-import { invitationEmail } from './emails';
+import { invitation as invitationEmail } from '@socioboard/emails';
 import type { WorkspaceEvents } from './events';
 
 /** The two Better Auth calls this module needs; passed in so modules don't import each other's internals. */
@@ -464,16 +464,14 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
       },
       include: { inviter: true },
     });
-    mailer
-      .send(
-        invitationEmail({
-          to: body.email,
-          inviter: caller.user.name,
-          workspace: workspace.name,
-          role: body.role,
-          url: `${appUrl}/invite/${created.id}`,
-        }),
-      )
+    // In the background: the invite is saved either way, and the email can be re-sent.
+    invitationEmail({
+      inviter: caller.user.name,
+      workspace: workspace.name,
+      role: body.role,
+      url: `${appUrl}/invite/${created.id}`,
+    })
+      .then((rendered) => mailer.send({ to: body.email, ...rendered }))
       .catch((err: unknown) => {
         logger.error({ err, invitationId: created.id }, 'invitation email failed');
       });

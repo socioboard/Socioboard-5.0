@@ -19,6 +19,7 @@
     "@aws-sdk/s3-request-presigner": "~3.1138.0",
     "@socioboard/contracts": "workspace:*",
     "@socioboard/db": "workspace:*",
+    "@socioboard/emails": "workspace:*",
     "better-auth": "~1.7.5",
     "bullmq": "^6.3.8",
     "express": "^5.2.1",

@@ -1,3 +1,5 @@
+import * as emails from '@socioboard/emails';
+import type { RenderedEmail } from '@socioboard/emails';
 import { betterAuth, type BetterAuthOptions } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { createAuthMiddleware, isAPIError } from 'better-auth/api';
@@ -13,11 +15,9 @@ import {
   type EventBus,
   type Kv,
   type Logger,
-  type MailMessage,
   type Mailer,
 } from '../../platform';
 import { promoteFirstUser } from './bootstrap';
-import * as emails from './emails';
 import type { AuthEvents } from './events';
 import { workspaceAc, workspaceRoles } from './roles';
 
@@ -36,10 +36,12 @@ const SEVEN_DAYS = 7 * 24 * 60 * 60;
 export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps) {
   // Emails go out in the background: awaiting them would slow responses and let response times
   // reveal whether an address has an account.
-  const send = (message: MailMessage) => {
-    mailer.send(message).catch((err: unknown) => {
-      logger.error({ err, subject: message.subject }, 'auth email failed');
-    });
+  const send = (to: string, kind: string, email: Promise<RenderedEmail>) => {
+    email
+      .then((rendered) => mailer.send({ to, ...rendered }))
+      .catch((err: unknown) => {
+        logger.error({ err, email: kind }, 'auth email failed');
+      });
   };
 
   const options = {
@@ -84,7 +86,7 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
         await events.emit('user.password_changed', { userId: user.id });
       },
       sendResetPassword: ({ user, url }) => {
-        send(emails.resetPassword(user.email, user.name, url));
+        send(user.email, 'reset-password', emails.resetPassword({ name: user.name, url }));
         return Promise.resolve();
       },
     },
@@ -92,7 +94,7 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
       sendOnSignUp: true,
       autoSignInAfterVerification: true,
       sendVerificationEmail: ({ user, url }) => {
-        send(emails.verifyEmail(user.email, user.name, url));
+        send(user.email, 'verify-email', emails.verifyEmail({ name: user.name, url }));
         return Promise.resolve();
       },
     },
@@ -179,7 +181,7 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
       magicLink({
         expiresIn: 600,
         sendMagicLink: ({ email, url }) => {
-          send(emails.magicLink(email, url));
+          send(email, 'magic-link', emails.magicLink({ url }));
           return Promise.resolve();
         },
       }),
