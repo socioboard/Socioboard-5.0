@@ -37,6 +37,11 @@ services:
 
   mailpit:
     image: axllent/mailpit:v1.31
+    environment:
+      # Mailpit rejects browser requests whose Origin isn't its own host:port. Some browsers and
+      # extensions send a bare "localhost" or 127.0.0.1 origin, which broke the inbox page
+      # ("Blocked due to CORS violation"). Local hostnames only, never "*".
+      MP_API_CORS: 'localhost,127.0.0.1,127.0.0.1:${MAILPIT_UI_PORT:-8025}'
     ports:
       - '${MAILPIT_SMTP_PORT:-1025}:1025'
       - '${MAILPIT_UI_PORT:-8025}:8025'
