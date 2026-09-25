@@ -1,5 +1,6 @@
 import {
   bootstrap,
+  createAuthModule,
   createErrorHandler,
   createPlatform,
   notFoundHandler,
@@ -10,8 +11,12 @@ import express from 'express';
 const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
+const authModule = createAuthModule(platform);
+
 const app = express();
 app.disable('x-powered-by');
+// Better Auth reads the raw request body, so its routes come before the JSON parser.
+app.use(authModule.router);
 app.use(express.json({ limit: '1mb' }));
 
 // Liveness only; P0-B11 adds db, Valkey and storage checks, P0-B3 the full middleware chain.

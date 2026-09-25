@@ -4,6 +4,8 @@ import { systemClock, type Clock } from './clock';
 import type { Config } from './config';
 import { createCrypto, type Crypto } from './crypto';
 import { createDb, type Db } from './db';
+import { createEventBus, type EventBus } from './events';
+import { createKv, type Kv } from './kv';
 import type { Logger } from './logger';
 import { createMailer, type Mailer } from './mailer';
 import { createQueues, type Queues } from './queue';
@@ -17,6 +19,9 @@ export interface Platform {
   crypto: Crypto;
   db: Db;
   queues: Queues;
+  kv: Kv;
+  /** App-wide event bus; each module declares its events and listeners subscribe by name. */
+  events: EventBus<Record<string, unknown>>;
   /** Undefined until S3 (or MinIO) is configured. */
   storage: Storage | undefined;
   mailer: Mailer;
@@ -31,6 +36,7 @@ export function createPlatform(config: Config, logger: Logger): Platform {
     scopedModels: WORKSPACE_SCOPED_MODELS,
   });
   const queues = createQueues({ url: config.redis.url, logger });
+  const kv = createKv({ url: config.redis.url });
   const storage = config.storage ? createStorage(config.storage) : undefined;
   const mailer = createMailer({ smtpUrl: config.mail.smtpUrl, from: config.mail.from, logger });
 
@@ -43,10 +49,13 @@ export function createPlatform(config: Config, logger: Logger): Platform {
     crypto: createCrypto(config.encryption.keys),
     db,
     queues,
+    kv,
+    events: createEventBus({ logger }),
     storage,
     mailer,
     async close() {
       await queues.close(30_000);
+      kv.close();
       mailer.close();
       storage?.close();
       await db.close();

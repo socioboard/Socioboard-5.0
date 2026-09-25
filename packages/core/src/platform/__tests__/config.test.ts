@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ConfigError, EXAMPLE_ENCRYPTION_KEY, loadConfig } from '../config';
+import { ConfigError, EXAMPLE_AUTH_SECRET, EXAMPLE_ENCRYPTION_KEY, loadConfig } from '../config';
 
 const key = (id: string, fill: number) => `${id}:${Buffer.alloc(32, fill).toString('base64')}`;
 
@@ -8,6 +8,7 @@ const base = {
   DATABASE_URL: 'postgresql://u:p@localhost:5440/db',
   REDIS_URL: 'redis://localhost:6380',
   ENCRYPTION_KEYS: key('k1', 1),
+  AUTH_SECRET: 'x'.repeat(32),
 };
 
 describe('loadConfig', () => {
@@ -90,5 +91,31 @@ describe('loadConfig', () => {
     const env = { ...base, ENCRYPTION_KEYS: `k1:${EXAMPLE_ENCRYPTION_KEY}` };
     expect(() => loadConfig(env)).not.toThrow();
     expect(() => loadConfig({ ...env, NODE_ENV: 'production' })).toThrow(/example dev key/);
+  });
+
+  it('requires a 32+ character auth secret and refuses the example one in production', () => {
+    expect(() => loadConfig({ ...base, AUTH_SECRET: 'short' })).toThrow(/AUTH_SECRET/);
+    const env = { ...base, AUTH_SECRET: EXAMPLE_AUTH_SECRET };
+    expect(() => loadConfig(env)).not.toThrow();
+    expect(() => loadConfig({ ...env, NODE_ENV: 'production' })).toThrow(/example dev secret/);
+  });
+
+  it('turns social sign-in on only when both keys are set', () => {
+    expect(loadConfig(base).auth.google).toBeUndefined();
+    expect(
+      loadConfig({ ...base, GOOGLE_CLIENT_ID: 'id', GOOGLE_CLIENT_SECRET: 's' }).auth.google,
+    ).toEqual({ clientId: 'id', clientSecret: 's' });
+    expect(() => loadConfig({ ...base, GOOGLE_CLIENT_ID: 'id' })).toThrow(/set together/);
+    expect(
+      loadConfig({ ...base, MICROSOFT_CLIENT_ID: 'id', MICROSOFT_CLIENT_SECRET: 's' }).auth
+        .microsoft,
+    ).toEqual({ clientId: 'id', clientSecret: 's', tenantId: 'common' });
+  });
+
+  it('checks breached passwords unless turned off', () => {
+    expect(loadConfig(base).auth.breachedPasswordCheck).toBe(true);
+    expect(
+      loadConfig({ ...base, AUTH_BREACHED_PASSWORD_CHECK: 'false' }).auth.breachedPasswordCheck,
+    ).toBe(false);
   });
 });

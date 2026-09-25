@@ -20,6 +20,8 @@ The shared building blocks every feature module uses. No business logic lives he
 | crypto | `platform/crypto` | AES-256-GCM encrypt/decrypt for tokens (key rotation support), HMAC sign/verify for webhooks and OAuth state | 0 (crypto), 1 (tokens) |
 | flags | `platform/flags` | `flags.isOn(key, ctx)` reading `FeatureFlag` with a 30 s cache | 2 |
 | clock | `platform/clock` | Injectable time source (tests control "now") | 0 |
+| kv | `platform/kv` | Key-value store on Valkey (`get`, `getAndDelete`, `set` with TTL, `incr` counters): auth session cache and rate-limit counters | 0 |
+| ids | `platform/ids` | `newId()`: UUIDv7, used for every id we generate (Better Auth included) | 0 |
 
 ## Entry points
 | App | Path | Does | Phase |
