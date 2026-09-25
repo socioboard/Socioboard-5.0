@@ -74,13 +74,20 @@ Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod),
 ## Middleware chain
 
 ```
-requestId → logger → rateLimit → session (Better Auth) → workspace(:workspaceId)
-          → requirePermission('posts:create') → requireFeature('approvals') → validate(schema) → handler
-          → errorHandler
+/api      requestId → requestLogger
+/api/auth Better Auth (its own rate limits; before the JSON parser)
+/api/v1   json → rateLimit (per IP, Valkey) → session (Better Auth, never rejects)
+per route signed in (401) → params (400) → workspace(:workspaceId) (404) → permission (403)
+          → requireFeature('approvals') (phase 5) → query + body (400) → handler
+          → response checked against the contract → errorHandler
 ```
 
-- `workspace` loads the membership for the session user and 404s if they aren't a member, so other workspaces look like they don't exist.
-- `requirePermission` checks the member's role against the permission map below.
+- Routes are mounted with `api.route(contractRoute, handler)` (`platform/http/route.ts`); every check above comes from the route's contract (`access`, `params`, `query`, `body`, `responses`), so handlers only receive parsed input and who is calling.
+- `workspace` loads the membership for the session user and 404s if they aren't a member (or the workspace is deleted), so other workspaces look like they don't exist. It runs before body validation, so outsiders learn nothing from validation errors.
+- The permission check compares the member's role with the permission map below.
+- The response is parsed with the route's response schema before sending: fields the contract doesn't declare are stripped, and a response that breaks the contract becomes a 500 (logged, never shown).
+- Every request gets an `X-Request-Id` (reused from our proxy when well-formed), which appears in logs and in error bodies.
+- The API warns at startup about contract routes that are not implemented yet; by the end of phase 0 every route is mounted.
 - `requireFeature` / `checkLimit` come from billing and always pass when billing is off.
 - Every Prisma call goes through a client extension that injects `workspaceId`; queries without a workspace scope fail in tests.
 - The extension does not see nested writes, so relations between workspace-owned tables use **composite foreign keys** `(xId, workspaceId) → (id, workspaceId)` (with `@@unique([id, workspaceId])` on the target), so Postgres rejects a row in one workspace pointing at a row in another. Never link rows by a foreign key alone.

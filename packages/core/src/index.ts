@@ -2,3 +2,4 @@
 export * from './platform';
 
 export * from './modules/auth';
+export * from './modules/workspaces';

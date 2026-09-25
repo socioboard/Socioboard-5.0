@@ -1,10 +1,17 @@
+import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
 import {
   bootstrap,
+  createApiRouter,
   createAuthModule,
   createErrorHandler,
+  createMembershipLookup,
   createPlatform,
   notFoundHandler,
   onShutdown,
+  rateLimit,
+  requestId,
+  requestLogger,
+  session,
 } from '@socioboard/core';
 import express from 'express';
 
@@ -12,20 +19,43 @@ const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
 const authModule = createAuthModule(platform);
+const api = createApiRouter({ lookupMembership: createMembershipLookup(platform.db) });
+// Module routes are mounted on `api` from P0-B4 onward.
 
 const app = express();
 app.disable('x-powered-by');
-// Better Auth reads the raw request body, so its routes come before the JSON parser.
+app.set('trust proxy', config.api.trustProxy);
+
+// Global pipeline (docs/backend/README.md#middleware-chain).
+app.use('/api', requestId, requestLogger(logger));
+// Better Auth reads the raw body and has its own rate limits, so it comes before the JSON parser.
 app.use(authModule.router);
 app.use(express.json({ limit: '1mb' }));
+app.use(
+  '/api/v1',
+  rateLimit({ kv: platform.kv, name: 'api', windowSec: 60, max: config.api.rateLimitPerMin }),
+  session(authModule.resolveSession),
+);
+app.use(api.router);
 
-// Liveness only; P0-B11 adds db, Valkey and storage checks, P0-B3 the full middleware chain.
+// Liveness only; P0-B11 adds db, Valkey and storage checks.
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
 app.use('/api', notFoundHandler);
 app.use(createErrorHandler(logger));
+
+const contractRoutes = Object.values(apiRoutes).flatMap(
+  (m) => Object.values(m) as RouteDefinition[],
+);
+const missing = contractRoutes.filter((r) => !api.mounted.has(r));
+if (missing.length > 0) {
+  logger.warn(
+    { missing: missing.length, total: contractRoutes.length },
+    'contract routes not implemented yet',
+  );
+}
 
 const server = app.listen(config.api.port, () => {
   logger.info({ port: config.api.port }, 'api listening');
