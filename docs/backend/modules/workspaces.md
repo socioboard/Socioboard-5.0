@@ -8,10 +8,10 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Workspace` | id, name, slug, logo, timezone, `requireReviewForAll`, createdAt | Better Auth organization + extra fields |
+| `Workspace` | id, name, slug, logo (storage key), timezone, `requireReviewForAll`, createdAt, deletedAt | Better Auth organization + extra fields; soft delete |
 | `Member` | id, workspaceId, userId, role, createdAt | role ∈ owner, admin, editor, contributor, viewer |
 | `Invitation` | id, workspaceId, email, role, status, expiresAt, invitedById | 7-day expiry |
-| `MemberAccountAccess` | memberId, socialAccountId | Empty = access to all accounts |
+| `MemberAccountAccess` | workspaceId, memberId, socialAccountId | Empty = access to all accounts. Created in phase 4 (P4-B1), once social accounts exist |
 
 ## API
 `:wid`, `:mid`, `:iid` stand for `:workspaceId`, `:memberId`, `:invitationId`. Schemas: `packages/contracts/src/workspaces.ts`.

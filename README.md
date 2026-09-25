@@ -18,24 +18,26 @@ corepack enable
 pnpm install
 cp .env.example .env      # fill in your S3 dev bucket, or enable the MinIO block
 pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI :8025), MinIO :9000 (console :9001) if enabled
+pnpm db:migrate           # create or update the database tables
 pnpm dev                  # api :3000, web :5173
 ```
 
 ## Commands
 
-| Command                              | What it does                                            |
-| ------------------------------------ | ------------------------------------------------------- |
-| `pnpm install`                       | Install all workspaces                                  |
-| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit        |
-| `pnpm services:reset`                | Stop services and delete their data                     |
-| `pnpm dev`                           | Run api, worker and web in watch mode                   |
-| `pnpm build`                         | Build every app                                         |
-| `pnpm typecheck`                     | Type-check every workspace                              |
-| `pnpm lint`                          | ESLint (type-aware)                                     |
-| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)        |
-| `pnpm format`                        | Format with Prettier                                    |
-| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services   |
-| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck |
+| Command                              | What it does                                                  |
+| ------------------------------------ | ------------------------------------------------------------- |
+| `pnpm install`                       | Install all workspaces                                        |
+| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit              |
+| `pnpm services:reset`                | Stop services and delete their data                           |
+| `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data |
+| `pnpm dev`                           | Run api, worker and web in watch mode                         |
+| `pnpm build`                         | Build every app                                               |
+| `pnpm typecheck`                     | Type-check every workspace                                    |
+| `pnpm lint`                          | ESLint (type-aware)                                           |
+| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)              |
+| `pnpm format`                        | Format with Prettier                                          |
+| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services         |
+| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck       |
 
 ## Layout
 

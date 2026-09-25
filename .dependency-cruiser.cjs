@@ -94,9 +94,11 @@ module.exports = {
     {
       name: 'no-undeclared-package',
       severity: 'error',
-      comment: "Import only packages listed in the importing workspace's own package.json.",
+      comment:
+        "Import only packages listed in the importing workspace's own package.json. Exception: " +
+        'vitest, the one test runner, is a root devDependency shared by every package.',
       from: {},
-      to: { dependencyTypes: ['npm-no-pkg', 'npm-unknown'] },
+      to: { dependencyTypes: ['npm-no-pkg', 'npm-unknown'], pathNot: '/node_modules/vitest/' },
     },
   ],
   options: {

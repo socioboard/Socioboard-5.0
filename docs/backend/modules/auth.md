@@ -10,7 +10,7 @@ Managed by Better Auth's Prisma adapter:
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `User` | id, email, emailVerified, name, image, timezone, locale, `isPlatformAdmin`, createdAt | Our extra fields are declared as Better Auth `additionalFields` |
+| `User` | id, email, emailVerified, name, image, avatarKey, timezone, locale, `isPlatformAdmin`, twoFactorEnabled, createdAt | Our extra fields are declared as Better Auth `additionalFields`. `image` is a social-login avatar URL; `avatarKey` an uploaded one, which wins |
 | `Session` | id, userId, token, expiresAt, ipAddress, userAgent, `activeWorkspaceId` | httpOnly, Secure, SameSite=Lax cookie |
 | `Account` | userId, providerId (`credential`, `google`, `microsoft`), accountId, password hash | Login identities only |
 | `Verification` | identifier, value, expiresAt | Email verification, magic links, reset tokens |
