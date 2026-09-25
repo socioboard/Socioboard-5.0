@@ -61,8 +61,15 @@ describe('scopeArgs', () => {
     expect(() => scopeArgs('updateMany', { data: { workspaceId: 'other' } }, W)).toThrow(
       TenantScopeError,
     );
-    // Setting it to the same workspace is harmless.
+    // Setting it to the same workspace, or leaving it undefined, is harmless.
     expect(() => scopeArgs('create', { data: { workspaceId: W } }, W)).not.toThrow();
+    expect(scopeArgs('create', { data: { workspaceId: undefined, t: 1 } }, W).data).toEqual({
+      t: 1,
+      workspaceId: W,
+    });
+    expect(() =>
+      scopeArgs('update', { where: { id: 'p1' }, data: { workspaceId: undefined } }, W),
+    ).not.toThrow();
   });
 
   it('fails closed on operations it does not know', () => {

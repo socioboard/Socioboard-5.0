@@ -34,7 +34,7 @@ const CREATE_MANY_OPS = new Set(['createMany', 'createManyAndReturn']);
 
 function stampData(data: unknown, workspaceId: string): Args {
   const row = (data ?? {}) as Args;
-  if ('workspaceId' in row && row.workspaceId !== workspaceId) {
+  if (row.workspaceId !== undefined && row.workspaceId !== workspaceId) {
     throw new TenantScopeError('Cannot write a row for another workspace');
   }
   return { ...row, workspaceId };
@@ -42,7 +42,7 @@ function stampData(data: unknown, workspaceId: string): Args {
 
 function guardUpdate(data: unknown, workspaceId: string): unknown {
   const row = (data ?? {}) as Args;
-  if ('workspaceId' in row && row.workspaceId !== workspaceId) {
+  if (row.workspaceId !== undefined && row.workspaceId !== workspaceId) {
     throw new TenantScopeError('Cannot move a row to another workspace');
   }
   return data;
@@ -115,10 +115,9 @@ export function createDb({ url, poolSize, scopedModels }: CreateDbOptions): Db {
     forWorkspace(workspaceId) {
       const scopeQuery = ({ model, operation, args, query }: QueryHookParams) =>
         scoped.has(model) ? query(scopeArgs(operation, args, workspaceId)) : query(args);
-      // Prisma's generated hook types depend on the schema's models, so the hook is typed by
-      // hand (QueryHookParams) and the scoped client keeps the plain PrismaClient type.
+      // The scoped client keeps the plain PrismaClient type, so repositories accept either.
       return client.$extends({
-        query: { $allModels: { $allOperations: scopeQuery as never } },
+        query: { $allModels: { $allOperations: scopeQuery } },
       }) as unknown as PrismaClient;
     },
 
