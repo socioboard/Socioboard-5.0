@@ -109,6 +109,57 @@ describe('error handler', () => {
   });
 });
 
+describe('errors from libraries and the database', () => {
+  const app = express();
+  app.get('/better-auth', () => {
+    throw Object.assign(new Error('Organization slug already taken'), {
+      statusCode: 400,
+      body: { code: 'ORGANIZATION_SLUG_ALREADY_TAKEN', message: 'Organization slug already taken' },
+    });
+  });
+  app.get('/client-no-code', () => {
+    throw Object.assign(new Error('Nope'), { statusCode: 403 });
+  });
+  app.get('/server-status', () => {
+    throw Object.assign(new Error('upstream exploded: secret-detail'), { statusCode: 502 });
+  });
+  const prisma = (code: string) => () => {
+    throw Object.assign(new Error(`prisma ${code}`), {
+      name: 'PrismaClientKnownRequestError',
+      code,
+    });
+  };
+  app.get('/p2002', prisma('P2002'));
+  app.get('/p2025', prisma('P2025'));
+  app.get('/p2003', prisma('P2003'));
+  app.get('/p9999', prisma('P9999'));
+  app.use(createErrorHandler(logger));
+
+  it('passes through 4xx errors that carry their own status (e.g. Better Auth)', async () => {
+    const res = await request(app).get('/better-auth');
+    expect(res.status).toBe(400);
+    expect(code(res)).toBe('ORGANIZATION_SLUG_ALREADY_TAKEN');
+    const plain = await request(app).get('/client-no-code');
+    expect([plain.status, code(plain)]).toEqual([403, 'REQUEST_REJECTED']);
+  });
+
+  it('keeps hiding server-side errors, whatever status they carry', async () => {
+    const res = await request(app).get('/server-status');
+    expect([res.status, code(res)]).toEqual([500, 'INTERNAL_ERROR']);
+    expect(JSON.stringify(res.body)).not.toContain('secret-detail');
+  });
+
+  it('turns database constraint errors into conflicts, not server errors', async () => {
+    expect([
+      (await request(app).get('/p2002')).status,
+      code(await request(app).get('/p2002')),
+    ]).toEqual([409, 'ALREADY_EXISTS']);
+    expect(code(await request(app).get('/p2025'))).toBe('NOT_FOUND');
+    expect(code(await request(app).get('/p2003'))).toBe('REFERENCE_CONFLICT');
+    expect((await request(app).get('/p9999')).status).toBe(500);
+  });
+});
+
 describe('route mounting', () => {
   it('refuses a workspace route whose params do not include workspaceId', () => {
     const api = createApiRouter({ lookupMembership: () => Promise.resolve(null) });
