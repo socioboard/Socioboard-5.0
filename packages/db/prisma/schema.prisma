@@ -1,5 +1,17 @@
-// Socioboard 6.0 database schema. Models arrive task by task:
-// P0-B1 adds auth, workspaces, media and audit (see docs/traceability.md).
+// Socioboard 6.0 database schema. Each phase adds its tables (docs/traceability.md).
+//
+// Conventions
+// - Ids are UUIDv7 (time-ordered). Better Auth passes its own (configured to UUIDv7, P0-B2);
+//   our tables default to uuid(7).
+// - Workspace-owned tables have `workspaceId` and are listed in WORKSPACE_SCOPED_MODELS
+//   (src/scoped-models.ts), so `db.forWorkspace(id)` limits every query to one workspace.
+// - A link between two workspace-owned tables is a composite foreign key
+//   (xId, workspaceId) -> (id, workspaceId), so Postgres itself rejects a link across
+//   workspaces. Those links use onDelete: NoAction: deleting a parent that still has children
+//   fails (the service moves or clears them first; SET NULL would also null workspaceId), while
+//   deleting a whole workspace still cascades, because NO ACTION is checked at statement end.
+// - Models named user, session, account, verification, workspace, member, invitation and
+//   twoFactor are read and written by Better Auth: keep their field names as they are.
 
 generator client {
   provider = "prisma-client"
@@ -8,4 +20,263 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Auth (Better Auth core + two-factor plugin) — docs/backend/modules/auth.md
+// ---------------------------------------------------------------------------
+
+model User {
+  id               String   @id @default(uuid(7)) @db.Uuid
+  name             String
+  email            String   @unique
+  emailVerified    Boolean  @default(false)
+  /// Avatar URL from a social login (Google/Microsoft). Uploaded avatars use avatarKey.
+  image            String?
+  /// Storage key of an uploaded avatar; wins over `image` when set.
+  avatarKey        String?
+  timezone         String?
+  locale           String   @default("en")
+  isPlatformAdmin  Boolean  @default(false)
+  twoFactorEnabled Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  sessions        Session[]
+  accounts        Account[]
+  twoFactors      TwoFactor[]
+  memberships     Member[]
+  invitationsSent Invitation[]
+  mediaUploaded   MediaAsset[]
+}
+
+model Session {
+  id                String   @id @default(uuid(7)) @db.Uuid
+  userId            String   @db.Uuid
+  token             String   @unique
+  expiresAt         DateTime
+  ipAddress         String?
+  userAgent         String?
+  /// Workspace the user last switched to; not a foreign key, checked against membership on use.
+  activeWorkspaceId String?  @db.Uuid
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Login identities (password, Google, Microsoft). Social accounts for posting are SocialConnection (P1).
+model Account {
+  id                    String    @id @default(uuid(7)) @db.Uuid
+  userId                String    @db.Uuid
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  /// Password hash for providerId "credential".
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+/// Email verification, password reset and magic-link tokens.
+model Verification {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+}
+
+model TwoFactor {
+  id                      String    @id @default(uuid(7)) @db.Uuid
+  userId                  String    @db.Uuid
+  secret                  String
+  backupCodes             String
+  verified                Boolean   @default(true)
+  failedVerificationCount Int       @default(0)
+  lockedUntil             DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([secret])
+}
+
+// ---------------------------------------------------------------------------
+// Workspaces (Better Auth organization plugin: organization = workspace)
+// docs/backend/modules/workspaces.md
+// ---------------------------------------------------------------------------
+
+model Workspace {
+  id                  String    @id @default(uuid(7)) @db.Uuid
+  name                String
+  slug                String    @unique
+  /// Storage key of the uploaded logo.
+  logo                String?
+  metadata            String?
+  timezone            String
+  requireReviewForAll Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  /// Soft delete; rows are removed 30 days later with everything they own.
+  deletedAt           DateTime?
+
+  members      Member[]
+  invitations  Invitation[]
+  mediaAssets  MediaAsset[]
+  mediaFolders MediaFolder[]
+}
+
+model Member {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  workspaceId String   @db.Uuid
+  userId      String   @db.Uuid
+  /// owner | admin | editor | contributor | viewer (see @socioboard/contracts permissions)
+  role        String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+}
+
+model Invitation {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  workspaceId String   @db.Uuid
+  email       String
+  role        String?
+  /// Better Auth values: pending | accepted | rejected | canceled; expiry is read from expiresAt.
+  status      String   @default("pending")
+  expiresAt   DateTime
+  inviterId   String   @db.Uuid
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  inviter   User      @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, status])
+  @@index([email])
+}
+
+// ---------------------------------------------------------------------------
+// Media — docs/backend/modules/media.md
+// ---------------------------------------------------------------------------
+
+enum MediaKind {
+  image
+  video
+  gif
+}
+
+enum MediaSource {
+  upload
+  ai
+  discovery
+}
+
+enum MediaStatus {
+  uploading
+  processing
+  ready
+  failed
+}
+
+model MediaFolder {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  workspaceId String   @db.Uuid
+  name        String
+  parentId    String?  @db.Uuid
+  createdAt   DateTime @default(now())
+
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parent    MediaFolder?  @relation("FolderTree", fields: [parentId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
+  children  MediaFolder[] @relation("FolderTree")
+  assets    MediaAsset[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, parentId])
+}
+
+model MediaAsset {
+  id           String      @id @default(uuid(7)) @db.Uuid
+  workspaceId  String      @db.Uuid
+  /// Display name (starts as the uploaded file name).
+  name         String
+  folderId     String?     @db.Uuid
+  kind         MediaKind
+  mime         String
+  storageKey   String      @unique
+  /// Up to 1 GB by default; Int holds up to 2 GB.
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  durationSec  Float?
+  thumbnailKey String?
+  source       MediaSource @default(upload)
+  /// Set when source = ai; foreign key added with AiJob (P4-B1).
+  aiJobId      String?     @db.Uuid
+  altText      String?
+  status       MediaStatus @default(uploading)
+  /// S3 multipart upload id while status = uploading.
+  uploadId     String?
+  uploadedById String?     @db.Uuid
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  /// Soft delete; the storage objects are purged a week later.
+  deletedAt    DateTime?
+
+  workspace  Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  folder     MediaFolder? @relation(fields: [folderId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
+  uploadedBy User?        @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt(sort: Desc)])
+  @@index([workspaceId, folderId])
+  @@index([status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Audit — docs/backend/modules/audit.md
+// ---------------------------------------------------------------------------
+
+enum AuditActorType {
+  user
+  admin
+  system
+}
+
+/// Append-only. No foreign keys, so entries outlive the users and workspaces they mention.
+model AuditLog {
+  id          String         @id @default(uuid(7)) @db.Uuid
+  /// Null for platform-level events (e.g. an admin action outside any workspace).
+  workspaceId String?        @db.Uuid
+  actorUserId String?        @db.Uuid
+  actorType   AuditActorType
+  /// e.g. "member.role_changed"
+  action      String
+  entityType  String
+  entityId    String?
+  diff        Json?
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime       @default(now())
+
+  @@index([workspaceId, createdAt(sort: Desc)])
+  @@index([entityType, entityId])
+  @@index([actorUserId, createdAt(sort: Desc)])
 }

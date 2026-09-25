@@ -19,7 +19,7 @@
 - [x] P0-C2 Schemas: me, workspaces, members, invitations, media uploads
 
 ## Backend
-- [ ] P0-B1 Prisma schema v1: User/Session/Account/Verification/TwoFactor, Workspace, Member, Invitation, MemberAccountAccess, MediaAsset, MediaFolder, AuditLog. Relations between workspace-owned tables use composite foreign keys `(xId, workspaceId)`; add each workspace-owned model to `WORKSPACE_SCOPED_MODELS`
+- [x] P0-B1 Prisma schema v1: User/Session/Account/Verification/TwoFactor, Workspace, Member, Invitation, MediaAsset, MediaFolder, AuditLog (MemberAccountAccess moved to P4-B1, when SocialAccount exists). Relations between workspace-owned tables use composite foreign keys `(xId, workspaceId)`; add each workspace-owned model to `WORKSPACE_SCOPED_MODELS`
 - [ ] P0-B2 Better Auth (UUIDv7 ids via `generateId`): email/password, verification, reset, magic link, Google + Microsoft (if keys), 2FA plugin, organization plugin with 5 roles
 - [ ] P0-B3 Middleware chain: requestId, rateLimit, session, workspace, requirePermission, validate, errorHandler
 - [ ] P0-B4 `/api/v1/me`, avatar upload, sessions endpoints; first-user bootstrap

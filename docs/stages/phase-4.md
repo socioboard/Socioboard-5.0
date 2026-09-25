@@ -9,7 +9,7 @@
 - [ ] P4-C2 AI templates, jobs, webhook payload (align with the Python team's spec when it arrives)
 
 ## Backend
-- [ ] P4-B1 Prisma: PostApproval, PostComment, Task, AiJob, AiTemplate
+- [ ] P4-B1 Prisma: PostApproval, PostComment, Task, AiJob, AiTemplate, MemberAccountAccess (composite keys to Member and SocialAccount; moved from P0-B1); foreign key MediaAsset.aiJobId → AiJob
 - [ ] P4-B2 Approval workflow + "editing resets approval" rule + review queue
 - [ ] P4-B3 Comments with @mentions; notifications for review events
 - [ ] P4-B4 Member account access enforced across posts, scheduling, calendar
