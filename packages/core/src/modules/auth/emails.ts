@@ -40,18 +40,3 @@ export const magicLink = (to: string, url: string) =>
     'Sign in',
     url,
   );
-
-export const invitation = (
-  to: string,
-  inviter: string,
-  workspace: string,
-  role: string,
-  url: string,
-) =>
-  message(
-    to,
-    `${inviter} invited you to ${workspace} on Socioboard`,
-    `${inviter} invited you to join ${workspace} as ${role}. The invitation expires in 7 days.`,
-    'Accept invitation',
-    url,
-  );

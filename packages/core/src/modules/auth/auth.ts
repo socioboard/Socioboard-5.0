@@ -174,11 +174,6 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
           invitation: { fields: { organizationId: 'workspaceId' } },
           session: { fields: { activeOrganizationId: 'activeWorkspaceId' } },
         },
-        sendInvitationEmail: ({ email, inviter, organization: workspace, role, id }) => {
-          const url = `${config.appUrl}/invite/${id}`;
-          send(emails.invitation(email, inviter.user.name, workspace.name, role, url));
-          return Promise.resolve();
-        },
       }),
       twoFactor({ issuer: 'Socioboard' }),
       magicLink({

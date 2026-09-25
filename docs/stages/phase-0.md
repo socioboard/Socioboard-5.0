@@ -23,7 +23,7 @@
 - [x] P0-B2 Better Auth (UUIDv7 ids via `generateId`): email/password, verification, reset, magic link, Google + Microsoft (if keys), 2FA plugin, organization plugin with 5 roles
 - [x] P0-B3 Middleware chain: requestId, rateLimit, session, workspace, requirePermission, validate, errorHandler
 - [x] P0-B4 `/api/v1/me`, avatar upload, sessions endpoints; first-user bootstrap
-- [ ] P0-B5 Workspaces (incl. logo upload, transfer ownership), members, invitations (incl. public preview) endpoints + invitation email
+- [x] P0-B5 Workspaces (incl. logo upload, transfer ownership), members, invitations (incl. public preview) endpoints + invitation email
 - [ ] P0-B6 Media upload (single PUT or multipart), complete, list, get, update, delete, folders; `media-process` job (dimensions, thumbnail)
 - [ ] P0-B7 Audit `record()` + listeners for member events
 - [ ] P0-B8 OpenAPI generation (zod-to-openapi) served at `/api/docs` in dev

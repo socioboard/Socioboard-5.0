@@ -1,3 +1,4 @@
+// Shared test utilities (Mailpit, TOTP). Only tests import this folder.
 import { createHmac } from 'node:crypto';
 
 /** Latest email Mailpit received for `to` (polls briefly: auth emails are sent in the background). */

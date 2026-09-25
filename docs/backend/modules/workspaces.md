@@ -42,9 +42,19 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 - `getMembership(userId, workspaceId)`: used by the `workspace` middleware
 - `canAccessAccount(member, socialAccountId)`: used by posts, scheduling, analytics
 
+## How it's built
+- Better Auth's organization plugin creates the workspace (with its owner membership) and switches the active workspace. Everything else (members, invitations, roles, ownership) is this module's own service, so permission checks, errors, emails and events have one path; Better Auth's organization HTTP endpoints are closed.
+- Slugs are generated from the name (`Acme Marketing` → `acme-marketing`, a short random suffix when taken); an explicit taken slug is 409 `SLUG_TAKEN`.
+- Invitation statuses map from Better Auth's: `rejected` → declined, `canceled` → revoked, and a pending one past `expiresAt` → expired.
+- Jobs: `workspace-purge`, nightly at 03:00 UTC in the worker, permanently deletes workspaces soft-deleted more than 30 days ago, removing their stored files (logo, media, thumbnails) before the rows.
+
 ## Rules
+- Creating a workspace and accepting an invitation need a verified email whenever the server can send email (SMTP configured); otherwise anyone could register an invitee's address without owning it and take the seat. 403 `EMAIL_NOT_VERIFIED`.
+- Only the invited address can accept or decline; anyone else gets 404, so the invitation's existence isn't confirmed to them.
 - A workspace always has exactly one owner. The owner can't leave or be removed; they must transfer ownership first.
 - Admins can't change the owner's role or promote anyone to owner.
 - Member count respects `checkLimit('members')` when billing is on.
 - Deleting a workspace cancels all scheduled jobs and revokes stored social tokens.
-- Emits `member.invited`, `member.joined`, `member.role_changed`, `member.removed`, `workspace.deleted`.
+- Role changes, removals and ownership transfers re-check roles inside the write, so two admins acting at once can't leave a workspace without an owner or with two.
+- Error codes: `SLUG_TAKEN`, `EMAIL_NOT_VERIFIED`, `CONFIRMATION_MISMATCH`, `OWNER_ONLY`, `TARGET_NOT_ADMIN`, `CANNOT_CHANGE_OWNER`, `OWNER_CANNOT_LEAVE`, `MEMBER_NOT_FOUND`, `ALREADY_MEMBER`, `ALREADY_INVITED`, `INVITATION_NOT_FOUND`, `INVITATION_EXPIRED` / `_REVOKED` / `_DECLINED` / `_ACCEPTED`, `LOGO_NOT_UPLOADED`, `STORAGE_NOT_CONFIGURED`.
+- Emits `workspace.created`, `workspace.updated`, `workspace.deleted`, `workspace.ownership_transferred`, `member.invited`, `member.joined`, `member.role_changed`, `member.removed`, `invitation.revoked`, `invitation.declined`.

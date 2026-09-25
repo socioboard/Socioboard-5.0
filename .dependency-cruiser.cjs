@@ -85,6 +85,13 @@ module.exports = {
       to: { dependencyTypes: ['npm-dev'], dependencyTypesNot: ['type-only'] },
     },
     {
+      name: 'testing-only-from-tests',
+      severity: 'error',
+      comment: 'Test utilities (src/testing) are for tests only, never production code.',
+      from: { pathNot: '(__tests__/|\\.test\\.tsx?$|/src/testing/)' },
+      to: { path: '/src/testing/' },
+    },
+    {
       name: 'not-to-unresolvable',
       severity: 'error',
       comment: 'Every import must resolve; an unresolved one usually means a missing dependency.',
