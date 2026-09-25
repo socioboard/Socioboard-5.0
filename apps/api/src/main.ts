@@ -3,6 +3,8 @@ import {
   bootstrap,
   createApiRouter,
   createAuthModule,
+  createWorkspaceAuthPort,
+  createWorkspaceService,
   createErrorHandler,
   createMembershipLookup,
   createMeService,
@@ -11,6 +13,7 @@ import {
   onShutdown,
   originCheck,
   registerAuthRoutes,
+  registerWorkspaceRoutes,
   rateLimit,
   requestId,
   requestLogger,
@@ -33,6 +36,21 @@ registerAuthRoutes(
     lookupMembership,
     clock: platform.clock,
     logger,
+  }),
+);
+registerWorkspaceRoutes(
+  api,
+  createWorkspaceService({
+    db: platform.db,
+    authPort: createWorkspaceAuthPort(authModule.auth),
+    storage: platform.storage,
+    mailer: platform.mailer,
+    events: platform.events,
+    clock: platform.clock,
+    logger,
+    appUrl: config.appUrl,
+    // Verification can only be required when the server can send the email.
+    requireVerifiedEmail: Boolean(config.mail.smtpUrl),
   }),
 );
 

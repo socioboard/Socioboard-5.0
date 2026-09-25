@@ -60,3 +60,13 @@ export function createEventBus<Events extends Record<string, unknown>>({
   };
   return bus;
 }
+
+/**
+ * A module's typed view of the app-wide bus (createPlatform's `events`). Event names are plain
+ * strings at runtime; this only adds the module's payload types.
+ */
+export function typedEvents<Events extends Record<string, unknown>>(
+  bus: EventBus<Record<string, unknown>>,
+): EventBus<Events> {
+  return bus as unknown as EventBus<Events>;
+}

@@ -16,7 +16,7 @@ import {
   loadConfig,
 } from '../../../platform';
 import { createAuthModule } from '../index';
-import { clearEmails, latestEmail, linkPath, totp } from './helpers';
+import { clearEmails, latestEmail, linkPath, totp } from '../../../testing';
 
 const base = loadConfig();
 // The breached-password check calls an external API; it is covered by the config tests.

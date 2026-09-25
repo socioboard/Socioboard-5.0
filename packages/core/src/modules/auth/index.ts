@@ -3,7 +3,13 @@
 import { toNodeHandler } from 'better-auth/node';
 import { Router } from 'express';
 
-import { notFound, type AuthContext, type EventBus, type SessionResolver } from '../../platform';
+import {
+  notFound,
+  typedEvents,
+  type AuthContext,
+  type EventBus,
+  type SessionResolver,
+} from '../../platform';
 import { createAuth, type Auth, type AuthDeps } from './auth';
 import type { AuthEvents } from './events';
 
@@ -29,7 +35,7 @@ export interface AuthModule {
 export function createAuthModule(
   deps: Omit<AuthDeps, 'events'> & { events: EventBus<Record<string, unknown>> },
 ): AuthModule {
-  const auth = createAuth({ ...deps, events: deps.events as unknown as EventBus<AuthEvents> });
+  const auth = createAuth({ ...deps, events: typedEvents<AuthEvents>(deps.events) });
   const router = Router();
   router.use('/api/auth/organization', (_req, _res, next) => {
     next(notFound('ROUTE_NOT_FOUND', 'Use the /api/v1/workspaces endpoints'));
@@ -65,4 +71,31 @@ export function createAuthModule(
   };
 
   return { auth, router, resolveSession };
+}
+
+/** Better Auth calls the workspaces module needs (its WorkspaceAuthPort). */
+export function createWorkspaceAuthPort(auth: Auth) {
+  return {
+    async createWorkspace(input: {
+      headers: Headers;
+      name: string;
+      slug: string;
+      timezone: string;
+    }) {
+      const { headers, response } = await auth.api.createOrganization({
+        body: { name: input.name, slug: input.slug, timezone: input.timezone },
+        headers: input.headers,
+        returnHeaders: true,
+      });
+      return { id: response.id, setCookies: headers.getSetCookie() };
+    },
+    async setActiveWorkspace(headers: Headers, workspaceId: string) {
+      const result = await auth.api.setActiveOrganization({
+        body: { organizationId: workspaceId },
+        headers,
+        returnHeaders: true,
+      });
+      return result.headers.getSetCookie();
+    },
+  };
 }

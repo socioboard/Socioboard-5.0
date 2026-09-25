@@ -1,3 +1,12 @@
-// Public surface of the workspaces module (docs/backend/modules/workspaces.md). P0-B5 adds the
-// workspace, member and invitation routes.
+// Public surface of the workspaces module (docs/backend/modules/workspaces.md).
 export { createMembershipLookup } from './membership';
+export type { WorkspaceEvents } from './events';
+export { purgeDeletedWorkspaces, workspacePurgeQueue } from './jobs';
+export { registerWorkspaceRoutes } from './routes';
+export {
+  createWorkspaceService,
+  maskEmail,
+  slugify,
+  type WorkspaceAuthPort,
+  type WorkspaceService,
+} from './service';
