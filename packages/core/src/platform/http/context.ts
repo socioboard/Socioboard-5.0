@@ -19,8 +19,14 @@ export interface MemberContext {
   role: Role;
 }
 
-/** Reads the session from request headers (cookie); null when signed out. Provided by auth. */
-export type SessionResolver = (headers: Headers) => Promise<AuthContext | null>;
+/**
+ * Reads the session from request headers (cookie); `auth` is null when signed out. Provided by
+ * auth. `setCookies` carries a refreshed session cookie when the session was extended; the
+ * session middleware forwards it, or active users would be signed out when the old one expires.
+ */
+export type SessionResolver = (
+  headers: Headers,
+) => Promise<{ auth: AuthContext | null; setCookies: string[] }>;
 
 /** Membership of a user in a live (not deleted) workspace. Provided by workspaces. */
 export type MembershipLookup = (

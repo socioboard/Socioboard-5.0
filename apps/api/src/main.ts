@@ -8,6 +8,7 @@ import {
   createPlatform,
   notFoundHandler,
   onShutdown,
+  originCheck,
   rateLimit,
   requestId,
   requestLogger,
@@ -24,7 +25,8 @@ const api = createApiRouter({ lookupMembership: createMembershipLookup(platform.
 
 const app = express();
 app.disable('x-powered-by');
-app.set('trust proxy', config.api.trustProxy);
+// One rule for the client IP, used by every rate limit (ours and Better Auth's): TRUST_PROXY.
+app.set('trust proxy', config.api.trustedProxies);
 
 // Global pipeline (docs/backend/README.md#middleware-chain).
 app.use('/api', requestId, requestLogger(logger));
@@ -33,6 +35,7 @@ app.use(authModule.router);
 app.use(express.json({ limit: '1mb' }));
 app.use(
   '/api/v1',
+  originCheck(config.appUrl),
   rateLimit({ kv: platform.kv, name: 'api', windowSec: 60, max: config.api.rateLimitPerMin }),
   session(authModule.resolveSession),
 );

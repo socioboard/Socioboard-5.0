@@ -76,7 +76,7 @@ Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod),
 ```
 /api      requestId → requestLogger
 /api/auth Better Auth (its own rate limits; before the JSON parser)
-/api/v1   json → rateLimit (per IP, Valkey) → session (Better Auth, never rejects)
+/api/v1   json → originCheck → rateLimit (per client IP, Valkey) → session (Better Auth, never rejects)
 per route signed in (401) → params (400) → workspace(:workspaceId) (404) → permission (403)
           → requireFeature('approvals') (phase 5) → query + body (400) → handler
           → response checked against the contract → errorHandler
@@ -86,6 +86,9 @@ per route signed in (401) → params (400) → workspace(:workspaceId) (404) →
 - `workspace` loads the membership for the session user and 404s if they aren't a member (or the workspace is deleted), so other workspaces look like they don't exist. It runs before body validation, so outsiders learn nothing from validation errors.
 - The permission check compares the member's role with the permission map below.
 - The response is parsed with the route's response schema before sending: fields the contract doesn't declare are stripped, and a response that breaks the contract becomes a 500 (logged, never shown).
+- **Client IP:** one rule for every rate limit. Express resolves it under `TRUST_PROXY` (the IPs/CIDRs of our proxies; required in production), and the auth router hands that same IP to Better Auth, so a client can't spoof it with `X-Forwarded-For`. IPv6 clients are counted per /64.
+- **originCheck:** state-changing requests that carry an `Origin` must come from `APP_URL` (403 `ORIGIN_NOT_ALLOWED`), on top of `SameSite=Lax` cookies.
+- **Sessions:** when Better Auth extends a session, the session middleware forwards the refreshed cookie.
 - Every request gets an `X-Request-Id` (reused from our proxy when well-formed), which appears in logs and in error bodies.
 - The API warns at startup about contract routes that are not implemented yet; by the end of phase 0 every route is mounted.
 - `requireFeature` / `checkLimit` come from billing and always pass when billing is off.

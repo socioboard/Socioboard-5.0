@@ -127,7 +127,7 @@ function buildApp({ limit = 1000 } = {}) {
     rateLimit({ kv: memoryKv(), name: 't', windowSec: 60, max: limit }),
     session((headers) => {
       const id = headers.get('x-test-user');
-      return Promise.resolve(id ? auth(id) : null);
+      return Promise.resolve({ auth: id ? auth(id) : null, setCookies: [] });
     }),
   );
   app.use(api.router);

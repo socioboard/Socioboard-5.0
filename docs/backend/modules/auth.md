@@ -49,7 +49,7 @@ Request and response schemas: `packages/contracts/src/auth.ts`.
 - Better Auth is configured to generate **UUIDv7** ids (`advanced.database.generateId`), so users, sessions and workspaces follow the API's id rule.
 - Email verification is required before creating a workspace (cloud); optional when self-hosted with no SMTP.
 - 2FA is optional for users and **mandatory for platform admins** (enforced when opening `/admin`).
-- Rate limits per client IP, counted in Valkey: sign-in 10/min; sign-up 5/hour; magic link 5/min; password-reset and verification emails 5/hour each; 2FA code 10/min; everything else under `/api/auth` 100/min. The IP comes from `X-Forwarded-For`, so production must sit behind our proxy (trusted-proxy settings: P5-B7).
+- Rate limits per client IP, counted in Valkey: sign-in 10/min; sign-up 5/hour; magic link 5/min; password-reset and verification emails 5/hour each; 2FA code 10/min; everything else under `/api/auth` 100/min. The IP is the one Express resolves under `TRUST_PROXY` (our router passes it to Better Auth), so clients can't spoof it.
 - Password rules: 10–128 characters, checked against Have I Been Pwned's range API (only the first 5 characters of the password's hash leave the server). `AUTH_BREACHED_PASSWORD_CHECK=false` turns the check off for installs without internet access.
 - Google and Microsoft login register only if both their client ID and secret are set (Google always shows the account picker).
 - Better Auth's organization endpoints (`/api/auth/organization/*`) are not exposed: workspaces, members and invitations go through our `/api/v1` routes, which call Better Auth server-side, so permissions, limits and audit stay in one place.

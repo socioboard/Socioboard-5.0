@@ -59,6 +59,8 @@ api.route(whoAmI, ({ auth, member }) => ({
 }));
 
 const app = express();
+// Tests give each client its own X-Forwarded-For; trust it from the local test client.
+app.set('trust proxy', 'loopback');
 app.use(authModule.router);
 app.use(express.json());
 app.use('/api/v1', session(authModule.resolveSession));
@@ -131,5 +133,26 @@ describe('request pipeline with real auth and membership', () => {
     });
     expect((await owner.agent.get(`/api/v1/workspaces/${workspaceId}/who-am-i`)).status).toBe(404);
     await db.client.workspace.update({ where: { id: workspaceId }, data: { deletedAt: null } });
+  });
+
+  it('forwards the refreshed session cookie when a session is extended', async () => {
+    const raw = owner.cookie.find((c) => c.startsWith('sb.session_token='));
+    const token =
+      decodeURIComponent((raw ?? '').split(';')[0]?.split('=')[1] ?? '').split('.')[0] ?? '';
+    expect(token).toBeTruthy();
+    // Make the session due for renewal (Better Auth renews within `updateAge` of expiry) and drop
+    // the cached copy so the database value is read.
+    await db.client.session.update({
+      where: { token },
+      data: { expiresAt: new Date(Date.now() + 60 * 60 * 1000) },
+    });
+    await kv.delete(`auth:${token}`);
+
+    const res = await owner.agent.get(`/api/v1/workspaces/${workspaceId}/who-am-i`);
+    expect(res.status).toBe(200);
+    const setCookie = (res.headers['set-cookie'] as unknown as string[] | undefined) ?? [];
+    expect(setCookie.some((c) => c.startsWith('sb.session_token='))).toBe(true);
+    const renewed = await db.client.session.findUniqueOrThrow({ where: { token } });
+    expect(renewed.expiresAt.getTime()).toBeGreaterThan(Date.now() + 24 * 60 * 60 * 1000);
   });
 });
