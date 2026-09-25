@@ -1,13 +1,18 @@
 import {
+  auditPurgeQueue,
   bootstrap,
+  createAuditLog,
   createPlatform,
   mediaProcessQueue,
   onShutdown,
+  registerAuditListeners,
   workspacePurgeQueue,
 } from '@socioboard/core';
 
 const { config, logger } = bootstrap('worker');
 const platform = createPlatform(config, logger);
+const audit = createAuditLog(platform);
+registerAuditListeners(platform.events, audit, logger);
 
 // Queue processors, one per module that owns background work.
 platform.queues.startWorker(mediaProcessQueue({ ...platform, tools: config.media }));
@@ -18,6 +23,12 @@ platform.queues.startWorker(purge);
 await platform.queues
   .get(purge)
   .upsertJobScheduler('nightly', { pattern: '0 3 * * *', tz: 'UTC' }, { name: 'purge' });
+
+const auditPurge = auditPurgeQueue({ audit, retentionDays: config.audit.retentionDays, logger });
+platform.queues.startWorker(auditPurge);
+await platform.queues
+  .get(auditPurge)
+  .upsertJobScheduler('nightly', { pattern: '30 3 * * *', tz: 'UTC' }, { name: 'purge' });
 
 logger.info('worker started');
 

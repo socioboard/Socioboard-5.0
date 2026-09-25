@@ -2,6 +2,7 @@ import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
 import {
   bootstrap,
   createApiRouter,
+  createAuditLog,
   createAuthModule,
   createMediaService,
   createWorkspaceAuthPort,
@@ -14,10 +15,12 @@ import {
   notFoundHandler,
   onShutdown,
   originCheck,
+  registerAuditListeners,
   registerAuthRoutes,
   registerMediaRoutes,
   registerWorkspaceRoutes,
   rateLimit,
+  requestContext,
   requestId,
   requestLogger,
   session,
@@ -26,6 +29,9 @@ import express from 'express';
 
 const { config, logger } = bootstrap('api');
 const platform = createPlatform(config, logger);
+
+// Audit first, so it hears every event the modules emit.
+registerAuditListeners(platform.events, createAuditLog(platform), logger);
 
 const authModule = createAuthModule(platform);
 const lookupMembership = createMembershipLookup(platform.db);
@@ -80,7 +86,7 @@ app.disable('x-powered-by');
 app.set('trust proxy', config.api.trustedProxies);
 
 // Global pipeline (docs/backend/README.md#middleware-chain).
-app.use('/api', requestId, requestLogger(logger));
+app.use('/api', requestId, requestContext, requestLogger(logger));
 // Better Auth reads the raw body and has its own rate limits, so it comes before the JSON parser.
 app.use(authModule.router);
 app.use(express.json({ limit: '1mb' }));
