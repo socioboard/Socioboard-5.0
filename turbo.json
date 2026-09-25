@@ -1,12 +1,33 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
-    "generate": { "inputs": ["prisma/**"], "outputs": ["src/generated/**"] },
-    "build": { "dependsOn": ["^generate", "^build"], "outputs": ["dist/**"] },
-    "typecheck": { "dependsOn": ["generate", "^generate", "^typecheck"] },
-    "test": { "dependsOn": ["generate", "^generate"] },
-    "test:int": { "dependsOn": ["^generate"], "cache": false },
-    "dev": { "dependsOn": ["^generate"], "cache": false, "persistent": true },
-    "clean": { "cache": false }
+    "generate": {
+      "inputs": ["prisma/**"],
+      "outputs": ["src/generated/**"]
+    },
+    "build": {
+      "dependsOn": ["^generate", "^build"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["generate", "^generate", "^typecheck"]
+    },
+    "test": {
+      "dependsOn": ["generate", "^generate"]
+    },
+    "test:int": {
+      "dependsOn": ["^generate"],
+      "cache": false,
+      "passThroughEnv": ["*"]
+    },
+    "dev": {
+      "dependsOn": ["^generate"],
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": ["*"]
+    },
+    "clean": {
+      "cache": false
+    }
   }
 }
