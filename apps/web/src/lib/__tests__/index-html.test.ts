@@ -6,7 +6,8 @@ import { describe, expect, it } from 'vitest';
 import { THEME_STORAGE_KEY } from '@socioboard/ui';
 
 const read = (path: string) => readFileSync(fileURLToPath(new URL(path, import.meta.url)), 'utf8');
-const html = read('../../../index.html');
+// Whitespace collapsed: the formatter is free to lay out the inline <style> however it likes.
+const html = read('../../../index.html').replace(/\s+/g, ' ');
 const tokens = read('../../../../../packages/ui/src/styles.css');
 
 describe('index.html first paint', () => {
