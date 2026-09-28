@@ -1,9 +1,8 @@
 import type { Me } from '@socioboard/contracts';
 import { describe, expect, it } from 'vitest';
 
-import { passwordStrength } from '../../features/auth/password';
 import { halden, meWith } from '../../testing/render';
-import { routeAfterSignIn, safeRedirect } from '../redirect';
+import { routeAfterSignIn, safeRedirect, withRedirect } from '../redirect';
 
 describe('safeRedirect', () => {
   it('keeps paths inside the app, with their query and hash', () => {
@@ -57,11 +56,11 @@ describe('routeAfterSignIn', () => {
   });
 });
 
-describe('passwordStrength', () => {
-  it('rates length first, then variety', () => {
-    expect(passwordStrength('short1!')).toBe('weak');
-    expect(passwordStrength('abcdefghij')).toBe('fair');
-    expect(passwordStrength('Abcdefgh12!x')).toBe('strong');
-    expect(passwordStrength('correct horse battery staple')).toBe('strong');
+describe('withRedirect', () => {
+  it('adds the destination, encoded, only when there is one', () => {
+    expect(withRedirect('/login', '/invite/abc?x=1')).toBe(
+      '/login?redirect=%2Finvite%2Fabc%3Fx%3D1',
+    );
+    expect(withRedirect('/login')).toBe('/login');
   });
 });

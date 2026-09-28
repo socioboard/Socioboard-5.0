@@ -46,6 +46,24 @@ module.exports = {
       to: { path: '^apps/', pathNot: '^apps/$1/' },
     },
     {
+      name: 'web-features-through-index',
+      severity: 'error',
+      comment:
+        'Web features use each other only through features/<area>/index.ts (docs/frontend/README.md).',
+      from: { path: '^apps/web/src/features/([^/]+)/' },
+      to: {
+        path: '^apps/web/src/features/',
+        pathNot: ['^apps/web/src/features/$1/', '^apps/web/src/features/[^/]+/index[.]ts$'],
+      },
+    },
+    {
+      name: 'web-outside-features-through-index',
+      severity: 'error',
+      comment: 'Routes and lib reach a feature only through its index.ts.',
+      from: { path: '^apps/web/src/', pathNot: '^apps/web/src/features/' },
+      to: { path: '^apps/web/src/features/', pathNot: '^apps/web/src/features/[^/]+/index[.]ts$' },
+    },
+    {
       name: 'web-no-server-code',
       severity: 'error',
       comment: 'The browser bundle may use contracts and ui only (no db, secrets or providers).',
