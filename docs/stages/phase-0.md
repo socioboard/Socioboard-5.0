@@ -55,7 +55,7 @@
 - [ ] P0-R7 Contributor agreement for AGPL-3.0: pick a CLA (e.g. CLA Assistant bot) so Socioboard can keep running the hosted cloud on contributed code; required before accepting outside PRs
 
 ## Quality
-- [ ] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image
+- [x] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image (`apps/web/e2e/phase-0/team-media.spec.ts`, `pnpm e2e`)
 
 ## Done when
 A new user signs up, verifies email, creates a workspace, invites a teammate who joins with a role, and both see an uploaded image in the media library, locally and on staging. CI is green. All network applications are submitted.

@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "clean": "rm -rf dist .turbo src/routeTree.gen.ts"
+    "clean": "rm -rf dist .turbo src/routeTree.gen.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource-variable/instrument-sans": "~5.3.0",
@@ -33,6 +34,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@playwright/test": "~1.63.0",
     "@tailwindcss/vite": "~4.3.3",
     "@tanstack/router-cli": "~1.167.38",
     "@tanstack/router-plugin": "~1.168.40",

@@ -19,3 +19,7 @@ Thumbs.db
 apps/web/src/routeTree.gen.ts
 apps/web/.tanstack/
 packages/ui/ladle-build/
+
+# Playwright
+apps/web/test-results/
+apps/web/playwright-report/
