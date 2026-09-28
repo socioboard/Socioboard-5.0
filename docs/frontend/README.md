@@ -17,7 +17,8 @@ A React single-page app built with Vite. It holds no business logic: it calls th
 | Charts (6.1) | Recharts |
 | Realtime | socket.io-client → invalidates Query caches |
 | i18n | react-i18next with typed keys; strings in `apps/web/src/locales/en/*.json` (`common`, `errors`); `errorMessage(error)` maps API error codes to translated text, else a generic message with the request ID |
-| Tests | Vitest + Testing Library (components), Playwright (end-to-end), MSW (API mocks) |
+| Tests | Vitest + Testing Library (components and screens), Playwright (end-to-end); API calls in screen tests go to a small fetch mock keyed by method and path (`src/testing/render.tsx`) |
+| Component catalog | Ladle (`pnpm catalog`), stories next to the components in `packages/ui` |
 
 ## Area index
 | Area | Screens | Phase |

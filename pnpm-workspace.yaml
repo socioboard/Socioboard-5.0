@@ -3,6 +3,10 @@ packages:
   - packages/*
 allowBuilds:
   '@prisma/engines': true
+  # Ladle's compiler: its binary comes from the platform package, no install script needed.
+  '@swc/core': false
   esbuild: true
   msgpackr-extract: false
+  # Pulled in by Ladle; we don't use its request mocking.
+  msw: false
   prisma: true

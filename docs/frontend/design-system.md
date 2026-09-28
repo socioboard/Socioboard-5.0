@@ -50,7 +50,7 @@ Using them in screens:
 - Clickable `DataTable` rows open with click or Enter, but screen readers announce a row, not a link: also put a real link (or button) in the row's main cell.
 - `Button asChild` renders its child (e.g. a router Link); `loading` applies only to real buttons.
 
-A development-only preview of every component lives at `/dev/components` until the catalog (P0-F8) replaces it.
+**Catalog (P0-F8):** `pnpm catalog` opens the component catalog (Ladle) at http://localhost:61000; `pnpm --filter @socioboard/ui catalog:build` builds it as static files. Stories sit next to the components (`src/components/*.stories.tsx`, plus `src/stories/` for foundations) and render in the real frame: tokens, Instrument Sans, the Aurora backdrop, tooltips and toasts, following Ladle's light/dark switch and its phone/tablet/desktop widths. A test (`src/__tests__/catalog.test.ts`) fails when an exported component isn't rendered in any story, so the catalog can't fall behind. Ladle runs its own Vite 6 and React plugin; the catalog config gives it only the Tailwind plugin.
 
 ## Foundations (phase 0)
 - **Tokens:** color (light + dark themes, semantic colors for success/warning/error/info, one brand accent), typography scale, spacing, radius, shadows, z-index, motion (respects reduced motion).

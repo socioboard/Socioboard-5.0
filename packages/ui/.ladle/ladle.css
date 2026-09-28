@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '../src/styles.css';
+
+/* Scan the components and stories for class names. */
+@source '../src';
