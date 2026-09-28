@@ -6,3 +6,4 @@ coverage/
 docs/
 packages/db/src/generated/
 apps/web/src/routeTree.gen.ts
+packages/ui/ladle-build/

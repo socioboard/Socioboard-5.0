@@ -14,6 +14,7 @@ export default tseslint.config(
       '**/coverage/**',
       '**/src/generated/**',
       '**/routeTree.gen.ts',
+      '**/ladle-build/**',
     ],
   },
 

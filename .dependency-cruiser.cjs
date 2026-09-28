@@ -132,7 +132,7 @@ module.exports = {
   ],
   options: {
     doNotFollow: { path: 'node_modules' },
-    exclude: { path: '(^|/)(dist|\\.turbo|generated)/' },
+    exclude: { path: '(^|/)(dist|\\.turbo|generated|ladle-build)/' },
     tsPreCompilationDeps: true,
     // Check each workspace against its own package.json, not the root's.
     combinedDependencies: false,
