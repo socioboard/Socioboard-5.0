@@ -1,6 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router';
-import { Backdrop } from '@socioboard/ui';
+import { Backdrop, Toaster } from '@socioboard/ui';
 import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,6 +36,7 @@ function Root() {
     <>
       <Backdrop />
       <Outlet />
+      <Toaster />
       <Suspense>
         <Devtools />
       </Suspense>
@@ -47,7 +48,7 @@ function NotFound() {
   const { t } = useTranslation();
   return (
     <main className="grid min-h-dvh place-items-center p-4">
-      <div className="glass animate-settle flex max-w-md flex-col gap-3 p-8">
+      <div className="glass rounded-pane animate-settle flex max-w-md flex-col gap-3 p-8">
         <h1 className="text-xl font-semibold tracking-tight">{t('notFound.title')}</h1>
         <p className="text-ink-2 text-sm leading-relaxed">{t('notFound.body')}</p>
         <Link to="/" className="text-sm font-semibold underline underline-offset-4">

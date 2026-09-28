@@ -20,6 +20,21 @@
 
 **In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
 
+**Components (P0-F2):** built on Radix (the `radix-ui` package) for keyboard, focus and screen-reader behavior, styled with the tokens; Sonner for toasts; lucide icons.
+
+| Component | Notes |
+| --- | --- |
+| `Button` | `primary` (lit orange, one per screen), `secondary` (glass), `ghost`, `danger` (crimson `#BE123C`, so it never reads as the primary action); sizes `sm`/`md`/`lg`/`icon`; `loading` blocks clicks and sets `aria-busy`; `asChild` renders a link; defaults to `type="button"` |
+| `Input`, `Textarea`, `Label`, `FormField` | `FormField` links label, hint and error to the control (`aria-describedby`, `aria-invalid`, `aria-required`); the error replaces the hint and is announced |
+| `Select` | Radix Select in a glass popover; keyboard and typeahead |
+| `Dialog` | Centered glass dialog over a blurred scrim; focus trapped and returned; always has a title |
+| `Drawer` | The same dialog anchored right; a bottom sheet under 640 px. Built on Radix Dialog instead of Vaul (unmaintained since 2024) |
+| `Toaster`, `toast` | Glass toasts following the theme; mount once at the root (done in `__root.tsx`) |
+| `DataTable` | Server-driven: headers ask the server to sort (`aria-sort`), rows open with click or Enter, skeleton rows while loading, `empty` and `error` (with retry) states, "Load more" for cursor pages. No client-side table engine; adopt TanStack Table if a view needs client sorting, filtering or column resizing |
+| `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name; Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
+
+A development-only preview of every component lives at `/dev/components` until the catalog (P0-F8) replaces it.
+
 ## Foundations (phase 0)
 - **Tokens:** color (light + dark themes, semantic colors for success/warning/error/info, one brand accent), typography scale, spacing, radius, shadows, z-index, motion (respects reduced motion).
 - **Network colors and icons:** one icon + brand color per network, used consistently in pickers, previews and calendar cards.
