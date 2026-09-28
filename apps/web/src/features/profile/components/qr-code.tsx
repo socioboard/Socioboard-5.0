@@ -13,7 +13,8 @@ export function QrCode({
   label: string;
   size?: number;
 }) {
-  const { data } = encode(value, { ecc: 'M', border: 2 });
+  // The 4-module quiet zone the QR spec asks for; scanners are fussy without it.
+  const { data } = encode(value, { ecc: 'M', border: 4 });
   const modules = data.length;
   const path = data
     .flatMap((row, y) => row.map((on, x) => (on ? `M${String(x)} ${String(y)}h1v1h-1z` : '')))

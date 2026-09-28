@@ -97,7 +97,11 @@ function TransferDialog({
   return (
     <ConfirmDialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={(next) => {
+        // Each opening starts without a choice.
+        if (!next) setMemberId(undefined);
+        onOpenChange(next);
+      }}
       title={t('danger.transferTitle', { workspace: workspace.name })}
       description={t('danger.transferDescription')}
       confirmLabel={t('danger.transferConfirm')}
