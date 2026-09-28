@@ -87,7 +87,7 @@ describe('onboarding: create a workspace', () => {
     await user.click(screen.getByRole('button', { name: 'Create workspace' }));
 
     await waitFor(() => {
-      expect(history.location.pathname).toBe('/w/roastery-social');
+      expect(history.location.pathname).toBe('/w/roastery-social/calendar');
     });
     expect(calls.find((c) => c.key === 'POST /api/v1/workspaces')?.body).toEqual({
       name: 'Roastery Social',

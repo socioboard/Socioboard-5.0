@@ -1,4 +1,4 @@
-// Typed translation keys: t('home.title') is checked against locales/en.
+// Typed translation keys: t('app.name') is checked against locales/en.
 import 'i18next';
 
 import type { resources } from './lib/i18n';

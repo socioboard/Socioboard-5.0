@@ -26,6 +26,13 @@ The marketing site and legal pages (`/privacy`, `/terms`, `/data-deletion`) stay
 `GET /api/v1/me` (cached for the session), `GET /api/v1/workspaces`, `GET /api/v1/notifications?unread=true` (count), announcements via `GET /api/v1/me` payload.
 
 ## Behavior
+- **Built in P0-F5** (`features/shell`): layout, sidebar, switcher, user menu, ⌘K palette, the verify-email banner, route guards. The notification bell arrives with P2-F4, the other banners with their phases, and the platform-admin guard with the admin console (P2-F6).
+- **Layout:** floating glass panes 12 px apart: the sidebar (232 px, or 64 px icons-only when collapsed, remembered as `sb-sidebar` in `localStorage`) and the content pane. Pages render into the content pane and start with a `PageHeader`. Under 768 px the sidebar becomes a bottom tab bar: the pages, Search, and Menu (a sheet with the switcher and account).
+- **Sidebar items** come from one list (`features/shell/nav.ts`), shared with the tab bar and palette, filtered by permission. A page joins it when its route exists: Calendar (placeholder until P2-F2) now, Settings with P0-F6, Media with P0-F7.
+- **Workspace in the URL:** `/w/:slug` for a workspace the user isn't in shows "Workspace not found" (after asking the server once more, in case they just joined), with links to theirs; the same answer whether it exists or not. Opening a workspace makes it the active one on the server (`POST /me/active-workspace`), so the next sign-in returns there.
+- **Session ending mid-use** (expired, signed out elsewhere, revoked): any 401 from a query or mutation, or `me` coming back empty when it is re-checked (on window focus once older than 30 s), drops every cached answer and goes to `/login?redirect=<here>` with a 10-second toast saying why. Signing out on purpose goes to `/login` with no toast.
+- **Command palette:** ⌘K / Ctrl+K from anywhere, or the sidebar's search button: go to a page, switch or create a workspace, theme, collapse the sidebar, sign out. Every word typed must match (label, hint, keywords or group).
+- `/` has no page: it redirects to the active workspace, `/onboarding`, `/verify-email` or `/login`.
 - Items the user can't access are hidden, not disabled.
 - Socket connection is opened here once and shared by all areas.
 - Theme and sidebar state are stored in `localStorage` (UI preferences only).

@@ -1,31 +1,18 @@
-// Placeholder workspace home; P0-F5 replaces it with the app shell (calendar first).
-import { Button } from '@socioboard/ui';
 import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
-import { AuthLayout, useSignOut } from '../features/auth';
+import { AppShell } from '../features/shell';
 import { requireSignedIn } from '../lib/route-guards';
+import { meQuery } from '../lib/session';
+import { membershipFor } from '../lib/workspace';
 
 export const Route = createFileRoute('/w/$slug')({
-  beforeLoad: ({ context, params }) =>
-    requireSignedIn(context.queryClient, `/w/${encodeURIComponent(params.slug)}`),
-  component: function Workspace() {
-    const { t } = useTranslation('auth');
-    const { slug } = Route.useParams();
-    const signOut = useSignOut();
-    return (
-      <AuthLayout
-        title={t('placeholder.workspaceTitle', { slug })}
-        subtitle={t('placeholder.workspaceBody')}
-      >
-        <Button
-          onClick={() => {
-            void signOut();
-          }}
-        >
-          {t('invite.signOut')}
-        </Button>
-      </AuthLayout>
-    );
+  beforeLoad: async ({ context, params, location }) => {
+    const me = await requireSignedIn(context.queryClient, location.href);
+    // Not a member per the cached session: ask the server once more (just invited, or joined in
+    // another tab) before the shell shows "workspace not found".
+    if (!membershipFor(me, params.slug)) {
+      await context.queryClient.refetchQueries({ queryKey: meQuery.queryKey, exact: true });
+    }
   },
+  component: AppShell,
 });

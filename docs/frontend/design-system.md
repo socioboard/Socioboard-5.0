@@ -18,7 +18,7 @@
 | Radius | 10 (controls, chips, cards), 14 (media), 18 (panes), full (pills) |
 | Motion | Panes settle in once (blur to sharp, 0.7 s, `cubic-bezier(.16,1,.3,1)`); the now line draws in; hovers lift 1–2 px; ambient backdrop drift. All off under `prefers-reduced-motion` |
 
-**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-float` (a denser frost for layers floating over content, such as Select and Combobox lists, so a bright button underneath doesn't tint them), `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. Scrollbars are thin and token-colored everywhere. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
+**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-float` (a denser frost for layers floating over content, such as Select and Combobox lists, so a bright button underneath doesn't tint them), `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. Scrollbars are thin and token-colored everywhere. The base color's Tailwind name is `canvas` (`bg-canvas`), not `base`: `text-base` would otherwise also set the text to the background color. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
 
 **Components (P0-F2):** built on Radix (the `radix-ui` package) for keyboard, focus and screen-reader behavior, styled with the tokens; Sonner for toasts; lucide icons.
 
@@ -32,6 +32,11 @@
 | `Drawer` | The same dialog anchored right; a bottom sheet under 640 px. Built on Radix Dialog instead of Vaul (unmaintained since 2024) |
 | `Toaster`, `toast` | Glass toasts following the theme; mount once at the root (done in `__root.tsx`) |
 | `DataTable` | Server-driven: headers ask the server to sort (`aria-sort`), rows open with click or Enter, skeleton rows while loading, `empty` and `error` (with retry) states, "Load more" for cursor pages. No client-side table engine; adopt TanStack Table if a view needs client sorting, filtering or column resizing |
+| `DropdownMenu` (P0-F5) | Radix menu in `glass-float`: items with icon and hint, `tone="danger"`, radio groups (theme) with a check, labels, separators |
+| `Tooltip` (P0-F5) | Short label on hover or keyboard focus (400 ms delay); supplements an `aria-label`, never replaces it. `TooltipProvider` is mounted by the app shell (not the root, so sign-in pages don't load tooltip code) |
+| `Banner` (P0-F5) | Notice above the content: `info`, `warning` (polite status), `danger` (alert); optional action and dismiss |
+| `CommandPalette` (P0-F5) | ⌘K dialog: a search box over grouped commands; the same word matching as Combobox; arrows wrap; Enter runs and closes; opens with an empty search each time |
+| `PageHeader`, `Kbd` (P0-F5) | The 56 px bar at the top of a content pane holding the page's h1 and actions; a keyboard key chip |
 | `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name; Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
 
 Using them in screens:
