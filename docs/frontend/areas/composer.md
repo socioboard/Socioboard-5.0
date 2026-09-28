@@ -46,7 +46,7 @@ The most important screen in the product: write once, tailor per network, see ex
 | Submit for review | review required | `POST /posts/:id/submit` |
 
 ## AI panel (phase 4)
-"Generate" opens [ai-studio](ai-studio.md) as a side panel: generate a caption into the editor, or an image/video into the media strip. Generated text is always editable.
+"Generate" opens [ai-studio](ai-studio.md) as a side panel: generate a caption into the editor, or an image/video into the media strip. Generated text is always editable. Results follow the studio's show → apply → undo pattern: options are proposed (a caption as a change against the current text), nothing enters the post until "Use this", and every applied change can be undone.
 
 ## Behavior
 - Autosave draft every 10 s while editing (debounced); "Saved" indicator.

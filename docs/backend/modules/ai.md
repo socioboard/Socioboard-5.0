@@ -8,14 +8,14 @@ The only code that talks to the Python AI service (the `AiGateway`). Users gener
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `AiJob` | id, workspaceId, userId, type (text/image/video), templateId?, input JSON, targetNetworks[], status (queued/running/succeeded/failed/cancelled), externalJobId?, outputs JSON, creditsUsed, errorCode?, errorMessage?, createdAt, finishedAt | |
+| `AiJob` | id, workspaceId, userId, type (text/image/video), templateId?, refinesJobId? (a follow-up on an earlier job in the same workspace), input JSON, targetNetworks[], status (queued/running/succeeded/failed/cancelled), externalJobId?, outputs JSON, creditsUsed, errorCode?, errorMessage?, createdAt, finishedAt | |
 | `AiTemplate` | id, key, name, type, inputSchema JSON, active | Form definitions synced from the AI service (JSON Schema) |
 
 ## API
 | Method | Path | Permission | Description |
 | --- | --- | --- | --- |
 | GET | `/api/v1/ai/templates` | signed in | Available generation forms (drives the UI) |
-| POST | `/api/v1/workspaces/:wid/ai/jobs` | `ai:generate` | Start a job (Idempotency-Key); text may return synchronously |
+| POST | `/api/v1/workspaces/:wid/ai/jobs` | `ai:generate` | Start a job (Idempotency-Key); text may return synchronously. A follow-up ("shorter", "less formal") sends `refinesJobId` with the instruction, and the AI service receives the earlier job's outputs as context |
 | GET | `/api/v1/workspaces/:wid/ai/jobs` | `ai:generate` | My recent jobs |
 | GET | `/api/v1/workspaces/:wid/ai/jobs/:jid` | `ai:generate` | Status + outputs |
 | POST | `/api/v1/workspaces/:wid/ai/jobs/:jid/cancel` | `ai:generate` | Cancel if still running |

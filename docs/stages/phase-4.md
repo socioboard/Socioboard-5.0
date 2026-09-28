@@ -15,7 +15,7 @@
 - [ ] P4-B4 Member account access enforced across posts, scheduling, calendar
 - [ ] P4-B5 Tasks CRUD + due reminders
 - [ ] P4-B6 **AI mock service** (`apps/ai-mock`) implementing the expected contract (async jobs, webhook, sample outputs); once `socioboard/socioboard-ai` publishes its OpenAPI spec, a CI check that the mock still matches it
-- [ ] P4-B7 AI gateway: templates sync, job create, webhook (HMAC), `ai-result` import to media, `ai-poll` fallback
+- [ ] P4-B7 AI gateway: templates sync, job create (including follow-ups: `refinesJobId`, with the earlier outputs sent to the AI service as context), webhook (HMAC), `ai-result` import to media, `ai-poll` fallback
 - [ ] P4-B8 Switch from mock to the real Python service once the spec is ready
 - [ ] P4-B9 AI content labels: mark assets, set network disclosure flags where supported
 - [ ] P4-B10 Basic abuse limits (per-workspace posting and AI rate limits) to protect our developer apps
@@ -27,7 +27,7 @@
 - [ ] P4-F3 Comments thread on review panel and post detail; @mention autocomplete
 - [ ] P4-F4 Tasks page + task creation from a post
 - [ ] P4-F5 Settings: review requirement toggle; per-member account access
-- [ ] P4-F6 AI studio page + composer side panel; schema-driven forms; job states; results to library/editor
+- [ ] P4-F6 AI studio page + composer side panel; schema-driven forms; job states; results to library/editor, shown as proposals that are applied explicitly and can be undone ([ai-studio](../frontend/areas/ai-studio.md#how-results-are-shown-show-then-apply-then-undo))
 - [ ] P4-F7 Design system additions: CommentThread, MentionInput, SchemaForm, JobProgress, AvatarStack (reviewers, commenters)
 
 ## Quality

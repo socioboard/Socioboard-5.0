@@ -14,6 +14,15 @@ Template forms are rendered automatically from the template's JSON Schema (`GET 
 ## States
 queued → running (progress / "this can take a few minutes" for video) → succeeded (results) / failed (reason; content-policy refusals explained) / cancelled. Live via socket `ai.job.updated`.
 
+## How results are shown (show, then apply, then undo)
+The AI never changes a post or the library silently: every run shows what it understood, where it is, and what it proposes, and nothing lands until the person applies it. Reference: Framer's agent panel (request → "Thinking…" → plan → a list of changes with Undo), reviewed 2026-09-28.
+
+1. **Request:** the prompt or filled template stays visible at the top of the run as a chip (template name, networks, tone), so people can see what the AI was asked.
+2. **Progress in plain words:** the job state as a sentence ("Writing 3 captions for Instagram and LinkedIn…", "Rendering the video, about 2 minutes"), not just a spinner; cancel is always available while it runs.
+3. **Proposal:** results appear as options to choose from, never already in place. In the composer, a caption option shows as a change against the current text (added and removed words marked); media shows as "adds 1 image to the post".
+4. **Apply, then undo:** "Use this" applies it and shows a short "Changes" line ("Caption replaced · 1 image added") with **Undo**, which restores exactly what was there before, until the next edit.
+5. **Follow-up:** a box under the result refines it ("shorter", "less formal"), and each refinement is a new result in the same run, so earlier options stay available.
+
 ## API calls
 `GET /ai/templates`, `POST /ai/jobs` (Idempotency-Key), `GET /ai/jobs`, `GET /ai/jobs/:id`, `POST /ai/jobs/:id/cancel`.
 
