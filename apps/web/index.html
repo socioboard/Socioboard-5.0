@@ -6,6 +6,17 @@
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href="/sb-mark.svg" />
     <title>Socioboard</title>
+    <style>
+      /* The theme's base colors from the first frame, before the stylesheet arrives (no white
+         flash in dark mode). Kept in sync with --sb-base in @socioboard/ui/styles.css. */
+      html {
+        background: #e9ecf2;
+      }
+      html.dark {
+        background: #07090d;
+        color-scheme: dark;
+      }
+    </style>
     <script>
       // Apply the saved theme before first paint so the page never flashes the wrong one.
       // Key and values match ThemeProvider in @socioboard/ui.

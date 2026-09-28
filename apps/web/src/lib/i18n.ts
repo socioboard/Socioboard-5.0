@@ -3,17 +3,18 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import auth from '../locales/en/auth.json';
 import common from '../locales/en/common.json';
 import errors from '../locales/en/errors.json';
 import { ApiError } from './api';
 
-export const resources = { en: { common, errors } } as const;
+export const resources = { en: { common, errors, auth } } as const;
 
 void i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
   fallbackLng: 'en',
-  ns: ['common', 'errors'],
+  ns: ['common', 'errors', 'auth'],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes
   returnNull: false,
@@ -34,4 +35,9 @@ export function errorMessage(error: unknown): string {
     if (error.requestId) return t('genericWithId', { requestId: error.requestId });
   }
   return t('generic');
+}
+
+/** An `?error=CODE` from an emailed link (verification, magic link, reset) as a message. */
+export function linkErrorMessage(code: string): string {
+  return errorMessage(new ApiError(400, code.toUpperCase(), '', undefined));
 }
