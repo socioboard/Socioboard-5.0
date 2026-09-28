@@ -18,7 +18,7 @@
 | Radius | 10 (controls, chips, cards), 14 (media), 18 (panes), full (pills) |
 | Motion | Panes settle in once (blur to sharp, 0.7 s, `cubic-bezier(.16,1,.3,1)`); the now line draws in; hovers lift 1–2 px; ambient backdrop drift. All off under `prefers-reduced-motion` |
 
-**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`; `index.html` applies it before first paint). `Backdrop` renders the ambient glows and grain, sized to the viewport.
+**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
 
 ## Foundations (phase 0)
 - **Tokens:** color (light + dark themes, semantic colors for success/warning/error/info, one brand accent), typography scale, spacing, radius, shadows, z-index, motion (respects reduced motion).

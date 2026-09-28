@@ -40,7 +40,7 @@
 - [ ] P0-F2 Design system base in `packages/ui` (shadcn/ui): Button, Input, Select, Dialog, Drawer, Toast, DataTable, EmptyState, Skeleton, Avatar, Badge
 - [ ] P0-F3 Sign up, sign in, verify email, reset password, 2FA, invitation accept
 - [ ] P0-F4 Onboarding step 1 (create workspace)
-- [ ] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, route guards, banners
+- [ ] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, route guards, banners; replaces the temporary start page from P0-F1 (`routes/index.tsx`) with a redirect
 - [ ] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions)
 - [ ] P0-F7 Media library: uploader with progress, grid, details drawer, folders
 - [ ] P0-F8 Component catalog (Ladle) for `packages/ui` ([design system](../frontend/design-system.md))

@@ -207,15 +207,12 @@
   animation: sb-settle 0.7s var(--ease-out-soft) both;
 }
 
+/* Reduced motion stops decorative motion only. Indicators that show something is happening
+   (spinners, progress, skeletons) keep moving; components use Tailwind's motion-reduce: variant
+   for their own decorative transitions. */
 @media (prefers-reduced-motion: reduce) {
-  .sb-glow {
+  .sb-glow,
+  .animate-settle {
     animation: none;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }

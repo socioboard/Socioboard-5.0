@@ -63,6 +63,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Another tab changed the theme: follow it.
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === THEME_STORAGE_KEY || event.key === null) {
+        setPreferenceState(readPreference());
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
   const resolved: ResolvedTheme =
     preference === 'system' ? (systemDark ? 'dark' : 'light') : preference;
 
