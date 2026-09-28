@@ -33,6 +33,11 @@
 | `DataTable` | Server-driven: headers ask the server to sort (`aria-sort`), rows open with click or Enter, skeleton rows while loading, `empty` and `error` (with retry) states, "Load more" for cursor pages. No client-side table engine; adopt TanStack Table if a view needs client sorting, filtering or column resizing |
 | `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name; Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
 
+Using them in screens:
+- The few words components carry (Close, Load more, Try again, Loading) default to English; screens pass translated ones (`closeLabel`, `labels`) so they follow the app's language.
+- Clickable `DataTable` rows open with click or Enter, but screen readers announce a row, not a link: also put a real link (or button) in the row's main cell.
+- `Button asChild` renders its child (e.g. a router Link); `loading` applies only to real buttons.
+
 A development-only preview of every component lives at `/dev/components` until the catalog (P0-F8) replaces it.
 
 ## Foundations (phase 0)
