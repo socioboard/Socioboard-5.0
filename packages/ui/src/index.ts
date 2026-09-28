@@ -10,7 +10,14 @@ export {
   type ThemePreference,
 } from './theme';
 
+export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
+export {
+  CommandPalette,
+  type Command,
+  type CommandGroup,
+  type CommandPaletteProps,
+} from './components/command-palette';
 export { Combobox, type ComboboxOption, type ComboboxProps } from './components/combobox';
 export {
   DataTable,
@@ -43,6 +50,18 @@ export {
   type EmptyStateProps,
 } from './components/display';
 export {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  type DropdownMenuItemProps,
+} from './components/dropdown-menu';
+export {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -70,5 +89,7 @@ export {
   SelectTrigger,
   SelectValue,
 } from './components/select';
+export { Kbd, PageHeader, type PageHeaderProps } from './components/page';
 export { Spinner, type SpinnerProps } from './components/spinner';
 export { toast, Toaster } from './components/toast';
+export { Tooltip, TooltipProvider, type TooltipProps } from './components/tooltip';

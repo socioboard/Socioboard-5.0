@@ -12,6 +12,7 @@ import {
 } from 'react';
 
 import { cn } from '../cn';
+import { matchesAll, searchWords } from '../search';
 
 export interface ComboboxOption {
   value: string;
@@ -37,12 +38,8 @@ export interface ComboboxProps extends Omit<
   emptyText: ReactNode;
 }
 
-/** Every word of the query must appear in the label, hint or keywords (any order, any case). */
 function matches(option: ComboboxOption, words: string[]): boolean {
-  if (words.length === 0) return true;
-  const haystack =
-    `${option.label} ${option.hint ?? ''} ${option.keywords ?? ''}`.toLocaleLowerCase();
-  return words.every((word) => haystack.includes(word));
+  return matchesAll(`${option.label} ${option.hint ?? ''} ${option.keywords ?? ''}`, words);
 }
 
 /** Scrolls the list (only the list; scrollIntoView could also move the page) to center the choice. */
@@ -81,7 +78,7 @@ export function Combobox({
   const keepCentered = useRef(false);
 
   const filtered = useMemo(() => {
-    const words = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
+    const words = searchWords(query);
     return options.filter((o) => matches(o, words));
   }, [options, query]);
   const selected = options.find((o) => o.value === value);
