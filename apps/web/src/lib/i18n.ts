@@ -7,15 +7,16 @@ import auth from '../locales/en/auth.json';
 import common from '../locales/en/common.json';
 import errors from '../locales/en/errors.json';
 import onboarding from '../locales/en/onboarding.json';
+import shell from '../locales/en/shell.json';
 import { ApiError } from './api';
 
-export const resources = { en: { common, errors, auth, onboarding } } as const;
+export const resources = { en: { common, errors, auth, onboarding, shell } } as const;
 
 void i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
   fallbackLng: 'en',
-  ns: ['common', 'errors', 'auth', 'onboarding'],
+  ns: ['common', 'errors', 'auth', 'onboarding', 'shell'],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes
   returnNull: false,

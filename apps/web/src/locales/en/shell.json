@@ -1,0 +1,65 @@
+{
+  "nav": {
+    "label": "Main",
+    "calendar": "Calendar"
+  },
+  "switcher": {
+    "label": "Switch workspace",
+    "heading": "Workspaces",
+    "create": "Create workspace"
+  },
+  "user": {
+    "menu": "Account menu",
+    "signOut": "Sign out",
+    "toggleTheme": "Switch to {{theme}} theme"
+  },
+  "roles": {
+    "owner": "Owner",
+    "admin": "Admin",
+    "editor": "Editor",
+    "contributor": "Contributor",
+    "viewer": "Viewer"
+  },
+  "sidebar": {
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "search": {
+    "button": "Search or jump to",
+    "title": "Command palette",
+    "empty": "Nothing matches. Try another word.",
+    "goTo": "Go to",
+    "workspaces": "Workspaces",
+    "preferences": "Preferences",
+    "account": "Account",
+    "current": "Current",
+    "themeLight": "Use the light theme",
+    "themeDark": "Use the dark theme",
+    "themeSystem": "Match the system theme"
+  },
+  "banners": {
+    "verifyEmail": "Verify your email address. We sent a link to {{email}}.",
+    "resend": "Send the link again",
+    "resent": "Sent. Check your inbox.",
+    "dismiss": "Dismiss"
+  },
+  "session": {
+    "ended": "Your session has ended. Sign in again to continue."
+  },
+  "notFound": {
+    "title": "Workspace not found",
+    "body": "It doesn’t exist, or you’re not a member. Ask an admin to invite you, or open one of yours.",
+    "none": "You don’t belong to any workspace yet.",
+    "create": "Create a workspace"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "emptyTitle": "Your calendar lives here",
+    "emptyBody": "Scheduled and published posts will appear here once posting arrives in phase 2 of the build."
+  },
+  "mobile": {
+    "menu": "Menu",
+    "search": "Search",
+    "close": "Close menu"
+  }
+}

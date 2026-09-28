@@ -18,8 +18,11 @@ const Devtools = import.meta.env.DEV
       return {
         default: () => (
           <>
+            {/* Both bottom-right, side by side: bottom-left would cover the sidebar's account menu. */}
             <router.TanStackRouterDevtools position="bottom-right" />
-            <query.ReactQueryDevtools buttonPosition="bottom-left" />
+            <div className="fixed right-40 bottom-2 z-[99999]">
+              <query.ReactQueryDevtools buttonPosition="relative" />
+            </div>
           </>
         ),
       };

@@ -4,7 +4,17 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  Banner,
   Combobox,
+  CommandPalette,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+  Tooltip,
+  TooltipProvider,
   Avatar,
   Badge,
   Button,
@@ -236,6 +246,170 @@ describe('Combobox', () => {
     await user.keyboard('{Enter}{Escape}');
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('UTC');
+  });
+});
+
+describe('DropdownMenu', () => {
+  it('runs items and picks a radio choice from the keyboard', async () => {
+    const onSignOut = vi.fn();
+    function Menu() {
+      const [theme, setTheme] = useState('system');
+      return (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger>Account</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+              <DropdownMenuItem tone="danger" onSelect={onSignOut}>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <output>{theme}</output>
+        </>
+      );
+    }
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Account' }));
+    expect(await screen.findByRole('menuitemradio', { name: 'System' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await user.click(screen.getByRole('menuitemradio', { name: 'Dark' }));
+    expect(screen.getByRole('status')).toHaveTextContent('dark');
+
+    await user.click(screen.getByRole('button', { name: 'Account' }));
+    await user.click(await screen.findByRole('menuitem', { name: 'Sign out' }));
+    expect(onSignOut).toHaveBeenCalledOnce();
+  });
+});
+
+describe('Tooltip', () => {
+  it('names an icon button on keyboard focus', async () => {
+    const user = userEvent.setup();
+    render(
+      <TooltipProvider>
+        <Tooltip content="Collapse sidebar">
+          <button type="button" aria-label="Collapse sidebar">
+            ‹
+          </button>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+    await user.tab();
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Collapse sidebar');
+  });
+});
+
+describe('Banner', () => {
+  it('is a polite status, a danger banner an alert, and can be dismissed', async () => {
+    const onDismiss = vi.fn();
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <Banner tone="warning" onDismiss={onDismiss} dismissLabel="Dismiss notice">
+        Verify your email
+      </Banner>,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('Verify your email');
+    await user.click(screen.getByRole('button', { name: 'Dismiss notice' }));
+    expect(onDismiss).toHaveBeenCalledOnce();
+    rerender(<Banner tone="danger">Payment failed</Banner>);
+    expect(screen.getByRole('alert')).toHaveTextContent('Payment failed');
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+});
+
+describe('CommandPalette', () => {
+  function Palette({ onGo }: { onGo: (to: string) => void }) {
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Open palette
+        </button>
+        <CommandPalette
+          open={open}
+          onOpenChange={setOpen}
+          title="Command palette"
+          searchLabel="Search or jump to"
+          emptyText="Nothing matches."
+          groups={[
+            {
+              heading: 'Go to',
+              commands: [
+                {
+                  id: 'cal',
+                  label: 'Calendar',
+                  keywords: 'schedule',
+                  onSelect: () => {
+                    onGo('calendar');
+                  },
+                },
+                {
+                  id: 'media',
+                  label: 'Media',
+                  onSelect: () => {
+                    onGo('media');
+                  },
+                },
+              ],
+            },
+            {
+              heading: 'Workspaces',
+              commands: [
+                {
+                  id: 'w',
+                  label: 'Roastery',
+                  hint: 'Owner',
+                  onSelect: () => {
+                    onGo('roastery');
+                  },
+                },
+              ],
+            },
+          ]}
+        />
+      </>
+    );
+  }
+
+  it('filters across groups by label, keywords and heading, and runs with Enter', async () => {
+    const onGo = vi.fn();
+    const user = userEvent.setup();
+    render(<Palette onGo={onGo} />);
+    await user.click(screen.getByRole('button', { name: 'Open palette' }));
+    const search = await screen.findByRole('combobox', { name: 'Search or jump to' });
+    expect(screen.getAllByRole('option')).toHaveLength(3);
+    await user.type(search, 'schedule');
+    expect(screen.getAllByRole('option')).toHaveLength(1);
+    await user.keyboard('{Enter}');
+    expect(onGo).toHaveBeenCalledWith('calendar');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('wraps with the arrow keys, and opens with an empty search each time', async () => {
+    const onGo = vi.fn();
+    const user = userEvent.setup();
+    render(<Palette onGo={onGo} />);
+    await user.click(screen.getByRole('button', { name: 'Open palette' }));
+    await user.type(await screen.findByRole('combobox'), 'zzz');
+    expect(screen.getByText('Nothing matches.')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+
+    await user.click(screen.getByRole('button', { name: 'Open palette' }));
+    expect(await screen.findByRole('combobox')).toHaveValue('');
+    await user.keyboard('{ArrowUp}{Enter}');
+    expect(onGo).toHaveBeenCalledWith('roastery');
   });
 });
 

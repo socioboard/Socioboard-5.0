@@ -77,7 +77,7 @@ Features import each other, and routes and `lib` import features, only through `
 The workspace lives in the URL (`/w/:slug`), so links are shareable and tabs can show different workspaces.
 
 ## Rules every area follows
-- **Permissions:** `can('posts:approve')` from `lib/permissions`, using the same permission map as the backend. Hide actions the user can't take; the API still enforces.
+- **Permissions:** `const can = useCan(); can('posts:approve')` from `lib/permissions` (the role in the current workspace, via `useWorkspace()` in `lib/workspace`), using the same permission map as the backend. Hide actions the user can't take; the API still enforces.
 - **Every data view handles four states:** loading (skeletons), empty (explains what to do next), error (message + retry), and success.
 - **Errors:** API error `code` maps to a translated message; unknown errors show a generic message plus a request ID.
 - **Mutations:** optimistic updates only where rollback is simple (marking read, reordering); otherwise disable and show progress.

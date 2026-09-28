@@ -85,7 +85,8 @@
 @theme inline {
   --font-sans: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
 
-  --color-base: var(--sb-base);
+  /* Not "base": text-base would then set the color as well as the 16 px size. */
+  --color-canvas: var(--sb-base);
   --color-glass: var(--sb-glass);
   --color-chip: var(--sb-chip);
   --color-edge: var(--sb-edge);

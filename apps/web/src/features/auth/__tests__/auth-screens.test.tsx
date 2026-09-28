@@ -82,7 +82,7 @@ describe('sign in', () => {
     });
     const { history } = renderApp('/login?redirect=%2F%2Fevil.test');
     await waitFor(() => {
-      expect(history.location.pathname).toBe('/w/halden');
+      expect(history.location.pathname).toBe('/w/halden/calendar');
     });
   });
 
@@ -377,7 +377,7 @@ describe('invitation', () => {
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Accept invitation' }));
     await waitFor(() => {
-      expect(history.location.pathname).toBe('/w/halden');
+      expect(history.location.pathname).toBe('/w/halden/calendar');
     });
   });
 
