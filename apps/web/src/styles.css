@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@socioboard/ui/styles.css';
+
+/* Scan the design system's components for class names too. */
+@source '../../../packages/ui/src';

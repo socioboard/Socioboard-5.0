@@ -8,15 +8,15 @@ A React single-page app built with Vite. It holds no business logic: it calls th
 | Concern | Choice |
 | --- | --- |
 | Framework | React 19 + TypeScript + Vite |
-| Routing | TanStack Router (file-based, type-safe params and search) |
-| Server state | TanStack Query (caching, retries, invalidation) |
-| API client | Typed client generated from `packages/contracts` (Zod) over `fetch`, cookies included |
+| Routing | TanStack Router (file-based, type-safe params and search). `src/routeTree.gen.ts` is generated (Vite plugin, or `pnpm generate`) and not committed; `tsr.config.json` keeps test files out of the route tree |
+| Server state | TanStack Query (caching, invalidation; 4xx never retried, server and network errors retried twice) |
+| API client | `lib/api.ts`: `api(route, { params, query, body })` typed by the route definitions in `packages/contracts`, over `fetch` with cookies; failures are `ApiError` (`status`, `code`, `requestId`), network failures `NETWORK_ERROR` |
 | Forms | react-hook-form + Zod resolvers (the same schemas the API validates with) |
-| UI | Tailwind CSS + shadcn/ui components in `packages/ui`; lucide icons |
+| UI | Tailwind CSS v4 with the design tokens in `packages/ui/src/styles.css` (glass utilities, light and dark via the `.dark` class), shadcn/ui-based components in `packages/ui`; lucide icons; Instrument Sans self-hosted (`@fontsource-variable`) |
 | Calendar | FullCalendar (month/week, drag-and-drop) |
 | Charts (6.1) | Recharts |
 | Realtime | socket.io-client → invalidates Query caches |
-| i18n | react-i18next; strings in `apps/web/src/locales/en/*.json` |
+| i18n | react-i18next with typed keys; strings in `apps/web/src/locales/en/*.json` (`common`, `errors`); `errorMessage(error)` maps API error codes to translated text, else a generic message with the request ID |
 | Tests | Vitest + Testing Library (components), Playwright (end-to-end), MSW (API mocks) |
 
 ## Area index

@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "Socioboard"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "status": {
+    "loading": "Loading…",
+    "retry": "Try again"
+  },
+  "notFound": {
+    "title": "This page doesn’t exist",
+    "body": "The link may be old, or the page was moved.",
+    "home": "Go to the start page"
+  },
+  "home": {
+    "title": "The foundation is in place",
+    "body": "Routing, data loading, translations and the light and dark themes are wired up. Screens arrive with the next tasks.",
+    "apiLabel": "API",
+    "apiChecking": "Checking…",
+    "apiSignedOut": "Connected. You’re signed out.",
+    "apiSignedIn": "Connected. Signed in as {{name}}."
+  }
+}

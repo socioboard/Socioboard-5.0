@@ -85,7 +85,8 @@ module.exports = {
         path: '^(apps|packages)/[^/]+/src/',
         pathNot: '__tests__|\\.test\\.tsx?$|/src/testing/',
       },
-      to: { dependencyTypes: ['npm-dev'], dependencyTypesNot: ['type-only'] },
+      // A library's peer (react in packages/ui) is also a devDependency so its tests run; allowed.
+      to: { dependencyTypes: ['npm-dev'], dependencyTypesNot: ['type-only', 'npm-peer'] },
     },
     {
       name: 'testing-only-from-tests',

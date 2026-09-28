@@ -5,3 +5,4 @@ coverage/
 # Docs are hand-formatted; keep table diffs readable.
 docs/
 packages/db/src/generated/
+apps/web/src/routeTree.gen.ts

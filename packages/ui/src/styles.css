@@ -1,0 +1,221 @@
+/*
+ * Socioboard design tokens: "Graphite with glass", Aurora palette, light and dark
+ * (docs/frontend/design-system.md#visual-direction). Import after Tailwind in the app's CSS:
+ *   @import 'tailwindcss';
+ *   @import '@socioboard/ui/styles.css';
+ * Colors are CSS variables (--sb-*) that switch with the `.dark` class on <html>; Tailwind
+ * utilities read them through `@theme inline`, so `bg-glass`, `text-ink-2` etc. follow the theme.
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  /* Backdrop: neutral base with three soft Aurora glows (rose, lilac, mint). */
+  --sb-base: #e9ecf2;
+  --sb-glow-1: rgb(255 122 150 / 0.34);
+  --sb-glow-2: rgb(168 138 255 / 0.34);
+  --sb-glow-3: rgb(90 210 180 / 0.28);
+  --sb-glow-strength: 0.8;
+  --sb-grain: 0.05;
+  /* Glass surfaces. */
+  --sb-glass: rgb(255 255 255 / 0.56);
+  --sb-glass-solid: rgb(255 255 255 / 0.74);
+  --sb-chip: rgb(255 255 255 / 0.72);
+  --sb-edge: rgb(255 255 255 / 0.75);
+  --sb-spec: rgb(255 255 255 / 0.9);
+  --sb-hair: rgb(18 22 32 / 0.08);
+  --sb-hair-strong: rgb(18 22 32 / 0.14);
+  --sb-shadow: 0 1px 1px rgb(16 20 30 / 0.04), 0 24px 60px -24px rgb(16 24 48 / 0.28);
+  /* Ink (text and icons); every level keeps 4.5:1 on glass. */
+  --sb-ink: #11141a;
+  --sb-ink-2: #3d4452;
+  --sb-ink-3: #596170;
+  /* Brand accent: primary actions and the calendar's "now" line only. */
+  --sb-accent: #d63a1b;
+  --sb-accent-hi: #e8502e;
+  --sb-on-accent: #ffffff;
+  /* Selection and focus: Aurora violet. */
+  --sb-ring: #5b45c4;
+  --sb-ring-glow: rgb(91 69 196 / 0.28);
+  /* Status. */
+  --sb-success: #177a46;
+  --sb-warning: #8f5200;
+  --sb-warning-tint: rgb(245 166 35 / 0.18);
+  --sb-danger: #b42318;
+  --sb-danger-tint: rgb(214 58 27 / 0.12);
+}
+
+.dark {
+  color-scheme: dark;
+  --sb-base: #07090d;
+  --sb-glow-1: rgb(255 110 150 / 0.22);
+  --sb-glow-2: rgb(150 120 255 / 0.3);
+  --sb-glow-3: rgb(70 200 170 / 0.18);
+  --sb-grain: 0.07;
+  --sb-glass: rgb(20 23 30 / 0.52);
+  --sb-glass-solid: rgb(34 38 48 / 0.66);
+  --sb-chip: rgb(255 255 255 / 0.06);
+  --sb-edge: rgb(255 255 255 / 0.09);
+  --sb-spec: rgb(255 255 255 / 0.1);
+  --sb-hair: rgb(255 255 255 / 0.07);
+  --sb-hair-strong: rgb(255 255 255 / 0.12);
+  --sb-shadow: 0 1px 1px rgb(0 0 0 / 0.3), 0 30px 70px -28px rgb(0 0 0 / 0.7);
+  --sb-ink: #eef0f4;
+  --sb-ink-2: #b9bfcb;
+  --sb-ink-3: #8f96a4;
+  --sb-ring: #c3b5ff;
+  --sb-ring-glow: rgb(150 120 255 / 0.4);
+  --sb-success: #5fd39a;
+  --sb-warning: #f5c15e;
+  --sb-warning-tint: rgb(245 176 60 / 0.14);
+  --sb-danger: #ff8a78;
+  --sb-danger-tint: rgb(255 99 82 / 0.14);
+}
+
+@theme inline {
+  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-base: var(--sb-base);
+  --color-glass: var(--sb-glass);
+  --color-chip: var(--sb-chip);
+  --color-edge: var(--sb-edge);
+  --color-hair: var(--sb-hair);
+  --color-hair-strong: var(--sb-hair-strong);
+  --color-ink: var(--sb-ink);
+  --color-ink-2: var(--sb-ink-2);
+  --color-ink-3: var(--sb-ink-3);
+  --color-accent: var(--sb-accent);
+  --color-on-accent: var(--sb-on-accent);
+  --color-ring: var(--sb-ring);
+  --color-success: var(--sb-success);
+  --color-warning: var(--sb-warning);
+  --color-warning-tint: var(--sb-warning-tint);
+  --color-danger: var(--sb-danger);
+  --color-danger-tint: var(--sb-danger-tint);
+
+  --radius-control: 10px;
+  --radius-media: 14px;
+  --radius-pane: 18px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background: var(--sb-base);
+    color: var(--sb-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'tnum' 1;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--sb-ring);
+    outline-offset: 2px;
+  }
+}
+
+/* A frosted pane: the main surface of the app. Falls back to a near-opaque fill where the browser
+   cannot blur, so text contrast never depends on the backdrop. */
+@utility glass {
+  background: var(--sb-glass);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  backdrop-filter: blur(28px) saturate(170%);
+  border: 1px solid var(--sb-edge);
+  box-shadow:
+    inset 0 1px 0 var(--sb-spec),
+    var(--sb-shadow);
+  border-radius: var(--radius-pane);
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: var(--sb-glass-solid);
+  }
+}
+
+/* A lighter layer on glass: inputs, chips, cards inside a pane. */
+@utility glass-chip {
+  background: var(--sb-chip);
+  border: 1px solid var(--sb-hair);
+  box-shadow: inset 0 1px 0 var(--sb-spec);
+}
+
+/* The primary button's lit surface. */
+@utility accent-lit {
+  color: var(--sb-on-accent);
+  background: linear-gradient(180deg, var(--sb-accent-hi), var(--sb-accent));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+}
+
+/* Selected item: violet ring with a soft glow. */
+@utility ring-selected {
+  box-shadow:
+    inset 0 1px 0 var(--sb-spec),
+    0 0 0 1px var(--sb-ring),
+    0 10px 28px -8px var(--sb-ring-glow);
+}
+
+/* Ambient backdrop (see Backdrop in backdrop.tsx). */
+.sb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--sb-base);
+  pointer-events: none;
+}
+.sb-backdrop-glows {
+  position: absolute;
+  inset: 0;
+  opacity: var(--sb-glow-strength);
+}
+.sb-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  animation: sb-drift 40s ease-in-out infinite alternate;
+}
+.sb-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: var(--sb-grain);
+  mix-blend-mode: overlay;
+}
+@keyframes sb-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(60px, -40px) scale(1.12);
+  }
+}
+
+/* Panes settle in once when a screen opens. */
+@keyframes sb-settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+@utility animate-settle {
+  animation: sb-settle 0.7s var(--ease-out-soft) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-glow {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -2,21 +2,33 @@
   "name": "@socioboard/ui",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared React components (shadcn/ui based)",
+  "description": "Design tokens and shared React components",
   "license": "AGPL-3.0-only",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "clean": "rm -rf .turbo"
   },
   "peerDependencies": {
     "react": "^19.3.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "~10.4.2",
+    "@testing-library/jest-dom": "~7.0.1",
+    "@testing-library/react": "~16.3.3",
     "@types/react": "^19.3.0",
-    "react": "^19.3.0"
+    "@types/react-dom": "^19.3.0",
+    "happy-dom": "~20.14.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "dependencies": {
+    "clsx": "~2.1.1",
+    "tailwind-merge": "~3.7.0"
   }
 }
