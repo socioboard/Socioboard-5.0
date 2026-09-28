@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Prisma schema, migrations, seed and client",
-  "license": "AGPL-3.0-only",
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"

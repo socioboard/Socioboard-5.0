@@ -4,13 +4,13 @@ As of 2026-09-23 · Live doc: [Architecture & Roadmap](https://claude.ai/code/ar
 
 ## Overview
 
-Socioboard 6.0 rebuilds Socioboard from scratch as a fully open-source (AGPL-3.0) social media management platform. It is a TypeScript monorepo: a React (Vite) web app, an Express API and a BullMQ worker, on PostgreSQL and Valkey. Socioboard 5.0 serves only as a reference for features and flows; no code carries over.
+Socioboard 6.0 rebuilds Socioboard from scratch as a fully open-source (MIT) social media management platform. It is a TypeScript monorepo: a React (Vite) web app, an Express API and a BullMQ worker, on PostgreSQL and Valkey. Socioboard 5.0 serves only as a reference for features and flows; no code carries over.
 
 **Product in one line:** teams connect their social accounts, create content (upload it, or generate it through the AI team's service), get it approved, then publish it now or on a schedule, and track how it performs.
 
 **One edition**
 
-Socioboard 6.0 ships as a single edition with every feature included, all under AGPL-3.0. There is no paid or closed code. The same code runs two ways:
+Socioboard 6.0 ships as a single edition with every feature included, all under the MIT license. There is no paid or closed code. The same code runs two ways:
 
 - **Hosted cloud (socioboard.com):** our multi-tenant SaaS. Stripe billing and plan limits are switched on, and AI credits are metered.
 - **Self-hosted:** anyone can run it with Docker Compose, using their own network app keys and the open-source AI service with their own model keys. Without Stripe keys, billing is off and everything is unlimited.
@@ -356,7 +356,7 @@ Browsers upload directly to S3 using presigned multipart URLs. The API then reco
 
 ### Licensing and the billing switch
 
-The whole repo is AGPL-3.0, with no private or license-keyed code. AGPL means anyone who runs a modified Socioboard as a network service must publish their changes under the same license, so competitors can't take the code closed. Socioboard, as the copyright holder, isn't bound by that for its own hosted cloud. Outside contributions need a CLA (or DCO plus a relicensing clause) to keep that option; set this up before accepting external PRs. Billing lives in `packages/billing` and loads only when `STRIPE_SECRET_KEY` is set; otherwise every workspace is unlimited. The hosted cloud is the same code with billing turned on, plus our reviewed network apps and our hosted AI service.
+The whole repo is MIT (changed from AGPL-3.0 on 2026-09-28), with no private or license-keyed code. Anyone may use, change and host Socioboard, commercially too, without publishing their changes; they keep the copyright and license notice. The hosted cloud stands on what the license doesn't cover: our reviewed network apps, our hosted AI service and operating it well. Contributions arrive under the same MIT license, so no CLA is needed; a CONTRIBUTING guide (with DCO sign-off) comes before accepting outside PRs. Billing lives in `packages/billing` and loads only when `STRIPE_SECRET_KEY` is set; otherwise every workspace is unlimited. The hosted cloud is the same code with billing turned on, plus our reviewed network apps and our hosted AI service.
 
 ### Deployment
 
