@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import { authClient, unwrap } from '../../../lib/auth-client';
 import { errorMessage } from '../../../lib/i18n';
+import { withRedirect } from '../../../lib/redirect';
 import { authOptionsQuery, meQuery } from '../../../lib/session';
 import { useFinishSignIn } from '../hooks';
 import { AuthLayout, FormError } from './auth-layout';
@@ -46,8 +47,10 @@ export function SignUpScreen({ redirect }: { redirect?: string }) {
       unwrap(
         await authClient.signUp.email({
           ...values,
-          // Where the verification link lands; the page asks the server whether it worked.
-          callbackURL: '/verify-email',
+          // Where the verification link lands (the page asks the server whether it worked). It
+          // keeps `redirect`: the link usually opens in a new tab, and an invitee must get back
+          // to the invitation rather than to onboarding.
+          callbackURL: withRedirect('/verify-email', redirect),
         }),
       );
       const options = await queryClient.query({ ...authOptionsQuery, staleTime: 'static' });
@@ -80,9 +83,7 @@ export function SignUpScreen({ redirect }: { redirect?: string }) {
         </>
       }
     >
-      <SocialButtons
-        callbackURL={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login'}
-      />
+      <SocialButtons redirect={redirect} />
       <form onSubmit={(e) => void onSubmit(e)} noValidate className="flex flex-col gap-4">
         <FormField label={t('fields.name')} error={fieldError(errors.name?.message)}>
           {(p) => <Input {...p} {...form.register('name')} autoComplete="name" autoFocus />}

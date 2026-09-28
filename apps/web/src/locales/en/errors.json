@@ -39,5 +39,14 @@
     "NEW_USER_SIGNUP_DISABLED": "There’s no account for that email yet. Create one first.",
     "FAILED_TO_CREATE_USER": "There’s no account for that email yet. Create one first.",
     "INVALID_USER": "That link belongs to a different account. Sign out, then open it again."
+  },
+  "providers": {
+    "access_denied": "Sign-in was cancelled at the provider. Try again when you’re ready.",
+    "account_not_linked": "There’s already an account for this email. Sign in with your password or an email link instead.",
+    "unable_to_link_account": "There’s already an account for this email. Sign in with your password or an email link instead.",
+    "email_not_found": "The provider didn’t share an email address, which Socioboard needs. Sign up with your email instead.",
+    "invalid_code": "Signing in with that provider didn’t work. Try again, or sign in with your email.",
+    "unable_to_get_user_info": "Signing in with that provider didn’t work. Try again, or sign in with your email.",
+    "state_mismatch": "Signing in with that provider didn’t work. Try again, or sign in with your email."
   }
 }

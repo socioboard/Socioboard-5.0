@@ -8,6 +8,7 @@ import { z } from 'zod';
 
 import { authClient, unwrap } from '../../../lib/auth-client';
 import { errorMessage, linkErrorMessage } from '../../../lib/i18n';
+import { withRedirect } from '../../../lib/redirect';
 import { useFinishSignIn } from '../hooks';
 import { AuthLayout, FormError, FormNotice } from './auth-layout';
 import { PasswordField } from './password-field';
@@ -18,10 +19,6 @@ const passwordSchema = z.object({
   password: z.string().min(1, { error: 'validation.passwordShort' }),
 });
 const linkSchema = z.object({ email: z.email({ error: 'validation.emailInvalid' }) });
-
-/** Sign-in page URL that returns to `redirect` afterwards (the page itself routes onward). */
-const signInUrl = (redirect?: string) =>
-  redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login';
 
 export function SignInScreen({ redirect, linkError }: { redirect?: string; linkError?: string }) {
   const { t } = useTranslation('auth');
@@ -42,7 +39,7 @@ export function SignInScreen({ redirect, linkError }: { redirect?: string; linkE
         </>
       }
     >
-      <SocialButtons callbackURL={signInUrl(redirect)} />
+      <SocialButtons redirect={redirect} />
       {linkError && <FormError>{linkErrorMessage(linkError)}</FormError>}
       {mode === 'password' ? (
         <PasswordForm
@@ -138,8 +135,9 @@ function LinkForm({ redirect, onUsePassword }: { redirect?: string; onUsePasswor
       unwrap(
         await authClient.signIn.magicLink({
           email,
-          callbackURL: signInUrl(redirect),
-          errorCallbackURL: '/login',
+          // Both land on this page, which routes onward or explains the error.
+          callbackURL: withRedirect('/login', redirect),
+          errorCallbackURL: withRedirect('/login', redirect),
         }),
       );
       setSentTo(email);
