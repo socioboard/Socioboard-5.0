@@ -28,7 +28,7 @@
 - [ ] P4-F4 Tasks page + task creation from a post
 - [ ] P4-F5 Settings: review requirement toggle; per-member account access
 - [ ] P4-F6 AI studio page + composer side panel; schema-driven forms; job states; results to library/editor
-- [ ] P4-F7 Design system additions: CommentThread, MentionInput, SchemaForm, JobProgress
+- [ ] P4-F7 Design system additions: CommentThread, MentionInput, SchemaForm, JobProgress, AvatarStack (reviewers, commenters)
 
 ## Quality
 - [ ] P4-Q1 E2E: Contributor generates with AI (mock) → submits → Editor comments, approves and schedules → publishes

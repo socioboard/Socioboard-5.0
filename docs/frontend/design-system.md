@@ -39,6 +39,9 @@
 | `Checkbox`, `Switch`, `RadioGroup` + `RadioCard` (P0-F6) | Checkbox with its label (and optional description) for choices saved by a form button; Switch for settings that apply at once; RadioCard is a selectable card with a one-line explanation (roles) |
 | `ConfirmDialog` (P0-F6) | "Are you sure?" with progress while `onConfirm` runs, the error kept in the dialog on failure, and optional type-to-confirm (deleting a workspace) |
 | `NavTabs` (P0-F6) | Tabs that are pages: a row of router links with the active one underlined in the selection color. Radix Tabs (panels within one page) are added when a screen needs them |
+| `FileDropzone` (P0-F7) | Makes an area accept dropped files, with a glass overlay saying what dropping does; ignores drags without files. Always paired with a visible upload button |
+| `ProgressBar` (P0-F7) | Thin bar in the selection color, announced as a progressbar with its value; without a value it runs an indeterminate sweep (kept under reduced motion, like spinners) |
+| `Card`, `Popover` (P0-F7) | Card: a light surface for tiles, with the selection ring when `selected`. Popover: a small glass panel for quick forms (New folder) |
 | `PageHeader`, `Kbd` (P0-F5) | The 56 px bar at the top of a content pane holding the page's h1 and actions; a keyboard key chip |
 | `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name (`decorative` when the name is already shown beside it, so screen readers don't read it twice); Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
 
@@ -57,15 +60,15 @@ A development-only preview of every component lives at `/dev/components` until t
 ## Components by phase
 | Phase | Components |
 | --- | --- |
-| 0 | Button, IconButton, Input, Textarea, Select, Combobox, Checkbox, Switch, RadioGroup, Label, FormField, Dialog, Drawer, Popover, DropdownMenu, Tooltip, Toast, Tabs, Badge, Avatar, AvatarStack, Card, DataTable (sort, cursor pagination), EmptyState, Skeleton, Spinner, Banner, ConfirmDialog, CommandPalette, PageHeader, Sidebar, FileDropzone, ProgressBar |
+| 0 | Button, IconButton, Input, Textarea, Select, Combobox, Checkbox, Switch, RadioGroup, Label, FormField, Dialog, Drawer, Popover, DropdownMenu, Tooltip, Toast, Tabs, Badge, Avatar, Card, DataTable (sort, cursor pagination), EmptyState, Skeleton, Spinner, Banner, ConfirmDialog, CommandPalette, PageHeader, Sidebar, FileDropzone, ProgressBar |
 | 1 | AccountPicker, NetworkIcon, StatusChip, MediaThumb, CharacterCounter, IssueList, PreviewFrame (base for network previews) |
 | 2 | DateTimePicker (timezone-aware), CalendarEventCard, NotificationItem, TimelineItem |
 | 3 | BoardPicker, PrivacyPicker, per-network option panels |
-| 4 | CommentThread, MentionInput, SchemaForm (renders JSON Schema → fields, for AI templates), JobProgress |
+| 4 | AvatarStack, CommentThread, MentionInput, SchemaForm (renders JSON Schema → fields, for AI templates), JobProgress |
 | 5 | UsageMeter, PlanCard, KpiTile |
 | 6.1 | Chart wrappers (Line, Bar, Area) with theme tokens, DateRangePicker, MetricDelta |
 
-Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card, Popover and AvatarStack with the media library (P0-F7). IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
+Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card and Popover with the media library (P0-F7); AvatarStack with approvals and comments (P4-F7), where several people first appear together. IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
 
 ## Rules
 - Components are accessible by default (keyboard, focus, ARIA, labels) and tested with Testing Library.

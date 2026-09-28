@@ -11,7 +11,7 @@
 - [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe); smoke test that starts the built api and worker images and waits for `/api/health` 200 (a bundling bug once broke only the built app), and sends SIGTERM to check graceful shutdown
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
-- [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
+- [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`; storage bucket CORS for browser uploads ([infra](../infra.md))
 - [ ] P0-I9 Repo migration into one `socioboard/socioboard` repo (5.0 renamed; 6.0 on `main`; 5.0, the prototype and socioboard-core on `archive/*` branches); runbook and progress in [repo-migration](../repo-migration.md)
 - [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
 
@@ -42,7 +42,7 @@
 - [x] P0-F4 Onboarding step 1 (create workspace); replaces the placeholder `/onboarding` route from P0-F3
 - [x] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, command palette (⌘K), route guards, banners; replaces the temporary start page from P0-F1 (`routes/index.tsx`) with a redirect and the placeholder `/w/$slug` route from P0-F3. Handles a session that ends mid-use: any 401 from the API clears the cached `me` and goes to `/login?redirect=<here>` (the P0-F3 route guards reuse the cached `me` and don't re-ask the server on every navigation)
 - [x] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions). Adds Settings to the sidebar (`features/shell/nav.ts`) and profile/security to the user menu; builds Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog in `packages/ui`
-- [ ] P0-F7 Media library: uploader with progress, grid, details drawer, folders. Adds Media to the sidebar (`features/shell/nav.ts`); builds FileDropzone, ProgressBar, Card, Popover and AvatarStack in `packages/ui`
+- [x] P0-F7 Media library: uploader with progress, grid, details drawer, folders. Adds Media to the sidebar (`features/shell/nav.ts`); builds FileDropzone, ProgressBar, Card and Popover in `packages/ui` (AvatarStack moved to P4-F7, where reviewers and commenters first appear)
 - [ ] P0-F8 Component catalog (Ladle) for `packages/ui`; replaces the development-only preview route `/dev/components` ([design system](../frontend/design-system.md))
 
 ## Platform reviews (Chethan) — see [developer-apps.md](../developer-apps.md)
