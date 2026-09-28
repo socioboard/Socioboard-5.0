@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { api, ApiError } from '../../lib/api';
-import { meQuery, useMe } from '../../lib/session';
+import { meQuery, notifySignedOut, useMe } from '../../lib/session';
 
 /**
  * A session can end while the app is open (expired, signed out in another tab, revoked from the
@@ -46,6 +46,7 @@ export function useSessionWatcher() {
     // Nothing from this session may show to whoever signs in next on this browser.
     queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== meQuery.queryKey[0] });
     queryClient.getMutationCache().clear();
+    notifySignedOut();
     // Long enough to read on the sign-in page it explains.
     toast(t('session.ended'), { id: 'session-ended', duration: 10_000 });
     const here = router.state.location.href;

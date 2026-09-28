@@ -1,8 +1,9 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiError } from '../../../lib/api';
+import { notifySignedOut } from '../../../lib/session';
 import { halden, meWith, mockServer, renderApp } from '../../../testing/render';
 import { checkFile, uploadMedia } from '../upload';
 import { resetUploads } from '../uploads';
@@ -210,6 +211,27 @@ const signedIn = (role = 'owner') => ({
     meWith({ memberships: [{ ...halden, role }], activeWorkspaceId: WID }),
   ] as [number, unknown],
   [`GET /api/v1/workspaces/${WID}/media/folders`]: [200, { items: [] }] as [number, unknown],
+});
+
+describe('uploads and signing out', () => {
+  it('forgets pending and failed uploads when the session ends', async () => {
+    mockServer({
+      ...signedIn(),
+      [`GET /api/v1/workspaces/${WID}/media`]: [200, { items: [], nextCursor: null }],
+    });
+    renderApp('/w/halden/media');
+    await screen.findByText('No media yet');
+    fireEvent.change(screen.getByTestId('media-file-input'), {
+      target: { files: [fakeFile('private-plan.svg', 'image/svg+xml', 10)] },
+    });
+    expect(await screen.findByText('private-plan.svg')).toBeInTheDocument();
+    act(() => {
+      notifySignedOut();
+    });
+    await waitFor(() => {
+      expect(screen.queryByText('private-plan.svg')).not.toBeInTheDocument();
+    });
+  });
 });
 
 describe('media library', () => {
