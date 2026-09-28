@@ -52,7 +52,7 @@
 - [ ] P0-R4 LinkedIn apps + Community Management access form
 - [ ] P0-R5 Google Cloud projects, OAuth consent screen, verification + YouTube audit form
 - [ ] P0-R6 TikTok app + media domain verification; Pinterest trial; X project + billing cap; Tumblr, Bitly, Microsoft apps
-- [ ] P0-R7 Contributor agreement for AGPL-3.0: pick a CLA (e.g. CLA Assistant bot) so Socioboard can keep running the hosted cloud on contributed code; required before accepting outside PRs
+- [ ] P0-R7 Contribution guide: `CONTRIBUTING.md` with DCO sign-off (`Signed-off-by`), required before accepting outside PRs. No CLA: under MIT, contributions come in under the same license (changed from the AGPL CLA plan on 2026-09-28)
 
 ## Quality
 - [x] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image (`apps/web/e2e/phase-0/team-media.spec.ts`, `pnpm e2e`)
