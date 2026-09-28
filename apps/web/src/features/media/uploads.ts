@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
 
+import { onSignedOut } from '../../lib/session';
 import { mediaKeys } from './api';
 import { checkFile, uploadMedia, type RejectReason } from './upload';
 
@@ -134,3 +135,6 @@ export function resetUploads() {
   items = [];
   emit();
 }
+
+// Nothing from one person's uploads (file names, progress) stays for the next person on this browser.
+onSignedOut(resetUploads);

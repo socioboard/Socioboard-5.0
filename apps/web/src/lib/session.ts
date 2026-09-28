@@ -25,3 +25,20 @@ export const authOptionsQuery = queryOptions({
 export function useMe() {
   return useQuery(meQuery);
 }
+
+const signedOutListeners = new Set<() => void>();
+
+/**
+ * Run `listener` whenever this browser's session ends (sign-out, or ended elsewhere), so state kept
+ * outside the query cache (uploads in progress) doesn't carry over to whoever signs in next.
+ */
+export function onSignedOut(listener: () => void): () => void {
+  signedOutListeners.add(listener);
+  return () => {
+    signedOutListeners.delete(listener);
+  };
+}
+
+export function notifySignedOut(): void {
+  for (const listener of signedOutListeners) listener();
+}

@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import { authClient } from '../../lib/auth-client';
 import { routeAfterSignIn, safeRedirect } from '../../lib/redirect';
-import { authOptionsQuery, meQuery } from '../../lib/session';
+import { authOptionsQuery, meQuery, notifySignedOut } from '../../lib/session';
 
 /** After any successful sign-in: refresh who we are, then go to `redirect` or the right place. */
 export function useFinishSignIn() {
@@ -32,6 +32,7 @@ export function useSignOut() {
     async (to = '/login') => {
       await authClient.signOut();
       queryClient.clear();
+      notifySignedOut();
       await navigate({ href: to, replace: true });
     },
     [queryClient, navigate],
