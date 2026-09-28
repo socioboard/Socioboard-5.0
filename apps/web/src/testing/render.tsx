@@ -60,6 +60,7 @@ export const signedOut: Record<string, Reply> = {
 
 export const meWith = (overrides: {
   emailVerified?: boolean;
+  timezone?: string | null;
   memberships?: {
     workspace: { id: string; name: string; slug: string; logoUrl: null };
     role: string;
@@ -72,7 +73,7 @@ export const meWith = (overrides: {
     emailVerified: overrides.emailVerified ?? true,
     name: 'Priya Raman',
     avatarUrl: null,
-    timezone: null,
+    timezone: overrides.timezone ?? null,
     locale: 'en',
     twoFactorEnabled: false,
     isPlatformAdmin: false,

@@ -54,7 +54,7 @@ apps/web/src/
 └─ main.tsx
 packages/ui/                shadcn/ui-based design system (Button, Dialog, DataTable, EmptyState, …)
 ```
-Features import each other only through `features/<area>/index.ts`.
+Features import each other, and routes and `lib` import features, only through `features/<area>/index.ts` (enforced by dependency-cruiser).
 
 ## Routes
 ```

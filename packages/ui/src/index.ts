@@ -11,6 +11,7 @@ export {
 } from './theme';
 
 export { Button, buttonVariants, type ButtonProps } from './components/button';
+export { Combobox, type ComboboxOption, type ComboboxProps } from './components/combobox';
 export {
   DataTable,
   type Column,

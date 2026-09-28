@@ -39,7 +39,7 @@
 - [x] P0-F1 Vite app, TanStack Router/Query, typed API client, i18n setup, theme tokens (light/dark)
 - [x] P0-F2 Design system base in `packages/ui` (shadcn/ui): Button, Input, Select, Dialog, Drawer, Toast, DataTable, EmptyState, Skeleton, Avatar, Badge
 - [x] P0-F3 Sign up, sign in, verify email, reset password, 2FA, invitation accept
-- [ ] P0-F4 Onboarding step 1 (create workspace); replaces the placeholder `/onboarding` route from P0-F3
+- [x] P0-F4 Onboarding step 1 (create workspace); replaces the placeholder `/onboarding` route from P0-F3
 - [ ] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, route guards, banners; replaces the temporary start page from P0-F1 (`routes/index.tsx`) with a redirect and the placeholder `/w/$slug` route from P0-F3. Handles a session that ends mid-use: any 401 from the API clears the cached `me` and goes to `/login?redirect=<here>` (the P0-F3 route guards reuse the cached `me` and don't re-ask the server on every navigation)
 - [ ] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions)
 - [ ] P0-F7 Media library: uploader with progress, grid, details drawer, folders

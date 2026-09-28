@@ -1,6 +1,7 @@
 // Development-only preview of the design system, for checking components in both themes.
 // Replaced by the component catalog in P0-F8; returns "not found" in production builds.
 import {
+  Combobox,
   Avatar,
   Badge,
   Button,
@@ -37,7 +38,9 @@ import {
 } from '@socioboard/ui';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import { ImagePlus, Moon, Plus, Sun, Trash2 } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
+
+import { timezoneOptions } from '../features/onboarding';
 
 export const Route = createFileRoute('/dev/components')({
   beforeLoad: () => {
@@ -142,6 +145,8 @@ function Preview() {
   const [sort, setSort] = useState<SortState | null>({ id: 'name', desc: false });
   const [tableState, setTableState] = useState<'rows' | 'loading' | 'empty' | 'error'>('rows');
   const [loadingMore, setLoadingMore] = useState(false);
+  const zones = useMemo(() => timezoneOptions(), []);
+  const [zone, setZone] = useState('Europe/Lisbon');
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:p-8">
@@ -197,7 +202,22 @@ function Preview() {
           <FormField label="Email" error="Enter a valid email address, like name@example.com.">
             {(p) => <Input {...p} type="email" defaultValue="priya@" />}
           </FormField>
-          <FormField label="Time zone">
+          <FormField
+            label="Time zone (Combobox)"
+            hint="Searches city, country, offset and long name."
+          >
+            {(p) => (
+              <Combobox
+                {...p}
+                options={zones}
+                value={zone}
+                onValueChange={setZone}
+                searchLabel="Search by city, country or offset"
+                emptyText="No matching time zone."
+              />
+            )}
+          </FormField>
+          <FormField label="Time zone (Select)">
             {(p) => (
               <Select defaultValue="Europe/Lisbon">
                 <SelectTrigger {...p}>

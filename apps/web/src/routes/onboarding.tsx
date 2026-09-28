@@ -1,30 +1,22 @@
-// Placeholder landing after sign-in for people with no workspace; P0-F4 replaces it with the
-// onboarding wizard.
-import { Button } from '@socioboard/ui';
-import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { AuthLayout, useSignOut } from '../features/auth';
+import { CreateWorkspaceScreen } from '../features/onboarding';
 import { requireSignedIn } from '../lib/route-guards';
+import { authOptionsQuery } from '../lib/session';
 
 export const Route = createFileRoute('/onboarding')({
-  beforeLoad: ({ context }) => requireSignedIn(context.queryClient, '/onboarding'),
+  beforeLoad: async ({ context }) => {
+    const me = await requireSignedIn(context.queryClient, '/onboarding');
+    // The server refuses to create a workspace before the email is verified (when it can send
+    // email), so send them there first rather than to a form that can't succeed.
+    const options = await context.queryClient.query({ ...authOptionsQuery, staleTime: 'static' });
+    if (options.emailVerificationRequired && !me.user.emailVerified) {
+      throw redirect({ to: '/verify-email', search: { redirect: '/onboarding' }, replace: true });
+    }
+    return { me };
+  },
   component: function Onboarding() {
-    const { t } = useTranslation('auth');
-    const signOut = useSignOut();
-    return (
-      <AuthLayout
-        title={t('placeholder.onboardingTitle')}
-        subtitle={t('placeholder.onboardingBody')}
-      >
-        <Button
-          onClick={() => {
-            void signOut();
-          }}
-        >
-          {t('invite.signOut')}
-        </Button>
-      </AuthLayout>
-    );
+    const { me } = Route.useRouteContext();
+    return <CreateWorkspaceScreen me={me} />;
   },
 });
