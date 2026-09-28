@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "generate": {
+      "inputs": ["src/routes/**"],
+      "outputs": ["src/routeTree.gen.ts"]
+    }
+  }
+}

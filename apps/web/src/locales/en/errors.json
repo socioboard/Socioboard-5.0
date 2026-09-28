@@ -1,0 +1,18 @@
+{
+  "generic": "Something went wrong. Try again in a moment.",
+  "genericWithId": "Something went wrong. If it keeps happening, contact support with reference {{requestId}}.",
+  "codes": {
+    "NETWORK_ERROR": "Can’t reach Socioboard. Check your connection and try again.",
+    "UNAUTHENTICATED": "Your session has ended. Sign in again.",
+    "FORBIDDEN": "You don’t have permission to do that.",
+    "NOT_FOUND": "We couldn’t find that. It may have been deleted.",
+    "WORKSPACE_NOT_FOUND": "This workspace doesn’t exist or you’re no longer a member.",
+    "VALIDATION_FAILED": "Some fields need attention.",
+    "RATE_LIMITED": "Too many requests. Wait a moment and try again.",
+    "PAYLOAD_TOO_LARGE": "That’s too large to upload.",
+    "ALREADY_EXISTS": "That already exists.",
+    "SLUG_TAKEN": "That workspace address is already taken.",
+    "EMAIL_NOT_VERIFIED": "Verify your email address first.",
+    "STORAGE_NOT_CONFIGURED": "File uploads aren’t set up on this server yet."
+  }
+}

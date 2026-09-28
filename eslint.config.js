@@ -13,6 +13,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/coverage/**',
       '**/src/generated/**',
+      '**/routeTree.gen.ts',
     ],
   },
 
@@ -55,6 +56,13 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
+  },
+
+  // Route files export a Route object next to their component (the router's code splitting
+  // handles hot reload there), and the ui package pairs providers with their hooks on purpose.
+  {
+    files: ['apps/web/src/routes/**/*.tsx', 'packages/ui/src/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 
   // Must stay last: turns off rules that Prettier handles.
