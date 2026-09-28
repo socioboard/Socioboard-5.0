@@ -37,7 +37,7 @@
 | `Banner` (P0-F5) | Notice above the content: `info`, `warning` (polite status), `danger` (alert); optional action and dismiss |
 | `CommandPalette` (P0-F5) | ⌘K dialog: a search box over grouped commands; the same word matching as Combobox; arrows wrap; Enter runs and closes; opens with an empty search each time |
 | `PageHeader`, `Kbd` (P0-F5) | The 56 px bar at the top of a content pane holding the page's h1 and actions; a keyboard key chip |
-| `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name; Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
+| `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name (`decorative` when the name is already shown beside it, so screen readers don't read it twice); Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
 
 Using them in screens:
 - The few words components carry (Close, Load more, Try again, Loading) default to English; screens pass translated ones (`closeLabel`, `labels`) so they follow the app's language.
@@ -61,6 +61,8 @@ A development-only preview of every component lives at `/dev/components` until t
 | 4 | CommentThread, MentionInput, SchemaForm (renders JSON Schema → fields, for AI templates), JobProgress |
 | 5 | UsageMeter, PlanCard, KpiTile |
 | 6.1 | Chart wrappers (Line, Bar, Area) with theme tokens, DateRangePicker, MetricDelta |
+
+Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, Tabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card, Popover and AvatarStack with the media library (P0-F7). IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
 
 ## Rules
 - Components are accessible by default (keyboard, focus, ARIA, labels) and tested with Testing Library.

@@ -23,7 +23,7 @@ export function WorkspaceNotFound({ me }: { me: Me }) {
                 params={{ slug: workspace.slug }}
                 className="glass-chip hover:border-hair-strong flex items-center gap-3 rounded-control p-2.5"
               >
-                <Avatar name={workspace.name} src={workspace.logoUrl} size="sm" />
+                <Avatar name={workspace.name} src={workspace.logoUrl} size="sm" decorative />
                 <span className="min-w-0 flex-1 truncate text-sm font-semibold">
                   {workspace.name}
                 </span>

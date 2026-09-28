@@ -50,7 +50,7 @@ export function UserMenu({
             compact && 'flex-none justify-center',
           )}
         >
-          <Avatar name={me.user.name} src={me.user.avatarUrl} size="sm" />
+          <Avatar name={me.user.name} src={me.user.avatarUrl} size="sm" decorative />
           {!compact && (
             <span className="flex min-w-0 flex-col">
               <span className="text-ink truncate text-[13px] font-semibold">{me.user.name}</span>

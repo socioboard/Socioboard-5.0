@@ -21,10 +21,12 @@ export function useSessionWatcher() {
 
   useEffect(() => {
     const onError = (error: unknown) => {
-      // Only mark the session ended here; the effect below cleans up once, whatever the trigger.
-      if (error instanceof ApiError && error.status === 401) {
-        queryClient.setQueryData(meQuery.queryKey, null);
-      }
+      if (!(error instanceof ApiError) || error.status !== 401) return;
+      // Our API's UNAUTHENTICATED means no session. Better Auth also answers 401 for a wrong 2FA
+      // or backup code, or a bad token, while the session is fine; for those, ask the server who
+      // is signed in, and let that answer decide. Either way the effect below does the cleanup.
+      if (error.code === 'UNAUTHENTICATED') queryClient.setQueryData(meQuery.queryKey, null);
+      else void queryClient.invalidateQueries({ queryKey: meQuery.queryKey });
     };
     const unsubscribeQueries = queryClient.getQueryCache().subscribe((event) => {
       if (event.type === 'updated' && event.action.type === 'error') onError(event.action.error);
@@ -93,7 +95,7 @@ export function useSidebarCollapsed(): [boolean, (collapsed: boolean) => void] {
   return [collapsed, update];
 }
 
-/** ⌘K on Mac, Ctrl+K elsewhere; works from any field, like every app with a palette. */
+/** ⌘K on Mac, Ctrl+K elsewhere; works from any field (including the palette's own search box). */
 export function useCommandShortcut(onTrigger: () => void) {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {

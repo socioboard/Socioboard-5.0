@@ -60,7 +60,7 @@ export function WorkspaceSwitcher({
         >
           {me.memberships.map(({ workspace, role }) => (
             <DropdownMenuRadioItem key={workspace.id} value={workspace.slug}>
-              <Avatar name={workspace.name} src={workspace.logoUrl} size="sm" />
+              <Avatar name={workspace.name} src={workspace.logoUrl} size="sm" decorative />
               <span className="min-w-0 flex-1 truncate">{workspace.name}</span>
               <span className="text-ink-3 text-xs">{t(`roles.${role}`)}</span>
             </DropdownMenuRadioItem>

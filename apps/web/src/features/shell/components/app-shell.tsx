@@ -45,7 +45,11 @@ function ShellLayout({
   const openSearch = useCallback(() => {
     setSearchOpen(true);
   }, []);
-  useCommandShortcut(openSearch);
+  // The shortcut toggles, as in Linear and Raycast; the search button only opens.
+  const toggleSearch = useCallback(() => {
+    setSearchOpen((open) => !open);
+  }, []);
+  useCommandShortcut(toggleSearch);
   useActiveWorkspaceSync(membership.workspace.id, me.activeWorkspaceId);
   const items = useMemo(
     () => NAV_ITEMS.filter((item) => can(membership.role, item.permission)),

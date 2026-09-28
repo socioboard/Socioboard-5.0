@@ -306,6 +306,15 @@ describe('Tooltip', () => {
   });
 });
 
+describe('Avatar', () => {
+  it('names the person, unless the name is already shown beside it', () => {
+    const { rerender, container } = render(<Avatar name="Priya Raman" />);
+    expect(screen.getByText('Priya Raman')).toBeInTheDocument();
+    rerender(<Avatar name="Priya Raman" decorative />);
+    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+  });
+});
+
 describe('Banner', () => {
   it('is a polite status, a danger banner an alert, and can be dismissed', async () => {
     const onDismiss = vi.fn();
