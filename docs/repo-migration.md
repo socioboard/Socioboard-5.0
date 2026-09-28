@@ -28,8 +28,8 @@ The old prototype repo is renamed `socioboard-6-prototype`, and it and `socioboa
 | --- | --- | --- | --- |
 | 0 | Join the org, get admin, announce a short merge freeze | SG | Partly: member of `Socioboard-developers`, **not yet of the `socioboard` org** (repos are there); write access only |
 | 1 | Backups: `git clone --mirror` of all three repos + wikis, verified bundles, JSON export of issues, PRs, comments, releases, labels, milestones | read | **Done 2026-09-28** (below) |
-| 2 | Push `archive/6.0-prototype`, `archive/core-csharp`, `archive/core-csharp-3.0`, `prototype-final`, `core-final`, `core/*` tags into the 5.0 repo | write | Prepared; run `_repo-backups/run-steps-2-3.sh` |
-| 3 | `archive/5.0` + `v5.0-final` from `master` (`1ec4ff50`); retarget the 9 open PRs to `archive/5.0`; label open issues and PRs `5.0` | write | Prepared; same script |
+| 2 | Push `archive/6.0-prototype`, `archive/core-csharp`, `archive/core-csharp-3.0`, `prototype-final`, `core-final`, `core/*` tags into the 5.0 repo | write | **Done 2026-09-28**: 4 archive branches verified against the mirrors, 35 `core/` tags plus `prototype-final` and `core-final` |
+| 3 | `archive/5.0` + `v5.0-final` from `master` (`1ec4ff50`); retarget the 9 open PRs to `archive/5.0`; label open issues and PRs `5.0` | write | **Done 2026-09-28**: `archive/5.0` = old `master` (`1ec4ff50`), 9 PRs retargeted, 28 issues and 9 PRs labelled `5.0` |
 | 4 | Rename default branch `master` → `main` (Settings → Branches) | admin | Waiting for admin |
 | 5 | Put 6.0 on `main`: in this repo, `git fetch` the old `main`, `git merge -s ours --allow-unrelated-histories` it into our history, push as a fast-forward (no force-push). Check the tree equals 6.0 and `archive/5.0` equals the old `master` | admin (for the protected switch) | Waiting |
 | 6 | Rename `socioboard` (prototype) → `socioboard-6-prototype`, then `Socioboard-5.0` → `socioboard`; update description, topics, website; README with a "Looking for 5.0?" link; root LICENSE AGPL-3.0 | admin | Waiting |
@@ -37,7 +37,7 @@ The old prototype repo is renamed `socioboard-6-prototype`, and it and `socioboa
 | 8 | Ruleset on `main`: PR + 1 review, no force-push or deletion, linear history, CI checks once P0-I4 lands. `archive/*`: no deletion or force-push. Teams, CODEOWNERS, org 2FA | admin | Waiting. Today nothing on the 5.0 repo is protected |
 | 9 | Point the local repo at the new remote; update docs (decisions log, infra, links to `Socioboard-5.0`) | | Waiting |
 
-Steps 2 and 3 only add branches, tags and labels and change PR targets; nothing is removed. They were prepared but not pushed from the assistant session, because publishing to the public repo needs a person to run it.
+Steps 2 and 3 only added branches, tags and labels and changed PR targets; nothing was removed. Script: `_repo-backups/run-steps-2-3.sh`. GitHub reports 270 Dependabot alerts on 5.0's `master`; they go away when 6.0 becomes the default branch.
 
 ## Backup (step 1)
 
