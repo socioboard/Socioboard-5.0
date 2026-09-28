@@ -35,7 +35,7 @@
 - [x] P0-B13 `packages/emails` base layout + auth/invitation templates
 
 ## Frontend
-- [ ] P0-F0 Visual direction: 2–3 directions for the key screens (app shell, composer, calendar, media) in light and dark, built with the real Socioboard logo (the only brand asset kept from 5.0); references Framer, Linear, Raycast. The chosen one sets the tokens (color, type, spacing, radius, motion) for `packages/ui` and every P0-F task
+- [x] P0-F0 Visual direction: 2–3 directions for the key screens (app shell, composer, calendar, media) in light and dark, built with the real Socioboard logo (the only brand asset kept from 5.0); references Framer, Linear, Raycast. The chosen one sets the tokens (color, type, spacing, radius, motion) for `packages/ui` and every P0-F task. Chosen: Graphite with glass, Aurora palette, light and dark ([design system](../frontend/design-system.md#visual-direction-p0-f0-chosen-2026-09-28))
 - [ ] P0-F1 Vite app, TanStack Router/Query, typed API client, i18n setup, theme tokens (light/dark)
 - [ ] P0-F2 Design system base in `packages/ui` (shadcn/ui): Button, Input, Select, Dialog, Drawer, Toast, DataTable, EmptyState, Skeleton, Avatar, Badge
 - [ ] P0-F3 Sign up, sign in, verify email, reset password, 2FA, invitation accept
