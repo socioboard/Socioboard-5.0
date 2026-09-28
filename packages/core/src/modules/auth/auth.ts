@@ -180,6 +180,9 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
       twoFactor({ issuer: 'Socioboard' }),
       magicLink({
         expiresIn: 600,
+        // Sign-in only: accounts are created on the sign-up screen (name, email, password), never
+        // silently by asking for a link.
+        disableSignUp: true,
         sendMagicLink: ({ email, url }) => {
           send(email, 'magic-link', emails.magicLink({ url }));
           return Promise.resolve();

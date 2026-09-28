@@ -60,7 +60,23 @@ export const SessionInfo = z.object({
 });
 export type SessionInfo = z.infer<typeof SessionInfo>;
 
+/** What the sign-in screens should offer on this server (public; no secrets). */
+export const AuthOptions = z.object({
+  /** Social sign-in providers with credentials configured. */
+  socialProviders: z.array(z.enum(['google', 'microsoft'])),
+  /** New accounts must verify their email before creating or joining a workspace. */
+  emailVerificationRequired: z.boolean(),
+});
+export type AuthOptions = z.infer<typeof AuthOptions>;
+
 export const authRoutes = {
+  getAuthOptions: defineRoute({
+    method: 'GET',
+    path: '/api/v1/auth/options',
+    access: 'public',
+    summary: 'Sign-in methods this server offers',
+    responses: { 200: AuthOptions },
+  }),
   getMe: defineRoute({
     method: 'GET',
     path: '/api/v1/me',

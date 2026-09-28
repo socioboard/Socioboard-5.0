@@ -26,6 +26,7 @@ type Kind =
 
 const CLASSIFIED: Record<string, Kind> = {
   // auth (/me): not workspace-scoped
+  getAuthOptions: { kind: 'user' },
   getMe: { kind: 'user' },
   updateMe: { kind: 'user' },
   createAvatarUpload: { kind: 'user' },

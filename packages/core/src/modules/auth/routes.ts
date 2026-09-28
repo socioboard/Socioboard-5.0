@@ -1,10 +1,12 @@
-import { authRoutes } from '@socioboard/contracts';
+import { authRoutes, type AuthOptions } from '@socioboard/contracts';
 
 import { toHeaders, type ApiRouter } from '../../platform';
 import type { MeService } from './service';
 
-/** Mounts the /api/v1/me routes (contracts: authRoutes). */
-export function registerAuthRoutes(api: ApiRouter, me: MeService) {
+/** Mounts /api/v1/auth/options and the /api/v1/me routes (contracts: authRoutes). */
+export function registerAuthRoutes(api: ApiRouter, me: MeService, options: AuthOptions) {
+  api.route(authRoutes.getAuthOptions, () => options);
+
   api.route(authRoutes.getMe, ({ auth }) => me.getMe(auth));
 
   api.route(authRoutes.updateMe, async ({ auth, body, req, res }) => {

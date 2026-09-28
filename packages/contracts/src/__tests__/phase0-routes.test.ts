@@ -46,7 +46,7 @@ describe('route table', () => {
   });
 
   it('matches the phase 0 route count (update when routes change)', () => {
-    expect(all.length).toBe(32); // auth 6, workspaces 16, media 10
+    expect(all.length).toBe(33); // auth 7, workspaces 16, media 10
   });
 
   it('declares folder routes before /media/:assetId so they match first', () => {
