@@ -5,7 +5,7 @@
 ## Screens
 | Route | Screen | Permission |
 | --- | --- | --- |
-| `/w/:slug/settings/general` | Name, logo, timezone, "require review for every post", auto-shorten links; danger zone (transfer ownership, delete workspace) | `workspace:update` (danger zone: owner) |
+| `/w/:slug/settings/general` | Name, URL, logo, timezone, "require review for every post" (phase 4); danger zone (transfer ownership, delete workspace) | `workspace:update` (danger zone: owner) |
 | `/w/:slug/settings/members` | Members table (name, email, role, account access, joined); invite dialog; pending invitations | view: member · change: `members:manage` |
 | `/w/:slug/settings/members/:mid` | Change role; limit to specific social accounts | `members:manage` |
 | `/w/:slug/settings/audit` | Activity log with filters | `workspace:update` |
