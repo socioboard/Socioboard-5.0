@@ -12,6 +12,7 @@
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`
+- [ ] P0-I9 Repo migration into one `socioboard/socioboard` repo (5.0 renamed; 6.0 on `main`; 5.0, the prototype and socioboard-core on `archive/*` branches); runbook and progress in [repo-migration](../repo-migration.md)
 - [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
 
 ## Contracts
