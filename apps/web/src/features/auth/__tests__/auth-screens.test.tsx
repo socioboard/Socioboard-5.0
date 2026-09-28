@@ -106,7 +106,7 @@ describe('sign in', () => {
       ...signedOut,
       'POST /api/auth/sign-in/magic-link': [200, { status: true }],
     });
-    renderApp('/login');
+    renderApp('/login?redirect=%2Finvite%2Fabc');
     const user = userEvent.setup();
     await user.click(
       await screen.findByRole('button', { name: 'Email me a sign-in link instead' }),
@@ -118,8 +118,46 @@ describe('sign in', () => {
     );
     expect(calls.find((c) => c.key === 'POST /api/auth/sign-in/magic-link')?.body).toMatchObject({
       email: 'priya@halden.test',
-      callbackURL: '/login',
+      callbackURL: '/login?redirect=%2Finvite%2Fabc',
+      errorCallbackURL: '/login?redirect=%2Finvite%2Fabc',
     });
+  });
+
+  it('starts social sign-in so both outcomes come back to this page', async () => {
+    const calls = mockServer({
+      ...signedOut,
+      'GET /api/v1/auth/options': [
+        200,
+        { socialProviders: ['google'], emailVerificationRequired: true },
+      ],
+      'POST /api/auth/sign-in/social': [
+        400,
+        { code: 'PROVIDER_NOT_FOUND', message: 'Provider not found' },
+      ],
+    });
+    renderApp('/login?redirect=%2Finvite%2Fabc');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Continue with Google' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong');
+    expect(calls.find((c) => c.key === 'POST /api/auth/sign-in/social')?.body).toMatchObject({
+      provider: 'google',
+      callbackURL: '/login?redirect=%2Finvite%2Fabc',
+      errorCallbackURL: '/login?redirect=%2Finvite%2Fabc',
+    });
+  });
+
+  it('explains social sign-in errors in their own words', async () => {
+    mockServer(signedOut);
+    renderApp('/login?error=access_denied');
+    expect(await screen.findByRole('alert')).toHaveTextContent('Sign-in was cancelled');
+  });
+
+  it('does not mistake a provider error for a wrong 2FA code', async () => {
+    mockServer(signedOut);
+    renderApp('/login?error=invalid_code');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Signing in with that provider didn’t work',
+    );
   });
 });
 
@@ -160,6 +198,33 @@ describe('sign up', () => {
     });
   });
 
+  it('keeps the invitation in the verification link, which opens in a new tab', async () => {
+    let created = false;
+    const calls = mockServer({
+      'GET /api/v1/auth/options': [200, { socialProviders: [], emailVerificationRequired: true }],
+      'GET /api/v1/me': () =>
+        created
+          ? [200, meWith({ emailVerified: false })]
+          : [401, { error: { code: 'UNAUTHENTICATED', message: 'x' } }],
+      'POST /api/auth/sign-up/email': () => {
+        created = true;
+        return [200, { token: 't', user: { id: 'u' } }];
+      },
+    });
+    const here = `/invite/${INVITE_ID}`;
+    const { history } = renderApp(`/signup?redirect=${encodeURIComponent(here)}`);
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText('Your name'), 'Priya Raman');
+    await user.type(screen.getByLabelText('Email'), 'priya@halden.test');
+    await user.type(screen.getByLabelText('Password'), 'correct horse battery staple');
+    await user.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(await screen.findByRole('heading', { name: 'Check your inbox' })).toBeInTheDocument();
+    expect(history.location.search).toContain(encodeURIComponent(here));
+    expect(calls.find((c) => c.key === 'POST /api/auth/sign-up/email')?.body).toMatchObject({
+      callbackURL: `/verify-email?redirect=${encodeURIComponent(here)}`,
+    });
+  });
+
   it('turns a breached password into a clear message', async () => {
     mockServer({
       ...signedOut,
@@ -197,16 +262,19 @@ describe('verify email', () => {
   });
 
   it('resends the link, then waits before allowing another', async () => {
-    mockServer({
+    const calls = mockServer({
       ...signedOut,
       'GET /api/v1/me': [200, meWith({ emailVerified: false })],
       'POST /api/auth/send-verification-email': [200, { status: true }],
     });
-    renderApp('/verify-email');
+    renderApp('/verify-email?redirect=%2Finvite%2Fabc');
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Send the link again' }));
     expect(await screen.findByText(/Sent. Check your inbox/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Send again in \d+ s/ })).toBeDisabled();
+    expect(
+      calls.find((c) => c.key === 'POST /api/auth/send-verification-email')?.body,
+    ).toMatchObject({ callbackURL: '/verify-email?redirect=%2Finvite%2Fabc' });
   });
 });
 

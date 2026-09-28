@@ -39,5 +39,10 @@ export function errorMessage(error: unknown): string {
 
 /** An `?error=CODE` from an emailed link (verification, magic link, reset) as a message. */
 export function linkErrorMessage(code: string): string {
+  // Social sign-in errors are lowercase OAuth codes; some share a name with an API code
+  // (invalid_code vs a wrong 2FA code), so they have their own section.
+  if (i18n.exists(`providers.${code}`, { ns: 'errors' })) {
+    return i18n.getFixedT(null, 'errors')(`providers.${code}` as 'providers.access_denied');
+  }
   return errorMessage(new ApiError(400, code.toUpperCase(), '', undefined));
 }

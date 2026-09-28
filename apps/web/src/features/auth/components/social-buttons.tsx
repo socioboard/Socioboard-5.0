@@ -3,8 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { authClient } from '../../../lib/auth-client';
+import { authClient, unwrap } from '../../../lib/auth-client';
+import { errorMessage } from '../../../lib/i18n';
+import { withRedirect } from '../../../lib/redirect';
 import { authOptionsQuery } from '../../../lib/session';
+import { FormError } from './auth-layout';
 
 function GoogleMark() {
   return (
@@ -41,15 +44,33 @@ function MicrosoftMark() {
 }
 
 /**
- * Google / Microsoft sign-in, only for providers this server has configured. After the provider,
- * Better Auth sends the browser back to `callbackURL` (the sign-in page, which routes onward).
+ * Google / Microsoft sign-in, only for providers this server has configured. The provider sends the
+ * browser back to the sign-in page either way: signed in, it routes onward (to `redirect` if set);
+ * on failure (cancelled at the provider, account problem) it shows `?error=`.
  */
-export function SocialButtons({ callbackURL }: { callbackURL: string }) {
+export function SocialButtons({ redirect }: { redirect?: string | undefined }) {
   const { t } = useTranslation('auth');
   const options = useQuery(authOptionsQuery);
   const [pending, setPending] = useState<string | null>(null);
+  const [error, setError] = useState<string>();
   const providers = options.data?.socialProviders ?? [];
   if (providers.length === 0) return null;
+
+  const start = async (provider: (typeof providers)[number]) => {
+    setError(undefined);
+    setPending(provider);
+    try {
+      const back = withRedirect('/login', redirect);
+      // On success the browser leaves for the provider, so only a failure returns here.
+      unwrap(
+        await authClient.signIn.social({ provider, callbackURL: back, errorCallbackURL: back }),
+      );
+    } catch (err) {
+      setError(errorMessage(err));
+      setPending(null);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3">
       {providers.map((provider) => (
@@ -57,17 +78,16 @@ export function SocialButtons({ callbackURL }: { callbackURL: string }) {
           key={provider}
           size="lg"
           loading={pending === provider}
+          disabled={pending !== null && pending !== provider}
           onClick={() => {
-            setPending(provider);
-            void authClient.signIn.social({ provider, callbackURL }).finally(() => {
-              setPending(null);
-            });
+            void start(provider);
           }}
         >
           {provider === 'google' ? <GoogleMark /> : <MicrosoftMark />}
           {t(`social.${provider}`)}
         </Button>
       ))}
+      <FormError>{error}</FormError>
       <div className="text-ink-3 flex items-center gap-3 text-xs" aria-hidden="true">
         <span className="bg-hair h-px flex-1" />
         {t('social.or')}

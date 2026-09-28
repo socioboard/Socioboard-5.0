@@ -18,6 +18,14 @@ export function safeRedirect(value: unknown): string | undefined {
 }
 
 /**
+ * `path` carrying `?redirect=`, for URLs the server sends people back to (email links, social
+ * sign-in), so the destination survives the trip out of the app.
+ */
+export function withRedirect(path: string, redirect?: string): string {
+  return redirect ? `${path}?redirect=${encodeURIComponent(redirect)}` : path;
+}
+
+/**
  * Where someone lands after signing in (docs/frontend/areas/auth-onboarding.md): verify the email
  * first when this server requires it and they have no workspace to go to; no workspace → create
  * one; otherwise the active workspace, else the first.

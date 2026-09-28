@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { authClient, unwrap } from '../../../lib/auth-client';
 import { errorMessage, linkErrorMessage } from '../../../lib/i18n';
+import { withRedirect } from '../../../lib/redirect';
 import { meQuery } from '../../../lib/session';
 import { useFinishSignIn, useSignOut } from '../hooks';
 import { AuthLayout, FormError, FormNotice } from './auth-layout';
@@ -74,7 +75,7 @@ export function VerifyEmailScreen({
       unwrap(
         await authClient.sendVerificationEmail({
           email: user.email,
-          callbackURL: '/verify-email',
+          callbackURL: withRedirect('/verify-email', redirect),
         }),
       );
       setNotice(t('verify.resent'));
