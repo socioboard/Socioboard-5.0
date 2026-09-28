@@ -57,6 +57,8 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   registerAuditListeners(platform.events, createAuditLog(platform), logger);
 
   const authModule = createAuthModule(platform);
+  // Verification can only be required when the server can send the email.
+  const requireVerifiedEmail = options.requireVerifiedEmail ?? Boolean(config.mail.smtpUrl);
   const lookupMembership = createMembershipLookup(platform.db);
   const api = createApiRouter({ lookupMembership });
   registerAuthRoutes(
@@ -69,6 +71,13 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
       clock: platform.clock,
       logger,
     }),
+    {
+      socialProviders: [
+        ...(config.auth.google ? (['google'] as const) : []),
+        ...(config.auth.microsoft ? (['microsoft'] as const) : []),
+      ],
+      emailVerificationRequired: requireVerifiedEmail,
+    },
   );
   registerWorkspaceRoutes(
     api,
@@ -81,8 +90,7 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
       clock: platform.clock,
       logger,
       appUrl: config.appUrl,
-      // Verification can only be required when the server can send the email.
-      requireVerifiedEmail: options.requireVerifiedEmail ?? Boolean(config.mail.smtpUrl),
+      requireVerifiedEmail,
     }),
   );
   const mediaProcess = mediaProcessQueue({ ...platform, tools: config.media });

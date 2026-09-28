@@ -51,6 +51,7 @@ registerAuthRoutes(
     clock: systemClock,
     logger,
   }),
+  { socialProviders: [], emailVerificationRequired: false },
 );
 
 const app = express();

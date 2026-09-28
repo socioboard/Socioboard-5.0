@@ -21,6 +21,7 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 
 | Method | Path | Who | Description |
 | --- | --- | --- | --- |
+| GET | `/api/v1/auth/options` | public | What the sign-in screens offer on this server: `socialProviders` (Google/Microsoft when configured) and `emailVerificationRequired` (when SMTP is set). No secrets |
 | GET | `/api/v1/me` | signed in | Current user, memberships, active workspace |
 | PATCH | `/api/v1/me` | signed in | Update name, avatar (`avatarKey`), timezone, locale |
 | POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB; the URL only accepts the declared size); then PATCH `avatarKey`, which checks the object exists under the caller's own prefix. Replacing or removing an avatar deletes the old file. 503 `STORAGE_NOT_CONFIGURED` without S3/MinIO |
@@ -40,7 +41,7 @@ Request and response schemas: `packages/contracts/src/auth.ts`.
 | --- | --- | --- |
 | organization | Workspaces, members, 5 roles, invitations ([workspaces](workspaces.md)) | 0 |
 | two-factor | TOTP + backup codes | 0 |
-| magic-link | Passwordless sign-in | 0 |
+| magic-link | Passwordless sign-in for existing accounts (`disableSignUp`: asking for a link never creates an account; the link email still goes out, so the form doesn't reveal who has one) | 0 |
 | **admin** | Platform-admin user management: list/search users, ban/unban, revoke sessions, read-only view-as; wrapped by our [admin](admin.md) module so every action is audited | 2 (guard), 5 (user management) |
 | stripe | Links workspaces to Stripe customers and subscriptions ([billing](billing.md)) | 5 |
 | sso | SAML/OIDC | 6.1 |
@@ -66,4 +67,4 @@ Request and response schemas: `packages/contracts/src/auth.ts`.
 - Optional "require SSO" for a workspace's members.
 
 ## Open points
-- Magic link on by default? Proposed: yes, alongside password.
+- None for phase 0. (Magic link: on, alongside password, sign-in only; decided in P0-F3.)

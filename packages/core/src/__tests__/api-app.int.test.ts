@@ -16,6 +16,19 @@ describe('createApiApp', () => {
     expect(t.missingRoutes).toEqual([]);
   });
 
+  it('tells the sign-in screens which options this server offers, without signing in', async () => {
+    const res = await request(t.app).get('/api/v1/auth/options').set('Origin', t.config.appUrl);
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      socialProviders: [
+        ...(t.config.auth.google ? ['google'] : []),
+        ...(t.config.auth.microsoft ? ['microsoft'] : []),
+      ],
+      // The test app turns verification off.
+      emailVerificationRequired: false,
+    });
+  });
+
   it('reports real dependency health at /api/health', async () => {
     const res = await request(t.app).get('/api/health');
     expect(res.status).toBe(200);

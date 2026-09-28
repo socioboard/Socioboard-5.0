@@ -267,6 +267,25 @@ describe('magic link', () => {
     await c.get(linkPath(mail.text));
     expect((await c.get('/api/auth/get-session')).body).toMatchObject({ user: { email: address } });
   });
+
+  it('never creates an account for an unknown address', async () => {
+    const address = email('magic-nobody');
+    const c = client();
+    const ask = await c.post('/api/auth/sign-in/magic-link', {
+      email: address,
+      callbackURL: '/',
+      errorCallbackURL: '/login',
+    });
+    // Same answer as for a real account, so the form doesn't reveal who has one.
+    expect(ask.status).toBe(200);
+    const mail = await latestEmail(address).catch(() => null);
+    if (mail) {
+      const opened = await c.get(linkPath(mail.text));
+      expect(opened.headers.location).toMatch(/error=/);
+    }
+    expect(await db.client.user.count({ where: { email: address } })).toBe(0);
+    expect((await c.get('/api/auth/get-session')).body).toBeNull();
+  });
 });
 
 describe('two-factor authentication', () => {
