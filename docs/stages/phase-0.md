@@ -8,7 +8,7 @@
 - [x] P0-I1 Monorepo: pnpm workspaces + Turborepo; `apps/api`, `apps/worker`, `apps/web`, `packages/{core,contracts,providers,db,ui,billing,emails}`
 - [x] P0-I2 TypeScript strict config, ESLint, Prettier, dependency-cruiser boundary rules
 - [x] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, Mailpit (catches emails); optional MinIO profile for developers without S3; apps run on the host with `pnpm dev`
-- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe); smoke test that starts the built api and worker images and waits for `/api/health` 200 (a bundling bug once broke only the built app), and sends SIGTERM to check graceful shutdown
+- [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe); smoke test that starts the built api and worker images and waits for `/api/health` 200 (a bundling bug once broke only the built app), and sends SIGTERM to check graceful shutdown; `pnpm e2e` (P0-Q1) on pull requests to main, with Postgres, Valkey, Mailpit and MinIO as service containers
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
 - [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`; storage bucket CORS for browser uploads ([infra](../infra.md))
