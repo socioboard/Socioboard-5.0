@@ -29,7 +29,8 @@
     "db:deploy": "pnpm --filter @socioboard/db migrate:deploy",
     "db:seed": "pnpm --filter @socioboard/api seed",
     "db:studio": "pnpm --filter @socioboard/db studio",
-    "catalog": "pnpm --filter @socioboard/ui catalog"
+    "catalog": "pnpm --filter @socioboard/ui catalog",
+    "e2e": "pnpm --filter @socioboard/web e2e"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
