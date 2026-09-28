@@ -1,0 +1,24 @@
+{
+  "create": {
+    "title": "Set up your workspace",
+    "titleAnother": "Create another workspace",
+    "subtitle": "A workspace holds your team, social accounts and posts. You can change these later in settings.",
+    "name": "Workspace name",
+    "namePlaceholder": "e.g. Halden Studio",
+    "nameHint": "Usually your company, brand or client.",
+    "timezone": "Time zone",
+    "timezoneHint": "Posts are scheduled and shown in this time zone.",
+    "timezoneSearch": "Search by city, country or offset",
+    "timezoneEmpty": "No matching time zone.",
+    "submit": "Create workspace",
+    "cancel": "Back to {{workspace}}",
+    "signedInAs": "Signed in as {{email}}",
+    "signOut": "Sign out",
+    "verifyFirst": "Verify your email address before creating a workspace.",
+    "goVerify": "Verify email"
+  },
+  "validation": {
+    "nameRequired": "Give the workspace a name.",
+    "nameLong": "Use 80 characters or fewer."
+  }
+}

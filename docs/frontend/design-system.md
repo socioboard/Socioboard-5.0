@@ -18,7 +18,7 @@
 | Radius | 10 (controls, chips, cards), 14 (media), 18 (panes), full (pills) |
 | Motion | Panes settle in once (blur to sharp, 0.7 s, `cubic-bezier(.16,1,.3,1)`); the now line draws in; hovers lift 1–2 px; ambient backdrop drift. All off under `prefers-reduced-motion` |
 
-**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
+**In code (P0-F1):** tokens are CSS variables in `packages/ui/src/styles.css`, exposed to Tailwind (`bg-glass`, `text-ink-2`, `rounded-pane`, …) plus utilities `glass`, `glass-float` (a denser frost for layers floating over content, such as Select and Combobox lists, so a bright button underneath doesn't tint them), `glass-chip`, `accent-lit`, `ring-selected` and `animate-settle`. Scrollbars are thin and token-colored everywhere. `ThemeProvider` / `useTheme` handle light, dark and system (saved in `localStorage` as `sb-theme`, followed across tabs; `index.html` applies it before first paint). Reduced motion stops decorative motion only (backdrop drift, pane entrance); spinners and progress keep moving, and components use `motion-reduce:` for their own decorative transitions. `Backdrop` renders the ambient glows and grain, sized to the viewport.
 
 **Components (P0-F2):** built on Radix (the `radix-ui` package) for keyboard, focus and screen-reader behavior, styled with the tokens; Sonner for toasts; lucide icons.
 
@@ -27,6 +27,7 @@
 | `Button` | `primary` (lit orange, one per screen), `secondary` (glass), `ghost`, `danger` (crimson `#BE123C`, so it never reads as the primary action); sizes `sm`/`md`/`lg`/`icon`; `loading` blocks clicks and sets `aria-busy`; `asChild` renders a link; defaults to `type="button"` |
 | `Input`, `Textarea`, `Label`, `FormField` | `FormField` links label, hint and error to the control (`aria-describedby`, `aria-invalid`, `aria-required`); the error replaces the hint and is announced |
 | `Select` | Radix Select in a glass popover; keyboard and typeahead |
+| `Combobox` (P0-F4) | A Select with a search box, for long lists (time zones): a button opens a glass popover with a filter input (`role="combobox"`) over a listbox. Opens centered on the current choice, even when the popover resizes or flips above the field. Every typed word must match the label, hint or hidden `keywords`; arrows/Page keys move, Enter picks, Escape closes and returns focus. Takes `FormField` control props |
 | `Dialog` | Centered glass dialog over a blurred scrim; focus trapped and returned; always has a title |
 | `Drawer` | The same dialog anchored right; a bottom sheet under 640 px. Built on Radix Dialog instead of Vaul (unmaintained since 2024) |
 | `Toaster`, `toast` | Glass toasts following the theme; mount once at the root (done in `__root.tsx`) |

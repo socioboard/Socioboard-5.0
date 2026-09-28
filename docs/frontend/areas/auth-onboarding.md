@@ -26,5 +26,6 @@ Better Auth client (`/api/auth/*`) for sign-up, sign-in, social, magic link, res
 - The invite page explains which address an invitation went to when the signed-in account differs (the API answers 404 so it never confirms the invitation to someone else), and asks to verify the email first when required.
 - After sign-in: no workspace → `/onboarding`; one workspace → its calendar; several → last active.
 - The onboarding wizard can be skipped at steps 2–3 and resumed from a checklist card on the calendar.
+- Step 1 (P0-F4) asks for the workspace name and time zone only; the server makes the URL slug from the name (changeable later in settings). The time zone defaults to the profile's, else the browser's; the list shows every IANA zone by city with its current offset, searchable by city, country, region or long name ("India Standard Time"), with today's city names for renamed ones (Kolkata, Kyiv). Visitors who must verify their email go to `/verify-email?redirect=/onboarding` first. Someone who already has a workspace can create another here and has a link back. Steps 2–3 arrive with P1-F7.
 - Password field shows strength and the breached-password error from the API.
 - Unverified users can sign in but see a "verify your email" banner and can't create a workspace (cloud).
