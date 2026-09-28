@@ -140,6 +140,25 @@ describe('app shell', () => {
     expect(queryClient.getQueryData(meQuery.queryKey)).toBeNull();
   });
 
+  it('stays signed in after a 401 that isn’t about the session (a wrong 2FA code)', async () => {
+    const calls = mockServer({
+      'GET /api/v1/auth/options': [200, options],
+      'GET /api/v1/me': [200, meWith(both)],
+      'POST /api/v1/me/active-workspace': [
+        401,
+        { error: { code: 'INVALID_CODE', message: 'Invalid code' } },
+      ],
+    });
+    const { history } = renderApp('/w/roastery/calendar');
+    // The 401 makes the shell re-check who is signed in; the answer is "still you".
+    await waitFor(() => {
+      expect(calls.filter((c) => c.key === 'GET /api/v1/me').length).toBeGreaterThan(1);
+    });
+    expect(history.location.pathname).toBe('/w/roastery/calendar');
+    expect(screen.getByRole('heading', { name: 'Calendar' })).toBeInTheDocument();
+    expect(screen.queryByText(/Your session has ended/)).not.toBeInTheDocument();
+  });
+
   it('notices a session that ended elsewhere when it next checks who is signed in', async () => {
     let signedIn = true;
     mockServer({
@@ -183,7 +202,7 @@ describe('app shell', () => {
     expect(screen.queryByText(/Your session has ended/)).not.toBeInTheDocument();
   });
 
-  it('opens the command palette with Ctrl+K and runs a command', async () => {
+  it('toggles the command palette with Ctrl+K and runs a command', async () => {
     mockServer({
       'GET /api/v1/auth/options': [200, options],
       'GET /api/v1/me': [200, meWith(both)],
@@ -191,6 +210,12 @@ describe('app shell', () => {
     renderApp('/w/halden/calendar');
     const user = userEvent.setup();
     await screen.findByRole('heading', { name: 'Calendar' });
+    await user.keyboard('{Control>}k{/Control}');
+    await screen.findByRole('dialog');
+    await user.keyboard('{Control>}k{/Control}');
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
     await user.keyboard('{Control>}k{/Control}');
     const search = await screen.findByRole('combobox', { name: 'Search or jump to' });
     await user.type(search, 'dark theme');

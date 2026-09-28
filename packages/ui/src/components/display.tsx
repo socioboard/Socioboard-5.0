@@ -56,13 +56,16 @@ export interface AvatarProps {
   name: string;
   src?: string | null;
   size?: keyof typeof avatarSizes;
+  /** The name is already shown next to it: hide the avatar from screen readers (no double read). */
+  decorative?: boolean;
   className?: string;
 }
 
 /** A photo when there is one; otherwise initials on a color picked from the name. */
-export function Avatar({ name, src, size = 'md', className }: AvatarProps) {
+export function Avatar({ name, src, size = 'md', decorative = false, className }: AvatarProps) {
   return (
     <AvatarPrimitive.Root
+      {...(decorative ? { 'aria-hidden': true } : {})}
       className={cn(
         'relative inline-flex shrink-0 overflow-hidden rounded-full font-semibold select-none',
         avatarSizes[size],
