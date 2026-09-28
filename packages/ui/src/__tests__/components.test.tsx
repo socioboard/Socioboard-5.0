@@ -1,10 +1,15 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
   Banner,
+  FileDropzone,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ProgressBar,
   Checkbox,
   ConfirmDialog,
   RadioCard,
@@ -384,6 +389,71 @@ describe('ConfirmDialog', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
     expect(onConfirm).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('ProgressBar', () => {
+  it('announces its value, or none while the amount is unknown', () => {
+    const { rerender } = render(<ProgressBar label="Uploading reel.mp4" value={64.4} />);
+    const bar = screen.getByRole('progressbar', { name: 'Uploading reel.mp4' });
+    expect(bar).toHaveAttribute('aria-valuenow', '64');
+    rerender(<ProgressBar label="Processing" />);
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-valuenow');
+  });
+});
+
+/** The dropzone wrapping the element with this text. */
+function dropzoneOf(text: string): HTMLElement {
+  const zone = screen.getByText(text).parentElement;
+  if (!zone) throw new Error(`No dropzone around "${text}"`);
+  return zone;
+}
+
+describe('FileDropzone', () => {
+  it('shows what dropping does while files hover, then hands over the dropped files', () => {
+    const onFiles = vi.fn();
+    render(
+      <FileDropzone onFiles={onFiles} label="Drop to upload">
+        <p>Media</p>
+      </FileDropzone>,
+    );
+    const zone = dropzoneOf('Media');
+    const file = new File(['x'], 'latte.jpg', { type: 'image/jpeg' });
+    const dataTransfer = { types: ['Files'], files: [file], dropEffect: 'none' };
+    fireEvent.dragEnter(zone, { dataTransfer });
+    expect(screen.getByText('Drop to upload')).toBeInTheDocument();
+    fireEvent.drop(zone, { dataTransfer });
+    expect(onFiles).toHaveBeenCalledWith([file]);
+    expect(screen.queryByText('Drop to upload')).not.toBeInTheDocument();
+  });
+
+  it('ignores drags that carry no files (text, links)', () => {
+    render(
+      <FileDropzone onFiles={vi.fn()} label="Drop to upload">
+        <p>Media</p>
+      </FileDropzone>,
+    );
+    const zone = dropzoneOf('Media');
+    fireEvent.dragEnter(zone, { dataTransfer: { types: ['text/plain'], files: [] } });
+    expect(screen.queryByText('Drop to upload')).not.toBeInTheDocument();
+  });
+});
+
+describe('Popover', () => {
+  it('opens from its trigger and closes with Escape', async () => {
+    const user = userEvent.setup();
+    render(
+      <Popover>
+        <PopoverTrigger>New folder</PopoverTrigger>
+        <PopoverContent aria-label="New folder">
+          <input aria-label="Folder name" />
+        </PopoverContent>
+      </Popover>,
+    );
+    await user.click(screen.getByRole('button', { name: 'New folder' }));
+    expect(await screen.findByLabelText('Folder name')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByLabelText('Folder name')).not.toBeInTheDocument();
   });
 });
 

@@ -12,6 +12,7 @@ export {
 
 export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
+export { Card } from './components/card';
 export { Checkbox, RadioCard, RadioGroup, Switch } from './components/choice';
 export {
   CommandPalette,
@@ -63,6 +64,7 @@ export {
   DropdownMenuTrigger,
   type DropdownMenuItemProps,
 } from './components/dropdown-menu';
+export { FileDropzone, type FileDropzoneProps } from './components/file-dropzone';
 export {
   Drawer,
   DrawerClose,
@@ -93,6 +95,8 @@ export {
 } from './components/select';
 export { NavTabs } from './components/nav-tabs';
 export { Kbd, PageHeader, type PageHeaderProps } from './components/page';
+export { Popover, PopoverClose, PopoverContent, PopoverTrigger } from './components/popover';
+export { ProgressBar, type ProgressBarProps } from './components/progress-bar';
 export { Spinner, type SpinnerProps } from './components/spinner';
 export { toast, Toaster } from './components/toast';
 export { Tooltip, TooltipProvider, type TooltipProps } from './components/tooltip';
