@@ -10,7 +10,7 @@
 - [x] P0-I3 Docker Compose (dev): Postgres 17, Valkey 8, Mailpit (catches emails); optional MinIO profile for developers without S3; apps run on the host with `pnpm dev`
 - [ ] P0-I4 GitHub Actions: lint, typecheck, unit + integration tests, build images (worker image includes ffmpeg/ffprobe); smoke test that starts the built api and worker images and waits for `/api/health` 200 (a bundling bug once broke only the built app), and sends SIGTERM to check graceful shutdown; `pnpm e2e` (P0-Q1) on pull requests to main, with Postgres, Valkey, Mailpit and MinIO as service containers
 - [x] P0-I5 `platform/*`: config (Zod-validated env), logger (Pino), db (Prisma + workspace-scope extension), queue (BullMQ), storage (S3 client: Amazon S3 or MinIO), mailer, events, crypto, http errors
-- [ ] P0-I6 Automated Postgres backups (daily + point-in-time) on staging; restore tested once
+- [ ] P0-I6 **(DevOps team)** Automated Postgres backups (daily + point-in-time) on staging; restore tested once. Owned and set up by DevOps; engineering only tracks it as done
 - [ ] P0-I7 Staging environment on a temporary host; `app.staging.socioboard.com`; storage bucket CORS for browser uploads ([infra](../infra.md))
 - [ ] P0-I9 Repo migration into one `socioboard/socioboard` repo (5.0 renamed; 6.0 on `main`; 5.0, the prototype and socioboard-core on `archive/*` branches); runbook and progress in [repo-migration](../repo-migration.md)
 - [ ] P0-I8 Cloudflare Tunnel dev hostnames `dev1..dev3.dev.socioboard.com`
