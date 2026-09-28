@@ -2,6 +2,11 @@
 // Replaced by the component catalog in P0-F8; returns "not found" in production builds.
 import {
   Banner,
+  Checkbox,
+  ConfirmDialog,
+  RadioCard,
+  RadioGroup,
+  Switch,
   Combobox,
   DropdownMenu,
   DropdownMenuContent,
@@ -158,6 +163,7 @@ function Preview() {
   const [loadingMore, setLoadingMore] = useState(false);
   const zones = useMemo(() => timezoneOptions(), []);
   const [zone, setZone] = useState('Europe/Lisbon');
+  const [confirming, setConfirming] = useState(false);
 
   return (
     <TooltipProvider>
@@ -307,6 +313,50 @@ function Preview() {
               Verify your email address. We sent a link to priya@halden.test.
             </Banner>
             <Banner tone="danger">LinkedIn needs reconnecting: 3 posts can’t publish.</Banner>
+          </Section>
+
+          <Section title="Choices and confirmations">
+            <Checkbox
+              label="Sign out of other devices"
+              description="Recommended if you think someone else knows your password."
+              defaultChecked
+            />
+            <div className="flex items-center gap-3">
+              <Switch aria-label="Two-factor authentication" defaultChecked />
+              <span className="text-ink-2 text-sm">Two-factor authentication</span>
+            </div>
+            <RadioGroup defaultValue="editor" aria-label="Role">
+              <RadioCard
+                value="admin"
+                label="Admin"
+                description="Manages members, settings and connected accounts."
+              />
+              <RadioCard
+                value="editor"
+                label="Editor"
+                description="Creates, publishes and approves posts."
+              />
+            </RadioGroup>
+            <Button
+              variant="danger"
+              className="self-start"
+              onClick={() => {
+                setConfirming(true);
+              }}
+            >
+              Delete workspace…
+            </Button>
+            <ConfirmDialog
+              open={confirming}
+              onOpenChange={setConfirming}
+              tone="danger"
+              title="Delete Halden Coffee?"
+              description="Members lose access at once. Everything is permanently deleted after 30 days."
+              confirmLabel="Delete workspace"
+              cancelLabel="Cancel"
+              typeToConfirm={{ value: 'Halden Coffee', label: 'Type Halden Coffee to confirm' }}
+              onConfirm={() => new Promise((resolve) => setTimeout(resolve, 800))}
+            />
           </Section>
 
           <Section title="Badges, avatars and loading">

@@ -1,5 +1,6 @@
 // Public surface of the auth feature (docs/frontend/areas/auth-onboarding.md).
 export { AuthLayout, FormError, FormNotice } from './components/auth-layout';
+export { PasswordField } from './components/password-field';
 export { InvitationScreen } from './components/invitation-screen';
 export { ResetPasswordScreen } from './components/reset-password-screen';
 export { SignInScreen } from './components/sign-in-screen';

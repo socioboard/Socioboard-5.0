@@ -4,7 +4,7 @@ import { Outlet, useParams } from '@tanstack/react-router';
 import { useCallback, useMemo, useState } from 'react';
 
 import { useMe } from '../../../lib/session';
-import { membershipFor } from '../../../lib/workspace';
+import { membershipFor, WorkspaceContext } from '../../../lib/workspace';
 import {
   useActiveWorkspaceSync,
   useCommandShortcut,
@@ -23,8 +23,23 @@ import { WorkspaceNotFound } from './workspace-not-found';
  * Pages render into the content pane and start with a PageHeader.
  */
 export function AppShell() {
-  useSessionWatcher();
   const { slug } = useParams({ from: '/w/$slug' });
+  return <WorkspaceShell slug={slug} />;
+}
+
+/**
+ * Account pages (`/me/*`) use the same frame, on the active workspace (else the first). The route
+ * sends people without a workspace to setup first.
+ */
+export function AccountShell() {
+  const me = useMe().data;
+  const active =
+    me?.memberships.find((m) => m.workspace.id === me.activeWorkspaceId) ?? me?.memberships[0];
+  return <WorkspaceShell slug={active?.workspace.slug ?? ''} />;
+}
+
+function WorkspaceShell({ slug }: { slug: string }) {
+  useSessionWatcher();
   const me = useMe().data;
   // Signed out mid-use: the session watcher is already on its way to the sign-in page.
   if (!me) return null;
@@ -52,39 +67,47 @@ function ShellLayout({
   useCommandShortcut(toggleSearch);
   useActiveWorkspaceSync(membership.workspace.id, me.activeWorkspaceId);
   const items = useMemo(
-    () => NAV_ITEMS.filter((item) => can(membership.role, item.permission)),
+    () =>
+      NAV_ITEMS.filter((item) => !('permission' in item) || can(membership.role, item.permission)),
     [membership.role],
+  );
+
+  const scope = useMemo(
+    () => ({ me, workspace: membership.workspace, role: membership.role }),
+    [me, membership],
   );
 
   // Tooltips live only in the shell, so sign-in pages don't load them.
   return (
-    <TooltipProvider>
-      <div className="flex h-dvh flex-col gap-3 p-3 md:flex-row">
-        <Sidebar
-          me={me}
-          membership={membership}
-          items={items}
-          collapsed={collapsed}
-          onCollapsedChange={setCollapsed}
-          onSearch={openSearch}
-        />
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
-          <ShellBanners me={me} />
-          <main className="glass rounded-pane animate-settle flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
-            <Outlet />
-          </main>
+    <WorkspaceContext value={scope}>
+      <TooltipProvider>
+        <div className="flex h-dvh flex-col gap-3 p-3 md:flex-row">
+          <Sidebar
+            me={me}
+            membership={membership}
+            items={items}
+            collapsed={collapsed}
+            onCollapsedChange={setCollapsed}
+            onSearch={openSearch}
+          />
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
+            <ShellBanners me={me} />
+            <main className="glass rounded-pane animate-settle flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
+              <Outlet />
+            </main>
+          </div>
+          <MobileTabBar me={me} membership={membership} items={items} onSearch={openSearch} />
+          <CommandMenu
+            open={searchOpen}
+            onOpenChange={setSearchOpen}
+            me={me}
+            membership={membership}
+            items={items}
+            sidebarCollapsed={collapsed}
+            onSidebarCollapsedChange={setCollapsed}
+          />
         </div>
-        <MobileTabBar me={me} membership={membership} items={items} onSearch={openSearch} />
-        <CommandMenu
-          open={searchOpen}
-          onOpenChange={setSearchOpen}
-          me={me}
-          membership={membership}
-          items={items}
-          sidebarCollapsed={collapsed}
-          onSidebarCollapsedChange={setCollapsed}
-        />
-      </div>
-    </TooltipProvider>
+      </TooltipProvider>
+    </WorkspaceContext>
   );
 }

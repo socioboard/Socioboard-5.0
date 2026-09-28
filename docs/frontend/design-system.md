@@ -36,6 +36,9 @@
 | `Tooltip` (P0-F5) | Short label on hover or keyboard focus (400 ms delay); supplements an `aria-label`, never replaces it. `TooltipProvider` is mounted by the app shell (not the root, so sign-in pages don't load tooltip code) |
 | `Banner` (P0-F5) | Notice above the content: `info`, `warning` (polite status), `danger` (alert); optional action and dismiss |
 | `CommandPalette` (P0-F5) | ⌘K dialog: a search box over grouped commands; the same word matching as Combobox; arrows wrap; Enter runs and closes; opens with an empty search each time |
+| `Checkbox`, `Switch`, `RadioGroup` + `RadioCard` (P0-F6) | Checkbox with its label (and optional description) for choices saved by a form button; Switch for settings that apply at once; RadioCard is a selectable card with a one-line explanation (roles) |
+| `ConfirmDialog` (P0-F6) | "Are you sure?" with progress while `onConfirm` runs, the error kept in the dialog on failure, and optional type-to-confirm (deleting a workspace) |
+| `NavTabs` (P0-F6) | Tabs that are pages: a row of router links with the active one underlined in the selection color. Radix Tabs (panels within one page) are added when a screen needs them |
 | `PageHeader`, `Kbd` (P0-F5) | The 56 px bar at the top of a content pane holding the page's h1 and actions; a keyboard key chip |
 | `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name (`decorative` when the name is already shown beside it, so screen readers don't read it twice); Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
 
@@ -62,7 +65,7 @@ A development-only preview of every component lives at `/dev/components` until t
 | 5 | UsageMeter, PlanCard, KpiTile |
 | 6.1 | Chart wrappers (Line, Bar, Area) with theme tokens, DateRangePicker, MetricDelta |
 
-Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, Tabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card, Popover and AvatarStack with the media library (P0-F7). IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
+Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card, Popover and AvatarStack with the media library (P0-F7). IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
 
 ## Rules
 - Components are accessible by default (keyboard, focus, ARIA, labels) and tested with Testing Library.

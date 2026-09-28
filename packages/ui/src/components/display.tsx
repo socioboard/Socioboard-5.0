@@ -79,7 +79,7 @@ export function Avatar({ name, src, size = 'md', decorative = false, className }
         {...(src ? { delayMs: 300 } : {})}
       >
         <span aria-hidden="true">{initials(name)}</span>
-        <span className="sr-only">{name}</span>
+        {!decorative && <span className="sr-only">{name}</span>}
       </AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>
   );

@@ -12,6 +12,7 @@ export {
 
 export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
+export { Checkbox, RadioCard, RadioGroup, Switch } from './components/choice';
 export {
   CommandPalette,
   type Command,
@@ -49,6 +50,7 @@ export {
   type BadgeProps,
   type EmptyStateProps,
 } from './components/display';
+export { ConfirmDialog, type ConfirmDialogProps } from './components/confirm-dialog';
 export {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,6 +91,7 @@ export {
   SelectTrigger,
   SelectValue,
 } from './components/select';
+export { NavTabs } from './components/nav-tabs';
 export { Kbd, PageHeader, type PageHeaderProps } from './components/page';
 export { Spinner, type SpinnerProps } from './components/spinner';
 export { toast, Toaster } from './components/toast';

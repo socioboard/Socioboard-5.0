@@ -5,6 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   Banner,
+  Checkbox,
+  ConfirmDialog,
+  RadioCard,
+  RadioGroup,
+  Switch,
   Combobox,
   CommandPalette,
   DropdownMenu,
@@ -303,6 +308,82 @@ describe('Tooltip', () => {
     );
     await user.tab();
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Collapse sidebar');
+  });
+});
+
+describe('Checkbox, Switch and RadioGroup', () => {
+  it('toggle from their labels and the keyboard', async () => {
+    const user = userEvent.setup();
+    function Form() {
+      const [role, setRole] = useState('editor');
+      return (
+        <>
+          <Checkbox label="Sign out other devices" description="Recommended" defaultChecked />
+          <Switch aria-label="Two-factor authentication" />
+          <RadioGroup value={role} onValueChange={setRole} aria-label="Role">
+            <RadioCard value="admin" label="Admin" description="Manages members and settings" />
+            <RadioCard value="editor" label="Editor" description="Publishes and approves posts" />
+          </RadioGroup>
+          <output>{role}</output>
+        </>
+      );
+    }
+    render(<Form />);
+    const box = screen.getByRole('checkbox', { name: 'Sign out other devices' });
+    expect(box).toHaveAccessibleDescription('Recommended');
+    expect(box).toBeChecked();
+    await user.click(screen.getByText('Sign out other devices'));
+    expect(box).not.toBeChecked();
+
+    const toggle = screen.getByRole('switch', { name: 'Two-factor authentication' });
+    await user.click(toggle);
+    expect(toggle).toBeChecked();
+
+    const editor = screen.getByRole('radio', { name: 'Editor' });
+    expect(editor).toHaveAccessibleDescription('Publishes and approves posts');
+    expect(editor).toBeChecked();
+    await user.click(screen.getByRole('radio', { name: 'Admin' }));
+    expect(screen.getByRole('status')).toHaveTextContent('admin');
+  });
+});
+
+describe('ConfirmDialog', () => {
+  it('confirms only once the name is typed, and stays open with the error on failure', async () => {
+    const user = userEvent.setup();
+    const onConfirm = vi
+      .fn<() => Promise<void>>()
+      .mockRejectedValueOnce(new Error('Try again'))
+      .mockResolvedValueOnce(undefined);
+    function Harness() {
+      const [open, setOpen] = useState(true);
+      return (
+        <ConfirmDialog
+          open={open}
+          onOpenChange={setOpen}
+          title="Delete Halden Coffee?"
+          description="Everything in it is deleted after 30 days."
+          confirmLabel="Delete workspace"
+          cancelLabel="Cancel"
+          tone="danger"
+          onConfirm={onConfirm}
+          errorMessage={(error) => (error as Error).message}
+          typeToConfirm={{ value: 'Halden Coffee', label: 'Type the workspace name' }}
+        />
+      );
+    }
+    render(<Harness />);
+    const confirm = screen.getByRole('button', { name: 'Delete workspace' });
+    expect(confirm).toBeDisabled();
+    await user.type(screen.getByLabelText('Type the workspace name'), 'Halden Coffee');
+    expect(confirm).toBeEnabled();
+    await user.click(confirm);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Try again');
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await user.click(confirm);
+    await vi.waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    expect(onConfirm).toHaveBeenCalledTimes(2);
   });
 });
 

@@ -1,7 +1,8 @@
 {
   "nav": {
     "label": "Main",
-    "calendar": "Calendar"
+    "calendar": "Calendar",
+    "settings": "Settings"
   },
   "switcher": {
     "label": "Switch workspace",
@@ -11,7 +12,9 @@
   "user": {
     "menu": "Account menu",
     "signOut": "Sign out",
-    "toggleTheme": "Switch to {{theme}} theme"
+    "toggleTheme": "Switch to {{theme}} theme",
+    "profile": "Profile",
+    "security": "Security"
   },
   "roles": {
     "owner": "Owner",

@@ -1,7 +1,17 @@
 import type { Me } from '@socioboard/contracts';
 import { CommandPalette, useTheme, type CommandGroup } from '@socioboard/ui';
 import { useNavigate } from '@tanstack/react-router';
-import { Building2, LogOut, Monitor, Moon, PanelLeft, Plus, Sun } from 'lucide-react';
+import {
+  Building2,
+  LogOut,
+  Monitor,
+  Moon,
+  PanelLeft,
+  Plus,
+  ShieldCheck,
+  Sun,
+  UserRound,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -116,6 +126,24 @@ export function CommandMenu({
       {
         heading: t('search.account'),
         commands: [
+          {
+            id: 'profile',
+            label: t('user.profile'),
+            icon: UserRound,
+            keywords: 'name photo avatar time zone',
+            onSelect: () => {
+              void navigate({ to: '/me/profile' });
+            },
+          },
+          {
+            id: 'security',
+            label: t('user.security'),
+            icon: ShieldCheck,
+            keywords: 'password two-factor 2fa sessions devices',
+            onSelect: () => {
+              void navigate({ to: '/me/security' });
+            },
+          },
           {
             id: 'sign-out',
             label: t('user.signOut'),
