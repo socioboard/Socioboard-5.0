@@ -25,6 +25,8 @@ export class ApiError extends Error {
 }
 
 export const NETWORK_ERROR = 'NETWORK_ERROR';
+/** A success status whose body isn't JSON (e.g. an HTML page from a misconfigured proxy). */
+export const INVALID_RESPONSE = 'INVALID_RESPONSE';
 
 type Params<R extends RouteDefinition> = R['params'] extends z.ZodType
   ? { params: z.input<R['params']> }
@@ -115,7 +117,19 @@ export function createApiClient({ baseUrl = '', fetch: customFetch }: ApiClientO
 
     const requestId = res.headers.get('x-request-id') ?? undefined;
     const text = await res.text();
-    if (res.ok) return (text ? JSON.parse(text) : undefined) as RouteResponse<R>;
+    if (res.ok) {
+      if (!text) return undefined as RouteResponse<R>;
+      try {
+        return JSON.parse(text) as RouteResponse<R>;
+      } catch {
+        throw new ApiError(
+          res.status,
+          INVALID_RESPONSE,
+          'The server sent an unreadable response',
+          requestId,
+        );
+      }
+    }
 
     let parsed: unknown;
     try {

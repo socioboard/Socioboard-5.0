@@ -80,6 +80,21 @@ describe('ThemeProvider', () => {
     expect(screen.getByRole('button')).toHaveTextContent('system:dark');
   });
 
+  it('follows a theme change made in another tab', () => {
+    mockSystem(false);
+    render(
+      <ThemeProvider>
+        <Probe />
+      </ThemeProvider>,
+    );
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark');
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: THEME_STORAGE_KEY }));
+    });
+    expect(screen.getByRole('button')).toHaveTextContent('dark:dark');
+    expect(document.documentElement).toHaveClass('dark');
+  });
+
   it('works when storage is blocked', () => {
     mockSystem(false);
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {

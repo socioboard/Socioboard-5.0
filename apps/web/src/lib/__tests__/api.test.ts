@@ -1,7 +1,14 @@
 import { apiRoutes } from '@socioboard/contracts';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ApiError, buildPath, buildQuery, createApiClient, NETWORK_ERROR } from '../api';
+import {
+  ApiError,
+  buildPath,
+  buildQuery,
+  createApiClient,
+  INVALID_RESPONSE,
+  NETWORK_ERROR,
+} from '../api';
 
 const WS = '01a0d816-827a-74d6-a46e-409c7db36f92';
 
@@ -101,6 +108,18 @@ describe('createApiClient', () => {
       status: 502,
       code: 'HTTP_502',
       requestId: 'req-2',
+    });
+  });
+
+  it('reports a success that is not JSON as INVALID_RESPONSE', async () => {
+    const api = createApiClient({
+      fetch: vi.fn<typeof fetch>(() =>
+        Promise.resolve(new Response('<!doctype html><p>Proxy page</p>', { status: 200 })),
+      ),
+    });
+    await expect(api(apiRoutes.auth.getMe)).rejects.toMatchObject({
+      status: 200,
+      code: INVALID_RESPONSE,
     });
   });
 
