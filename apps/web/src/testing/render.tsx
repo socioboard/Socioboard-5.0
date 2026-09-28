@@ -16,14 +16,14 @@ export function renderApp(path: string) {
   queryClient.setDefaultOptions({ ...defaults, queries: { ...defaults.queries, retry: false } });
   const history = createMemoryHistory({ initialEntries: [path] });
   const router = createRouter({ routeTree, context: { queryClient }, history });
-  render(
+  const view = render(
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
     </ThemeProvider>,
   );
-  return { router, history, queryClient };
+  return { router, history, queryClient, unmount: view.unmount };
 }
 
 type Reply = [status: number, body?: unknown];
@@ -40,7 +40,13 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
     const url = new URL(request.url, 'http://localhost');
     const key = `${request.method} ${url.pathname}`;
     const text = await request.text();
-    const body: unknown = text ? JSON.parse(text) : undefined;
+    // JSON for API calls; raw text for anything else (a file PUT to storage).
+    let body: unknown = text || undefined;
+    try {
+      if (text) body = JSON.parse(text);
+    } catch {
+      // keep the raw text
+    }
     calls.push({ key, body });
     const handler = handlers[key];
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);

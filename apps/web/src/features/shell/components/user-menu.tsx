@@ -14,7 +14,8 @@ import {
   useTheme,
   type ThemePreference,
 } from '@socioboard/ui';
-import { LogOut, Moon, Sun } from 'lucide-react';
+import { LogOut, Moon, ShieldCheck, Sun, UserRound } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import type { Membership } from '../../../lib/workspace';
@@ -23,8 +24,8 @@ import { useSignOut } from '../../auth';
 const THEMES: ThemePreference[] = ['light', 'dark', 'system'];
 
 /**
- * Who is signed in and in what role, opening a menu with the theme and sign out. Profile, security
- * and notification settings join the menu with P0-F6.
+ * Who is signed in and in what role, opening a menu with their account pages, the theme and sign
+ * out. Notification settings join with P2-F4.
  */
 export function UserMenu({
   me,
@@ -40,6 +41,7 @@ export function UserMenu({
   const { t } = useTranslation(['shell', 'common']);
   const { preference, setPreference } = useTheme();
   const signOut = useSignOut();
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <Tooltip content={me.user.name} side="right" disabled={!compact}>
@@ -64,6 +66,23 @@ export function UserMenu({
           <span className="text-ink text-sm">{me.user.name}</span>
           <span className="truncate font-normal">{me.user.email}</span>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onSelect={() => {
+            void navigate({ to: '/me/profile' });
+          }}
+        >
+          <UserRound aria-hidden="true" />
+          {t('user.profile')}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() => {
+            void navigate({ to: '/me/security' });
+          }}
+        >
+          <ShieldCheck aria-hidden="true" />
+          {t('user.security')}
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>{t('common:theme.label')}</DropdownMenuLabel>
         <DropdownMenuRadioGroup

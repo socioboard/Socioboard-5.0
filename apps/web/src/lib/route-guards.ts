@@ -1,8 +1,11 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
 
+import { can, type Permission } from '@socioboard/contracts';
+
 import { routeAfterSignIn, safeRedirect } from './redirect';
 import { authOptionsQuery, meQuery } from './session';
+import { membershipFor } from './workspace';
 
 /**
  * `?redirect=` kept only when it is a safe in-app path. The key is always returned (undefined when
@@ -31,4 +34,15 @@ export async function requireSignedIn(queryClient: QueryClient, here: string) {
   const me = await queryClient.query({ ...meQuery, staleTime: 'static' });
   if (!me) throw redirect({ to: '/login', search: { redirect: here }, replace: true });
   return me;
+}
+
+/** Whether my role in workspace `slug` has `permission` (false when I'm not a member). */
+export async function canInWorkspace(
+  queryClient: QueryClient,
+  slug: string,
+  permission: Permission,
+): Promise<boolean> {
+  const me = await queryClient.query({ ...meQuery, staleTime: 'static' });
+  const membership = me ? membershipFor(me, slug) : undefined;
+  return membership ? can(membership.role, permission) : false;
 }

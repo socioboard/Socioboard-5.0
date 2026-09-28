@@ -41,7 +41,7 @@
 - [x] P0-F3 Sign up, sign in, verify email, reset password, 2FA, invitation accept
 - [x] P0-F4 Onboarding step 1 (create workspace); replaces the placeholder `/onboarding` route from P0-F3
 - [x] P0-F5 App shell: layout, sidebar, workspace switcher, user menu, command palette (⌘K), route guards, banners; replaces the temporary start page from P0-F1 (`routes/index.tsx`) with a redirect and the placeholder `/w/$slug` route from P0-F3. Handles a session that ends mid-use: any 401 from the API clears the cached `me` and goes to `/login?redirect=<here>` (the P0-F3 route guards reuse the cached `me` and don't re-ask the server on every navigation)
-- [ ] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions). Adds Settings to the sidebar (`features/shell/nav.ts`) and profile/security to the user menu; builds Checkbox, Switch, RadioGroup, Tabs and ConfirmDialog in `packages/ui`
+- [x] P0-F6 Settings: general, members, invitations; profile; security (password, 2FA, sessions). Adds Settings to the sidebar (`features/shell/nav.ts`) and profile/security to the user menu; builds Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog in `packages/ui`
 - [ ] P0-F7 Media library: uploader with progress, grid, details drawer, folders. Adds Media to the sidebar (`features/shell/nav.ts`); builds FileDropzone, ProgressBar, Card, Popover and AvatarStack in `packages/ui`
 - [ ] P0-F8 Component catalog (Ladle) for `packages/ui`; replaces the development-only preview route `/dev/components` ([design system](../frontend/design-system.md))
 

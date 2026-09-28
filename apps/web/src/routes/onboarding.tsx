@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { CreateWorkspaceScreen } from '../features/onboarding';
 import { requireSignedIn } from '../lib/route-guards';
-import { authOptionsQuery } from '../lib/session';
+import { authOptionsQuery, useMe } from '../lib/session';
 
 export const Route = createFileRoute('/onboarding')({
   beforeLoad: async ({ context }) => {
@@ -16,7 +16,9 @@ export const Route = createFileRoute('/onboarding')({
     return { me };
   },
   component: function Onboarding() {
+    // Live `me` (e.g. after deleting the last workspace), else the one the guard loaded.
+    const live = useMe().data;
     const { me } = Route.useRouteContext();
-    return <CreateWorkspaceScreen me={me} />;
+    return <CreateWorkspaceScreen me={live ?? me} />;
   },
 });
