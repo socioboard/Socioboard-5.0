@@ -44,6 +44,11 @@
   --sb-warning-tint: rgb(245 166 35 / 0.18);
   --sb-danger: #b42318;
   --sb-danger-tint: rgb(214 58 27 / 0.12);
+  /* Fill for destructive buttons: crimson, so it never reads as the orange primary action; white
+     text on it passes 4.5:1 in both themes. */
+  --sb-danger-solid: #be123c;
+  /* Overlay behind dialogs and drawers. */
+  --sb-scrim: rgb(20 24 33 / 0.28);
 }
 
 .dark {
@@ -71,6 +76,7 @@
   --sb-warning-tint: rgb(245 176 60 / 0.14);
   --sb-danger: #ff8a78;
   --sb-danger-tint: rgb(255 99 82 / 0.14);
+  --sb-scrim: rgb(0 0 0 / 0.5);
 }
 
 @theme inline {
@@ -93,12 +99,77 @@
   --color-warning-tint: var(--sb-warning-tint);
   --color-danger: var(--sb-danger);
   --color-danger-tint: var(--sb-danger-tint);
+  --color-danger-solid: var(--sb-danger-solid);
+  --color-scrim: var(--sb-scrim);
+  --color-glass-solid: var(--sb-glass-solid);
 
   --radius-control: 10px;
   --radius-media: 14px;
   --radius-pane: 18px;
 
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Overlay motion (Radix waits for the exit animation before unmounting). */
+  --animate-fade-in: sb-fade-in 0.2s ease-out both;
+  --animate-fade-out: sb-fade-out 0.15s ease-in both;
+  --animate-pop-in: sb-pop-in 0.22s var(--ease-out-soft) both;
+  --animate-pop-out: sb-pop-out 0.14s ease-in both;
+  --animate-sheet-in-right: sb-sheet-in-right 0.35s var(--ease-out-soft) both;
+  --animate-sheet-out-right: sb-sheet-out-right 0.2s ease-in both;
+  --animate-sheet-in-bottom: sb-sheet-in-bottom 0.35s var(--ease-out-soft) both;
+  --animate-sheet-out-bottom: sb-sheet-out-bottom 0.2s ease-in both;
+  --animate-shimmer: sb-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes sb-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sb-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes sb-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+}
+@keyframes sb-pop-out {
+  to {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+@keyframes sb-sheet-in-right {
+  from {
+    transform: translateX(104%);
+  }
+}
+@keyframes sb-sheet-out-right {
+  to {
+    transform: translateX(104%);
+  }
+}
+@keyframes sb-sheet-in-bottom {
+  from {
+    transform: translateY(104%);
+  }
+}
+@keyframes sb-sheet-out-bottom {
+  to {
+    transform: translateY(104%);
+  }
+}
+@keyframes sb-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
 }
 
 @layer base {
@@ -115,8 +186,9 @@
   }
 }
 
-/* A frosted pane: the main surface of the app. Falls back to a near-opaque fill where the browser
-   cannot blur, so text contrast never depends on the backdrop. */
+/* A frosted surface: panes, popovers, dialogs. Falls back to a near-opaque fill where the browser
+   cannot blur, so text contrast never depends on the backdrop. Set the radius alongside it
+   (rounded-pane for panes). */
 @utility glass {
   background: var(--sb-glass);
   -webkit-backdrop-filter: blur(28px) saturate(170%);
@@ -125,7 +197,6 @@
   box-shadow:
     inset 0 1px 0 var(--sb-spec),
     var(--sb-shadow);
-  border-radius: var(--radius-pane);
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     background: var(--sb-glass-solid);
   }

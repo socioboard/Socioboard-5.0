@@ -58,6 +58,22 @@ export default tseslint.config(
     },
   },
 
+  // TanStack Router signals "not found" and redirects by throwing its own objects.
+  {
+    files: ['apps/web/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        {
+          allow: [
+            { from: 'package', package: '@tanstack/router-core', name: 'NotFoundError' },
+            { from: 'package', package: '@tanstack/router-core', name: 'Redirect' },
+          ],
+        },
+      ],
+    },
+  },
+
   // Route files export a Route object next to their component (the router's code splitting
   // handles hot reload there), and the ui package pairs providers with their hooks on purpose.
   {

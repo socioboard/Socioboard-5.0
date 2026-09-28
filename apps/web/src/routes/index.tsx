@@ -30,7 +30,7 @@ function Home() {
 
   return (
     <main className="grid min-h-dvh place-items-center p-4">
-      <div className="glass animate-settle flex w-full max-w-lg flex-col gap-6 p-8">
+      <div className="glass rounded-pane animate-settle flex w-full max-w-lg flex-col gap-6 p-8">
         <img src="/sb-mark.svg" alt={t('app.name')} width={28} height={32} />
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-semibold tracking-tight">{t('home.title')}</h1>
