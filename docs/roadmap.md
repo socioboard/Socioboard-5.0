@@ -8,7 +8,7 @@ Socioboard 6.0 launches publicly after phase 5, about 25 weeks in. Phase 6 then 
 
 | Phase | Scope | Exit criteria | Est. |
 | --- | --- | --- | --- |
-| 0. Foundation | Monorepo, CI, Docker Compose, Prisma schema v1, Better Auth + workspaces/invites, S3 uploads, shadcn/ui design system shell, i18n setup (English strings only). **Create new developer apps (Meta, LinkedIn, TikTok, X, Google/YouTube, Pinterest, Tumblr, Snapchat); publish privacy policy, terms and data-deletion pages; submit app reviews** | A user signs up, creates a workspace, invites a teammate and uploads media locally; all app reviews submitted | 3 wks |
+| 0. Foundation | Monorepo, CI, Docker Compose, Prisma schema v1, Better Auth + workspaces/invites, S3 uploads, design system (Graphite with glass, light and dark), i18n setup (English strings only). **Create new developer apps (Meta, LinkedIn, TikTok, X, Google/YouTube, Pinterest, Tumblr, Snapchat); publish privacy policy, terms and data-deletion pages; submit app reviews** | A user signs up, creates a workspace, invites a teammate and uploads media locally; all app reviews submitted | 3 wks |
 | 1. Publish core | Provider interface, Facebook Pages + Instagram adapters, composer with live validation and per-network live preview, publish now, BullMQ publish queue, retries, post history | A post goes to an FB Page and IG from the UI, and failures show readable errors | 4 wks |
 | 2. Scheduling | Scheduled + recurring posts, queue slots, calendar with drag-to-reschedule, reconciler, token refresh, notifications; admin console v1 (queues, publishing health) | Scheduled posts survive an api/worker/Valkey restart and publish on time; operators can see and retry failed posts | 4 wks |
 | 3. More networks | LinkedIn (personal + org), X, YouTube, Pinterest, TikTok, Snapchat, Tumblr, Bitly; per-network content overrides | Every kept network passes its contract tests and a manual publish | 6 wks |
@@ -41,9 +41,9 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Project name / version | Socioboard 6.0, the official successor; Socioboard owns the brand and 5.0 code (repo folder `Socioboard-6.0`) |
 | Delivery model | Single edition: one open-source codebase, run as our hosted cloud or self-hosted |
 | License | AGPL-3.0-only for the whole repo (changed from MIT/Apache on 2026-09-24); no paid or closed code. Needs a contributor agreement (CLA) before outside PRs are accepted |
-| Repository | One public monorepo; billing activates only when Stripe keys are set |
+| Repository | One public monorepo; billing activates only when Stripe keys are set. It lives in `socioboard/socioboard`, the renamed Socioboard-5.0 repo so its stars and forks carry over; 5.0, the 2026 prototype and socioboard-core stay on `archive/*` branches (decided by SG on 2026-09-28; progress in [repo migration](repo-migration.md)) |
 | Architecture | Modular monolith: one Node.js + TypeScript codebase, api + worker processes; split modules out only if load demands |
-| Frontend | React + Vite; UI built on shadcn/ui (no designer for now) |
+| Frontend | React + Vite. Own design system, **Graphite with glass** (Aurora palette, light and dark), chosen on 2026-09-28 from five prototyped directions; components built shadcn-style on Radix with our own styling, not the stock shadcn look (no designer for now; details in [design system](frontend/design-system.md)) |
 | Backend | Express 5 + Zod on Node 24 LTS + TypeScript (NestJS dropped: team doesn't know it); structure enforced by module convention and lint |
 | Data | PostgreSQL 17+ + Prisma |
 | Jobs | BullMQ on Valkey (Redis-compatible) |

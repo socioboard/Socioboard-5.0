@@ -122,7 +122,7 @@ Without a framework enforcing structure, we enforce it by convention and lint:
 
 | Path | Contents |
 | --- | --- |
-| `apps/web` | React + Vite SPA: TanStack Router and Query, Tailwind + shadcn/ui, calendar and composer |
+| `apps/web` | React + Vite SPA: TanStack Router and Query, Tailwind and our design system (`packages/ui`), calendar and composer |
 | `apps/api` | Express 5 HTTP + Socket.IO entrypoint; mounts each module's routes |
 | `apps/worker` | Node process that runs the BullMQ processors and repeatable jobs, importing the same modules as api |
 | `packages/db` | Prisma schema, migrations, generated client (the seed runs through core: `pnpm db:seed`) |
@@ -146,7 +146,7 @@ The stack below includes the agreed decisions (React + Vite, Node TS, Postgres +
 | --- | --- | --- |
 | Frontend | React + Vite, TypeScript | Agreed. A fast dev server, and it can be served as a static SPA from any CDN |
 | Routing / data* | TanStack Router + TanStack Query | Type-safe routes; caching and invalidation for server data |
-| UI | Tailwind CSS + shadcn/ui, FullCalendar for the calendar | Decided: no designer, so we build our own design system (tokens + components) on shadcn/ui; it can be re-skinned later |
+| UI | Tailwind CSS v4 + our design system on Radix (shadcn-style, own styling), FullCalendar for the calendar | Decided: no designer, so we build our own design system. Visual direction chosen on 2026-09-28: Graphite with glass, Aurora palette, light and dark ([design system](frontend/design-system.md)) |
 | Backend | Express 5 on Node 24 LTS, TypeScript | Agreed. Familiar to the team; Express 5 handles async errors properly. Structure comes from our module convention (below) |
 | API docs | OpenAPI 3.1 from Zod 4's built-in JSON Schema (`buildOpenApi` in contracts; `zod-to-openapi` was the plan, not needed) | Generated from the same Zod schemas that validate requests, so it can't drift; validated against the official OpenAPI 3.1 schema in tests |
 | Validation* | Zod schemas shared in `packages/contracts` | One schema validates both the web forms and the API |
