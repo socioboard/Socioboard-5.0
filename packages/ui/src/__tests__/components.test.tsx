@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  Combobox,
   Avatar,
   Badge,
   Button,
@@ -167,6 +168,73 @@ describe('Select', () => {
     await user.keyboard('{Enter}');
     await screen.findByRole('listbox');
     await user.keyboard('{ArrowUp}{Enter}');
+    expect(screen.getByRole('status')).toHaveTextContent('UTC');
+  });
+});
+
+describe('Combobox', () => {
+  const zones = [
+    { value: 'UTC', label: 'UTC', hint: 'GMT' },
+    { value: 'Europe/Lisbon', label: 'Lisbon', hint: 'GMT+1', keywords: 'Portugal' },
+    { value: 'Asia/Kolkata', label: 'Kolkata', hint: 'GMT+5:30', keywords: 'India Calcutta' },
+  ];
+  function Zone() {
+    const [value, setValue] = useState('UTC');
+    return (
+      <>
+        <Combobox
+          aria-label="Time zone"
+          options={zones}
+          value={value}
+          onValueChange={setValue}
+          searchLabel="Search time zones"
+          emptyText="No matching time zone"
+        />
+        <output>{value}</output>
+      </>
+    );
+  }
+
+  it('filters by any word, including hidden keywords, and picks with the keyboard', async () => {
+    const user = userEvent.setup();
+    render(<Zone />);
+    await user.click(screen.getByRole('button', { name: 'Time zone' }));
+    const search = await screen.findByRole('combobox', { name: 'Search time zones' });
+    expect(search).toHaveFocus();
+    expect(screen.getByRole('option', { name: /UTC/ })).toHaveAttribute('aria-selected', 'true');
+
+    await user.type(search, 'india');
+    expect(screen.getAllByRole('option')).toHaveLength(1);
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('status')).toHaveTextContent('Asia/Kolkata');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Time zone' })).toHaveFocus();
+  });
+
+  it('moves with the arrow keys and picks with the pointer', async () => {
+    const user = userEvent.setup();
+    render(<Zone />);
+    await user.click(screen.getByRole('button', { name: 'Time zone' }));
+    const search = await screen.findByRole('combobox', { name: 'Search time zones' });
+    await user.keyboard('{ArrowDown}');
+    const lisbon = screen.getByRole('option', { name: /Lisbon/ });
+    expect(search).toHaveAttribute('aria-activedescendant', lisbon.id);
+    await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
+    expect(screen.getByRole('status')).toHaveTextContent('Asia/Kolkata');
+
+    await user.click(screen.getByRole('button', { name: 'Time zone' }));
+    await user.click(await screen.findByRole('option', { name: /Lisbon/ }));
+    expect(screen.getByRole('status')).toHaveTextContent('Europe/Lisbon');
+  });
+
+  it('says so when nothing matches, and Escape keeps the value', async () => {
+    const user = userEvent.setup();
+    render(<Zone />);
+    await user.click(screen.getByRole('button', { name: 'Time zone' }));
+    await user.type(await screen.findByRole('combobox'), 'atlantis');
+    expect(screen.getByText('No matching time zone')).toBeInTheDocument();
+    await user.keyboard('{Enter}{Escape}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('UTC');
   });
 });
