@@ -21,3 +21,9 @@
 - Assets stay "processing" until the server marks them ready (socket event refreshes the card).
 - Delete is blocked, with an explanation, when the asset is in a scheduled post.
 - Alt text field suggests filling it in (AI suggestion comes later).
+
+**Built in P0-F7** (`features/media`):
+- Header: search by name (as you type, sent after a pause) and Upload; filters for type (image, GIF, video) and source (uploaded, AI); folder chips (all, not in a folder, each folder; create in a popover, rename and delete from the selected chip's menu; deleting moves its contents up). Folder, filters and the open asset live in the URL (`?folder=&kind=&source=&q=&asset=`), so a view can be shared.
+- Uploads: button, or drop anywhere on the page. Type and size are checked against the API's limits first (the refusal shows the limit). Files upload two at a time, straight to storage with progress (one PUT up to 16 MB, else 16 MB parts three at a time); each shows as a tile first in the grid, with Retry or Dismiss when it fails. Uploads keep going while people move around the app. Uploading with a folder open puts the files in it.
+- Grid: thumbnails (the file name names each tile; the image's alt text is for posts), video length and GIF/AI badges; "Processing…" until the server marks it ready. Until live updates arrive (P2-F5), the grid and the open details re-ask every 3 s while anything is processing. Infinite scroll with a "Load more" button.
+- Details drawer: preview from the signed URL (video plays in place), type, size, dimensions, length, who uploaded it and when; name, alt text (images and GIFs) and folder for people who can upload; "Open original" (a new tab, since browsers ignore download links to another origin) and delete. "Used in posts" and "Use in new post" come with posts (phase 1).

@@ -2,7 +2,8 @@
   "nav": {
     "label": "Main",
     "calendar": "Calendar",
-    "settings": "Settings"
+    "settings": "Settings",
+    "media": "Media"
   },
   "switcher": {
     "label": "Switch workspace",

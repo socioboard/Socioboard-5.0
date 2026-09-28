@@ -53,7 +53,14 @@
     "IMAGE_TYPE": "Use a JPEG, PNG or WebP image.",
     "IMAGE_TOO_LARGE": "Use an image under 2 MB.",
     "INVALID_PASSWORD": "That password isn’t right.",
-    "SESSION_NOT_FOUND": "That session already ended."
+    "SESSION_NOT_FOUND": "That session already ended.",
+    "MEDIA_NOT_FOUND": "That file no longer exists. It may have been deleted.",
+    "MEDIA_IN_USE": "This file is in a scheduled post. Remove it from the post first.",
+    "FOLDER_NOT_FOUND": "That folder no longer exists.",
+    "FOLDER_CYCLE": "A folder can’t go inside itself.",
+    "UPLOAD_INVALID": "The uploaded file didn’t match what was expected. Try uploading it again.",
+    "UPLOAD_INCOMPLETE": "The upload didn’t finish. Try again.",
+    "UPLOAD_ALREADY_COMPLETED": "This file was already uploaded."
   },
   "providers": {
     "access_denied": "Sign-in was cancelled at the provider. Try again when you’re ready.",

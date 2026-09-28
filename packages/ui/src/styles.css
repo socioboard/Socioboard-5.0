@@ -117,6 +117,8 @@
   --animate-fade-in: sb-fade-in 0.2s ease-out both;
   --animate-fade-out: sb-fade-out 0.15s ease-in both;
   --animate-pop-in: sb-pop-in 0.22s var(--ease-out-soft) both;
+  /* Progress of unknown length; like spinners, it keeps moving under reduced motion. */
+  --animate-indeterminate: sb-indeterminate 1.2s ease-in-out infinite;
   --animate-pop-out: sb-pop-out 0.14s ease-in both;
   --animate-sheet-in-right: sb-sheet-in-right 0.35s var(--ease-out-soft) both;
   --animate-sheet-out-right: sb-sheet-out-right 0.2s ease-in both;
@@ -133,6 +135,14 @@
 @keyframes sb-fade-out {
   to {
     opacity: 0;
+  }
+}
+@keyframes sb-indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
   }
 }
 @keyframes sb-pop-in {

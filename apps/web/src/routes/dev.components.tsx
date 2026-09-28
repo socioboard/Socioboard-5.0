@@ -2,6 +2,12 @@
 // Replaced by the component catalog in P0-F8; returns "not found" in production builds.
 import {
   Banner,
+  Card,
+  FileDropzone,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ProgressBar,
   Checkbox,
   ConfirmDialog,
   RadioCard,
@@ -357,6 +363,29 @@ function Preview() {
               typeToConfirm={{ value: 'Halden Coffee', label: 'Type Halden Coffee to confirm' }}
               onConfirm={() => new Promise((resolve) => setTimeout(resolve, 800))}
             />
+          </Section>
+
+          <Section title="Uploads, cards and popovers">
+            <FileDropzone
+              onFiles={(files) => {
+                toast(`${String(files.length)} file(s) dropped`);
+              }}
+              label="Drop files to upload"
+            >
+              <Card className="gap-2 p-4">
+                <span className="text-sm font-semibold">Drop files on this card</span>
+                <ProgressBar label="Uploading harvest-reel.mp4" value={64} />
+                <ProgressBar label="Processing" />
+              </Card>
+            </FileDropzone>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button className="self-start">New folder</Button>
+              </PopoverTrigger>
+              <PopoverContent aria-label="New folder">
+                <Input aria-label="Folder name" placeholder="Folder name" />
+              </PopoverContent>
+            </Popover>
           </Section>
 
           <Section title="Badges, avatars and loading">
