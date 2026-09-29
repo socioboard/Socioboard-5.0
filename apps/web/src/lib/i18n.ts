@@ -7,6 +7,7 @@ import account from '../locales/en/account.json';
 import accounts from '../locales/en/accounts.json';
 import auth from '../locales/en/auth.json';
 import common from '../locales/en/common.json';
+import composer from '../locales/en/composer.json';
 import errors from '../locales/en/errors.json';
 import media from '../locales/en/media.json';
 import onboarding from '../locales/en/onboarding.json';
@@ -15,7 +16,7 @@ import shell from '../locales/en/shell.json';
 import { ApiError } from './api';
 
 export const resources = {
-  en: { common, errors, auth, onboarding, shell, settings, account, media, accounts },
+  en: { common, errors, auth, onboarding, shell, settings, account, media, accounts, composer },
 } as const;
 
 void i18n.use(initReactI18next).init({
@@ -32,6 +33,7 @@ void i18n.use(initReactI18next).init({
     'account',
     'media',
     'accounts',
+    'composer',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes

@@ -1,0 +1,83 @@
+{
+  "newTitle": "New post",
+  "editTitle": "Edit post",
+  "postTo": "Post to",
+  "accountsLabel": "Accounts to post to",
+  "noAccounts": "Connect a Facebook Page or Instagram account to post to it.",
+  "noAccountsReadOnly": "No accounts are connected yet. An admin of this workspace connects them.",
+  "connectAccounts": "Connect accounts",
+  "loadError": "The composer didn’t load.",
+  "retry": "Try again",
+  "tabs": {
+    "label": "Content for",
+    "all": "All networks",
+    "custom": "{{network}} (customised)"
+  },
+  "text": {
+    "label": "Text",
+    "labelFor": "Text for {{network}}",
+    "placeholder": "What do you want to share?",
+    "shared": "Using the shared text. Typing here changes it for {{network}} only.",
+    "custom": "{{network}} gets its own text.",
+    "otherNetworksCustom_one": "{{networks}} has its own text; its counter is on its tab.",
+    "otherNetworksCustom_other": "{{networks}} have their own text; their counters are on their tabs."
+  },
+  "reset": "Reset to shared",
+  "media": {
+    "label": "Media",
+    "labelFor": "Media for {{network}}",
+    "upload": "Upload",
+    "library": "Choose from library",
+    "remove": "Remove",
+    "moveEarlier": "Move earlier",
+    "shared": "Using the shared media.",
+    "customise": "Use different media for {{network}}",
+    "custom": "{{network}} gets its own media.",
+    "none": "No media attached.",
+    "deleted": "This file was deleted",
+    "dropHere": "Drop files to attach them",
+    "uploadFailed": "{{name}} didn’t upload.",
+    "rejectedType": "{{name}} isn’t a type you can post.",
+    "rejectedSize": "{{name}} is too large.",
+    "retry": "Retry",
+    "dismiss": "Dismiss"
+  },
+  "picker": {
+    "title": "Choose from library",
+    "description": "Pick files to attach, in the order you want them.",
+    "empty": "Your library is empty. Upload files here or on the Media page.",
+    "loadError": "The library didn’t load.",
+    "attached": "Attached",
+    "select": "Select {{name}}",
+    "loadMore": "Load more",
+    "add_one": "Attach {{count}} file",
+    "add_other": "Attach {{count}} files",
+    "cancel": "Cancel",
+    "close": "Close"
+  },
+  "link": {
+    "label": "Link",
+    "hint": "Shown as a link preview where the network supports it.",
+    "placeholder": "https://",
+    "invalid": "Enter a full web address, starting with https://"
+  },
+  "firstComment": {
+    "add": "Add a first comment",
+    "label": "First comment",
+    "hint": "Posted as the first comment right after the post, e.g. for hashtags or a link.",
+    "remove": "Remove first comment"
+  },
+  "instagram": {
+    "format": "Instagram format",
+    "feed": "Feed",
+    "feedHint": "One photo or video, or a carousel of 2–10",
+    "reel": "Reel",
+    "reelHint": "One vertical video",
+    "story": "Story",
+    "storyHint": "One photo or video, gone after 24 hours"
+  },
+  "locked": "This post is being published or was published, so it can’t be changed.",
+  "notYours": "Only its author or someone who approves posts can edit this post.",
+  "notFound": "This post doesn’t exist or was deleted.",
+  "backToCalendar": "Back to calendar"
+}

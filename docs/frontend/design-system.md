@@ -49,7 +49,7 @@
 | `AccountPicker` (P1-F9) | Avatars grouped by network, each with its network tile; toggle buttons (`aria-pressed`) named "Account, Network". Accounts that can't post (reconnect, paused) show greyed with the reason and can't be picked, though one already chosen can still be removed. They use `aria-disabled`, not `disabled`, so they still take focus and hover and the reason's tooltip shows |
 | `CharacterCounter` (P1-F9) | Count against one network's limit: quiet, amber from 90 %, red "−N" past it; screen readers hear the full sentence (hidden text; the short count is `aria-hidden`) |
 | `IssueList` (P1-F9) | Validation issues, errors before warnings, each with its network; an issue with `onSelect` is a button that jumps to the fix. Optional "ready" line when empty |
-| `MediaThumb` (P1-F9) | A file as a square: picture, video length or GIF tag, uploading/processing spinner, failed state, optional remove button (shown on hover, focus and touch) |
+| `MediaThumb` (P1-F9) | A file as a square: picture, video length or GIF tag, uploading/processing spinner, failed state, optional remove button (shown on hover, focus and touch). A picture that fails to load (expired link, file gone) falls back to the placeholder |
 | `PreviewFrame` (P1-F9) | The card network previews are drawn in (P1-F3): account header with the network's mark, text and media in the network's order (`mediaFirst` for Instagram), on `--sb-preview-*` paper that follows the network's own light/dark look rather than the app's glass |
 
 Using them in screens:

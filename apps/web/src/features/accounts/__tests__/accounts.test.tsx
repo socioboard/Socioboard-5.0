@@ -13,7 +13,7 @@ const options = { socialProviders: [], emailVerificationRequired: true };
 type Reply = [number, unknown];
 
 const rules = {
-  maxTextLength: 2200,
+  maxChars: 2200,
   media: {
     kinds: ['image', 'video'],
     maxItems: 10,
