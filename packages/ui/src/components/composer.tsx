@@ -2,7 +2,7 @@
 // what's wrong with it, its media, and the frame network previews are drawn in.
 import type { AccountStatus, NetworkId, ValidationIssue } from '@socioboard/contracts';
 import { Check, CircleAlert, Film, ImageOff, Play, TriangleAlert, X } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 
 import { cn } from '../cn';
 import { Avatar } from './display';
@@ -45,7 +45,8 @@ const UNAVAILABLE: Partial<Record<AccountStatus, string>> = {
 /**
  * Choose the accounts a post goes to: avatars grouped by network, each marked with its network.
  * Accounts that can't post (needs reconnecting, paused) are shown but can't be chosen, with the
- * reason on hover and focus. Each avatar is a toggle button (`aria-pressed`).
+ * reason on hover and focus (`aria-disabled`, not `disabled`: a disabled button gets neither, so
+ * the reason would never show). Each avatar is a toggle button (`aria-pressed`).
  */
 export function AccountPicker({
   accounts,
@@ -76,6 +77,8 @@ export function AccountPicker({
                   ? null
                   : (labels?.unavailable?.[a.status] ?? UNAVAILABLE[a.status] ?? null);
               const on = chosen.has(a.id);
+              // Chosen before it needed reconnecting: it can still be taken off the post.
+              const blocked = Boolean(reason) && !on;
               const detail = [
                 a.username ? `@${a.username}` : null,
                 a.loginName ? `via ${a.loginName}` : null,
@@ -88,14 +91,16 @@ export function AccountPicker({
                     type="button"
                     aria-pressed={on}
                     aria-label={`${a.name}, ${networkName(a.network)}${reason ? `: ${reason}` : ''}`}
-                    disabled={Boolean(reason) && !on}
+                    aria-disabled={blocked || undefined}
                     onClick={() => {
-                      toggle(a.id);
+                      if (!blocked) toggle(a.id);
                     }}
                     className={cn(
                       'relative rounded-full p-0.5 transition-transform outline-none',
-                      'focus-visible:ring-selected hover:enabled:-translate-y-px motion-reduce:transition-none',
-                      on ? 'ring-selected' : 'opacity-70 hover:enabled:opacity-100',
+                      'focus-visible:ring-selected motion-reduce:transition-none',
+                      !blocked && 'hover:-translate-y-px',
+                      on ? 'ring-selected' : 'opacity-70',
+                      !on && !blocked && 'hover:opacity-100',
                       reason && 'cursor-not-allowed opacity-40 grayscale',
                     )}
                   >
@@ -138,7 +143,8 @@ export interface CharacterCounterProps {
 
 /**
  * Characters used against one network's limit. Quiet while there's room; amber from 90 %; red
- * with how far over once past it. The full sentence is what screen readers hear.
+ * with how far over once past it. The full sentence is what screen readers hear (as hidden text:
+ * an aria-label on a plain span is ignored by most of them).
  */
 export function CharacterCounter({ count, max, network, className }: CharacterCounterProps) {
   const over = count - max;
@@ -152,7 +158,6 @@ export function CharacterCounter({ count, max, network, className }: CharacterCo
   return (
     <span
       title={spoken}
-      aria-label={spoken}
       data-state={state}
       className={cn(
         'inline-flex items-center gap-1 text-xs tabular-nums',
@@ -163,7 +168,10 @@ export function CharacterCounter({ count, max, network, className }: CharacterCo
       )}
     >
       {network && <NetworkIcon network={network} size="xs" decorative />}
-      {state === 'over' ? `−${fmt(over)}` : `${fmt(count)}/${fmt(max)}`}
+      <span aria-hidden="true">
+        {state === 'over' ? `−${fmt(over)}` : `${fmt(count)}/${fmt(max)}`}
+      </span>
+      <span className="sr-only">{spoken}</span>
     </span>
   );
 }
@@ -202,6 +210,7 @@ const defaultTitle = (errors: number, warnings: number) =>
 export function IssueList({ issues, labels, className }: IssueListProps) {
   const errors = issues.filter((i) => i.severity === 'error');
   const warnings = issues.filter((i) => i.severity === 'warning');
+  const headingId = useId();
   if (issues.length === 0) {
     return labels?.ready === undefined ? null : (
       <p className={cn('text-success flex items-center gap-2 text-sm', className)}>
@@ -211,11 +220,8 @@ export function IssueList({ issues, labels, className }: IssueListProps) {
     );
   }
   return (
-    <section
-      aria-label={(labels?.title ?? defaultTitle)(errors.length, warnings.length)}
-      className={cn('flex flex-col gap-2', className)}
-    >
-      <h3 className="text-ink-2 text-xs font-semibold">
+    <section aria-labelledby={headingId} className={cn('flex flex-col gap-2', className)}>
+      <h3 id={headingId} className="text-ink-2 text-xs font-semibold">
         {(labels?.title ?? defaultTitle)(errors.length, warnings.length)}
       </h3>
       <ul className="flex flex-col gap-1">

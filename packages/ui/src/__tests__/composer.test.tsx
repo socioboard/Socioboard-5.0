@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -93,13 +93,25 @@ describe('AccountPicker', () => {
   });
 
   it('shows accounts that can’t post, with the reason, and doesn’t let them be chosen', async () => {
-    render(<Picker />);
+    const onChange = vi.fn();
+    render(<Picker onChange={onChange} />);
     const stale = screen.getByRole('button', {
       name: 'Halden Kiosk, Facebook: Reconnect this account to post to it',
     });
-    expect(stale).toBeDisabled();
+    expect(stale).toHaveAttribute('aria-disabled', 'true');
     await userEvent.click(stale);
     expect(stale).toHaveAttribute('aria-pressed', 'false');
+    expect(onChange).not.toHaveBeenCalled();
+    // Still reachable by keyboard, so the reason shows on focus, not only to mouse users.
+    await userEvent.keyboard('{Escape}');
+    act(() => {
+      stale.blur();
+      stale.focus();
+    });
+    expect(stale).toHaveFocus();
+    expect(await screen.findByRole('tooltip')).toHaveTextContent(
+      'Reconnect this account to post to it',
+    );
   });
 
   it('an account already chosen that later needs reconnecting can still be removed', async () => {
@@ -114,16 +126,21 @@ describe('AccountPicker', () => {
 
 describe('CharacterCounter', () => {
   it('is quiet with room, amber near the limit, red and "over" past it', () => {
-    const { rerender } = render(<CharacterCounter count={100} max={2200} network="instagram" />);
-    const counter = () => screen.getByLabelText(/characters/);
+    const { container, rerender } = render(
+      <CharacterCounter count={100} max={2200} network="instagram" />,
+    );
+    const counter = () => container.querySelector('[data-state]');
+    // What a screen reader reads: the sentence, not "100/2,200".
+    const spoken = () =>
+      [...(counter()?.querySelectorAll('span:not([aria-hidden])') ?? [])].map((e) => e.textContent);
     expect(counter()).toHaveAttribute('data-state', 'ok');
-    expect(counter()).toHaveAccessibleName('100 of 2,200 characters for Instagram');
+    expect(spoken()).toEqual(['100 of 2,200 characters for Instagram']);
     rerender(<CharacterCounter count={2000} max={2200} network="instagram" />);
     expect(counter()).toHaveAttribute('data-state', 'near');
     rerender(<CharacterCounter count={2212} max={2200} network="instagram" />);
     expect(counter()).toHaveAttribute('data-state', 'over');
-    expect(counter()).toHaveAccessibleName('12 characters over the 2,200 limit for Instagram');
-    expect(counter()).toHaveTextContent('−12');
+    expect(spoken()).toEqual(['12 characters over the 2,200 limit for Instagram']);
+    expect(screen.getByText('−12')).toHaveAttribute('aria-hidden', 'true');
   });
 });
 

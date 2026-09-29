@@ -484,6 +484,35 @@ describe('labels', () => {
     });
     expect([edited.status, code(edited)]).toEqual([422, 'POST_NOT_EDITABLE']);
   });
+
+  it('a label deleted while a post is being saved with it doesn’t stay on the post', async () => {
+    const tag = (await label('Fleeting', 'pink')).label;
+    const post = await createPost(owner, { text: 'slow save' });
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((r) => (release = r));
+    let locked: () => void = () => undefined;
+    const lockTaken = new Promise<void>((r) => (locked = r));
+    // Holds the post so the save below is caught mid-way, after it has checked its labels.
+    const hold = t.db.client.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${post.id}::uuid FOR UPDATE`;
+      locked();
+      await held;
+    });
+    await lockTaken;
+    const save = owner
+      .send('PATCH', `${base()}/posts/${post.id}`, { text: 'saved', labelIds: [tag?.id] })
+      .then((r) => r);
+    await new Promise((r) => setTimeout(r, 300));
+    const remove = editor.send('DELETE', `${base()}/labels/${tag?.id ?? ''}`).then((r) => r);
+    await new Promise((r) => setTimeout(r, 300));
+    release();
+    await hold;
+    expect((await save).status).toBe(200);
+    expect((await remove).status).toBe(204);
+    const row = await t.db.client.post.findUniqueOrThrow({ where: { id: post.id } });
+    expect(row.text).toBe('saved');
+    expect(row.labelIds).toEqual([]);
+  });
 });
 
 describe('media in use', () => {
