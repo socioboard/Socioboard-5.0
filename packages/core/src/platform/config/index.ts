@@ -102,6 +102,21 @@ const envSchema = z.object({
   /** "common" (any Microsoft account) unless limited to one tenant. */
   MICROSOFT_TENANT_ID: z.string().default('common'),
 
+  /** Facebook Login for Business app: Facebook Pages and Instagram accounts linked to a Page. */
+  META_APP_ID: optional,
+  META_APP_SECRET: optional,
+  /** Login for Business configuration id (permissions set on Meta's side); else scopes are sent. */
+  META_LOGIN_CONFIG_ID: optional,
+  /** Instagram Login (Instagram accounts without a Page): its own app id and secret. */
+  INSTAGRAM_APP_ID: optional,
+  INSTAGRAM_APP_SECRET: optional,
+  /** Graph API version, e.g. v25.0; defaults to the one the adapters were checked against. */
+  META_GRAPH_VERSION: z
+    .string()
+    .regex(/^v\d+\.\d+$/, 'must look like v25.0')
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+
   /** ffmpeg/ffprobe for video duration and thumbnails; without them videos get neither. */
   FFMPEG_PATH: z.string().default('ffmpeg'),
   FFPROBE_PATH: z.string().default('ffprobe'),
@@ -149,6 +164,12 @@ export interface Config {
     google: { clientId: string; clientSecret: string } | undefined;
     microsoft: { clientId: string; clientSecret: string; tenantId: string } | undefined;
   };
+  /** Social networks: each login registers only when its id and secret are set. */
+  networks: {
+    facebook: { appId: string; appSecret: string; configId: string | undefined } | undefined;
+    instagram: { appId: string; appSecret: string } | undefined;
+    graphVersion: string | undefined;
+  };
   /** Features switch on when their keys are present (self-host without Stripe = no billing). */
   billing: { enabled: boolean };
   ai: { enabled: boolean; url: string | undefined };
@@ -193,6 +214,11 @@ export function loadConfig(source: Record<string, string | undefined> = process.
   for (const provider of ['GOOGLE', 'MICROSOFT']) {
     if (Boolean(raw(`${provider}_CLIENT_ID`)) !== Boolean(raw(`${provider}_CLIENT_SECRET`))) {
       problems.push(`${provider}_CLIENT_ID and ${provider}_CLIENT_SECRET must be set together`);
+    }
+  }
+  for (const app of ['META', 'INSTAGRAM']) {
+    if (Boolean(raw(`${app}_APP_ID`)) !== Boolean(raw(`${app}_APP_SECRET`))) {
+      problems.push(`${app}_APP_ID and ${app}_APP_SECRET must be set together`);
     }
   }
 
@@ -252,6 +278,17 @@ export function loadConfig(source: Record<string, string | undefined> = process.
               tenantId: e.MICROSOFT_TENANT_ID,
             }
           : undefined,
+    },
+    networks: {
+      facebook:
+        e.META_APP_ID && e.META_APP_SECRET
+          ? { appId: e.META_APP_ID, appSecret: e.META_APP_SECRET, configId: e.META_LOGIN_CONFIG_ID }
+          : undefined,
+      instagram:
+        e.INSTAGRAM_APP_ID && e.INSTAGRAM_APP_SECRET
+          ? { appId: e.INSTAGRAM_APP_ID, appSecret: e.INSTAGRAM_APP_SECRET }
+          : undefined,
+      graphVersion: e.META_GRAPH_VERSION,
     },
     billing: { enabled: Boolean(e.STRIPE_SECRET_KEY) },
     ai: { enabled: Boolean(e.AI_SERVICE_URL), url: e.AI_SERVICE_URL },

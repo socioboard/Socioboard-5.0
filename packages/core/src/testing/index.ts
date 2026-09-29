@@ -52,3 +52,4 @@ export function totp(base32Secret: string, now = Date.now()): string {
 
 export { createTestApp } from './app';
 export { namedRoutes, PENDING_ROUTES } from './pending-routes';
+export { createFakeNetworks, fakePage, type FakeNetworks, type FakePerson } from './fake-networks';

@@ -79,6 +79,8 @@ export function createFacebookLogin(config: FacebookLoginConfig): LoginAdapter {
     // Facebook has no account picker: a second login means signing out of Facebook first.
     supportsAccountSelection: false,
     usesPkce: false,
+    // Without it Meta lists no Pages at all; per-asset permissions show in the picker.
+    requiredScopes: ['pages_show_list'],
 
     getAuthUrl({ state, redirectUri }) {
       const url = new URL(`https://www.facebook.com/${version}/dialog/oauth`);

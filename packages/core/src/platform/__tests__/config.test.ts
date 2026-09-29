@@ -112,6 +112,32 @@ describe('loadConfig', () => {
     ).toEqual({ clientId: 'id', clientSecret: 's', tenantId: 'common' });
   });
 
+  it('turns social networks on only when an app id and secret are set together', () => {
+    expect(loadConfig(base).networks).toEqual({
+      facebook: undefined,
+      instagram: undefined,
+      graphVersion: undefined,
+    });
+    const meta = loadConfig({
+      ...base,
+      META_APP_ID: '123',
+      META_APP_SECRET: 's',
+      META_LOGIN_CONFIG_ID: 'cfg',
+      INSTAGRAM_APP_ID: '456',
+      INSTAGRAM_APP_SECRET: 't',
+      META_GRAPH_VERSION: 'v25.0',
+    }).networks;
+    expect(meta).toEqual({
+      facebook: { appId: '123', appSecret: 's', configId: 'cfg' },
+      instagram: { appId: '456', appSecret: 't' },
+      graphVersion: 'v25.0',
+    });
+    expect(() => loadConfig({ ...base, META_APP_ID: '123' })).toThrow(/META_APP_ID and/);
+    expect(() => loadConfig({ ...base, INSTAGRAM_APP_SECRET: 't' })).toThrow(/INSTAGRAM_APP_ID/);
+    expect(() => loadConfig({ ...base, META_GRAPH_VERSION: '25' })).toThrow(/v25\.0/);
+    expect(loadConfig({ ...base, META_GRAPH_VERSION: '' }).networks.graphVersion).toBeUndefined();
+  });
+
   it('checks breached passwords unless turned off', () => {
     expect(loadConfig(base).auth.breachedPasswordCheck).toBe(true);
     expect(

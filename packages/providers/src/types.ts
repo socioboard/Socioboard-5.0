@@ -66,6 +66,8 @@ export interface LoginAdapter {
   supportsAccountSelection: boolean;
   /** Whether the flow uses PKCE (the service then creates and stores a verifier). */
   usesPkce: boolean;
+  /** Permissions without which nothing can be listed; missing ones fail the connect clearly. */
+  requiredScopes: readonly string[];
   getAuthUrl(input: AuthUrlInput): string;
   exchangeCode(input: ExchangeCodeInput): Promise<TokenSet>;
   /** Fresh tokens before they expire; absent when the network's tokens can't be refreshed. */

@@ -52,6 +52,22 @@ A connection has one or more accounts, possibly of more than one network: a Face
 - `getTokens(accountId)` → the asset token if the network uses one, else the connection's token; **only** for publishing/analytics workers.
 - `markReauthRequired(connectionId, reason)` → marks the connection and all its accounts, notifies admins.
 
+## Callback rules
+- The `state` is deleted as it is read, so a callback works once. It must be for the same provider, within 10 minutes, from the **same signed-in person** who started it (the callback route sits behind the session middleware), who must still be a member allowed to `accounts:connect`. Anything else is `OAUTH_STATE_INVALID`.
+- An unknown or used `state` gives no workspace to return to: the browser goes to `<APP_URL>/?connectError=<code>`. Otherwise to `/w/:slug/accounts/connect/:provider?…` as above.
+- Every error becomes a readable code on that page (`ConnectErrorCode`): cancelled consent → `ACCESS_DENIED`; a login missing the adapter's `requiredScopes` (e.g. Facebook `pages_show_list`) → `MISSING_PERMISSIONS`; code exchange or identity failing → `NETWORK_ERROR`.
+- Expired `OAuthState` rows are cleared when the same person starts a new connect (no separate job).
+- The redirect is `303` with `Cache-Control: no-store` and `Referrer-Policy: no-referrer` (the URL held a one-time code).
+
+## Errors (API)
+| Code | Status | When |
+| --- | --- | --- |
+| `NETWORK_NOT_ENABLED` | 404 | The login provider has no keys on this server |
+| `CONNECTION_NOT_FOUND`, `ACCOUNT_NOT_FOUND` | 404 | Not in this workspace |
+| `ASSET_NOT_AVAILABLE` | 422 | Adding something the login no longer lists, or can't post to (`details.externalIds`) |
+| `CONNECTION_REAUTH_REQUIRED` | 409 | The network refused the login's token while listing assets; the login and its accounts are marked `reauth_required` |
+| `NETWORK_ERROR` | 502 | The network didn't answer while listing assets |
+
 ## Adding a second login of the same network
 Networks sign the user in with whatever account the browser is already logged into, so a second "Connect" usually returns the same login. We handle it in three ways:
 1. **Force the account picker** where the network supports it (adapter declares `supportsAccountSelection`; e.g. Google/YouTube `prompt=select_account`; other networks' parameters to be verified when building each adapter).
@@ -67,5 +83,5 @@ Networks sign the user in with whatever account the browser is already logged in
 - Two logins can reach the same asset (e.g. two Facebook users both admin the same Page). The asset is stored once per workspace, and the login that most recently connected it becomes its connection (the picker shows "already connected via Priya; switch to this login?").
 - Tokens never leave the server and are never logged. They're decrypted only inside publishing and analytics workers.
 - The same external login or asset may be connected to several workspaces; each workspace keeps its own tokens.
-- Disconnecting an account or connection cancels pending PostTargets for the affected accounts and notifies their authors.
+- Disconnecting an account or connection cancels the affected accounts' pending and scheduled PostTargets of non-draft posts (drafts keep theirs; validation flags the account) and emits `account.disconnected` with the cancelled target ids, from which posts recomputes status (P1-B6) and notifications tell authors (phase 2).
 - Emits `connection.added`, `connection.removed`, `account.connected`, `account.disconnected`, `account.reauth_required` (audit + notifications).

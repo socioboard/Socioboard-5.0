@@ -195,6 +195,7 @@ function login(id: LoginAdapter['id'], networks: NetworkId[]): LoginAdapter {
     networks,
     supportsAccountSelection: false,
     usesPkce: false,
+    requiredScopes: [],
     getAuthUrl: () => 'https://example.test/auth',
     exchangeCode: () => Promise.reject(new Error('not in this test')),
     getIdentity: () => Promise.reject(new Error('not in this test')),

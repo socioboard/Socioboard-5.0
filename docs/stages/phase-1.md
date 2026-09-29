@@ -13,7 +13,7 @@
 - [x] P1-B2 `packages/providers`: types, errors, registry, shared HTTP client, fixtures setup
 - [x] P1-B3 Facebook Page adapter: auth, listAssets, validate, publish (text, link, photo, video), preview spec
 - [x] P1-B4 Instagram adapter (FB Login + Instagram Login): container flow, carousel, reels; validate aspect ratios
-- [ ] P1-B5 Connect flow endpoints + OAuth callback + asset save; token encryption; `GET /networks`; **multi-account**: SocialConnection (login) + SocialAccount (asset), any number of logins per network, duplicate-login detection, force account selection where supported
+- [x] P1-B5 Connect flow endpoints + OAuth callback + asset save; token encryption; `GET /networks`; **multi-account**: SocialConnection (login) + SocialAccount (asset), any number of logins per network, duplicate-login detection, force account selection where supported
 - [ ] P1-B6 Posts CRUD, `validate`, `resolveContent`, status derivation; add sample draft and scheduled posts to `pnpm db:seed`
 - [ ] P1-B7 Publishing worker: `publish` + `media-prepare` processors, error classification, retries, attempts, idempotency
 - [ ] P1-B8 Media public URLs on `media.<domain>` for networks to fetch
