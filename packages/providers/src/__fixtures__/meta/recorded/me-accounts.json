@@ -1,0 +1,55 @@
+{
+  "method": "GET",
+  "url": "https://graph.facebook.com/v25.0/me/accounts",
+  "query": {
+    "fields": "id,name,username,picture.width(200).height(200){url},access_token,tasks,instagram_business_account{id,username,name,profile_picture_url}",
+    "limit": "100"
+  },
+  "status": 200,
+  "response": {
+    "data": [
+      {
+        "id": "101",
+        "name": "Halden Coffee",
+        "picture": {
+          "data": {
+            "url": "https://scontent.example.test/2.jpg"
+          }
+        },
+        "access_token": "EAA-recorded-1",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ]
+      },
+      {
+        "id": "102",
+        "name": "Halden Roastery",
+        "picture": {
+          "data": {
+            "url": "https://scontent.example.test/3.jpg"
+          }
+        },
+        "access_token": "EAA-recorded-2",
+        "instagram_business_account": {
+          "id": "17841400000000001",
+          "username": "halden.coffee",
+          "name": "Halden Kiosk",
+          "profile_picture_url": "https://scontent.example.test/4.jpg"
+        },
+        "tasks": ["CREATE_CONTENT", "MODERATE", "MESSAGING", "ADVERTISE", "ANALYZE", "MANAGE_LEADS"]
+      }
+    ],
+    "paging": {
+      "cursors": {
+        "before": "CURSOR",
+        "after": "CURSOR"
+      }
+    }
+  }
+}

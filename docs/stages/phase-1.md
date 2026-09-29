@@ -17,7 +17,7 @@
 - [x] P1-B6 Posts CRUD, `validate`, `resolveContent`, status derivation; add sample draft and scheduled posts to `pnpm db:seed`
 - [x] P1-B7 Publishing worker: `publish` + `media-prepare` processors, error classification, retries, attempts, idempotency
 - [x] P1-B8 Media public URLs on `media.<domain>` for networks to fetch
-- [ ] P1-B9 Contract tests for both Meta adapters
+- [x] P1-B9 Contract tests for both Meta adapters
 - [ ] P1-B10 `media-purge` nightly job (soft-deleted assets after 7 days, and uploads left in `uploading` over a day: abort multipart, delete rows); media `prepareVariant` (resize/transcode with sharp + ffmpeg)
 - [ ] P1-B11 Post labels (`PostLabel` + endpoints)
 

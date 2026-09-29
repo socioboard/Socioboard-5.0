@@ -1,0 +1,12 @@
+{
+  "method": "GET",
+  "url": "https://graph.facebook.com/v25.0/101_555",
+  "query": {
+    "fields": "permalink_url"
+  },
+  "status": 200,
+  "response": {
+    "permalink_url": "https://www.facebook.com/101/posts/555",
+    "id": "101_555"
+  }
+}
