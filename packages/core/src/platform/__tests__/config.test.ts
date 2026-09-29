@@ -136,6 +136,8 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...base, INSTAGRAM_APP_SECRET: 't' })).toThrow(/INSTAGRAM_APP_ID/);
     expect(() => loadConfig({ ...base, META_GRAPH_VERSION: '25' })).toThrow(/v25\.0/);
     expect(loadConfig({ ...base, META_GRAPH_VERSION: '' }).networks.graphVersion).toBeUndefined();
+    // Meta writes versions both ways; the URL needs the "v".
+    expect(loadConfig({ ...base, META_GRAPH_VERSION: '25.0' }).networks.graphVersion).toBe('v25.0');
   });
 
   it('checks breached passwords unless turned off', () => {
