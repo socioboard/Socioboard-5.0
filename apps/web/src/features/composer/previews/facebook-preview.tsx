@@ -85,6 +85,7 @@ export function FacebookPreview({
         <Truncated
           text={text}
           truncateAt={spec.truncateAt}
+          truncateLines={spec.truncateLines}
           moreLabel={t('preview.facebook.seeMore')}
         />
       )}

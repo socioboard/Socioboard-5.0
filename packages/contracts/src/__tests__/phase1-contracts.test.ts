@@ -46,6 +46,7 @@ describe('networks', () => {
       },
       preview: {
         truncateAt: 125,
+        truncateLines: 2,
         captionPosition: 'below_media',
         mediaLayout: 'carousel',
         cropAspectRatio: { min: 0.8, max: 1.91 },

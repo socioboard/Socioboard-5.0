@@ -47,6 +47,8 @@ export const FACEBOOK_IMAGE_PREP: ImagePrep = {
 export const FACEBOOK_PREVIEW: PreviewSpec = {
   // Desktop feed cuts long text at about 480 characters with "See more".
   truncateAt: 480,
+  // ...or after about five lines, however short they are.
+  truncateLines: 5,
   captionPosition: 'above_media',
   mediaLayout: 'grid',
   cropAspectRatio: null,

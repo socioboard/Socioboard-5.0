@@ -111,6 +111,7 @@ export function InstagramPreview({
         <Truncated
           text={text}
           truncateAt={spec.truncateAt}
+          truncateLines={spec.truncateLines}
           moreLabel={t('preview.instagram.more')}
           lead={<span className="mr-1 font-semibold">{handle}</span>}
           plainLinks

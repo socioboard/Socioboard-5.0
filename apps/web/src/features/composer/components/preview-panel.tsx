@@ -11,18 +11,28 @@ import { InstagramPreview } from '../previews/instagram-preview';
 import type { PreviewFile } from '../previews/shared';
 import { NetworkTabs } from './network-tabs';
 
-/** A file as previews show it: the full picture where there is one, else its thumbnail. */
+/** Originals up to this size are shown for a lone picture; beyond it, or in a grid, the thumbnail. */
+const FULL_PICTURE_MAX_BYTES = 2 * 1024 * 1024;
+
+/**
+ * A file as previews show it. The 480 px thumbnail is plenty for grid tiles and carousel slides;
+ * only a lone, modest picture loads its original, so a post of large photos stays light.
+ */
 function toPreviewFile(
   id: string,
   asset: MediaAssetDetails | undefined,
   fallbackAlt: string,
+  alone: boolean,
 ): PreviewFile {
   if (!asset) return { id, kind: 'image', src: null, width: null, height: null, alt: fallbackAlt };
   return {
     id,
     kind: asset.kind,
-    // Videos show their poster (the thumbnail); pictures their full file once processed.
-    src: asset.kind === 'video' ? asset.thumbnailUrl : (asset.url ?? asset.thumbnailUrl),
+    // Videos show their poster (the thumbnail).
+    src:
+      asset.kind !== 'video' && alone && asset.sizeBytes <= FULL_PICTURE_MAX_BYTES
+        ? (asset.url ?? asset.thumbnailUrl)
+        : asset.thumbnailUrl,
     width: asset.width,
     height: asset.height,
     alt: asset.altText ?? asset.name,
@@ -142,7 +152,12 @@ function NetworkPreview({
   const content = contentFor(draft, network);
   const assets = useAttachedMedia(workspaceId, content.mediaIds);
   const files = content.mediaIds.map((id, i) =>
-    toPreviewFile(id, assets[i]?.data, t('preview.file', { n: i + 1 })),
+    toPreviewFile(
+      id,
+      assets[i]?.data,
+      t('preview.file', { n: i + 1 }),
+      content.mediaIds.length === 1,
+    ),
   );
   const link = draft.link.trim() === '' ? null : draft.link.trim();
   const firstComment = draft.firstComment.trim() === '' ? null : draft.firstComment;

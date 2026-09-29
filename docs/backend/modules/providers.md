@@ -31,7 +31,7 @@ interface NetworkAdapter {
   displayName: string;
   capabilities: NetworkCapabilities;   // postTypes (text, link, image, carousel, video, reel, story), firstComment, altText
   rules: ContentRules;                 // maxChars, hashtags/mentions, media count/kinds/sizes, aspect ratios, video length, link handling
-  preview: PreviewSpec;                // layout hints for the frontend live preview
+  preview: PreviewSpec;                // layout hints for the frontend live preview (text cut: truncateAt characters, truncateLines lines; caption position; media layout; crop; link card)
   validate(input: PublishInput): ValidationIssue[];                          // pure, used by composer + API
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;   // externalId, permalink
   deletePost?(externalId: string, account: AccountCredentials): Promise<void>;

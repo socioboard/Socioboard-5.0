@@ -211,6 +211,7 @@ function network(id: NetworkId): NetworkAdapter {
     },
     preview: {
       truncateAt: null,
+      truncateLines: null,
       captionPosition: 'above_media',
       mediaLayout: 'grid',
       cropAspectRatio: null,

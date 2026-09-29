@@ -43,18 +43,20 @@ export function RichText({ text, plainLinks = false }: { text: string; plainLink
 export function Truncated({
   text,
   truncateAt,
+  truncateLines = null,
   moreLabel,
   lead,
   plainLinks = false,
 }: {
   text: string;
   truncateAt: number | null;
+  truncateLines?: number | null;
   moreLabel: string;
   lead?: ReactNode;
   plainLinks?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const { shown, truncated } = truncateText(text, truncateAt);
+  const { shown, truncated } = truncateText(text, truncateAt, truncateLines);
   return (
     <p className="break-words whitespace-pre-wrap">
       {lead}

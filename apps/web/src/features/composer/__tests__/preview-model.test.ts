@@ -37,6 +37,16 @@ describe('truncateText', () => {
   });
 });
 
+describe('truncateText by lines', () => {
+  it('a caption of short lines is cut after the network’s line limit too', () => {
+    expect(truncateText('One\nTwo\nThree', 125, 2)).toEqual({ shown: 'One\nTwo', truncated: true });
+    expect(truncateText('One\nTwo', 125, 2)).toEqual({ shown: 'One\nTwo', truncated: false });
+    // Lines kept, then still cut by characters.
+    expect(truncateText(`${'word '.repeat(40)}\nnext`, 50, 5).shown.length).toBeLessThanOrEqual(50);
+    expect(truncateText('One\nTwo\nThree', 125, null).truncated).toBe(false);
+  });
+});
+
 describe('shapes', () => {
   it('keeps a file within the network’s crop limits', () => {
     expect(croppedRatio(9 / 16, IG_CROP)).toBe(0.8);

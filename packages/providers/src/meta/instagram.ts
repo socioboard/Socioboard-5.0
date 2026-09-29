@@ -72,6 +72,8 @@ export const INSTAGRAM_IMAGE_PREP: ImagePrep = {
 export const INSTAGRAM_PREVIEW: PreviewSpec = {
   // The feed shows about 125 characters before "more".
   truncateAt: 125,
+  // ...and at most two lines, the first beginning with the username.
+  truncateLines: 2,
   captionPosition: 'below_media',
   mediaLayout: 'carousel',
   cropAspectRatio: { min: 0.8, max: 1.91 },
