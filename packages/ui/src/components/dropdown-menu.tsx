@@ -33,7 +33,7 @@ export function DropdownMenuContent({
 
 const itemBase = [
   'text-ink relative flex min-h-9 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-sm outline-none select-none',
-  'data-[highlighted]:bg-chip data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+  'data-[highlighted]:bg-chip data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
   '[&>svg]:text-ink-3 [&>svg]:size-4 [&>svg]:shrink-0',
 ];
 

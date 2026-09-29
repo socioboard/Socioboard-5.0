@@ -1,10 +1,13 @@
 // P0-Q1: phase 0's "done when" (docs/stages/phase-0.md). A new user signs up, verifies their
 // email, creates a workspace, uploads an image and invites a teammate, who signs up from the
-// invitation, verifies, joins with the role they were given, and sees the same image.
+// invitation, verifies, joins with the role they were given, and sees the same image. Along the
+// way the owner opens Accounts and the composer (phase 1, nothing connected yet), and every screen
+// is checked for the right cursors (support/cursors.ts).
 import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { expectRightCursors } from '../support/cursors';
 import { linkIn, waitForEmail } from '../support/mailpit';
 import { browserFor, person } from '../support/people';
 
@@ -36,10 +39,13 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   const ownerContext = await browserFor(browser);
   const ownerPage = await ownerContext.newPage();
   await ownerPage.goto('/signup');
+  await expect(ownerPage.getByRole('button', { name: 'Create account' })).toBeVisible();
+  await expectRightCursors(ownerPage, 'sign-up');
   await signUp(ownerPage, owner);
   await verifyByEmail(ownerPage, owner);
 
   await expect(ownerPage).toHaveURL(/\/onboarding$/);
+  await expectRightCursors(ownerPage, 'onboarding');
   await ownerPage.getByLabel('Workspace name').fill(workspaceName);
   await ownerPage.getByRole('button', { name: 'Create workspace' }).click();
   await expect(ownerPage).toHaveURL(/\/w\/[a-z0-9-]+\/calendar$/);
@@ -51,12 +57,27 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   const tile = ownerPage.getByRole('button', { name: /^socioboard-logo\.png/ });
   // Dimensions appear once the worker has made the thumbnail.
   await expect(tile).toContainText('520 × 126', { timeout: 30_000 });
+  await expectRightCursors(ownerPage, 'media');
+
+  // --- Accounts and the composer (phase 1) open, with nothing connected yet. ---
+  await ownerPage.getByRole('link', { name: 'Accounts' }).first().click();
+  await expect(ownerPage.getByText('No accounts yet')).toBeVisible();
+  await expectRightCursors(ownerPage, 'accounts');
+  await ownerPage.getByRole('button', { name: 'Connect account' }).first().click();
+  await expect(ownerPage.getByRole('dialog', { name: 'Connect an account' })).toBeVisible();
+  await expectRightCursors(ownerPage, 'network chooser');
+  await ownerPage.keyboard.press('Escape');
+  await ownerPage.goto(`/w/${slug}/compose`);
+  await expect(ownerPage.getByRole('textbox', { name: 'Text' })).toBeVisible();
+  await expectRightCursors(ownerPage, 'composer');
 
   // --- The owner invites a teammate as an editor. ---
   await ownerPage.getByRole('link', { name: 'Settings' }).first().click();
   await ownerPage.getByRole('link', { name: 'Members' }).click();
+  await expectRightCursors(ownerPage, 'members');
   await ownerPage.getByRole('button', { name: 'Invite people' }).click();
   const invite = ownerPage.getByRole('dialog');
+  await expectRightCursors(ownerPage, 'invite dialog');
   await invite.getByRole('textbox', { name: 'Email', exact: true }).fill(teammate.email);
   await invite.getByRole('radio', { name: 'Editor' }).check();
   await invite.getByRole('button', { name: 'Send invitation' }).click();
@@ -69,6 +90,7 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   const page = await teammateContext.newPage();
   await page.goto(linkIn(invitation, '/invite/'));
   await expect(page.getByRole('heading', { name: `Join ${workspaceName}` })).toBeVisible();
+  await expectRightCursors(page, 'invitation');
   await page.getByRole('link', { name: 'Create an account' }).click();
   await signUp(page, teammate);
   await verifyByEmail(page, teammate);

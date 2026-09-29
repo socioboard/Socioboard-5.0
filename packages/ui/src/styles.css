@@ -207,6 +207,33 @@
     outline: 2px solid var(--sb-ring);
     outline-offset: 2px;
   }
+  /* Everything clickable shows the hand (Tailwind v4 leaves buttons on the arrow), and anything
+     disabled shows it can't be used. In the base layer, so a component's own cursor-* wins. */
+  button,
+  a[href],
+  summary,
+  select,
+  label[for],
+  input[type='checkbox'],
+  input[type='radio'],
+  input[type='file'],
+  [role='button'],
+  [role='tab'],
+  [role='link'],
+  [role='menuitem'],
+  [role='menuitemradio'],
+  [role='menuitemcheckbox'],
+  [role='option'],
+  [role='radio'],
+  [role='checkbox'],
+  [role='switch'] {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled='true'],
+  [data-disabled] {
+    cursor: not-allowed;
+  }
   /* Thin, quiet scrollbars on every scrolling surface (no arrow buttons on Windows). */
   * {
     scrollbar-width: thin;
