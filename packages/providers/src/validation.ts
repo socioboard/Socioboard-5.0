@@ -67,6 +67,8 @@ export function checkRules(
   rules: ContentRules,
   input: ContentInput,
   networkName: string,
+  /** The worker fits images to the network's size (ImagePrep), so their size isn't an issue. */
+  options: { imagesRefitted?: boolean } = {},
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const length = textLength(input.text);
@@ -131,11 +133,16 @@ export function checkRules(
       ),
     );
   }
-  for (const m of input.media) issues.push(...checkMedia(rules, m, networkName));
+  for (const m of input.media) issues.push(...checkMedia(rules, m, networkName, options));
   return issues;
 }
 
-function checkMedia(rules: ContentRules, m: ContentMedia, networkName: string): ValidationIssue[] {
+function checkMedia(
+  rules: ContentRules,
+  m: ContentMedia,
+  networkName: string,
+  options: { imagesRefitted?: boolean },
+): ValidationIssue[] {
   const { media } = rules;
   const at = { field: 'media' as const, mediaId: m.id };
   if (!media.kinds.includes(m.kind)) {
@@ -149,7 +156,7 @@ function checkMedia(rules: ContentRules, m: ContentMedia, networkName: string): 
   }
   const issues: ValidationIssue[] = [];
   if (m.kind !== 'video') {
-    if (m.sizeBytes > media.maxImageBytes) {
+    if (m.sizeBytes > media.maxImageBytes && !options.imagesRefitted) {
       issues.push(
         issue(
           'error',

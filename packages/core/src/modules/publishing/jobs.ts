@@ -130,9 +130,10 @@ export async function publishTarget(
       target.post,
       TargetOverride.nullable().catch(null).parse(target.override),
     );
-    const media = await prepareMedia(deps, data.workspaceId, network, content.mediaIds);
+    const adapter = registry.network(network);
+    const media = await prepareMedia(deps, data.workspaceId, adapter.imagePrep, content.mediaIds);
     const { credentials } = await deps.getCredentials(data.workspaceId, target.account.id);
-    const result = await registry.network(network).publish({ ...content, media }, credentials);
+    const result = await adapter.publish({ ...content, media }, credentials);
 
     // Saved at once: from here on, a re-run sees externalPostId and never posts again.
     await ws.postTarget.update({

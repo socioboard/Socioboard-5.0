@@ -127,6 +127,17 @@ export interface PublishResult {
   warnings: string[];
 }
 
+/**
+ * What a network accepts for images. The worker fits images to it before publishing (media's
+ * prepareVariant: convert, shrink, re-compress), so validation doesn't flag what it can fix.
+ */
+export interface ImagePrep {
+  mimes: readonly string[];
+  /** Widest image the network takes; null for any width. */
+  maxWidth: number | null;
+  maxBytes: number;
+}
+
 /** A kind of postable asset: its rules, preview, validation and publishing. */
 export interface NetworkAdapter {
   id: NetworkId;
@@ -134,6 +145,8 @@ export interface NetworkAdapter {
   capabilities: NetworkCapabilities;
   rules: ContentRules;
   preview: PreviewSpec;
+  /** Set when the worker should fit images to the network before publishing. */
+  imagePrep?: ImagePrep;
   /** Pure: the composer's live checks and the API's check before saving and publishing. */
   validate(input: ContentInput): ValidationIssue[];
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;

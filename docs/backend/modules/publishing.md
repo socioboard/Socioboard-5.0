@@ -19,7 +19,7 @@ None directly (triggered via posts and scheduling). Read access to attempts is t
 | Queue | Job | Behavior |
 | --- | --- | --- |
 | `publish` | `publish-<targetId>-<tries>` | Publish one target. `tries` is the target's attempt count when queued, so publish-now twice or a double click queues it once, and a retry after a failure is a new job. Scheduled posts (phase 2) add the schedule version to the id and a delay until `scheduledAt` |
-| `media-prepare` | (inline in `publish` for now) | Get each file into the form the network takes and give it a URL: images other than JPEG are converted for Instagram (stored once as `variants/jpeg.jpg` next to the original and reused). Video transcoding (P1-B10) may move this to its own queue |
+| `media-prepare` | (inline in `publish` for now) | Get each file into the form the network takes (the adapter's `imagePrep`: media's `prepareImageVariant` converts, shrinks and re-compresses images once per spec) and give it a read URL and, when configured, a public address. Video transcoding (phase 3 networks) may move this to its own queue |
 
 **Publish processor steps:**
 1. Load target; exit if its status isn't `pending`/`scheduled`/`publishing` or `externalPostId` is already set (idempotency).

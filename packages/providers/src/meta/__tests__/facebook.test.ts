@@ -236,10 +236,9 @@ describe('Facebook Page validation', () => {
     expect(codes(post({ media: [image('g', { kind: 'gif', mime: 'image/gif' })] }))).toEqual([
       `error:${IssueCode.MEDIA_KIND_NOT_SUPPORTED}`,
     ]);
-    const big = page.validate(post({ media: [image('big', { sizeBytes: 11 * 1024 * 1024 })] }));
-    expect(big).toEqual([
-      expect.objectContaining({ code: IssueCode.IMAGE_TOO_LARGE, mediaId: 'big', field: 'media' }),
-    ]);
+    // Over Facebook's 10 MB: not an issue, the worker fits it before publishing (imagePrep).
+    expect(codes(post({ media: [image('big', { sizeBytes: 11 * 1024 * 1024 })] }))).toEqual([]);
+    expect(page.imagePrep).toMatchObject({ maxBytes: 10 * 1024 * 1024 });
     expect(codes(post({ media: [video('long', { durationSec: 5 * 60 * 60 })] }))).toEqual([
       `error:${IssueCode.VIDEO_TOO_LONG}`,
     ]);

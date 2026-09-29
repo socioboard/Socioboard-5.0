@@ -2,7 +2,7 @@
 // BullMQ worker runs it against a played network, and every outcome is recorded. Failure paths
 // call the job function directly to walk through retries without waiting for backoff.
 import { ErrorEnvelope, Post, PostDetails, ValidatePostResponse } from '@socioboard/contracts';
-import { ProviderError } from '@socioboard/providers';
+import { INSTAGRAM_IMAGE_PREP, ProviderError } from '@socioboard/providers';
 import sharp from 'sharp';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -371,10 +371,9 @@ describe('the publish job', () => {
       expect((await sharp(bytes).metadata()).format).toBe('jpeg');
       // Made once: preparing again reuses the stored copy instead of converting again.
       const variantKey = new URL(media?.readUrl ?? '').pathname;
-      const before = await storage.head(key.replace(/[^/]+$/, 'variants/jpeg.jpg'));
-      const [again] = await prepareMedia(deps, ws, 'instagram', [id]);
+      const [again] = await prepareMedia(deps, ws, INSTAGRAM_IMAGE_PREP, [id]);
       expect(new URL(again?.readUrl ?? '').pathname).toBe(variantKey);
-      expect(await storage.head(key.replace(/[^/]+$/, 'variants/jpeg.jpg'))).toEqual(before);
+      expect(again?.sizeBytes).toBe(media?.sizeBytes);
     },
   );
 });

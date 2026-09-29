@@ -4,6 +4,7 @@ import { isProviderError, ProviderError } from '../errors';
 import type {
   AccountCredentials,
   ContentInput,
+  ImagePrep,
   NetworkAdapter,
   PublishInput,
   PublishMedia,
@@ -59,6 +60,13 @@ const RULES_BY_FORMAT: Record<Format, ContentRules> = {
   feed: INSTAGRAM_RULES,
   reel: REEL_RULES,
   story: STORY_RULES,
+};
+
+/** Instagram images (IG User Media reference): JPEG only, at most 1440 wide and 8 MB. */
+export const INSTAGRAM_IMAGE_PREP: ImagePrep = {
+  mimes: ['image/jpeg'],
+  maxWidth: 1440,
+  maxBytes: 8 * MB,
 };
 
 export const INSTAGRAM_PREVIEW: PreviewSpec = {
@@ -264,10 +272,13 @@ export function createInstagram(
     },
     rules: INSTAGRAM_RULES,
     preview: INSTAGRAM_PREVIEW,
+    imagePrep: INSTAGRAM_IMAGE_PREP,
 
     validate(input) {
       const format = formatOf(input);
-      const issues: ValidationIssue[] = checkRules(RULES_BY_FORMAT[format], input, 'Instagram');
+      const issues: ValidationIssue[] = checkRules(RULES_BY_FORMAT[format], input, 'Instagram', {
+        imagesRefitted: true,
+      });
       if (format === 'reel' && input.media.some((m) => m.kind !== 'video')) {
         issues.push(
           issue('error', IssueCode.FORMAT_NEEDS_VIDEO, 'A reel is one video.', {
