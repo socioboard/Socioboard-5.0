@@ -120,7 +120,7 @@ export function createFacebookLogin(config: FacebookLoginConfig): LoginAdapter {
       }>('me', tokens.accessToken, { fields: 'id,name,picture.width(200).height(200){url}' });
       return {
         externalUserId: me.id,
-        displayName: me.name,
+        displayName: me.name.trim(),
         avatarUrl: me.picture?.data?.url ?? null,
       };
     },
@@ -144,7 +144,8 @@ function pageAssets(page: PageNode, tokens: TokenSet): ProviderAsset[] {
     {
       network: 'facebook_page',
       externalId: page.id,
-      displayName: page.name,
+      // Page names can carry stray spaces (seen on a real Page: "Goslicd ").
+      displayName: page.name.trim(),
       username: page.username ?? null,
       avatarUrl: page.picture?.data?.url ?? null,
       token,
@@ -158,7 +159,7 @@ function pageAssets(page: PageNode, tokens: TokenSet): ProviderAsset[] {
     assets.push({
       network: 'instagram',
       externalId: ig.id,
-      displayName: ig.name ?? ig.username ?? ig.id,
+      displayName: (ig.name ?? ig.username ?? ig.id).trim(),
       username: ig.username ?? null,
       avatarUrl: ig.profile_picture_url ?? null,
       // Instagram accounts reached through a Page publish with that Page's token.

@@ -25,7 +25,22 @@ export interface SeedResult {
   workspace: { id: string; slug: string; created: boolean };
   /** Sample files added; "no-storage" when S3/MinIO isn't configured, "exists" when all are there. */
   media: number | 'no-storage' | 'exists';
+  /** Sample posts added (a draft and a scheduled post), or "exists". */
+  posts: number | 'exists';
 }
+
+/** Marks the sample accounts: paused, so validation says they can't publish. */
+const SAMPLE_ACCOUNT_REASON = 'Sample account: connect a real one to publish';
+const SAMPLE_POSTS = [
+  {
+    text: 'Sample draft: fresh roast arriving this week ☕ What should we call it?',
+    status: 'draft' as const,
+  },
+  {
+    text: 'Sample scheduled post: our weekend tasting starts Saturday at 10. See you there!',
+    status: 'scheduled' as const,
+  },
+];
 
 const ROLES: readonly Role[] = ['owner', 'admin', 'editor', 'contributor', 'viewer'];
 
@@ -207,9 +222,97 @@ export async function seedDevData(platform: Platform, options: SeedOptions): Pro
     }
   }
 
+  // Sample accounts and posts (P1-B6). The accounts use fake tokens, so they are paused.
+  const login =
+    (await scoped.socialConnection.findFirst({
+      where: { provider: 'facebook', externalUserId: 'sample-login' },
+    })) ??
+    (await scoped.socialConnection.create({
+      data: {
+        id: newId(),
+        workspaceId,
+        provider: 'facebook',
+        externalUserId: 'sample-login',
+        displayName: 'Sample Facebook login',
+        accessTokenEnc: platform.crypto.encrypt('sample-token'),
+        connectedById: owner.id,
+      },
+    }));
+  const sampleAccounts: { id: string }[] = [];
+  for (const a of [
+    {
+      network: 'facebook_page' as const,
+      externalId: 'sample-page',
+      displayName: 'Demo Café',
+      username: null,
+    },
+    {
+      network: 'instagram' as const,
+      externalId: 'sample-instagram',
+      displayName: 'Demo Café',
+      username: 'demo.cafe',
+    },
+  ]) {
+    sampleAccounts.push(
+      (await scoped.socialAccount.findFirst({
+        where: { network: a.network, externalId: a.externalId },
+      })) ??
+        (await scoped.socialAccount.create({
+          data: {
+            id: newId(),
+            workspaceId,
+            connectionId: login.id,
+            ...a,
+            status: 'paused',
+            statusReason: SAMPLE_ACCOUNT_REASON,
+            connectedById: owner.id,
+          },
+        })),
+    );
+  }
+  const existingPosts = await scoped.post.count({
+    where: { text: { in: SAMPLE_POSTS.map((p) => p.text) } },
+  });
+  let posts: SeedResult['posts'] = 'exists';
+  if (existingPosts === 0) {
+    const square = await scoped.mediaAsset.findFirst({ where: { name: 'Square post.jpg' } });
+    // Tomorrow at 10:00 UTC.
+    const at = new Date();
+    at.setUTCDate(at.getUTCDate() + 1);
+    at.setUTCHours(10, 0, 0, 0);
+    for (const sample of SAMPLE_POSTS) {
+      const postId = newId();
+      const scheduled = sample.status === 'scheduled';
+      await db.client.$transaction(async (tx) => {
+        await tx.post.create({
+          data: {
+            id: postId,
+            workspaceId,
+            authorId: owner.id,
+            status: sample.status,
+            text: sample.text,
+            mediaIds: square ? [square.id] : [],
+          },
+        });
+        await tx.postTarget.createMany({
+          data: sampleAccounts.map((account) => ({
+            id: newId(),
+            workspaceId,
+            postId,
+            socialAccountId: account.id,
+            status: scheduled ? ('scheduled' as const) : ('pending' as const),
+            scheduledAt: scheduled ? at : null,
+          })),
+        });
+      });
+    }
+    posts = SAMPLE_POSTS.length;
+  }
+
   return {
     users: users.map(({ email, role, created }) => ({ email, role, created })),
     workspace: { id: workspaceId, slug, created: workspaceCreated },
     media,
+    posts,
   };
 }

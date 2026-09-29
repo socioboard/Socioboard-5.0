@@ -35,10 +35,25 @@ The content users write once and send to many accounts. A **Post** holds the sha
 - `validate(post)`: runs each target's adapter `validate()` on the merged content (base + override); returns issues per target. Used by the composer on every edit (debounced) and enforced on save.
 - `resolveContent(target)`: base content + override → final text/media for a network.
 - `publishNow(postId)`: checks permissions and approval state, then hands targets to publishing.
-- `recomputeStatus(postId)`: derives the post status from its targets.
+- `recomputeStatus(postId)`: derives the post status from its targets (cancelled targets don't count): any target `publishing`, or some done while others still wait → `publishing`; all done → `published`, `failed`, or `partial` for a mix; every remaining target `scheduled` → `scheduled`; nothing sent yet → the editorial status it had (`draft`, `in_review`, `approved`). It runs after edits and when accounts are disconnected (`account.disconnected`).
+
+## Validation issues
+`validate` returns issues per target: ours first, then the network adapter's (providers `IssueCode`: `TEXT_TOO_LONG`, `MEDIA_REQUIRED`, `ASPECT_RATIO`, `LINK_NOT_CLICKABLE`…). Ours: `NO_ACCOUNTS` (post level), `ACCOUNT_NOT_AVAILABLE` (disconnected), `ACCOUNT_NEEDS_RECONNECT`, `ACCOUNT_PAUSED`, `NETWORK_NOT_ENABLED`, `OPTIONS_NOT_FOR_NETWORK`, `MEDIA_NOT_FOUND`, `MEDIA_NOT_READY` (still processing), `MEDIA_FAILED`. Errors block publishing to that network; warnings don't.
+
+## Errors (API)
+| Code | Status | When |
+| --- | --- | --- |
+| `POST_NOT_FOUND`, `ACCOUNT_NOT_FOUND`, `MEDIA_NOT_FOUND` | 404 | Not in this workspace (a body naming another workspace's account or file gets the same 404) |
+| `NOT_POST_AUTHOR` | 403 | Changing someone else's post without `posts:approve` |
+| `ACCOUNT_NOT_AVAILABLE` | 422 | Adding a disconnected account (one already on the post may stay) |
+| `OPTIONS_NOT_FOR_NETWORK` | 422 | `override.options` for another network than the account's |
+| `POST_NOT_EDITABLE`, `POST_NOT_DELETABLE` | 422 | A target is publishing or published: the post stays as history |
 
 ## Rules
-- Only the author (or `posts:approve` roles) can edit a post; nobody can edit a target that is `publishing` or `published`.
+- Only the author (or `posts:approve` roles) can edit or delete a post; once any target is `publishing` or `published`, the post can't be edited or deleted.
+- Updating `targets` replaces the selection: removed accounts' targets go, new ones join as `pending`, kept ones keep their id and history and take the new override.
+- Duplicating copies content and overrides as a new draft by the caller, leaving out disconnected accounts and deleted files.
+- `pnpm db:seed` adds a sample Facebook login with two **paused** sample accounts (fake tokens), a draft and a post scheduled for the next day.
 - A post needs approval before scheduling or publishing if the author lacks `posts:publish` **or** the workspace has `requireReviewForAll`.
 - Members only see and target accounts they have access to.
 - Media must be `ready`; AI assets must have finished generating.

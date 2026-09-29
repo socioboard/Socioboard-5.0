@@ -15,6 +15,7 @@ type Ids = Record<
   | 'folderId'
   | 'connectionId'
   | 'accountId'
+  | 'postId'
   | 'provider',
   string
 >;
@@ -88,6 +89,26 @@ const CLASSIFIED: Record<string, Kind> = {
   listAccounts: { kind: 'list', idsOf: 'accountId' },
   getAccount: { kind: 'resource' },
   disconnectAccount: { kind: 'resource' },
+  // posts: bodies naming A's account or media must not work from B
+  validatePost: {
+    kind: 'bodyRef',
+    body: (a) => ({
+      text: 'x',
+      mediaIds: [],
+      link: null,
+      firstComment: null,
+      targets: [{ accountId: a.accountId }],
+    }),
+  },
+  createPost: {
+    kind: 'bodyRef',
+    body: (a) => ({ text: 'x', mediaIds: [a.assetId], targets: [{ accountId: a.accountId }] }),
+  },
+  listPosts: { kind: 'list', idsOf: 'postId' },
+  getPost: { kind: 'resource' },
+  updatePost: { kind: 'resource', body: () => ({ text: 'hijacked' }) },
+  deletePost: { kind: 'resource' },
+  duplicatePost: { kind: 'resource' },
 };
 
 // Routes still being built (no handler yet) join the checks when their task mounts them.
@@ -165,7 +186,14 @@ beforeAll(async () => {
       displayName: 'Victim Page',
     },
   });
+  const post = await t.db.client.post.create({
+    data: { workspaceId: aWorkspace, authorId: victim.userId, text: 'A post' },
+  });
+  await t.db.client.postTarget.create({
+    data: { workspaceId: aWorkspace, postId: post.id, socialAccountId: account.id },
+  });
   a = {
+    postId: post.id,
     connectionId: connection.id,
     accountId: account.id,
     provider: 'facebook',

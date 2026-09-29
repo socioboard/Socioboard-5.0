@@ -17,6 +17,7 @@ try {
         (u) => `  ${u.role.padEnd(12)} ${u.email}${u.created ? '' : ' (already there)'}`,
       ),
       `Media: ${typeof result.media === 'number' ? `${String(result.media)} sample files` : result.media}`,
+      `Posts: ${typeof result.posts === 'number' ? `${String(result.posts)} sample posts (on paused sample accounts)` : result.posts}`,
       '',
     ].join('\n'),
   );
