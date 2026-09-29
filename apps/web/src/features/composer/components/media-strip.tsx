@@ -1,6 +1,5 @@
-import type { MediaAssetDetails } from '@socioboard/contracts';
 import { Button, MediaThumb } from '@socioboard/ui';
-import { useQueries, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ImagePlus, ImageUp, RotateCcw, X } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,11 +10,11 @@ import {
   dismissUpload,
   isPending,
   MEDIA_ACCEPT,
-  mediaDetailQuery,
   retryUpload,
   startUploads,
   useUploads,
 } from '../../media';
+import { useAttachedMedia } from '../media';
 import { MediaPickerDialog } from './media-picker-dialog';
 
 /**
@@ -37,7 +36,8 @@ export function MediaStrip({
   workspaceId: string;
   mediaIds: string[];
   onChange: (mediaIds: string[]) => void;
-  onAttach: (mediaIds: string[]) => void;
+  /** Attaches files; `before`: put them ahead of these (keeping the order files were picked in). */
+  onAttach: (mediaIds: string[], before?: string[]) => void;
   canUpload: boolean;
   disabled: boolean;
   label: string;
@@ -50,20 +50,16 @@ export function MediaStrip({
   const fileInput = useRef<HTMLInputElement>(null);
   const [picking, setPicking] = useState(false);
   const uploads = useUploads(workspaceId).filter((u) => uploadIds.includes(u.id));
-  const assets = useQueries({
-    queries: mediaIds.map((id) => ({
-      ...mediaDetailQuery(workspaceId, id),
-      // Processing finishes on the server; re-ask until the thumbnail exists.
-      refetchInterval: (query: { state: { data?: MediaAssetDetails | undefined } }) =>
-        query.state.data && isPending(query.state.data) ? 3000 : false,
-      // A deleted file answers 404; asking again won't bring it back.
-      retry: false,
-    })),
-  });
+  const assets = useAttachedMedia(workspaceId, mediaIds);
 
   const upload = (files: File[]) => {
-    const ids = startUploads(queryClient, workspaceId, files, undefined, (asset) => {
-      onAttach([asset.id]);
+    // Files finish in any order; each goes in ahead of any picked after it that finished first,
+    // so the post keeps the order they were chosen in (even when one of them fails).
+    const stored: (string | undefined)[] = files.map(() => undefined);
+    const ids = startUploads(queryClient, workspaceId, files, undefined, (asset, index) => {
+      stored[index] = asset.id;
+      const later = stored.slice(index + 1).filter((id): id is string => id !== undefined);
+      onAttach([asset.id], later);
     });
     onUploadIds((m) => [...m, ...ids]);
   };

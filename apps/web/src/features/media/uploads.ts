@@ -91,10 +91,11 @@ export function startUploads(
   workspaceId: string,
   files: File[],
   folderId?: string,
-  onDone?: (asset: MediaAsset) => void,
+  /** Told each stored asset, with the file's position in `files`. */
+  onDone?: (asset: MediaAsset, index: number) => void,
 ): string[] {
   client = queryClient;
-  const added = files.map((file): UploadItem => {
+  const added = files.map((file, index): UploadItem => {
     const reject = checkFile(file);
     nextId += 1;
     return {
@@ -105,7 +106,13 @@ export function startUploads(
       status: reject ? 'rejected' : 'queued',
       progress: 0,
       ...(reject ? { reject } : {}),
-      ...(onDone ? { onDone } : {}),
+      ...(onDone
+        ? {
+            onDone: (asset: MediaAsset) => {
+              onDone(asset, index);
+            },
+          }
+        : {}),
     };
   });
   items = [...items, ...added];

@@ -46,7 +46,8 @@ export type DraftAction =
   | { type: 'accounts'; accountIds: string[] }
   | { type: 'text'; network: NetworkId | null; text: string }
   | { type: 'media'; network: NetworkId | null; mediaIds: string[] }
-  | { type: 'attach'; network: NetworkId | null; mediaIds: string[] }
+  /** Adds files not attached yet; before the first of `before` that's there, else at the end. */
+  | { type: 'attach'; network: NetworkId | null; mediaIds: string[]; before?: string[] }
   | { type: 'link'; link: string }
   | { type: 'firstComment'; firstComment: string }
   | { type: 'format'; format: z.infer<typeof InstagramFormat> }
@@ -104,11 +105,12 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
           ? draft.mediaIds
           : (draft.overrides[action.network]?.mediaIds ?? draft.mediaIds);
       const added = action.mediaIds.filter((id) => !current.includes(id));
-      return draftReducer(draft, {
-        type: 'media',
-        network: action.network,
-        mediaIds: [...current, ...added],
-      });
+      const at = current.findIndex((id) => action.before?.includes(id));
+      const mediaIds =
+        at === -1
+          ? [...current, ...added]
+          : [...current.slice(0, at), ...added, ...current.slice(at)];
+      return draftReducer(draft, { type: 'media', network: action.network, mediaIds });
     }
     case 'format':
       return setOverride(draft, 'instagram', (o) => ({

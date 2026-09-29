@@ -79,5 +79,38 @@
   "locked": "This post is being published or was published, so it can’t be changed.",
   "notYours": "Only its author or someone who approves posts can edit this post.",
   "notFound": "This post doesn’t exist or was deleted.",
-  "backToCalendar": "Back to calendar"
+  "backToCalendar": "Back to calendar",
+  "preview": {
+    "title": "Preview",
+    "tabs": "Preview on",
+    "empty": "Pick an account to see how the post will look.",
+    "unsupported": "This network’s preview arrives with it.",
+    "as": "Preview as",
+    "asAccount": "Preview as {{name}}",
+    "file": "File {{n}}",
+    "noPicture": "No picture yet",
+    "justNow": "Just now",
+    "public": "Public",
+    "facebook": {
+      "seeMore": "See more",
+      "like": "Like",
+      "comment": "Comment",
+      "share": "Share"
+    },
+    "instagram": {
+      "more": "more",
+      "story": "Story",
+      "reel": "Reel",
+      "noCaption": "Stories don’t show a caption.",
+      "needsMedia": "Instagram posts need a photo or video.",
+      "carousel": "File {{at}} of {{count}}",
+      "previous": "Previous file",
+      "next": "Next file"
+    }
+  },
+  "view": {
+    "label": "Show",
+    "edit": "Edit",
+    "preview": "Preview"
+  }
 }
