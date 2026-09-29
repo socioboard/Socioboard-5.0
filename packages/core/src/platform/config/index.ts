@@ -126,6 +126,12 @@ const envSchema = z.object({
    * media.<domain> in production, the dev tunnel's /public-media locally. Unset: those can't post.
    */
   MEDIA_PUBLIC_URL: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
+  /**
+   * Only when the bucket is publicly readable (a CDN in front of it): networks fetch
+   * <STORAGE_PUBLIC_URL>/<key> directly. Handy in development; MEDIA_PUBLIC_URL wins when both
+   * are set, and production should keep storage private.
+   */
+  STORAGE_PUBLIC_URL: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
 
   /** ffmpeg/ffprobe for video duration and thumbnails; without them videos get neither. */
   FFMPEG_PATH: z.string().default('ffmpeg'),
@@ -165,7 +171,12 @@ export interface Config {
       }
     | undefined;
   encryption: { keys: EncryptionKey[] };
-  media: { ffmpegPath: string; ffprobePath: string; publicUrl: string | undefined };
+  media: {
+    ffmpegPath: string;
+    ffprobePath: string;
+    publicUrl: string | undefined;
+    storagePublicUrl: string | undefined;
+  };
   audit: { retentionDays: number };
   auth: {
     secret: string;
@@ -275,6 +286,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       ffmpegPath: e.FFMPEG_PATH,
       ffprobePath: e.FFPROBE_PATH,
       publicUrl: e.MEDIA_PUBLIC_URL,
+      storagePublicUrl: e.STORAGE_PUBLIC_URL,
     },
     audit: { retentionDays: e.AUDIT_RETENTION_DAYS },
     auth: {

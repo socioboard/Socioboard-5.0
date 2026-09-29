@@ -43,7 +43,13 @@ export function createPublishingServices(
   const mediaUrls = createMediaUrlSigner({
     baseUrl: config.media.publicUrl,
     secret: config.auth.secret,
+    storagePublicUrl: config.media.storagePublicUrl,
   });
+  if (!config.media.publicUrl && config.media.storagePublicUrl) {
+    logger.warn(
+      'STORAGE_PUBLIC_URL: media is readable by anyone with its path; keep storage private in production',
+    );
+  }
   const queue = publishQueue({
     db,
     storage,
