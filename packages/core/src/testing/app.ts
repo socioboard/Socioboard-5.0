@@ -74,8 +74,20 @@ export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions =
       where: { email: { endsWith: `-${run}@example.test` } },
       select: { id: true },
     });
-    await db.client.workspace.deleteMany({ where: { name: { startsWith: `T${run}` } } });
-    await db.client.auditLog.deleteMany({ where: { actorUserId: { in: users.map((u) => u.id) } } });
+    const workspaces = await db.client.workspace.findMany({
+      where: { name: { startsWith: `T${run}` } },
+      select: { id: true },
+    });
+    await db.client.workspace.deleteMany({ where: { id: { in: workspaces.map((w) => w.id) } } });
+    // Entries by the test users, and system entries (no user) in the test workspaces.
+    await db.client.auditLog.deleteMany({
+      where: {
+        OR: [
+          { actorUserId: { in: users.map((u) => u.id) } },
+          { workspaceId: { in: workspaces.map((w) => w.id) } },
+        ],
+      },
+    });
     await db.client.user.deleteMany({ where: { id: { in: users.map((u) => u.id) } } });
     await platform.close();
   }
