@@ -254,6 +254,16 @@ describe('the OAuth callback', () => {
     expect(names).toEqual(expect.arrayContaining(['Priya Rao', 'Brand Admin']));
   });
 
+  it('an unexpected failure still lands the browser in the app, not on a JSON error', async () => {
+    // A malformed token answer (no scopes list) breaks the permission check itself.
+    facebook.people.set('broken', {
+      ...person('fb-broken', 'Broken', []),
+      scopes: undefined as unknown as string[],
+    });
+    const { location } = await connect(owner, 'broken');
+    expect(location.toString()).toBe(`${t.config.appUrl}/?connectError=NETWORK_ERROR`);
+  });
+
   it('an unknown state sends the browser home with an error', async () => {
     const res = await owner.get('/api/oauth/facebook/callback?state=nope&code=x');
     expect(res.headers.location).toBe(`${t.config.appUrl}/?connectError=OAUTH_STATE_INVALID`);

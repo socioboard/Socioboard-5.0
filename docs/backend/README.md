@@ -11,30 +11,30 @@ Both import the same feature modules from `packages/core/src/modules/*`.
 
 ## Module index
 
-| Module | What it owns | Phase |
-| --- | --- | --- |
-| [platform](modules/platform.md) | Shared infrastructure: config, db + seeds, http middleware, queue, storage, mailer + email templates, events, realtime, crypto, flags | 0 |
-| [auth](modules/auth.md) | Sign-up, sign-in, sessions, 2FA, OAuth login (Better Auth); SSO in 6.1 | 0, 6.1 |
-| [workspaces](modules/workspaces.md) | Workspaces, members, roles, invitations, workspace settings | 0 |
-| [media](modules/media.md) | Uploads, media library, processing, public URLs | 0–1 |
-| [audit](modules/audit.md) | Audit log of sensitive actions | 0 (used by all) |
-| [providers](modules/providers.md) | One adapter per social network; content rules; registry | 1, 3 |
-| [social-accounts](modules/social-accounts.md) | Connecting accounts via OAuth, tokens, groups, member access | 1 |
-| [posts](modules/posts.md) | Posts, per-account targets, drafts, overrides, validation, previews | 1 |
-| [publishing](modules/publishing.md) | Publish jobs, media preparation, retries, results | 1–2 |
-| [scheduling](modules/scheduling.md) | Scheduled and recurring posts, queue slots, calendar, reconciler | 2 |
-| [notifications](modules/notifications.md) | In-app and email notifications, realtime delivery | 2 |
-| [admin](modules/admin.md) | Platform admin console APIs | 2, 5 |
-| [shortlinks](modules/shortlinks.md) | Bitly and link shortening in posts | 3 |
-| [approvals](modules/approvals.md) | Review workflow and post comments | 4 |
-| [ai](modules/ai.md) | AI generation jobs via the Python AI service | 4 |
-| [tasks](modules/tasks.md) | Tasks and assignees on posts | 4 |
-| [billing](modules/billing.md) | Stripe plans, limits, AI credits (only when Stripe is configured) | 5 |
-| [compliance](modules/compliance.md) | GDPR export and deletion, Meta data-deletion callback | 5 |
-| [analytics](modules/analytics.md) | Metric sync, snapshots, dashboards | 6.1 |
-| [reports](modules/reports.md) | Scheduled PDF/CSV reports | 6.1 |
-| [discovery](modules/discovery.md) | Content sources, RSS, boards | 6.1 |
-| [feeds](modules/feeds.md) | Per-account feed of published posts and comments | 6.1 |
+| Module                                        | What it owns                                                                                                                          | Phase           |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| [platform](modules/platform.md)               | Shared infrastructure: config, db + seeds, http middleware, queue, storage, mailer + email templates, events, realtime, crypto, flags | 0               |
+| [auth](modules/auth.md)                       | Sign-up, sign-in, sessions, 2FA, OAuth login (Better Auth); SSO in 6.1                                                                | 0, 6.1          |
+| [workspaces](modules/workspaces.md)           | Workspaces, members, roles, invitations, workspace settings                                                                           | 0               |
+| [media](modules/media.md)                     | Uploads, media library, processing, public URLs                                                                                       | 0–1             |
+| [audit](modules/audit.md)                     | Audit log of sensitive actions                                                                                                        | 0 (used by all) |
+| [providers](modules/providers.md)             | One adapter per social network; content rules; registry                                                                               | 1, 3            |
+| [social-accounts](modules/social-accounts.md) | Connecting accounts via OAuth, tokens, groups, member access                                                                          | 1               |
+| [posts](modules/posts.md)                     | Posts, per-account targets, drafts, overrides, validation, previews                                                                   | 1               |
+| [publishing](modules/publishing.md)           | Publish jobs, media preparation, retries, results                                                                                     | 1–2             |
+| [scheduling](modules/scheduling.md)           | Scheduled and recurring posts, queue slots, calendar, reconciler                                                                      | 2               |
+| [notifications](modules/notifications.md)     | In-app and email notifications, realtime delivery                                                                                     | 2               |
+| [admin](modules/admin.md)                     | Platform admin console APIs                                                                                                           | 2, 5            |
+| [shortlinks](modules/shortlinks.md)           | Bitly and link shortening in posts                                                                                                    | 3               |
+| [approvals](modules/approvals.md)             | Review workflow and post comments                                                                                                     | 4               |
+| [ai](modules/ai.md)                           | AI generation jobs via the Python AI service                                                                                          | 4               |
+| [tasks](modules/tasks.md)                     | Tasks and assignees on posts                                                                                                          | 4               |
+| [billing](modules/billing.md)                 | Stripe plans, limits, AI credits (only when Stripe is configured)                                                                     | 5               |
+| [compliance](modules/compliance.md)           | GDPR export and deletion, Meta data-deletion callback                                                                                 | 5               |
+| [analytics](modules/analytics.md)             | Metric sync, snapshots, dashboards                                                                                                    | 6.1             |
+| [reports](modules/reports.md)                 | Scheduled PDF/CSV reports                                                                                                             | 6.1             |
+| [discovery](modules/discovery.md)             | Content sources, RSS, boards                                                                                                          | 6.1             |
+| [feeds](modules/feeds.md)                     | Per-account feed of published posts and comments                                                                                      | 6.1             |
 
 Shared infrastructure lives in `packages/core/src/platform/` (see [platform](modules/platform.md)). Request/response schemas live in [`packages/contracts`](contracts.md). Every piece of code maps to a phase and task in the [traceability map](../traceability.md).
 
@@ -80,6 +80,8 @@ Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod),
 /api      requestId → requestLogger
 /api/auth Better Auth (its own rate limits; before the JSON parser)
 /api/v1   json → originCheck → rateLimit (per client IP, Valkey) → session (Better Auth, never rejects)
+/api/oauth rateLimit → session → callback (a browser redirect from the network: no origin check;
+          always answers with a redirect into the app, even on failure)
 per route signed in (401) → params (400) → workspace(:workspaceId) (404) → permission (403)
           → requireFeature('approvals') (phase 5) → query + body (400) → handler
           → response checked against the contract → errorHandler
@@ -101,13 +103,13 @@ per route signed in (401) → params (400) → workspace(:workspaceId) (404) →
 
 ## Permissions
 
-| Permission | Owner | Admin | Editor | Contributor | Viewer |
-| --- | :-: | :-: | :-: | :-: | :-: |
-| `workspace:delete`, `billing:manage` | ✓ | | | | |
-| `workspace:update`, `members:manage`, `accounts:connect`, `accounts:manage` | ✓ | ✓ | | | |
-| `posts:approve`, `posts:publish` (skip review) | ✓ | ✓ | ✓ | | |
-| `posts:create`, `posts:update-own`, `media:upload`, `ai:generate`, `tasks:manage` | ✓ | ✓ | ✓ | ✓ | |
-| `posts:read`, `calendar:read`, `analytics:read`, `media:read` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Permission                                                                        | Owner | Admin | Editor | Contributor | Viewer |
+| --------------------------------------------------------------------------------- | :---: | :---: | :----: | :---------: | :----: |
+| `workspace:delete`, `billing:manage`                                              |   ✓   |       |        |             |        |
+| `workspace:update`, `members:manage`, `accounts:connect`, `accounts:manage`       |   ✓   |   ✓   |        |             |        |
+| `posts:approve`, `posts:publish` (skip review)                                    |   ✓   |   ✓   |   ✓    |             |        |
+| `posts:create`, `posts:update-own`, `media:upload`, `ai:generate`, `tasks:manage` |   ✓   |   ✓   |   ✓    |      ✓      |        |
+| `posts:read`, `calendar:read`, `analytics:read`, `media:read`                     |   ✓   |   ✓   |   ✓    |      ✓      |   ✓    |
 
 Members can also be limited to specific social accounts (`MemberAccountAccess`). Services must check account access, not just role.
 
