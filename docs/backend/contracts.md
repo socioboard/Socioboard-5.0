@@ -36,4 +36,4 @@ export const createPost = defineRoute({
 
 ## Rules
 - Changing a contract is a reviewed change; breaking changes need both sides updated in the same PR.
-- Every module doc's API table must match its contracts file; CI checks that every defined route has a handler.
+- Every module doc's API table must match its contracts file; CI checks that every defined route has a handler. A phase's contracts land before its handlers: until a task mounts its routes, they are listed with that task in `packages/core/src/testing/pending-routes.ts`, and the check fails once a listed route is mounted.

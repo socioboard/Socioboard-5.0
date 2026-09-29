@@ -105,6 +105,145 @@ describe('database schema', () => {
     ).rejects.toMatchObject({ code: 'P2002' });
   });
 
+  describe('social accounts and posts', () => {
+    const connection = (workspaceId: string, externalUserId: string = randomUUID()) =>
+      db.client.socialConnection.create({
+        data: {
+          workspaceId,
+          provider: 'facebook',
+          externalUserId,
+          displayName: 'Priya',
+          accessTokenEnc: 'v1.k1.x.y.z',
+          connectedById: userId,
+        },
+      });
+    const account = (workspaceId: string, connectionId: string | null) =>
+      db.client.socialAccount.create({
+        data: {
+          workspaceId,
+          connectionId,
+          network: 'facebook_page',
+          externalId: randomUUID(),
+          displayName: 'Halden Coffee',
+        },
+      });
+
+    it('allows one row per login and per asset in a workspace, and the same in another', async () => {
+      const login = await connection(wsA, `fb-${run}`);
+      await expect(connection(wsA, `fb-${run}`)).rejects.toMatchObject({ code: 'P2002' });
+      await expect(connection(wsB, `fb-${run}`)).resolves.toBeTruthy();
+
+      const page = await account(wsA, login.id);
+      await expect(
+        db.client.socialAccount.create({
+          data: {
+            workspaceId: wsA,
+            network: 'facebook_page',
+            externalId: page.externalId,
+            displayName: 'again',
+          },
+        }),
+      ).rejects.toMatchObject({ code: 'P2002' });
+    });
+
+    it('rejects links across workspaces: account → login, target → post or account', async () => {
+      const loginB = await connection(wsB);
+      await expect(account(wsA, loginB.id)).rejects.toMatchObject({ code: 'P2003' });
+
+      const accountB = await account(wsB, loginB.id);
+      const postA = await db.client.post.create({ data: { workspaceId: wsA, authorId: userId } });
+      await expect(
+        db.client.postTarget.create({
+          data: { workspaceId: wsA, postId: postA.id, socialAccountId: accountB.id },
+        }),
+      ).rejects.toMatchObject({ code: 'P2003' });
+      const postB = await db.client.post.create({ data: { workspaceId: wsB, authorId: userId } });
+      await expect(
+        db.client.postTarget.create({
+          data: { workspaceId: wsB, postId: postA.id, socialAccountId: accountB.id },
+        }),
+      ).rejects.toMatchObject({ code: 'P2003' });
+      await expect(
+        db.client.postTarget.create({
+          data: { workspaceId: wsB, postId: postB.id, socialAccountId: accountB.id },
+        }),
+      ).resolves.toBeTruthy();
+    });
+
+    it('deleting a post deletes its targets and their history; a used account stays', async () => {
+      const login = await connection(wsA);
+      const page = await account(wsA, login.id);
+      const post = await db.client.post.create({ data: { workspaceId: wsA, authorId: userId } });
+      const target = await db.client.postTarget.create({
+        data: { workspaceId: wsA, postId: post.id, socialAccountId: page.id },
+      });
+      await db.client.publishAttempt.create({
+        data: { workspaceId: wsA, postTargetId: target.id, attemptNo: 1 },
+      });
+      // Accounts with post history are disconnected, never deleted.
+      await expect(
+        db.client.socialAccount.delete({ where: { id: page.id } }),
+      ).rejects.toMatchObject({ code: 'P2003' });
+
+      await db.client.post.delete({ where: { id: post.id } });
+      expect(await db.client.postTarget.count({ where: { postId: post.id } })).toBe(0);
+      expect(await db.client.publishAttempt.count({ where: { postTargetId: target.id } })).toBe(0);
+    });
+
+    it('removing a login needs its accounts detached first; the accounts stay', async () => {
+      const login = await connection(wsA);
+      const page = await account(wsA, login.id);
+      await expect(
+        db.client.socialConnection.delete({ where: { id: login.id } }),
+      ).rejects.toMatchObject({ code: 'P2003' });
+
+      await db.client.socialAccount.update({
+        where: { id: page.id },
+        data: { connectionId: null, status: 'disconnected' },
+      });
+      await db.client.socialConnection.delete({ where: { id: login.id } });
+      expect(await db.client.socialAccount.count({ where: { id: page.id } })).toBe(1);
+    });
+
+    it('deletes a workspace with logins, accounts, posts and history in one go', async () => {
+      const ws = await db.client.workspace.create({
+        data: { name: 'gone2', slug: `gone2-${run}`, timezone: 'UTC' },
+      });
+      const login = await connection(ws.id);
+      const page = await account(ws.id, login.id);
+      const post = await db.client.post.create({ data: { workspaceId: ws.id } });
+      const target = await db.client.postTarget.create({
+        data: { workspaceId: ws.id, postId: post.id, socialAccountId: page.id },
+      });
+      await db.client.publishAttempt.create({
+        data: { workspaceId: ws.id, postTargetId: target.id, attemptNo: 1 },
+      });
+      await db.client.oAuthState.create({
+        data: {
+          state: randomUUID(),
+          workspaceId: ws.id,
+          userId,
+          provider: 'facebook',
+          connectionId: login.id,
+          expiresAt: new Date(Date.now() + 600_000),
+        },
+      });
+
+      await db.client.workspace.delete({ where: { id: ws.id } });
+      expect(await db.client.socialAccount.count({ where: { workspaceId: ws.id } })).toBe(0);
+      expect(await db.client.postTarget.count({ where: { workspaceId: ws.id } })).toBe(0);
+    });
+
+    it('finds posts that use a media file (GIN index on mediaIds)', async () => {
+      const media = await db.client.mediaAsset.create({ data: asset(wsA) });
+      await db.client.post.create({
+        data: { workspaceId: wsA, mediaIds: [media.id], text: `uses-${run}` },
+      });
+      const users = await db.client.post.findMany({ where: { mediaIds: { has: media.id } } });
+      expect(users.map((p) => p.text)).toEqual([`uses-${run}`]);
+    });
+  });
+
   it('keeps uploads when the uploader’s account is deleted', async () => {
     const temp = await db.client.user.create({
       data: { name: 'Temp', email: `temp-${run}@example.test` },

@@ -1,10 +1,10 @@
 // Tenant isolation harness (P0-B9). A member of workspace B attacks workspace A through every
 // route. Every contract route must be classified below, so new routes can't skip these checks.
-import { apiRoutes, ErrorEnvelope, type RouteDefinition } from '@socioboard/contracts';
+import { ErrorEnvelope } from '@socioboard/contracts';
 import type request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createTestApp } from '../testing';
+import { createTestApp, namedRoutes, PENDING_ROUTES } from '../testing';
 
 const t = createTestApp();
 type Ids = Record<'workspaceId' | 'memberId' | 'invitationId' | 'assetId' | 'folderId', string>;
@@ -69,9 +69,8 @@ const CLASSIFIED: Record<string, Kind> = {
   deleteMedia: { kind: 'resource' },
 };
 
-const routes = Object.values(apiRoutes).flatMap((m) =>
-  Object.entries(m as Record<string, RouteDefinition>),
-);
+// Routes still being built (no handler yet) join the checks when their task mounts them.
+const routes = namedRoutes().filter(([name]) => !(name in PENDING_ROUTES));
 const fillPath = (path: string, ids: Partial<Ids>) =>
   path.replace(/:([A-Za-z]+)/g, (_, name: string) => ids[name as keyof Ids] ?? name);
 const code = (res: request.Response) => ErrorEnvelope.safeParse(res.body).data?.error.code;

@@ -42,12 +42,16 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  sessions        Session[]
-  accounts        Account[]
-  twoFactors      TwoFactor[]
-  memberships     Member[]
-  invitationsSent Invitation[]
-  mediaUploaded   MediaAsset[]
+  sessions         Session[]
+  accounts         Account[]
+  twoFactors       TwoFactor[]
+  memberships      Member[]
+  invitationsSent  Invitation[]
+  mediaUploaded    MediaAsset[]
+  connectionsAdded SocialConnection[] @relation("ConnectionsAdded")
+  accountsAdded    SocialAccount[]    @relation("AccountsAdded")
+  oauthStates      OAuthState[]
+  posts            Post[]
 }
 
 model Session {
@@ -135,10 +139,18 @@ model Workspace {
   /// Soft delete; rows are removed 30 days later with everything they own.
   deletedAt           DateTime?
 
-  members      Member[]
-  invitations  Invitation[]
-  mediaAssets  MediaAsset[]
-  mediaFolders MediaFolder[]
+  members           Member[]
+  invitations       Invitation[]
+  mediaAssets       MediaAsset[]
+  mediaFolders      MediaFolder[]
+  socialConnections SocialConnection[]
+  socialAccounts    SocialAccount[]
+  accountGroups     SocialAccountGroup[]
+  accountGroupItems SocialAccountGroupItem[]
+  oauthStates       OAuthState[]
+  posts             Post[]
+  postTargets       PostTarget[]
+  publishAttempts   PublishAttempt[]
 }
 
 model Member {
@@ -248,6 +260,280 @@ model MediaAsset {
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([workspaceId, folderId])
   @@index([status, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Social accounts — docs/backend/modules/social-accounts.md
+// A SocialConnection is one login (OAuth tokens); a SocialAccount is one asset reached through
+// it (a Page, an Instagram account…). Values match LoginProvider and NetworkId in the contracts.
+// ---------------------------------------------------------------------------
+
+enum LoginProvider {
+  facebook
+  instagram
+  linkedin
+  x
+  youtube
+  pinterest
+  tiktok
+  snapchat
+  tumblr
+}
+
+enum SocialNetwork {
+  facebook_page
+  instagram
+  linkedin_person
+  linkedin_org
+  x
+  youtube
+  pinterest
+  tiktok
+  snapchat
+  tumblr
+}
+
+enum ConnectionStatus {
+  active
+  reauth_required
+  revoked
+}
+
+enum AccountStatus {
+  active
+  reauth_required
+  disconnected
+  paused
+}
+
+model SocialConnection {
+  id              String           @id @default(uuid(7)) @db.Uuid
+  workspaceId     String           @db.Uuid
+  provider        LoginProvider
+  /// The login's id on the network (e.g. the Facebook user id); detects the same login twice.
+  externalUserId  String
+  displayName     String
+  avatarUrl       String?
+  /// Encrypted with platform/crypto (AES-256-GCM); never logged or sent to the browser.
+  accessTokenEnc  String
+  refreshTokenEnc String?
+  tokenExpiresAt  DateTime?
+  scopes          String[]
+  status          ConnectionStatus @default(active)
+  /// Why it needs attention, in the network's words.
+  statusReason    String?
+  connectedById   String?          @db.Uuid
+  lastCheckedAt   DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  workspace   Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connectedBy User?           @relation("ConnectionsAdded", fields: [connectedById], references: [id], onDelete: SetNull)
+  accounts    SocialAccount[]
+  oauthStates OAuthState[]
+
+  @@unique([id, workspaceId])
+  @@unique([workspaceId, provider, externalUserId])
+}
+
+model SocialAccount {
+  id                  String        @id @default(uuid(7)) @db.Uuid
+  workspaceId         String        @db.Uuid
+  /// Null once its login is removed; the account is then disconnected and kept for post history.
+  connectionId        String?       @db.Uuid
+  network             SocialNetwork
+  externalId          String
+  displayName         String
+  username            String?
+  avatarUrl           String?
+  /// Per-asset token where the network issues one (Facebook Page tokens); else the login's is used.
+  assetTokenEnc       String?
+  assetTokenExpiresAt DateTime?
+  /// Network extras: Instagram's linked Page, Pinterest default board, LinkedIn org URN…
+  meta                Json          @default("{}")
+  status              AccountStatus @default(active)
+  statusReason        String?
+  connectedById       String?       @db.Uuid
+  lastCheckedAt       DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  workspace   Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connection  SocialConnection?        @relation(fields: [connectionId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
+  connectedBy User?                    @relation("AccountsAdded", fields: [connectedById], references: [id], onDelete: SetNull)
+  groupItems  SocialAccountGroupItem[]
+  postTargets PostTarget[]
+
+  @@unique([id, workspaceId])
+  @@unique([workspaceId, network, externalId])
+  @@index([connectionId])
+}
+
+/// Saved sets of accounts, e.g. "Brand A all channels" (routes arrive with P3-F3).
+model SocialAccountGroup {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  workspaceId String   @db.Uuid
+  name        String
+  createdAt   DateTime @default(now())
+
+  workspace Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  items     SocialAccountGroupItem[]
+
+  @@unique([id, workspaceId])
+}
+
+model SocialAccountGroupItem {
+  id              String @id @default(uuid(7)) @db.Uuid
+  workspaceId     String @db.Uuid
+  groupId         String @db.Uuid
+  socialAccountId String @db.Uuid
+
+  workspace Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  group     SocialAccountGroup @relation(fields: [groupId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+  account   SocialAccount      @relation(fields: [socialAccountId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@unique([groupId, socialAccountId])
+  @@index([socialAccountId])
+}
+
+/// One OAuth attempt: single use, expires after 10 minutes.
+model OAuthState {
+  id                    String        @id @default(uuid(7)) @db.Uuid
+  /// Random value sent to the network and checked on the callback.
+  state                 String        @unique
+  workspaceId           String        @db.Uuid
+  userId                String        @db.Uuid
+  provider              LoginProvider
+  pkceVerifier          String?
+  /// Set when reconnecting: the callback must return the same login.
+  connectionId          String?       @db.Uuid
+  forceAccountSelection Boolean       @default(false)
+  expiresAt             DateTime
+  createdAt             DateTime      @default(now())
+
+  workspace  Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connection SocialConnection? @relation(fields: [connectionId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@index([expiresAt])
+}
+
+// ---------------------------------------------------------------------------
+// Posts and publishing — docs/backend/modules/posts.md, publishing.md
+// A Post holds the shared content; each PostTarget is its delivery to one account.
+// ---------------------------------------------------------------------------
+
+enum PostStatus {
+  draft
+  in_review
+  approved
+  scheduled
+  publishing
+  published
+  partial
+  failed
+}
+
+enum TargetStatus {
+  pending
+  scheduled
+  publishing
+  published
+  failed
+  cancelled
+}
+
+enum PublishOutcome {
+  running
+  published
+  failed
+  will_retry
+}
+
+enum PublishErrorKind {
+  retryable
+  rate_limited
+  auth
+  content
+}
+
+model Post {
+  id           String     @id @default(uuid(7)) @db.Uuid
+  workspaceId  String     @db.Uuid
+  authorId     String?    @db.Uuid
+  /// Derived from the targets by the posts service (recomputeStatus).
+  status       PostStatus @default(draft)
+  text         String     @default("")
+  /// MediaAsset ids in display order. No foreign key: checked by the service; a media delete
+  /// looks here before removing a file a scheduled post uses.
+  mediaIds     String[]   @db.Uuid
+  link         String?
+  firstComment String?
+  /// PostLabel ids (P1-B11).
+  labelIds     String[]   @db.Uuid
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  author    User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  targets   PostTarget[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, createdAt(sort: Desc)])
+  @@index([workspaceId, status])
+  @@index([mediaIds], type: Gin)
+}
+
+model PostTarget {
+  id              String       @id @default(uuid(7)) @db.Uuid
+  workspaceId     String       @db.Uuid
+  postId          String       @db.Uuid
+  socialAccountId String       @db.Uuid
+  /// TargetOverride from the contracts: text, mediaIds and network options for this account.
+  override        Json?
+  scheduledAt     DateTime?
+  /// Bumped on every reschedule; a publish job for an older version exits (P2).
+  scheduleVersion Int          @default(0)
+  status          TargetStatus @default(pending)
+  externalPostId  String?
+  permalink       String?
+  attempts        Int          @default(0)
+  /// PublishError from the contracts: kind, networkCode, message.
+  lastError       Json?
+  publishedAt     DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  workspace Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  post      Post             @relation(fields: [postId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+  account   SocialAccount    @relation(fields: [socialAccountId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
+  history   PublishAttempt[]
+
+  @@unique([id, workspaceId])
+  @@unique([postId, socialAccountId])
+  @@index([socialAccountId, status])
+  @@index([status, scheduledAt])
+}
+
+/// Every try at publishing a target, shown as its history.
+model PublishAttempt {
+  id           String            @id @default(uuid(7)) @db.Uuid
+  workspaceId  String            @db.Uuid
+  postTargetId String            @db.Uuid
+  attemptNo    Int
+  startedAt    DateTime          @default(now())
+  finishedAt   DateTime?
+  outcome      PublishOutcome    @default(running)
+  errorKind    PublishErrorKind?
+  networkCode  String?
+  message      String?
+  /// Network charges for this attempt (X bills per post), in the network's units.
+  costUnits    Float?
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  target    PostTarget @relation(fields: [postTargetId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@unique([postTargetId, attemptNo])
 }
 
 // ---------------------------------------------------------------------------

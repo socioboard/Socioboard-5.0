@@ -9,7 +9,7 @@
 - [x] P1-C2 Posts, targets, overrides, validation issues, publish-now, attempts
 
 ## Backend
-- [ ] P1-B1 Prisma: SocialConnection, SocialAccount, SocialAccountGroup(+Item), OAuthState, Post, PostTarget, PublishAttempt
+- [x] P1-B1 Prisma: SocialConnection, SocialAccount, SocialAccountGroup(+Item), OAuthState, Post, PostTarget, PublishAttempt
 - [ ] P1-B2 `packages/providers`: types, errors, registry, shared HTTP client, fixtures setup
 - [ ] P1-B3 Facebook Page adapter: auth, listAssets, validate, publish (text, link, photo, video), preview spec
 - [ ] P1-B4 Instagram adapter (FB Login + Instagram Login): container flow, carousel, reels; validate aspect ratios
