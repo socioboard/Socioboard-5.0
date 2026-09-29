@@ -3,7 +3,8 @@
     "label": "Main",
     "calendar": "Calendar",
     "settings": "Settings",
-    "media": "Media"
+    "media": "Media",
+    "accounts": "Accounts"
   },
   "switcher": {
     "label": "Switch workspace",

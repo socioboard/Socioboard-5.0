@@ -1,5 +1,5 @@
 import type { Permission } from '@socioboard/contracts';
-import { CalendarDays, Images, Settings, type LucideIcon } from 'lucide-react';
+import { AtSign, CalendarDays, Images, Settings, type LucideIcon } from 'lucide-react';
 
 /**
  * The sidebar, bottom tab bar and command palette all read this list. A page joins it when its
@@ -23,6 +23,14 @@ export const NAV_ITEMS = [
     label: 'nav.media',
     keywords: 'images videos photos library upload files',
     permission: 'media:read',
+  },
+  {
+    id: 'accounts',
+    to: '/w/$slug/accounts',
+    icon: AtSign,
+    label: 'nav.accounts',
+    keywords: 'social networks connect facebook instagram pages profiles channels',
+    permission: 'posts:read',
   },
   {
     id: 'settings',

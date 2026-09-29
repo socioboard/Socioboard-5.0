@@ -1,0 +1,153 @@
+{
+  "title": "Accounts",
+  "connect": "Connect account",
+  "connectAnother": "Connect another {{network}} account",
+  "count_one": "{{count}} account",
+  "count_other": "{{count}} accounts",
+  "loadError": "Your accounts didn’t load.",
+  "retry": "Try again",
+  "cancel": "Cancel",
+  "empty": {
+    "title": "No accounts yet",
+    "body": "Connect a Facebook Page or an Instagram account to start posting from here.",
+    "readOnlyBody": "An admin of this workspace connects accounts. Once they do, they appear here."
+  },
+  "providers": {
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "linkedin": "LinkedIn",
+    "x": "X",
+    "youtube": "YouTube",
+    "pinterest": "Pinterest",
+    "tiktok": "TikTok",
+    "snapchat": "Snapchat",
+    "tumblr": "Tumblr"
+  },
+  "status": {
+    "active": "Working",
+    "reauth_required": "Needs reconnecting",
+    "disconnected": "Disconnected",
+    "paused": "Paused",
+    "revoked": "Access removed"
+  },
+  "login": {
+    "via": "{{provider}} login",
+    "manage": "Manage",
+    "manageLabel": "Manage {{name}}’s {{provider}} login",
+    "reconnect": "Reconnect",
+    "nothingAdded": "Nothing added from this login yet.",
+    "addFrom": "Add accounts"
+  },
+  "account": {
+    "open": "Details for {{name}} on {{network}}",
+    "connectedBy": "Connected by {{name}} on {{date}}",
+    "connectedOn": "Connected on {{date}}"
+  },
+  "chooser": {
+    "title": "Connect an account",
+    "description": "Choose where you want to post.",
+    "another": "Connect another {{network}} account",
+    "noneEnabled": "No networks are set up on this server yet. Whoever runs it adds each network’s app keys first.",
+    "loadError": "The list of networks didn’t load.",
+    "postTypes": {
+      "text": "text",
+      "link": "links",
+      "image": "photos",
+      "carousel": "carousels",
+      "video": "videos",
+      "reel": "reels",
+      "story": "stories"
+    },
+    "supports": "Posts {{types}}",
+    "loginTitle": "How do you want to sign in?",
+    "loginDescription": "{{network}} accounts can be reached two ways.",
+    "logins": {
+      "facebook": {
+        "label": "Continue with Facebook",
+        "description": "For Instagram business accounts linked to a Facebook Page. One sign-in adds your Pages and their Instagram accounts."
+      },
+      "instagram": {
+        "label": "Continue with Instagram",
+        "description": "For Instagram professional accounts that aren’t linked to a Page."
+      }
+    },
+    "tipTitle": "Adding another {{provider}} account?",
+    "tip": "{{provider}} signs you in as whoever is logged in to {{provider}} in this browser. To add a different account, sign out of {{provider}} first, or open Socioboard in a private window.",
+    "continue": "Continue to {{provider}}",
+    "back": "Back",
+    "starting": "Opening {{provider}}…"
+  },
+  "picker": {
+    "title": "Add accounts",
+    "backToAccounts": "Back to accounts",
+    "signedInAs": "Signed in to {{provider}} as {{name}}.",
+    "alreadyConnected": "{{name}} is already connected. To add a different {{provider}} account, sign out of {{provider}} in this browser (or use a private window), then connect again.",
+    "reconnected": "Reconnected {{name}}’s {{provider}} login. Its accounts can post again.",
+    "choose": "Choose what to add",
+    "added": "Added",
+    "movesHere": "Added through {{name}}’s login. Adding it here moves it to this login.",
+    "unavailable": {
+      "not_professional": "Only professional (business or creator) Instagram accounts can post. Switch it to one in the Instagram app, then connect again.",
+      "missing_permission": "Socioboard wasn’t given access to this one. Reconnect and allow it."
+    },
+    "add_one": "Add {{count}} account",
+    "add_other": "Add {{count}} accounts",
+    "addedToast_one": "Added {{count}} account.",
+    "addedToast_other": "Added {{count}} accounts.",
+    "skip": "Not now",
+    "done": "Done",
+    "allAdded": "Everything this login can post to is already added.",
+    "nothingTitle": "Nothing to add from {{name}}",
+    "nothingBody": "This {{provider}} login doesn’t manage any Pages or professional accounts that Socioboard can post to. Check its access on {{provider}}, or connect a different account.",
+    "loadError": "What this login can post to didn’t load.",
+    "networkDown": "{{provider}} didn’t answer. Try again in a moment.",
+    "needsReconnect": "{{provider}} no longer accepts this login. Reconnect it to continue."
+  },
+  "connectError": {
+    "title": "{{provider}} didn’t connect",
+    "titleGeneric": "The account didn’t connect",
+    "ACCESS_DENIED": "The sign-in was cancelled, so nothing was connected.",
+    "OAUTH_STATE_INVALID": "That sign-in link expired or was already used. Start again from here.",
+    "RECONNECT_WRONG_ACCOUNT": "You signed in as a different person than the login you’re reconnecting. Sign in as the same person, or connect this one as a new login.",
+    "MISSING_PERMISSIONS": "Some permissions Socioboard needs to post weren’t allowed. Connect again and keep every option switched on.",
+    "NETWORK_NOT_ENABLED": "This network isn’t set up on this server.",
+    "NETWORK_ERROR": "The network didn’t answer as expected. Try again in a moment.",
+    "tryAgain": "Try again",
+    "dismiss": "Dismiss"
+  },
+  "details": {
+    "title": "Account details",
+    "close": "Close",
+    "network": "Network",
+    "login": "Comes through",
+    "connectedBy": "Connected by",
+    "connected": "Connected",
+    "lastChecked": "Last checked",
+    "never": "Not yet",
+    "working": "This account can post.",
+    "reconnect": "Reconnect",
+    "disconnect": "Disconnect",
+    "disconnectTitle": "Disconnect {{name}}?",
+    "disconnectPending_one": "{{count}} scheduled post to it will be cancelled.",
+    "disconnectPending_other": "{{count}} scheduled posts to it will be cancelled.",
+    "disconnectNone": "Nothing is scheduled to it.",
+    "disconnectHistory": "Its post history stays, and it comes back if you connect it again.",
+    "disconnectConfirm": "Disconnect",
+    "disconnected": "{{name}} disconnected."
+  },
+  "loginDetails": {
+    "title": "{{provider}} login",
+    "accounts": "Accounts through this login",
+    "addMore": "Add more from this login",
+    "reconnect": "Reconnect",
+    "remove": "Remove login",
+    "removeTitle": "Remove {{name}}’s {{provider}} login?",
+    "removeBodyNone": "Nothing was added through it.",
+    "removeBody_one": "Its {{count}} account is disconnected and its scheduled posts are cancelled.",
+    "removeBody_other": "Its {{count}} accounts are disconnected and their scheduled posts are cancelled.",
+    "removeHistory": "Post history stays. You can connect the login again later.",
+    "removeConfirm": "Remove login",
+    "removed": "{{name}}’s login removed.",
+    "notFound": "This login was removed."
+  }
+}
