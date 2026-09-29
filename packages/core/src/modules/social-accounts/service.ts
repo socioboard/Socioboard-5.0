@@ -243,8 +243,24 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     query: Record<string, unknown>,
     caller: AuthContext | null,
   ): Promise<string> {
-    const home = (code: ConnectErrorCode) =>
-      `${new URL('/', deps.appUrl).toString()}?connectError=${code}`;
+    try {
+      return await callback(providerParam, query, caller);
+    } catch (err) {
+      // The browser arrived from the network's site: it gets our app with a message, never a
+      // JSON error page, even when something unexpected (a database hiccup) failed.
+      logger.error({ err, provider: providerParam }, 'OAuth callback failed');
+      return home('NETWORK_ERROR');
+    }
+  }
+
+  const home = (code: ConnectErrorCode) =>
+    `${new URL('/', deps.appUrl).toString()}?connectError=${code}`;
+
+  async function callback(
+    providerParam: string,
+    query: Record<string, unknown>,
+    caller: AuthContext | null,
+  ): Promise<string> {
     const parsed = LoginProvider.safeParse(providerParam);
     const stateValue = typeof query.state === 'string' ? query.state : '';
     if (!parsed.success) return home('NETWORK_NOT_ENABLED');
