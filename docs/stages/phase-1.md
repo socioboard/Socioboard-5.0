@@ -10,7 +10,7 @@
 
 ## Backend
 - [x] P1-B1 Prisma: SocialConnection, SocialAccount, SocialAccountGroup(+Item), OAuthState, Post, PostTarget, PublishAttempt
-- [ ] P1-B2 `packages/providers`: types, errors, registry, shared HTTP client, fixtures setup
+- [x] P1-B2 `packages/providers`: types, errors, registry, shared HTTP client, fixtures setup
 - [ ] P1-B3 Facebook Page adapter: auth, listAssets, validate, publish (text, link, photo, video), preview spec
 - [ ] P1-B4 Instagram adapter (FB Login + Instagram Login): container flow, carousel, reels; validate aspect ratios
 - [ ] P1-B5 Connect flow endpoints + OAuth callback + asset save; token encryption; `GET /networks`; **multi-account**: SocialConnection (login) + SocialAccount (asset), any number of logins per network, duplicate-login detection, force account selection where supported
