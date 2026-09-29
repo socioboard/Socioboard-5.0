@@ -1,0 +1,17 @@
+{
+  "method": "POST",
+  "url": "https://graph.facebook.com/v25.0/17841400000000001/media_publish",
+  "status": 400,
+  "response": {
+    "error": {
+      "message": "Application request limit reached",
+      "type": "OAuthException",
+      "code": 9,
+      "error_subcode": 2207042,
+      "is_transient": false,
+      "error_user_title": "Can't publish post",
+      "error_user_msg": "You reached the maximum number of posts that is allowed to be published by Content Publishing API.",
+      "fbtrace_id": "A1b2C3d8"
+    }
+  }
+}

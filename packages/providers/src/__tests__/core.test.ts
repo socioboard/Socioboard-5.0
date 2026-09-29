@@ -83,6 +83,21 @@ describe('http client', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
+  it('keeps ids too large for a JS number exact, as strings', async () => {
+    const replay = replayFetch([
+      {
+        method: 'GET',
+        url: 'https://api.example.test/v1/me',
+        status: 200,
+        // Instagram user ids have 17 digits; as a JS number this one would become ...000008.
+        response: '{"user_id":17841400000000009,"count":3,"ratio":1.5}',
+      },
+    ]);
+    const http = createHttpClient({ name: 'example', fetch: replay.fetch });
+    const res = await http.request({ url: 'https://api.example.test/v1/me' });
+    expect(res.body).toEqual({ user_id: '17841400000000009', count: 3, ratio: 1.5 });
+  });
+
   it('returns error answers for the adapter to read', async () => {
     const replay = replayFetch([
       {

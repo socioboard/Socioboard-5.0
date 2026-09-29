@@ -42,6 +42,8 @@ interface NetworkAdapter {
 ```
 `AccountCredentials` is the asset's external id plus the token to use (the asset token where the network issues one, else the login's).
 
+The shared HTTP client keeps integers too large for a JS number (Instagram's 17-digit ids, which some endpoints send as JSON numbers) as exact strings.
+
 Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth' | 'content' | 'rate_limited', retryAfter?, networkCode, message }`.
 
 ## Layout
@@ -69,8 +71,8 @@ Every adapter must support any number of logins per workspace and any number of 
 ## Per-network notes (build details)
 | Network | Auth | Publish path | Notes |
 | --- | --- | --- | --- |
-| Facebook Page | Facebook Login for Business | `/{page}/feed`, `/photos`, `/videos` | Page tokens from `listAssets` |
-| Instagram | FB Login (linked) or Instagram Login | container create → publish | Media fetched from public URL; carousel = child containers |
+| Facebook Page | Facebook Login for Business | `/{page}/feed` (text, link, several photos via `attached_media`), `/photos` (one photo), graph-video `/videos` (`file_url`) | Page tokens from `listAssets` (don't expire); first comment needs `pages_manage_engagement`, video `publish_video` |
+| Instagram | FB Login (linked to a Page; graph.facebook.com, Page token) or Instagram Login (graph.instagram.com, login token) | container create → poll `status_code` until FINISHED (up to 10 min, then retried) → `media_publish` | Media fetched from public URL (JPEG images); single videos are reels; carousel = up to 10 child containers; stories drop caption and comment; 100 API posts per account per 24 h |
 | LinkedIn person/org | OAuth 2 | Posts API + Images/Videos API | Org needs Community Management access |
 | X | OAuth 2 PKCE | `POST /2/tweets` + media upload | Pay-per-post; count cost per publish |
 | YouTube | Google OAuth | resumable `videos.insert` | Private-only until audit passes |

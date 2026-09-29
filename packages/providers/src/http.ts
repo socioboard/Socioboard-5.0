@@ -114,7 +114,7 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
       let parsed: unknown = text;
       if (res.headers.get('content-type')?.includes('json') && text !== '') {
         try {
-          parsed = JSON.parse(text);
+          parsed = parseJson(text);
         } catch {
           // Keep the text: a proxy error page labelled as JSON.
         }
@@ -126,6 +126,21 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
       return { status: res.status, ok: res.ok, headers: res.headers, body: parsed as T };
     },
   };
+}
+
+/**
+ * JSON.parse, except integers too large for a JS number (Meta's 17-digit Instagram ids, sent as
+ * numbers by some endpoints) keep their exact digits as strings instead of being rounded.
+ */
+export function parseJson(text: string): unknown {
+  return JSON.parse(text, (_key, value: unknown, context?: { source?: string }) =>
+    typeof value === 'number' &&
+    Number.isInteger(value) &&
+    !Number.isSafeInteger(value) &&
+    context?.source
+      ? context.source
+      : value,
+  );
 }
 
 /** Seconds from a Retry-After header (seconds or an HTTP date), or null. */
