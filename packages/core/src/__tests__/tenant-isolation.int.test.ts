@@ -17,6 +17,7 @@ type Ids = Record<
   | 'accountId'
   | 'postId'
   | 'targetId'
+  | 'labelId'
   | 'provider',
   string
 >;
@@ -112,6 +113,10 @@ const CLASSIFIED: Record<string, Kind> = {
   duplicatePost: { kind: 'resource' },
   publishNow: { kind: 'resource' },
   retryTarget: { kind: 'resource' },
+  listLabels: { kind: 'list', idsOf: 'labelId' },
+  createLabel: { kind: 'workspace', body: () => ({ name: 'Hijack', color: 'red' }) },
+  updateLabel: { kind: 'resource', body: () => ({ name: 'hijacked' }) },
+  deleteLabel: { kind: 'resource' },
 };
 
 // Routes still being built (no handler yet) join the checks when their task mounts them.
@@ -195,7 +200,11 @@ beforeAll(async () => {
   const target = await t.db.client.postTarget.create({
     data: { workspaceId: aWorkspace, postId: post.id, socialAccountId: account.id },
   });
+  const label = await t.db.client.postLabel.create({
+    data: { workspaceId: aWorkspace, name: 'A label', color: 'blue' },
+  });
   a = {
+    labelId: label.id,
     postId: post.id,
     targetId: target.id,
     connectionId: connection.id,
@@ -280,6 +289,13 @@ describe('tenant isolation harness', () => {
       }
     }
     expect(leaks).toEqual([]);
+  });
+
+  it("can't put A's labels on its own posts", async () => {
+    const res = await attacker.post(`/api/v1/workspaces/${bWorkspace}/posts`, {
+      labelIds: [a.labelId],
+    });
+    expect([res.status, code(res)]).toEqual([404, 'LABEL_NOT_FOUND']);
   });
 
   it("can't move its own objects into A's folders", async () => {

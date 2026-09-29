@@ -143,6 +143,24 @@ export const AUDITED: Mapping = {
     entity: { type: 'post', id: p.postId },
     diff: { targets: p.targetIds.length },
   }),
+  'label.created': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post_label', id: p.labelId },
+    diff: { name: p.name },
+  }),
+  'label.updated': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post_label', id: p.labelId },
+    diff: { fields: p.fields },
+  }),
+  'label.deleted': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post_label', id: p.labelId },
+    diff: { name: p.name },
+  }),
   'post.deleted': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),

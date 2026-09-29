@@ -74,3 +74,6 @@ Phase 0 components are built with the task that first uses them: Button through 
 - Components are accessible by default (keyboard, focus, ARIA, labels) and tested with Testing Library.
 - A live component catalog (Ladle or Storybook) runs in dev so screens can be built from it.
 - Feature code never styles raw HTML for something the design system provides.
+
+## Label colours
+Post labels (P1-B11, UI in P1-F8) store a colour **name**: gray, red, orange, amber, green, teal, blue, indigo, violet, pink. The design system maps each to a chip background and text colour per theme (light and dark), so a label always meets contrast; hex values are never stored.

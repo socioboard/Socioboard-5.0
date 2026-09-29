@@ -2,13 +2,16 @@ import {
   can,
   PublishError,
   TargetOverride,
+  type CreateLabelBody,
   type CreatePostBody,
   type ListPostsQuery,
   type NetworkId,
   type Post,
   type PostDetails,
+  type PostLabel,
   type PostTarget,
   type TargetInput,
+  type UpdateLabelBody,
   type UpdatePostBody,
   type ValidatePostBody,
   type ValidatePostResponse,
@@ -422,6 +425,7 @@ export function createPostService(deps: PostServiceDeps) {
     body: Body<typeof CreatePostBody>,
   ) {
     await checkReferences(member.workspaceId, body, body.targets);
+    await checkLabels(member.workspaceId, body.labelIds);
     const id = newId();
     await db.client.$transaction(async (tx) => {
       await tx.post.create({
@@ -434,6 +438,7 @@ export function createPostService(deps: PostServiceDeps) {
           mediaIds: body.mediaIds,
           link: body.link ?? null,
           firstComment: body.firstComment ?? null,
+          labelIds: body.labelIds,
         },
       });
       await tx.postTarget.createMany({
@@ -462,8 +467,13 @@ export function createPostService(deps: PostServiceDeps) {
   ) {
     const post = await findPost(member.workspaceId, postId);
     assertCanEdit(caller, member, post);
+    // Labels organise the posts list, so they stay editable after publishing; content doesn't.
+    const labelsOnly = Object.keys(body).every((k) => k === 'labelIds');
     // Checked early for a quick answer; checked again under the lock below.
-    if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) throw notEditable();
+    if (!labelsOnly && post.targets.some((t) => LOCKED_TARGET.includes(t.status))) {
+      throw notEditable();
+    }
+    if (body.labelIds) await checkLabels(member.workspaceId, body.labelIds);
     const targets = body.targets;
     await checkReferences(
       member.workspaceId,
@@ -473,7 +483,7 @@ export function createPostService(deps: PostServiceDeps) {
     );
 
     await db.client.$transaction(async (tx) => {
-      await lockUnpublished(tx, member.workspaceId, post.id, notEditable);
+      if (!labelsOnly) await lockUnpublished(tx, member.workspaceId, post.id, notEditable);
       await tx.post.update({
         where: { id: post.id, workspaceId: member.workspaceId },
         data: {
@@ -481,6 +491,7 @@ export function createPostService(deps: PostServiceDeps) {
           ...(body.mediaIds !== undefined ? { mediaIds: body.mediaIds } : {}),
           ...(body.link !== undefined ? { link: body.link } : {}),
           ...(body.firstComment !== undefined ? { firstComment: body.firstComment } : {}),
+          ...(body.labelIds !== undefined ? { labelIds: body.labelIds } : {}),
         },
       });
       if (!targets) return;
@@ -557,6 +568,7 @@ export function createPostService(deps: PostServiceDeps) {
       mediaIds: post.mediaIds.filter((id) => live.has(id)),
       link: post.link,
       firstComment: post.firstComment,
+      labelIds: post.labelIds,
       targets: targets.map((t) => ({
         ...t,
         override: t.override?.mediaIds
@@ -808,7 +820,129 @@ export function createPostService(deps: PostServiceDeps) {
     return toPost(await findPost(member.workspaceId, post.id));
   }
 
+  // ---------------------------------------------------------------- labels (P1-B11)
+
+  async function checkLabels(workspaceId: string, labelIds: string[]) {
+    if (labelIds.length === 0) return;
+    const found = await scoped(workspaceId).postLabel.findMany({
+      where: { id: { in: labelIds } },
+      select: { id: true },
+    });
+    const missing = labelIds.filter((id) => !found.some((l) => l.id === id));
+    if (missing.length > 0) {
+      throw new AppError(404, 'LABEL_NOT_FOUND', 'Label not found', { labelIds: missing });
+    }
+  }
+
+  async function findLabel(workspaceId: string, labelId: string) {
+    const label = await scoped(workspaceId).postLabel.findUnique({ where: { id: labelId } });
+    if (!label) throw notFound('LABEL_NOT_FOUND', 'Label not found');
+    return label;
+  }
+
+  /** Names are unique in a workspace, whatever their case ("Launch" and "launch" clash). */
+  async function assertNameFree(workspaceId: string, name: string, except?: string) {
+    const clash = await scoped(workspaceId).postLabel.findFirst({
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+        ...(except ? { id: { not: except } } : {}),
+      },
+    });
+    if (clash) throw conflict('LABEL_EXISTS', `There is already a label called "${clash.name}"`);
+  }
+
+  async function postCounts(workspaceId: string): Promise<Map<string, number>> {
+    const rows = await db.client.$queryRaw<{ id: string; count: bigint }[]>`
+      SELECT label AS id, count(*) AS count
+      FROM "Post", unnest("labelIds") AS label
+      WHERE "workspaceId" = ${workspaceId}::uuid
+      GROUP BY label`;
+    return new Map(rows.map((r) => [r.id, Number(r.count)]));
+  }
+
+  const toLabel = (
+    l: { id: string; name: string; color: PostLabel['color']; createdAt: Date },
+    counts: Map<string, number>,
+  ): PostLabel => ({
+    id: l.id,
+    name: l.name,
+    color: l.color,
+    postCount: counts.get(l.id) ?? 0,
+    createdAt: l.createdAt.toISOString(),
+  });
+
+  async function listLabels(member: MemberContext) {
+    const labels = await scoped(member.workspaceId).postLabel.findMany({
+      orderBy: [{ name: 'asc' }, { id: 'asc' }],
+    });
+    const counts = await postCounts(member.workspaceId);
+    return labels.map((l) => toLabel(l, counts));
+  }
+
+  async function createLabel(
+    caller: AuthContext,
+    member: MemberContext,
+    body: Body<typeof CreateLabelBody>,
+  ) {
+    await assertNameFree(member.workspaceId, body.name);
+    const label = await scoped(member.workspaceId).postLabel.create({
+      data: { id: newId(), workspaceId: member.workspaceId, name: body.name, color: body.color },
+    });
+    await events.emit('label.created', {
+      workspaceId: member.workspaceId,
+      labelId: label.id,
+      userId: caller.user.id,
+      name: label.name,
+    });
+    return toLabel(label, new Map());
+  }
+
+  async function updateLabel(
+    caller: AuthContext,
+    member: MemberContext,
+    labelId: string,
+    body: Body<typeof UpdateLabelBody>,
+  ) {
+    const label = await findLabel(member.workspaceId, labelId);
+    if (body.name !== undefined) await assertNameFree(member.workspaceId, body.name, label.id);
+    const updated = await scoped(member.workspaceId).postLabel.update({
+      where: { id: label.id },
+      data: {
+        ...(body.name !== undefined ? { name: body.name } : {}),
+        ...(body.color !== undefined ? { color: body.color } : {}),
+      },
+    });
+    await events.emit('label.updated', {
+      workspaceId: member.workspaceId,
+      labelId: label.id,
+      userId: caller.user.id,
+      fields: Object.keys(body),
+    });
+    return toLabel(updated, await postCounts(member.workspaceId));
+  }
+
+  /** Deletes a label and takes it off every post that carried it, in one transaction. */
+  async function deleteLabel(caller: AuthContext, member: MemberContext, labelId: string) {
+    const label = await findLabel(member.workspaceId, labelId);
+    await db.client.$transaction(async (tx) => {
+      await tx.$executeRaw`
+        UPDATE "Post" SET "labelIds" = array_remove("labelIds", ${label.id}::uuid)
+        WHERE "workspaceId" = ${member.workspaceId}::uuid AND ${label.id}::uuid = ANY("labelIds")`;
+      await tx.postLabel.delete({ where: { id: label.id, workspaceId: member.workspaceId } });
+    });
+    await events.emit('label.deleted', {
+      workspaceId: member.workspaceId,
+      labelId: label.id,
+      userId: caller.user.id,
+      name: label.name,
+    });
+  }
+
   return {
+    listLabels,
+    createLabel,
+    updateLabel,
+    deleteLabel,
     publishNow,
     retryTarget,
     validate,

@@ -151,6 +151,7 @@ model Workspace {
   posts             Post[]
   postTargets       PostTarget[]
   publishAttempts   PublishAttempt[]
+  postLabels        PostLabel[]
 }
 
 model Member {
@@ -482,6 +483,7 @@ model Post {
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([workspaceId, status])
   @@index([mediaIds], type: Gin)
+  @@index([labelIds], type: Gin)
 }
 
 model PostTarget {
@@ -513,6 +515,33 @@ model PostTarget {
   @@unique([postId, socialAccountId])
   @@index([socialAccountId, status])
   @@index([status, scheduledAt])
+}
+
+enum LabelColor {
+  gray
+  red
+  orange
+  amber
+  green
+  teal
+  blue
+  indigo
+  violet
+  pink
+}
+
+/// The workspace's post labels (P1-B11). Posts keep label ids in Post.labelIds (no foreign key);
+/// deleting a label removes its id from those posts in the same transaction.
+model PostLabel {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  workspaceId String     @db.Uuid
+  name        String
+  color       LabelColor
+  createdAt   DateTime   @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, name])
 }
 
 /// Every try at publishing a target, shown as its history.

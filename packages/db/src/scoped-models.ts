@@ -19,4 +19,5 @@ export const WORKSPACE_SCOPED_MODELS: readonly string[] = [
   'Post',
   'PostTarget',
   'PublishAttempt',
+  'PostLabel',
 ];
