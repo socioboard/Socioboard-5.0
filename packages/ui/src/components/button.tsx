@@ -9,21 +9,22 @@ export const buttonVariants = cva(
   [
     'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-semibold select-none',
     'transition-[background-color,box-shadow,filter,color] duration-150',
-    'disabled:pointer-events-none disabled:opacity-50 aria-busy:cursor-progress',
+    // Disabled: dimmed, the not-allowed cursor, and no hover change (so it doesn't look clickable).
+    'disabled:cursor-not-allowed disabled:opacity-50 aria-busy:cursor-progress',
     '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   ],
   {
     variants: {
       variant: {
         /** The one main action on a screen: lit brand orange. */
-        primary: 'accent-lit hover:brightness-105 active:brightness-95',
+        primary: 'accent-lit not-disabled:hover:brightness-105 not-disabled:active:brightness-95',
         /** Everything else: frosted chip. */
-        secondary: 'glass-chip text-ink hover:bg-glass-solid',
+        secondary: 'glass-chip text-ink not-disabled:hover:bg-glass-solid',
         /** Low emphasis, in toolbars and lists. */
-        ghost: 'text-ink-2 hover:bg-chip hover:text-ink',
+        ghost: 'text-ink-2 not-disabled:hover:bg-chip not-disabled:hover:text-ink',
         /** Deletes or removes something; pair with a confirmation. */
         danger:
-          'bg-danger-solid text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.25)] hover:brightness-110',
+          'bg-danger-solid text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.25)] not-disabled:hover:brightness-110',
       },
       size: {
         sm: 'h-8 rounded-lg px-3 text-[13px]',

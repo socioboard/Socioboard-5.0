@@ -79,6 +79,7 @@ Phase 0 components are built with the task that first uses them: Button through 
 
 ## Rules
 - Components are accessible by default (keyboard, focus, ARIA, labels) and tested with Testing Library.
+- **Cursors:** everything clickable shows the hand; anything disabled shows "not allowed". A base-layer rule in `styles.css` covers buttons, links, tabs, menu items, options, radios, checkboxes, switches, `label[for]` and file inputs (Tailwind v4 leaves buttons on the arrow); a clickable element outside that list (a clickable row or `div`) sets `cursor-pointer` itself. Disabled controls never use `pointer-events-none`, which would hide the not-allowed cursor; hover styles use `not-disabled:hover:`. The end-to-end tests check the cursor of every control on each screen they visit (`e2e/support/cursors.ts`).
 - A live component catalog (Ladle or Storybook) runs in dev so screens can be built from it.
 - Feature code never styles raw HTML for something the design system provides.
 
