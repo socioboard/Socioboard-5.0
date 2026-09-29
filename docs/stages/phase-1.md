@@ -30,7 +30,7 @@
 - [ ] P1-F6 Posts list + post detail with targets and publishing history; retry failed target
 - [ ] P1-F7 Onboarding steps 2 (connect account) and 3 (first post)
 - [ ] P1-F8 Labels: picker in composer, filter + label management in posts list
-- [ ] P1-F9 Design system additions: AccountPicker, NetworkIcon, StatusChip, MediaThumb, CharacterCounter, IssueList, PreviewFrame
+- [x] P1-F9 Design system additions: AccountPicker, NetworkIcon, StatusChip, MediaThumb, CharacterCounter, IssueList, PreviewFrame
 
 ## Reviews
 - [ ] P1-R1 Record Meta screencasts on staging for each requested permission; submit App Review

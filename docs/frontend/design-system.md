@@ -44,6 +44,13 @@
 | `Card`, `Popover` (P0-F7) | Card: a light surface for tiles, with the selection ring when `selected`. Popover: a small glass panel for quick forms (New folder) |
 | `PageHeader`, `Kbd` (P0-F5) | The 56 px bar at the top of a content pane holding the page's h1 and actions; a keyboard key chip |
 | `EmptyState`, `Skeleton`, `Spinner`, `Avatar`, `Badge` | Avatar shows the photo or initials on a tint picked from the name (`decorative` when the name is already shown beside it, so screen readers don't read it twice); Badge tones `neutral`, `success`, `warning`, `danger`, `accent`, `outline` with an optional dot |
+| `NetworkIcon` (P1-F9) | A network's mark from Simple Icons (CC0; LinkedIn, missing there, gets an "in" mark until its brand kit in phase 3): `tile` (glyph on the brand colour, Instagram's gradient) for pickers and avatars, `glyph` for text lines. Brand colours only where they read in both themes; black brands (X, TikTok) follow the ink. `networkName()` gives the name people know |
+| `StatusChip` (P1-F9) | The one status mapping: draft dashed, in review amber, approved and scheduled neutral, publishing violet with a quiet pulse (off under reduced motion), published green, partly published amber, failed red; `pending` and `cancelled` for deliveries |
+| `AccountPicker` (P1-F9) | Avatars grouped by network, each with its network tile; toggle buttons (`aria-pressed`) named "Account, Network". Accounts that can't post (reconnect, paused) show greyed with the reason and can't be picked, though one already chosen can still be removed |
+| `CharacterCounter` (P1-F9) | Count against one network's limit: quiet, amber from 90 %, red "−N" past it; screen readers hear the full sentence |
+| `IssueList` (P1-F9) | Validation issues, errors before warnings, each with its network; an issue with `onSelect` is a button that jumps to the fix. Optional "ready" line when empty |
+| `MediaThumb` (P1-F9) | A file as a square: picture, video length or GIF tag, uploading/processing spinner, failed state, optional remove button (shown on hover, focus and touch) |
+| `PreviewFrame` (P1-F9) | The card network previews are drawn in (P1-F3): account header with the network's mark, text and media in the network's order (`mediaFirst` for Instagram), on `--sb-preview-*` paper that follows the network's own light/dark look rather than the app's glass |
 
 Using them in screens:
 - The few words components carry (Close, Load more, Try again, Loading) default to English; screens pass translated ones (`closeLabel`, `labels`) so they follow the app's language.
