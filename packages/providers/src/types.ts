@@ -97,9 +97,16 @@ export interface ContentInput {
   options: TargetOptions;
 }
 
-/** A file ready to publish: the network fetches it from `url` (`media.<domain>`, P1-B8). */
+/**
+ * A file ready to publish. Adapters upload its bytes (read from `readUrl`) where the network
+ * allows it, else give the network `publicUrl` to fetch (docs/backend/modules/media.md,
+ * "Delivering media to networks").
+ */
 export interface PublishMedia extends ContentMedia {
-  url: string;
+  /** Where we read the file: a signed storage URL, reachable by the worker, maybe not beyond. */
+  readUrl: string;
+  /** A signed address on `media.<domain>` the network can fetch; null when not configured. */
+  publicUrl: string | null;
 }
 
 export interface PublishInput extends ContentInput {

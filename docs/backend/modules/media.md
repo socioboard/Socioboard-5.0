@@ -46,3 +46,16 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 - Allowed: JPEG, PNG, WebP, GIF, MP4, MOV. Max 20 MB per image, 1 GB per video (configurable).
 - Objects are private; the browser views them through signed URLs.
 - Storage used counts against `checkLimit('storage')` when billing is on.
+
+## Delivering media to networks (P1-B8)
+Networks get a post's files in one of two ways, chosen per network by the adapter:
+
+| Way | Used for | Needs |
+| --- | --- | --- |
+| **Upload**: the worker reads the file from storage (a signed storage URL) and sends the bytes | Facebook photos (`source`), Facebook videos (chunked upload, each chunk a byte range), Instagram videos of accounts reached through a Page (`rupload.facebook.com`) | Nothing public: works with local MinIO |
+| **Fetch**: the network downloads it from a signed public address | Instagram images (Meta offers no upload for them), Instagram videos of Instagram Login accounts; TikTok (phase 3, domain-verified prefix) | `MEDIA_PUBLIC_URL` |
+
+- Each prepared file carries `readUrl` (signed storage URL, 2 hours, for the worker) and `publicUrl` (null when `MEDIA_PUBLIC_URL` is unset). Uploading is preferred wherever the network allows it: nothing has to be reachable from the internet and no fetched link can expire.
+- Public addresses: `<MEDIA_PUBLIC_URL>/<payload>.<signature>.<ext>`. The payload names the stored file and an expiry (24 hours); the signature is an HMAC with `AUTH_SECRET` under its own label, so addresses can't be guessed or altered. The API serves them at `GET /public-media/:file`, streaming from storage with `Range` support (206) and `HEAD`, rate-limited per IP; anything forged, expired or missing is a bare 404.
+- Production points `media.<domain>` at the API's `/public-media` ([infra](../../infra.md)); a developer sets `MEDIA_PUBLIC_URL` to their tunnel, e.g. `https://dev1.dev.socioboard.com/public-media`.
+- Without `MEDIA_PUBLIC_URL`, posts that need it fail with `media_public_url_missing` and a plain message instead of a network error.

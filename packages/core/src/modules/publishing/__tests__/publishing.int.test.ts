@@ -24,6 +24,7 @@ const services = createPublishingServices(t.platform, { registry: played.registr
 const deps: PublishDeps = {
   ...t.platform,
   registry: played.registry,
+  mediaUrls: services.mediaUrls,
   getCredentials: services.socialAccounts.getCredentials,
   markReauthRequired: services.socialAccounts.markReauthRequired,
   recomputeStatus: services.posts.recomputeStatus,
@@ -332,13 +333,13 @@ describe('the publish job', () => {
       await settled(post.id);
       const media = played.published[0]?.input.media[0];
       expect(media).toMatchObject({ mime: 'image/jpeg' });
-      const bytes = Buffer.from(await (await fetch(media?.url ?? '')).arrayBuffer());
+      const bytes = Buffer.from(await (await fetch(media?.readUrl ?? '')).arrayBuffer());
       expect((await sharp(bytes).metadata()).format).toBe('jpeg');
       // Made once: preparing again reuses the stored copy instead of converting again.
-      const variantKey = new URL(media?.url ?? '').pathname;
+      const variantKey = new URL(media?.readUrl ?? '').pathname;
       const before = await storage.head(key.replace(/[^/]+$/, 'variants/jpeg.jpg'));
-      const [again] = await prepareMedia(t.platform, ws, 'instagram', [id]);
-      expect(new URL(again?.url ?? '').pathname).toBe(variantKey);
+      const [again] = await prepareMedia(deps, ws, 'instagram', [id]);
+      expect(new URL(again?.readUrl ?? '').pathname).toBe(variantKey);
       expect(await storage.head(key.replace(/[^/]+$/, 'variants/jpeg.jpg'))).toEqual(before);
     },
   );

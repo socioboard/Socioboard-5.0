@@ -14,6 +14,10 @@ export interface HttpRequest {
   json?: unknown;
   /** Sent as application/x-www-form-urlencoded. */
   form?: Record<string, string>;
+  /** Sent as multipart/form-data (file uploads); fetch sets the boundary. */
+  multipart?: FormData;
+  /** Sent as is (a binary upload); set its content-type in `headers`. */
+  bytes?: Uint8Array;
   headers?: Record<string, string>;
   /** Overrides the client's timeout (video uploads take longer). */
   timeoutMs?: number;
@@ -34,6 +38,14 @@ export interface HttpClient {
    * DNS, connection reset).
    */
   request<T = unknown>(req: HttpRequest): Promise<HttpResponse<T>>;
+  /**
+   * Reads a file (or the byte range [start, end)) from a URL, e.g. our own storage, for uploading
+   * it to a network. Anything but a 2xx answer, or more than `maxBytes`, is a `retryable` error.
+   */
+  download(
+    url: string,
+    opts?: { range?: { start: number; end: number }; maxBytes?: number; timeoutMs?: number },
+  ): Promise<Uint8Array>;
 }
 
 export interface HttpClientOptions {
@@ -76,13 +88,17 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
         if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
       }
       const headers: Record<string, string> = { accept: 'application/json', ...req.headers };
-      let body: string | undefined;
+      let body: string | FormData | Uint8Array | undefined;
       if (req.json !== undefined) {
         headers['content-type'] = 'application/json';
         body = JSON.stringify(req.json);
       } else if (req.form) {
         headers['content-type'] = 'application/x-www-form-urlencoded';
         body = new URLSearchParams(req.form).toString();
+      } else if (req.multipart) {
+        body = req.multipart;
+      } else if (req.bytes) {
+        body = req.bytes;
       }
 
       const started = Date.now();
@@ -124,6 +140,38 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
         'network call',
       );
       return { status: res.status, ok: res.ok, headers: res.headers, body: parsed as T };
+    },
+
+    async download(raw, opts = {}) {
+      const url = redactUrl(raw);
+      const headers: Record<string, string> = opts.range
+        ? { range: `bytes=${String(opts.range.start)}-${String(opts.range.end - 1)}` }
+        : {};
+      let res: Response;
+      try {
+        res = await doFetch(raw, {
+          headers,
+          signal: AbortSignal.timeout(opts.timeoutMs ?? defaultTimeout),
+        });
+      } catch (err) {
+        options.logger?.warn({ network: options.name, url }, 'reading a file failed');
+        throw new ProviderError({
+          kind: 'retryable',
+          message: 'Could not read the file to upload',
+          cause: err,
+        });
+      }
+      const size = Number(res.headers.get('content-length') ?? '0');
+      if (!res.ok || (opts.maxBytes !== undefined && size > opts.maxBytes)) {
+        throw new ProviderError({
+          kind: 'retryable',
+          message: res.ok
+            ? 'The file is larger than this upload allows'
+            : `Reading the file answered HTTP ${String(res.status)}`,
+          status: res.status,
+        });
+      }
+      return new Uint8Array(await res.arrayBuffer());
     },
   };
 }

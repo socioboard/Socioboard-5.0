@@ -36,7 +36,7 @@ None directly (triggered via posts and scheduling). Read access to attempts is t
 
 **Publish now** (`POST /posts/:pid/publish-now`, in posts): refuses when the workspace reviews everything (`REVIEW_REQUIRED` until approvals, phase 4), when a target isn't waiting (`POST_ALREADY_SENT`, 409), or when validation finds errors (`POST_HAS_ERRORS`, 422, with the full validation report in `details`). Under the post lock it moves the waiting targets to `publishing`, then queues them; if queuing fails they go back to `pending`. An `Idempotency-Key` is remembered for 24 hours and a repeat answers with the post without queuing again. **Retry** (`…/targets/:tid/retry`) does the same for one `failed` target (`TARGET_NOT_FAILED`, 409, otherwise).
 
-**Media URLs:** networks fetch files from signed storage URLs valid for an hour until P1-B8 gives them a stable public address (`media.<domain>`). A storage the internet can't reach (local MinIO) can't serve Meta; use S3 or the dev tunnel to publish media from a laptop.
+**Media:** files are uploaded to the network where it allows (Facebook photos and videos, Instagram videos via a Page) and fetched from a signed public address (`MEDIA_PUBLIC_URL`, `media.<domain>`) where it doesn't (Instagram images). See [media](media.md#delivering-media-to-networks-p1-b8).
 
 ## Rules
 - **Rate limits:** BullMQ group limiter keyed by `network:account` and `network:app`, tuned per network.

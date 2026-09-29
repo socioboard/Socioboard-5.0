@@ -3,9 +3,10 @@ import type { NetworkId } from '@socioboard/contracts';
 import sharp from 'sharp';
 
 import type { Db, Storage } from '../../platform';
+import type { MediaUrlSigner } from '../media';
 
-/** How long a network has to fetch a file from its signed URL. */
-const URL_TTL_SEC = 60 * 60;
+/** How long the worker has to read a file from its signed storage URL (big videos included). */
+const READ_TTL_SEC = 2 * 60 * 60;
 const IMAGE_MAX_BYTES = 25 * 1024 * 1024;
 
 /** Networks that take only JPEG images (Instagram); other image types are converted for them. */
@@ -13,11 +14,11 @@ const JPEG_ONLY: ReadonlySet<NetworkId> = new Set(['instagram']);
 
 /**
  * media-prepare, inline in the publish job: the post's files as the network needs them, each
- * with a URL the network fetches it from. Converted copies are stored once per file and reused.
- * The URLs are signed storage URLs for now; P1-B8 gives them a stable public address.
+ * with a URL the worker reads it from (to upload it) and, when configured, a signed public
+ * address the network can fetch it from. Converted copies are stored once per file and reused.
  */
 export async function prepareMedia(
-  deps: { db: Db; storage: Storage | undefined },
+  deps: { db: Db; storage: Storage | undefined; mediaUrls: MediaUrlSigner },
   workspaceId: string,
   network: NetworkId,
   mediaIds: string[],
@@ -70,7 +71,8 @@ export async function prepareMedia(
       height: m.height,
       durationSec: m.durationSec,
       altText: m.altText,
-      url: await storage.presignGet(key, URL_TTL_SEC),
+      readUrl: await storage.presignGet(key, READ_TTL_SEC),
+      publicUrl: deps.mediaUrls.sign(key),
     });
   }
   return prepared;

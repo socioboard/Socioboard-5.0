@@ -30,3 +30,6 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | Local | `localhost` / `devN.dev.socioboard.com` | manual | seed data |
 | Staging | `app.staging.socioboard.com` | every merge to `main` | test accounts only |
 | Production | `app.socioboard.com` | tagged releases | customers |
+
+## Public media address
+`media.<domain>` (and the dev tunnels) must proxy to the API's `/public-media` path, e.g. Caddy `media.socioboard.com { rewrite * /public-media{uri}; reverse_proxy api:3000 }`, with `MEDIA_PUBLIC_URL=https://media.socioboard.com`. Networks that fetch media themselves (Instagram images, TikTok) read files there; addresses are signed and expire (see [media](backend/modules/media.md#delivering-media-to-networks-p1-b8)). TikTok's URL-prefix verification covers `https://media.socioboard.com/`.

@@ -19,6 +19,7 @@ import {
   type Storage,
 } from '../../platform';
 import { resolveContent } from '../posts';
+import type { MediaUrlSigner } from '../media';
 import type { PublishingEvents } from './events';
 import { prepareMedia } from './media';
 
@@ -29,6 +30,8 @@ export interface PublishDeps {
   logger: Logger;
   events: EventBus<Record<string, unknown>>;
   registry: Registry;
+  /** media: signed public addresses for networks that fetch files themselves. */
+  mediaUrls: MediaUrlSigner;
   /** social-accounts: the token to publish with. */
   getCredentials(
     workspaceId: string,

@@ -29,7 +29,8 @@ const image = (id: string, extra: Partial<PublishMedia> = {}): PublishMedia => (
   id,
   kind: 'image',
   mime: 'image/jpeg',
-  url: `https://media.test/${id}.jpg`,
+  readUrl: `https://storage.test/${id}.jpg`,
+  publicUrl: null,
   sizeBytes: 200_000,
   width: 1080,
   height: 1080,
@@ -41,7 +42,7 @@ const video = (id: string, extra: Partial<ContentMedia> = {}): PublishMedia => (
   ...image(id),
   kind: 'video',
   mime: 'video/mp4',
-  url: `https://media.test/${id}.mp4`,
+  readUrl: `https://storage.test/${id}.mp4`,
   durationSec: 30,
   ...extra,
 });
@@ -275,13 +276,23 @@ describe('Facebook Page publishing', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
-  it('posts one photo with its caption and alt text, adding the link to the caption', async () => {
+  /** Reading a file from our storage before uploading it. */
+  const read = (file: string, bytes: number, range?: string): RecordedCall => ({
+    method: 'GET',
+    url: `https://storage.test/${file}`,
+    ...(range ? { requestHeaders: { range } } : {}),
+    status: range ? 206 : 200,
+    responseBytes: bytes,
+  });
+
+  it('uploads one photo as bytes with its caption and alt text, adding the link', async () => {
     const { replay, page } = setup([
+      read('a.jpg', 200_000),
       {
         method: 'POST',
         url: `${G}/101/photos`,
         body: {
-          url: 'https://media.test/a.jpg',
+          source: 'file:photo.jpg:200000',
           caption: 'Fresh roast today\n\nhttps://halden.test',
           alt_text_custom: 'A cup of coffee',
         },
@@ -295,22 +306,27 @@ describe('Facebook Page publishing', () => {
       PAGE,
     );
     expect(result.externalId).toBe('101_777');
+    // The token went in the form, never in the storage request.
+    expect(replay.seen[0]?.url.search).toBe('');
+    expect(replay.mismatches).toEqual([]);
     expect(replay.remaining()).toEqual([]);
   });
 
-  it('posts several photos as one post, in order', async () => {
+  it('uploads several photos unpublished, then posts them as one, in order', async () => {
     const { replay, page } = setup([
+      read('a.jpg', 1000),
       {
         method: 'POST',
         url: `${G}/101/photos`,
-        body: { url: 'https://media.test/a.jpg', published: 'false' },
+        body: { source: 'file:photo.jpg:1000', published: 'false' },
         status: 200,
         response: { id: 'p1' },
       },
+      read('b.jpg', 2000),
       {
         method: 'POST',
         url: `${G}/101/photos`,
-        body: { url: 'https://media.test/b.jpg', published: 'false' },
+        body: { source: 'file:photo.jpg:2000', published: 'false' },
         status: 200,
         response: { id: 'p2' },
       },
@@ -332,23 +348,67 @@ describe('Facebook Page publishing', () => {
     expect(replay.mismatches).toEqual([]);
   });
 
-  it('posts a video through graph-video from its public URL', async () => {
+  it('uploads a video in the chunks Meta asks for, each read as a byte range', async () => {
+    const V = 'https://graph-video.facebook.com/v25.0/101/videos';
     const { replay, page } = setup([
       {
         method: 'POST',
-        url: 'https://graph-video.facebook.com/v25.0/101/videos',
-        body: { file_url: 'https://media.test/v.mp4', description: 'Fresh roast today' },
+        url: V,
+        body: { upload_phase: 'start', file_size: '300' },
         status: 200,
-        response: { id: 'vid9' },
+        response: {
+          video_id: 'vid9',
+          upload_session_id: 's1',
+          start_offset: '0',
+          end_offset: '200',
+        },
+      },
+      read('v.mp4', 200, 'bytes=0-199'),
+      {
+        method: 'POST',
+        url: V,
+        body: {
+          upload_phase: 'transfer',
+          upload_session_id: 's1',
+          start_offset: '0',
+          video_file_chunk: 'file:chunk:200',
+        },
+        status: 200,
+        response: { start_offset: '200', end_offset: '300' },
+      },
+      read('v.mp4', 100, 'bytes=200-299'),
+      {
+        method: 'POST',
+        url: V,
+        body: { upload_phase: 'transfer', start_offset: '200', video_file_chunk: 'file:chunk:100' },
+        status: 200,
+        response: { start_offset: '300', end_offset: '300' },
+      },
+      {
+        method: 'POST',
+        url: V,
+        body: { upload_phase: 'finish', upload_session_id: 's1', description: 'Fresh roast today' },
+        status: 200,
+        response: { success: true },
       },
       permalink('vid9', '/haldencoffee/videos/vid9/'),
     ]);
-    const result = await page.publish(post({ media: [video('v')] }), PAGE);
+    const result = await page.publish(post({ media: [video('v', { sizeBytes: 300 })] }), PAGE);
     expect(result).toMatchObject({
       externalId: 'vid9',
       permalink: 'https://www.facebook.com/haldencoffee/videos/vid9/',
     });
     expect(replay.mismatches).toEqual([]);
+    expect(replay.remaining()).toEqual([]);
+  });
+
+  it('a file our storage can’t serve is retried, not blamed on the post', async () => {
+    const { page } = setup([
+      { method: 'GET', url: 'https://storage.test/a.jpg', status: 503, response: 'down' },
+    ]);
+    await expect(page.publish(post({ media: [image('a')] }), PAGE)).rejects.toMatchObject({
+      kind: 'retryable',
+    });
   });
 
   it('adds the first comment, and a refused comment is a warning, not a failure', async () => {

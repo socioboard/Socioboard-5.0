@@ -39,7 +39,8 @@ const image = (id: string, extra: Partial<PublishMedia> = {}): PublishMedia => (
   id,
   kind: 'image',
   mime: 'image/jpeg',
-  url: `https://media.test/${id}.jpg`,
+  readUrl: `https://storage.test/${id}.jpg`,
+  publicUrl: `https://media.test/${id}.jpg`,
   sizeBytes: 300_000,
   width: 1080,
   height: 1350,
@@ -51,7 +52,8 @@ const video = (id: string, extra: Partial<PublishMedia> = {}): PublishMedia => (
   ...image(id),
   kind: 'video',
   mime: 'video/mp4',
-  url: `https://media.test/${id}.mp4`,
+  readUrl: `https://storage.test/${id}.mp4`,
+  publicUrl: `https://media.test/${id}.mp4`,
   width: 1080,
   height: 1920,
   durationSec: 20,
@@ -286,19 +288,65 @@ describe('Instagram publishing', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
-  it('waits while Instagram processes a video, then publishes it as a reel', async () => {
+  /** Instagram's resumable upload of a video's bytes (accounts reached through a Page). */
+  const uploaded = (id: string, file: string, bytes: number): RecordedCall[] => [
+    { method: 'GET', url: `https://storage.test/${file}`, status: 200, responseBytes: bytes },
+    {
+      method: 'POST',
+      url: `https://rupload.facebook.com/ig-api-upload/v25.0/${id}`,
+      requestHeaders: {
+        authorization: 'OAuth EAA-page-101',
+        offset: '0',
+        file_size: String(bytes),
+      },
+      body: { bytes: String(bytes) },
+      status: 200,
+      response: { success: true, message: 'Upload successful.' },
+    },
+  ];
+
+  it('uploads a Page-linked account’s video as bytes, waits, then publishes it as a reel', async () => {
     const { replay, instagram } = setup([
-      ...created(
-        FB,
-        'c2',
-        { media_type: 'REELS', video_url: 'https://media.test/v.mp4', share_to_feed: 'true' },
-        ['IN_PROGRESS', 'IN_PROGRESS', 'FINISHED'],
-      ),
+      {
+        method: 'POST',
+        url: `${FB}/${IG_ID}/media`,
+        body: { media_type: 'REELS', share_to_feed: 'true', upload_type: 'resumable' },
+        status: 200,
+        response: { id: 'c2' },
+      },
+      ...uploaded('c2', 'v.mp4', 5000),
+      ...created(FB, 'c2', {}, ['IN_PROGRESS', 'IN_PROGRESS', 'FINISHED']).slice(1),
       ...published(FB, 'c2', 'm2'),
     ]);
     await instagram.publish(post({ media: [video('v')] }), VIA_PAGE);
+    // No public address involved: Instagram never fetched our URL.
+    expect(replay.seen.some((r) => r.body.video_url)).toBe(false);
     expect(replay.mismatches).toEqual([]);
     expect(replay.remaining()).toEqual([]);
+  });
+
+  it('Instagram Login accounts’ videos are fetched from the public address', async () => {
+    const { replay, instagram } = setup([
+      {
+        method: 'POST',
+        url: `${IG}/${VIA_IG.externalId}/media`,
+        body: { media_type: 'REELS', video_url: 'https://media.test/v.mp4' },
+        status: 200,
+        response: { id: 'c3' },
+      },
+      { method: 'GET', url: `${IG}/c3`, status: 200, response: { status_code: 'FINISHED' } },
+      ...published(IG, 'c3', 'm3', VIA_IG.externalId),
+    ]);
+    await instagram.publish(post({ media: [video('v')] }), VIA_IG);
+    expect(replay.mismatches).toEqual([]);
+  });
+
+  it('without a public address, images fail with a clear reason before calling Instagram', async () => {
+    const { replay, instagram } = setup([]);
+    await expect(
+      instagram.publish(post({ media: [image('a', { publicUrl: null })] }), VIA_PAGE),
+    ).rejects.toMatchObject({ kind: 'content', networkCode: 'media_public_url_missing' });
+    expect(replay.seen).toHaveLength(0);
   });
 
   it('builds a carousel: creates every child first, waits for all, then the carousel', async () => {
@@ -315,8 +363,9 @@ describe('Instagram publishing', () => {
       ...child('k2', {
         is_carousel_item: 'true',
         media_type: 'VIDEO',
-        video_url: 'https://media.test/v.mp4',
+        upload_type: 'resumable',
       }),
+      ...uploaded('k2', 'v.mp4', 5000),
       status('k1'),
       status('k2', 'IN_PROGRESS'),
       status('k2'),

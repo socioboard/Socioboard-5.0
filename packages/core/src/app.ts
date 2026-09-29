@@ -12,7 +12,12 @@ import {
   registerAuthRoutes,
   type AuthModule,
 } from './modules/auth';
-import { createMediaService, mediaProcessQueue, registerMediaRoutes } from './modules/media';
+import {
+  createMediaService,
+  createPublicMediaRouter,
+  mediaProcessQueue,
+  registerMediaRoutes,
+} from './modules/media';
 import { createPublishingServices } from './domain';
 import { registerPostRoutes } from './modules/posts';
 import { createOAuthCallbackRouter, registerSocialAccountRoutes } from './modules/social-accounts';
@@ -117,7 +122,7 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
-  const { socialAccounts, posts } = createPublishingServices(platform, {
+  const { socialAccounts, posts, mediaUrls } = createPublishingServices(platform, {
     registry: options.registry,
   });
   registerSocialAccountRoutes(api, socialAccounts);
@@ -147,6 +152,13 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     session(authModule.resolveSession),
   );
   app.use(createOAuthCallbackRouter(socialAccounts));
+
+  // Media networks fetch themselves (media.<domain> points here); signed and expiring.
+  app.use(
+    '/public-media',
+    rateLimit({ kv: platform.kv, name: 'public-media', windowSec: 60, max: 1200 }),
+  );
+  app.use(createPublicMediaRouter({ signer: mediaUrls, storage: platform.storage, logger }));
 
   const health = createHealth(platform);
   app.use(health.router);
