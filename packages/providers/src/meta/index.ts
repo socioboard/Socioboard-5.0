@@ -8,9 +8,9 @@ import { createInstagramLogin } from './instagram-login';
 
 export { classifyGraphError, DEFAULT_GRAPH_VERSION } from './graph-client';
 export { FACEBOOK_SCOPES } from './facebook-login';
-export { FACEBOOK_PREVIEW, FACEBOOK_RULES } from './facebook-page';
+export { FACEBOOK_IMAGE_PREP, FACEBOOK_PREVIEW, FACEBOOK_RULES } from './facebook-page';
 export { INSTAGRAM_SCOPES } from './instagram-login';
-export { INSTAGRAM_PREVIEW, INSTAGRAM_RULES } from './instagram';
+export { INSTAGRAM_IMAGE_PREP, INSTAGRAM_PREVIEW, INSTAGRAM_RULES } from './instagram';
 
 export interface MetaConfig {
   /** META_APP_ID / META_APP_SECRET: the Facebook Login for Business app. */

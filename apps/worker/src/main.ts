@@ -5,6 +5,7 @@ import {
   createPlatform,
   createPublishingServices,
   mediaProcessQueue,
+  mediaPurgeQueue,
   onShutdown,
   registerAuditListeners,
   workspacePurgeQueue,
@@ -31,6 +32,12 @@ platform.queues.startWorker(purge);
 await platform.queues
   .get(purge)
   .upsertJobScheduler('nightly', { pattern: '0 3 * * *', tz: 'UTC' }, { name: 'purge' });
+
+const mediaPurge = mediaPurgeQueue(platform);
+platform.queues.startWorker(mediaPurge);
+await platform.queues
+  .get(mediaPurge)
+  .upsertJobScheduler('nightly', { pattern: '15 3 * * *', tz: 'UTC' }, { name: 'purge' });
 
 const auditPurge = auditPurgeQueue({ audit, retentionDays: config.audit.retentionDays, logger });
 platform.queues.startWorker(auditPurge);

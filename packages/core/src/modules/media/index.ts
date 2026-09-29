@@ -10,3 +10,11 @@ export {
   PUBLIC_MEDIA_TTL_SEC,
   type MediaUrlSigner,
 } from './public-media';
+export {
+  ABANDONED_UPLOAD_HOURS,
+  DELETED_MEDIA_RETENTION_DAYS,
+  mediaPurgeQueue,
+  purgeMedia,
+  type MediaPurgeDeps,
+} from './purge';
+export { prepareImageVariant, type ImageSpec, type StoredImage } from './variants';

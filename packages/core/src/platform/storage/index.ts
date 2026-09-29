@@ -3,9 +3,11 @@ import {
   CompleteMultipartUploadCommand,
   CreateMultipartUploadCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
+  ListObjectsV2Command,
   NotFound,
   PutObjectCommand,
   S3Client,
@@ -52,6 +54,11 @@ export interface Storage {
   presignGet(key: string, expiresInSec?: number): Promise<string>;
   head(key: string): Promise<ObjectInfo | undefined>;
   delete(key: string): Promise<void>;
+  /**
+   * Deletes every object whose key starts with `prefix` (an asset's folder: original, thumbnail,
+   * converted copies; or a whole workspace); returns how many. `prefix` must end with "/".
+   */
+  deletePrefix(prefix: string): Promise<number>;
   /** Server-side write (thumbnails and other generated files). */
   put(key: string, body: Buffer, contentType: string): Promise<void>;
   /** Server-side read into memory; refuses objects larger than `maxBytes`. */
@@ -157,6 +164,29 @@ export function createStorage(config: StorageConfig): Storage {
 
     async delete(key) {
       await client.send(new DeleteObjectCommand({ Bucket, Key: key }));
+    },
+
+    async deletePrefix(prefix) {
+      // A slip here would empty the bucket: only whole folders, never "" or a bare word.
+      if (!/^[^/]+\/.+\/$|^[^/]+\/$/.test(prefix) || prefix.length < 12) {
+        throw new Error(`Refusing to delete by prefix "${prefix}"`);
+      }
+      let deleted = 0;
+      let token: string | undefined;
+      do {
+        const page = await client.send(
+          new ListObjectsV2Command({ Bucket, Prefix: prefix, ContinuationToken: token }),
+        );
+        const keys = (page.Contents ?? []).flatMap((o) => (o.Key ? [{ Key: o.Key }] : []));
+        if (keys.length > 0) {
+          await client.send(
+            new DeleteObjectsCommand({ Bucket, Delete: { Objects: keys, Quiet: true } }),
+          );
+          deleted += keys.length;
+        }
+        token = page.IsTruncated ? page.NextContinuationToken : undefined;
+      } while (token);
+      return deleted;
     },
 
     async ping() {

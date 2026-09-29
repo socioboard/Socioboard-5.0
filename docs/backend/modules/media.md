@@ -32,11 +32,12 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 - `completeUpload(assetId)`: verifies the object exists, enqueues `media-process`.
 - `getPublicUrl(assetId, ttl)`: short-lived URL on `media.<domain>` for networks to fetch.
 - `importFromUrl(url, source)`: used by ai and discovery.
-- `prepareVariant(assetId, rules)`: resize or transcode for a network (called from publishing's `media-prepare`).
+- `prepareImageVariant(image, spec)` (P1-B10): fits an image to a network's `imagePrep` (accepted formats, max width, max bytes). The original is used when it already fits; otherwise a JPEG copy is made once, turned upright by its EXIF orientation, shrunk to the max width and re-compressed (a few qualities, then one informed shrink) until under the size limit, stored as `…/<asset>/variants/jpeg-w<width>-b<bytes>.jpg` and reused. Facebook: JPEG/PNG/GIF up to 10 MB (WebP converted); Instagram: JPEG, 1440 wide, 8 MB. Because images are fitted, validation doesn't flag an image's size for these networks. Videos pass through: no phase 1 network needs a transcode; ffmpeg transcoding joins with the networks that do (phase 3).
 
 ## Jobs
 - `media-process` (P0-B6): images and GIFs through sharp (dimensions as displayed, EXIF rotation applied; first frame of GIFs); videos through ffprobe (dimensions, duration) and ffmpeg (a frame 1 s in), both reading a signed URL so large files never load into memory. Stores a 480 px WebP thumbnail and marks the asset `ready`. 3 attempts with backoff; after the last it marks the asset `failed`. One job per asset (job id `media-<assetId>`). Without ffprobe/ffmpeg (`FFPROBE_PATH`, `FFMPEG_PATH`) videos become `ready` without duration or thumbnail and the worker logs a warning.
-- `media-purge` (nightly): delete storage objects for soft-deleted assets older than 7 days.
+- `media-purge` (nightly, 03:15 UTC, P1-B10): for assets deleted over 7 days ago and uploads left in `uploading` over a day, abort any multipart upload, delete everything under the asset's folder (original, thumbnail, converted copies; `storage.deletePrefix`, which refuses anything but a whole folder), then the row. One failure stops the run and is retried the next night.
+- `workspace-purge` removes a deleted workspace's whole folder (`workspaces/<id>/`), so converted copies and logos go with it.
 
 ## Rules
 - Files live under `workspaces/<workspaceId>/media/<assetId>/` (`original.<ext>`, `thumb.webp`), so a workspace's files share one prefix.

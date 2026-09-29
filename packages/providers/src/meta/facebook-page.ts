@@ -3,6 +3,7 @@ import type { ContentRules, PreviewSpec, ValidationIssue } from '@socioboard/con
 import { isProviderError, ProviderError } from '../errors';
 import type {
   AccountCredentials,
+  ImagePrep,
   NetworkAdapter,
   PublishInput,
   PublishMedia,
@@ -33,6 +34,16 @@ export const FACEBOOK_RULES: ContentRules = {
   links: 'card',
 };
 
+/**
+ * Facebook photos (Page Photos reference): JPEG, PNG or GIF up to 10 MB. WebP and oversized
+ * images are fitted before publishing.
+ */
+export const FACEBOOK_IMAGE_PREP: ImagePrep = {
+  mimes: ['image/jpeg', 'image/png', 'image/gif'],
+  maxWidth: null,
+  maxBytes: 10 * MB,
+};
+
 export const FACEBOOK_PREVIEW: PreviewSpec = {
   // Desktop feed cuts long text at about 480 characters with "See more".
   truncateAt: 480,
@@ -56,9 +67,12 @@ export function createFacebookPage(graph: GraphClient): NetworkAdapter {
     },
     rules: FACEBOOK_RULES,
     preview: FACEBOOK_PREVIEW,
+    imagePrep: FACEBOOK_IMAGE_PREP,
 
     validate(input) {
-      const issues: ValidationIssue[] = checkRules(FACEBOOK_RULES, input, 'Facebook');
+      const issues: ValidationIssue[] = checkRules(FACEBOOK_RULES, input, 'Facebook', {
+        imagesRefitted: true,
+      });
       if (input.text.trim() === '' && input.media.length === 0 && !input.link) {
         issues.push(
           issue('error', IssueCode.EMPTY_POST, 'Add text, a link, a photo or a video.', {
