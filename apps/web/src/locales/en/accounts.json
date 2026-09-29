@@ -46,7 +46,6 @@
   "chooser": {
     "title": "Connect an account",
     "description": "Choose where you want to post.",
-    "another": "Connect another {{network}} account",
     "noneEnabled": "No networks are set up on this server yet. Whoever runs it adds each network’s app keys first.",
     "loadError": "The list of networks didn’t load.",
     "postTypes": {

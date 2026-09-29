@@ -1,5 +1,6 @@
 import type { Network, SocialAccount, SocialConnection } from '@socioboard/contracts';
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
+import { focusManager } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -152,6 +153,22 @@ describe('accounts page', () => {
     expect(screen.queryByRole('button', { name: 'Reconnect' })).not.toBeInTheDocument();
   });
 
+  it('a login nothing was added from yet links straight to adding its accounts', async () => {
+    const fresh = {
+      ...priya,
+      id: '01a0d816-827a-74d6-a46e-409c7db30009',
+      displayName: 'New Login',
+    };
+    mockServer(asAdmin([connection(priya, [coffee, gram]), connection(fresh, [])]));
+    renderApp('/w/halden/accounts');
+    const facebook = await screen.findByRole('region', { name: 'Facebook' });
+    expect(within(facebook).getByText('Nothing added from this login yet.')).toBeInTheDocument();
+    expect(within(facebook).getByRole('link', { name: 'Add accounts' })).toHaveAttribute(
+      'href',
+      `/w/halden/accounts/connect/facebook?connection=${fresh.id}`,
+    );
+  });
+
   it('with nothing connected, invites connecting the first account', async () => {
     mockServer({ ...asAdmin(), [`GET ${BASE}/accounts`]: [200, { items: [] }] });
     renderApp('/w/halden/accounts');
@@ -220,6 +237,22 @@ describe('connecting', () => {
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith('https://facebook.test/again');
     });
+  });
+});
+
+describe('leaving for the network', () => {
+  it('only ever goes to an https sign-in page', async () => {
+    mockServer({
+      ...asAdmin(),
+      [`POST ${BASE}/accounts/connect/instagram`]: [200, { authUrl: 'javascript:alert(1)' }],
+    });
+    renderApp('/w/halden/accounts');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Connect account' }));
+    await user.click(await screen.findByRole('button', { name: /^Instagram/ }));
+    await user.click(screen.getByRole('button', { name: /Continue with Instagram/ }));
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(assign).not.toHaveBeenCalled();
   });
 });
 
@@ -351,6 +384,63 @@ describe('asset picker', () => {
     await waitFor(() => {
       expect(history.location.pathname).toBe('/w/halden/accounts');
     });
+  });
+
+  it('coming back to the tab doesn’t ask the network again', async () => {
+    const calls = mockServer({
+      ...asAdmin(),
+      [`GET ${BASE}/connections/${priya.id}/assets`]: [
+        200,
+        { connection: priya, items: [asset({ externalId: 'a', displayName: 'Halden Roastery' })] },
+      ],
+    });
+    renderApp(picker);
+    await screen.findByRole('checkbox', { name: /Halden Roastery/ });
+    act(() => {
+      focusManager.setFocused(false);
+      focusManager.setFocused(true);
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 20));
+    });
+    focusManager.setFocused(undefined);
+    expect(calls.filter((c) => c.key.endsWith('/assets'))).toHaveLength(1);
+  });
+
+  it('a failed refresh in the background keeps the list and the ticks', async () => {
+    let fail = false;
+    mockServer({
+      ...asAdmin(),
+      [`GET ${BASE}/connections/${priya.id}/assets`]: () =>
+        fail
+          ? [502, { error: { code: 'NETWORK_ERROR', message: 'x' } }]
+          : [
+              200,
+              {
+                connection: priya,
+                items: [
+                  asset({ externalId: 'a', displayName: 'Halden Roastery' }),
+                  asset({ externalId: 'b', displayName: 'Halden Bakery' }),
+                ],
+              },
+            ],
+    });
+    const { queryClient } = renderApp(picker);
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('checkbox', { name: /Halden Bakery/ }));
+    fail = true;
+    const key = ['workspaces', WID, 'accounts', 'assets', priya.id];
+    await act(async () => {
+      await queryClient.refetchQueries({ queryKey: key });
+    });
+    expect(queryClient.getQueryState(key)?.status).toBe('error');
+    // React Query tells the screen on its next tick; let it render before looking.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 20));
+    });
+    expect(screen.getByRole('checkbox', { name: /Halden Bakery/ })).not.toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /Halden Roastery/ })).toBeChecked();
+    expect(screen.getByRole('button', { name: 'Add 1 account' })).toBeInTheDocument();
   });
 
   it('a login Facebook no longer accepts offers to reconnect it', async () => {

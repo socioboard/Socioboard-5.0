@@ -8,7 +8,7 @@ import {
 } from '@socioboard/contracts';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 
-import { api, ApiError } from '../../lib/api';
+import { api, ApiError, INVALID_RESPONSE } from '../../lib/api';
 
 export const accountKeys = {
   all: (workspaceId: string) => ['workspaces', workspaceId, 'accounts'] as const,
@@ -59,9 +59,11 @@ export const connectableAssetsQuery = (workspaceId: string, connectionId: string
         params: { workspaceId, connectionId },
         signal,
       }),
-    // Asks the network each time; a retry won't fix a refused login.
+    // Asks the network each time the picker opens; a retry won't fix a refused login, and
+    // coming back to the tab mustn't call the network again (or drop the user's ticks).
     staleTime: 0,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 
 /** After any change: lists, details and logins all read the same rows. */
@@ -75,6 +77,20 @@ export const browser = {
   },
 };
 
+/** Only a network's https sign-in page, never another scheme, even if the server were tricked. */
+function leaveFor(authUrl: string) {
+  let url: URL;
+  try {
+    url = new URL(authUrl);
+  } catch {
+    throw new ApiError(0, INVALID_RESPONSE, 'The sign-in address is invalid', undefined);
+  }
+  if (url.protocol !== 'https:') {
+    throw new ApiError(0, INVALID_RESPONSE, 'The sign-in address is invalid', undefined);
+  }
+  browser.assign(url.toString());
+}
+
 /** Starts connecting through `provider` and sends the browser to its sign-in page. */
 export async function startConnect(
   workspaceId: string,
@@ -85,7 +101,7 @@ export async function startConnect(
     params: { workspaceId, provider },
     body: { forceAccountSelection },
   });
-  browser.assign(authUrl);
+  leaveFor(authUrl);
 }
 
 /** Signs in again as the same person to refresh a login. */
@@ -93,7 +109,7 @@ export async function startReconnect(workspaceId: string, connectionId: string) 
   const { authUrl } = await api(apiRoutes.socialAccounts.reconnect, {
     params: { workspaceId, connectionId },
   });
-  browser.assign(authUrl);
+  leaveFor(authUrl);
 }
 
 /** The network answered badly (502), as opposed to our server being out of reach (status 0). */
