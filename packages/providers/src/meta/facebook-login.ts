@@ -137,7 +137,8 @@ export function createFacebookLogin(config: FacebookLoginConfig): LoginAdapter {
 function pageAssets(page: PageNode, tokens: TokenSet): ProviderAsset[] {
   const has = (scope: string) => tokens.scopes.includes(scope);
   const token = page.access_token ? { accessToken: page.access_token, expiresAt: null } : null;
-  const canPost = (page.tasks ?? []).some((t) => POSTING_TASKS.has(t));
+  // No `tasks` in the answer means unknown: allow it, and let publishing report a real refusal.
+  const canPost = page.tasks === undefined || page.tasks.some((t) => POSTING_TASKS.has(t));
   const assets: ProviderAsset[] = [
     {
       network: 'facebook_page',

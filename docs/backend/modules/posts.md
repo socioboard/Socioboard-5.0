@@ -10,7 +10,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 | --- | --- | --- |
 | `Post` | id, workspaceId, authorId, status, text, mediaIds[], link?, labelIds[], firstComment?, createdAt, updatedAt | status is derived from targets (see below) |
 | `PostLabel` | id, workspaceId, name, color | Workspace label list for organizing and filtering posts |
-| `PostTarget` | id, postId, socialAccountId, override JSON (text, mediaIds, options), scheduledAt?, scheduleVersion, status, externalPostId?, permalink?, attempts, lastError JSON?, publishedAt? | One per selected account |
+| `PostTarget` | id, workspaceId, postId, socialAccountId, override JSON (text, mediaIds, options), scheduledAt?, scheduleVersion, status, externalPostId?, permalink?, attempts, lastError JSON?, publishedAt? | One per selected account |
 
 **Post status:** `draft` → `in_review` → `approved` → `scheduled` → `publishing` → `published` / `partial` / `failed`. Target status: `pending`, `scheduled`, `publishing`, `published`, `failed`, `cancelled`.
 

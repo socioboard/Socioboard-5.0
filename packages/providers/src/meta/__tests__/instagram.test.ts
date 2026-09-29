@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { fixture, replayFetch, type RecordedCall } from '../../testing/replay';
 import type { AccountCredentials, PublishInput, PublishMedia } from '../../types';
@@ -301,14 +301,25 @@ describe('Instagram publishing', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
-  it('builds a carousel from finished child containers, in order', async () => {
+  it('builds a carousel: creates every child first, waits for all, then the carousel', async () => {
+    const child = (id: string, body: Record<string, string>) => created(FB, id, body, []);
+    const status = (id: string, code = 'FINISHED'): RecordedCall => ({
+      method: 'GET',
+      url: `${FB}/${id}`,
+      query: { fields: 'status_code,status' },
+      status: 200,
+      response: { status_code: code },
+    });
     const { replay, instagram } = setup([
-      ...created(FB, 'k1', { is_carousel_item: 'true', image_url: 'https://media.test/a.jpg' }),
-      ...created(FB, 'k2', {
+      ...child('k1', { is_carousel_item: 'true', image_url: 'https://media.test/a.jpg' }),
+      ...child('k2', {
         is_carousel_item: 'true',
         media_type: 'VIDEO',
         video_url: 'https://media.test/v.mp4',
       }),
+      status('k1'),
+      status('k2', 'IN_PROGRESS'),
+      status('k2'),
       ...created(FB, 'k3', {
         media_type: 'CAROUSEL',
         children: 'k1,k2',
@@ -317,6 +328,48 @@ describe('Instagram publishing', () => {
       ...published(FB, 'k3', 'm3'),
     ]);
     await instagram.publish(post({ media: [image('a'), video('v')] }), VIA_PAGE);
+    expect(replay.mismatches).toEqual([]);
+    expect(replay.remaining()).toEqual([]);
+  });
+
+  it('one wait covers the whole publish, not each carousel item', async () => {
+    let now = 0;
+    const clock = vi.spyOn(Date, 'now').mockImplementation(() => now);
+    const poll = (id: string, code: string): RecordedCall => ({
+      method: 'GET',
+      url: `${FB}/${id}`,
+      status: 200,
+      response: { status_code: code },
+    });
+    const replay = replayFetch([
+      ...created(FB, 'k1', { image_url: 'https://media.test/a.jpg' }, []),
+      ...created(FB, 'k2', { image_url: 'https://media.test/b.jpg' }, []),
+      poll('k1', 'IN_PROGRESS'), // t=0
+      poll('k1', 'FINISHED'), // t=600
+      poll('k2', 'IN_PROGRESS'), // t=600
+      // t=1200: past the 1000 ms budget of the publish. With a wait per item, k2 would still
+      // have until 1600 and poll again (an unexpected call here).
+      poll('k2', 'IN_PROGRESS'),
+    ]);
+    const instagram = createMetaAdapters({
+      facebook: { appId: '1', appSecret: 's' },
+      fetch: replay.fetch,
+      instagramOptions: {
+        maxWaitMs: 1000,
+        pollIntervalMs: 600,
+        sleep: (ms) => {
+          now += ms;
+          return Promise.resolve();
+        },
+      },
+    }).networks.find((n) => n.id === 'instagram');
+    try {
+      await expect(
+        instagram?.publish(post({ media: [image('a'), image('b')] }), VIA_PAGE),
+      ).rejects.toMatchObject({ kind: 'retryable', networkCode: 'container_timeout' });
+    } finally {
+      clock.mockRestore();
+    }
     expect(replay.mismatches).toEqual([]);
     expect(replay.remaining()).toEqual([]);
   });

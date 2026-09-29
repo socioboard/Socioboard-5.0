@@ -82,7 +82,7 @@ export interface InstagramGraphs {
 export interface InstagramOptions {
   /** How often to ask whether Instagram has finished processing a container. */
   pollIntervalMs?: number;
-  /** Give up (and retry the whole target later) after this long; videos can take minutes. */
+  /** Longest wait for Instagram to process one publish (all its containers), then retry later. */
   maxWaitMs?: number;
   sleep?: (ms: number) => Promise<void>;
 }
@@ -109,8 +109,16 @@ export function createInstagram(
     return graph;
   }
 
-  async function waitUntilReady(graph: GraphClient, token: string, containerId: string) {
-    const deadline = Date.now() + maxWaitMs;
+  /**
+   * Polls until Instagram has processed the container. `deadline` is shared by every container
+   * of one publish, so a carousel of videos can't hold the worker longer than one wait.
+   */
+  async function waitUntilReady(
+    graph: GraphClient,
+    token: string,
+    containerId: string,
+    deadline: number,
+  ) {
     for (;;) {
       const c = await graph.get<{ status_code?: string; status?: string }>(containerId, token, {
         fields: 'status_code,status',
@@ -134,7 +142,7 @@ export function createInstagram(
     }
   }
 
-  async function container(
+  async function create(
     graph: GraphClient,
     account: AccountCredentials,
     fields: Record<string, string>,
@@ -144,7 +152,6 @@ export function createInstagram(
       account.accessToken,
       fields,
     );
-    await waitUntilReady(graph, account.accessToken, res.id);
     return res.id;
   }
 
@@ -153,10 +160,12 @@ export function createInstagram(
       ? { video_url: m.url }
       : { image_url: m.url, ...(m.altText ? { alt_text: m.altText } : {}) };
 
+  /** Creates the container to publish and waits until it (and any children) are processed. */
   async function createContainer(
     input: PublishInput,
     account: AccountCredentials,
     graph: GraphClient,
+    deadline: number,
   ) {
     const format = formatOf(input);
     const [first] = input.media;
@@ -166,37 +175,47 @@ export function createInstagram(
         message: 'Instagram posts need a photo or video.',
       });
     }
+    const ready = async (id: string) => {
+      await waitUntilReady(graph, account.accessToken, id, deadline);
+      return id;
+    };
     const caption = input.text === '' ? {} : { caption: input.text };
     if (format === 'story') {
-      return container(graph, account, { media_type: 'STORIES', ...mediaFields(first) });
+      return ready(await create(graph, account, { media_type: 'STORIES', ...mediaFields(first) }));
     }
     if (format === 'reel' || (input.media.length === 1 && first.kind === 'video')) {
       // Single feed videos are reels; share_to_feed keeps them in the profile grid too.
-      return container(graph, account, {
-        media_type: 'REELS',
-        video_url: first.url,
-        share_to_feed: 'true',
-        ...caption,
-      });
+      return ready(
+        await create(graph, account, {
+          media_type: 'REELS',
+          video_url: first.url,
+          share_to_feed: 'true',
+          ...caption,
+        }),
+      );
     }
     if (input.media.length === 1) {
-      return container(graph, account, { ...mediaFields(first), ...caption });
+      return ready(await create(graph, account, { ...mediaFields(first), ...caption }));
     }
+    // Carousel: create every child first so Instagram processes them side by side, then wait.
     const children: string[] = [];
     for (const m of input.media) {
       children.push(
-        await container(graph, account, {
+        await create(graph, account, {
           is_carousel_item: 'true',
           ...(m.kind === 'video' ? { media_type: 'VIDEO' } : {}),
           ...mediaFields(m),
         }),
       );
     }
-    return container(graph, account, {
-      media_type: 'CAROUSEL',
-      children: children.join(','),
-      ...caption,
-    });
+    for (const child of children) await ready(child);
+    return ready(
+      await create(graph, account, {
+        media_type: 'CAROUSEL',
+        children: children.join(','),
+        ...caption,
+      }),
+    );
   }
 
   return {
@@ -271,7 +290,7 @@ export function createInstagram(
     async publish(input, account) {
       const graph = graphFor(account);
       const token = account.accessToken;
-      const creationId = await createContainer(input, account, graph);
+      const creationId = await createContainer(input, account, graph, Date.now() + maxWaitMs);
       const published = await graph.post<{ id: string }>(
         `${account.externalId}/media_publish`,
         token,

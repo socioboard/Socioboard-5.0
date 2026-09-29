@@ -170,6 +170,46 @@ describe('Facebook login', () => {
   });
 });
 
+describe('Facebook login: safety and edge cases', () => {
+  const tokens = {
+    accessToken: 'EAA-long',
+    refreshToken: null,
+    expiresAt: null,
+    scopes: ['pages_show_list', 'pages_manage_posts'],
+  };
+
+  it('never follows a paging link to another host (the token would go with it)', async () => {
+    const { replay, login } = setup([
+      {
+        method: 'GET',
+        url: `${G}/me/accounts`,
+        status: 200,
+        response: {
+          data: [
+            { id: '101', name: 'Halden Coffee', access_token: 'EAA-page-101', tasks: ['MANAGE'] },
+          ],
+          paging: { next: 'https://evil.example.test/steal?access_token=EAA-long&after=x' },
+        },
+      },
+    ]);
+    await expect(login.listAssets(tokens)).rejects.toMatchObject({ kind: 'retryable' });
+    expect(replay.seen.map((r) => r.url.host)).toEqual(['graph.facebook.com']);
+  });
+
+  it('a Page whose tasks Meta leaves out is offered, not blocked', async () => {
+    const { login } = setup([
+      {
+        method: 'GET',
+        url: `${G}/me/accounts`,
+        status: 200,
+        response: { data: [{ id: '103', name: 'No tasks', access_token: 'EAA-page-103' }] },
+      },
+    ]);
+    const [page] = await login.listAssets(tokens);
+    expect(page?.unavailableReason).toBeNull();
+  });
+});
+
 describe('Facebook Page validation', () => {
   const { page } = setup([]);
   const codes = (input: PublishInput) => page.validate(input).map((i) => `${i.severity}:${i.code}`);

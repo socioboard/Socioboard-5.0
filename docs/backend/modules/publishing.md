@@ -10,7 +10,7 @@ Writes to `PostTarget` (status, externalPostId, permalink, attempts, lastError, 
 
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `PublishAttempt` | id, postTargetId, attemptNo, startedAt, finishedAt, outcome, errorKind, networkCode, message, costUnits? | Full history shown to users and admins; `costUnits` tracks X per-post cost |
+| `PublishAttempt` | id, workspaceId, postTargetId, attemptNo, startedAt, finishedAt, outcome, errorKind, networkCode, message, costUnits? | Full history shown to users and admins; `costUnits` tracks X per-post cost |
 
 ## API
 None directly (triggered via posts and scheduling). Read access to attempts is through `GET /posts/:pid` (history).
