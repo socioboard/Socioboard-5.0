@@ -73,7 +73,7 @@ Every adapter must support any number of logins per workspace and any number of 
 ## Per-network notes (build details)
 | Network | Auth | Publish path | Notes |
 | --- | --- | --- | --- |
-| Facebook Page | Facebook Login for Business | `/{page}/feed` (text, link, several photos via `attached_media`), `/photos` (one photo), graph-video `/videos` (`file_url`) | Page tokens from `listAssets` (don't expire); first comment needs `pages_manage_engagement`, video `publish_video` |
+| Facebook Page | Facebook Login for Business | `/{page}/feed` (text, link, several photos via `attached_media`), `/photos` (one photo), graph-video `/videos` (`file_url`) | Page tokens from `listAssets` (don't expire); first comment needs `pages_manage_engagement`; videos need only `pages_manage_posts` (the old `publish_video` isn't offered to use-case apps) |
 | Instagram | FB Login (linked to a Page; graph.facebook.com, Page token) or Instagram Login (graph.instagram.com, login token) | container create → poll `status_code` until FINISHED (up to 10 min, then retried) → `media_publish` | Media fetched from public URL (JPEG images); single videos are reels; carousel = up to 10 child containers; stories drop caption and comment; 100 API posts per account per 24 h |
 | LinkedIn person/org | OAuth 2 | Posts API + Images/Videos API | Org needs Community Management access |
 | X | OAuth 2 PKCE | `POST /2/tweets` + media upload | Pay-per-post; count cost per publish |

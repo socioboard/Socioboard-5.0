@@ -12,7 +12,6 @@ export const FACEBOOK_SCOPES = [
   'pages_read_engagement',
   'pages_manage_posts',
   'pages_manage_engagement',
-  'publish_video',
   'business_management',
   'instagram_basic',
   'instagram_content_publish',
