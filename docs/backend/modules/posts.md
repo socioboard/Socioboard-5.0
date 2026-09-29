@@ -60,7 +60,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 
 ## Rules
 - Only the author (or `posts:approve` roles) can edit or delete a post; once any target is `publishing` or `published`, the post can't be edited or deleted. Edit, delete and publish-now lock the post row (`SELECT … FOR UPDATE`) and check again under the lock, so an edit can't land while a publish starts.
-- Labels: posts keep label ids in `labelIds` (at most 20). Labels stay editable after publishing (an update with only `labelIds` isn't locked), since they organise the posts list. Deleting a label removes its id from every post in the same transaction. `GET /labels` returns each label's `postCount`.
+- Labels: posts keep label ids in `labelIds` (at most 20). Labels stay editable after publishing (an update with only `labelIds` isn't locked), since they organise the posts list. Deleting a label removes its id from every post in the same transaction. Saving a post checks its labels under a share lock (`FOR SHARE`) taken before the post's own lock, and deleting a label deletes its row before stripping posts, so a label deleted while a post is being saved with it never stays on that post. `GET /labels` returns each label's `postCount`.
 - Updating `targets` replaces the selection: removed accounts' targets go, new ones join as `pending`, kept ones keep their id and history and take the new override.
 - Duplicating copies content and overrides as a new draft by the caller, leaving out disconnected accounts and deleted files.
 - `pnpm db:seed` adds a sample Facebook login with two **paused** sample accounts (fake tokens), a draft and a post scheduled for the next day.

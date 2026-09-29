@@ -1,5 +1,7 @@
 // P1-B10: fitting images to each network, and the nightly media-purge. Needs storage (MinIO or
 // S3); without it only the storage guard runs.
+import { randomBytes } from 'node:crypto';
+
 import { FACEBOOK_IMAGE_PREP, INSTAGRAM_IMAGE_PREP } from '@socioboard/providers';
 import sharp, { type Sharp } from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -83,9 +85,7 @@ describe.runIf(storage)('fitting images to a network', () => {
 
   it('brings a big image under the size limit, and makes the copy only once', async () => {
     // Noise doesn't compress: a large PNG that stays large as a JPEG at high quality.
-    const noise = Buffer.from(
-      Array.from({ length: 2000 * 1500 * 3 }, () => Math.floor(Math.random() * 256)),
-    );
+    const noise = randomBytes(2000 * 1500 * 3);
     const image = await store(
       'original.png',
       sharp(noise, { raw: { width: 2000, height: 1500, channels: 3 } }).png(),
@@ -98,7 +98,8 @@ describe.runIf(storage)('fitting images to a network', () => {
     const again = await prepareImageVariant(need(), image, spec);
     expect(again).toEqual(fitted);
     expect(await need().head(fitted.storageKey)).toEqual(head);
-  });
+    // Several full-size encodes of an image that barely compresses: seconds, not milliseconds.
+  }, 30_000);
 
   it('turns phone photos upright (EXIF orientation)', async () => {
     // Stored 400×200 with "rotate 90°": it shows as 200×400.
@@ -182,6 +183,51 @@ describe.runIf(storage)('media-purge', () => {
     expect(result.abandoned).toBeGreaterThanOrEqual(1);
     expect(await row(abandoned.id)).toBeNull();
     expect(await row(inProgress.id)).not.toBeNull();
+  });
+
+  it('a file stored outside its own folder is removed alone, not with its neighbours', async () => {
+    const neighbour = await asset({});
+    const id = newId();
+    const flat = `workspaces/${ws}/media/${id}.jpg`;
+    await need().put(flat, Buffer.from('flat'), 'image/jpeg');
+    await t.db.client.mediaAsset.create({
+      data: {
+        id,
+        workspaceId: ws,
+        name: 'flat.jpg',
+        kind: 'image',
+        mime: 'image/jpeg',
+        storageKey: flat,
+        sizeBytes: 4,
+        status: 'ready',
+        deletedAt: days(8),
+      },
+    });
+    await purgeMedia({ ...t.platform, clock });
+    expect(await row(id)).toBeNull();
+    expect(await exists(flat)).toBe(false);
+    expect(await exists(neighbour.keys.original)).toBe(true);
+    expect(await exists(neighbour.keys.thumbnail)).toBe(true);
+  });
+
+  it('one file that can’t be removed doesn’t hold up the others', async () => {
+    const stuck = await asset({ deletedAt: days(9) });
+    const next = await asset({ deletedAt: days(9) });
+    const real = need();
+    const storage = {
+      ...real,
+      deletePrefix: (prefix: string) =>
+        prefix.includes(stuck.id)
+          ? Promise.reject(new Error('S3 said no'))
+          : real.deletePrefix(prefix),
+    };
+    const result = await purgeMedia({ ...t.platform, storage, clock });
+    expect(result.failed).toBe(1);
+    expect(await row(stuck.id)).not.toBeNull();
+    expect(await row(next.id)).toBeNull();
+    // Tried again the next night.
+    await purgeMedia({ ...t.platform, clock });
+    expect(await row(stuck.id)).toBeNull();
   });
 
   it('a deleted workspace takes all its files with it, converted copies included', async () => {

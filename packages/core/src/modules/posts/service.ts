@@ -425,9 +425,9 @@ export function createPostService(deps: PostServiceDeps) {
     body: Body<typeof CreatePostBody>,
   ) {
     await checkReferences(member.workspaceId, body, body.targets);
-    await checkLabels(member.workspaceId, body.labelIds);
     const id = newId();
     await db.client.$transaction(async (tx) => {
+      await lockLabels(tx, member.workspaceId, body.labelIds);
       await tx.post.create({
         data: {
           id,
@@ -473,7 +473,6 @@ export function createPostService(deps: PostServiceDeps) {
     if (!labelsOnly && post.targets.some((t) => LOCKED_TARGET.includes(t.status))) {
       throw notEditable();
     }
-    if (body.labelIds) await checkLabels(member.workspaceId, body.labelIds);
     const targets = body.targets;
     await checkReferences(
       member.workspaceId,
@@ -483,6 +482,7 @@ export function createPostService(deps: PostServiceDeps) {
     );
 
     await db.client.$transaction(async (tx) => {
+      if (body.labelIds) await lockLabels(tx, member.workspaceId, body.labelIds);
       if (!labelsOnly) await lockUnpublished(tx, member.workspaceId, post.id, notEditable);
       await tx.post.update({
         where: { id: post.id, workspaceId: member.workspaceId },
@@ -822,12 +822,18 @@ export function createPostService(deps: PostServiceDeps) {
 
   // ---------------------------------------------------------------- labels (P1-B11)
 
-  async function checkLabels(workspaceId: string, labelIds: string[]) {
+  /**
+   * Refuses label ids that aren't this workspace's, and holds a share lock on the labels until the
+   * post is saved. A label deleted meanwhile waits for the save, then takes itself off the saved
+   * post (deleteLabel), so no post keeps the id of a label that's gone. Taken before the post's
+   * own lock, in the same order as deleteLabel (label, then posts), so the two can't deadlock.
+   */
+  async function lockLabels(tx: Prisma.TransactionClient, workspaceId: string, labelIds: string[]) {
     if (labelIds.length === 0) return;
-    const found = await scoped(workspaceId).postLabel.findMany({
-      where: { id: { in: labelIds } },
-      select: { id: true },
-    });
+    const found = await tx.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "PostLabel"
+      WHERE "workspaceId" = ${workspaceId}::uuid AND id = ANY(${labelIds}::uuid[])
+      FOR SHARE`;
     const missing = labelIds.filter((id) => !found.some((l) => l.id === id));
     if (missing.length > 0) {
       throw new AppError(404, 'LABEL_NOT_FOUND', 'Label not found', { labelIds: missing });
@@ -925,10 +931,12 @@ export function createPostService(deps: PostServiceDeps) {
   async function deleteLabel(caller: AuthContext, member: MemberContext, labelId: string) {
     const label = await findLabel(member.workspaceId, labelId);
     await db.client.$transaction(async (tx) => {
+      // The label first: its row lock makes a post save that's choosing it wait (lockLabels), or
+      // this wait for one already under way, whose post the UPDATE below then sees.
+      await tx.postLabel.delete({ where: { id: label.id, workspaceId: member.workspaceId } });
       await tx.$executeRaw`
         UPDATE "Post" SET "labelIds" = array_remove("labelIds", ${label.id}::uuid)
         WHERE "workspaceId" = ${member.workspaceId}::uuid AND ${label.id}::uuid = ANY("labelIds")`;
-      await tx.postLabel.delete({ where: { id: label.id, workspaceId: member.workspaceId } });
     });
     await events.emit('label.deleted', {
       workspaceId: member.workspaceId,
