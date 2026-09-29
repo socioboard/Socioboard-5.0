@@ -1,3 +1,4 @@
+import type { MediaAsset } from '@socioboard/contracts';
 import type { QueryClient } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
 
@@ -15,6 +16,8 @@ export interface UploadItem {
   progress: number;
   error?: unknown;
   reject?: RejectReason;
+  /** Told the new asset once the file is stored (the composer attaches it to the post). */
+  onDone?: (asset: MediaAsset) => void;
 }
 
 /** Two files upload at once; the rest wait their turn. */
@@ -59,7 +62,7 @@ async function run(item: UploadItem) {
   controllers.set(item.id, controller);
   update(item.id, { status: 'uploading', progress: 0, error: undefined });
   try {
-    await uploadMedia(item.workspaceId, item.file, {
+    const asset = await uploadMedia(item.workspaceId, item.file, {
       folderId: item.folderId,
       signal: controller.signal,
       onProgress: (progress) => {
@@ -67,6 +70,7 @@ async function run(item: UploadItem) {
       },
     });
     remove(item.id);
+    item.onDone?.(asset);
     // The new asset shows up (as "processing") in whatever list is open.
     await client?.invalidateQueries({ queryKey: mediaKeys.lists(item.workspaceId) });
   } catch (err) {
@@ -78,13 +82,17 @@ async function run(item: UploadItem) {
   }
 }
 
-/** Queue files for upload; files the API would refuse are shown as rejected right away. */
+/**
+ * Queue files for upload; files the API would refuse are shown as rejected right away. Returns
+ * the uploads' ids (to show their progress elsewhere, e.g. in the composer).
+ */
 export function startUploads(
   queryClient: QueryClient,
   workspaceId: string,
   files: File[],
   folderId?: string,
-) {
+  onDone?: (asset: MediaAsset) => void,
+): string[] {
   client = queryClient;
   const added = files.map((file): UploadItem => {
     const reject = checkFile(file);
@@ -97,11 +105,13 @@ export function startUploads(
       status: reject ? 'rejected' : 'queued',
       progress: 0,
       ...(reject ? { reject } : {}),
+      ...(onDone ? { onDone } : {}),
     };
   });
   items = [...items, ...added];
   emit();
   pump();
+  return added.map((item) => item.id);
 }
 
 export function retryUpload(id: string) {

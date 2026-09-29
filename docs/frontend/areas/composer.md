@@ -45,6 +45,15 @@ The most important screen in the product: write once, tailor per network, see ex
 | Add to queue | `posts:publish` and slots exist | `POST /posts/:id/queue` |
 | Submit for review | review required | `POST /posts/:id/submit` |
 
+**Built in P1-F2** (`features/composer`, routes `/w/:slug/compose` for `posts:create`, `/w/:slug/compose/:postId`):
+- Draft model (`draft.ts`): the shared content (text, media, link, first comment) plus **one override per network**. The API keeps overrides per account; saving gives every selected account its network's override, and loading a post rebuilds the per-network overrides from its targets (cancelled deliveries ignored). Overrides of networks no longer selected are left out when saving.
+- "Post to": the design-system `AccountPicker` over the workspace's accounts (paused or needs-reconnecting ones shown but not pickable); with no accounts, a line pointing admins to the accounts page.
+- Tabs: "All networks" plus one per selected network (arrow keys, Home/End); a dot marks a network with its own content, and a deselected network's tab goes away. On "All networks", character counters for every network using the shared text, and a note naming the networks that have their own. A network tab shows that network's text (typing there makes it its own, starting from the shared text) and counter, the shared media with "Use different media for <network>", and "Reset to shared" for each part it overrides. Instagram's tab adds feed / reel / story (feed is the default and stores nothing).
+- Media strip: thumbnails in order with remove and "move earlier", "processing" until ready, "This file was deleted" for a file that's gone; Upload attaches each file as soon as it's stored (progress, retry and dismiss inline); "Choose from library" picks files in order, showing what's already attached.
+- Link (checked to be an http(s) address when the field is left) and an optional first comment, on "All networks".
+- Editing: a post with a publishing or published delivery opens read-only with a notice; so does someone else's post for a person who can't approve posts.
+- Previews (P1-F3), the issues panel (P1-F4) and Save / Publish / autosave (P1-F5) join this screen next; the sidebar's Compose button arrives with saving.
+
 ## AI panel (phase 4)
 "Generate" opens [ai-studio](ai-studio.md) as a side panel: generate a caption into the editor, or an image/video into the media strip. Generated text is always editable. Results follow the studio's show → apply → undo pattern: options are proposed (a caption as a change against the current text), nothing enters the post until "Use this", and every applied change can be undone.
 

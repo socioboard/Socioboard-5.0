@@ -1,8 +1,17 @@
 // Building blocks of the composer and posts screens (P1-F9): who a post goes to, how long it is,
 // what's wrong with it, its media, and the frame network previews are drawn in.
 import type { AccountStatus, NetworkId, ValidationIssue } from '@socioboard/contracts';
-import { Check, CircleAlert, Film, ImageOff, Play, TriangleAlert, X } from 'lucide-react';
-import { useId, type ReactNode } from 'react';
+import {
+  Check,
+  CircleAlert,
+  Film,
+  Image as ImageIcon,
+  ImageOff,
+  Play,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
+import { useId, useState, type ReactNode } from 'react';
 
 import { cn } from '../cn';
 import { Avatar } from './display';
@@ -300,6 +309,10 @@ export function MediaThumb({
   className,
 }: MediaThumbProps) {
   const busy = status === 'uploading' || status === 'processing';
+  // A picture that doesn't load (expired link, file gone) falls back to the placeholder instead
+  // of the browser's broken-image box.
+  const [brokenSrc, setBrokenSrc] = useState<string | null>(null);
+  const showImage = src !== null && src !== brokenSrc && status !== 'failed';
   return (
     <div
       className={cn(
@@ -308,8 +321,16 @@ export function MediaThumb({
         className,
       )}
     >
-      {src && status !== 'failed' ? (
-        <img src={src} alt={alt} className="size-full object-cover" loading="lazy" />
+      {showImage ? (
+        <img
+          src={src}
+          alt={alt}
+          className="size-full object-cover"
+          loading="lazy"
+          onError={() => {
+            setBrokenSrc(src);
+          }}
+        />
       ) : (
         <div
           className="text-ink-3 flex size-full items-center justify-center"
@@ -318,9 +339,11 @@ export function MediaThumb({
         >
           {status === 'failed' ? (
             <ImageOff className="text-danger size-5" aria-hidden="true" />
-          ) : kind === 'video' && !busy ? (
+          ) : busy ? null : kind === 'video' ? (
             <Film className="size-5" aria-hidden="true" />
-          ) : null}
+          ) : (
+            <ImageIcon className="size-5" aria-hidden="true" />
+          )}
         </div>
       )}
       {busy && (

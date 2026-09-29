@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -186,6 +186,13 @@ describe('MediaThumb', () => {
     expect(screen.getByText('1:15')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Remove: Latte art' }));
     expect(onRemove).toHaveBeenCalled();
+  });
+
+  it('a picture that fails to load falls back to the placeholder, still named', () => {
+    render(<MediaThumb src="https://cdn.test/gone.jpg" alt="Latte art" kind="image" />);
+    fireEvent.error(screen.getByRole('img', { name: 'Latte art' }));
+    const placeholder = screen.getByRole('img', { name: 'Latte art' });
+    expect(placeholder.tagName).toBe('DIV');
   });
 
   it('says when a file is still processing', () => {
