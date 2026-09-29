@@ -22,7 +22,7 @@
 - [x] P1-B11 Post labels (`PostLabel` + endpoints)
 
 ## Frontend
-- [ ] P1-F1 Accounts page grouped by network → login → accounts, "Connect another account" per network with switch-account tip, network chooser, asset picker, account and login details (reconnect, disconnect, remove login)
+- [x] P1-F1 Accounts page grouped by network → login → accounts, "Connect another account" per network with switch-account tip, network chooser, asset picker, account and login details (reconnect, disconnect, remove login)
 - [ ] P1-F2 Composer: account picker, editor with per-network counters, media strip + picker, per-network tabs/overrides
 - [ ] P1-F3 **Live preview** framework + Facebook and Instagram preview components
 - [ ] P1-F4 Validation: client quick checks + debounced server validation; issues panel
