@@ -50,7 +50,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 | `POST_NOT_EDITABLE`, `POST_NOT_DELETABLE` | 422 | A target is publishing or published: the post stays as history |
 
 ## Rules
-- Only the author (or `posts:approve` roles) can edit or delete a post; once any target is `publishing` or `published`, the post can't be edited or deleted.
+- Only the author (or `posts:approve` roles) can edit or delete a post; once any target is `publishing` or `published`, the post can't be edited or deleted. Edit, delete and publish-now lock the post row (`SELECT … FOR UPDATE`) and check again under the lock, so an edit can't land while a publish starts.
 - Updating `targets` replaces the selection: removed accounts' targets go, new ones join as `pending`, kept ones keep their id and history and take the new override.
 - Duplicating copies content and overrides as a new draft by the caller, leaving out disconnected accounts and deleted files.
 - `pnpm db:seed` adds a sample Facebook login with two **paused** sample accounts (fake tokens), a draft and a post scheduled for the next day.

@@ -225,6 +225,35 @@ export function createPostService(deps: PostServiceDeps) {
   const overrideJson = (o: TargetInput['override']) =>
     o === null ? Prisma.DbNull : (o as Prisma.InputJsonValue);
 
+  /**
+   * Locks the post row for the rest of the transaction, then refuses if a target is publishing
+   * or published. Editing, deleting and publish-now (P1-B7) all take this lock, so an edit can't
+   * slip in between "nothing is publishing" and the write while a publish starts.
+   */
+  async function lockUnpublished(
+    tx: Prisma.TransactionClient,
+    workspaceId: string,
+    postId: string,
+    refuse: () => Error,
+  ) {
+    await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${postId}::uuid AND "workspaceId" = ${workspaceId}::uuid FOR UPDATE`;
+    const locked = await tx.postTarget.count({
+      where: { workspaceId, postId, status: { in: [...LOCKED_TARGET] } },
+    });
+    if (locked > 0) throw refuse();
+  }
+
+  const notEditable = () =>
+    unprocessable(
+      'POST_NOT_EDITABLE',
+      'This post is being published or was published, so it can’t be changed',
+    );
+  const notDeletable = () =>
+    unprocessable(
+      'POST_NOT_DELETABLE',
+      'Posts that are being published or were published stay in the history',
+    );
+
   async function recomputeStatus(workspaceId: string, postId: string) {
     const ws = scoped(workspaceId);
     const post = await ws.post.findUnique({
@@ -420,12 +449,8 @@ export function createPostService(deps: PostServiceDeps) {
   ) {
     const post = await findPost(member.workspaceId, postId);
     assertCanEdit(caller, member, post);
-    if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) {
-      throw unprocessable(
-        'POST_NOT_EDITABLE',
-        'This post is being published or was published, so it can’t be changed',
-      );
-    }
+    // Checked early for a quick answer; checked again under the lock below.
+    if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) throw notEditable();
     const targets = body.targets;
     await checkReferences(
       member.workspaceId,
@@ -435,6 +460,7 @@ export function createPostService(deps: PostServiceDeps) {
     );
 
     await db.client.$transaction(async (tx) => {
+      await lockUnpublished(tx, member.workspaceId, post.id, notEditable);
       await tx.post.update({
         where: { id: post.id, workspaceId: member.workspaceId },
         data: {
@@ -490,13 +516,11 @@ export function createPostService(deps: PostServiceDeps) {
   async function remove(caller: AuthContext, member: MemberContext, postId: string) {
     const post = await findPost(member.workspaceId, postId);
     assertCanEdit(caller, member, post);
-    if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) {
-      throw unprocessable(
-        'POST_NOT_DELETABLE',
-        'Posts that are being published or were published stay in the history',
-      );
-    }
-    await scoped(member.workspaceId).post.delete({ where: { id: post.id } });
+    if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) throw notDeletable();
+    await db.client.$transaction(async (tx) => {
+      await lockUnpublished(tx, member.workspaceId, post.id, notDeletable);
+      await tx.post.delete({ where: { id: post.id, workspaceId: member.workspaceId } });
+    });
     await events.emit('post.deleted', {
       workspaceId: member.workspaceId,
       postId: post.id,
