@@ -10,6 +10,13 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "clean": "rm -rf .turbo"
+  },
+  "dependencies": {
+    "@socioboard/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6"
   }
 }
