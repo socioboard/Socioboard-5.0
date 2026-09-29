@@ -9,6 +9,7 @@ import {
   AccountPicker,
   Banner,
   Button,
+  cn,
   CharacterCounter,
   EmptyState,
   FormField,
@@ -42,6 +43,7 @@ import {
 } from '../draft';
 import { MediaStrip } from './media-strip';
 import { NetworkTabs } from './network-tabs';
+import { PreviewPanel } from './preview-panel';
 
 /** Targets in these states make a post history: it can't be edited any more. */
 const LOCKED = new Set(['publishing', 'published']);
@@ -120,7 +122,7 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
     <div className="flex min-h-0 flex-1 flex-col">
       <PageHeader title={title} />
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-5 sm:px-6">{body}</div>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">{body}</div>
       </div>
     </div>
   );
@@ -140,6 +142,10 @@ function Composer({
   const can = useCan();
   const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
   const [tab, setTab] = useState<NetworkId | null>(null);
+  // The preview follows the editor to a network's tab, and can be switched on its own.
+  const [previewTab, setPreviewTab] = useState<NetworkId | null>(null);
+  // Under 1024 px the editor and the preview take turns (docs: "Edit" / "Preview").
+  const [view, setView] = useState<'edit' | 'preview'>('edit');
   // Files uploading, by the tab they were started from ("all" for the shared media).
   const [uploadsByTab, setUploadsByTab] = useState<Record<string, string[]>>({});
   const panelId = useId();
@@ -170,108 +176,177 @@ function Composer({
     <>
       {locked && <Banner tone="warning">{t('locked')}</Banner>}
       {!locked && !mayEdit && <Banner tone="warning">{t('notYours')}</Banner>}
-      <fieldset disabled={readOnly} className="flex min-w-0 flex-col gap-5">
-        <Section title={t('postTo')}>
-          {accounts.length === 0 ? (
-            <p className="text-ink-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-              {can('accounts:connect') ? t('noAccounts') : t('noAccountsReadOnly')}
-              {can('accounts:connect') && (
-                <Link
-                  to="/w/$slug/accounts"
-                  params={{ slug: workspace.slug }}
-                  className="text-ring font-medium hover:underline"
-                >
-                  {t('connectAccounts')}
-                </Link>
-              )}
-            </p>
-          ) : (
-            <AccountPicker
-              accounts={pickerAccounts}
-              value={draft.accountIds}
-              onChange={(accountIds) => {
-                if (!readOnly) dispatch({ type: 'accounts', accountIds });
-              }}
-              labels={{ group: t('accountsLabel') }}
-            />
-          )}
-        </Section>
-
-        <section className="glass-chip rounded-pane flex flex-col gap-4 p-4 sm:p-5">
-          <NetworkTabs
-            networks={selected}
-            active={active}
-            customised={customised}
-            onChange={setTab}
-            panelId={panelId}
-          />
-          <div
-            role="tabpanel"
-            id={panelId}
-            aria-labelledby={`${panelId}-tab-${active ?? 'all'}`}
-            className="flex flex-col gap-5"
-          >
-            <TextBlock
-              draft={draft}
-              network={active}
-              selected={selected}
-              maxOf={(n) => rulesOf(n)?.rules.maxChars}
-              onText={(text) => {
-                dispatch({ type: 'text', network: active, text });
-              }}
-              onReset={() => {
-                if (active) dispatch({ type: 'reset', network: active, part: 'text' });
-              }}
-            />
-            <MediaBlock
-              workspaceId={workspace.id}
-              draft={draft}
-              network={active}
-              canUpload={can('media:upload')}
-              readOnly={readOnly}
-              onMedia={(mediaIds) => {
-                dispatch({ type: 'media', network: active, mediaIds });
-              }}
-              onAttach={(mediaIds) => {
-                dispatch({ type: 'attach', network: active, mediaIds });
-              }}
-              onReset={() => {
-                if (active) dispatch({ type: 'reset', network: active, part: 'media' });
-              }}
-              uploadIds={uploadsByTab[active ?? 'all'] ?? []}
-              onUploadIds={(update) => {
-                const scope = active ?? 'all';
-                setUploadsByTab((all) => ({ ...all, [scope]: update(all[scope] ?? []) }));
-              }}
-            />
-            {active === null && (
-              <>
-                <LinkField
-                  value={draft.link}
-                  onChange={(link) => {
-                    dispatch({ type: 'link', link });
-                  }}
-                />
-                <FirstComment
-                  value={draft.firstComment}
-                  onChange={(firstComment) => {
-                    dispatch({ type: 'firstComment', firstComment });
-                  }}
-                />
-              </>
-            )}
-            {active === 'instagram' && (
-              <InstagramFormat
-                value={contentFor(draft, 'instagram').format}
-                onChange={(format) => {
-                  dispatch({ type: 'format', format });
+      <ViewSwitch value={view} onChange={setView} />
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
+        <fieldset
+          disabled={readOnly}
+          className={cn('flex min-w-0 flex-col gap-5', view === 'preview' && 'max-lg:hidden')}
+        >
+          <Section title={t('postTo')}>
+            {accounts.length === 0 ? (
+              <p className="text-ink-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                {can('accounts:connect') ? t('noAccounts') : t('noAccountsReadOnly')}
+                {can('accounts:connect') && (
+                  <Link
+                    to="/w/$slug/accounts"
+                    params={{ slug: workspace.slug }}
+                    className="text-ring font-medium hover:underline"
+                  >
+                    {t('connectAccounts')}
+                  </Link>
+                )}
+              </p>
+            ) : (
+              <AccountPicker
+                accounts={pickerAccounts}
+                value={draft.accountIds}
+                onChange={(accountIds) => {
+                  if (!readOnly) dispatch({ type: 'accounts', accountIds });
                 }}
+                labels={{ group: t('accountsLabel') }}
               />
             )}
-          </div>
-        </section>
-      </fieldset>
+          </Section>
+
+          <section className="glass-chip rounded-pane flex flex-col gap-4 p-4 sm:p-5">
+            <NetworkTabs
+              networks={selected}
+              active={active}
+              customised={customised}
+              onChange={(n) => {
+                setTab(n);
+                if (n) setPreviewTab(n);
+              }}
+              panelId={panelId}
+            />
+            <div
+              role="tabpanel"
+              id={panelId}
+              aria-labelledby={`${panelId}-tab-${active ?? 'all'}`}
+              className="flex flex-col gap-5"
+            >
+              <TextBlock
+                draft={draft}
+                network={active}
+                selected={selected}
+                maxOf={(n) => rulesOf(n)?.rules.maxChars}
+                onText={(text) => {
+                  dispatch({ type: 'text', network: active, text });
+                }}
+                onReset={() => {
+                  if (active) dispatch({ type: 'reset', network: active, part: 'text' });
+                }}
+              />
+              <MediaBlock
+                workspaceId={workspace.id}
+                draft={draft}
+                network={active}
+                canUpload={can('media:upload')}
+                readOnly={readOnly}
+                onMedia={(mediaIds) => {
+                  dispatch({ type: 'media', network: active, mediaIds });
+                }}
+                onAttach={(mediaIds, before) => {
+                  dispatch({
+                    type: 'attach',
+                    network: active,
+                    mediaIds,
+                    ...(before ? { before } : {}),
+                  });
+                }}
+                onReset={() => {
+                  if (active) dispatch({ type: 'reset', network: active, part: 'media' });
+                }}
+                uploadIds={uploadsByTab[active ?? 'all'] ?? []}
+                onUploadIds={(update) => {
+                  const scope = active ?? 'all';
+                  setUploadsByTab((all) => ({ ...all, [scope]: update(all[scope] ?? []) }));
+                }}
+              />
+              {active === null && (
+                <>
+                  <LinkField
+                    value={draft.link}
+                    onChange={(link) => {
+                      dispatch({ type: 'link', link });
+                    }}
+                  />
+                  <FirstComment
+                    value={draft.firstComment}
+                    onChange={(firstComment) => {
+                      dispatch({ type: 'firstComment', firstComment });
+                    }}
+                  />
+                </>
+              )}
+              {active === 'instagram' && (
+                <InstagramFormat
+                  value={contentFor(draft, 'instagram').format}
+                  onChange={(format) => {
+                    dispatch({ type: 'format', format });
+                  }}
+                />
+              )}
+            </div>
+          </section>
+        </fieldset>
+        <aside
+          aria-labelledby={`${panelId}-preview`}
+          className={cn(
+            'glass-chip rounded-pane flex min-w-0 flex-col gap-3 p-4 sm:p-5 lg:sticky lg:top-0',
+            view === 'edit' && 'max-lg:hidden',
+          )}
+        >
+          <h2 id={`${panelId}-preview`} className="text-ink-2 text-xs font-semibold">
+            {t('preview.title')}
+          </h2>
+          <PreviewPanel
+            workspaceId={workspace.id}
+            draft={draft}
+            selected={selected}
+            accounts={accounts}
+            networks={networks}
+            active={previewTab}
+            onActiveChange={setPreviewTab}
+          />
+        </aside>
+      </div>
     </>
+  );
+}
+
+/** Phones and tablets: the editor and the preview take turns. */
+function ViewSwitch({
+  value,
+  onChange,
+}: {
+  value: 'edit' | 'preview';
+  onChange: (v: 'edit' | 'preview') => void;
+}) {
+  const { t } = useTranslation('composer');
+  return (
+    <div
+      role="group"
+      aria-label={t('view.label')}
+      className="glass-chip rounded-control flex self-start p-1 lg:hidden"
+    >
+      {(['edit', 'preview'] as const).map((v) => (
+        <button
+          key={v}
+          type="button"
+          aria-pressed={value === v}
+          onClick={() => {
+            onChange(v);
+          }}
+          className={cn(
+            'h-8 rounded-lg px-4 text-[13px] font-medium',
+            value === v ? 'bg-chip text-ink shadow-sm' : 'text-ink-3 hover:text-ink',
+          )}
+        >
+          {t(`view.${v}`)}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -382,7 +457,7 @@ function MediaBlock({
   canUpload: boolean;
   readOnly: boolean;
   onMedia: (mediaIds: string[]) => void;
-  onAttach: (mediaIds: string[]) => void;
+  onAttach: (mediaIds: string[], before?: string[]) => void;
   onReset: () => void;
   uploadIds: string[];
   onUploadIds: (update: (ids: string[]) => string[]) => void;

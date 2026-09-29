@@ -10,6 +10,8 @@ const WID = halden.workspace.id;
 const BASE = `/api/v1/workspaces/${WID}`;
 const ME = '01a0d816-827a-74d6-a46e-409c7db36f92';
 type Reply = [number, unknown];
+/** The editor's tabs (the preview has its own). */
+const editor = () => within(screen.getByRole('tablist', { name: 'Content for' }));
 
 const network = (id: 'facebook_page' | 'instagram', maxChars: number) =>
   ({
@@ -17,7 +19,22 @@ const network = (id: 'facebook_page' | 'instagram', maxChars: number) =>
     displayName: id === 'facebook_page' ? 'Facebook' : 'Instagram',
     capabilities: { postTypes: ['image'], firstComment: true, altText: true },
     rules: { maxChars, maxHashtags: null, maxMentions: null, media: {}, links: 'card' },
-    preview: { truncateAt: 125, cropAspectRatio: null },
+    preview:
+      id === 'facebook_page'
+        ? {
+            truncateAt: 480,
+            captionPosition: 'above_media',
+            mediaLayout: 'grid',
+            cropAspectRatio: null,
+            linkCard: true,
+          }
+        : {
+            truncateAt: 125,
+            captionPosition: 'below_media',
+            mediaLayout: 'carousel',
+            cropAspectRatio: { min: 0.8, max: 1.91 },
+            linkCard: false,
+          },
     logins: [{ provider: 'facebook', supportsAccountSelection: false }],
   }) as unknown as Network;
 
@@ -33,7 +50,11 @@ const account = (id: string, net: 'facebook_page' | 'instagram', name: string): 
   createdAt: '2026-09-28T10:00:00.000Z',
 });
 const FB = account('01a0d816-827a-74d6-a46e-409c7db31001', 'facebook_page', 'Halden Coffee');
-const IG = account('01a0d816-827a-74d6-a46e-409c7db31002', 'instagram', 'Halden Gram');
+const IG = {
+  ...account('01a0d816-827a-74d6-a46e-409c7db31002', 'instagram', 'Halden Gram'),
+  username: 'halden.coffee',
+};
+const FB2 = account('01a0d816-827a-74d6-a46e-409c7db31003', 'facebook_page', 'Halden Roastery');
 
 const media = (id: string, name: string, overrides: object = {}) => ({
   id,
@@ -64,7 +85,7 @@ const base = (role = 'owner'): Record<string, Reply> => ({
     200,
     { items: [network('facebook_page', 63206), network('instagram', 2200)] },
   ],
-  [`GET ${BASE}/accounts`]: [200, { items: [FB, IG] }],
+  [`GET ${BASE}/accounts`]: [200, { items: [FB, IG, FB2] }],
   [`GET ${BASE}/media/${M1.id}`]: [200, M1],
   [`GET ${BASE}/media/${M2.id}`]: [200, M2],
 });
@@ -116,22 +137,22 @@ describe('composer', () => {
     expect(screen.getByText('11 of 63,206 characters for Facebook')).toBeInTheDocument();
     expect(screen.getByText('11 of 2,200 characters for Instagram')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
     const igText = screen.getByRole('textbox', { name: 'Text for Instagram' });
     expect(igText).toHaveValue('Fresh roast');
     expect(screen.getByText(/Using the shared text/)).toBeInTheDocument();
     await user.type(igText, ' ☕');
-    expect(screen.getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
+    expect(editor().getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: 'All networks' }));
+    await user.click(editor().getByRole('tab', { name: 'All networks' }));
     expect(screen.getByRole('textbox', { name: 'Text' })).toHaveValue('Fresh roast');
     expect(screen.getByText(/Instagram has its own text/)).toBeInTheDocument();
     expect(screen.queryByText(/characters for Instagram/)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('tab', { name: /Instagram/ }));
+    await user.click(editor().getByRole('tab', { name: /Instagram/ }));
     await user.click(screen.getByRole('button', { name: 'Reset to shared' }));
     expect(screen.getByRole('textbox', { name: 'Text for Instagram' })).toHaveValue('Fresh roast');
-    expect(screen.getByRole('tab', { name: 'Instagram' })).toBeInTheDocument();
+    expect(editor().getByRole('tab', { name: 'Instagram' })).toBeInTheDocument();
   });
 
   it('tabs move with the arrow keys, and a deselected network’s tab goes away', async () => {
@@ -139,12 +160,15 @@ describe('composer', () => {
     renderApp('/w/halden/compose');
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
-    await user.click(screen.getByRole('tab', { name: 'All networks' }));
+    await user.click(editor().getByRole('tab', { name: 'All networks' }));
     await user.keyboard('{ArrowRight}');
-    expect(screen.getByRole('tab', { name: 'Facebook' })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('tab', { name: 'Facebook' })).toHaveFocus();
+    expect(editor().getByRole('tab', { name: 'Facebook' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(editor().getByRole('tab', { name: 'Facebook' })).toHaveFocus();
     await user.click(screen.getByRole('button', { name: 'Halden Coffee, Facebook' }));
-    expect(screen.queryByRole('tab', { name: 'Facebook' })).not.toBeInTheDocument();
+    expect(editor().queryByRole('tab', { name: 'Facebook' })).not.toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Text' })).toBeInTheDocument();
   });
 
@@ -234,18 +258,18 @@ describe('composer', () => {
     renderApp('/w/halden/compose');
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
-    await user.click(screen.getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
     await user.click(screen.getByRole('button', { name: 'Use different media for Instagram' }));
-    await user.click(screen.getByRole('tab', { name: /All networks/ }));
+    await user.click(editor().getByRole('tab', { name: /All networks/ }));
     fireEvent.change(screen.getByTestId('composer-file-input'), {
       target: { files: [new File(['x'], 'slow.jpg', { type: 'image/jpeg' })] },
     });
     const shared = screen.getByRole('list', { name: 'Media' });
     expect(await within(shared).findByRole('status', { name: 'Uploading' })).toBeInTheDocument();
-    await user.click(screen.getByRole('tab', { name: /Instagram/ }));
+    await user.click(editor().getByRole('tab', { name: /Instagram/ }));
     const ig = screen.getByRole('list', { name: 'Media for Instagram' });
     expect(within(ig).queryByRole('status', { name: 'Uploading' })).not.toBeInTheDocument();
-    await user.click(screen.getByRole('tab', { name: /All networks/ }));
+    await user.click(editor().getByRole('tab', { name: /All networks/ }));
     expect(
       within(screen.getByRole('list', { name: 'Media' })).getByRole('status', {
         name: 'Uploading',
@@ -272,10 +296,182 @@ describe('composer', () => {
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
     expect(screen.queryByRole('radio', { name: /Reel/ })).not.toBeInTheDocument();
-    await user.click(screen.getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
     await user.click(screen.getByRole('radio', { name: /Reel/ }));
     expect(screen.getByRole('radio', { name: /Reel/ })).toBeChecked();
-    expect(screen.getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
+    expect(editor().getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
+  });
+});
+
+/** Storage that answers only when told to, so a test decides which upload finishes first. */
+class ControlledXhr extends FakeXhr {
+  static pending: (() => void)[] = [];
+  override send() {
+    ControlledXhr.pending.push(() => {
+      this.status = 200;
+      this.onload?.();
+    });
+  }
+}
+
+describe('uploading several files', () => {
+  it('keeps the order they were picked in, whichever finishes first', async () => {
+    ControlledXhr.pending = [];
+    vi.stubGlobal('XMLHttpRequest', ControlledXhr);
+    const first = media('01a0d816-827a-74d6-a46e-409c7db32021', 'first.jpg');
+    const second = media('01a0d816-827a-74d6-a46e-409c7db32022', 'second.jpg');
+    let created = 0;
+    mockServer({
+      ...base(),
+      [`POST ${BASE}/media/uploads`]: () => {
+        const asset = [first, second][created++] ?? first;
+        return [
+          201,
+          {
+            asset: { ...asset, status: 'uploading' },
+            upload: { type: 'single', url: `https://s3.test/${asset.id}`, headers: {} },
+            expiresAt: '2026-09-28T11:00:00.000Z',
+          },
+        ];
+      },
+      [`POST ${BASE}/media/uploads/${first.id}/complete`]: [200, first],
+      [`POST ${BASE}/media/uploads/${second.id}/complete`]: [200, second],
+      [`GET ${BASE}/media/${first.id}`]: [200, first],
+      [`GET ${BASE}/media/${second.id}`]: [200, second],
+      [`GET ${BASE}/media`]: [200, { items: [], nextCursor: null }],
+    });
+    renderApp('/w/halden/compose');
+    await screen.findByRole('button', { name: 'Upload' });
+    fireEvent.change(screen.getByTestId('composer-file-input'), {
+      target: {
+        files: [
+          new File(['1'], 'first.jpg', { type: 'image/jpeg' }),
+          new File(['2'], 'second.jpg', { type: 'image/jpeg' }),
+        ],
+      },
+    });
+    await waitFor(() => {
+      expect(ControlledXhr.pending).toHaveLength(2);
+    });
+    // The second file finishes first.
+    ControlledXhr.pending[1]?.();
+    const strip = screen.getByRole('list', { name: 'Media' });
+    await within(strip).findByRole('img', { name: 'second.jpg' });
+    ControlledXhr.pending[0]?.();
+    await within(strip).findByRole('img', { name: 'first.jpg' });
+    expect(
+      within(strip)
+        .getAllByRole('img')
+        .map((i) => i.getAttribute('alt')),
+    ).toEqual(['first.jpg', 'second.jpg']);
+  });
+});
+
+describe('live preview', () => {
+  const preview = () => screen.getByRole('complementary', { name: 'Preview' });
+  const long = `${'Fresh roast today, washed Ethiopia Guji. '.repeat(14)}#coffee`;
+
+  it('shows each network as it will look, and cuts where the network cuts', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await screen.findByRole('complementary', { name: 'Preview' });
+    expect(
+      within(preview()).getByText('Pick an account to see how the post will look.'),
+    ).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Halden Gram, Instagram' }));
+    fireEvent.change(screen.getByRole('textbox', { name: 'Text' }), { target: { value: long } });
+
+    const fb = within(preview()).getByRole('figure', { name: 'Preview on Facebook' });
+    expect(within(fb).getByText('Halden Coffee')).toBeInTheDocument();
+    expect(fb).not.toHaveTextContent('#coffee');
+    await user.click(within(fb).getByRole('button', { name: 'See more' }));
+    expect(fb).toHaveTextContent('#coffee');
+
+    await user.click(within(preview()).getByRole('tab', { name: 'Instagram' }));
+    const ig = within(preview()).getByRole('figure', { name: 'Preview on Instagram' });
+    expect(within(ig).getAllByText('halden.coffee').length).toBeGreaterThan(0);
+    expect(within(ig).getByRole('button', { name: 'more' })).toBeInTheDocument();
+    expect(ig).toHaveTextContent('Instagram posts need a photo or video.');
+  });
+
+  it('follows the editor to a network, and shows its own text and format', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Halden Gram, Instagram' }));
+    await user.type(screen.getByRole('textbox', { name: 'Text' }), 'Shared');
+    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
+    expect(within(preview()).getByRole('tab', { name: 'Instagram' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await user.type(screen.getByRole('textbox', { name: 'Text for Instagram' }), ' on IG');
+    // Facebook colours web addresses in text; Instagram doesn't make them links, so neither do we.
+    const LINK = 'text-[var(--sb-preview-link)]';
+    await user.click(editor().getByRole('tab', { name: /All networks/ }));
+    await user.type(screen.getByRole('textbox', { name: 'Text' }), ' https://halden.coffee');
+    await user.click(within(preview()).getByRole('tab', { name: 'Facebook' }));
+    expect(within(preview()).getByText('https://halden.coffee')).toHaveClass(LINK);
+    await user.click(editor().getByRole('tab', { name: /Instagram/ }));
+    await user.type(
+      screen.getByRole('textbox', { name: 'Text for Instagram' }),
+      ' https://halden.coffee',
+    );
+    expect(within(preview()).getByText('https://halden.coffee')).not.toHaveClass(LINK);
+    expect(
+      within(preview()).getByRole('figure', { name: 'Preview on Instagram' }),
+    ).toHaveTextContent('Shared on IG https://halden.coffee');
+    await user.click(screen.getByRole('radio', { name: /Story/ }));
+    expect(preview()).toHaveTextContent('Stories don’t show a caption.');
+    expect(preview()).not.toHaveTextContent('Shared on IG');
+  });
+
+  it('Facebook shows a link card when there are no photos, and the first comment', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.type(
+      screen.getByRole('textbox', { name: 'Link' }),
+      'https://www.halden.coffee/guji',
+    );
+    await user.click(screen.getByRole('button', { name: 'Add a first comment' }));
+    await user.type(screen.getByRole('textbox', { name: 'First comment' }), 'Tickets at the bar');
+    const fb = within(preview()).getByRole('figure', { name: 'Preview on Facebook' });
+    expect(within(fb).getByText('halden.coffee')).toBeInTheDocument();
+    expect(fb).toHaveTextContent('Tickets at the bar');
+  });
+
+  it('with two Pages selected, previews as either', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Halden Roastery, Facebook' }));
+    const fb = () => within(preview()).getByRole('figure', { name: 'Preview on Facebook' });
+    expect(within(fb()).getByText('Halden Coffee')).toBeInTheDocument();
+    await user.click(within(preview()).getByRole('combobox', { name: 'Preview as' }));
+    await user.click(await screen.findByRole('option', { name: 'Preview as Halden Roastery' }));
+    expect(within(fb()).getByText('Halden Roastery')).toBeInTheDocument();
+  });
+
+  it('on small screens, Edit and Preview take turns', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    const show = await screen.findByRole('group', { name: 'Show' });
+    const previewButton = within(show).getByRole('button', { name: 'Preview' });
+    expect(within(show).getByRole('button', { name: 'Edit' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(preview()).toHaveClass('max-lg:hidden');
+    await user.click(previewButton);
+    expect(previewButton).toHaveAttribute('aria-pressed', 'true');
+    expect(preview()).not.toHaveClass('max-lg:hidden');
   });
 });
 
@@ -335,7 +531,7 @@ describe('editing a post', () => {
       'true',
     );
     const user = userEvent.setup();
-    await user.click(screen.getByRole('tab', { name: /Instagram \(customised\)/ }));
+    await user.click(editor().getByRole('tab', { name: /Instagram \(customised\)/ }));
     expect(screen.getByRole('textbox', { name: 'Text for Instagram' })).toHaveValue(
       'Saved for Instagram',
     );

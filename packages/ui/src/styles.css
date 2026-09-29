@@ -56,6 +56,9 @@
   --sb-preview-ink: #080809;
   --sb-preview-ink-2: #65676b;
   --sb-preview-line: rgb(0 0 0 / 0.1);
+  /* Hashtags, mentions and links as the networks colour them. */
+  --sb-preview-link: #0a58ca;
+  --sb-preview-well: #f0f2f5;
 }
 
 .dark {
@@ -89,6 +92,8 @@
   --sb-preview-ink: #e4e6eb;
   --sb-preview-ink-2: #b0b3b8;
   --sb-preview-line: rgb(255 255 255 / 0.1);
+  --sb-preview-link: #7cb3ff;
+  --sb-preview-well: #3a3b3c;
 }
 
 @theme inline {

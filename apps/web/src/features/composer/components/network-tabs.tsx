@@ -14,16 +14,21 @@ export function NetworkTabs({
   customised,
   onChange,
   panelId,
+  withAll = true,
+  label,
 }: {
   networks: NetworkId[];
   active: NetworkId | null;
   customised: ReadonlySet<NetworkId>;
   onChange: (network: NetworkId | null) => void;
   panelId: string;
+  /** Starts with "All networks" (the editor); the preview has only networks. */
+  withAll?: boolean;
+  label?: string;
 }) {
   const { t } = useTranslation('composer');
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const tabs: (NetworkId | null)[] = [null, ...networks];
+  const tabs: (NetworkId | null)[] = withAll ? [null, ...networks] : networks;
 
   const onKeyDown = (e: KeyboardEvent, index: number) => {
     const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
@@ -38,7 +43,7 @@ export function NetworkTabs({
   return (
     <div
       role="tablist"
-      aria-label={t('tabs.label')}
+      aria-label={label ?? t('tabs.label')}
       className="flex gap-1 overflow-x-auto [scrollbar-width:none]"
     >
       {tabs.map((network, i) => {
