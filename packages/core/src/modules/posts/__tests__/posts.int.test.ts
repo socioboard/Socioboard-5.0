@@ -405,6 +405,70 @@ describe('reading', () => {
   });
 });
 
+describe('media in use', () => {
+  it('a file a scheduled or publishing post uses can’t be deleted; a draft doesn’t block', async () => {
+    const shared = await t.db.client.mediaAsset.create({
+      data: {
+        workspaceId: ws,
+        name: 'in-use.jpg',
+        kind: 'image',
+        mime: 'image/jpeg',
+        storageKey: `test/${ws}/in-use`,
+        sizeBytes: 1000,
+        status: 'ready',
+      },
+    });
+    const viaOverride = await t.db.client.mediaAsset.create({
+      data: {
+        workspaceId: ws,
+        name: 'override.jpg',
+        kind: 'image',
+        mime: 'image/jpeg',
+        storageKey: `test/${ws}/override`,
+        sizeBytes: 1000,
+        status: 'ready',
+      },
+    });
+    const post = await createPost(owner, {
+      text: 'Uses files',
+      mediaIds: [shared.id],
+      targets: [{ accountId: acc.ig, override: { mediaIds: [viaOverride.id] } }],
+    });
+    const del = (id: string) => owner.send('DELETE', `${base()}/media/${id}`);
+    // While a post is only a draft, its files can be deleted (its validation flags them later).
+    const draftOnly = await t.db.client.mediaAsset.create({
+      data: {
+        workspaceId: ws,
+        name: 'draft-only.jpg',
+        kind: 'image',
+        mime: 'image/jpeg',
+        storageKey: `test/${ws}/draft-only`,
+        sizeBytes: 1000,
+        status: 'ready',
+      },
+    });
+    await createPost(owner, {
+      text: 'draft',
+      mediaIds: [draftOnly.id],
+      targets: [{ accountId: acc.fb }],
+    });
+    expect((await del(draftOnly.id)).status).toBe(204);
+    await t.db.client.postTarget.updateMany({
+      where: { postId: post.id },
+      data: { status: 'scheduled' },
+    });
+    for (const id of [shared.id, viaOverride.id]) {
+      const res = await del(id);
+      expect([res.status, code(res)]).toEqual([409, 'MEDIA_IN_USE']);
+    }
+    await t.db.client.postTarget.updateMany({
+      where: { postId: post.id },
+      data: { status: 'published' },
+    });
+    expect((await del(shared.id)).status).toBe(204);
+  });
+});
+
 describe('status follows the targets', () => {
   it('disconnecting an account cancels its waiting target and updates the post', async () => {
     const post = await createPost(owner, {

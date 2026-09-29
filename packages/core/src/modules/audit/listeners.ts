@@ -137,6 +137,12 @@ export const AUDITED: Mapping = {
     entity: { type: 'post', id: p.postId },
     diff: { fields: p.fields },
   }),
+  'post.publish_requested': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { targets: p.targetIds.length },
+  }),
   'post.deleted': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),

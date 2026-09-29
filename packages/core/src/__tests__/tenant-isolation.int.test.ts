@@ -16,6 +16,7 @@ type Ids = Record<
   | 'connectionId'
   | 'accountId'
   | 'postId'
+  | 'targetId'
   | 'provider',
   string
 >;
@@ -109,6 +110,8 @@ const CLASSIFIED: Record<string, Kind> = {
   updatePost: { kind: 'resource', body: () => ({ text: 'hijacked' }) },
   deletePost: { kind: 'resource' },
   duplicatePost: { kind: 'resource' },
+  publishNow: { kind: 'resource' },
+  retryTarget: { kind: 'resource' },
 };
 
 // Routes still being built (no handler yet) join the checks when their task mounts them.
@@ -189,11 +192,12 @@ beforeAll(async () => {
   const post = await t.db.client.post.create({
     data: { workspaceId: aWorkspace, authorId: victim.userId, text: 'A post' },
   });
-  await t.db.client.postTarget.create({
+  const target = await t.db.client.postTarget.create({
     data: { workspaceId: aWorkspace, postId: post.id, socialAccountId: account.id },
   });
   a = {
     postId: post.id,
+    targetId: target.id,
     connectionId: connection.id,
     accountId: account.id,
     provider: 'facebook',

@@ -21,6 +21,7 @@ import {
   createUrlSigner,
   decodeCursor,
   newId,
+  conflict,
   notFound,
   toPage,
   typedEvents,
@@ -268,7 +269,20 @@ export function createMediaService(deps: MediaServiceDeps) {
 
   async function remove(caller: AuthContext, member: MemberContext, assetId: string) {
     const asset = await findAsset(member, assetId);
-    // Phase 1 adds: refuse while a scheduled post uses the asset (MEDIA_IN_USE).
+    // A post that is scheduled or being published needs its files (in its content or in a
+    // network's override); drafts don't block, their validation flags the missing file.
+    const inUse = await scoped(member).postTarget.count({
+      where: {
+        status: { in: ['scheduled', 'publishing'] },
+        OR: [
+          { post: { mediaIds: { has: asset.id } } },
+          { override: { path: ['mediaIds'], array_contains: [asset.id] } },
+        ],
+      },
+    });
+    if (inUse > 0) {
+      throw conflict('MEDIA_IN_USE', 'A scheduled or publishing post uses this file');
+    }
     await scoped(member).mediaAsset.update({
       where: { id: asset.id },
       data: { deletedAt: clock.now() },

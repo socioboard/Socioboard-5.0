@@ -11,7 +11,8 @@ export interface QueueDefinition<Data = unknown, Result = unknown> {
   processor: (job: Job<Data, Result>) => Promise<Result>;
   /** Defaults for jobs added to this queue (attempts, backoff, removeOnComplete…). */
   jobDefaults?: JobsOptions;
-  worker?: Pick<WorkerOptions, 'concurrency' | 'limiter' | 'lockDuration'>;
+  /** `settings.backoffStrategy` backs jobs with `backoff: { type: 'custom' }`. */
+  worker?: Pick<WorkerOptions, 'concurrency' | 'limiter' | 'lockDuration' | 'settings'>;
 }
 
 export function defineQueue<Data, Result = void>(
