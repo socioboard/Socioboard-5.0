@@ -163,13 +163,27 @@ export function createGraphClient(input: {
           params,
         );
         items.push(...(page.data ?? []));
-        // `next` already carries the query (including the token); send only the proof again.
-        next = page.paging?.next ? stripAuth(page.paging.next) : undefined;
+        // `next` already carries the query (including the token); `call` adds the token back.
+        next = page.paging?.next ? sameHost(stripAuth(page.paging.next), base) : undefined;
         params = {};
       }
       return items;
     },
   };
+}
+
+/**
+ * A paging URL is followed only on the API's own host: the token goes with it, so an answer
+ * pointing elsewhere (a tampered response, a misbehaving proxy) must not receive it.
+ */
+function sameHost(next: string, base: string): string {
+  if (new URL(next).origin !== new URL(base).origin) {
+    throw new ProviderError({
+      kind: 'retryable',
+      message: 'Meta answered with a paging link to another host',
+    });
+  }
+  return next;
 }
 
 /** Removes access_token and appsecret_proof from a paging URL; `call` adds them back. */

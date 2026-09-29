@@ -18,11 +18,11 @@ A connection has one or more accounts, possibly of more than one network: a Face
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `SocialConnection` | id, workspaceId, provider, externalUserId, displayName, avatarUrl, accessTokenEnc, refreshTokenEnc, tokenExpiresAt, scopes, status (active/reauth_required/revoked), connectedById, lastCheckedAt | Unique (workspaceId, provider, externalUserId) |
+| `SocialConnection` | id, workspaceId, provider, externalUserId, displayName, avatarUrl, accessTokenEnc, refreshTokenEnc, tokenExpiresAt, scopes, status (active/reauth_required/revoked), statusReason?, connectedById, lastCheckedAt | Unique (workspaceId, provider, externalUserId) |
 | `SocialAccount` | id, workspaceId, connectionId?, network, externalId, displayName, username, avatarUrl, assetTokenEnc?, assetTokenExpiresAt?, meta JSON, status (active/reauth_required/disconnected/paused), statusReason?, connectedById, lastCheckedAt | Unique (workspaceId, network, externalId). `connectionId` is null once its login is removed (the account is then `disconnected`, kept for post history). `assetTokenEnc` only where the network issues per-asset tokens (e.g. Facebook Page tokens) |
 | `SocialAccountGroup` | id, workspaceId, name | Saved sets, e.g. "Brand A all channels" |
 | `SocialAccountGroupItem` | groupId, socialAccountId | |
-| `OAuthState` | state, workspaceId, userId, provider, pkceVerifier, connectionId? (for reconnect), expiresAt | 10-minute expiry, single use |
+| `OAuthState` | state, workspaceId, userId, provider, pkceVerifier, connectionId? (for reconnect), forceAccountSelection, expiresAt | 10-minute expiry, single use |
 
 `meta` holds network extras (Pinterest default board, LinkedIn org URN, TikTok creator info cache).
 

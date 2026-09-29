@@ -21,7 +21,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | Contracts | `packages/contracts` | [contracts](backend/contracts.md) | 0 · P0-B12, P0-C1–C2 · 1 · P1-C1–C2 · 2 · P2-C1–C3 · 3 · P3-C1 · 4 · P4-C1–C2 · 5 · P5-C1 · 6.1 · P6-C1 |
 | Email templates | `packages/emails` | [platform](backend/modules/platform.md) | 0 · P0-B13; 2 · P2-B12; 4 · P4-B11; 5 · P5-B9; 6.1 · P6-B11 |
 | Design system | `packages/ui` | [design system](frontend/design-system.md) | 0 · P0-F2, P0-F4, P0-F5, P0-F6, P0-F7, P0-F8; 1 · P1-F9; 4 · P4-F7; 5 · P5-F6; 6.1 · P6-F8 |
-| Provider core (types, registry, http, errors) | `packages/providers/src` | [providers](backend/modules/providers.md) | 1 · P1-B2 |
+| Provider core (types, registry, http, errors, shared validation, replay fixtures) | `packages/providers/src` (`__fixtures__/<network>/` recordings, `testing/replay.ts`) | [providers](backend/modules/providers.md) | 1 · P1-B2 |
 | Facebook Page adapter | `packages/providers/src/meta` | [providers](backend/modules/providers.md) | 1 · P1-B3, P1-B9 |
 | Instagram adapter | `packages/providers/src/meta` | [providers](backend/modules/providers.md) | 1 · P1-B4, P1-B9 |
 | LinkedIn adapters | `packages/providers/src/linkedin` | [providers](backend/modules/providers.md) | 3 · P3-B1 |
@@ -87,7 +87,7 @@ Unit and integration tests live next to the code they test (`__tests__/` in each
 | --- | --- | --- |
 | E2E per phase | `apps/web/e2e/phase-<n>/` | P0-Q1 · P1-Q1, P1-Q2, P1-Q3 · P2-Q3 · P3-Q1 · P4-Q1, P4-Q2 · P5-Q1, P5-Q2 · P6-Q1, P6-Q2 |
 | Chaos + DST | `tests/chaos/`, `tests/scheduling/` | P2-Q1, P2-Q2 |
-| Adapter coverage | `packages/providers/__tests__/` | P3-Q2 |
+| Adapter coverage | `packages/providers/src/**/__tests__/` | P1-B9 (Meta) · P3-Q2 |
 | Self-host install | `tests/selfhost/` | P5-Q3 |
 | Load | `tests/load/` (k6) | P5-I3 |
 
