@@ -23,6 +23,24 @@ describe('signed public addresses', () => {
     expect(off.sign('workspaces/w/media/a/original.jpg')).toBeNull();
   });
 
+  it('fall back to the bucket’s own public address when only that is set', () => {
+    const cdn = createMediaUrlSigner({
+      baseUrl: undefined,
+      secret: 'x'.repeat(32),
+      storagePublicUrl: 'https://contents.example.test/',
+    });
+    expect(cdn.sign('workspaces/w/media/a b/original.jpg')).toBe(
+      'https://contents.example.test/workspaces/w/media/a%20b/original.jpg',
+    );
+    // The signed address wins when both are configured.
+    const both = createMediaUrlSigner({
+      baseUrl: 'https://media.test',
+      secret: 'x'.repeat(32),
+      storagePublicUrl: 'https://contents.example.test',
+    });
+    expect(both.sign('k.jpg')).toMatch(/^https:\/\/media\.test\//);
+  });
+
   it('name the stored file, keep its extension, and verify', () => {
     const url = signer.sign('workspaces/w/media/a/original.jpg');
     expect(url).toMatch(/^https:\/\/media\.test\/[\w-]+\.[\w-]+\.jpg$/);

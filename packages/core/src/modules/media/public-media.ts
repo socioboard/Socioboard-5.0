@@ -29,14 +29,23 @@ export function createMediaUrlSigner(input: {
   baseUrl: string | undefined;
   /** AUTH_SECRET; a label keeps these signatures apart from anything else signed with it. */
   secret: string;
+  /**
+   * STORAGE_PUBLIC_URL: the bucket itself is publicly readable here (a CDN in front of it), so
+   * networks can fetch `<this>/<key>` directly. Used only when `baseUrl` isn't set.
+   */
+  storagePublicUrl?: string | undefined;
 }): MediaUrlSigner {
   const mac = (payload: string) =>
     createHmac('sha256', input.secret).update(`public-media:${payload}`).digest('base64url');
   const base = input.baseUrl?.replace(/\/+$/, '');
+  const storagePublic = input.storagePublicUrl?.replace(/\/+$/, '');
 
   return {
     sign(storageKey, ttlSec = PUBLIC_MEDIA_TTL_SEC) {
-      if (!base) return null;
+      if (!base) {
+        if (!storagePublic) return null;
+        return `${storagePublic}/${storageKey.split('/').map(encodeURIComponent).join('/')}`;
+      }
       const exp = Math.floor(Date.now() / 1000) + ttlSec;
       const payload = Buffer.from(JSON.stringify({ k: storageKey, e: exp })).toString('base64url');
       // The extension helps fetchers that look at it; it isn't part of what's signed.
