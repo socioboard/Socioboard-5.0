@@ -140,6 +140,8 @@ function Composer({
   const can = useCan();
   const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
   const [tab, setTab] = useState<NetworkId | null>(null);
+  // Files uploading, by the tab they were started from ("all" for the shared media).
+  const [uploadsByTab, setUploadsByTab] = useState<Record<string, string[]>>({});
   const panelId = useId();
 
   const networkOf = (id: string) => accounts.find((a) => a.id === id)?.network;
@@ -235,6 +237,11 @@ function Composer({
               }}
               onReset={() => {
                 if (active) dispatch({ type: 'reset', network: active, part: 'media' });
+              }}
+              uploadIds={uploadsByTab[active ?? 'all'] ?? []}
+              onUploadIds={(update) => {
+                const scope = active ?? 'all';
+                setUploadsByTab((all) => ({ ...all, [scope]: update(all[scope] ?? []) }));
               }}
             />
             {active === null && (
@@ -366,6 +373,8 @@ function MediaBlock({
   onMedia,
   onAttach,
   onReset,
+  uploadIds,
+  onUploadIds,
 }: {
   workspaceId: string;
   draft: Draft;
@@ -375,6 +384,8 @@ function MediaBlock({
   onMedia: (mediaIds: string[]) => void;
   onAttach: (mediaIds: string[]) => void;
   onReset: () => void;
+  uploadIds: string[];
+  onUploadIds: (update: (ids: string[]) => string[]) => void;
 }) {
   const { t } = useTranslation('composer');
   const content = contentFor(draft, network);
@@ -396,6 +407,8 @@ function MediaBlock({
         // A network tab shows the shared files until the user chooses its own.
         disabled={readOnly || shared}
         label={label}
+        uploadIds={uploadIds}
+        onUploadIds={onUploadIds}
       />
       {network && !readOnly && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">

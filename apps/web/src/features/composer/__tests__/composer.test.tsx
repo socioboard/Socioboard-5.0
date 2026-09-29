@@ -209,6 +209,50 @@ describe('composer', () => {
     expect(within(strip).getByRole('img', { name: 'fresh.jpg' })).toBeInTheDocument();
   });
 
+  it('a file still uploading shows on the tab it was started from, not on the others', async () => {
+    // Storage never answers: the upload stays in progress for the whole test.
+    vi.stubGlobal(
+      'XMLHttpRequest',
+      class extends FakeXhr {
+        override send() {
+          // left hanging
+        }
+      },
+    );
+    const pending = media('01a0d816-827a-74d6-a46e-409c7db32010', 'slow.jpg');
+    mockServer({
+      ...base(),
+      [`POST ${BASE}/media/uploads`]: [
+        201,
+        {
+          asset: { ...pending, status: 'uploading' },
+          upload: { type: 'single', url: 'https://s3.test/put', headers: {} },
+          expiresAt: '2026-09-28T11:00:00.000Z',
+        },
+      ],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
+    await user.click(screen.getByRole('tab', { name: 'Instagram' }));
+    await user.click(screen.getByRole('button', { name: 'Use different media for Instagram' }));
+    await user.click(screen.getByRole('tab', { name: /All networks/ }));
+    fireEvent.change(screen.getByTestId('composer-file-input'), {
+      target: { files: [new File(['x'], 'slow.jpg', { type: 'image/jpeg' })] },
+    });
+    const shared = screen.getByRole('list', { name: 'Media' });
+    expect(await within(shared).findByRole('status', { name: 'Uploading' })).toBeInTheDocument();
+    await user.click(screen.getByRole('tab', { name: /Instagram/ }));
+    const ig = screen.getByRole('list', { name: 'Media for Instagram' });
+    expect(within(ig).queryByRole('status', { name: 'Uploading' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('tab', { name: /All networks/ }));
+    expect(
+      within(screen.getByRole('list', { name: 'Media' })).getByRole('status', {
+        name: 'Uploading',
+      }),
+    ).toBeInTheDocument();
+  });
+
   it('checks the link is a web address once the field is left', async () => {
     mockServer(base());
     renderApp('/w/halden/compose');

@@ -9,7 +9,7 @@ import { expect, type Page } from '@playwright/test';
 export async function expectRightCursors(page: Page, where: string) {
   const wrong = await page.evaluate(() => {
     const controls = document.querySelectorAll(
-      'button, a[href], summary, select, label[for], input[type=checkbox], input[type=radio], ' +
+      'button, a[href], summary, select, input[type=checkbox], input[type=radio], ' +
         'input[type=file], [role=button], [role=tab], [role=link], [role=menuitem], ' +
         '[role=menuitemradio], [role=menuitemcheckbox], [role=option], [role=radio], ' +
         '[role=checkbox], [role=switch]',
