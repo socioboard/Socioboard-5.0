@@ -140,6 +140,17 @@ describe('loadConfig', () => {
     expect(loadConfig({ ...base, META_GRAPH_VERSION: '25.0' }).networks.graphVersion).toBe('v25.0');
   });
 
+  it('takes an optional public media address', () => {
+    expect(loadConfig(base).media.publicUrl).toBeUndefined();
+    expect(loadConfig({ ...base, MEDIA_PUBLIC_URL: '' }).media.publicUrl).toBeUndefined();
+    expect(
+      loadConfig({ ...base, MEDIA_PUBLIC_URL: 'https://media.socioboard.com' }).media.publicUrl,
+    ).toBe('https://media.socioboard.com');
+    expect(() => loadConfig({ ...base, MEDIA_PUBLIC_URL: 'media.socioboard.com' })).toThrow(
+      /MEDIA_PUBLIC_URL/,
+    );
+  });
+
   it('checks breached passwords unless turned off', () => {
     expect(loadConfig(base).auth.breachedPasswordCheck).toBe(true);
     expect(

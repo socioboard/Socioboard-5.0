@@ -10,10 +10,18 @@ export interface RecordedCall {
   url: string;
   /** Query parameters that must be present with these values (others are ignored). */
   query?: Record<string, string>;
-  /** Form or JSON body fields that must be present with these values. */
+  /**
+   * Body fields that must be present with these values: form, JSON or multipart fields (a
+   * multipart file reads `file:<filename>:<bytes>`); a raw binary body reads `bytes: <count>`.
+   */
   body?: Record<string, string>;
+  /** Request headers that must be present with these values (lowercase names). */
+  requestHeaders?: Record<string, string>;
   status: number;
-  response: unknown;
+  /** JSON (or text) answer; ignored when `responseBytes` is set. */
+  response?: unknown;
+  /** Answer with this many bytes of binary content instead (a file download). */
+  responseBytes?: number;
   headers?: Record<string, string>;
 }
 
@@ -45,6 +53,14 @@ export function fixture(network: string, name: string): RecordedCall[] {
 
 function readBody(init: RequestInit | undefined): Record<string, string> {
   const raw = init?.body;
+  if (raw instanceof FormData) {
+    const fields: Record<string, string> = {};
+    for (const [k, v] of raw.entries()) {
+      fields[k] = typeof v === 'string' ? v : `file:${v.name}:${String(v.size)}`;
+    }
+    return fields;
+  }
+  if (raw instanceof Uint8Array) return { bytes: String(raw.byteLength) };
   if (typeof raw !== 'string' || raw === '') return {};
   const type = new Headers(init?.headers).get('content-type') ?? '';
   if (type.includes('json')) {
@@ -77,10 +93,28 @@ export function replayFetch(calls: RecordedCall[]): Replay {
       const actual = url.searchParams.get(key);
       if (actual !== value) fail(`${where}: query ${key}=${String(actual)}, expected ${value}`);
     }
+    const sentHeaders = new Headers(init?.headers);
+    for (const [key, value] of Object.entries(next.requestHeaders ?? {})) {
+      if (sentHeaders.get(key) !== value) {
+        fail(`${where}: header ${key}=${String(sentHeaders.get(key))}, expected ${value}`);
+      }
+    }
     for (const [key, value] of Object.entries(next.body ?? {})) {
       if (body[key] !== value) {
         fail(`${where}: body ${key}=${String(body[key])}, expected ${value}`);
       }
+    }
+    if (next.responseBytes !== undefined) {
+      return Promise.resolve(
+        new Response(new Uint8Array(next.responseBytes).fill(7), {
+          status: next.status,
+          headers: {
+            'content-type': 'application/octet-stream',
+            'content-length': String(next.responseBytes),
+            ...next.headers,
+          },
+        }),
+      );
     }
     const text = typeof next.response === 'string' ? next.response : JSON.stringify(next.response);
     return Promise.resolve(

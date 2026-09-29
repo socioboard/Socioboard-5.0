@@ -155,10 +155,48 @@ export function createInstagram(
     return res.id;
   }
 
-  const mediaFields = (m: PublishMedia): Record<string, string> =>
-    m.kind === 'video'
-      ? { video_url: m.url }
-      : { image_url: m.url, ...(m.altText ? { alt_text: m.altText } : {}) };
+  /**
+   * One container for one file. Videos of accounts reached through a Facebook Page are uploaded
+   * as bytes to rupload.facebook.com (Meta offers this only with Facebook Login); everything
+   * else (images always, Instagram Login videos) is fetched by Instagram from the public URL.
+   */
+  async function createMedia(
+    graph: GraphClient,
+    account: AccountCredentials,
+    m: PublishMedia,
+    fields: Record<string, string>,
+  ): Promise<string> {
+    if (m.kind === 'video' && account.meta.via !== 'instagram') {
+      const id = await create(graph, account, { ...fields, upload_type: 'resumable' });
+      const bytes = await graph.http.download(m.readUrl, {
+        maxBytes: INSTAGRAM_RULES.media.video?.maxBytes ?? m.sizeBytes,
+        timeoutMs: 5 * 60_000,
+      });
+      await graph.postBytes(
+        `https://rupload.facebook.com/ig-api-upload/${graph.version}/${id}`,
+        account.accessToken,
+        bytes,
+        { offset: '0', file_size: String(bytes.byteLength) },
+      );
+      return id;
+    }
+    if (!m.publicUrl) {
+      throw new ProviderError({
+        kind: 'content',
+        networkCode: 'media_public_url_missing',
+        message:
+          m.kind === 'video'
+            ? 'Instagram fetches this video from a public address, and this server has none (MEDIA_PUBLIC_URL)'
+            : 'Instagram fetches images from a public address, and this server has none (MEDIA_PUBLIC_URL)',
+      });
+    }
+    return create(graph, account, {
+      ...fields,
+      ...(m.kind === 'video'
+        ? { video_url: m.publicUrl }
+        : { image_url: m.publicUrl, ...(m.altText ? { alt_text: m.altText } : {}) }),
+    });
+  }
 
   /** Creates the container to publish and waits until it (and any children) are processed. */
   async function createContainer(
@@ -181,30 +219,28 @@ export function createInstagram(
     };
     const caption = input.text === '' ? {} : { caption: input.text };
     if (format === 'story') {
-      return ready(await create(graph, account, { media_type: 'STORIES', ...mediaFields(first) }));
+      return ready(await createMedia(graph, account, first, { media_type: 'STORIES' }));
     }
     if (format === 'reel' || (input.media.length === 1 && first.kind === 'video')) {
       // Single feed videos are reels; share_to_feed keeps them in the profile grid too.
       return ready(
-        await create(graph, account, {
+        await createMedia(graph, account, first, {
           media_type: 'REELS',
-          video_url: first.url,
           share_to_feed: 'true',
           ...caption,
         }),
       );
     }
     if (input.media.length === 1) {
-      return ready(await create(graph, account, { ...mediaFields(first), ...caption }));
+      return ready(await createMedia(graph, account, first, caption));
     }
     // Carousel: create every child first so Instagram processes them side by side, then wait.
     const children: string[] = [];
     for (const m of input.media) {
       children.push(
-        await create(graph, account, {
+        await createMedia(graph, account, m, {
           is_carousel_item: 'true',
           ...(m.kind === 'video' ? { media_type: 'VIDEO' } : {}),
-          ...mediaFields(m),
         }),
       );
     }

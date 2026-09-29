@@ -68,6 +68,20 @@ export interface GraphClient {
     opts?: PostOptions,
   ): Promise<T>;
   delete(path: string, token: string): Promise<void>;
+  /**
+   * Sends raw bytes to an upload host (Instagram's rupload), with the token in an
+   * `Authorization: OAuth` header as that host wants.
+   */
+  postBytes<T>(
+    fullUrl: string,
+    token: string,
+    bytes: Uint8Array,
+    headers: Record<string, string>,
+  ): Promise<T>;
+  /** The Graph API version in use (upload hosts put it in their paths). */
+  version: string;
+  /** For reading files to upload (downloads never carry a token). */
+  http: HttpClient;
   /** Follows `paging.next` until the list ends or `maxPages` is reached. */
   getAll<T>(
     path: string,
@@ -81,7 +95,12 @@ interface PostOptions {
   /** graph-video.facebook.com, for video uploads. */
   video?: boolean;
   timeoutMs?: number;
+  /** Sends the form as multipart/form-data with this file (photo `source`, video chunks). */
+  file?: { field: string; bytes: Uint8Array; filename: string; mime: string };
 }
+
+/** Upload timeout: files take longer than the default minute. */
+const UPLOAD_TIMEOUT_MS = 5 * 60_000;
 
 /**
  * Calls graph.facebook.com (or graph.instagram.com) with a token, adding `appsecret_proof` so a
@@ -104,30 +123,39 @@ export function createGraphClient(input: {
   const url = (root: string, path: string) =>
     path.startsWith('https://') ? path : `${root}/${version}/${path.replace(/^\//, '')}`;
 
+  function multipart(fields: Record<string, string>, file: NonNullable<PostOptions['file']>) {
+    const form = new FormData();
+    for (const [k, v] of Object.entries(fields)) form.append(k, v);
+    form.append(file.field, new Blob([file.bytes], { type: file.mime }), file.filename);
+    return form;
+  }
+
   async function call<T>(
     method: 'GET' | 'POST' | 'DELETE',
     fullUrl: string,
     token: string,
     params: Record<string, string | number>,
-    timeoutMs?: number,
+    opts: { timeoutMs?: number | undefined; file?: PostOptions['file'] } = {},
   ): Promise<T> {
     const auth: Record<string, string> =
       input.proof === false
         ? { access_token: token }
         : { access_token: token, appsecret_proof: makeProof(token) };
+    const timeout = opts.timeoutMs ?? (opts.file ? UPLOAD_TIMEOUT_MS : undefined);
+    const fields = { ...(params as Record<string, string>), ...auth };
     const res = await input.http.request<T>(
       method !== 'POST'
         ? {
             method,
             url: fullUrl,
             query: { ...params, ...auth },
-            ...(timeoutMs ? { timeoutMs } : {}),
+            ...(timeout ? { timeoutMs: timeout } : {}),
           }
         : {
             method,
             url: fullUrl,
-            form: { ...(params as Record<string, string>), ...auth },
-            ...(timeoutMs ? { timeoutMs } : {}),
+            ...(opts.file ? { multipart: multipart(fields, opts.file) } : { form: fields }),
+            ...(timeout ? { timeoutMs: timeout } : {}),
           },
     );
     if (res.ok) return res.body;
@@ -142,7 +170,30 @@ export function createGraphClient(input: {
   return {
     get: (path, token, query = {}) => call('GET', url(base, path), token, query),
     post: (path, token, form, opts = {}) =>
-      call('POST', url(opts.video ? videoBase : base, path), token, form, opts.timeoutMs),
+      call('POST', url(opts.video ? videoBase : base, path), token, form, opts),
+    async postBytes<T>(
+      fullUrl: string,
+      token: string,
+      bytes: Uint8Array,
+      headers: Record<string, string>,
+    ) {
+      const res = await input.http.request<T>({
+        method: 'POST',
+        url: fullUrl,
+        bytes,
+        headers: { authorization: `OAuth ${token}`, ...headers },
+        timeoutMs: UPLOAD_TIMEOUT_MS,
+      });
+      if (res.ok) return res.body;
+      const c = classifyGraphError(res.status, res.body);
+      throw new ProviderError({
+        ...c,
+        status: res.status,
+        retryAfterSec: retryAfterSec(res.headers),
+      });
+    },
+    version,
+    http: input.http,
     async delete(path, token) {
       await call('DELETE', url(base, path), token, {});
     },

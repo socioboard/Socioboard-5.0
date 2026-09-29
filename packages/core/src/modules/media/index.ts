@@ -4,3 +4,9 @@ export { mediaProcessQueue, processMedia, type MediaJobDeps } from './jobs';
 export { analyzeImage, analyzeVideo } from './processing';
 export { registerMediaRoutes } from './routes';
 export { createMediaService, mediaKeys, type MediaService } from './service';
+export {
+  createMediaUrlSigner,
+  createPublicMediaRouter,
+  PUBLIC_MEDIA_TTL_SEC,
+  type MediaUrlSigner,
+} from './public-media';

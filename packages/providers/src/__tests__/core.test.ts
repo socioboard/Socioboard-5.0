@@ -138,6 +138,38 @@ describe('http client', () => {
     });
   });
 
+  it('downloads files to upload: whole, by byte range, and within a size limit', async () => {
+    const replay = replayFetch([
+      { method: 'GET', url: 'https://storage.test/a.jpg', status: 200, responseBytes: 10 },
+      {
+        method: 'GET',
+        url: 'https://storage.test/v.mp4',
+        requestHeaders: { range: 'bytes=100-199' },
+        status: 206,
+        responseBytes: 100,
+      },
+      { method: 'GET', url: 'https://storage.test/big.jpg', status: 200, responseBytes: 50 },
+      { method: 'GET', url: 'https://storage.test/gone.jpg', status: 404, response: 'no' },
+    ]);
+    const http = createHttpClient({ name: 'example', fetch: replay.fetch });
+    expect((await http.download('https://storage.test/a.jpg')).byteLength).toBe(10);
+    const chunk = await http.download('https://storage.test/v.mp4', {
+      range: { start: 100, end: 200 },
+    });
+    expect(chunk.byteLength).toBe(100);
+    await expect(
+      http.download('https://storage.test/big.jpg', { maxBytes: 20 }),
+    ).rejects.toMatchObject({
+      kind: 'retryable',
+      message: 'The file is larger than this upload allows',
+    });
+    await expect(http.download('https://storage.test/gone.jpg')).rejects.toMatchObject({
+      kind: 'retryable',
+      status: 404,
+    });
+    expect(replay.mismatches).toEqual([]);
+  });
+
   it('reads Retry-After in seconds or as a date', () => {
     const now = Date.parse('2026-09-29T10:00:00Z');
     expect(retryAfterSec(new Headers({ 'retry-after': '30' }), now)).toBe(30);

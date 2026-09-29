@@ -1,7 +1,13 @@
 import type { ContentRules, PreviewSpec, ValidationIssue } from '@socioboard/contracts';
 
 import { isProviderError } from '../errors';
-import type { AccountCredentials, NetworkAdapter, PublishInput, PublishResult } from '../types';
+import type {
+  AccountCredentials,
+  NetworkAdapter,
+  PublishInput,
+  PublishMedia,
+  PublishResult,
+} from '../types';
 import { checkRules, issue, IssueCode } from '../validation';
 import type { GraphClient } from './graph-client';
 
@@ -132,35 +138,31 @@ async function createPost(
   }
 
   if (first.kind === 'video') {
-    const res = await graph.post<{ id: string }>(
-      `${page}/videos`,
-      token,
-      { file_url: first.url, description: messageWithLink(input) },
-      // Meta fetches the file before answering; allow longer than the default minute.
-      { video: true, timeoutMs: 5 * 60_000 },
-    );
-    return { externalId: res.id, isVideo: true };
+    const id = await uploadVideo(graph, page, token, first, messageWithLink(input));
+    return { externalId: id, isVideo: true };
   }
 
   const alt = (text: string | null): Record<string, string> =>
     text ? { alt_text_custom: text } : {};
   if (input.media.length === 1) {
-    const res = await graph.post<{ id: string; post_id?: string }>(`${page}/photos`, token, {
-      url: first.url,
-      caption: messageWithLink(input),
-      ...alt(first.altText),
-    });
+    const res = await graph.post<{ id: string; post_id?: string }>(
+      `${page}/photos`,
+      token,
+      { caption: messageWithLink(input), ...alt(first.altText) },
+      { file: await photoFile(graph, first) },
+    );
     return { externalId: res.post_id ?? res.id, isVideo: false };
   }
 
   // Several photos: upload each unpublished, then one feed post that attaches them in order.
   const photoIds: string[] = [];
   for (const m of input.media) {
-    const res = await graph.post<{ id: string }>(`${page}/photos`, token, {
-      url: m.url,
-      published: 'false',
-      ...alt(m.altText),
-    });
+    const res = await graph.post<{ id: string }>(
+      `${page}/photos`,
+      token,
+      { published: 'false', ...alt(m.altText) },
+      { file: await photoFile(graph, m) },
+    );
     photoIds.push(res.id);
   }
   const attached = Object.fromEntries(
@@ -171,6 +173,78 @@ async function createPost(
     ...attached,
   });
   return { externalId: res.id, isVideo: false };
+}
+
+/**
+ * Photos are uploaded as bytes (`source`), read from our storage: nothing needs to be reachable
+ * from the internet, and Meta never has to fetch a URL that might expire.
+ */
+async function photoFile(graph: GraphClient, m: PublishMedia) {
+  const bytes = await graph.http.download(m.readUrl, {
+    maxBytes: FACEBOOK_RULES.media.maxImageBytes,
+  });
+  const ext = m.mime === 'image/png' ? 'png' : m.mime === 'image/gif' ? 'gif' : 'jpg';
+  return { field: 'source', bytes, filename: `photo.${ext}`, mime: m.mime };
+}
+
+/**
+ * Videos go through Meta's chunked upload (start → transfer each chunk Meta asks for → finish),
+ * each chunk read from our storage as a byte range, so a large video is never held whole.
+ */
+async function uploadVideo(
+  graph: GraphClient,
+  page: string,
+  token: string,
+  m: PublishMedia,
+  description: string,
+): Promise<string> {
+  const session = await graph.post<{
+    video_id: string;
+    upload_session_id: string;
+    start_offset: string;
+    end_offset: string;
+  }>(
+    `${page}/videos`,
+    token,
+    { upload_phase: 'start', file_size: String(m.sizeBytes) },
+    { video: true },
+  );
+  let start = Number(session.start_offset);
+  let end = Number(session.end_offset);
+  // Meta sizes the chunks; a bound keeps a misbehaving answer from looping forever.
+  for (let i = 0; start < end && i < 10_000; i++) {
+    const chunk = await graph.http.download(m.readUrl, {
+      range: { start, end },
+      timeoutMs: 5 * 60_000,
+    });
+    const next = await graph.post<{ start_offset: string; end_offset: string }>(
+      `${page}/videos`,
+      token,
+      {
+        upload_phase: 'transfer',
+        upload_session_id: session.upload_session_id,
+        start_offset: String(start),
+      },
+      {
+        video: true,
+        file: {
+          field: 'video_file_chunk',
+          bytes: chunk,
+          filename: 'chunk',
+          mime: 'application/octet-stream',
+        },
+      },
+    );
+    start = Number(next.start_offset);
+    end = Number(next.end_offset);
+  }
+  await graph.post(
+    `${page}/videos`,
+    token,
+    { upload_phase: 'finish', upload_session_id: session.upload_session_id, description },
+    { video: true },
+  );
+  return session.video_id;
 }
 
 /** The post's public URL; the post is published even when this lookup fails. */

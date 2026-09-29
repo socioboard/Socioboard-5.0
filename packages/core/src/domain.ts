@@ -2,6 +2,7 @@
 // the API queues publish jobs and the worker runs them, with the same code on each side.
 import type { Registry } from '@socioboard/providers';
 
+import { createMediaUrlSigner, type MediaUrlSigner } from './modules/media';
 import { createPostService, registerPostListeners, type PostService } from './modules/posts';
 import { publishJobId, publishQueue, type PublishJobData } from './modules/publishing';
 import {
@@ -16,6 +17,8 @@ export interface PublishingServices {
   registry: Registry;
   socialAccounts: SocialAccountService;
   posts: PostService;
+  /** Signed public media addresses (served by the API at /public-media). */
+  mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
   publishQueue: QueueDefinition<PublishJobData, void>;
 }
@@ -37,9 +40,14 @@ export function createPublishingServices(
     lookupMembership: createMembershipLookup(db),
   });
 
+  const mediaUrls = createMediaUrlSigner({
+    baseUrl: config.media.publicUrl,
+    secret: config.auth.secret,
+  });
   const queue = publishQueue({
     db,
     storage,
+    mediaUrls,
     clock,
     logger,
     events,
@@ -67,5 +75,5 @@ export function createPublishingServices(
   });
   registerPostListeners(events, posts, logger);
 
-  return { registry, socialAccounts, posts, publishQueue: queue };
+  return { registry, socialAccounts, posts, mediaUrls, publishQueue: queue };
 }
