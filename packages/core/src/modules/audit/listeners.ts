@@ -1,11 +1,12 @@
 import type { EventBus, Logger } from '../../platform';
 import type { AuthEvents } from '../auth';
 import type { MediaEvents } from '../media';
+import type { PostEvents } from '../posts';
 import type { SocialAccountEvents } from '../social-accounts';
 import type { WorkspaceEvents } from '../workspaces';
 import type { AuditEntry, AuditLog } from './service';
 
-type AllEvents = AuthEvents & WorkspaceEvents & MediaEvents & SocialAccountEvents;
+type AllEvents = AuthEvents & WorkspaceEvents & MediaEvents & SocialAccountEvents & PostEvents;
 /** The real event names, without the `Record<string, unknown>` index signature the maps extend. */
 type EventName = keyof { [K in keyof AllEvents as string extends K ? never : K]: true };
 type Mapping = {
@@ -124,6 +125,22 @@ export const AUDITED: Mapping = {
     actor: user(p.userId),
     entity: { type: 'social_account', id: p.accountId },
     diff: { network: p.network, cancelledTargets: p.cancelledTargetIds.length },
+  }),
+  'post.created': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+  }),
+  'post.updated': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { fields: p.fields },
+  }),
+  'post.deleted': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
   }),
   'account.reauth_required': (p) => ({
     workspaceId: p.workspaceId,

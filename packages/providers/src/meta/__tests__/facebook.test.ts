@@ -152,6 +152,8 @@ describe('Facebook login', () => {
       // Only ANALYZE on this Page: can't post as it.
       ['facebook_page', '102', 'missing_permission'],
     ]);
+    // The fixture's second Page name ends in a space, as a real one did.
+    expect(assets[2]?.displayName).toBe('Halden Roastery');
     expect(assets[0]).toMatchObject({
       displayName: 'Halden Coffee',
       username: 'haldencoffee',

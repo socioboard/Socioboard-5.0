@@ -115,7 +115,7 @@ export function createInstagramLogin(config: InstagramLoginConfig): LoginAdapter
       const me = await igMe(graph, tokens);
       return {
         externalUserId: me.user_id,
-        displayName: me.name ?? me.username,
+        displayName: (me.name ?? me.username).trim(),
         avatarUrl: me.profile_picture_url ?? null,
       };
     },
@@ -126,7 +126,7 @@ export function createInstagramLogin(config: InstagramLoginConfig): LoginAdapter
         {
           network: 'instagram',
           externalId: me.user_id,
-          displayName: me.name ?? me.username,
+          displayName: (me.name ?? me.username).trim(),
           username: me.username,
           avatarUrl: me.profile_picture_url ?? null,
           // Posts with the login's own token.

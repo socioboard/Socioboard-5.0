@@ -36,7 +36,7 @@
       "data": [
         {
           "id": "102",
-          "name": "Halden Roastery",
+          "name": "Halden Roastery ",
           "picture": { "data": { "url": "https://scontent.example.test/roastery.jpg" } },
           "access_token": "EAA-page-102",
           "tasks": ["ANALYZE"]

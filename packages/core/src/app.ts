@@ -13,6 +13,7 @@ import {
   type AuthModule,
 } from './modules/auth';
 import { createMediaService, mediaProcessQueue, registerMediaRoutes } from './modules/media';
+import { createPostService, registerPostListeners, registerPostRoutes } from './modules/posts';
 import {
   createNetworkRegistry,
   createOAuthCallbackRouter,
@@ -120,17 +121,26 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
+  const registry = options.registry ?? createNetworkRegistry(config, logger);
   const socialAccounts = createSocialAccountService({
     db: platform.db,
     crypto: platform.crypto,
     clock: platform.clock,
     logger,
     events: platform.events,
-    registry: options.registry ?? createNetworkRegistry(config, logger),
+    registry,
     appUrl: config.appUrl,
     lookupMembership,
   });
   registerSocialAccountRoutes(api, socialAccounts);
+  const posts = createPostService({
+    db: platform.db,
+    storage: platform.storage,
+    events: platform.events,
+    registry,
+  });
+  registerPostRoutes(api, posts);
+  registerPostListeners(platform.events, posts, logger);
 
   const app = express();
   app.disable('x-powered-by');

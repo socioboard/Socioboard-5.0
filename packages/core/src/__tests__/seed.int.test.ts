@@ -89,11 +89,33 @@ describe('seedDevData', () => {
     expect(assets.filter((a) => a.folderId)).toHaveLength(2);
   });
 
+  it('adds paused sample accounts, a draft and a scheduled post', async () => {
+    expect(first.posts).toBe(2);
+    const ws = t.db.forWorkspace(first.workspace.id);
+    const accounts = await ws.socialAccount.findMany({ orderBy: { network: 'asc' } });
+    expect(accounts.map((a) => [a.network, a.status])).toEqual([
+      ['facebook_page', 'paused'],
+      ['instagram', 'paused'],
+    ]);
+    const posts = await ws.post.findMany({
+      include: { targets: true },
+      orderBy: { status: 'asc' },
+    });
+    expect(posts.map((p) => [p.status, p.targets.map((x) => x.status)])).toEqual([
+      ['draft', ['pending', 'pending']],
+      ['scheduled', ['scheduled', 'scheduled']],
+    ]);
+    const scheduledAt = posts[1]?.targets[0]?.scheduledAt?.getTime() ?? 0;
+    expect(scheduledAt).toBeGreaterThan(Date.now());
+  });
+
   it('running again adds nothing', async () => {
     const again = await seedDevData(platform, options);
     expect(again.users.every((u) => !u.created)).toBe(true);
     expect(again.workspace).toEqual({ ...first.workspace, created: false });
     expect(again.media).toBe(t.platform.storage ? 'exists' : 'no-storage');
+    expect(again.posts).toBe('exists');
+    expect(await t.db.forWorkspace(first.workspace.id).socialAccount.count()).toBe(2);
     const members = await t.db.forWorkspace(first.workspace.id).member.count();
     expect(members).toBe(5);
   });
