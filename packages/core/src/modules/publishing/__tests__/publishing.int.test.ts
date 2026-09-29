@@ -167,6 +167,40 @@ describe('publish now', () => {
     expect(played.published).toHaveLength(1);
   });
 
+  it('two requests with the same key at the same moment publish once, and both succeed', async () => {
+    const post = await draft({ text: 'Double submit', targets: [{ accountId: acc.fb }] });
+    const url = `${base()}/posts/${post.id}/publish-now`;
+    // Sent together (supertest sends on then).
+    const [a, b] = await Promise.all([
+      owner
+        .post(url)
+        .set('Idempotency-Key', 'same-moment')
+        .then((r) => r),
+      owner
+        .post(url)
+        .set('Idempotency-Key', 'same-moment')
+        .then((r) => r),
+    ]);
+    expect([a.status, b.status]).toEqual([202, 202]);
+    await settled(post.id);
+    expect(played.published).toHaveLength(1);
+  });
+
+  it('a key whose request failed can be used again once the problem is fixed', async () => {
+    const post = await draft({
+      text: 'Fix me',
+      targets: [{ accountId: acc.fb }, { accountId: acc.ig }],
+    });
+    const url = `${base()}/posts/${post.id}/publish-now`;
+    const first = await owner.post(url).set('Idempotency-Key', 'fix-and-retry');
+    expect(code(first)).toBe('POST_HAS_ERRORS');
+    // Drop the Instagram account (it needed a photo), then retry with the same key.
+    await owner.send('PATCH', `${base()}/posts/${post.id}`, { targets: [{ accountId: acc.fb }] });
+    const again = await owner.post(url).set('Idempotency-Key', 'fix-and-retry');
+    expect(again.status).toBe(202);
+    expect((await settled(post.id)).status).toBe('published');
+  });
+
   it('refuses a post with errors and says what they are', async () => {
     // Instagram needs a photo or video.
     const post = await draft({

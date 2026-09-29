@@ -83,7 +83,12 @@ const targetInclude = {
 } as const;
 const postInclude = {
   author: { select: { id: true, name: true, image: true, avatarKey: true } },
-  targets: { include: targetInclude, orderBy: { createdAt: 'asc' } },
+  // One statement creates all of a post's targets, so they share createdAt; ids (UUIDv7,
+  // increasing) keep the order stable and as created.
+  targets: {
+    include: targetInclude,
+    orderBy: [{ createdAt: 'asc' }, { id: 'asc' }] as Prisma.PostTargetOrderByWithRelationInput[],
+  },
 } as const;
 type PostRow = Prisma.PostGetPayload<{ include: typeof postInclude }>;
 type TargetRow = PostRow['targets'][number];
@@ -706,10 +711,25 @@ export function createPostService(deps: PostServiceDeps) {
     const idemKey = idempotencyKey
       ? `idem:publish:${member.workspaceId}:${postId}:${idempotencyKey}`
       : null;
-    if (idemKey && (await deps.kv.get(idemKey))) {
+    // Claimed atomically: of requests with the same key, only the first one publishes; the
+    // others (a retry, or a double submit arriving at the same moment) get the post as it is.
+    if (idemKey && (await deps.kv.incr(idemKey, IDEMPOTENCY_TTL_SEC)) > 1) {
       return toPost(await findPost(member.workspaceId, postId));
     }
+    try {
+      return await publishClaimed(caller, member, postId);
+    } catch (err) {
+      // Nothing was published: the same key may be used again once the problem is fixed.
+      if (idemKey) await deps.kv.delete(idemKey);
+      throw err;
+    }
+  }
 
+  async function publishClaimed(
+    caller: AuthContext,
+    member: MemberContext,
+    postId: string,
+  ): Promise<Post> {
     const post = await findPost(member.workspaceId, postId);
     const workspace = await db.client.workspace.findUnique({
       where: { id: member.workspaceId },
@@ -743,7 +763,6 @@ export function createPostService(deps: PostServiceDeps) {
       }));
     });
     await enqueueOrRevert(member.workspaceId, jobs);
-    if (idemKey) await deps.kv.set(idemKey, '1', IDEMPOTENCY_TTL_SEC);
     await recomputeStatus(member.workspaceId, post.id);
     await events.emit('post.publish_requested', {
       workspaceId: member.workspaceId,

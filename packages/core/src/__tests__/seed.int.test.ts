@@ -35,6 +35,7 @@ afterAll(async () => {
 describe('seedDevData', () => {
   let first: SeedResult;
 
+  // Draws and processes five sample images: slower than the default 5 s under a full run.
   it('creates one verified user per role and the demo workspace', async () => {
     first = await seedDevData(platform, options);
     expect(first.users.map((u) => [u.role, u.created])).toEqual([
@@ -56,7 +57,7 @@ describe('seedDevData', () => {
       where: { email: { endsWith: `@${options.emailDomain}` }, emailVerified: true },
     });
     expect(verified).toBe(5);
-  });
+  }, 30_000);
 
   it('seeded users sign in with the seed password and see their role', async () => {
     const b = t.browser();
