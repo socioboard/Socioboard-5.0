@@ -18,20 +18,25 @@ None directly (triggered via posts and scheduling). Read access to attempts is t
 ## Jobs
 | Queue | Job | Behavior |
 | --- | --- | --- |
-| `media-prepare` | `prepare:<targetId>` | Resize/transcode media to the target network's rules; produce public URLs |
-| `publish` | `publish:<targetId>:v<scheduleVersion>` | Publish one target. Delayed until `scheduledAt` for scheduled posts |
+| `publish` | `publish-<targetId>-<tries>` | Publish one target. `tries` is the target's attempt count when queued, so publish-now twice or a double click queues it once, and a retry after a failure is a new job. Scheduled posts (phase 2) add the schedule version to the id and a delay until `scheduledAt` |
+| `media-prepare` | (inline in `publish` for now) | Get each file into the form the network takes and give it a URL: images other than JPEG are converted for Instagram (stored once as `variants/jpeg.jpg` next to the original and reused). Video transcoding (P1-B10) may move this to its own queue |
 
 **Publish processor steps:**
-1. Load target; exit if status isn't `scheduled`/`pending` or `externalPostId` is already set (idempotency).
-2. Check the account is `active`, the post is still approved, and the schedule version matches.
-3. Set `publishing`; resolve content; get tokens; run `media-prepare` if needed.
-4. Call `adapter.publish()`.
-5. Success → `published`, save externalId/permalink, emit `target.published`.
-6. Error → classify:
-   - `retryable` / `rate_limited` → retry with backoff (max 5; respect `retryAfter`)
-   - `auth` → mark account `reauth_required`, target `failed`, no retry
-   - `content` → target `failed` with the network's message, no retry
-7. Record a `PublishAttempt`; recompute post status; emit `target.failed` after the final failure.
+1. Load target; exit if its status isn't `pending`/`scheduled`/`publishing` or `externalPostId` is already set (idempotency).
+2. **Claim the try**: move `attempts` from n to n+1 only if it is still n, so two runs of the same target can't both publish. Record a `PublishAttempt` (`running`).
+3. Check the account is `active` (else an `auth` failure without calling the network) and the network is enabled. Phase 2 adds: the post is still approved and the schedule version matches.
+4. Resolve content (shared content + override); prepare media; get the token (`getCredentials`: the asset's own, else its login's).
+5. Call `adapter.publish()`.
+6. Success → `published`, save externalId/permalink **at once** (a re-run then exits at step 1), clear `lastError`, attempt `published` (warnings such as a refused first comment go in the attempt's message), emit `target.published`.
+7. Error → classify (anything that isn't a `ProviderError` counts as `retryable` and is logged):
+   - `retryable` / `rate_limited` with tries left → attempt `will_retry`, target stays `publishing` with `lastError`, BullMQ retries (5 tries in all; waits the network's `retryAfter`, else 30 s, 1 min, 2 min, 4 min)
+   - `auth` → target `failed`, the login and its accounts `reauth_required`, no retry
+   - `content`, or the last try → target `failed` with the network's message, no retry
+8. Recompute the post status; emit `target.failed` after the final failure.
+
+**Publish now** (`POST /posts/:pid/publish-now`, in posts): refuses when the workspace reviews everything (`REVIEW_REQUIRED` until approvals, phase 4), when a target isn't waiting (`POST_ALREADY_SENT`, 409), or when validation finds errors (`POST_HAS_ERRORS`, 422, with the full validation report in `details`). Under the post lock it moves the waiting targets to `publishing`, then queues them; if queuing fails they go back to `pending`. An `Idempotency-Key` is remembered for 24 hours and a repeat answers with the post without queuing again. **Retry** (`…/targets/:tid/retry`) does the same for one `failed` target (`TARGET_NOT_FAILED`, 409, otherwise).
+
+**Media URLs:** networks fetch files from signed storage URLs valid for an hour until P1-B8 gives them a stable public address (`media.<domain>`). A storage the internet can't reach (local MinIO) can't serve Meta; use S3 or the dev tunnel to publish media from a laptop.
 
 ## Rules
 - **Rate limits:** BullMQ group limiter keyed by `network:account` and `network:app`, tuned per network.

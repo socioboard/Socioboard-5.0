@@ -30,7 +30,9 @@ import {
   typedEvents,
   unprocessable,
   type AuthContext,
+  conflict,
   type Db,
+  type Kv,
   type EventBus,
   type MemberContext,
   type Storage,
@@ -43,7 +45,13 @@ export interface PostServiceDeps {
   storage: Storage | undefined;
   events: EventBus<Record<string, unknown>>;
   registry: Registry;
+  /** Remembers Idempotency-Keys of publish-now for a day. */
+  kv: Kv;
+  /** publishing: queue one publish job per target (`tries` = the target's attempts so far). */
+  enqueuePublish(jobs: { workspaceId: string; targetId: string; tries: number }[]): Promise<void>;
 }
+
+const IDEMPOTENCY_TTL_SEC = 24 * 3600;
 
 /** Issue codes of our own; each network's adapter adds its codes (providers IssueCode). */
 export const PostIssueCode = {
@@ -632,7 +640,158 @@ export function createPostService(deps: PostServiceDeps) {
     }
   }
 
+  // ---------------------------------------------------------------- publishing
+
+  const hasErrors = (r: ValidatePostResponse) =>
+    r.issues.some((i) => i.severity === 'error') ||
+    r.targets.some((t) => t.issues.some((i) => i.severity === 'error'));
+
+  /** Validates what these targets will publish; errors stop the request with the full report. */
+  async function assertPublishable(member: MemberContext, post: PostRow, targets: TargetRow[]) {
+    const report = await validate(member, {
+      text: post.text,
+      mediaIds: post.mediaIds,
+      link: post.link,
+      firstComment: post.firstComment,
+      targets: targets.map((t) => ({
+        accountId: t.socialAccountId,
+        override: parseOverride(t.override),
+      })),
+    });
+    if (hasErrors(report)) {
+      throw unprocessable('POST_HAS_ERRORS', 'Fix the errors before publishing', report);
+    }
+  }
+
+  /** Queues the jobs; if that fails, the targets go back to how they were so nothing is stuck. */
+  async function enqueueOrRevert(
+    workspaceId: string,
+    jobs: { targetId: string; tries: number; revertTo: 'pending' | 'failed' }[],
+  ) {
+    try {
+      await deps.enqueuePublish(
+        jobs.map(({ targetId, tries }) => ({ workspaceId, targetId, tries })),
+      );
+    } catch (err) {
+      for (const status of ['pending', 'failed'] as const) {
+        await scoped(workspaceId).postTarget.updateMany({
+          where: {
+            id: { in: jobs.filter((j) => j.revertTo === status).map((j) => j.targetId) },
+            status: 'publishing',
+          },
+          data: { status },
+        });
+      }
+      throw err;
+    }
+  }
+
+  const alreadySent = () =>
+    conflict(
+      'POST_ALREADY_SENT',
+      'This post was already sent; retry the accounts that failed instead',
+    );
+
+  /**
+   * Publish every target now (publish-now). Same lock as editing, so an edit can't land while it
+   * starts. A repeated request with the same Idempotency-Key, or a second click, posts nothing
+   * twice: only targets still waiting are sent, and job ids are per target and try.
+   */
+  async function publishNow(
+    caller: AuthContext,
+    member: MemberContext,
+    postId: string,
+    idempotencyKey: string | undefined,
+  ): Promise<Post> {
+    const idemKey = idempotencyKey
+      ? `idem:publish:${member.workspaceId}:${postId}:${idempotencyKey}`
+      : null;
+    if (idemKey && (await deps.kv.get(idemKey))) {
+      return toPost(await findPost(member.workspaceId, postId));
+    }
+
+    const post = await findPost(member.workspaceId, postId);
+    const workspace = await db.client.workspace.findUnique({
+      where: { id: member.workspaceId },
+      select: { requireReviewForAll: true },
+    });
+    if (workspace?.requireReviewForAll) {
+      throw unprocessable(
+        'REVIEW_REQUIRED',
+        'Posts in this workspace need review before publishing',
+      );
+    }
+    const live = post.targets.filter((t) => t.status !== 'cancelled');
+    if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
+    if (live.some((t) => t.status !== 'pending')) throw alreadySent();
+    await assertPublishable(member, post, live);
+
+    const jobs = await db.client.$transaction(async (tx) => {
+      await lockUnpublished(tx, member.workspaceId, post.id, alreadySent);
+      const waiting = await tx.postTarget.findMany({
+        where: { workspaceId: member.workspaceId, postId: post.id, status: 'pending' },
+        select: { id: true, attempts: true },
+      });
+      await tx.postTarget.updateMany({
+        where: { workspaceId: member.workspaceId, id: { in: waiting.map((t) => t.id) } },
+        data: { status: 'publishing', lastError: Prisma.DbNull },
+      });
+      return waiting.map((t) => ({
+        targetId: t.id,
+        tries: t.attempts,
+        revertTo: 'pending' as const,
+      }));
+    });
+    await enqueueOrRevert(member.workspaceId, jobs);
+    if (idemKey) await deps.kv.set(idemKey, '1', IDEMPOTENCY_TTL_SEC);
+    await recomputeStatus(member.workspaceId, post.id);
+    await events.emit('post.publish_requested', {
+      workspaceId: member.workspaceId,
+      postId: post.id,
+      userId: caller.user.id,
+      targetIds: jobs.map((j) => j.targetId),
+    });
+    return toPost(await findPost(member.workspaceId, post.id));
+  }
+
+  /** Publish one failed target again (after fixing the content or reconnecting the account). */
+  async function retryTarget(
+    caller: AuthContext,
+    member: MemberContext,
+    postId: string,
+    targetId: string,
+  ): Promise<Post> {
+    const post = await findPost(member.workspaceId, postId);
+    const target = post.targets.find((t) => t.id === targetId);
+    if (!target) throw notFound('TARGET_NOT_FOUND', 'Target not found');
+    const notFailed = () => conflict('TARGET_NOT_FAILED', 'Only a failed account can be retried');
+    if (target.status !== 'failed') throw notFailed();
+    await assertPublishable(member, post, [target]);
+
+    await db.client.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${post.id}::uuid AND "workspaceId" = ${member.workspaceId}::uuid FOR UPDATE`;
+      const moved = await tx.postTarget.updateMany({
+        where: { workspaceId: member.workspaceId, id: target.id, status: 'failed' },
+        data: { status: 'publishing' },
+      });
+      if (moved.count === 0) throw notFailed();
+    });
+    await enqueueOrRevert(member.workspaceId, [
+      { targetId: target.id, tries: target.attempts, revertTo: 'failed' },
+    ]);
+    await recomputeStatus(member.workspaceId, post.id);
+    await events.emit('post.publish_requested', {
+      workspaceId: member.workspaceId,
+      postId: post.id,
+      userId: caller.user.id,
+      targetIds: [target.id],
+    });
+    return toPost(await findPost(member.workspaceId, post.id));
+  }
+
   return {
+    publishNow,
+    retryTarget,
     validate,
     createDraft,
     update,

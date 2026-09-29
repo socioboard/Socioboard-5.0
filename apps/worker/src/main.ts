@@ -3,6 +3,7 @@ import {
   bootstrap,
   createAuditLog,
   createPlatform,
+  createPublishingServices,
   mediaProcessQueue,
   onShutdown,
   registerAuditListeners,
@@ -21,6 +22,8 @@ registerAuditListeners(platform.events, audit, logger);
 
 // Queue processors, one per module that owns background work.
 platform.queues.startWorker(mediaProcessQueue({ ...platform, tools: config.media }));
+// Publishing: one job per post target (publish-now and retries from the API).
+platform.queues.startWorker(createPublishingServices(platform).publishQueue);
 
 const purge = workspacePurgeQueue(platform);
 platform.queues.startWorker(purge);

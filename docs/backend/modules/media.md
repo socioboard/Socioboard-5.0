@@ -41,8 +41,8 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 ## Rules
 - Files live under `workspaces/<workspaceId>/media/<assetId>/` (`original.<ext>`, `thumb.webp`), so a workspace's files share one prefix.
 - Uploads up to 16 MB use one presigned PUT locked to the declared size and type; larger files use multipart (16 MB parts). `complete` checks the stored object's size and type against what was declared (else 422 `UPLOAD_INVALID` and the asset is `failed`), and only one `complete` moves it to `processing`.
-- Deleting is soft; phase 1 adds the "used by a scheduled post" block (`MEDIA_IN_USE`) and `media-purge` for the stored files.
-- Error codes: `STORAGE_NOT_CONFIGURED`, `MEDIA_NOT_FOUND`, `FOLDER_NOT_FOUND`, `FOLDER_CYCLE`, `UPLOAD_ALREADY_COMPLETED`, `PARTS_REQUIRED`, `UPLOAD_INCOMPLETE`, `UPLOAD_INVALID`, `INVALID_CURSOR`.
+- Deleting is soft. A file used by a post that is scheduled or being published (in its content or a network's override) can't be deleted: `MEDIA_IN_USE` (409); drafts don't block, their validation flags the missing file. `media-purge` removes stored files later (P1-B10).
+- Error codes: `STORAGE_NOT_CONFIGURED`, `MEDIA_NOT_FOUND`, `FOLDER_NOT_FOUND`, `FOLDER_CYCLE`, `UPLOAD_ALREADY_COMPLETED`, `PARTS_REQUIRED`, `UPLOAD_INCOMPLETE`, `UPLOAD_INVALID`, `MEDIA_IN_USE`, `INVALID_CURSOR`.
 - Allowed: JPEG, PNG, WebP, GIF, MP4, MOV. Max 20 MB per image, 1 GB per video (configurable).
 - Objects are private; the browser views them through signed URLs.
 - Storage used counts against `checkLimit('storage')` when billing is on.

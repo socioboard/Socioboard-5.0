@@ -1,10 +1,15 @@
 // Networks for tests: the real Meta network adapters (rules, validation) behind fake logins
 // whose people, Pages and failures the test controls. Nothing here calls a network.
+import type { NetworkId } from '@socioboard/contracts';
 import {
   createMetaAdapters,
   createRegistry,
   ProviderError,
+  type AccountCredentials,
   type LoginAdapter,
+  type NetworkAdapter,
+  type PublishInput,
+  type PublishResult,
   type LoginIdentity,
   type ProviderAsset,
   type Registry,
@@ -76,10 +81,24 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
   return login;
 }
 
+/** One call to a network's `publish`, as the test sees it. */
+export interface FakePublish {
+  network: NetworkId;
+  input: PublishInput;
+  account: AccountCredentials;
+}
+
 export interface FakeNetworks {
   registry: Registry;
   facebook: FakeLogin;
   instagram: FakeLogin;
+  /** Every publish call, in order. */
+  published: FakePublish[];
+  /**
+   * What the next publish calls answer, in order: a result or an error to throw. When empty,
+   * publishing succeeds with `<network>-post-<n>` as the external id.
+   */
+  publishAnswers: (Partial<PublishResult> | ProviderError)[];
 }
 
 export function createFakeNetworks(): FakeNetworks {
@@ -90,10 +109,29 @@ export function createFakeNetworks(): FakeNetworks {
     instagram: { appId: 'test', appSecret: 'test' },
     fetch: () => Promise.reject(new Error('tests never call Meta')),
   });
+  const published: FakePublish[] = [];
+  const publishAnswers: FakeNetworks['publishAnswers'] = [];
+  // Real rules, previews and validation; publish is played by the test.
+  const played = networks.map((n): NetworkAdapter => ({
+    ...n,
+    publish(input, account) {
+      published.push({ network: n.id, input, account });
+      const answer = publishAnswers.shift();
+      if (answer instanceof ProviderError) return Promise.reject(answer);
+      const externalId = answer?.externalId ?? `${n.id}-post-${String(published.length)}`;
+      return Promise.resolve({
+        externalId,
+        permalink: answer?.permalink ?? `https://social.example.test/${externalId}`,
+        warnings: answer?.warnings ?? [],
+      });
+    },
+  }));
   return {
-    registry: createRegistry({ logins: [facebook, instagram], networks }),
+    registry: createRegistry({ logins: [facebook, instagram], networks: played }),
     facebook,
     instagram,
+    published,
+    publishAnswers,
   };
 }
 
