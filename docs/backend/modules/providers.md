@@ -42,6 +42,8 @@ interface NetworkAdapter {
 ```
 `AccountCredentials` is the asset's external id plus the token to use (the asset token where the network issues one, else the login's).
 
+**No network SDKs.** Adapters call each network's HTTP API directly through the shared client, not vendor SDKs (e.g. not `facebook-nodejs-business-sdk`, which targets the Marketing API and doesn't cover Instagram Login on graph.instagram.com). Reasons: a phase uses a handful of endpoints per network; the shared client gives every network the same timeouts, token-free logs, error classification and replayable tests; and the API version is one setting (`META_GRAPH_VERSION`) instead of an SDK upgrade. Revisit only for something an SDK does that we can't do simply (e.g. ads management, not in scope).
+
 The shared HTTP client keeps integers too large for a JS number (Instagram's 17-digit ids, which some endpoints send as JSON numbers) as exact strings.
 
 Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth' | 'content' | 'rate_limited', retryAfter?, networkCode, message }`.
