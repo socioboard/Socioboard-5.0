@@ -35,8 +35,10 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 ### Meta: Facebook Pages + Instagram
 - **Portal:** developers.facebook.com, app type **Business**, owned by Socioboard's Meta Business Manager.
 - **Products:** Facebook Login for Business (Pages, and Instagram accounts linked to a Page) and Instagram API with Instagram Login (Instagram professional accounts with no Facebook Page).
-- **Permissions (Facebook Login):** `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`, `read_insights`, `business_management`, `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`.
-- **Permissions (Instagram Login):** `instagram_business_basic`, `instagram_business_content_publish`, `instagram_business_manage_insights`.
+- **Permissions (Facebook Login):** `pages_show_list`, `pages_read_engagement`, `pages_manage_posts`, `pages_manage_engagement` (first comment), `publish_video` (video posts), `business_management`, `instagram_basic`, `instagram_content_publish`, `instagram_manage_comments` (first comment). Analytics (6.1) adds `read_insights` and `instagram_manage_insights`. Set them in a Login for Business **configuration** (user access token) and put its id in `META_LOGIN_CONFIG_ID`; without it the adapter sends them as `scope`.
+- **Permissions (Instagram Login):** `instagram_business_basic`, `instagram_business_content_publish`, `instagram_business_manage_comments` (first comment). Analytics (6.1) adds `instagram_business_manage_insights`.
+- **Env:** `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID` (Facebook Login); `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET` (Instagram Login, shown under Instagram → API setup with Instagram login); `META_GRAPH_VERSION` optional (default in `packages/providers`, v25.0 as of 2026-09-29).
+- **Local development:** Facebook Login allows `http://localhost` redirect URIs while the app is in Development mode, so `http://localhost:5173/api/oauth/facebook/callback` works without a tunnel. Instagram Login needs HTTPS (the dev tunnel, P0-I8).
 - **Review:** business verification of the Business Manager, then App Review for **Advanced Access** on each permission, with a screencast per permission showing where it's used.
 - **Also set:** privacy policy URL, data-deletion callback `https://app.socioboard.com/api/webhooks/meta/data-deletion`, app domain.
 - **Gotchas:** Instagram fetches media from a public URL (`media.socioboard.com`); images must fit IG aspect ratios. Threads (6.1) will be a separate use case on the same Meta app.

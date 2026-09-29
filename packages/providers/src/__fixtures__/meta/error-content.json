@@ -1,0 +1,15 @@
+{
+  "method": "POST",
+  "url": "https://graph.facebook.com/v25.0/101/feed",
+  "status": 400,
+  "response": {
+    "error": {
+      "message": "(#100) Invalid parameter",
+      "type": "OAuthException",
+      "code": 100,
+      "error_user_title": "Post not allowed",
+      "error_user_msg": "This post goes against our Community Standards.",
+      "fbtrace_id": "A1b2C3d6"
+    }
+  }
+}
