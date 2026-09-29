@@ -1,6 +1,6 @@
 import type { ContentRules, PreviewSpec, ValidationIssue } from '@socioboard/contracts';
 
-import { isProviderError } from '../errors';
+import { isProviderError, ProviderError } from '../errors';
 import type {
   AccountCredentials,
   NetworkAdapter,
@@ -235,6 +235,15 @@ async function uploadVideo(
         },
       },
     );
+    // Meta must move forward; if it doesn't, stop (the whole job is retried later) instead of
+    // sending the same chunk again and again.
+    if (Number(next.start_offset) <= start) {
+      throw new ProviderError({
+        kind: 'retryable',
+        message: 'Facebook stopped accepting the video upload',
+        networkCode: 'upload_stalled',
+      });
+    }
     start = Number(next.start_offset);
     end = Number(next.end_offset);
   }

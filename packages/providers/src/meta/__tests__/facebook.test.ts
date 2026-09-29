@@ -402,6 +402,24 @@ describe('Facebook Page publishing', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
+  it('stops a video upload that stops moving forward, to retry it later', async () => {
+    const V = 'https://graph-video.facebook.com/v25.0/101/videos';
+    const { page } = setup([
+      {
+        method: 'POST',
+        url: V,
+        status: 200,
+        response: { video_id: 'v1', upload_session_id: 's1', start_offset: '0', end_offset: '100' },
+      },
+      read('v.mp4', 100, 'bytes=0-99'),
+      // Meta answers with the same offsets: no progress.
+      { method: 'POST', url: V, status: 200, response: { start_offset: '0', end_offset: '100' } },
+    ]);
+    await expect(
+      page.publish(post({ media: [video('v', { sizeBytes: 100 })] }), PAGE),
+    ).rejects.toMatchObject({ kind: 'retryable', networkCode: 'upload_stalled' });
+  });
+
   it('a file our storage can’t serve is retried, not blamed on the post', async () => {
     const { page } = setup([
       { method: 'GET', url: 'https://storage.test/a.jpg', status: 503, response: 'down' },

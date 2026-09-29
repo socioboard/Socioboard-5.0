@@ -527,10 +527,10 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
         accounts: {
           where: { status: { not: 'disconnected' } },
           include: accountInclude,
-          orderBy: [{ network: 'asc' }, { displayName: 'asc' }],
+          orderBy: [{ network: 'asc' }, { displayName: 'asc' }, { id: 'asc' }],
         },
       },
-      orderBy: [{ provider: 'asc' }, { createdAt: 'asc' }],
+      orderBy: [{ provider: 'asc' }, { createdAt: 'asc' }, { id: 'asc' }],
     });
     return rows.map((c) => ({
       ...toSummary(c),
@@ -545,7 +545,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     const rows = await scoped(member.workspaceId).socialAccount.findMany({
       where: { status: { not: 'disconnected' }, ...(network ? { network } : {}) },
       include: accountInclude,
-      orderBy: [{ network: 'asc' }, { displayName: 'asc' }],
+      orderBy: [{ network: 'asc' }, { displayName: 'asc' }, { id: 'asc' }],
     });
     return rows.map(toAccount);
   }
