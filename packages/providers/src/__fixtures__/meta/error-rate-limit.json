@@ -1,0 +1,13 @@
+{
+  "method": "POST",
+  "url": "https://graph.facebook.com/v25.0/101/feed",
+  "status": 400,
+  "response": {
+    "error": {
+      "message": "(#32) Page request limit reached",
+      "type": "OAuthException",
+      "code": 32,
+      "fbtrace_id": "A1b2C3d5"
+    }
+  }
+}

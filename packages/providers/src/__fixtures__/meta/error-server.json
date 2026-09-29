@@ -1,0 +1,14 @@
+{
+  "method": "POST",
+  "url": "https://graph.facebook.com/v25.0/101/feed",
+  "status": 500,
+  "response": {
+    "error": {
+      "message": "An unexpected error has occurred. Please retry your request later.",
+      "type": "OAuthException",
+      "is_transient": true,
+      "code": 2,
+      "fbtrace_id": "A1b2C3d7"
+    }
+  }
+}

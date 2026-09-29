@@ -1,0 +1,36 @@
+[
+  {
+    "method": "GET",
+    "url": "https://graph.facebook.com/v25.0/oauth/access_token",
+    "query": {
+      "client_id": "1234567890",
+      "code": "AQD-code",
+      "redirect_uri": "https://app.test/api/oauth/facebook/callback"
+    },
+    "status": 200,
+    "response": { "access_token": "EAA-short", "token_type": "bearer", "expires_in": 5183 }
+  },
+  {
+    "method": "GET",
+    "url": "https://graph.facebook.com/v25.0/oauth/access_token",
+    "query": { "grant_type": "fb_exchange_token", "fb_exchange_token": "EAA-short" },
+    "status": 200,
+    "response": { "access_token": "EAA-long", "token_type": "bearer", "expires_in": 5183944 }
+  },
+  {
+    "method": "GET",
+    "url": "https://graph.facebook.com/v25.0/me/permissions",
+    "query": { "access_token": "EAA-long" },
+    "status": 200,
+    "response": {
+      "data": [
+        { "permission": "pages_show_list", "status": "granted" },
+        { "permission": "pages_manage_posts", "status": "granted" },
+        { "permission": "pages_read_engagement", "status": "granted" },
+        { "permission": "instagram_basic", "status": "granted" },
+        { "permission": "instagram_content_publish", "status": "declined" },
+        { "permission": "public_profile", "status": "granted" }
+      ]
+    }
+  }
+]
