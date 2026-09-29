@@ -163,7 +163,8 @@ function Picker({
       </div>
     );
   }
-  if (assets.isError) {
+  // A failed refresh keeps what's on screen; only a first load that fails shows the error.
+  if (!assets.data) {
     return <LoadFailed provider={provider} connectionId={connectionId} error={assets.error} />;
   }
 
@@ -188,8 +189,9 @@ function Picker({
         body: { externalIds: [...selected] },
       });
       toast.success(t('picker.addedToast', { count: added.items.length }));
-      await refreshAccounts(queryClient, workspace.id);
+      // Leave first: the picker's list is then only marked stale, not fetched from the network.
       done();
+      await refreshAccounts(queryClient, workspace.id);
     } catch (err) {
       setError(err);
       setSaving(false);

@@ -13,6 +13,7 @@ import {
   toast,
 } from '@socioboard/ui';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { ChevronRight, Plus, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -322,7 +323,19 @@ function LoginGroupView({
       )}
       <div className={c ? 'border-hair-strong ml-3 border-l pl-5' : ''}>
         {group.accounts.length === 0 ? (
-          <p className="text-ink-3 py-1 text-sm">{t('login.nothingAdded')}</p>
+          <p className="text-ink-3 flex flex-wrap items-center gap-x-3 gap-y-1 py-1 text-sm">
+            {t('login.nothingAdded')}
+            {canConnect && c && (
+              <Link
+                to="/w/$slug/accounts/connect/$provider"
+                params={{ slug: workspace.slug, provider: c.provider }}
+                search={{ connection: c.id }}
+                className="text-ring font-medium hover:underline"
+              >
+                {t('login.addFrom')}
+              </Link>
+            )}
+          </p>
         ) : (
           <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
             {group.accounts.map((a) => (

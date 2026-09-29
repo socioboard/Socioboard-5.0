@@ -48,9 +48,8 @@ export function ConnectDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={t('details.close')} className="sm:max-w-lg">
-        {open && (
-          <ChooserBody initialNetwork={initialNetwork} existingProviders={existingProviders} />
-        )}
+        {/* Radix unmounts the content once closed, so each opening starts at the first step. */}
+        <ChooserBody initialNetwork={initialNetwork} existingProviders={existingProviders} />
       </DialogContent>
     </Dialog>
   );
@@ -73,7 +72,6 @@ function ChooserBody({
   const opening = networks.data?.find((n) => n.id === initialNetwork);
   const step: Step =
     picked ?? (opening ? stepFor(opening, existingProviders) : { kind: 'network' });
-  const setStep = setPicked;
 
   const go = async (provider: LoginProvider) => {
     setStarting(provider);
@@ -88,14 +86,14 @@ function ChooserBody({
   };
 
   const pickLogin = (network: Network, login: NetworkLogin) => {
-    if (needsTip(login, existingProviders)) setStep({ kind: 'tip', network, login });
+    if (needsTip(login, existingProviders)) setPicked({ kind: 'tip', network, login });
     else void go(login.provider);
   };
 
   const pickNetwork = (network: Network) => {
     const [only, ...more] = network.logins;
     if (only && more.length === 0) pickLogin(network, only);
-    else setStep({ kind: 'login', network });
+    else setPicked({ kind: 'login', network });
   };
 
   if (step.kind === 'tip') {
@@ -116,7 +114,7 @@ function ChooserBody({
         <DialogFooter>
           <BackButton
             onClick={() => {
-              setStep(
+              setPicked(
                 step.network.logins.length > 1
                   ? { kind: 'login', network: step.network }
                   : { kind: 'network' },
@@ -172,7 +170,7 @@ function ChooserBody({
         <DialogFooter>
           <BackButton
             onClick={() => {
-              setStep({ kind: 'network' });
+              setPicked({ kind: 'network' });
             }}
           />
         </DialogFooter>
