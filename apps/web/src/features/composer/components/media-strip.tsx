@@ -31,6 +31,8 @@ export function MediaStrip({
   canUpload,
   disabled,
   label,
+  uploadIds,
+  onUploadIds,
 }: {
   workspaceId: string;
   mediaIds: string[];
@@ -39,13 +41,15 @@ export function MediaStrip({
   canUpload: boolean;
   disabled: boolean;
   label: string;
+  /** Uploads started from this strip, kept by the composer per tab (so they show where started). */
+  uploadIds: string[];
+  onUploadIds: (update: (ids: string[]) => string[]) => void;
 }) {
   const { t } = useTranslation('composer');
   const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
-  const [mine, setMine] = useState<string[]>([]);
   const [picking, setPicking] = useState(false);
-  const uploads = useUploads(workspaceId).filter((u) => mine.includes(u.id));
+  const uploads = useUploads(workspaceId).filter((u) => uploadIds.includes(u.id));
   const assets = useQueries({
     queries: mediaIds.map((id) => ({
       ...mediaDetailQuery(workspaceId, id),
@@ -61,7 +65,7 @@ export function MediaStrip({
     const ids = startUploads(queryClient, workspaceId, files, undefined, (asset) => {
       onAttach([asset.id]);
     });
-    setMine((m) => [...m, ...ids]);
+    onUploadIds((m) => [...m, ...ids]);
   };
 
   const move = (index: number) => {
@@ -149,7 +153,7 @@ export function MediaStrip({
                   aria-label={`${t('media.dismiss')}: ${u.file.name}`}
                   onClick={() => {
                     dismissUpload(u.id);
-                    setMine((m) => m.filter((x) => x !== u.id));
+                    onUploadIds((m) => m.filter((x) => x !== u.id));
                   }}
                 >
                   <X className="size-3.5" aria-hidden="true" />
