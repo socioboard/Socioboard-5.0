@@ -110,12 +110,16 @@ const envSchema = z.object({
   /** Instagram Login (Instagram accounts without a Page): its own app id and secret. */
   INSTAGRAM_APP_ID: optional,
   INSTAGRAM_APP_SECRET: optional,
-  /** Graph API version, e.g. v25.0; defaults to the one the adapters were checked against. */
-  META_GRAPH_VERSION: z
-    .string()
-    .regex(/^v\d+\.\d+$/, 'must look like v25.0')
-    .optional()
-    .or(z.literal('').transform(() => undefined)),
+  /** Graph API version, e.g. v25.0 (or 25.0); defaults to the one the adapters were checked against. */
+  META_GRAPH_VERSION: z.preprocess(
+    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+    z
+      .string()
+      .trim()
+      .regex(/^v?\d+\.\d+$/, 'must look like v25.0')
+      .transform((v) => (v.startsWith('v') ? v : `v${v}`))
+      .optional(),
+  ),
 
   /** ffmpeg/ffprobe for video duration and thumbnails; without them videos get neither. */
   FFMPEG_PATH: z.string().default('ffmpeg'),
