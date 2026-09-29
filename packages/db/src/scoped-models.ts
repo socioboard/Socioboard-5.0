@@ -11,4 +11,12 @@ export const WORKSPACE_SCOPED_MODELS: readonly string[] = [
   'MediaFolder',
   'MediaAsset',
   'AuditLog',
+  'SocialConnection',
+  'SocialAccount',
+  'SocialAccountGroup',
+  'SocialAccountGroupItem',
+  'OAuthState',
+  'Post',
+  'PostTarget',
+  'PublishAttempt',
 ];
