@@ -28,6 +28,15 @@ export function registerPostRoutes(api: ApiRouter, posts: PostService) {
   api.route(r.retryTarget, ({ auth, member, params }) =>
     posts.retryTarget(auth, member, params.postId, params.targetId),
   );
+
+  api.route(r.listLabels, async ({ member }) => ({ items: await posts.listLabels(member) }));
+  api.route(r.createLabel, ({ auth, member, body }) => posts.createLabel(auth, member, body));
+  api.route(r.updateLabel, ({ auth, member, params, body }) =>
+    posts.updateLabel(auth, member, params.labelId, body),
+  );
+  api.route(r.deleteLabel, ({ auth, member, params }) =>
+    posts.deleteLabel(auth, member, params.labelId),
+  );
 }
 
 /** Keeps post status right when accounts are disconnected (their targets were cancelled). */

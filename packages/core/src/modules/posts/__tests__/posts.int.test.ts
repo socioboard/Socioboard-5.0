@@ -5,9 +5,11 @@ import {
   page,
   Post,
   PostDetails,
+  PostLabel,
   ValidatePostResponse,
 } from '@socioboard/contracts';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { z } from 'zod';
 
 import { createTestApp } from '../../../testing';
 
@@ -402,6 +404,85 @@ describe('reading', () => {
       [2, 'published', undefined],
       [1, 'will_retry', 'Meta had a hiccup'],
     ]);
+  });
+});
+
+describe('labels', () => {
+  const label = async (name: string, color = 'blue', who: Browser = editor) => {
+    const res = await who.post(`${base()}/labels`, { name, color });
+    return { res, label: res.status === 201 ? PostLabel.parse(res.body) : null };
+  };
+
+  it('approvers manage labels; everyone who reads posts sees them', async () => {
+    const { res } = await label('Launch', 'violet');
+    expect(res.status).toBe(201);
+    expect((await label('Nope', 'red', contributor)).res.status).toBe(403);
+    const list = await viewer.get(`${base()}/labels`);
+    expect(list.status).toBe(200);
+    expect(
+      z
+        .object({ items: z.array(PostLabel) })
+        .parse(list.body)
+        .items.map((l) => l.name),
+    ).toContain('Launch');
+  });
+
+  it('names are unique whatever their case', async () => {
+    await label('Evergreen');
+    const clash = await label('EVERGREEN');
+    expect([clash.res.status, code(clash.res)]).toEqual([409, 'LABEL_EXISTS']);
+    const other = await label('Seasonal');
+    const rename = await editor.send('PATCH', `${base()}/labels/${other.label?.id ?? ''}`, {
+      name: 'evergreen',
+    });
+    expect([rename.status, code(rename)]).toEqual([409, 'LABEL_EXISTS']);
+    const recolour = await editor.send('PATCH', `${base()}/labels/${other.label?.id ?? ''}`, {
+      color: 'green',
+    });
+    expect(PostLabel.parse(recolour.body).color).toBe('green');
+  });
+
+  it('posts carry labels, lists filter by them, and a deleted label leaves the posts', async () => {
+    const promo = (await label('Promo', 'orange')).label;
+    const tips = (await label('Tips', 'teal')).label;
+    const labelled = await createPost(owner, { text: 'labelled', labelIds: [promo?.id, tips?.id] });
+    const other = await createPost(owner, { text: 'unlabelled' });
+    expect(labelled.labelIds).toEqual([promo?.id, tips?.id]);
+
+    const filtered = page(Post).parse(
+      (await viewer.get(`${base()}/posts?labelId=${promo?.id ?? ''}`)).body,
+    );
+    expect(filtered.items.map((p) => p.id)).toEqual([labelled.id]);
+    expect(filtered.items.map((p) => p.id)).not.toContain(other.id);
+    const counts = z
+      .object({ items: z.array(PostLabel) })
+      .parse((await viewer.get(`${base()}/labels`)).body)
+      .items.find((l) => l.id === promo?.id);
+    expect(counts?.postCount).toBe(1);
+
+    expect((await editor.send('DELETE', `${base()}/labels/${promo?.id ?? ''}`)).status).toBe(204);
+    const after = Post.parse((await owner.get(`${base()}/posts/${labelled.id}`)).body);
+    expect(after.labelIds).toEqual([tips?.id]);
+    const unknown = await owner.post(`${base()}/posts`, { labelIds: [promo?.id] });
+    expect([unknown.status, code(unknown)]).toEqual([404, 'LABEL_NOT_FOUND']);
+  });
+
+  it('a published post can still be labelled, but not otherwise changed', async () => {
+    const tag = (await label('Archive', 'gray')).label;
+    const post = await createPost(owner, { text: 'Hi', targets: [{ accountId: acc.fb }] });
+    await t.db.client.postTarget.updateMany({
+      where: { postId: post.id },
+      data: { status: 'published', externalPostId: 'x', publishedAt: new Date() },
+    });
+    const labelled = await owner.send('PATCH', `${base()}/posts/${post.id}`, {
+      labelIds: [tag?.id],
+    });
+    expect(labelled.status).toBe(200);
+    const edited = await owner.send('PATCH', `${base()}/posts/${post.id}`, {
+      text: 'changed',
+      labelIds: [],
+    });
+    expect([edited.status, code(edited)]).toEqual([422, 'POST_NOT_EDITABLE']);
   });
 });
 

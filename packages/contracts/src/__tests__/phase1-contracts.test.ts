@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import {
   apiRoutes,
+  CreateLabelBody,
   CreatePostBody,
   ListPostsQuery,
   Network,
   StartConnectBody,
   textLength,
+  UpdateLabelBody,
   UpdatePostBody,
   ValidatePostBody,
   type RouteDefinition,
@@ -72,7 +74,16 @@ describe('connect flow', () => {
 
 describe('posts', () => {
   it('a draft can start empty', () => {
-    expect(CreatePostBody.parse({})).toEqual({ text: '', mediaIds: [], targets: [] });
+    expect(CreatePostBody.parse({})).toEqual({ text: '', mediaIds: [], labelIds: [], targets: [] });
+  });
+
+  it('labels: named colours, unique on a post, names of 1 to 40 characters', () => {
+    expect(CreateLabelBody.safeParse({ name: 'Launch', color: 'violet' }).success).toBe(true);
+    expect(CreateLabelBody.safeParse({ name: 'Launch', color: '#ff00aa' }).success).toBe(false);
+    expect(CreateLabelBody.safeParse({ name: '  ', color: 'blue' }).success).toBe(false);
+    expect(CreateLabelBody.safeParse({ name: 'x'.repeat(41), color: 'blue' }).success).toBe(false);
+    expect(CreatePostBody.safeParse({ labelIds: [A, A] }).success).toBe(false);
+    expect(UpdateLabelBody.safeParse({}).success).toBe(false);
   });
 
   it('refuses the same account or file twice', () => {

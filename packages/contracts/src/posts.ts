@@ -88,14 +88,56 @@ const Targets = z
   );
 
 /** A draft may have no text, media or accounts yet; publishing checks it's complete. */
+/** Labels of the workspace (P1-B11), at most 20 per post. */
+const LabelIds = z
+  .array(Id)
+  .max(20)
+  .refine((ids) => new Set(ids).size === ids.length, 'The same label is chosen twice');
+
 export const CreatePostBody = PostContent.partial().extend({
   text: Text.default(''),
   mediaIds: MediaIds.default([]),
+  labelIds: LabelIds.default([]),
   targets: Targets.default([]),
 });
 
 /** `targets` replaces the whole selection: accounts left out are removed from the post. */
-export const UpdatePostBody = PostContent.extend({ targets: Targets })
+export const UpdatePostBody = PostContent.extend({ targets: Targets, labelIds: LabelIds })
+  .partial()
+  .refine((b) => Object.keys(b).length > 0, 'Nothing to update');
+
+/**
+ * Label colours are names, not hex values: the UI maps each to a shade that reads well in light
+ * and dark themes (docs/frontend/design-system.md).
+ */
+export const LabelColor = z.enum([
+  'gray',
+  'red',
+  'orange',
+  'amber',
+  'green',
+  'teal',
+  'blue',
+  'indigo',
+  'violet',
+  'pink',
+]);
+export type LabelColor = z.infer<typeof LabelColor>;
+
+export const PostLabel = z.object({
+  id: Id,
+  name: z.string(),
+  color: LabelColor,
+  /** Posts that carry the label (shown when managing labels, before deleting one). */
+  postCount: z.number().int().nonnegative(),
+  createdAt: IsoDateTime,
+});
+export type PostLabel = z.infer<typeof PostLabel>;
+
+const LabelName = z.string().trim().min(1).max(40);
+export const CreateLabelBody = z.object({ name: LabelName, color: LabelColor });
+export const UpdateLabelBody = z
+  .object({ name: LabelName, color: LabelColor })
   .partial()
   .refine((b) => Object.keys(b).length > 0, 'Nothing to update');
 
@@ -289,5 +331,40 @@ export const postRoutes = {
     summary: 'Publish a failed target again',
     params: postParams.extend({ targetId: Id }),
     responses: { 202: Post },
+  }),
+
+  listLabels: defineRoute({
+    method: 'GET',
+    path: '/api/v1/workspaces/:workspaceId/labels',
+    access: 'posts:read',
+    summary: 'The workspace’s post labels, by name',
+    params: workspaceParams,
+    responses: { 200: z.object({ items: z.array(PostLabel) }) },
+  }),
+  createLabel: defineRoute({
+    method: 'POST',
+    path: '/api/v1/workspaces/:workspaceId/labels',
+    access: 'posts:approve',
+    summary: 'Add a label (names are unique in a workspace, ignoring case)',
+    params: workspaceParams,
+    body: CreateLabelBody,
+    responses: { 201: PostLabel },
+  }),
+  updateLabel: defineRoute({
+    method: 'PATCH',
+    path: '/api/v1/workspaces/:workspaceId/labels/:labelId',
+    access: 'posts:approve',
+    summary: 'Rename or recolour a label',
+    params: workspaceParams.extend({ labelId: Id }),
+    body: UpdateLabelBody,
+    responses: { 200: PostLabel },
+  }),
+  deleteLabel: defineRoute({
+    method: 'DELETE',
+    path: '/api/v1/workspaces/:workspaceId/labels/:labelId',
+    access: 'posts:approve',
+    summary: 'Delete a label; posts that carried it keep everything else',
+    params: workspaceParams.extend({ labelId: Id }),
+    responses: { 204: null },
   }),
 };
