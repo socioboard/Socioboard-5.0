@@ -23,6 +23,7 @@ const network = (id: 'facebook_page' | 'instagram', maxChars: number) =>
       id === 'facebook_page'
         ? {
             truncateAt: 480,
+            truncateLines: 5,
             captionPosition: 'above_media',
             mediaLayout: 'grid',
             cropAspectRatio: null,
@@ -30,6 +31,7 @@ const network = (id: 'facebook_page' | 'instagram', maxChars: number) =>
           }
         : {
             truncateAt: 125,
+            truncateLines: 2,
             captionPosition: 'below_media',
             mediaLayout: 'carousel',
             cropAspectRatio: { min: 0.8, max: 1.91 },
@@ -443,6 +445,59 @@ describe('live preview', () => {
     const fb = within(preview()).getByRole('figure', { name: 'Preview on Facebook' });
     expect(within(fb).getByText('halden.coffee')).toBeInTheDocument();
     expect(fb).toHaveTextContent('Tickets at the bar');
+  });
+
+  it('a lone modest picture shows in full; several show their thumbnails', async () => {
+    const small = { ...M1, url: 'https://media.test/full-1.jpg' };
+    const big = { ...M2, url: 'https://media.test/full-2.jpg', sizeBytes: 9 * 1024 * 1024 };
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/media/${M1.id}`]: [200, small],
+      [`GET ${BASE}/media/${M2.id}`]: [200, big],
+      [`GET ${BASE}/media`]: [200, { items: [small, big], nextCursor: null }],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    const attach = async (name: string) => {
+      await user.click(screen.getByRole('button', { name: 'Choose from library' }));
+      const dialog = await screen.findByRole('dialog', { name: 'Choose from library' });
+      await user.click(await within(dialog).findByRole('button', { name: `Select ${name}` }));
+      await user.click(within(dialog).getByRole('button', { name: 'Attach 1 file' }));
+    };
+    const fb = () => within(preview()).getByRole('figure', { name: 'Preview on Facebook' });
+    await attach('latte.jpg');
+    await waitFor(() => {
+      expect(within(fb()).getByRole('img', { name: 'latte.jpg' })).toHaveAttribute(
+        'src',
+        'https://media.test/full-1.jpg',
+      );
+    });
+    await attach('beans.jpg');
+    await waitFor(() => {
+      expect(within(fb()).getByRole('img', { name: 'latte.jpg' })).toHaveAttribute(
+        'src',
+        `https://media.test/${M1.id}.webp`,
+      );
+    });
+    expect(within(fb()).getByRole('img', { name: 'beans.jpg' })).toHaveAttribute(
+      'src',
+      `https://media.test/${M2.id}.webp`,
+    );
+  });
+
+  it('a caption of short lines is cut where Instagram cuts it', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
+    fireEvent.change(screen.getByRole('textbox', { name: 'Text' }), {
+      target: { value: 'Line one\nLine two\nLine three' },
+    });
+    const ig = within(preview()).getByRole('figure', { name: 'Preview on Instagram' });
+    expect(ig).not.toHaveTextContent('Line three');
+    await user.click(within(ig).getByRole('button', { name: 'more' }));
+    expect(ig).toHaveTextContent('Line three');
   });
 
   it('with two Pages selected, previews as either', async () => {

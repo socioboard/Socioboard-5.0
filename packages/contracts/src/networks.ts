@@ -84,6 +84,8 @@ export type ContentRules = z.infer<typeof ContentRules>;
 export const PreviewSpec = z.object({
   /** Characters shown before the network's "See more"; null when it shows everything. */
   truncateAt: z.number().int().positive().nullable(),
+  /** Lines shown before "See more" (a caption of short lines is cut there too); null for no limit. */
+  truncateLines: z.number().int().positive().nullable(),
   captionPosition: z.enum(['above_media', 'below_media']),
   /** How several media show: a grid (Facebook) or a swipeable carousel (Instagram). */
   mediaLayout: z.enum(['grid', 'carousel']),

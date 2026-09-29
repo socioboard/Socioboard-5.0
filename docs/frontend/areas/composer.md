@@ -24,7 +24,7 @@ The most important screen in the product: write once, tailor per network, see ex
 ```
 
 ## Live preview
-- One preview component per network, driven by the adapter's `preview` spec from `GET /api/v1/networks` (name/avatar placement, text truncation length, media grid shape, aspect-ratio crop, link card).
+- One preview component per network, driven by the adapter's `preview` spec from `GET /api/v1/networks` (name/avatar placement, text truncation length and line limit, media grid shape, aspect-ratio crop, link card).
 - Uses the connected account's real name and avatar.
 - Shows what the network will cut: e.g. Instagram crops to the chosen ratio, X shows the 280-char cut, LinkedIn shows the "…see more" point.
 - On mobile the preview is a toggle ("Edit" / "Preview").
@@ -56,10 +56,10 @@ The most important screen in the product: write once, tailor per network, see ex
 
 **Built in P1-F3** (`features/composer/previews`):
 - The preview sits beside the editor from 1024 px (sticky), with a tab per selected network; below that, an "Edit / Preview" switch shows one at a time. Choosing a network's tab in the editor switches the preview to it; the preview's own tabs don't move the editor. With several accounts of one network selected, "Preview as" picks which account's name and avatar to show.
-- A pure model (`previews/model.ts`) decides what each network shows from its `PreviewSpec`: the cut before "See more" (counted in code points, as networks count, and made between words when a word straddles the limit), the crop (a file kept within `cropAspectRatio`), Facebook's grid (one in its own shape but no taller than 4:5; two side by side; one above two; 2 × 2 with "+N"), Instagram's frame (a feed post or carousel takes the first file's shape within 4:5–1.91:1; reels and stories are 9:16), link-card hosts, and hashtags/mentions/links.
+- A pure model (`previews/model.ts`) decides what each network shows from its `PreviewSpec`: the cut before "See more" (after `truncateLines` lines, e.g. Facebook 5 and Instagram 2, then at `truncateAt` characters counted in code points, as networks count, and made between words when a word straddles the limit), the crop (a file kept within `cropAspectRatio`), Facebook's grid (one in its own shape but no taller than 4:5; two side by side; one above two; 2 × 2 with "+N"), Instagram's frame (a feed post or carousel takes the first file's shape within 4:5–1.91:1; reels and stories are 9:16), link-card hosts, and hashtags/mentions/links.
 - Facebook: the Page's name and avatar, "Just now" and the public globe, text cut at about 480 characters with "See more" (which expands), the photo grid or a link card (the site's host and the address) when there are no photos, the Like / Comment / Share bar, and the first comment as a reply from the Page.
 - Instagram: the username, the media first in one frame, a carousel with its "n/N" count, arrows and dots, the action row, and the caption after the bold username, cut at about 125 characters with "more". Web addresses stay plain (Instagram doesn't make them links). Reels and stories are drawn in a narrower phone-shaped card; stories show no caption and say so. A post with no media says Instagram needs a photo or video.
-- Pictures use the full file once processed (else the thumbnail); videos show their poster with a play mark; a picture that won't load falls back to a placeholder. Text is always rendered as plain React text, never as HTML.
+- A lone picture up to 2 MB shows its full file; otherwise (larger, or several in a grid or carousel) the 480 px thumbnail, so a post of big photos stays light; videos show their poster with a play mark; a picture that won't load falls back to a placeholder. Text is always rendered as plain React text, never as HTML.
 - Uploading several files at once keeps the order they were picked in, whichever finishes uploading first.
 
 ## AI panel (phase 4)

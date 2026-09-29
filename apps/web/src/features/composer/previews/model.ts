@@ -1,17 +1,23 @@
 import { textLength, type PreviewSpec } from '@socioboard/contracts';
 
 /**
- * What a network shows before its "See more": the first `truncateAt` characters, counted as
- * networks count them (code points, so an emoji is one), cut back to the last space when that
- * doesn't lose much, without trailing spaces. `truncated` is false when it all fits.
+ * What a network shows before its "See more": at most `truncateLines` lines, then at most
+ * `truncateAt` characters, counted as networks count them (code points, so an emoji is one), cut
+ * back to the last space when that doesn't lose much, without trailing spaces. `truncated` is
+ * false when it all fits.
  */
 export function truncateText(
   text: string,
   truncateAt: number | null,
+  truncateLines: number | null = null,
 ): { shown: string; truncated: boolean } {
-  if (truncateAt === null || textLength(text) <= truncateAt)
-    return { shown: text, truncated: false };
-  const cut = Array.from(text).slice(0, truncateAt).join('');
+  const lines = text.split('\n');
+  const byLines = truncateLines !== null && lines.length > truncateLines;
+  const kept = byLines ? lines.slice(0, truncateLines).join('\n') : text;
+  if (truncateAt === null || textLength(kept) <= truncateAt) {
+    return byLines ? { shown: kept.trimEnd(), truncated: true } : { shown: text, truncated: false };
+  }
+  const cut = Array.from(kept).slice(0, truncateAt).join('');
   const space = cut.search(/\s\S*$/);
   // Networks break between words when a word straddles the limit (within about 20 characters).
   const atWord = space > 0 && textLength(cut) - textLength(cut.slice(0, space)) <= 20;
