@@ -30,6 +30,7 @@ API: `GET /accounts/:aid/feed`, `GET …/feed/:itemId/comments`, `POST …/feed/
 The composer's account picker lists every account across all logins (grouped by network, showing the login on hover), so posting to Pages from different Facebook users in one post just works.
 
 ## Behavior
+- A connect that comes back with an unknown or used sign-in link lands on `/?connectError=<code>`: the app shows the same readable message as the asset picker would.
 - "Needs reconnect" accounts show a red status and a Reconnect button that re-runs the flow.
 - Disconnect confirms and states how many scheduled posts will be cancelled.
 - Network-specific notes on connect: TikTok/YouTube posts are private until our app passes review; LinkedIn company pages need admin rights.

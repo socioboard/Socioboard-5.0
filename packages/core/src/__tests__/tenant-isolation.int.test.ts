@@ -7,7 +7,17 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTestApp, namedRoutes, PENDING_ROUTES } from '../testing';
 
 const t = createTestApp();
-type Ids = Record<'workspaceId' | 'memberId' | 'invitationId' | 'assetId' | 'folderId', string>;
+type Ids = Record<
+  | 'workspaceId'
+  | 'memberId'
+  | 'invitationId'
+  | 'assetId'
+  | 'folderId'
+  | 'connectionId'
+  | 'accountId'
+  | 'provider',
+  string
+>;
 
 /**
  * How each route relates to tenant data:
@@ -67,6 +77,17 @@ const CLASSIFIED: Record<string, Kind> = {
   getMedia: { kind: 'resource' },
   updateMedia: { kind: 'resource', body: () => ({ name: 'hijacked' }) },
   deleteMedia: { kind: 'resource' },
+  // networks and social accounts
+  listNetworks: { kind: 'user' },
+  startConnect: { kind: 'workspace', body: () => ({}) },
+  listConnections: { kind: 'list', idsOf: 'connectionId' },
+  listConnectableAssets: { kind: 'resource' },
+  addAssets: { kind: 'resource', body: () => ({ externalIds: ['101'] }) },
+  reconnect: { kind: 'resource' },
+  removeConnection: { kind: 'resource' },
+  listAccounts: { kind: 'list', idsOf: 'accountId' },
+  getAccount: { kind: 'resource' },
+  disconnectAccount: { kind: 'resource' },
 };
 
 // Routes still being built (no handler yet) join the checks when their task mounts them.
@@ -125,7 +146,29 @@ beforeAll(async () => {
       status: 'uploading',
     },
   });
+  // A Facebook login with one Page.
+  const connection = await t.db.client.socialConnection.create({
+    data: {
+      workspaceId: aWorkspace,
+      provider: 'facebook',
+      externalUserId: 'victim-fb',
+      displayName: 'Victim',
+      accessTokenEnc: t.platform.crypto.encrypt('token-victim'),
+    },
+  });
+  const account = await t.db.client.socialAccount.create({
+    data: {
+      workspaceId: aWorkspace,
+      connectionId: connection.id,
+      network: 'facebook_page',
+      externalId: '101',
+      displayName: 'Victim Page',
+    },
+  });
   a = {
+    connectionId: connection.id,
+    accountId: account.id,
+    provider: 'facebook',
     workspaceId: aWorkspace,
     memberId: members.items.find((m) => m.role === 'editor')?.id ?? '',
     invitationId: (pending.body as { id: string }).id,

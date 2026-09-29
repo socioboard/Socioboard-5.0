@@ -64,6 +64,7 @@ export function createInstagramLogin(config: InstagramLoginConfig): LoginAdapter
     // force_reauth makes Instagram ask for credentials instead of reusing the signed-in account.
     supportsAccountSelection: true,
     usesPkce: false,
+    requiredScopes: ['instagram_business_basic'],
 
     getAuthUrl({ state, redirectUri, forceAccountSelection }) {
       const url = new URL('https://www.instagram.com/oauth/authorize');

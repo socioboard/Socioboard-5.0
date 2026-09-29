@@ -1,10 +1,11 @@
 import type { EventBus, Logger } from '../../platform';
 import type { AuthEvents } from '../auth';
 import type { MediaEvents } from '../media';
+import type { SocialAccountEvents } from '../social-accounts';
 import type { WorkspaceEvents } from '../workspaces';
 import type { AuditEntry, AuditLog } from './service';
 
-type AllEvents = AuthEvents & WorkspaceEvents & MediaEvents;
+type AllEvents = AuthEvents & WorkspaceEvents & MediaEvents & SocialAccountEvents;
 /** The real event names, without the `Record<string, unknown>` index signature the maps extend. */
 type EventName = keyof { [K in keyof AllEvents as string extends K ? never : K]: true };
 type Mapping = {
@@ -98,6 +99,37 @@ export const AUDITED: Mapping = {
     workspaceId: p.workspaceId,
     actor: user(p.userId),
     entity: { type: 'media_asset', id: p.assetId },
+  }),
+
+  'connection.added': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'social_connection', id: p.connectionId },
+    diff: { provider: p.provider },
+  }),
+  'connection.removed': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'social_connection', id: p.connectionId },
+    diff: { provider: p.provider },
+  }),
+  'account.connected': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'social_account', id: p.accountId },
+    diff: { network: p.network, connectionId: p.connectionId },
+  }),
+  'account.disconnected': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'social_account', id: p.accountId },
+    diff: { network: p.network, cancelledTargets: p.cancelledTargetIds.length },
+  }),
+  'account.reauth_required': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: { userId: null, type: 'system' },
+    entity: { type: 'social_account', id: p.accountId },
+    diff: { connectionId: p.connectionId, reason: p.reason },
   }),
 };
 

@@ -1,6 +1,7 @@
 // The API's composition root: platform + modules + request pipeline, in one place. apps/api runs
 // it; integration tests build the same app, so they exercise the real wiring.
 import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
+import type { Registry } from '@socioboard/providers';
 import express, { type Express } from 'express';
 
 import { createAuditLog, registerAuditListeners } from './modules/audit';
@@ -12,6 +13,12 @@ import {
   type AuthModule,
 } from './modules/auth';
 import { createMediaService, mediaProcessQueue, registerMediaRoutes } from './modules/media';
+import {
+  createNetworkRegistry,
+  createOAuthCallbackRouter,
+  createSocialAccountService,
+  registerSocialAccountRoutes,
+} from './modules/social-accounts';
 import {
   createMembershipLookup,
   createWorkspaceService,
@@ -38,6 +45,8 @@ export interface ApiAppOptions {
   requireVerifiedEmail?: boolean;
   /** Extra routes mounted before the 404 and error handlers (e.g. dev-only API docs). */
   extend?: (app: Express) => void;
+  /** Network adapters; defaults to those configured in the environment (tests pass fakes). */
+  registry?: Registry;
 }
 
 export interface ApiApp {
@@ -111,6 +120,18 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
+  const socialAccounts = createSocialAccountService({
+    db: platform.db,
+    crypto: platform.crypto,
+    clock: platform.clock,
+    logger,
+    events: platform.events,
+    registry: options.registry ?? createNetworkRegistry(config, logger),
+    appUrl: config.appUrl,
+    lookupMembership,
+  });
+  registerSocialAccountRoutes(api, socialAccounts);
+
   const app = express();
   app.disable('x-powered-by');
   // One rule for the client IP, used by every rate limit (ours and Better Auth's): TRUST_PROXY.
@@ -128,6 +149,13 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     session(authModule.resolveSession),
   );
   app.use(api.router);
+  // Network sign-in comes back here (a browser redirect, not a JSON call): session, not origin check.
+  app.use(
+    '/api/oauth',
+    rateLimit({ kv: platform.kv, name: 'oauth', windowSec: 60, max: 60 }),
+    session(authModule.resolveSession),
+  );
+  app.use(createOAuthCallbackRouter(socialAccounts));
 
   const health = createHealth(platform);
   app.use(health.router);

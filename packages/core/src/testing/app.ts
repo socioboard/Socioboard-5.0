@@ -5,6 +5,7 @@ import request from 'supertest';
 
 import { createApiApp } from '../app';
 import { createLogger, createPlatform, loadConfig } from '../platform';
+import { createFakeNetworks } from './fake-networks';
 
 export interface TestAppOptions {
   /** Defaults to false, so tests can create workspaces without clicking email links. */
@@ -20,7 +21,12 @@ export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions =
   const platform = createPlatform(config, createLogger({ level: 'silent' }), {
     prefix: `sb-test-${run}`,
   });
-  const { app, authModule, missingRoutes } = createApiApp(platform, { requireVerifiedEmail });
+  // Fake logins in front of the real Meta network adapters: tests never call a network.
+  const networks = createFakeNetworks();
+  const { app, authModule, missingRoutes } = createApiApp(platform, {
+    requireVerifiedEmail,
+    registry: networks.registry,
+  });
   const { db } = platform;
 
   let ipCounter = 0;
@@ -84,6 +90,7 @@ export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions =
     platform,
     authModule,
     missingRoutes,
+    networks,
     browser,
     signUp,
     email,
