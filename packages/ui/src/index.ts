@@ -13,6 +13,20 @@ export {
 export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
 export { Card } from './components/card';
+export {
+  AccountPicker,
+  CharacterCounter,
+  IssueList,
+  MediaThumb,
+  PreviewFrame,
+  type AccountPickerProps,
+  type CharacterCounterProps,
+  type IssueItem,
+  type IssueListProps,
+  type MediaThumbProps,
+  type PickerAccount,
+  type PreviewFrameProps,
+} from './components/composer';
 export { Checkbox, RadioCard, RadioGroup, Switch } from './components/choice';
 export {
   CommandPalette,
@@ -94,9 +108,11 @@ export {
   SelectValue,
 } from './components/select';
 export { NavTabs } from './components/nav-tabs';
+export { NetworkIcon, networkName, type NetworkIconProps } from './components/network-icon';
 export { Kbd, PageHeader, type PageHeaderProps } from './components/page';
 export { Popover, PopoverClose, PopoverContent, PopoverTrigger } from './components/popover';
 export { ProgressBar, type ProgressBarProps } from './components/progress-bar';
 export { Spinner, type SpinnerProps } from './components/spinner';
+export { StatusChip, type StatusChipProps } from './components/status-chip';
 export { toast, Toaster } from './components/toast';
 export { Tooltip, TooltipProvider, type TooltipProps } from './components/tooltip';

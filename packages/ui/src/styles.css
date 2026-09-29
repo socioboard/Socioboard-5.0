@@ -51,6 +51,11 @@
   --sb-danger-solid: #be123c;
   /* Overlay behind dialogs and drawers. */
   --sb-scrim: rgb(20 24 33 / 0.28);
+  /* Network previews (PreviewFrame): the networks' own paper and ink, not the app's glass. */
+  --sb-preview-bg: #ffffff;
+  --sb-preview-ink: #080809;
+  --sb-preview-ink-2: #65676b;
+  --sb-preview-line: rgb(0 0 0 / 0.1);
 }
 
 .dark {
@@ -80,6 +85,10 @@
   --sb-danger: #ff8a78;
   --sb-danger-tint: rgb(255 99 82 / 0.14);
   --sb-scrim: rgb(0 0 0 / 0.5);
+  --sb-preview-bg: #242526;
+  --sb-preview-ink: #e4e6eb;
+  --sb-preview-ink-2: #b0b3b8;
+  --sb-preview-line: rgb(255 255 255 / 0.1);
 }
 
 @theme inline {
