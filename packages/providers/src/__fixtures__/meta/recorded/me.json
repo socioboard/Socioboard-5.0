@@ -1,0 +1,17 @@
+{
+  "method": "GET",
+  "url": "https://graph.facebook.com/v25.0/me",
+  "query": {
+    "fields": "id,name,picture.width(200).height(200){url}"
+  },
+  "status": 200,
+  "response": {
+    "id": "9001",
+    "name": "Priya Rao",
+    "picture": {
+      "data": {
+        "url": "https://scontent.example.test/1.jpg"
+      }
+    }
+  }
+}

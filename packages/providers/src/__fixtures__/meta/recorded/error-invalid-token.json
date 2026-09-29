@@ -1,0 +1,13 @@
+{
+  "method": "GET",
+  "url": "https://graph.facebook.com/v25.0/me",
+  "status": 400,
+  "response": {
+    "error": {
+      "message": "Invalid OAuth access token - Cannot parse access token",
+      "type": "OAuthException",
+      "code": 190,
+      "fbtrace_id": "TRACE"
+    }
+  }
+}
