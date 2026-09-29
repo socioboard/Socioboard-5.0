@@ -23,7 +23,8 @@ interface GraphErrorBody {
 
 /** Meta error codes by what the worker should do (Graph API "Handling errors"). */
 const AUTH_CODES = new Set([102, 190, 10, 459, 460, 463, 467]);
-const RATE_CODES = new Set([4, 17, 32, 341, 613, 80001, 80002, 80004, 80005, 80006]);
+// 9: Instagram's 100 posts per 24 hours (subcode 2207042).
+const RATE_CODES = new Set([4, 9, 17, 32, 341, 613, 80001, 80002, 80004, 80005, 80006]);
 const RETRYABLE_CODES = new Set([1, 2]);
 
 export function classifyGraphError(
@@ -92,11 +93,13 @@ export function createGraphClient(input: {
   version?: string | undefined;
   baseUrl?: string;
   videoBaseUrl?: string;
+  /** Send appsecret_proof (graph.facebook.com); graph.instagram.com calls go without it. */
+  proof?: boolean;
 }): GraphClient {
   const version = input.version ?? DEFAULT_GRAPH_VERSION;
   const base = input.baseUrl ?? 'https://graph.facebook.com';
   const videoBase = input.videoBaseUrl ?? 'https://graph-video.facebook.com';
-  const proof = (token: string) =>
+  const makeProof = (token: string) =>
     createHmac('sha256', input.appSecret).update(token).digest('hex');
   const url = (root: string, path: string) =>
     path.startsWith('https://') ? path : `${root}/${version}/${path.replace(/^\//, '')}`;
@@ -108,7 +111,10 @@ export function createGraphClient(input: {
     params: Record<string, string | number>,
     timeoutMs?: number,
   ): Promise<T> {
-    const auth = { access_token: token, appsecret_proof: proof(token) };
+    const auth: Record<string, string> =
+      input.proof === false
+        ? { access_token: token }
+        : { access_token: token, appsecret_proof: makeProof(token) };
     const res = await input.http.request<T>(
       method !== 'POST'
         ? {

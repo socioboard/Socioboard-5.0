@@ -1,0 +1,29 @@
+[
+  {
+    "method": "POST",
+    "url": "https://api.instagram.com/oauth/access_token",
+    "body": {
+      "client_id": "990011",
+      "grant_type": "authorization_code",
+      "redirect_uri": "https://app.test/api/oauth/instagram/callback",
+      "code": "AQB-ig-code"
+    },
+    "status": 200,
+    "response": {
+      "data": [
+        {
+          "access_token": "IGAA-short",
+          "user_id": "17841400000000009",
+          "permissions": "instagram_business_basic,instagram_business_content_publish"
+        }
+      ]
+    }
+  },
+  {
+    "method": "GET",
+    "url": "https://graph.instagram.com/access_token",
+    "query": { "grant_type": "ig_exchange_token", "access_token": "IGAA-short" },
+    "status": 200,
+    "response": { "access_token": "IGAA-long", "token_type": "bearer", "expires_in": 5183944 }
+  }
+]
