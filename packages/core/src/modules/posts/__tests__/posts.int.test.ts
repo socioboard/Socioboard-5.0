@@ -275,6 +275,37 @@ describe('editing and deleting', () => {
     expect([del.status, code(del)]).toEqual([422, 'POST_NOT_DELETABLE']);
   });
 
+  it('an edit that races a starting publish waits for it, then refuses', async () => {
+    const post = await createPost(owner, { text: 'race', targets: [{ accountId: acc.fb }] });
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((r) => (release = r));
+    let locked: () => void = () => undefined;
+    const lockTaken = new Promise<void>((r) => (locked = r));
+    // Plays publish-now (P1-B7): takes the post lock, marks the target publishing, commits later.
+    const publish = t.db.client.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${post.id}::uuid FOR UPDATE`;
+      await tx.postTarget.updateMany({
+        where: { postId: post.id },
+        data: { status: 'publishing' },
+      });
+      locked();
+      await held;
+    });
+    await lockTaken;
+    // Sent now (supertest only sends on then): its early check still sees "pending", so the
+    // edit must wait for the lock and check again.
+    const edit = owner
+      .send('PATCH', `${base()}/posts/${post.id}`, { text: 'changed mid-publish' })
+      .then((r) => r);
+    await new Promise((r) => setTimeout(r, 300));
+    release();
+    await publish;
+    const res = await edit;
+    expect([res.status, code(res)]).toEqual([422, 'POST_NOT_EDITABLE']);
+    const row = await t.db.client.post.findUniqueOrThrow({ where: { id: post.id } });
+    expect(row.text).toBe('race');
+  });
+
   it('deletes drafts, with an audit entry', async () => {
     const post = await createPost(owner, { text: 'bye' });
     expect((await owner.send('DELETE', `${base()}/posts/${post.id}`)).status).toBe(204);
