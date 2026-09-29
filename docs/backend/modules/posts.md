@@ -14,7 +14,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 
 **Post status:** `draft` → `in_review` → `approved` → `scheduled` → `publishing` → `published` / `partial` / `failed`. Target status: `pending`, `scheduled`, `publishing`, `published`, `failed`, `cancelled`.
 
-`override.options` holds network-specific settings (Pinterest board, YouTube title/privacy, TikTok privacy level and toggles, Instagram post type).
+`override.options` holds network-specific settings under the network's key, e.g. `{ instagram: { format: 'reel' } }` (Instagram feed/reel/story; a feed post with 2–10 files is a carousel). Phase 3 adds Pinterest board, YouTube title/privacy, TikTok privacy level and toggles. Keys for another network than the target account's are rejected.
 
 ## API
 | Method | Path | Permission | Description |

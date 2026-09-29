@@ -5,8 +5,8 @@
 **Modules:** [providers](../backend/modules/providers.md) (interface + Meta), [social-accounts](../backend/modules/social-accounts.md), [posts](../backend/modules/posts.md), [publishing](../backend/modules/publishing.md), [media](../backend/modules/media.md) (public URLs, prepare) · **Areas:** [accounts](../frontend/areas/accounts.md), [composer](../frontend/areas/composer.md), [posts](../frontend/areas/posts.md), onboarding steps 2–3
 
 ## Contracts
-- [ ] P1-C1 Networks (capabilities, rules, preview spec), accounts, connect flow
-- [ ] P1-C2 Posts, targets, overrides, validation issues, publish-now, attempts
+- [x] P1-C1 Networks (capabilities, rules, preview spec), accounts, connect flow
+- [x] P1-C2 Posts, targets, overrides, validation issues, publish-now, attempts
 
 ## Backend
 - [ ] P1-B1 Prisma: SocialConnection, SocialAccount, SocialAccountGroup(+Item), OAuthState, Post, PostTarget, PublishAttempt

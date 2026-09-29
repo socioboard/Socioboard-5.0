@@ -3,34 +3,44 @@
 **Phase:** 1 (Meta: Facebook Pages + Instagram), 3 (LinkedIn, X, YouTube, Pinterest, TikTok, Snapchat, Tumblr, Bitly) · **Path:** `packages/providers` · **Depends on:** platform (config, http client, logger) only
 
 ## Purpose
-The only code that talks to social network APIs. Each network is one adapter implementing a shared interface. Other modules ask the registry for an adapter and never call a network directly.
+The only code that talks to social network APIs. Other modules ask the registry for an adapter and never call a network directly.
+
+## Logins and networks
+Signing in and posting are separate, because one login can reach several networks: a Facebook login reaches the person's Pages **and** the Instagram accounts linked to those Pages.
+
+- A **login provider** (`LoginProvider`: `facebook`, `instagram`, `linkedin`, `x`, `youtube`, `pinterest`, `tiktok`, `snapchat`, `tumblr`) is one OAuth app, with one callback URL `/api/oauth/<provider>/callback` ([developer apps](../../developer-apps.md)). It signs in, identifies the person and lists what they can post to.
+- A **network** (`NetworkId`: `facebook_page`, `instagram`, `linkedin_person`, `linkedin_org`, `x`, `youtube`, `pinterest`, `tiktok`, `snapchat`, `tumblr`) is a kind of postable asset. It has the content rules, the preview spec, validation and publishing.
+
+Each network lists the logins that reach it (`Network.logins` in the contracts): Instagram accounts connect through `facebook` (accounts linked to a Page) or `instagram` (Instagram Login, no Page needed). Most networks have exactly one login provider.
 
 ## Interface
 ```ts
-interface SocialProvider {
-  id: NetworkId;                       // 'facebook_page' | 'instagram' | 'linkedin_person' | 'linkedin_org' | 'x' | 'youtube' | 'pinterest' | 'tiktok' | 'snapchat' | 'tumblr'
+interface LoginAdapter {
+  id: LoginProvider;
+  networks: NetworkId[];               // what its assets can be: facebook → facebook_page, instagram
+  supportsAccountSelection: boolean;   // can the network show an account picker?
+  getAuthUrl(input: { state: string; redirectUri: string; pkce?: Pkce; forceAccountSelection?: boolean }): string;
+  exchangeCode(input: { code: string; redirectUri: string; pkce?: Pkce }): Promise<TokenSet>;
+  refresh?(tokens: TokenSet): Promise<TokenSet>;                   // or re-exchange for long-lived tokens
+  getIdentity(tokens: TokenSet): Promise<LoginIdentity>;           // externalUserId + name + avatar of the login
+  listAssets(tokens: TokenSet): Promise<ConnectableAsset[]>;       // Pages, IG accounts, orgs, channels, boards… with per-asset tokens where the network issues them
+}
+
+interface NetworkAdapter {
+  id: NetworkId;
   displayName: string;
-  capabilities: Capabilities;          // postTypes (text, image, carousel, video, story, reel, short), firstComment, altText, scheduling-native?
-  rules: ContentRules;                 // maxChars, maxMedia, allowed mime, aspect ratios, max video secs/size, link handling
-
-  auth: {
-    getAuthUrl(state: string, pkce?: Pkce, opts?: { forceAccountSelection?: boolean }): string;
-    getIdentity(tokens: TokenSet): Promise<LoginIdentity>;       // externalUserId + name + avatar of the login
-    supportsAccountSelection: boolean;                           // can the network show an account picker?
-    exchangeCode(code: string, pkce?: Pkce): Promise<TokenSet>;
-    refresh(tokens: TokenSet): Promise<TokenSet>;
-    listAssets(tokens: TokenSet): Promise<ConnectableAsset[]>;   // Pages, orgs, channels, boards...
-  };
-
-  validate(input: PublishInput): ValidationIssue[];              // pure, used by composer + API
-  publish(input: PublishInput, tokens: TokenSet): Promise<PublishResult>;   // externalId, permalink
-  deletePost?(externalId: string, tokens: TokenSet): Promise<void>;
-  fetchAccountMetrics?(tokens: TokenSet, range: DateRange): Promise<AccountMetrics>;   // 6.1
-  fetchPostMetrics?(externalIds: string[], tokens: TokenSet): Promise<PostMetrics[]>;   // 6.1
-  fetchFeed?(tokens: TokenSet, cursor?: string): Promise<FeedPage>;                      // 6.1 (feeds module)
+  capabilities: NetworkCapabilities;   // postTypes (text, link, image, carousel, video, reel, story), firstComment, altText
+  rules: ContentRules;                 // maxChars, hashtags/mentions, media count/kinds/sizes, aspect ratios, video length, link handling
   preview: PreviewSpec;                // layout hints for the frontend live preview
+  validate(input: PublishInput): ValidationIssue[];                          // pure, used by composer + API
+  publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;   // externalId, permalink
+  deletePost?(externalId: string, account: AccountCredentials): Promise<void>;
+  fetchAccountMetrics?(account: AccountCredentials, range: DateRange): Promise<AccountMetrics>;   // 6.1
+  fetchPostMetrics?(externalIds: string[], account: AccountCredentials): Promise<PostMetrics[]>;   // 6.1
+  fetchFeed?(account: AccountCredentials, cursor?: string): Promise<FeedPage>;                    // 6.1 (feeds module)
 }
 ```
+`AccountCredentials` is the asset's external id plus the token to use (the asset token where the network issues one, else the login's).
 
 Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth' | 'content' | 'rate_limited', retryAfter?, networkCode, message }`.
 
@@ -38,7 +48,7 @@ Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth'
 ```
 packages/providers/src/
 ├─ types.ts, errors.ts, registry.ts, http.ts (shared fetch with timeouts + logging)
-├─ meta/        facebook-page.ts, instagram.ts, graph-client.ts
+├─ meta/        facebook-login.ts, instagram-login.ts, facebook-page.ts, instagram.ts, graph-client.ts
 ├─ linkedin/    person.ts, organization.ts
 ├─ x/  youtube/  pinterest/  tiktok/  snapchat/  tumblr/
 ├─ utilities/   bitly.ts (shortener, not a SocialProvider)
@@ -53,8 +63,8 @@ None of its own. Rules and preview specs are exposed through `social-accounts` a
 Every adapter must support any number of logins per workspace and any number of assets per login (see [social-accounts](social-accounts.md)). `getIdentity` lets us detect when a user connects the same login twice. Where the network has an account-picker or force-login parameter, `getAuthUrl` adds it when `forceAccountSelection` is set (Google/YouTube: `prompt=select_account`; others verified per adapter in phase 1/3).
 
 ## Registry
-- `registry.get(networkId)` returns the adapter or throws `NETWORK_NOT_ENABLED`.
-- An adapter registers only when its env keys are set, so self-hosters see only configured networks.
+- `registry.login(provider)` and `registry.network(networkId)` return the adapter or throw `NETWORK_NOT_ENABLED`.
+- A login registers only when its env keys are set (`META_APP_ID` + `META_APP_SECRET` for `facebook`, `INSTAGRAM_APP_ID` + `INSTAGRAM_APP_SECRET` for `instagram`, …); a network is enabled when at least one of its logins is. Self-hosters see only what they configured.
 
 ## Per-network notes (build details)
 | Network | Auth | Publish path | Notes |
