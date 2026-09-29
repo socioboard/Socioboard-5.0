@@ -65,7 +65,7 @@ Request and response schemas live in `packages/contracts/src/<module>.ts` (Zod),
 ## HTTP conventions
 
 - **Base path:** `/api/v1`. Workspace resources live under `/api/v1/workspaces/:workspaceId/...`.
-- **Reserved paths:** `/api/auth/*` (Better Auth), `/api/oauth/:network/*` (social account connect), `/api/webhooks/*` (Stripe, AI service, Meta), `/api/admin/*` (platform admin console), `/api/health` (readiness) and `/api/health/live` (liveness).
+- **Reserved paths:** `/api/auth/*` (Better Auth), `/api/oauth/:provider/*` (social account connect), `/api/webhooks/*` (Stripe, AI service, Meta), `/api/admin/*` (platform admin console), `/api/health` (readiness) and `/api/health/live` (liveness).
 - **IDs:** UUIDv7 strings (time-ordered). Never expose sequential integers.
 - **Time:** ISO-8601 UTC in and out. The client converts to the workspace or user timezone.
 - **Success:** return the resource (or `{ items, nextCursor }` for lists) with 200/201; 204 for deletes.

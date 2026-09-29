@@ -7,7 +7,7 @@
 | --- | --- | --- |
 | `/w/:slug/accounts` | Connected accounts grouped by network, then by **login** (e.g. Facebook → "Priya" → her 3 Pages; Facebook → "Brand Admin" → 2 Pages): avatar, name, status (active / needs reconnect), connected by, date. Each network section has **"+ Connect another <network> account"** | `posts:read` |
 | `/w/:slug/accounts` → "Connect" | Network chooser: enabled networks only, with a note on what each supports | `accounts:connect` |
-| `/w/:slug/accounts/connect/:network` | **Asset picker** after OAuth: shows which login was used ("Signed in as Priya"), lists that login's Pages / orgs / channels / boards, marks ones already connected | `accounts:connect` |
+| `/w/:slug/accounts/connect/:provider` | **Asset picker** after OAuth: shows which login was used ("Signed in as Priya"), lists that login's Pages / orgs / channels / boards, marks ones already connected | `accounts:connect` |
 | (drawer) | Account details: health, which login it comes through, reconnect, disconnect, queue slots editor | `accounts:manage` |
 | (drawer) | Login details: its accounts, "Add more Pages from this login", reconnect, remove login (and all its accounts) | `accounts:manage` |
 | (tab) | Account groups: create, name, pick accounts | `accounts:manage` |
@@ -21,9 +21,9 @@
 API: `GET /accounts/:aid/feed`, `GET …/feed/:itemId/comments`, `POST …/feed/refresh` ([feeds](../../backend/modules/feeds.md)). Networks without feed support show a short explanation.
 
 ## Flow: connect an account (first or additional login)
-1. User picks a network (or "+ Connect another Facebook account") → `POST /accounts/connect/:network` → browser goes to the network's consent screen.
+1. User picks a network (or "+ Connect another Facebook account"); where a network has more than one login (Instagram: "Continue with Facebook" for accounts linked to a Page, or "Continue with Instagram"), they pick one → `POST /accounts/connect/:provider` → browser goes to the network's consent screen.
    - Adding another login: we ask the network to show its account picker where supported. Where it isn't, a tip appears first: "You'll be signed in as whoever is logged in to Facebook in this browser. To add a different account, sign out of Facebook first or use a private window."
-2. Network redirects to `/api/oauth/:network/callback` → server creates or updates the login → redirects to `/w/:slug/accounts/connect/:network?connection=…`.
+2. Network redirects to `/api/oauth/:provider/callback` → server creates or updates the login → redirects to `/w/:slug/accounts/connect/:provider?connection=…&result=…` (or `?error=…`, shown as a readable message with a "Try again").
 3. If that login was already connected, the page says so ("Priya is already connected") with the switch-account tip, and still offers any of her assets not yet added.
 4. Asset picker loads `GET /connections/:cid/assets` → user ticks assets → `POST /connections/:cid/assets` → accounts appear under that login.
 

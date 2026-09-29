@@ -66,7 +66,7 @@ Features import each other, and routes and `lib` import features, only through `
 /w/:slug/posts                  /w/:slug/posts/:postId
 /w/:slug/approvals              /w/:slug/tasks
 /w/:slug/media                  /w/:slug/ai
-/w/:slug/accounts               /w/:slug/accounts/connect/:network
+/w/:slug/accounts               /w/:slug/accounts/connect/:provider
 /w/:slug/analytics              /w/:slug/reports              (6.1)
 /w/:slug/discovery              (6.1)
 /w/:slug/settings/{general,members,billing,audit}

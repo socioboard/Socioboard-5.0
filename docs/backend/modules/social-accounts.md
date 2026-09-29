@@ -10,41 +10,41 @@ Connecting social accounts (Facebook Pages, Instagram accounts, LinkedIn profile
 ## Two levels: connection and account
 | Level | What it is | Examples |
 | --- | --- | --- |
-| **SocialConnection** | One login to a network, holding that login's OAuth tokens | Facebook user "Priya", Facebook user "Brand Admin", Google account `ops@brand.com`, LinkedIn member "Chethan" |
+| **SocialConnection** | One login through a login provider (`facebook`, `instagram`, `linkedin`, … see [providers](providers.md#logins-and-networks)), holding that login's OAuth tokens | Facebook user "Priya", Facebook user "Brand Admin", Google account `ops@brand.com`, LinkedIn member "Chethan" |
 | **SocialAccount** | One postable asset reached through a connection | Facebook Pages, Instagram professional accounts, LinkedIn profile + company pages, YouTube channels, Pinterest account, TikTok account, Tumblr blogs, X account, Snapchat profile |
 
-A connection has one or more accounts. For networks where the login *is* the account (X, TikTok, Pinterest, Snapchat), the connection has exactly one account.
+A connection has one or more accounts, possibly of more than one network: a Facebook login reaches Pages (`facebook_page`) and the Instagram accounts linked to them (`instagram`). For networks where the login *is* the account (X, TikTok, Pinterest, Snapchat), the connection has exactly one account.
 
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `SocialConnection` | id, workspaceId, network, externalUserId, displayName, avatarUrl, accessTokenEnc, refreshTokenEnc, tokenExpiresAt, scopes, status (active/reauth_required/revoked), connectedById, lastCheckedAt | Unique (workspaceId, network, externalUserId) |
-| `SocialAccount` | id, workspaceId, connectionId, network, externalId, displayName, username, avatarUrl, assetTokenEnc?, assetTokenExpiresAt?, meta JSON, status (active/reauth_required/disconnected/paused), lastCheckedAt | Unique (workspaceId, network, externalId). `assetTokenEnc` only where the network issues per-asset tokens (e.g. Facebook Page tokens) |
+| `SocialConnection` | id, workspaceId, provider, externalUserId, displayName, avatarUrl, accessTokenEnc, refreshTokenEnc, tokenExpiresAt, scopes, status (active/reauth_required/revoked), connectedById, lastCheckedAt | Unique (workspaceId, provider, externalUserId) |
+| `SocialAccount` | id, workspaceId, connectionId?, network, externalId, displayName, username, avatarUrl, assetTokenEnc?, assetTokenExpiresAt?, meta JSON, status (active/reauth_required/disconnected/paused), statusReason?, connectedById, lastCheckedAt | Unique (workspaceId, network, externalId). `connectionId` is null once its login is removed (the account is then `disconnected`, kept for post history). `assetTokenEnc` only where the network issues per-asset tokens (e.g. Facebook Page tokens) |
 | `SocialAccountGroup` | id, workspaceId, name | Saved sets, e.g. "Brand A all channels" |
 | `SocialAccountGroupItem` | groupId, socialAccountId | |
-| `OAuthState` | state, workspaceId, userId, network, pkceVerifier, connectionId? (for reconnect), expiresAt | 10-minute expiry, single use |
+| `OAuthState` | state, workspaceId, userId, provider, pkceVerifier, connectionId? (for reconnect), expiresAt | 10-minute expiry, single use |
 
 `meta` holds network extras (Pinterest default board, LinkedIn org URN, TikTok creator info cache).
 
 ## API
 | Method | Path | Permission | Description |
 | --- | --- | --- | --- |
-| GET | `/api/v1/networks` | signed in | Enabled networks + capabilities/rules/preview spec + how account switching works |
-| POST | `/api/v1/workspaces/:wid/accounts/connect/:network` | `accounts:connect` | Start OAuth (body: `{ forceAccountSelection: true }` when adding another login); returns the network's auth URL |
-| GET | `/api/oauth/:network/callback` | (state) | OAuth redirect target; creates or updates the SocialConnection, redirects to the asset picker |
+| GET | `/api/v1/networks` | signed in | Enabled networks + capabilities/rules/preview spec + the logins that reach each (with whether they can show an account picker) |
+| POST | `/api/v1/workspaces/:wid/accounts/connect/:provider` | `accounts:connect` | Start OAuth with a login provider (body: `{ forceAccountSelection: true }` when adding another login); returns the network's auth URL |
+| GET | `/api/oauth/:provider/callback` | (state) | OAuth redirect target; creates or updates the SocialConnection, redirects to `/w/:slug/accounts/connect/:provider?connection=…&result=connected\|already_connected\|reconnected`, or `?error=<code>` (`ConnectErrorCode` in the contracts) |
 | GET | `/api/v1/workspaces/:wid/connections/:cid/assets` | `accounts:connect` | Connectable assets for this login, marking ones already connected |
 | POST | `/api/v1/workspaces/:wid/connections/:cid/assets` | `accounts:connect` | Add the chosen assets as SocialAccounts |
-| GET | `/api/v1/workspaces/:wid/connections?network=` | `accounts:manage` | Logins per network, each with its accounts |
+| GET | `/api/v1/workspaces/:wid/connections?provider=` | `accounts:manage` | Logins, each with its accounts |
 | POST | `/api/v1/workspaces/:wid/connections/:cid/reconnect` | `accounts:connect` | Re-run OAuth for this login (must return the same user) |
 | DELETE | `/api/v1/workspaces/:wid/connections/:cid` | `accounts:manage` | Remove a login and all its accounts |
-| GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts (respects member account access) |
-| GET | `/api/v1/workspaces/:wid/accounts/:aid` | `posts:read` | Details + health + which login it comes through |
+| GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts, with the login each comes through (respects member account access from phase 4; `disconnected` ones left out) |
+| GET | `/api/v1/workspaces/:wid/accounts/:aid` | `posts:read` | Details + health + which login it comes through + how many pending posts disconnecting would cancel |
 | DELETE | `/api/v1/workspaces/:wid/accounts/:aid` | `accounts:manage` | Disconnect one account; cancels its scheduled targets |
-| CRUD | `/api/v1/workspaces/:wid/account-groups` | `accounts:manage` | Account groups |
+| CRUD | `/api/v1/workspaces/:wid/account-groups` | `accounts:manage` | Account groups (routes arrive with the groups UI, P3-F3; the tables exist from P1-B1) |
 
 ## Services
-- `startConnect(workspace, user, network, { forceAccountSelection })` → signed `state` + PKCE saved in `OAuthState`; adapter adds the network's account-picker/force-login parameter where supported.
-- `handleCallback(network, code, state)` → exchange code, fetch the login's identity (`externalUserId`):
+- `startConnect(workspace, user, provider, { forceAccountSelection })` → signed `state` + PKCE saved in `OAuthState`; adapter adds the network's account-picker/force-login parameter where supported.
+- `handleCallback(provider, code, state)` → exchange code, fetch the login's identity (`externalUserId`):
   - **new login** → create a SocialConnection;
   - **login already connected** → refresh its tokens and tell the user "You're signed in to Facebook as Priya, who is already connected" with steps to switch accounts (below);
   - **reconnect** → must match the original `externalUserId`, otherwise reject with `RECONNECT_WRONG_ACCOUNT`.
