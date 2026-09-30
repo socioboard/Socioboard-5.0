@@ -1,6 +1,6 @@
 import type { NetworkId } from '@socioboard/contracts';
 import { cn, NetworkIcon, networkName } from '@socioboard/ui';
-import { Layers } from 'lucide-react';
+import { CircleAlert, Layers } from 'lucide-react';
 import { useRef, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +16,7 @@ export function NetworkTabs({
   panelId,
   withAll = true,
   label,
+  flagged,
 }: {
   networks: NetworkId[];
   active: NetworkId | null;
@@ -25,6 +26,8 @@ export function NetworkTabs({
   /** Starts with "All networks" (the editor); the preview has only networks. */
   withAll?: boolean;
   label?: string;
+  /** Networks with an error to fix (a red mark on their tab). */
+  flagged?: ReadonlySet<NetworkId>;
 }) {
   const { t } = useTranslation('composer');
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -49,6 +52,7 @@ export function NetworkTabs({
       {tabs.map((network, i) => {
         const selected = network === active;
         const custom = network !== null && customised.has(network);
+        const bad = network !== null && (flagged?.has(network) ?? false);
         const name = network === null ? t('tabs.all') : networkName(network);
         return (
           <button
@@ -84,6 +88,12 @@ export function NetworkTabs({
               <>
                 <span className="bg-ring size-1.5 rounded-full" aria-hidden="true" />
                 <span className="sr-only">{t('tabs.custom', { network: name })}</span>
+              </>
+            )}
+            {bad && (
+              <>
+                <CircleAlert className="text-danger size-3.5" aria-hidden="true" />
+                <span className="sr-only">{t('issues.tabHasErrors', { network: name })}</span>
               </>
             )}
           </button>

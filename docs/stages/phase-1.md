@@ -25,7 +25,7 @@
 - [x] P1-F1 Accounts page grouped by network → login → accounts, "Connect another account" per network with switch-account tip, network chooser, asset picker, account and login details (reconnect, disconnect, remove login)
 - [x] P1-F2 Composer: account picker, editor with per-network counters, media strip + picker, per-network tabs/overrides
 - [x] P1-F3 **Live preview** framework + Facebook and Instagram preview components
-- [ ] P1-F4 Validation: client quick checks + debounced server validation; issues panel
+- [x] P1-F4 Validation: client quick checks + debounced server validation; issues panel
 - [ ] P1-F5 Save draft, Publish now, autosave
 - [ ] P1-F6 Posts list + post detail with targets and publishing history; retry failed target
 - [ ] P1-F7 Onboarding steps 2 (connect account) and 3 (first post)
