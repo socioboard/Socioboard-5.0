@@ -63,7 +63,7 @@ export async function useFacebookSession(context: BrowserContext, sessionFile: s
   const state = JSON.parse(readFileSync(sessionFile, 'utf8')) as {
     cookies: Parameters<BrowserContext['addCookies']>[0];
   };
-  await context.addCookies(state.cookies.filter((c) => /facebook\.com$/.test(c.domain ?? '')));
+  await context.addCookies(state.cookies.filter((c) => (c.domain ?? '').endsWith('facebook.com')));
 }
 
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
