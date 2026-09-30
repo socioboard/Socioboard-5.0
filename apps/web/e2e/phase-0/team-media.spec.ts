@@ -6,30 +6,13 @@
 // is checked for the right cursors (support/cursors.ts).
 import { fileURLToPath } from 'node:url';
 
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { expectRightCursors } from '../support/cursors';
 import { linkIn, waitForEmail } from '../support/mailpit';
-import { browserFor, person } from '../support/people';
+import { browserFor, person, signUp, verifyByEmail } from '../support/people';
 
 const IMAGE = fileURLToPath(new URL('../fixtures/socioboard-logo.png', import.meta.url));
-
-async function signUp(page: Page, who: ReturnType<typeof person>) {
-  await page.getByLabel('Your name').fill(who.name);
-  // By role: the dev build's router devtools also have a label mentioning "email".
-  await page.getByRole('textbox', { name: 'Email', exact: true }).fill(who.email);
-  await page.getByLabel('Password', { exact: true }).fill(who.password);
-  await page.getByRole('button', { name: 'Create account' }).click();
-  await expect(page.getByRole('heading', { name: 'Check your inbox' })).toBeVisible();
-}
-
-/** Opens the verification link from the email, as if clicked in a mail app, then continues. */
-async function verifyByEmail(page: Page, who: ReturnType<typeof person>) {
-  const email = await waitForEmail(who.email, 'Verify your email');
-  await page.goto(linkIn(email, '/verify-email'));
-  await expect(page.getByRole('heading', { name: 'Email verified' })).toBeVisible();
-  await page.getByRole('button', { name: 'Continue' }).click();
-}
 
 test('a team forms around a workspace and shares its media', async ({ browser }) => {
   const owner = person('owner');

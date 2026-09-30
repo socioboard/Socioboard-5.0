@@ -10,7 +10,8 @@
     "start": "node dist/main.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo",
-    "seed": "tsx --env-file-if-exists=../../.env src/seed.ts"
+    "seed": "tsx --env-file-if-exists=../../.env src/seed.ts",
+    "delete-network-post": "tsx --env-file-if-exists=../../.env src/delete-network-post.ts"
   },
   "dependencies": {
     "@socioboard/contracts": "workspace:*",

@@ -218,14 +218,6 @@ function Composer({
     !post || post.author?.id === me.user.id ? can('posts:create') : can('posts:approve');
   const readOnly = locked || !mayEdit;
 
-  const validation = useValidation({
-    workspaceId: workspace.id,
-    draft,
-    networkOf,
-    selected,
-    rulesOf: (n) => rulesOf(n)?.rules,
-    enabled: !readOnly,
-  });
   // Every file on the post (shared or a network's own), to name them in issues.
   const allMediaIds = [
     ...new Set([
@@ -234,6 +226,20 @@ function Composer({
     ]),
   ];
   const attached = useAttachedMedia(workspace.id, allMediaIds);
+  const validation = useValidation({
+    workspaceId: workspace.id,
+    draft,
+    networkOf,
+    selected,
+    rulesOf: (n) => rulesOf(n)?.rules,
+    enabled: !readOnly,
+    mediaState: allMediaIds
+      .map(
+        (id, i) =>
+          `${id}:${attached[i]?.data?.status ?? (attached[i]?.isError ? 'gone' : 'loading')}`,
+      )
+      .join(','),
+  });
   const wording = useIssueWording({
     account: (id) => accounts.find((a) => a.id === id)?.displayName,
     file: (id) => attached[allMediaIds.indexOf(id)]?.data?.name,
