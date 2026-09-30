@@ -10,3 +10,6 @@ allowBuilds:
   # Pulled in by Ladle; we don't use its request mocking.
   msw: false
   prisma: true
+minimumReleaseAgeExclude:
+  - framer-motion@13.4.6
+  - motion@13.4.6

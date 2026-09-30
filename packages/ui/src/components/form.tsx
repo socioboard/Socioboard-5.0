@@ -9,6 +9,8 @@ const fieldBase = [
   'hover:border-hair-strong focus-visible:border-ring focus-visible:outline-none',
   'focus-visible:shadow-[inset_0_1px_0_var(--sb-spec),0_0_0_3px_var(--sb-ring-glow)]',
   'aria-invalid:border-danger aria-invalid:focus-visible:shadow-[0_0_0_3px_var(--sb-danger-tint)]',
+  // Becoming invalid nudges the field once; border and glow ease between states.
+  'transition-[border-color,box-shadow,background-color] duration-200 aria-invalid:animate-nudge motion-reduce:animate-none',
   'disabled:cursor-not-allowed disabled:opacity-60',
 ];
 
@@ -81,8 +83,13 @@ export function FormField({ label, hint, error, required, className, children }:
       {children(control)}
       {note && (
         <p
+          // A new error rises in (the hint doesn't move).
+          key={error ? 'error' : 'hint'}
           id={noteId}
-          className={cn('text-xs leading-relaxed', error ? 'text-danger' : 'text-ink-3')}
+          className={cn(
+            'text-xs leading-relaxed',
+            error ? 'text-danger animate-enter' : 'text-ink-3',
+          )}
           {...(error ? { role: 'alert' } : {})}
         >
           {note}

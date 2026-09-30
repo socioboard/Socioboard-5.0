@@ -22,7 +22,7 @@ export function AuthLayout({
       <div className="flex w-full max-w-[26rem] flex-col gap-4">
         <div
           className={cn(
-            'glass rounded-pane animate-settle flex flex-col gap-6 p-6 sm:p-8',
+            'glass rounded-pane animate-settle stagger-children flex flex-col gap-6 p-6 [--stagger-base:180ms] sm:p-8',
             className,
           )}
         >
@@ -45,7 +45,7 @@ export function FormError({ children }: { children: ReactNode }) {
   return (
     <p
       role="alert"
-      className="bg-danger-tint text-danger rounded-control px-3 py-2.5 text-sm leading-relaxed"
+      className="bg-danger-tint text-danger rounded-control animate-enter px-3 py-2.5 text-sm leading-relaxed"
     >
       {children}
     </p>
@@ -57,7 +57,7 @@ export function FormNotice({ children }: { children: ReactNode }) {
   return (
     <p
       role="status"
-      className="glass-chip text-ink-2 rounded-control px-3 py-2.5 text-sm leading-relaxed"
+      className="glass-chip text-ink-2 rounded-control animate-enter px-3 py-2.5 text-sm leading-relaxed"
     >
       {children}
     </p>

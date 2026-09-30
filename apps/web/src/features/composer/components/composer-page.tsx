@@ -18,9 +18,12 @@ import {
   networkName,
   PageHeader,
   RadioCard,
+  motion,
   RadioGroup,
   Skeleton,
+  springs,
   Textarea,
+  useChangeMotion,
   toast,
   type PickerAccount,
 } from '@socioboard/ui';
@@ -167,7 +170,9 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
     <div className="flex min-h-0 flex-1 flex-col">
       <PageHeader title={title} />
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">{body}</div>
+        <div className="stagger-children mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">
+          {body}
+        </div>
       </div>
     </div>
   );
@@ -203,6 +208,8 @@ function Composer({
   const selected = selectedNetworks(draft, networkOf);
   // A tab whose network was just deselected falls back to the shared content.
   const active = tab !== null && selected.includes(tab) ? tab : null;
+  // Switching a network tab refreshes the panel (the same fields, new content).
+  const panelMotion = useChangeMotion(active);
   const customised = new Set(selected.filter((n) => draft.overrides[n] !== undefined));
   const rulesOf = (n: NetworkId) => networks.find((x) => x.id === n);
 
@@ -384,6 +391,7 @@ function Composer({
               panelId={panelId}
             />
             <div
+              ref={panelMotion}
               role="tabpanel"
               id={panelId}
               aria-labelledby={`${panelId}-tab-${active ?? 'all'}`}
@@ -554,10 +562,18 @@ function ViewSwitch({
             onChange(v);
           }}
           className={cn(
-            'h-8 rounded-lg px-4 text-[13px] font-medium',
-            value === v ? 'bg-chip text-ink shadow-sm' : 'text-ink-3 hover:text-ink',
+            'relative isolate h-8 rounded-lg px-4 text-[13px] font-medium transition-colors duration-200',
+            value === v ? 'text-ink' : 'text-ink-3 hover:text-ink',
           )}
         >
+          {value === v && (
+            <motion.span
+              layoutId="composer-view"
+              aria-hidden="true"
+              className="bg-chip absolute inset-0 -z-10 rounded-lg shadow-sm"
+              transition={springs.snappy}
+            />
+          )}
           {t(`view.${v}`)}
         </button>
       ))}

@@ -16,7 +16,7 @@ export function Card({
     <div
       data-selected={selected ? '' : undefined}
       className={cn(
-        'glass-chip rounded-control relative flex flex-col overflow-hidden',
+        'glass-chip rounded-control relative flex flex-col overflow-hidden transition-[box-shadow,border-color,background-color,transform] duration-300 ease-out-soft',
         'data-[selected]:ring-selected',
         className,
       )}

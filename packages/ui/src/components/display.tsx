@@ -72,7 +72,14 @@ export function Avatar({ name, src, size = 'md', decorative = false, className }
         className,
       )}
     >
-      {src && <AvatarPrimitive.Image src={src} alt={name} className="size-full object-cover" />}
+      {src && (
+        <AvatarPrimitive.Image
+          src={src}
+          alt={name}
+          // Shown once loaded (Radix waits), so it fades in over the initials.
+          className="animate-fade-in size-full object-cover motion-reduce:animate-none"
+        />
+      )}
       <AvatarPrimitive.Fallback
         className={cn('flex size-full items-center justify-center', colorFor(name))}
         // Only a photo that fails needs a delay; without one, show initials at once.
@@ -86,7 +93,7 @@ export function Avatar({ name, src, size = 'md', decorative = false, className }
 }
 
 export const badgeVariants = cva(
-  'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold whitespace-nowrap',
+  'inline-flex h-6 shrink-0 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold whitespace-nowrap transition-[background-color,color,border-color] duration-300',
   {
     variants: {
       tone: {
@@ -131,7 +138,7 @@ export function EmptyState({ icon, title, description, action, className }: Empt
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center gap-3 px-6 py-12 text-center',
+        'stagger-children flex flex-col items-center justify-center gap-3 px-6 py-12 text-center',
         className,
       )}
     >

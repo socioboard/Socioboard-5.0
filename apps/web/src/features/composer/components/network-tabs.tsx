@@ -1,5 +1,5 @@
 import type { NetworkId } from '@socioboard/contracts';
-import { cn, NetworkIcon, networkName } from '@socioboard/ui';
+import { cn, motion, NetworkIcon, networkName, springs } from '@socioboard/ui';
 import { CircleAlert, Layers } from 'lucide-react';
 import { useRef, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,11 +73,19 @@ export function NetworkTabs({
               onKeyDown(e, i);
             }}
             className={cn(
-              'rounded-control flex h-9 shrink-0 items-center gap-2 px-3 text-[13px] font-medium whitespace-nowrap outline-none',
-              'focus-visible:ring-selected',
-              selected ? 'bg-chip text-ink shadow-sm' : 'text-ink-3 hover:text-ink',
+              'rounded-control relative isolate flex h-9 shrink-0 items-center gap-2 px-3 text-[13px] font-medium whitespace-nowrap outline-none',
+              'focus-visible:ring-selected transition-[color,transform] duration-200 active:scale-[0.97]',
+              selected ? 'text-ink' : 'text-ink-3 hover:text-ink',
             )}
           >
+            {selected && (
+              <motion.span
+                layoutId={`${panelId}-selected`}
+                aria-hidden="true"
+                className="bg-chip rounded-control absolute inset-0 -z-10 shadow-sm"
+                transition={springs.snappy}
+              />
+            )}
             {network === null ? (
               <Layers className="size-4" aria-hidden="true" />
             ) : (
@@ -86,13 +94,19 @@ export function NetworkTabs({
             <span aria-hidden={custom || undefined}>{name}</span>
             {custom && (
               <>
-                <span className="bg-ring size-1.5 rounded-full" aria-hidden="true" />
+                <span
+                  className="bg-ring animate-scale-in size-1.5 rounded-full motion-reduce:animate-none"
+                  aria-hidden="true"
+                />
                 <span className="sr-only">{t('tabs.custom', { network: name })}</span>
               </>
             )}
             {bad && (
               <>
-                <CircleAlert className="text-danger size-3.5" aria-hidden="true" />
+                <CircleAlert
+                  className="text-danger animate-scale-in size-3.5 motion-reduce:animate-none"
+                  aria-hidden="true"
+                />
                 <span className="sr-only">{t('issues.tabHasErrors', { network: name })}</span>
               </>
             )}

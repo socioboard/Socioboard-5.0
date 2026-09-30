@@ -391,11 +391,14 @@ describe('uploading several files', () => {
     await within(strip).findByRole('img', { name: 'second.jpg' });
     ControlledXhr.pending[0]?.();
     await within(strip).findByRole('img', { name: 'first.jpg' });
-    expect(
-      within(strip)
-        .getAllByRole('img')
-        .map((i) => i.getAttribute('alt')),
-    ).toEqual(['first.jpg', 'second.jpg']);
+    // The finished upload's placeholder leaves (animated) a frame later.
+    await waitFor(() => {
+      expect(
+        within(strip)
+          .getAllByRole('img')
+          .map((i) => i.getAttribute('alt')),
+      ).toEqual(['first.jpg', 'second.jpg']);
+    });
   });
 });
 

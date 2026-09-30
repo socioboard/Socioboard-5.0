@@ -125,20 +125,47 @@
   --radius-media: 14px;
   --radius-pane: 18px;
 
+  /* Motion (docs/frontend/design-system.md, "Motion"). Things arrive with a soft ease-out or a
+     gentle spring and leave quickly; only transform, opacity and small blurs are animated. */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  /* A spring that settles with a 3% overshoot (CSS linear() easing). */
+  --ease-spring: linear(
+    0,
+    0.06 2.2%,
+    0.25 5.4%,
+    0.52 9.6%,
+    0.76 14.4%,
+    0.92 19.5%,
+    1.01 25%,
+    1.03 30%,
+    1.025 36%,
+    1.008 45%,
+    0.998 60%,
+    1
+  );
 
-  /* Overlay motion (Radix waits for the exit animation before unmounting). */
-  --animate-fade-in: sb-fade-in 0.2s ease-out both;
-  --animate-fade-out: sb-fade-out 0.15s ease-in both;
-  --animate-pop-in: sb-pop-in 0.22s var(--ease-out-soft) both;
+  /* Overlay motion (Radix waits for the exit animation before unmounting). Menus and popovers
+     grow from their trigger (transform-origin from Radix). */
+  --animate-fade-in: sb-fade-in 0.22s ease-out both;
+  --animate-fade-out: sb-fade-out 0.16s var(--ease-exit) both;
+  --animate-pop-in: sb-pop-in 0.26s var(--ease-spring) both;
+  --animate-pop-out: sb-pop-out 0.12s var(--ease-exit) both;
+  --animate-dialog-in: sb-dialog-in 0.38s var(--ease-out-soft) both;
+  --animate-dialog-out: sb-dialog-out 0.16s var(--ease-exit) both;
   /* Progress of unknown length; like spinners, it keeps moving under reduced motion. */
   --animate-indeterminate: sb-indeterminate 1.2s ease-in-out infinite;
-  --animate-pop-out: sb-pop-out 0.14s ease-in both;
-  --animate-sheet-in-right: sb-sheet-in-right 0.35s var(--ease-out-soft) both;
-  --animate-sheet-out-right: sb-sheet-out-right 0.2s ease-in both;
-  --animate-sheet-in-bottom: sb-sheet-in-bottom 0.35s var(--ease-out-soft) both;
-  --animate-sheet-out-bottom: sb-sheet-out-bottom 0.2s ease-in both;
+  --animate-sheet-in-right: sb-sheet-in-right 0.42s var(--ease-out-soft) both;
+  --animate-sheet-out-right: sb-sheet-out-right 0.2s var(--ease-exit) both;
+  --animate-sheet-in-bottom: sb-sheet-in-bottom 0.42s var(--ease-out-soft) both;
+  --animate-sheet-out-bottom: sb-sheet-out-bottom 0.2s var(--ease-exit) both;
   --animate-shimmer: sb-shimmer 1.6s ease-in-out infinite;
+  /* Something new on screen: rises into place. `--i` staggers siblings (see animate-enter). */
+  --animate-rise: sb-rise 0.46s var(--ease-out-soft) both;
+  /* A small thing appearing (a chip, a check, a badge): springs up from smaller. */
+  --animate-scale-in: sb-scale-in 0.32s var(--ease-spring) both;
+  /* A field that just became invalid: a short sideways nudge. */
+  --animate-nudge: sb-nudge 0.36s var(--ease-out-soft);
 }
 
 @keyframes sb-fade-in {
@@ -162,13 +189,74 @@
 @keyframes sb-pop-in {
   from {
     opacity: 0;
-    transform: translateY(6px) scale(0.97);
+    transform: translateY(4px) scale(0.94);
+    filter: blur(3px);
   }
 }
 @keyframes sb-pop-out {
   to {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(0.96);
+  }
+}
+@keyframes sb-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    filter: blur(6px);
+  }
+}
+@keyframes sb-dialog-out {
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+@keyframes sb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(3px);
+  }
+}
+@keyframes sb-nudge {
+  20% {
+    transform: translateX(-3px);
+  }
+  45% {
+    transform: translateX(3px);
+  }
+  70% {
+    transform: translateX(-1.5px);
+  }
+}
+@keyframes sb-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+/* The page's own sections rise in (stagger-children), so the pane only crossfades and sharpens. */
+@keyframes sb-page-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+@keyframes sb-page-out {
+  to {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+@keyframes sb-reveal {
+  from {
+    clip-path: circle(0 at var(--sb-reveal-x, 50%) var(--sb-reveal-y, 50%));
+  }
+  to {
+    clip-path: circle(
+      var(--sb-reveal-r, 150vmax) at var(--sb-reveal-x, 50%) var(--sb-reveal-y, 50%)
+    );
   }
 }
 @keyframes sb-sheet-in-right {
@@ -350,12 +438,123 @@
   animation: sb-settle 0.7s var(--ease-out-soft) both;
 }
 
+/* Something that appears rises into place. Siblings stagger by `--i` (style={{ '--i': index }}),
+   40 ms apart and at most 12 steps, so a long list doesn't keep arriving. */
+@utility animate-enter {
+  animation: var(--animate-rise);
+  animation-delay: calc(min(var(--i, 0), 12) * 40ms);
+}
+
+/* A group whose parts arrive one after another (a dialog's or drawer's contents, an empty
+   state): each direct child rises in, 40 ms after the one before (from `--stagger-base`). */
+@utility stagger-children {
+  & > * {
+    animation: var(--animate-rise);
+    animation-delay: var(--stagger-base, 0ms);
+  }
+  & > :nth-child(2) {
+    animation-delay: calc(var(--stagger-base, 0ms) + 40ms);
+  }
+  & > :nth-child(3) {
+    animation-delay: calc(var(--stagger-base, 0ms) + 80ms);
+  }
+  & > :nth-child(4) {
+    animation-delay: calc(var(--stagger-base, 0ms) + 120ms);
+  }
+  & > :nth-child(5) {
+    animation-delay: calc(var(--stagger-base, 0ms) + 160ms);
+  }
+  & > :nth-child(n + 6) {
+    animation-delay: calc(var(--stagger-base, 0ms) + 200ms);
+  }
+}
+
+/* Interactive surfaces (cards, tiles, rows that open something) lift a little under the pointer
+   and settle back when pressed. */
+@utility hover-lift {
+  transition:
+    transform 0.28s var(--ease-out-soft),
+    box-shadow 0.28s var(--ease-out-soft),
+    background-color 0.2s ease-out;
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        inset 0 1px 0 var(--sb-spec),
+        0 12px 32px -14px rgb(0 0 0 / 0.35);
+    }
+  }
+  &:active {
+    transform: translateY(0) scale(0.99);
+    transition-duration: 0.1s;
+  }
+}
+
+/* A control answers a press by giving a little (buttons, chips, toggles). */
+@utility press {
+  transition-property: transform, background-color, box-shadow, filter, color, opacity;
+  transition-duration: 0.16s;
+  transition-timing-function: var(--ease-out-soft);
+  &:active:not(:disabled, [aria-disabled='true']) {
+    transform: scale(0.97);
+    transition-duration: 0.08s;
+  }
+}
+
+/* Page changes (TanStack Router view transitions, type "page"): only the content pane moves; the
+   sidebar and backdrop stay put. The theme switch (type "theme") reveals the new theme in a
+   circle growing from the toggle. */
+html:active-view-transition-type(page) {
+  &::view-transition-old(root),
+  &::view-transition-new(root) {
+    animation: none;
+  }
+  &::view-transition-group(sb-page) {
+    animation-duration: 0s;
+  }
+  &::view-transition-old(sb-page) {
+    animation: sb-page-out 0.14s var(--ease-exit) both;
+  }
+  &::view-transition-new(sb-page) {
+    animation: sb-page-in 0.42s var(--ease-out-soft) both;
+  }
+}
+html:active-view-transition-type(theme) {
+  &::view-transition-old(root) {
+    animation: none;
+  }
+  &::view-transition-new(root) {
+    animation: sb-reveal 0.6s var(--ease-out-soft) both;
+  }
+  /* The pane is its own layer during page changes; here it switches with everything else. */
+  &::view-transition-group(sb-page),
+  &::view-transition-old(sb-page),
+  &::view-transition-new(sb-page) {
+    animation: none;
+  }
+}
+.sb-page {
+  view-transition-name: sb-page;
+}
+
 /* Reduced motion stops decorative motion only. Indicators that show something is happening
    (spinners, progress, skeletons) keep moving; components use Tailwind's motion-reduce: variant
    for their own decorative transitions. */
 @media (prefers-reduced-motion: reduce) {
   .sb-glow,
-  .animate-settle {
+  .animate-settle,
+  .animate-enter,
+  .stagger-children > * {
     animation: none;
+  }
+  .hover-lift,
+  .hover-lift:hover,
+  .press:active {
+    transform: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

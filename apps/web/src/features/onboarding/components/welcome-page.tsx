@@ -1,4 +1,14 @@
-import { Avatar, Button, cn, NetworkIcon, networkName, PageHeader, Skeleton } from '@socioboard/ui';
+import {
+  Avatar,
+  Button,
+  cn,
+  NetworkIcon,
+  networkName,
+  PageHeader,
+  Skeleton,
+  staggerStyle,
+  Swap,
+} from '@socioboard/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Check, Plus, SquarePen } from 'lucide-react';
@@ -23,9 +33,11 @@ export function WelcomePage({ step }: { step: WelcomeStep }) {
     <div className="flex min-h-0 flex-1 flex-col">
       <PageHeader title={t('welcome.title')} />
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-12">
+        <div className="stagger-children relative mx-auto flex w-full max-w-xl flex-col gap-8 px-4 py-8 sm:px-6 sm:py-12">
           <Steps current={step} />
-          {step === 'connect' ? <ConnectStep /> : <PostStep />}
+          <Swap id={step} direction={1}>
+            {step === 'connect' ? <ConnectStep /> : <PostStep />}
+          </Swap>
         </div>
       </div>
     </div>
@@ -50,21 +62,27 @@ function Steps({ current }: { current: WelcomeStep }) {
             aria-current={active ? 'step' : undefined}
             className="flex min-w-0 flex-1 flex-col gap-2"
           >
-            <span
-              className={cn(
-                'h-1 rounded-full',
-                s.done || active ? 'bg-accent' : 'bg-hair-strong',
-                active && 'opacity-60',
-              )}
-              aria-hidden="true"
-            />
+            <span className="bg-hair-strong h-1 overflow-hidden rounded-full" aria-hidden="true">
+              <span
+                className={cn(
+                  'bg-accent block h-full origin-left rounded-full transition-[scale,opacity] duration-700 ease-out-soft motion-reduce:transition-none',
+                  s.done || active ? 'scale-x-100' : 'scale-x-0',
+                  active && 'opacity-60',
+                )}
+              />
+            </span>
             <span
               className={cn(
                 'flex items-center gap-1 truncate text-xs font-medium',
                 active ? 'text-ink' : 'text-ink-3',
               )}
             >
-              {s.done && <Check className="text-success size-3.5 shrink-0" aria-hidden="true" />}
+              {s.done && (
+                <Check
+                  className="text-success animate-scale-in size-3.5 shrink-0 motion-reduce:animate-none"
+                  aria-hidden="true"
+                />
+              )}
               <span className="sr-only">{t('welcome.stepOf', { n: i + 1 })}: </span>
               {t(`welcome.step.${s.id}`)}
               {s.done && <span className="sr-only"> ({t('welcome.done')})</span>}
@@ -129,8 +147,12 @@ function ConnectStep() {
           {t('welcome.connect.connected', { count: connected.length })}
         </p>
         <ul className="glass-chip rounded-control flex flex-col divide-y divide-[var(--color-hair)]">
-          {connected.map((a) => (
-            <li key={a.id} className="flex items-center gap-3 px-3 py-2.5">
+          {connected.map((a, i) => (
+            <li
+              key={a.id}
+              className="animate-enter flex items-center gap-3 px-3 py-2.5"
+              style={staggerStyle(i)}
+            >
               <span className="relative inline-flex">
                 <Avatar name={a.displayName} src={a.avatarUrl} size="md" decorative />
                 <NetworkIcon

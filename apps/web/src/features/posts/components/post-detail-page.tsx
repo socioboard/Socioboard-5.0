@@ -14,6 +14,7 @@ import {
   networkName,
   PageHeader,
   Skeleton,
+  staggerStyle,
   toast,
 } from '@socioboard/ui';
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -90,7 +91,7 @@ export function PostDetailPage({ postId }: { postId: string }) {
         actions={post.data && <Actions post={post.data} />}
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">
+        <div className="stagger-children mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">
           {body ?? (post.data && <Details post={post.data} />)}
         </div>
       </div>
@@ -286,8 +287,10 @@ function Details({ post }: { post: PostDetails }) {
             )}
           </div>
           {live.length === 0 && <p className="text-ink-2 text-sm">{t('detail.noTargets')}</p>}
-          {[...live, ...cancelled].map((target) => (
-            <TargetCard key={target.id} postId={post.id} target={target} editable={mayEdit} />
+          {[...live, ...cancelled].map((target, i) => (
+            <div key={target.id} className="animate-enter" style={staggerStyle(i + 1)}>
+              <TargetCard postId={post.id} target={target} editable={mayEdit} />
+            </div>
           ))}
         </section>
         <ContentPanel post={post} />

@@ -1,5 +1,12 @@
 import type { MediaAssetDetails, Network, NetworkId, SocialAccount } from '@socioboard/contracts';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socioboard/ui';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  useChangeMotion,
+} from '@socioboard/ui';
 import { Eye } from 'lucide-react';
 import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -65,6 +72,8 @@ export function PreviewPanel({
   const panelId = useId();
   const [as, setAs] = useState<Partial<Record<NetworkId, string>>>({});
   const network = active && selected.includes(active) ? active : selected[0];
+  // Another network or account refreshes the preview in place.
+  const previewMotion = useChangeMotion(`${network ?? ''}:${network ? (as[network] ?? '') : ''}`);
 
   if (!network) {
     return (
@@ -114,6 +123,7 @@ export function PreviewPanel({
         </Select>
       )}
       <div
+        ref={previewMotion}
         role="tabpanel"
         id={panelId}
         aria-labelledby={`${panelId}-tab-${network}`}

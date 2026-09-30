@@ -10,6 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
+  AnimatePresence,
+  listItem,
+  motion,
 } from '@socioboard/ui';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { ImageUp, Images, Search } from 'lucide-react';
@@ -108,19 +111,26 @@ export function MediaPage({
     body = (
       <>
         <Grid>
-          {uploads.map((item) => (
-            <UploadTile key={item.id} item={item} />
-          ))}
-          {assets.map((asset) => (
-            <AssetTile
-              key={asset.id}
-              asset={asset}
-              selected={search.asset === asset.id}
-              onOpen={() => {
-                onSearchChange({ asset: asset.id });
-              }}
-            />
-          ))}
+          {/* Tiles arrive one after another, slide over when one leaves, and an upload
+              makes room at the front. */}
+          <AnimatePresence mode="popLayout">
+            {uploads.map((item, i) => (
+              <motion.div key={item.id} {...listItem(i)}>
+                <UploadTile item={item} />
+              </motion.div>
+            ))}
+            {assets.map((asset, i) => (
+              <motion.div key={asset.id} {...listItem(uploads.length + i)}>
+                <AssetTile
+                  asset={asset}
+                  selected={search.asset === asset.id}
+                  onOpen={() => {
+                    onSearchChange({ asset: asset.id });
+                  }}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </Grid>
         {list.hasNextPage && (
           <LoadMore

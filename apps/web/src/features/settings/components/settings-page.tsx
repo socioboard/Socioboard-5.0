@@ -19,7 +19,7 @@ export function SettingsPage({
       <PageHeader title={title} />
       <NavTabs>{tabs}</NavTabs>
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8">
+        <div className="stagger-children mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8">
           {children}
         </div>
       </div>

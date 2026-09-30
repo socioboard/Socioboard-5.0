@@ -10,6 +10,7 @@ import {
   networkName,
   PageHeader,
   Skeleton,
+  staggerStyle,
   toast,
 } from '@socioboard/ui';
 import { useQuery } from '@tanstack/react-query';
@@ -148,7 +149,7 @@ export function AccountsPage({
         }
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-5 sm:px-6">
+        <div className="stagger-children mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-5 sm:px-6">
           {search.connectError && (
             <Banner
               tone="danger"
@@ -338,8 +339,8 @@ function LoginGroupView({
           </p>
         ) : (
           <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-            {group.accounts.map((a) => (
-              <li key={a.id}>
+            {group.accounts.map((a, i) => (
+              <li key={a.id} className="animate-enter" style={staggerStyle(i)}>
                 <AccountRow
                   account={a}
                   onOpen={() => {
@@ -360,7 +361,7 @@ function AccountRow({ account, onOpen }: { account: SocialAccount; onOpen: () =>
   const network = networkName(account.network);
   const attention = account.status !== 'active';
   return (
-    <Card className="h-full">
+    <Card className="hover-lift h-full">
       <button
         type="button"
         onClick={onOpen}

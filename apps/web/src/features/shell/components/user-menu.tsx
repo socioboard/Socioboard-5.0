@@ -10,6 +10,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  switchTheme,
   Tooltip,
   useTheme,
   type ThemePreference,
@@ -122,16 +123,27 @@ export function ThemeToggle() {
       <button
         type="button"
         aria-label={label}
-        onClick={() => {
-          setPreference(next);
+        onClick={(event) => {
+          // The new theme spreads out from the toggle.
+          const box = event.currentTarget.getBoundingClientRect();
+          switchTheme(next, setPreference, {
+            x: box.left + box.width / 2,
+            y: box.top + box.height / 2,
+          });
         }}
-        className="text-ink-2 hover:bg-chip hover:text-ink inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg"
+        className="text-ink-2 hover:bg-chip hover:text-ink inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-[background-color,color,transform] duration-150 active:scale-90"
       >
-        {resolved === 'dark' ? (
-          <Sun className="size-4" aria-hidden="true" />
-        ) : (
-          <Moon className="size-4" aria-hidden="true" />
-        )}
+        {/* The icon turns as it changes (sun ↔ moon). */}
+        <span
+          key={resolved}
+          className="animate-[sb-scale-in_0.4s_var(--ease-spring)_both] motion-reduce:animate-none"
+        >
+          {resolved === 'dark' ? (
+            <Sun className="size-4" aria-hidden="true" />
+          ) : (
+            <Moon className="size-4" aria-hidden="true" />
+          )}
+        </span>
       </button>
     </Tooltip>
   );
