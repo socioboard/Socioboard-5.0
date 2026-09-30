@@ -9,3 +9,10 @@ regexes = [
   '''export const EXAMPLE_ENCRYPTION_KEY = ''',
   '''export const EXAMPLE_AUTH_SECRET = ''',
 ]
+
+[[allowlists]]
+description = "The dev compose's local S3 credentials (docker/compose.dev.yml): public, development-only, the same ones .env.example documents"
+condition = "AND"
+paths = ['''^docker/compose\.dev\.yml$''']
+regexTarget = "match"
+regexes = ['''socioboard:socioboard-dev-secret''']

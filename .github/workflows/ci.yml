@@ -86,6 +86,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example .env
+      # The Prisma client is generated, not committed; `pnpm check` and `pnpm build` generate it
+      # through turbo, but these jobs run tests straight away.
+      - name: Generate the database client
+        run: pnpm generate
       - name: Start Postgres, Valkey, Mailpit, local S3
         run: COMPOSE_PROFILES=local-s3 $COMPOSE up -d --wait
       - name: Migrate
@@ -168,6 +172,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example .env
+      # The Prisma client is generated, not committed; `pnpm check` and `pnpm build` generate it
+      # through turbo, but these jobs run tests straight away.
+      - name: Generate the database client
+        run: pnpm generate
       - name: Start Postgres, Valkey, Mailpit, local S3
         run: COMPOSE_PROFILES=local-s3 $COMPOSE up -d --wait
       - name: Migrate
