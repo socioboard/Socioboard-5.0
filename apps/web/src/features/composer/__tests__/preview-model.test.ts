@@ -44,6 +44,8 @@ describe('truncateText by lines', () => {
     // Lines kept, then still cut by characters.
     expect(truncateText(`${'word '.repeat(40)}\nnext`, 50, 5).shown.length).toBeLessThanOrEqual(50);
     expect(truncateText('One\nTwo\nThree', 125, null).truncated).toBe(false);
+    // A trailing line break isn't a third line.
+    expect(truncateText('One\nTwo\n', 125, 2).truncated).toBe(false);
   });
 });
 
