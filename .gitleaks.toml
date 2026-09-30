@@ -1,0 +1,11 @@
+# Secret scanning in CI (docs/infra.md, P0-I4): gitleaks' default rules, plus a narrow allowlist.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Public, development-only example values: documented in .env.example, and config validation refuses them in production (packages/core/src/platform/config)"
+regexTarget = "line"
+regexes = [
+  '''export const EXAMPLE_ENCRYPTION_KEY = ''',
+  '''export const EXAMPLE_AUTH_SECRET = ''',
+]

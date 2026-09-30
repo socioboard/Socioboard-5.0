@@ -1,0 +1,28 @@
+# CodeQL code scanning (docs/infra.md, dependency hygiene, P0-I4): JavaScript/TypeScript on
+# pushes to the main branches, pull requests and weekly. Findings show in the repo's Security tab.
+name: CodeQL
+
+on:
+  push:
+    branches: [main, '6.0']
+  pull_request:
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (JavaScript/TypeScript)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript-typescript'
