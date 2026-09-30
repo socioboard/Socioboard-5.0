@@ -1,5 +1,4 @@
 import type {
-  CreatePostBody,
   InstagramFormat,
   NetworkId,
   Post,
@@ -153,16 +152,20 @@ export function selectedNetworks(draft: Draft, networkOf: NetworkOf): NetworkId[
   return seen;
 }
 
+/** A post's content and targets as the API takes them (create, update and validate). */
+export interface PostBody {
+  text: string;
+  mediaIds: string[];
+  link: string | null;
+  firstComment: string | null;
+  targets: { accountId: string; override: TargetOverride | null }[];
+}
+
 /**
  * The draft as the API's post body. Each account gets its network's override; overrides of
  * networks no longer selected are left out (they'd be refused, and mean nothing without one).
  */
-export function toPostBody(
-  draft: Draft,
-  networkOf: NetworkOf,
-): z.input<typeof CreatePostBody> & {
-  targets: { accountId: string; override: TargetOverride | null }[];
-} {
+export function toPostBody(draft: Draft, networkOf: NetworkOf): PostBody {
   const link = draft.link.trim();
   const firstComment = draft.firstComment.trim();
   return {

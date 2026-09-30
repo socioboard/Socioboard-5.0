@@ -25,7 +25,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { MessageSquarePlus, RotateCcw, Trash2 } from 'lucide-react';
-import { useId, useReducer, useState, type ReactNode } from 'react';
+import { useEffect, useId, useReducer, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ApiError } from '../../../lib/api';
@@ -42,6 +42,11 @@ import {
   type Draft,
 } from '../draft';
 import { MediaStrip } from './media-strip';
+import { useAttachedMedia } from '../media';
+import { useValidation } from '../use-validation';
+import { isWebAddress, type ComposerIssue } from '../validation';
+import { useIssueWording } from '../issue-wording';
+import { IssuesPanel } from './issues-panel';
 import { NetworkTabs } from './network-tabs';
 import { PreviewPanel } from './preview-panel';
 
@@ -162,6 +167,70 @@ function Composer({
     !post || post.author?.id === me.user.id ? can('posts:create') : can('posts:approve');
   const readOnly = locked || !mayEdit;
 
+  const validation = useValidation({
+    workspaceId: workspace.id,
+    draft,
+    networkOf,
+    selected,
+    rulesOf: (n) => rulesOf(n)?.rules,
+    enabled: !readOnly,
+  });
+  // Every file on the post (shared or a network's own), to name them in issues.
+  const allMediaIds = [
+    ...new Set([
+      ...draft.mediaIds,
+      ...Object.values(draft.overrides).flatMap((o) => o.mediaIds ?? []),
+    ]),
+  ];
+  const attached = useAttachedMedia(workspace.id, allMediaIds);
+  const wording = useIssueWording({
+    account: (id) => accounts.find((a) => a.id === id)?.displayName,
+    file: (id) => attached[allMediaIds.indexOf(id)]?.data?.name,
+  });
+  // The panel appears once there's something to check, and then stays (so "Choose at least one
+  // account" can still be read after every account is taken off).
+  const hasContent =
+    draft.accountIds.length > 0 || draft.text.trim() !== '' || draft.mediaIds.length > 0;
+  const [touched, setTouched] = useState(hasContent);
+  if (hasContent && !touched) setTouched(true);
+  const editorRef = useRef<HTMLDivElement>(null);
+  // Jumping to an issue: switch to the tab that holds the field, then focus it once drawn.
+  const pendingFocus = useRef<string | null>(null);
+  const [focusTick, setFocusTick] = useState(0);
+  useEffect(() => {
+    const field = pendingFocus.current;
+    if (!field) return;
+    pendingFocus.current = null;
+    const el = editorRef.current?.querySelector<HTMLElement>(`[data-field="${field}"]`);
+    const target = el?.matches('input, textarea, button') ? el : el?.querySelector('button');
+    target?.focus();
+    el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [focusTick]);
+  const goToIssue = (issue: ComposerIssue) => {
+    const n = issue.network;
+    const own =
+      n !== null &&
+      ((issue.field === 'text' && contentFor(draft, n).textOverridden) ||
+        (issue.field === 'media' && contentFor(draft, n).mediaOverridden) ||
+        issue.field === 'options');
+    if (issue.field !== 'account') {
+      setTab(own ? n : null);
+      if (n) setPreviewTab(n);
+    }
+    setView('edit');
+    pendingFocus.current = issue.field ?? 'text';
+    setFocusTick((x) => x + 1);
+  };
+  // The text box is marked invalid when its text breaks a network's rule.
+  const textInvalid = validation.issues.some(
+    (i) =>
+      i.field === 'text' &&
+      i.severity === 'error' &&
+      (active
+        ? i.network === active
+        : i.network !== null && !contentFor(draft, i.network).textOverridden),
+  );
+
   const pickerAccounts: PickerAccount[] = accounts.map((a) => ({
     id: a.id,
     name: a.displayName,
@@ -179,6 +248,7 @@ function Composer({
       <ViewSwitch value={view} onChange={setView} />
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
         <fieldset
+          ref={editorRef as unknown as React.Ref<HTMLFieldSetElement>}
           disabled={readOnly}
           className={cn('flex min-w-0 flex-col gap-5', view === 'preview' && 'max-lg:hidden')}
         >
@@ -197,14 +267,16 @@ function Composer({
                 )}
               </p>
             ) : (
-              <AccountPicker
-                accounts={pickerAccounts}
-                value={draft.accountIds}
-                onChange={(accountIds) => {
-                  if (!readOnly) dispatch({ type: 'accounts', accountIds });
-                }}
-                labels={{ group: t('accountsLabel') }}
-              />
+              <div data-field="account">
+                <AccountPicker
+                  accounts={pickerAccounts}
+                  value={draft.accountIds}
+                  onChange={(accountIds) => {
+                    if (!readOnly) dispatch({ type: 'accounts', accountIds });
+                  }}
+                  labels={{ group: t('accountsLabel') }}
+                />
+              </div>
             )}
           </Section>
 
@@ -213,6 +285,7 @@ function Composer({
               networks={selected}
               active={active}
               customised={customised}
+              flagged={validation.blocked}
               onChange={(n) => {
                 setTab(n);
                 if (n) setPreviewTab(n);
@@ -228,6 +301,7 @@ function Composer({
               <TextBlock
                 draft={draft}
                 network={active}
+                invalid={textInvalid}
                 selected={selected}
                 maxOf={(n) => rulesOf(n)?.rules.maxChars}
                 onText={(text) => {
@@ -289,6 +363,9 @@ function Composer({
               )}
             </div>
           </section>
+          {!readOnly && touched && (
+            <IssuesPanel validation={validation} wording={wording} onSelect={goToIssue} />
+          )}
         </fieldset>
         <aside
           aria-labelledby={`${panelId}-preview`}
@@ -368,6 +445,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function TextBlock({
   draft,
   network,
+  invalid,
   selected,
   maxOf,
   onText,
@@ -375,6 +453,7 @@ function TextBlock({
 }: {
   draft: Draft;
   network: NetworkId | null;
+  invalid: boolean;
   selected: NetworkId[];
   maxOf: (n: NetworkId) => number | undefined;
   onText: (text: string) => void;
@@ -404,6 +483,8 @@ function TextBlock({
         <div className="flex flex-col gap-2">
           <Textarea
             {...control}
+            {...(invalid ? { 'aria-invalid': true } : {})}
+            data-field="text"
             rows={7}
             value={content.text}
             placeholder={t('text.placeholder')}
@@ -468,7 +549,7 @@ function MediaBlock({
   const shared = network !== null && !content.mediaOverridden;
   const label = network ? t('media.labelFor', { network: name }) : t('media.label');
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 outline-none" data-field="media" tabIndex={-1}>
       <span className="text-ink text-[13px] font-medium">{label}</span>
       {content.mediaIds.length === 0 && shared && (
         <p className="text-ink-3 text-sm">{t('media.none')}</p>
@@ -519,16 +600,6 @@ function ResetButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-/** http(s) addresses only, as the API accepts. */
-function isWebAddress(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' || url.protocol === 'http:';
-  } catch {
-    return false;
-  }
-}
-
 function LinkField({ value, onChange }: { value: string; onChange: (link: string) => void }) {
   const { t } = useTranslation('composer');
   const [touched, setTouched] = useState(false);
@@ -542,6 +613,7 @@ function LinkField({ value, onChange }: { value: string; onChange: (link: string
       {(control) => (
         <Input
           {...control}
+          data-field="link"
           type="url"
           inputMode="url"
           value={value}
@@ -573,6 +645,7 @@ function FirstComment({
         <Button
           size="sm"
           variant="ghost"
+          data-field="firstComment"
           onClick={() => {
             setOpen(true);
           }}
@@ -589,6 +662,7 @@ function FirstComment({
         <div className="flex flex-col gap-1.5">
           <Textarea
             {...control}
+            data-field="firstComment"
             rows={3}
             value={value}
             autoFocus={value === ''}
@@ -621,7 +695,7 @@ function InstagramFormat({ value, onChange }: { value: Format; onChange: (f: For
   const { t } = useTranslation('composer');
   const id = useId();
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2" data-field="options">
       <span id={id} className="text-ink text-[13px] font-medium">
         {t('instagram.format')}
       </span>

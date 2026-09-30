@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { halden, meWith, mockServer, renderApp } from '../../../testing/render';
+import { halden, meWith, mockServer, renderApp, type Handler } from '../../../testing/render';
 import { resetUploads } from '../../media';
 
 const WID = halden.workspace.id;
@@ -18,7 +18,13 @@ const network = (id: 'facebook_page' | 'instagram', maxChars: number) =>
     id,
     displayName: id === 'facebook_page' ? 'Facebook' : 'Instagram',
     capabilities: { postTypes: ['image'], firstComment: true, altText: true },
-    rules: { maxChars, maxHashtags: null, maxMentions: null, media: {}, links: 'card' },
+    rules: {
+      maxChars,
+      maxHashtags: null,
+      maxMentions: null,
+      media: { required: id === 'instagram', maxItems: 10 },
+      links: 'card',
+    },
     preview:
       id === 'facebook_page'
         ? {
@@ -80,7 +86,7 @@ const media = (id: string, name: string, overrides: object = {}) => ({
 const M1 = media('01a0d816-827a-74d6-a46e-409c7db32001', 'latte.jpg');
 const M2 = media('01a0d816-827a-74d6-a46e-409c7db32002', 'beans.jpg');
 
-const base = (role = 'owner'): Record<string, Reply> => ({
+const base = (role = 'owner'): Record<string, Reply | Handler> => ({
   'GET /api/v1/auth/options': [200, { socialProviders: [], emailVerificationRequired: true }],
   'GET /api/v1/me': [200, meWith({ memberships: [{ ...halden, role }], activeWorkspaceId: WID })],
   'GET /api/v1/networks': [
@@ -90,6 +96,29 @@ const base = (role = 'owner'): Record<string, Reply> => ({
   [`GET ${BASE}/accounts`]: [200, { items: [FB, IG, FB2] }],
   [`GET ${BASE}/media/${M1.id}`]: [200, M1],
   [`GET ${BASE}/media/${M2.id}`]: [200, M2],
+  // Nothing to report unless a test says otherwise.
+  [`POST ${BASE}/posts/validate`]: ({ body }) => [200, validated(body)],
+});
+
+/** The validate answer for a body: each target with the given issues (none by default). */
+function validated(body: unknown, byNetwork: Record<string, object[]> = {}, post: object[] = []) {
+  const { targets } = body as { targets: { accountId: string }[] };
+  return {
+    issues: post,
+    targets: targets.map((t) => {
+      const network = [FB, IG, FB2].find((a) => a.id === t.accountId)?.network ?? 'facebook_page';
+      return { accountId: t.accountId, network, issues: byNetwork[network] ?? [] };
+    }),
+  };
+}
+
+const serverIssue = (code: string, field: string, extra: object = {}) => ({
+  severity: 'error',
+  code,
+  message: `${code} (server wording)`,
+  field,
+  mediaId: null,
+  ...extra,
 });
 
 /** Answers every storage PUT with 200 and an ETag (see the media tests). */
@@ -139,7 +168,7 @@ describe('composer', () => {
     expect(screen.getByText('11 of 63,206 characters for Facebook')).toBeInTheDocument();
     expect(screen.getByText('11 of 2,200 characters for Instagram')).toBeInTheDocument();
 
-    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: /^Instagram/ }));
     const igText = screen.getByRole('textbox', { name: 'Text for Instagram' });
     expect(igText).toHaveValue('Fresh roast');
     expect(screen.getByText(/Using the shared text/)).toBeInTheDocument();
@@ -154,7 +183,7 @@ describe('composer', () => {
     await user.click(editor().getByRole('tab', { name: /Instagram/ }));
     await user.click(screen.getByRole('button', { name: 'Reset to shared' }));
     expect(screen.getByRole('textbox', { name: 'Text for Instagram' })).toHaveValue('Fresh roast');
-    expect(editor().getByRole('tab', { name: 'Instagram' })).toBeInTheDocument();
+    expect(editor().getByRole('tab', { name: /^Instagram/ })).toBeInTheDocument();
   });
 
   it('tabs move with the arrow keys, and a deselected network’s tab goes away', async () => {
@@ -164,13 +193,13 @@ describe('composer', () => {
     await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
     await user.click(editor().getByRole('tab', { name: 'All networks' }));
     await user.keyboard('{ArrowRight}');
-    expect(editor().getByRole('tab', { name: 'Facebook' })).toHaveAttribute(
+    expect(editor().getByRole('tab', { name: /^Facebook/ })).toHaveAttribute(
       'aria-selected',
       'true',
     );
-    expect(editor().getByRole('tab', { name: 'Facebook' })).toHaveFocus();
+    expect(editor().getByRole('tab', { name: /^Facebook/ })).toHaveFocus();
     await user.click(screen.getByRole('button', { name: 'Halden Coffee, Facebook' }));
-    expect(editor().queryByRole('tab', { name: 'Facebook' })).not.toBeInTheDocument();
+    expect(editor().queryByRole('tab', { name: /^Facebook/ })).not.toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Text' })).toBeInTheDocument();
   });
 
@@ -260,7 +289,7 @@ describe('composer', () => {
     renderApp('/w/halden/compose');
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
-    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: /^Instagram/ }));
     await user.click(screen.getByRole('button', { name: 'Use different media for Instagram' }));
     await user.click(editor().getByRole('tab', { name: /All networks/ }));
     fireEvent.change(screen.getByTestId('composer-file-input'), {
@@ -298,7 +327,7 @@ describe('composer', () => {
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
     expect(screen.queryByRole('radio', { name: /Reel/ })).not.toBeInTheDocument();
-    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: /^Instagram/ }));
     await user.click(screen.getByRole('radio', { name: /Reel/ }));
     expect(screen.getByRole('radio', { name: /Reel/ })).toBeChecked();
     expect(editor().getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
@@ -405,7 +434,7 @@ describe('live preview', () => {
     await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
     await user.click(screen.getByRole('button', { name: 'Halden Gram, Instagram' }));
     await user.type(screen.getByRole('textbox', { name: 'Text' }), 'Shared');
-    await user.click(editor().getByRole('tab', { name: 'Instagram' }));
+    await user.click(editor().getByRole('tab', { name: /^Instagram/ }));
     expect(within(preview()).getByRole('tab', { name: 'Instagram' })).toHaveAttribute(
       'aria-selected',
       'true',
@@ -530,6 +559,148 @@ describe('live preview', () => {
   });
 });
 
+describe('validation', () => {
+  const panel = () => screen.getByRole('region', { name: 'Before you publish' });
+
+  it('checks length at once, asks the server once typing pauses, and words each issue', async () => {
+    const calls = mockServer({
+      ...base(),
+      [`POST ${BASE}/posts/validate`]: ({ body }) => [
+        200,
+        validated(body, {
+          instagram: [
+            serverIssue('TOO_MANY_HASHTAGS', 'text', { params: { max: 30, actual: 35 } }),
+            // A stale copy of a quick check: the composer's own result is shown instead.
+            serverIssue('TEXT_TOO_LONG', 'text', { params: { max: 2200, actual: 9999 } }),
+            serverIssue('SOMETHING_NEW', 'text'),
+          ],
+        }),
+      ],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
+    await user.type(screen.getByRole('textbox', { name: 'Text' }), 'Hello');
+    // The quick check is there before the server answers.
+    expect(within(panel()).getByText('Instagram posts need a photo or video.')).toBeInTheDocument();
+    expect(
+      await within(panel()).findByText('Instagram allows 30 hashtags; this has 35.'),
+    ).toBeInTheDocument();
+    expect(within(panel()).getByText('SOMETHING_NEW (server wording)')).toBeInTheDocument();
+    expect(within(panel()).queryByText(/9,999|over/)).not.toBeInTheDocument();
+    // Asked once typing paused: no request ever carried half-typed text.
+    const sent = calls
+      .filter((c) => c.key.endsWith('/posts/validate'))
+      .map((c) => (c.body as { text: string }).text);
+    expect(sent).toContain('Hello');
+    expect(sent.filter((t) => ['H', 'He', 'Hel', 'Hell'].includes(t))).toEqual([]);
+    expect(
+      editor().getByRole('tab', { name: /Instagram has problems to fix/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('too long shows at once, marks the text box, and names how far over', async () => {
+    mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
+    fireEvent.change(screen.getByRole('textbox', { name: 'Text' }), {
+      target: { value: 'x'.repeat(2210) },
+    });
+    expect(
+      within(panel()).getByText('Instagram allows 2,200 characters; this is 10 over.'),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Text' })).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('a link that isn’t a web address is reported, and not sent to the server', async () => {
+    const calls = mockServer(base());
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.type(screen.getByRole('textbox', { name: 'Link' }), 'halden.coffee');
+    expect(within(panel()).getByText(/The link isn’t a web address/)).toBeInTheDocument();
+    await new Promise((r) => setTimeout(r, 700));
+    const links = calls
+      .filter((c) => c.key.endsWith('/posts/validate'))
+      .map((c) => (c.body as { link: string | null }).link);
+    expect(links.filter((l) => l !== null)).toEqual([]);
+  });
+
+  it('an issue jumps to what needs fixing, on the tab that holds it', async () => {
+    mockServer({
+      ...base(),
+      [`POST ${BASE}/posts/validate`]: ({ body }) => [
+        200,
+        validated(body, {
+          instagram: [
+            serverIssue('TOO_MANY_HASHTAGS', 'text', { params: { max: 30, actual: 31 } }),
+          ],
+        }),
+      ],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Halden Gram, Instagram' }));
+    // Instagram has its own text: the issue is about that text.
+    await user.click(editor().getByRole('tab', { name: /^Instagram/ }));
+    await user.type(screen.getByRole('textbox', { name: 'Text for Instagram' }), '#a');
+    await user.click(editor().getByRole('tab', { name: /All networks/ }));
+    await user.click(await within(panel()).findByRole('button', { name: /allows 30 hashtags/ }));
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: 'Text for Instagram' })).toHaveFocus();
+    });
+    // A post-level issue (no accounts left) goes to the account picker.
+    await user.click(screen.getByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Halden Gram, Instagram' }));
+    await user.click(within(panel()).getByRole('button', { name: /Choose at least one account/ }));
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Halden Coffee, Facebook' })).toHaveFocus();
+    });
+  });
+
+  it('account problems name the account; nothing left says ready', async () => {
+    mockServer({
+      ...base(),
+      [`POST ${BASE}/posts/validate`]: ({ body }) => {
+        const { text } = body as { text: string };
+        return [
+          200,
+          validated(
+            body,
+            text === 'ok' ? {} : { facebook_page: [serverIssue('ACCOUNT_PAUSED', 'account')] },
+          ),
+        ];
+      },
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.type(screen.getByRole('textbox', { name: 'Text' }), 'hi');
+    expect(
+      await within(panel()).findByText('Halden Coffee (Facebook) is paused.'),
+    ).toBeInTheDocument();
+    await user.clear(screen.getByRole('textbox', { name: 'Text' }));
+    await user.type(screen.getByRole('textbox', { name: 'Text' }), 'ok');
+    expect(await within(panel()).findByText('Ready to publish')).toBeInTheDocument();
+  });
+
+  it('when the server can’t be asked, the quick checks still show and say so', async () => {
+    mockServer({
+      ...base(),
+      [`POST ${BASE}/posts/validate`]: [500, { error: { code: 'INTERNAL_ERROR', message: 'x' } }],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Gram, Instagram' }));
+    expect(
+      await within(panel()).findByText(/Couldn’t check with the networks just now/),
+    ).toBeInTheDocument();
+    expect(within(panel()).getByText('Instagram posts need a photo or video.')).toBeInTheDocument();
+  });
+});
+
 const post = (overrides: object = {}) => ({
   id: '01a0d816-827a-74d6-a46e-409c7db33001',
   status: 'draft',
@@ -600,6 +771,7 @@ describe('editing a post', () => {
     renderApp(url);
     expect(await screen.findByText(/was published, so it can’t be changed/)).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Text' })).toBeDisabled();
+    expect(screen.queryByRole('region', { name: 'Before you publish' })).not.toBeInTheDocument();
   });
 
   it('someone else’s post is read-only for a contributor', async () => {
