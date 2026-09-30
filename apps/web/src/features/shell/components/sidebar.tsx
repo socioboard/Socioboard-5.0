@@ -1,7 +1,7 @@
 import type { Me } from '@socioboard/contracts';
-import { cn, Kbd, Tooltip } from '@socioboard/ui';
+import { buttonVariants, cn, Kbd, Tooltip } from '@socioboard/ui';
 import { Link } from '@tanstack/react-router';
-import { PanelLeftClose, PanelLeftOpen, Search } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, Search, SquarePen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import type { Membership } from '../../../lib/workspace';
@@ -14,6 +14,8 @@ export interface SidebarProps {
   me: Me;
   membership: Membership;
   items: readonly NavItem[];
+  /** Shows the primary "New post" button (people who can write posts). */
+  canCompose: boolean;
   collapsed: boolean;
   onCollapsedChange: (collapsed: boolean) => void;
   onSearch: () => void;
@@ -24,6 +26,7 @@ export function Sidebar({
   me,
   membership,
   items,
+  canCompose,
   collapsed,
   onCollapsedChange,
   onSearch,
@@ -42,6 +45,24 @@ export function Sidebar({
       )}
     >
       <WorkspaceSwitcher me={me} current={membership.workspace} compact={collapsed} />
+
+      {canCompose && (
+        <Tooltip content={t('compose')} side="right" disabled={!collapsed}>
+          <Link
+            to="/w/$slug/compose/{-$postId}"
+            params={{ slug: membership.workspace.slug, postId: undefined }}
+            className={cn(
+              buttonVariants({ variant: 'primary', size: 'md' }),
+              'mt-2 w-full',
+              collapsed && 'size-9 px-0',
+            )}
+            {...(collapsed ? { 'aria-label': t('compose') } : {})}
+          >
+            <SquarePen aria-hidden="true" />
+            {!collapsed && t('compose')}
+          </Link>
+        </Tooltip>
+      )}
 
       <Tooltip content={t('search.button')} side="right" disabled={!collapsed}>
         <button

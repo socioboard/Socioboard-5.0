@@ -72,6 +72,8 @@ function ShellLayout({
     [membership.role],
   );
 
+  const canCompose = can(membership.role, 'posts:create');
+
   const scope = useMemo(
     () => ({ me, workspace: membership.workspace, role: membership.role }),
     [me, membership],
@@ -86,6 +88,7 @@ function ShellLayout({
             me={me}
             membership={membership}
             items={items}
+            canCompose={canCompose}
             collapsed={collapsed}
             onCollapsedChange={setCollapsed}
             onSearch={openSearch}
@@ -96,13 +99,20 @@ function ShellLayout({
               <Outlet />
             </main>
           </div>
-          <MobileTabBar me={me} membership={membership} items={items} onSearch={openSearch} />
+          <MobileTabBar
+            me={me}
+            membership={membership}
+            items={items}
+            canCompose={canCompose}
+            onSearch={openSearch}
+          />
           <CommandMenu
             open={searchOpen}
             onOpenChange={setSearchOpen}
             me={me}
             membership={membership}
             items={items}
+            canCompose={canCompose}
             sidebarCollapsed={collapsed}
             onSidebarCollapsedChange={setCollapsed}
           />

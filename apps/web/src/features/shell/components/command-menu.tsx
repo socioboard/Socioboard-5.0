@@ -9,6 +9,7 @@ import {
   PanelLeft,
   Plus,
   ShieldCheck,
+  SquarePen,
   Sun,
   UserRound,
 } from 'lucide-react';
@@ -26,6 +27,7 @@ export function CommandMenu({
   me,
   membership,
   items,
+  canCompose,
   sidebarCollapsed,
   onSidebarCollapsedChange,
 }: {
@@ -34,6 +36,7 @@ export function CommandMenu({
   me: Me;
   membership: Membership;
   items: readonly NavItem[];
+  canCompose: boolean;
   sidebarCollapsed: boolean;
   onSidebarCollapsedChange: (collapsed: boolean) => void;
 }) {
@@ -45,6 +48,27 @@ export function CommandMenu({
 
   const groups = useMemo<CommandGroup[]>(
     () => [
+      ...(canCompose
+        ? [
+            {
+              heading: t('search.create'),
+              commands: [
+                {
+                  id: 'create-post',
+                  label: t('compose'),
+                  icon: SquarePen,
+                  keywords: 'compose write new post publish',
+                  onSelect: () => {
+                    void navigate({
+                      to: '/w/$slug/compose/{-$postId}',
+                      params: { slug, postId: undefined },
+                    });
+                  },
+                },
+              ],
+            },
+          ]
+        : []),
       {
         heading: t('search.goTo'),
         commands: items.map((item) => ({
@@ -159,6 +183,7 @@ export function CommandMenu({
     [
       t,
       items,
+      canCompose,
       me.memberships,
       membership.workspace.id,
       slug,

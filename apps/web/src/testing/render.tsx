@@ -27,14 +27,15 @@ export function renderApp(path: string) {
 }
 
 type Reply = [status: number, body?: unknown];
-export type Handler = (request: { body: unknown; url: URL }) => Reply;
+/** Answers a request; may answer later (a Promise), to test what happens meanwhile. */
+export type Handler = (request: { body: unknown; url: URL }) => Reply | Promise<Reply>;
 
 /**
  * Fakes the server by "METHOD /path". Unhandled requests fail the test with a clear message.
  * Returns the calls made, for asserting on what was sent.
  */
 export function mockServer(handlers: Record<string, Handler | Reply>) {
-  const calls: { key: string; body: unknown }[] = [];
+  const calls: { key: string; body: unknown; headers: Record<string, string> }[] = [];
   vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
     const request = input instanceof Request ? input : new Request(input, init);
     const url = new URL(request.url, 'http://localhost');
@@ -47,10 +48,14 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
     } catch {
       // keep the raw text
     }
-    calls.push({ key, body });
+    // Header names are case-insensitive; stored lowercased, as servers see them.
+    const headers = Object.fromEntries(
+      [...request.headers.entries()].map(([name, value]) => [name.toLowerCase(), value]),
+    );
+    calls.push({ key, body, headers });
     const handler = handlers[key];
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);
-    const [status, reply] = typeof handler === 'function' ? handler({ body, url }) : handler;
+    const [status, reply] = typeof handler === 'function' ? await handler({ body, url }) : handler;
     return new Response(reply === undefined ? null : JSON.stringify(reply), {
       status,
       headers: { 'content-type': 'application/json' },
