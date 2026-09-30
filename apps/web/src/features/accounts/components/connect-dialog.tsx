@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { errorMessage } from '../../../lib/i18n';
+import { forgetConnectReturn, rememberConnectReturn } from '../../../lib/return-to';
 import { useWorkspace } from '../../../lib/workspace';
 import { FormError } from '../../auth';
 import { networksQuery, startConnect } from '../api';
@@ -36,6 +37,7 @@ export function ConnectDialog({
   onOpenChange,
   initialNetwork,
   existingProviders,
+  returnTo,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -43,13 +45,19 @@ export function ConnectDialog({
   initialNetwork?: NetworkId | undefined;
   /** Logins the workspace already has: connecting one of these again is "another account". */
   existingProviders: ReadonlySet<LoginProvider>;
+  /** Where to land once the accounts are added (an app path); the Accounts page by default. */
+  returnTo?: string | undefined;
 }) {
   const { t } = useTranslation('accounts');
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent closeLabel={t('details.close')} className="sm:max-w-lg">
         {/* Radix unmounts the content once closed, so each opening starts at the first step. */}
-        <ChooserBody initialNetwork={initialNetwork} existingProviders={existingProviders} />
+        <ChooserBody
+          initialNetwork={initialNetwork}
+          existingProviders={existingProviders}
+          returnTo={returnTo}
+        />
       </DialogContent>
     </Dialog>
   );
@@ -58,9 +66,11 @@ export function ConnectDialog({
 function ChooserBody({
   initialNetwork,
   existingProviders,
+  returnTo,
 }: {
   initialNetwork: NetworkId | undefined;
   existingProviders: ReadonlySet<LoginProvider>;
+  returnTo: string | undefined;
 }) {
   const { t } = useTranslation('accounts');
   const { workspace } = useWorkspace();
@@ -77,6 +87,10 @@ function ChooserBody({
     setStarting(provider);
     setError(null);
     try {
+      // Remembered for the way back from the network (this tab only); a connect started
+      // elsewhere forgets an older one, so it ends on the Accounts page.
+      if (returnTo) rememberConnectReturn(workspace.id, returnTo);
+      else forgetConnectReturn();
       await startConnect(workspace.id, provider, existingProviders.has(provider));
       // The browser is leaving; keep the button busy until it does.
     } catch (err) {

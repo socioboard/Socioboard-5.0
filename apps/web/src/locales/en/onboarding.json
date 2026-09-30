@@ -20,5 +20,45 @@
   "validation": {
     "nameRequired": "Give the workspace a name.",
     "nameLong": "Use 80 characters or fewer."
+  },
+  "welcome": {
+    "title": "Get started",
+    "steps": "Setup steps",
+    "step": {
+      "workspace": "Workspace",
+      "connect": "Accounts",
+      "post": "First post"
+    },
+    "stepOf": "Step {{n}} of 3",
+    "done": "Done",
+    "connect": {
+      "title": "Connect your first account",
+      "body": "Socioboard publishes to Facebook Pages and Instagram professional accounts. You sign in with the network, then choose which of your accounts to add.",
+      "action": "Connect an account",
+      "another": "Connect another",
+      "connected_one": "{{count}} account connected",
+      "connected_other": "{{count}} accounts connected",
+      "readOnly": "An admin of this workspace connects its accounts. You can carry on without one."
+    },
+    "post": {
+      "title": "Write your first post",
+      "body": "Write it once, see how it looks on each network, then publish it or keep it as a draft.",
+      "bodyNoAccounts": "With no account connected yet, it’s kept as a draft. Connect one whenever you’re ready.",
+      "action": "Write a post",
+      "readOnly": "Someone who writes posts in this workspace takes it from here."
+    },
+    "continue": "Continue",
+    "skip": "Skip for now",
+    "finish": "Go to the calendar"
+  },
+  "checklist": {
+    "title": "Get started",
+    "progress": "{{done}} of 3 done",
+    "hide": "Hide getting started",
+    "workspace": "Create a workspace",
+    "connect": "Connect a social account",
+    "post": "Write your first post",
+    "connectAction": "Connect",
+    "postAction": "Write"
   }
 }

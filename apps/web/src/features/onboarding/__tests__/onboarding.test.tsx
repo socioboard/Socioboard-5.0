@@ -66,6 +66,7 @@ describe('onboarding: create a workspace', () => {
         hasWorkspace = true;
         return [201, created];
       },
+      [`GET /api/v1/workspaces/${created.id}/accounts`]: [200, { items: [] }],
     });
     const { history } = renderApp('/onboarding');
     const user = userEvent.setup();
@@ -86,9 +87,11 @@ describe('onboarding: create a workspace', () => {
     expect(screen.getByRole('button', { name: /Time zone/ })).toHaveTextContent('Lisbon');
     await user.click(screen.getByRole('button', { name: 'Create workspace' }));
 
-    await waitFor(() => {
-      expect(history.location.pathname).toBe('/w/roastery-social/calendar');
-    });
+    // Step 2 follows: connect a first account.
+    expect(
+      await screen.findByRole('heading', { name: 'Connect your first account' }),
+    ).toBeInTheDocument();
+    expect(history.location.pathname).toBe('/w/roastery-social/welcome');
     expect(calls.find((c) => c.key === 'POST /api/v1/workspaces')?.body).toEqual({
       name: 'Roastery Social',
       timezone: 'Europe/Lisbon',
