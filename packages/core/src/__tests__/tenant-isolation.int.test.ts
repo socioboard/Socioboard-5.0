@@ -117,7 +117,29 @@ const CLASSIFIED: Record<string, Kind> = {
   createLabel: { kind: 'workspace', body: () => ({ name: 'Hijack', color: 'red' }) },
   updateLabel: { kind: 'resource', body: () => ({ name: 'hijacked' }) },
   deleteLabel: { kind: 'resource' },
+  // scheduling
+  schedulePost: { kind: 'resource', body: () => ({ at: soon() }) },
+  queuePost: { kind: 'resource' },
+  unschedulePost: { kind: 'resource' },
+  rescheduleTarget: { kind: 'resource', body: () => ({ at: soon(), previousAt: soon() }) },
+  setRecurrence: {
+    kind: 'resource',
+    body: () => ({ frequency: 'daily', time: '09:00', timezone: 'UTC', startsOn: '2030-01-01' }),
+  },
+  deleteRecurrence: { kind: 'resource' },
+  getCalendar: {
+    kind: 'list',
+    idsOf: 'targetId',
+    query: () => `from=${new Date(Date.now() - 86_400_000).toISOString()}&to=${soon()}`,
+  },
+  getQueueSlots: { kind: 'resource' },
+  putQueueSlots: { kind: 'resource', body: () => ({ timezone: 'UTC', slots: [] }) },
 };
+
+/** A valid schedule time: a day ahead. */
+function soon() {
+  return new Date(Date.now() + 86_400_000).toISOString();
+}
 
 // Routes still being built (no handler yet) join the checks when their task mounts them.
 const routes = namedRoutes().filter(([name]) => !(name in PENDING_ROUTES));
@@ -282,7 +304,13 @@ describe('tenant isolation harness', () => {
     for (const [name, route] of routes) {
       const k = CLASSIFIED[name];
       if (k?.kind !== 'list') continue;
-      for (const qs of ['', name === 'listMedia' ? `?folderId=${a.folderId}` : '']) {
+      const base = k.query ? `?${k.query(a)}` : '';
+      const byA: Record<string, string> = {
+        listMedia: `folderId=${a.folderId}`,
+        getCalendar: `accountId=${a.accountId}`,
+      };
+      const filtered = byA[name] ? `${base ? `${base}&` : '?'}${byA[name]}` : base;
+      for (const qs of [base, filtered]) {
         const res = await attacker.get(`${fillPath(route.path, { workspaceId: bWorkspace })}${qs}`);
         if (res.status !== 200 || JSON.stringify(res.body).includes(a[k.idsOf]))
           leaks.push(`${name}${qs}`);

@@ -12,6 +12,7 @@ packages/contracts/src/
 ├─ route.ts           defineRoute() and the types derived from a route
 ├─ events.ts          Socket.IO event names + payload schemas (phase 2, with realtime)
 ├─ <module>.ts        one file per backend module: request/response schemas + route definitions
+├─ recurrence.ts      how a post repeats; apart from scheduling.ts so posts.ts can use it without a cycle
 └─ index.ts
 ```
 

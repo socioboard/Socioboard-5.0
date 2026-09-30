@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { Id, IsoDateTime, page, PageQuery } from './common';
 import { NetworkId } from './networks';
+import { Recurrence } from './recurrence';
 import { AccountStatus } from './social-accounts';
 import { defineRoute } from './route';
 
@@ -229,9 +230,11 @@ export const Post = PostContent.extend({
 });
 export type Post = z.infer<typeof Post>;
 
-/** A post with each target's publishing history, newest attempt first. */
+/** A post with each target's publishing history (newest attempt first) and its recurrence. */
 export const PostDetails = Post.extend({
   targets: z.array(PostTarget.extend({ history: z.array(PublishAttempt) })),
+  /** How the post repeats, if it does (phase 2). */
+  recurrence: Recurrence.nullable(),
 });
 export type PostDetails = z.infer<typeof PostDetails>;
 

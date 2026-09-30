@@ -642,6 +642,8 @@ export function createPostService(deps: PostServiceDeps) {
               : null,
           })),
       })),
+      // Recurring rules arrive with P2-B4.
+      recurrence: null,
     };
   }
 
