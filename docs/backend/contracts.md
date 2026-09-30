@@ -29,7 +29,7 @@ export const createPost = defineRoute({
   responses: { 201: PostSchema },
 });
 ```
-- `access` is `'public'`, `'user'` (any signed-in user), `'member'` (any member of `:workspaceId`) or a permission key. Finer rules from the module docs ("`members:manage` or self", "owner", "matching email") are checked in the service on top. `defineRoute` refuses workspace access on a path without `:workspaceId`, and non-camelCase params.
+- `access` is `'public'`, `'user'` (any signed-in user), `'member'` (any member of `:workspaceId`) a permission key, or `'platform_admin'` (the admin console: allowed only on `/api/admin/*`, and the API can't mount it without an admin guard). Finer rules from the module docs ("`members:manage` or self", "owner", "matching email") are checked in the service on top. `defineRoute` refuses workspace access on a path without `:workspaceId`, and non-camelCase params.
 - `responses` maps success statuses to schemas; `null` means no body (204).
 - Backend: `router.route(createPost, handler)` applies `validate()` + `requirePermission()` from the definition.
 - Frontend: the typed client is generated from the same definitions (`api.posts.create({ workspaceId, body })`).

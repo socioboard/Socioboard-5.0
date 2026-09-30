@@ -21,6 +21,7 @@ Only for platform admins (`isPlatformAdmin`) with 2FA. Uses the same shell with 
 | `/admin/growth` | Sign-up, activation, retention charts | 6.1 |
 
 ## Behavior
-- Every destructive action asks for confirmation and a reason (stored in the audit log).
+- Every destructive action asks for confirmation and a reason, 3–500 characters (stored in the audit log).
+- Phase 2 API: `GET /api/admin/overview`, `/publishing/health`, `/publishing/failed`, `POST /publishing/targets/:tid/retry` and `/cancel`, `GET /accounts/expiring` (shapes in `packages/contracts/src/admin.ts`). The console shows deliveries, errors and accounts, never post content.
 - **View-as mode:** opens the customer's workspace in a new tab with a persistent "Viewing as <user>, read-only" banner; all write buttons are disabled.
 - Links to Grafana and Sentry for infrastructure detail.

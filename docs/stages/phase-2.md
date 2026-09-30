@@ -7,7 +7,7 @@
 ## Contracts
 - [x] P2-C1 Schedule, reschedule, queue, recurrence, calendar range, queue slots
 - [x] P2-C2 Notifications, preferences, socket event payloads
-- [ ] P2-C3 Admin v1: overview-lite, publishing health, failed targets, expiring accounts
+- [x] P2-C3 Admin v1: overview-lite, publishing health, failed targets, expiring accounts
 
 ## Backend
 - [ ] P2-B1 Prisma: RecurringRule, QueueSlot, Notification, NotificationPreference, FeatureFlag

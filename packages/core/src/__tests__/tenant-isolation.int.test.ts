@@ -29,13 +29,15 @@ type Ids = Record<
  * - list: returns workspace-owned objects (outsider + "no foreign items" checks)
  * - bodyRef: a body field names a workspace-owned object (foreign-id check with that body)
  * - user: not workspace-scoped; foreign references are covered in explicit tests below
+ * - admin: the platform admin console; any other user is refused
  */
 type Kind =
   | { kind: 'workspace'; body?: (a: Ids) => object }
   | { kind: 'resource'; body?: (a: Ids) => object }
   | { kind: 'list'; idsOf: keyof Ids; query?: (a: Ids) => string }
   | { kind: 'bodyRef'; body: (a: Ids) => object }
-  | { kind: 'user' };
+  | { kind: 'user' }
+  | { kind: 'admin'; body?: () => object };
 
 const CLASSIFIED: Record<string, Kind> = {
   // auth (/me): not workspace-scoped
@@ -141,6 +143,13 @@ const CLASSIFIED: Record<string, Kind> = {
   markNotificationRead: { kind: 'user' },
   getNotificationPreferences: { kind: 'user' },
   updateNotificationPreferences: { kind: 'user' },
+  // admin console: workspace members, even owners, are refused
+  getAdminOverview: { kind: 'admin' },
+  getPublishingHealth: { kind: 'admin' },
+  listProblemTargets: { kind: 'admin' },
+  adminRetryTarget: { kind: 'admin', body: () => ({ reason: 'support ticket' }) },
+  adminCancelTarget: { kind: 'admin', body: () => ({ reason: 'support ticket' }) },
+  listAttentionAccounts: { kind: 'admin' },
 };
 
 /** A valid schedule time: a day ahead. */
@@ -280,12 +289,23 @@ describe('tenant isolation harness', () => {
     const failures: string[] = [];
     for (const [name, route] of routes) {
       const k = CLASSIFIED[name];
-      if (!k || k.kind === 'user') continue;
+      if (!k || k.kind === 'user' || k.kind === 'admin') continue;
       const body = 'body' in k ? k.body(a) : undefined;
       const res = await attacker.send(route.method, fillPath(route.path, a), body);
       if (res.status !== 404 || code(res) !== 'WORKSPACE_NOT_FOUND') {
         failures.push(`${name}: ${String(res.status)} ${code(res) ?? ''}`);
       }
+    }
+    expect(failures).toEqual([]);
+  });
+
+  it('admin console: a workspace owner who is not a platform admin is refused', async () => {
+    const failures: string[] = [];
+    for (const [name, route] of routes) {
+      const k = CLASSIFIED[name];
+      if (k?.kind !== 'admin') continue;
+      const res = await victim.send(route.method, fillPath(route.path, a), k.body?.());
+      if (res.status !== 403) failures.push(`${name}: ${String(res.status)} ${code(res) ?? ''}`);
     }
     expect(failures).toEqual([]);
   });

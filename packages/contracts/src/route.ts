@@ -10,10 +10,11 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
  * - `user`: any signed-in user ("signed in" in the module docs)
  * - `member`: any member of the `:workspaceId` workspace
  * - a permission: a member whose role has it
+ * - `platform_admin`: Socioboard staff (`isPlatformAdmin`, with 2FA), only on `/api/admin/*`
  * Finer rules ("members:manage or self", "owner only", "matching email") are enforced in the
  * service on top of this baseline.
  */
-export type Access = 'public' | 'user' | 'member' | Permission;
+export type Access = 'public' | 'user' | 'member' | 'platform_admin' | Permission;
 
 export type SuccessStatus = 200 | 201 | 202 | 204;
 
@@ -37,6 +38,12 @@ export function defineRoute<const R extends RouteDefinition>(route: R): R {
     if (!route.path.includes('/:workspaceId')) {
       throw new Error(`${route.method} ${route.path}: workspace access needs a :workspaceId param`);
     }
+  }
+  // The admin console's routes and only those live under /api/admin, outside the versioned API.
+  if ((route.access === 'platform_admin') !== route.path.startsWith('/api/admin/')) {
+    throw new Error(
+      `${route.method} ${route.path}: platform_admin access goes with /api/admin/ paths`,
+    );
   }
   for (const name of pathParams(route.path)) {
     if (!/^[a-z][a-zA-Z0-9]*$/.test(name)) {

@@ -18,7 +18,9 @@ import { addLogContext } from '../logger';
 import type { AuthContext, MemberContext, MembershipLookup } from './context';
 import { AppError, forbidden, notFound, unauthorized } from './errors';
 
-type IsWorkspaceAccess<A extends Access> = A extends 'public' | 'user' ? false : true;
+type IsWorkspaceAccess<A extends Access> = A extends 'public' | 'user' | 'platform_admin'
+  ? false
+  : true;
 
 /** What a handler receives: parsed inputs plus who is calling. */
 export interface RouteContext<R extends RouteDefinition> {
@@ -62,6 +64,12 @@ const isPermission = (access: Access): access is Permission => access.includes('
 
 export interface ApiRouterDeps {
   lookupMembership: MembershipLookup;
+  /**
+   * Throws unless the caller may use the admin console (platform admin with 2FA, P2-B10). A
+   * `platform_admin` route can't be mounted without it, so no admin route is ever open to any
+   * signed-in user.
+   */
+  platformAdminGuard?: (auth: AuthContext) => void | Promise<void>;
 }
 
 export interface ApiRouter {
@@ -74,17 +82,23 @@ export interface ApiRouter {
 
 /**
  * Per-route chain, in this order:
- *   signed in (401) → params valid (400) → member of :workspaceId (404, so other workspaces look
+ *   signed in (401) → platform admin, for /api/admin routes (the guard's error) → params valid (400) → member of :workspaceId (404, so other workspaces look
  *   like they don't exist) → permission (403) → query and body valid (400) → handler →
  *   response checked against the contract (unknown fields are stripped, never sent).
  * Needs the global middleware first: requestId, requestLogger, rateLimit, session.
  */
-export function createApiRouter({ lookupMembership }: ApiRouterDeps): ApiRouter {
+export function createApiRouter({
+  lookupMembership,
+  platformAdminGuard,
+}: ApiRouterDeps): ApiRouter {
   const router = Router();
   const mounted = new Set<RouteDefinition>();
 
   function route<R extends RouteDefinition>(def: R, handler: RouteHandler<R>) {
     if (mounted.has(def)) throw new Error(`Route mounted twice: ${def.method} ${def.path}`);
+    if (def.access === 'platform_admin' && !platformAdminGuard) {
+      throw new Error(`${def.method} ${def.path}: platform_admin routes need a platformAdminGuard`);
+    }
     mounted.add(def);
     const workspaceAccess = def.access === 'member' || isPermission(def.access);
     const paramShape = (def.params as { shape?: Record<string, unknown> } | undefined)?.shape;
@@ -97,6 +111,7 @@ export function createApiRouter({ lookupMembership }: ApiRouterDeps): ApiRouter 
     const run: RequestHandler = async (req, res) => {
       const auth = res.locals.auth ?? null;
       if (def.access !== 'public' && !auth) throw unauthorized();
+      if (def.access === 'platform_admin' && auth) await platformAdminGuard?.(auth);
 
       const params = parse(def.params, req.params, 'params');
 

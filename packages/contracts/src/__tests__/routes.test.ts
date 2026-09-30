@@ -29,9 +29,10 @@ describe('route table', () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it('lives under /api/v1 and declares a params schema matching every :param', () => {
+  it('lives under /api/v1 (admin console: /api/admin) and declares a params schema matching every :param', () => {
     for (const [name, r] of all) {
-      expect(r.path.startsWith('/api/v1/'), name).toBe(true);
+      const prefix = r.access === 'platform_admin' ? '/api/admin/' : '/api/v1/';
+      expect(r.path.startsWith(prefix), name).toBe(true);
       const names = pathParams(r.path).sort();
       const declared = r.params ? Object.keys((r.params as z.ZodObject).shape).sort() : [];
       expect(declared, `${name} params`).toEqual(names);
@@ -47,8 +48,8 @@ describe('route table', () => {
 
   it('matches the route count (update when routes change)', () => {
     // Phase 0: auth 7, workspaces 16, media 10. Phase 1: networks 1, social accounts 9, posts 13.
-    // Phase 2: scheduling 9, notifications 5.
-    expect(all.length).toBe(70);
+    // Phase 2: scheduling 9, notifications 5, admin 6.
+    expect(all.length).toBe(76);
   });
 
   it('declares folder routes before /media/:assetId so they match first', () => {
