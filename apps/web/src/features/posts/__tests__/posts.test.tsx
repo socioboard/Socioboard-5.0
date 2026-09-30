@@ -111,6 +111,7 @@ const partial = postWith({
 const base = (role = 'owner'): Record<string, Reply | Handler> => ({
   'GET /api/v1/auth/options': [200, { socialProviders: [], emailVerificationRequired: true }],
   'GET /api/v1/me': [200, meWith({ memberships: [{ ...halden, role }], activeWorkspaceId: WID })],
+  [`GET ${BASE}/labels`]: [200, { items: [] }],
 });
 
 afterEach(() => {

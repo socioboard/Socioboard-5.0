@@ -7,6 +7,7 @@ import { Button } from './button';
 import { Card } from './card';
 import { Avatar, Badge, EmptyState, Skeleton } from './display';
 import { FileDropzone } from './file-dropzone';
+import { LABEL_COLOR_NAMES, LabelChip, LabelSwatch } from './label-chip';
 import { ProgressBar } from './progress-bar';
 import { Spinner } from './spinner';
 import { toast } from './toast';
@@ -92,5 +93,26 @@ export const CardsAndDropzone: Story = () => (
       </div>
     </FileDropzone>
     <p className="text-ink-3 text-xs">Drag files from your desktop onto the cards.</p>
+  </Pane>
+);
+
+/** Post labels in every colour: chips (one removable) and the swatches pickers use. */
+export const Labels: Story = () => (
+  <Pane>
+    <div className="flex flex-wrap gap-2">
+      {LABEL_COLOR_NAMES.map((color) => (
+        <LabelChip
+          key={color}
+          name={color.charAt(0).toUpperCase() + color.slice(1)}
+          color={color}
+        />
+      ))}
+      <LabelChip name="Autumn campaign" color="orange" onRemove={() => undefined} />
+    </div>
+    <div className="mt-4 flex gap-2">
+      {LABEL_COLOR_NAMES.map((color) => (
+        <LabelSwatch key={color} color={color} />
+      ))}
+    </div>
   </Pane>
 );

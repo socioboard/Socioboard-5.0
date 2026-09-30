@@ -107,6 +107,13 @@ export {
   SelectTrigger,
   SelectValue,
 } from './components/select';
+export {
+  LABEL_COLOR_NAMES,
+  LABEL_COLORS,
+  LabelChip,
+  LabelSwatch,
+  type LabelChipProps,
+} from './components/label-chip';
 export { NavTabs } from './components/nav-tabs';
 export { NetworkIcon, networkName, type NetworkIconProps } from './components/network-icon';
 export { Kbd, PageHeader, type PageHeaderProps } from './components/page';

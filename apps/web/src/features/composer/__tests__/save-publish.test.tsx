@@ -82,6 +82,7 @@ const base = (
   'GET /api/v1/networks': [200, { items: [NETWORK] }],
   [`GET ${BASE}/accounts`]: [200, { items: [FB] }],
   [`GET ${BASE}`]: [200, { ...halden.workspace, timezone: 'UTC', ...workspace }],
+  [`GET ${BASE}/labels`]: [200, { items: [] }],
   [`POST ${BASE}/posts/validate`]: ({ body }) => {
     const { targets } = body as { targets: { accountId: string }[] };
     return [
@@ -120,6 +121,45 @@ afterEach(() => {
 });
 
 describe('saving', () => {
+  it('labels chosen in the composer are saved with the post, and don’t re-run the checks', async () => {
+    const LABEL = '01a0d816-827a-74d6-a46e-409c7db38001';
+    const calls = mockServer({
+      ...base(),
+      [`GET ${BASE}/labels`]: [
+        200,
+        {
+          items: [
+            {
+              id: LABEL,
+              name: 'Autumn campaign',
+              color: 'orange',
+              postCount: 0,
+              createdAt: '2026-09-28T10:00:00.000Z',
+            },
+          ],
+        },
+      ],
+    });
+    renderApp('/w/halden/compose');
+    const user = await writePost('Autumn menu');
+    // Let the checks of what was typed settle (debounced 500 ms), then count them.
+    await new Promise((r) => setTimeout(r, 700));
+    const checks = calls.filter((c) => c.key.endsWith('/validate')).length;
+    expect(checks).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', { name: 'Label' }));
+    await user.click(await screen.findByRole('checkbox', { name: 'Autumn campaign' }));
+    await user.keyboard('{Escape}');
+    await user.click(screen.getByRole('button', { name: 'Save draft' }));
+    await waitFor(() => {
+      expect(calls.find((c) => c.key === `POST ${BASE}/posts`)?.body).toMatchObject({
+        text: 'Autumn menu',
+        labelIds: [LABEL],
+      });
+    });
+    await new Promise((r) => setTimeout(r, 700));
+    expect(calls.filter((c) => c.key.endsWith('/validate'))).toHaveLength(checks);
+  });
+
   it('the first save creates the draft and puts its id in the address; later ones update it', async () => {
     const calls = mockServer(base());
     const { history } = renderApp('/w/halden/compose');

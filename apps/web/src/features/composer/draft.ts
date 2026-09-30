@@ -27,6 +27,8 @@ export interface Draft {
   link: string;
   firstComment: string;
   overrides: Partial<Record<NetworkId, NetworkOverride>>;
+  /** The workspace labels on the post, in the order chosen. */
+  labelIds: string[];
 }
 
 export const emptyDraft = (): Draft => ({
@@ -36,6 +38,7 @@ export const emptyDraft = (): Draft => ({
   link: '',
   firstComment: '',
   overrides: {},
+  labelIds: [],
 });
 
 /** Which network each account posts to (from the accounts list). */
@@ -49,6 +52,7 @@ export type DraftAction =
   | { type: 'attach'; network: NetworkId | null; mediaIds: string[]; before?: string[] }
   | { type: 'link'; link: string }
   | { type: 'firstComment'; firstComment: string }
+  | { type: 'labels'; labelIds: string[] }
   | { type: 'format'; format: z.infer<typeof InstagramFormat> }
   | { type: 'reset'; network: NetworkId; part: 'text' | 'media' }
   | { type: 'load'; draft: Draft };
@@ -90,6 +94,8 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
       return { ...draft, link: action.link };
     case 'firstComment':
       return { ...draft, firstComment: action.firstComment };
+    case 'labels':
+      return { ...draft, labelIds: action.labelIds };
     case 'text':
       return action.network === null
         ? { ...draft, text: action.text }
@@ -158,6 +164,7 @@ export interface PostBody {
   mediaIds: string[];
   link: string | null;
   firstComment: string | null;
+  labelIds: string[];
   targets: { accountId: string; override: TargetOverride | null }[];
 }
 
@@ -173,6 +180,7 @@ export function toPostBody(draft: Draft, networkOf: NetworkOf): PostBody {
     mediaIds: draft.mediaIds,
     link: link === '' ? null : link,
     firstComment: firstComment === '' ? null : draft.firstComment,
+    labelIds: draft.labelIds,
     targets: draft.accountIds.map((accountId) => {
       const network = networkOf(accountId);
       const o = network ? draft.overrides[network] : undefined;
@@ -205,5 +213,6 @@ export function fromPost(post: Post): Draft {
     link: post.link ?? '',
     firstComment: post.firstComment ?? '',
     overrides,
+    labelIds: post.labelIds,
   };
 }

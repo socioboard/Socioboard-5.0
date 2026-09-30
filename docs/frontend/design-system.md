@@ -84,4 +84,4 @@ Phase 0 components are built with the task that first uses them: Button through 
 - Feature code never styles raw HTML for something the design system provides.
 
 ## Label colours
-Post labels (P1-B11, UI in P1-F8) store a colour **name**: gray, red, orange, amber, green, teal, blue, indigo, violet, pink. The design system maps each to a chip background and text colour per theme (light and dark), so a label always meets contrast; hex values are never stored.
+Post labels (P1-B11, UI in P1-F8) store a colour **name**: gray, red, orange, amber, green, teal, blue, indigo, violet, pink. The design system maps each to a chip background and text colour per theme (light and dark), so a label always meets contrast; hex values are never stored. Built in P1-F8 as `LabelChip` (name on its colour, optional remove button) and `LabelSwatch` (the colour dot in pickers and menus), from one table (`LABEL_COLORS`); the catalog shows every colour.
