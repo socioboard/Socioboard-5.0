@@ -37,7 +37,7 @@
 
 ## Quality
 - [x] P1-Q1 E2E (against Meta test users): connect Page → compose with image → preview matches → publish → permalink shown (`apps/web/e2e/phase-1/meta-publish.spec.ts`, `pnpm --filter @socioboard/web e2e:meta`: real accounts named in `E2E_META_PAGE` / `E2E_META_INSTAGRAM`, a Facebook session saved once by `e2e:meta:login`; Meta no longer lets test users own Pages, so it uses the team's test Page and Instagram account. It connects in onboarding step 2, publishes an image post through S3, checks both links, then deletes the Facebook copy with `pnpm --filter @socioboard/api delete-network-post`; Instagram has no delete API, so its copy stays)
-- [ ] P1-Q2 Failure drills: expired token, content rejected, network timeout; each shows the right message
+- [x] P1-Q2 Failure drills: expired token, content rejected, network timeout; each shows the right message (`packages/core/src/modules/publishing/__tests__/meta-drills.int.test.ts`: the real Facebook Page adapter, Graph client, publish job, Postgres and API against Meta's real error answers (190/463 expired session, 368 refused with its message for people, a timeout, a 503 then recovery, 4 rate limit, retry after reconnecting); the post page's wording for each kind is tested in `apps/web/src/features/posts`)
 - [ ] P1-Q3 Multi-account: connect two different Facebook logins with Pages each, publish one post to Pages from both logins; reconnect one login without affecting the other
 
 ## Done when
