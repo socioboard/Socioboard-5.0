@@ -47,7 +47,7 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Backend | Express 5 + Zod on Node 24 LTS + TypeScript (NestJS dropped: team doesn't know it); structure enforced by module convention and lint |
 | Data | PostgreSQL 17+ + Prisma |
 | Jobs | BullMQ on Valkey (Redis-compatible) |
-| Media storage | Amazon S3 by default; MinIO when the user has no S3 account (decided 2026-09-24). Same S3 client for both. MinIO no longer publishes to Docker Hub, so its image comes from `quay.io/minio/minio` (pinned) |
+| Media storage | Amazon S3 by default; MinIO when the user has no S3 account (decided 2026-09-24). Same S3 client for both. MinIO no longer publishes to Docker Hub, so its image comes from `quay.io/minio/minio` (pinned). Update 2026-09-30: MinIO's images are no longer publicly available (quay.io and Docker Hub refuse anonymous pulls), so the local S3 in dev and CI is RustFS 1.0 (Apache-2.0, built as a MinIO replacement); the same S3 client and settings apply. |
 | Auth | Better Auth (organization, two-factor, magic-link, admin, stripe, sso plugins); re-confirmed over Clerk on 2026-09-24 to keep self-hosting free of third-party accounts. Payment admin (invoices, refunds, disputes) uses the Stripe dashboard plus the admin console |
 | Billing | Stripe |
 | AI | Python team's service, also open source, in its own repo `socioboard/socioboard-ai` (decided 2026-09-24); self-hosters run its Docker image with their own model keys. Its OpenAPI spec is the contract; our `apps/ai-mock` follows it |
