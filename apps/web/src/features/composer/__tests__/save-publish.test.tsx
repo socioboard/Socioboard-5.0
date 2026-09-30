@@ -237,6 +237,39 @@ describe('saving', () => {
   });
 });
 
+describe('leaving while a save is under way', () => {
+  it('stays wherever the user went when the save finishes', async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((r) => (release = r));
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/media/folders`]: [200, { items: [] }],
+      [`GET ${BASE}/media`]: [200, { items: [], nextCursor: null }],
+      [`POST ${BASE}/posts`]: async ({ body }) => {
+        await gate;
+        return [201, post(body as { text: string })];
+      },
+    });
+    const { history } = renderApp('/w/halden/compose');
+    const user = await writePost('Going');
+    await user.click(screen.getByRole('button', { name: 'Save draft' }));
+    expect(await screen.findByText('Saving…')).toBeInTheDocument();
+    await user.click(mediaLink());
+    await user.click(
+      within(await screen.findByRole('dialog', { name: 'Leave without saving?' })).getByRole(
+        'button',
+        { name: 'Leave' },
+      ),
+    );
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/w/halden/media');
+    });
+    release();
+    await new Promise((r) => setTimeout(r, 50));
+    expect(history.location.pathname).toBe('/w/halden/media');
+  });
+});
+
 describe('publishing', () => {
   it('saves, publishes with an Idempotency-Key, and then shows the post as sent', async () => {
     const calls = mockServer({
