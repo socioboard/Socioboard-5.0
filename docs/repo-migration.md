@@ -1,6 +1,6 @@
 # Repo migration: one `socioboard/socioboard` repo
 
-As of 2026-09-28 · Task P0-I9 · See also: [Infra](infra.md)
+As of 2026-09-30 · Task P0-I9 · See also: [Infra](infra.md)
 
 Socioboard 6.0 moves into the existing **Socioboard-5.0** repo, which is renamed to `socioboard`. That repo keeps its stars (1,513), forks (411), releases and tags, and GitHub redirects the old URL. The other two repos become archive branches inside it and are archived themselves.
 
@@ -30,8 +30,9 @@ The old prototype repo is renamed `socioboard-6-prototype`, and it and `socioboa
 | 1 | Backups: `git clone --mirror` of all three repos + wikis, verified bundles, JSON export of issues, PRs, comments, releases, labels, milestones | read | **Done 2026-09-28** (below) |
 | 2 | Push `archive/6.0-prototype`, `archive/core-csharp`, `archive/core-csharp-3.0`, `prototype-final`, `core-final`, `core/*` tags into the 5.0 repo | write | **Done 2026-09-28**: 4 archive branches verified against the mirrors, 35 `core/` tags plus `prototype-final` and `core-final` |
 | 3 | `archive/5.0` + `v5.0-final` from `master` (`1ec4ff50`); retarget the 9 open PRs to `archive/5.0`; label open issues and PRs `5.0` | write | **Done 2026-09-28**: `archive/5.0` = old `master` (`1ec4ff50`), 9 PRs retargeted, 28 issues and 9 PRs labelled `5.0` |
+| 3b | Push 6.0's full history to a `6.0` branch in the 5.0 repo (the default branch stays `master`, so visitors still see 5.0). Every finished task is pushed there from now on, so the branch always has all our commits | write | **Done 2026-09-30**: `6.0` = local `main` at `aee57ab`, 184 commits; `master` unchanged (`1ec4ff50`). Local repo: `origin` = `Socioboard-developers/Socioboard-5.0`, `main` tracks `origin/6.0` |
 | 4 | Rename default branch `master` → `main` (Settings → Branches) | admin | Waiting for admin |
-| 5 | Put 6.0 on `main`: in this repo, `git fetch` the old `main`, `git merge -s ours --allow-unrelated-histories` it into our history, push as a fast-forward (no force-push). Check the tree equals 6.0 and `archive/5.0` equals the old `master` | admin (for the protected switch) | Waiting |
+| 5 | Put 6.0 on `main`: `git fetch origin main`, then on our history `git merge -s ours --allow-unrelated-histories origin/main`, and `git push origin <ours>:main` as a fast-forward (no force-push). Every 6.0 commit keeps its hash, author and date; the one new commit is that merge, which records 5.0's history underneath. Check the tree equals 6.0 and `archive/5.0` equals the old `master`; then protect `main` and delete or keep `6.0` | admin (for the protected switch) | Waiting |
 | 6 | Rename `socioboard` (prototype) → `socioboard-6-prototype`, then `Socioboard-5.0` → `socioboard`; update description, topics, website; README with a "Looking for 5.0?" link; root LICENSE MIT | admin | Waiting |
 | 7 | README pointer + archive `socioboard-6-prototype` and `socioboard-core`; transfer core's 15 open issues with a `core-legacy` label; close its 1 PR with a note pointing to `archive/core-csharp` | admin (core is read-only for us) | Waiting |
 | 8 | Ruleset on `main`: PR + 1 review, no force-push or deletion, linear history, CI checks once P0-I4 lands. `archive/*`: no deletion or force-push. Teams, CODEOWNERS, org 2FA | admin | Waiting. Today nothing on the 5.0 repo is protected |
