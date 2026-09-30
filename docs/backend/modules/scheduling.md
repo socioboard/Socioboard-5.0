@@ -64,5 +64,6 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - Postgres is the source of truth; Valkey jobs can always be rebuilt.
 - Minimum schedule time: now + 2 minutes. Maximum: 1 year ahead (`SCHEDULE_MIN_LEAD_MINUTES`, `SCHEDULE_MAX_AHEAD_DAYS` in contracts, so the date picker uses the same bounds).
 - Times are stored in UTC. Recurring rules keep their own timezone so they don't drift with daylight saving.
+- Wall-clock times that don't exist or happen twice (a recurring rule's or a queue slot's time on a daylight-saving change day): a time skipped by the clock change moves forward by the gap (02:30 on a spring-forward night that jumps 02:00 → 03:00 becomes 03:30); a time that happens twice uses the first. Both are covered by the daylight-saving tests (P2-Q2).
 - Scheduled count respects `checkLimit('scheduledPosts')` when billing is on.
 - Emits `post.scheduled`, `post.rescheduled`, `post.unscheduled`.

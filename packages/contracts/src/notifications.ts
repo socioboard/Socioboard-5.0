@@ -26,12 +26,16 @@ export const FEED_TYPES = NotificationType.options.filter((t) => t !== 'digest')
 
 /**
  * A path inside the app (e.g. `/w/acme/posts/…`), never a full URL: a notification can't send
- * anyone off-site. `//host` is a full URL to a browser, so it's refused too.
+ * anyone off-site. `//host` and `/\host` are full URLs to a browser, and browsers drop tabs and
+ * newlines (`/\t/host` becomes `//host`), so only URL path characters are allowed.
  */
 export const AppPath = z
   .string()
   .max(512)
-  .regex(/^\/(?![/\\])/, 'A path inside the app, starting with a single /');
+  .regex(
+    /^\/(?![/\\])[A-Za-z0-9\-._~!$&'()*+,;=:@%/?#]*$/,
+    'A path inside the app, starting with a single /',
+  );
 
 export const Notification = z.object({
   id: Id,

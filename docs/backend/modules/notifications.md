@@ -51,3 +51,4 @@ Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a use
 - Emails use React Email templates in `packages/emails`, sent via Nodemailer (any SMTP).
 - Group bursts: several failures from one post become one email.
 - Never include tokens or private data in email bodies; link to the app instead.
+- A user sees notifications of the workspaces they still belong to (and ones about themselves alone): once removed from a workspace, its notifications leave their feed and unread count, so nothing about its posts or accounts stays visible.

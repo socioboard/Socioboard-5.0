@@ -1,6 +1,6 @@
 # CI (docs/infra.md, P0-I4): secret scan → lint, types, unit tests, build → integration tests
 # (Postgres, Valkey, local S3; then storage off) → the four images built and smoke-tested → Playwright
-# end to end on pull requests to main. Services come from the same compose file as local dev.
+# end to end on pull requests to main (and 6.0 for now). Services come from the same compose file as local dev.
 name: CI
 
 on:
@@ -157,9 +157,11 @@ jobs:
 
   e2e:
     name: End to end (Playwright)
-    # On pull requests to main (docs/infra.md), and on demand.
+    # On pull requests to main (docs/infra.md), and to `6.0` until the repo migration puts 6.0 on
+    # main; and on demand.
     if: >-
-      (github.event_name == 'pull_request' && github.base_ref == 'main') ||
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == '6.0')) ||
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 20
