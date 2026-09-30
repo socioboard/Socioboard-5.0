@@ -1,0 +1,20 @@
+# Images are built from the repo root (docs/infra.md, P0-I4). Nothing secret or local goes in:
+# no .env, no Facebook sessions from the Meta e2e, no installed or built output from this machine.
+.env
+.env.*
+!.env.example
+**/.auth
+.git
+**/node_modules
+**/dist
+**/.turbo
+**/ladle-build
+**/build
+**/coverage
+**/test-results
+**/playwright-report
+apps/web/src/routeTree.gen.ts
+packages/db/src/generated
+.vscode
+.playwright-mcp
+*.log

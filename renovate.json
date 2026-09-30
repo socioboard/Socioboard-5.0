@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Dependency updates (docs/infra.md, dependency hygiene, P0-I4). Needs the Renovate GitHub app on the repo.",
+  "extends": ["config:recommended", ":semanticCommitTypeAll(chore)"],
+  "timezone": "Asia/Kolkata",
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "3 days",
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "description": "Minor and patch updates of dev tooling land together, once a week.",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dev tooling (minor and patch)"
+    },
+    {
+      "description": "TanStack packages move together.",
+      "matchPackageNames": ["/^@tanstack\\//"],
+      "groupName": "TanStack"
+    },
+    {
+      "description": "Prisma's CLI, client and adapter move together.",
+      "matchPackageNames": ["prisma", "/^@prisma\\//"],
+      "groupName": "Prisma"
+    },
+    {
+      "description": "Radix primitives move together.",
+      "matchPackageNames": ["radix-ui", "/^@radix-ui\\//"],
+      "groupName": "Radix"
+    },
+    {
+      "description": "GitHub Actions and Docker base images: one PR a week.",
+      "matchManagers": ["github-actions", "dockerfile"],
+      "groupName": "CI and image bases"
+    }
+  ]
+}

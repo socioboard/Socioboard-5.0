@@ -1,0 +1,173 @@
+# CI (docs/infra.md, P0-I4): secret scan → lint, types, unit tests, build → integration tests
+# (Postgres, Valkey; storage off, then MinIO) → the four images built and smoke-tested → Playwright
+# end to end on pull requests to main. Services come from the same compose file as local dev.
+name: CI
+
+on:
+  push:
+    # `6.0` until the repo migration puts 6.0 on main (docs/repo-migration.md).
+    branches: [main, '6.0']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  FORCE_COLOR: '1'
+  # The dev compose's services, on the ports .env.example uses.
+  COMPOSE: docker compose -f docker/compose.dev.yml --env-file .env
+
+jobs:
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Scan the history for secrets
+        run: >
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.28.0
+          git /repo --redact --no-banner --exit-code 1
+
+  check:
+    name: Lint, types, unit tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - name: Format, lint, dependency rules, types
+        run: pnpm check
+      - name: Unit tests
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+      - name: Component catalog
+        run: pnpm --filter @socioboard/ui catalog:build
+
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - name: Start Postgres, Valkey, Mailpit, MinIO
+        run: COMPOSE_PROFILES=minio $COMPOSE up -d --wait
+      - name: Migrate
+        run: pnpm --filter @socioboard/db migrate:deploy
+      - name: Integration tests, storage off
+        run: pnpm --filter @socioboard/core test:int
+      - name: Integration tests, against MinIO
+        env:
+          S3_ENDPOINT: http://localhost:9000
+          S3_BUCKET: socioboard-media
+          S3_REGION: us-east-1
+          S3_ACCESS_KEY_ID: socioboard
+          S3_SECRET_ACCESS_KEY: socioboard-dev-secret
+          S3_FORCE_PATH_STYLE: 'true'
+        run: pnpm --filter @socioboard/core test:int
+      - name: Service logs on failure
+        if: failure()
+        run: $COMPOSE logs --tail 200
+
+  images:
+    name: Images and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      # amd64 here; the release workflow (P5-I5) builds multi-arch and pushes to GHCR.
+      - name: Build the API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          tags: socioboard-api:ci
+          load: true
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,scope=api,mode=max
+      - name: Build the worker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/worker/Dockerfile
+          tags: socioboard-worker:ci
+          load: true
+          cache-from: type=gha,scope=worker
+          cache-to: type=gha,scope=worker,mode=max
+      - name: Build the migration image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: packages/db/Dockerfile
+          tags: socioboard-migrate:ci
+          load: true
+          cache-from: type=gha,scope=migrate
+          cache-to: type=gha,scope=migrate,mode=max
+      - name: Build the web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          tags: socioboard-web:ci
+          load: true
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
+      - run: cp .env.example .env
+      - name: Start Postgres and Valkey
+        run: $COMPOSE up -d --wait postgres valkey mailpit
+      - name: Smoke test (health, worker start, web routes, graceful SIGTERM)
+        run: bash docker/smoke-test.sh
+
+  e2e:
+    name: End to end (Playwright)
+    # On pull requests to main (docs/infra.md), and on demand.
+    if: >-
+      (github.event_name == 'pull_request' && github.base_ref == 'main') ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - name: Start Postgres, Valkey, Mailpit, MinIO
+        run: COMPOSE_PROFILES=minio $COMPOSE up -d --wait
+      - name: Migrate
+        run: pnpm --filter @socioboard/db migrate:deploy
+      - name: Install Chromium
+        run: pnpm --filter @socioboard/web exec playwright install --with-deps chromium
+      # The app suite only; the Meta suite publishes to real accounts and never runs in CI.
+      - name: End-to-end tests
+        run: pnpm --filter @socioboard/web e2e
+      - name: Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+          retention-days: 7
