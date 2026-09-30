@@ -36,7 +36,7 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { accountsQuery, networksQuery } from '../../accounts';
 import { workspaceQuery } from '../../settings';
-import { postQuery } from '../api';
+import { postQuery } from '../../posts';
 import {
   contentFor,
   draftReducer,
@@ -118,8 +118,8 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
         action={
           gone ? (
             <Button asChild>
-              <Link to="/w/$slug/calendar" params={{ slug: workspace.slug }}>
-                {t('backToCalendar')}
+              <Link to="/w/$slug/posts" params={{ slug: workspace.slug }}>
+                {t('backToPosts')}
               </Link>
             </Button>
           ) : (
@@ -152,6 +152,13 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
         accounts={accounts.data}
         networks={networks.data}
         onCreated={onCreated}
+        onPublished={(id) =>
+          void navigate({
+            to: '/w/$slug/posts/$postId',
+            params: { slug: workspace.slug, postId: id },
+            replace: true,
+          })
+        }
       />
     );
   }
@@ -171,11 +178,13 @@ function Composer({
   accounts,
   networks,
   onCreated,
+  onPublished,
 }: {
   post: Post | undefined;
   accounts: SocialAccount[];
   networks: Network[];
   onCreated: (postId: string) => void;
+  onPublished: (postId: string) => void;
 }) {
   const { t } = useTranslation('composer');
   const { me, workspace } = useWorkspace();
@@ -243,6 +252,8 @@ function Composer({
       const published = await saving.publish();
       if (published) {
         toast.success(t('publish.started', { count: published.targets.length }));
+        // How it goes, account by account, is on the post's page.
+        onPublished(published.id);
       }
     } catch (err) {
       const code = err instanceof ApiError ? err.code : '';
@@ -312,7 +323,18 @@ function Composer({
 
   return (
     <>
-      {locked && <Banner tone="warning">{t('locked')}</Banner>}
+      {locked && post && (
+        <Banner tone="warning">
+          {t('locked')}{' '}
+          <Link
+            to="/w/$slug/posts/$postId"
+            params={{ slug: workspace.slug, postId: post.id }}
+            className="font-semibold underline underline-offset-2"
+          >
+            {t('seeDelivery')}
+          </Link>
+        </Banner>
+      )}
       {!locked && !mayEdit && <Banner tone="warning">{t('notYours')}</Banner>}
       <ViewSwitch value={view} onChange={setView} />
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">

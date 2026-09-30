@@ -11,7 +11,8 @@ export function NavTabs({ className, ...props }: ComponentProps<'nav'>) {
   return (
     <nav
       className={cn(
-        'border-hair flex shrink-0 gap-1 overflow-x-auto border-b px-3 sm:px-4',
+        // overflow-y-hidden: the active underline sits on the border; it mustn't add a scrollbar.
+        'border-hair flex shrink-0 gap-1 overflow-x-auto overflow-y-hidden border-b px-3 sm:px-4',
         '[&>a]:text-ink-3 [&>a]:hover:text-ink [&>a]:relative [&>a]:flex [&>a]:h-10 [&>a]:items-center [&>a]:px-2.5 [&>a]:text-[13px] [&>a]:font-medium [&>a]:whitespace-nowrap',
         '[&>a[data-status=active]]:text-ink [&>a[aria-current=page]]:text-ink',
         // Active underline in the selection color.

@@ -2,6 +2,7 @@
   "nav": {
     "label": "Main",
     "calendar": "Calendar",
+    "posts": "Posts",
     "settings": "Settings",
     "media": "Media",
     "accounts": "Accounts"

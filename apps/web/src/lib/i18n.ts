@@ -11,12 +11,25 @@ import composer from '../locales/en/composer.json';
 import errors from '../locales/en/errors.json';
 import media from '../locales/en/media.json';
 import onboarding from '../locales/en/onboarding.json';
+import posts from '../locales/en/posts.json';
 import settings from '../locales/en/settings.json';
 import shell from '../locales/en/shell.json';
 import { ApiError } from './api';
 
 export const resources = {
-  en: { common, errors, auth, onboarding, shell, settings, account, media, accounts, composer },
+  en: {
+    common,
+    errors,
+    auth,
+    onboarding,
+    shell,
+    settings,
+    account,
+    media,
+    accounts,
+    composer,
+    posts,
+  },
 } as const;
 
 void i18n.use(initReactI18next).init({
@@ -34,6 +47,7 @@ void i18n.use(initReactI18next).init({
     'media',
     'accounts',
     'composer',
+    'posts',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes
