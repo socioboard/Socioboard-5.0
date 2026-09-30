@@ -134,6 +134,13 @@ const CLASSIFIED: Record<string, Kind> = {
   },
   getQueueSlots: { kind: 'resource' },
   putQueueSlots: { kind: 'resource', body: () => ({ timezone: 'UTC', slots: [] }) },
+  // notifications: a user's own, across workspaces (P2-B8 tests that one user can't read or
+  // mark another's)
+  listNotifications: { kind: 'user' },
+  markAllNotificationsRead: { kind: 'user' },
+  markNotificationRead: { kind: 'user' },
+  getNotificationPreferences: { kind: 'user' },
+  updateNotificationPreferences: { kind: 'user' },
 };
 
 /** A valid schedule time: a day ahead. */

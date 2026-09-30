@@ -9,7 +9,7 @@
 | `/me/notifications` | Full list with filters (unread, type) and **preferences**: per type, in-app on/off, email on/off |
 
 ## API calls
-`GET /notifications`, `POST /notifications/:id/read`, `POST /notifications/read-all`, `GET/PUT /me/notification-preferences`. Socket `notification.new` prepends to the list and bumps the count.
+`GET /notifications` (with `unreadCount` for the bell), `POST /notifications/:id/read`, `POST /notifications/read-all`, `GET/PUT /me/notification-preferences`. Socket `notification.new` prepends to the list and sets the count; `notification.read` keeps other tabs in step. Wording comes from `type` + `params` through i18n (`title`/`body` are the fallback); a switch whose channel is `null` isn't shown.
 
 ## Behavior
 - Each notification links to the relevant screen (failed post → post detail; approval request → approvals).
