@@ -11,7 +11,8 @@ export function truncateText(
   truncateAt: number | null,
   truncateLines: number | null = null,
 ): { shown: string; truncated: boolean } {
-  const lines = text.split('\n');
+  // Networks drop trailing blank lines, so they don't count towards the limit.
+  const lines = text.trimEnd().split('\n');
   const byLines = truncateLines !== null && lines.length > truncateLines;
   const kept = byLines ? lines.slice(0, truncateLines).join('\n') : text;
   if (truncateAt === null || textLength(kept) <= truncateAt) {
