@@ -68,6 +68,7 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Live preview | Per-network live preview in the composer, in 6.0 (phase 1, extended per network in phase 3) |
 | Team size and launch date | Not fixed; roadmap durations are indicative only |
 | Domains | `app.socioboard.com` (API at `/api`), `media.socioboard.com`; staging under `*.staging.socioboard.com`; local dev via `*.dev.socioboard.com` tunnels |
+| Recurring posts | A template post holds the content and rule; each occurrence becomes its own ordinary post (own targets, status, history, retry), created about a week ahead. Chosen over many targets per post so publishing, retry and history stay unchanged (decided 2026-09-30, P2-B4) |
 | Admin console | Platform admin console in the app for monitoring and operations; support access is view-only |
 | Tech lead | Chethan |
 | Platform account owner | Chethan owns the Meta Business Manager and the LinkedIn, TikTok, X, Google, Pinterest, Tumblr and Snapchat developer accounts |
