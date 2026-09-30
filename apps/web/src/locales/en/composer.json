@@ -79,7 +79,6 @@
   "locked": "This post is being published or was published, so it can’t be changed.",
   "notYours": "Only its author or someone who approves posts can edit this post.",
   "notFound": "This post doesn’t exist or was deleted.",
-  "backToCalendar": "Back to calendar",
   "preview": {
     "title": "Preview",
     "tabs": "Preview on",
@@ -191,5 +190,7 @@
     "body": "Your latest changes to this post aren’t saved yet.",
     "confirm": "Leave",
     "cancel": "Stay"
-  }
+  },
+  "seeDelivery": "See how it went",
+  "backToPosts": "Back to posts"
 }

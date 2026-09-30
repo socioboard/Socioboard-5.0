@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { api, ApiError, NETWORK_ERROR } from '../../lib/api';
-import { postKeys } from './api';
+import { rememberPost } from '../posts';
 import type { PostBody } from './draft';
 
 /** Autosave runs at most this long after the first unsaved change (docs: "every 10 s"). */
@@ -72,7 +72,7 @@ export function useSavePost({
 
   const remember = useCallback(
     (post: Post) => {
-      queryClient.setQueryData(postKeys.detail(workspaceId, post.id), post);
+      rememberPost(queryClient, workspaceId, post);
     },
     [queryClient, workspaceId],
   );

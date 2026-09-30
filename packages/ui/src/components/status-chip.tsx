@@ -29,7 +29,7 @@ export interface StatusChipProps {
   status: Status;
   /** The status in the app's language; defaults to English. */
   label?: string;
-  className?: string;
+  className?: string | undefined;
 }
 
 export function StatusChip({ status, label, className }: StatusChipProps) {

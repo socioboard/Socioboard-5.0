@@ -1,7 +1,8 @@
 // P0-Q1: phase 0's "done when" (docs/stages/phase-0.md). A new user signs up, verifies their
 // email, creates a workspace, uploads an image and invites a teammate, who signs up from the
 // invitation, verifies, joins with the role they were given, and sees the same image. Along the
-// way the owner opens Accounts and the composer (phase 1, nothing connected yet), and every screen
+// way the owner opens Accounts and the composer (phase 1, nothing connected yet), saves a draft
+// and finds it under Posts, and every screen
 // is checked for the right cursors (support/cursors.ts).
 import { fileURLToPath } from 'node:url';
 
@@ -70,6 +71,19 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   await ownerPage.goto(`/w/${slug}/compose`);
   await expect(ownerPage.getByRole('textbox', { name: 'Text' })).toBeVisible();
   await expectRightCursors(ownerPage, 'composer');
+  // A saved draft shows up under Posts, and opens to its details.
+  await ownerPage.getByRole('textbox', { name: 'Text' }).fill('Autumn menu draft');
+  await ownerPage.getByRole('button', { name: 'Save draft' }).click();
+  await expect(ownerPage.getByText(/^Saved at/)).toBeVisible();
+  await ownerPage.getByRole('link', { name: 'Posts' }).first().click();
+  await ownerPage.getByRole('link', { name: 'Drafts' }).click();
+  const draftRow = ownerPage.getByRole('row', { name: /Autumn menu draft/ });
+  await expect(draftRow).toContainText('Draft');
+  await expectRightCursors(ownerPage, 'posts');
+  await draftRow.click();
+  await expect(ownerPage.getByRole('heading', { name: 'Post', exact: true })).toBeVisible();
+  await expect(ownerPage.getByText('No accounts chosen yet.', { exact: false })).toBeVisible();
+  await expectRightCursors(ownerPage, 'post details');
 
   // --- The owner invites a teammate as an editor. ---
   await ownerPage.getByRole('link', { name: 'Settings' }).first().click();

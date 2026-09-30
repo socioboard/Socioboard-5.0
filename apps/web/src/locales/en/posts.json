@@ -1,0 +1,138 @@
+{
+  "title": "Posts",
+  "tabs": {
+    "label": "Show",
+    "all": "All",
+    "drafts": "Drafts",
+    "scheduled": "Scheduled",
+    "published": "Published",
+    "failed": "Failed"
+  },
+  "table": {
+    "caption": "Posts",
+    "post": "Post",
+    "accounts": "Accounts",
+    "status": "Status",
+    "when": "When",
+    "author": "Author",
+    "loadMore": "Load more",
+    "retry": "Try again",
+    "loading": "Loading posts"
+  },
+  "noText": "No text",
+  "files_one": "{{count}} file",
+  "files_other": "{{count}} files",
+  "noAccounts": "No accounts",
+  "moreAccounts": "+{{count}}",
+  "when": {
+    "published": "Published {{time}}",
+    "scheduled": "Scheduled for {{time}}",
+    "created": "Created {{time}}",
+    "sending": "Sending now"
+  },
+  "status": {
+    "draft": "Draft",
+    "in_review": "In review",
+    "approved": "Approved",
+    "scheduled": "Scheduled",
+    "publishing": "Publishing",
+    "published": "Published",
+    "partial": "Partly published",
+    "failed": "Failed",
+    "pending": "Waiting",
+    "cancelled": "Cancelled"
+  },
+  "loadError": "The posts didn’t load.",
+  "empty": {
+    "all": {
+      "title": "No posts yet",
+      "body": "Write a post once and send it to your Facebook Pages and Instagram accounts."
+    },
+    "drafts": {
+      "title": "No drafts",
+      "body": "Posts you save without publishing wait here."
+    },
+    "scheduled": {
+      "title": "Nothing scheduled",
+      "body": "Posts set to go out later show up here."
+    },
+    "published": {
+      "title": "Nothing published yet",
+      "body": "Posts you publish show up here, with a link to each one on its network."
+    },
+    "failed": {
+      "title": "Nothing failed",
+      "body": "When a post doesn’t go out, it shows up here with what went wrong and how to fix it."
+    },
+    "write": "Write a post"
+  },
+  "detail": {
+    "title": "Post",
+    "back": "Back to posts",
+    "notFound": "This post doesn’t exist or was deleted.",
+    "loadError": "The post didn’t load.",
+    "retry": "Try again",
+    "by": "By {{name}}",
+    "unknownAuthor": "By a former member",
+    "created": "Created {{time}}",
+    "edit": "Edit",
+    "more": "More actions",
+    "duplicate": "Duplicate",
+    "duplicated": "Copied as a new draft.",
+    "delete": "Delete post",
+    "deleteTitle": "Delete this post?",
+    "deleteBody": "It’s deleted for everyone in the workspace. This can’t be undone.",
+    "deleteConfirm": "Delete",
+    "deleteCancel": "Cancel",
+    "deleted": "Post deleted.",
+    "deliveries": "Accounts",
+    "deliveriesHint_one": "Where this post goes: {{count}} account.",
+    "deliveriesHint_other": "Where this post goes: {{count}} accounts.",
+    "noTargets": "No accounts chosen yet. Edit the post to pick where it goes.",
+    "content": "Content",
+    "contentFor": "What {{network}} gets",
+    "sharedContent": "Shared content",
+    "customised": "{{network}} has its own version of this post.",
+    "link": "Link",
+    "firstComment": "First comment",
+    "noContent": "Nothing written yet.",
+    "fileDeleted": "A deleted file",
+    "labels": "Labels"
+  },
+  "target": {
+    "view": "View on {{network}}",
+    "publishedAt": "Published {{time}}",
+    "scheduledFor": "Scheduled for {{time}}",
+    "waiting": "Not sent yet.",
+    "sending": "Sending to {{network}}…",
+    "cancelled": "Not sent: the account was taken off this post.",
+    "networkSaid": "{{network}} said: “{{message}}”",
+    "errors": {
+      "auth": "{{network}} no longer accepts this account’s sign-in. Reconnect the account, then retry.",
+      "content": "{{network}} didn’t accept this post. Change what it didn’t accept, then retry.",
+      "rate_limited": "{{network}} asked us to slow down, and the automatic retries ran out. Retry in a few minutes.",
+      "retryable": "{{network}} couldn’t be reached, and the automatic retries ran out. Retrying usually works."
+    },
+    "accountGone": "This account was disconnected. Connect it again to retry.",
+    "retryAction": "Retry",
+    "retrying": "Publishing to {{account}} again.",
+    "reconnect": "Reconnect account",
+    "editPost": "Edit post",
+    "retryErrors": {
+      "POST_HAS_ERRORS": "The post has problems to fix for this network first. Edit the post to see them.",
+      "TARGET_NOT_FAILED": "This account is already being published to.",
+      "ACCOUNT_NOT_AVAILABLE": "This account was disconnected. Connect it again to retry.",
+      "REVIEW_REQUIRED": "This workspace reviews every post before it goes out."
+    },
+    "history": "Publishing history",
+    "historyToggle_one": "Publishing history ({{count}} attempt)",
+    "historyToggle_other": "Publishing history ({{count}} attempts)",
+    "attempt": "Attempt {{n}}",
+    "outcome": {
+      "running": "Sending",
+      "published": "Published",
+      "failed": "Failed",
+      "will_retry": "Didn’t go through; retried automatically"
+    }
+  }
+}

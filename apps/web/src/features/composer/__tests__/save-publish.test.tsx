@@ -271,12 +271,13 @@ describe('leaving while a save is under way', () => {
 });
 
 describe('publishing', () => {
-  it('saves, publishes with an Idempotency-Key, and then shows the post as sent', async () => {
+  it('saves, publishes with an Idempotency-Key, then opens the post to follow how it goes', async () => {
     const calls = mockServer({
       ...base(),
       [`POST ${BASE}/posts/${POST_ID}/publish-now`]: [202, post({ text: 'Go' }, 'publishing')],
+      [`GET ${BASE}/posts/${POST_ID}`]: [200, post({ text: 'Go' }, 'publishing')],
     });
-    renderApp('/w/halden/compose');
+    const { router } = renderApp('/w/halden/compose');
     const user = await writePost('Go');
     await user.click(screen.getByRole('button', { name: 'Publish now' }));
     expect(await screen.findByText('Publishing to 1 account.')).toBeInTheDocument();
@@ -285,7 +286,21 @@ describe('publishing', () => {
     expect(calls.findIndex((c) => c.key === `POST ${BASE}/posts`)).toBeLessThan(
       calls.findIndex((c) => c.key.endsWith('/publish-now')),
     );
+    expect(await screen.findByText('Sending to Facebook…')).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe(`/w/halden/posts/${POST_ID}`);
+  });
+
+  it('a post that was sent opens read-only, with a link to how it went', async () => {
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/posts/${POST_ID}`]: [200, post({ text: 'Go' }, 'published')],
+    });
+    renderApp(`/w/halden/compose/${POST_ID}`);
     expect(await screen.findByText(/being published or was published/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'See how it went' })).toHaveAttribute(
+      'href',
+      `/w/halden/posts/${POST_ID}`,
+    );
     expect(screen.queryByRole('button', { name: 'Publish now' })).not.toBeInTheDocument();
   });
 
