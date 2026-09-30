@@ -33,23 +33,23 @@ Running it again only adds what is missing. It refuses to run with `NODE_ENV=pro
 
 ## Commands
 
-| Command                              | What it does                                                      |
-| ------------------------------------ | ----------------------------------------------------------------- |
-| `pnpm install`                       | Install all workspaces                                            |
-| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit                  |
-| `pnpm services:reset`                | Stop services and delete their data                               |
-| `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data     |
-| `pnpm db:seed`                       | Add development data (safe to run again)                          |
-| `pnpm dev`                           | Run api, worker and web in watch mode                             |
-| `pnpm build`                         | Build every app                                                   |
-| `pnpm typecheck`                     | Type-check every workspace                                        |
-| `pnpm lint`                          | ESLint (type-aware)                                               |
-| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)                  |
-| `pnpm format`                        | Format with Prettier                                              |
-| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services (MinIO too) |
-| `pnpm e2e`                           | Browser tests of each phase's main flow (needs the MinIO profile) |
-| `pnpm catalog`                       | Component catalog (Ladle) at http://localhost:61000               |
-| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck           |
+| Command                              | What it does                                                       |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `pnpm install`                       | Install all workspaces                                             |
+| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit                   |
+| `pnpm services:reset`                | Stop services and delete their data                                |
+| `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data      |
+| `pnpm db:seed`                       | Add development data (safe to run again)                           |
+| `pnpm dev`                           | Run api, worker and web in watch mode                              |
+| `pnpm build`                         | Build every app                                                    |
+| `pnpm typecheck`                     | Type-check every workspace                                         |
+| `pnpm lint`                          | ESLint (type-aware)                                                |
+| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)                   |
+| `pnpm format`                        | Format with Prettier                                               |
+| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services (MinIO too)  |
+| `pnpm e2e`                           | Browser tests of each phase's main flow (S3 from .env, else MinIO) |
+| `pnpm catalog`                       | Component catalog (Ladle) at http://localhost:61000                |
+| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck            |
 
 ## Layout
 
@@ -69,7 +69,7 @@ Running it again only adds what is missing. It refuses to run with `NODE_ENV=pro
 
 ## Working rules
 
-Every change belongs to a task in [docs/stages](docs/stages/README.md). Branch `p<phase>/<module>/<task-id>-<name>`, commit `type(module): summary` with a `Task: <ID>` line, PR title starts with the task ID.
+Every change belongs to a task in [docs/stages](docs/stages/README.md). Branch `p<phase>/<module>/<task-id>-<name>`, commit `type(module): summary` with a `Task: <ID>` line, PR title starts with the task ID. Contributing from outside the team: see [CONTRIBUTING.md](CONTRIBUTING.md) (commits signed off under the DCO).
 
 ## License
 
