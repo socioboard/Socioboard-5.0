@@ -16,8 +16,21 @@ const A = '01890a5d-ac96-774b-bcce-b302099a8057';
 describe('notifications', () => {
   it('links stay inside the app', () => {
     expect(AppPath.safeParse(`/w/acme/posts/${A}`).success).toBe(true);
-    for (const bad of ['https://evil.example', '//evil.example', '/\\evil.example', 'w/acme', '']) {
-      expect(AppPath.safeParse(bad).success, bad).toBe(false);
+    expect(AppPath.safeParse('/w/acme/posts?tab=failed#top').success).toBe(true);
+    const bad = [
+      'https://evil.example',
+      '//evil.example',
+      '/\\evil.example',
+      // Browsers drop tabs and newlines: these become //evil.example.
+      '/\t/evil.example',
+      '/\n/evil.example',
+      '/\r/evil.example',
+      '/ /evil.example',
+      'w/acme',
+      '',
+    ];
+    for (const path of bad) {
+      expect(AppPath.safeParse(path).success, JSON.stringify(path)).toBe(false);
     }
   });
 
