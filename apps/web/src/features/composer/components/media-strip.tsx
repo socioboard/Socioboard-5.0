@@ -74,7 +74,7 @@ export function MediaStrip({
 
   return (
     <div className="flex flex-col gap-2">
-      <ul aria-label={label} className="flex flex-wrap gap-2.5">
+      <ul aria-label={label} className="relative flex flex-wrap gap-2.5">
         <AnimatePresence initial={false} mode="popLayout">
           {mediaIds.map((id, i) => {
             const q = assets[i];
