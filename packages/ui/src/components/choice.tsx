@@ -39,7 +39,7 @@ export function Checkbox({
         )}
         {...props}
       >
-        <CheckboxPrimitive.Indicator className="data-[state=checked]:animate-scale-in motion-reduce:animate-none">
+        <CheckboxPrimitive.Indicator className="data-[state=checked]:animate-scale-in">
           <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
@@ -118,7 +118,7 @@ export function RadioCard({
       {...props}
     >
       <span className="border-hair-strong mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border">
-        <RadioPrimitive.Indicator className="bg-ring data-[state=checked]:animate-scale-in size-2 rounded-full motion-reduce:animate-none" />
+        <RadioPrimitive.Indicator className="bg-ring data-[state=checked]:animate-scale-in size-2 rounded-full" />
       </span>
       <span className="flex flex-col gap-0.5">
         <span id={`${id}-label`} className="text-ink text-sm font-semibold">

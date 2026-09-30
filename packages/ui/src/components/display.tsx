@@ -77,7 +77,7 @@ export function Avatar({ name, src, size = 'md', decorative = false, className }
           src={src}
           alt={name}
           // Shown once loaded (Radix waits), so it fades in over the initials.
-          className="animate-fade-in size-full object-cover motion-reduce:animate-none"
+          className="animate-fade-in size-full object-cover"
         />
       )}
       <AvatarPrimitive.Fallback

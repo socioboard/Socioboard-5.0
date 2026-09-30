@@ -59,6 +59,9 @@
   /* Hashtags, mentions and links as the networks colour them. */
   --sb-preview-link: #0a58ca;
   --sb-preview-well: #f0f2f5;
+  /* Glass made solid (reduced transparency, more contrast). */
+  --sb-opaque: #f7f8fb;
+  --sb-opaque-chip: #ffffff;
 }
 
 .dark {
@@ -94,6 +97,8 @@
   --sb-preview-line: rgb(255 255 255 / 0.1);
   --sb-preview-link: #7cb3ff;
   --sb-preview-well: #3a3b3c;
+  --sb-opaque: #14171e;
+  --sb-opaque-chip: #1c2029;
 }
 
 @theme inline {
@@ -124,24 +129,48 @@
   --radius-control: 10px;
   --radius-media: 14px;
   --radius-pane: 18px;
+}
+
+/* Motion tokens: a plain @theme (not inline), so utilities read them through variables and the
+   accessibility settings below can swap them (reduced motion turns movement into crossfades). */
+@theme {
+  /* Letter-spacing follows size: small text opens up a little, headings tighten. */
+  --text-xs--letter-spacing: 0.01em;
+  --text-sm--letter-spacing: 0em;
+  --text-base--letter-spacing: -0.006em;
+  --text-lg--letter-spacing: -0.012em;
+  --text-xl--letter-spacing: -0.016em;
+  --text-2xl--letter-spacing: -0.02em;
+  --text-3xl--letter-spacing: -0.024em;
+  --text-4xl--letter-spacing: -0.028em;
 
   /* Motion (docs/frontend/design-system.md, "Motion"). Things arrive with a soft ease-out or a
      gentle spring and leave quickly; only transform, opacity and small blurs are animated. */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-  /* A spring that settles with a 3% overshoot (CSS linear() easing). */
+  /* A critically damped spring (Apple's default, damping 1.0): quick, no overshoot. Bounce is
+     only for things the person flicked or threw (springs.momentum in motion.tsx). */
   --ease-spring: linear(
     0,
-    0.06 2.2%,
-    0.25 5.4%,
-    0.52 9.6%,
-    0.76 14.4%,
-    0.92 19.5%,
-    1.01 25%,
-    1.03 30%,
-    1.025 36%,
-    1.008 45%,
-    0.998 60%,
+    0.054 5%,
+    0.17 10%,
+    0.305 15%,
+    0.435 20%,
+    0.552 25%,
+    0.65 30%,
+    0.731 35%,
+    0.795 40%,
+    0.845 45%,
+    0.884 50%,
+    0.913 55%,
+    0.936 60%,
+    0.953 65%,
+    0.965 70%,
+    0.975 75%,
+    0.981 80%,
+    0.986 85%,
+    0.99 90%,
+    0.993 95%,
     1
   );
 
@@ -512,11 +541,12 @@ html:active-view-transition-type(page) {
   &::view-transition-group(sb-page) {
     animation-duration: 0s;
   }
+  /* Short: a view transition covers the page while it runs, and input must never wait. */
   &::view-transition-old(sb-page) {
-    animation: sb-page-out 0.14s var(--ease-exit) both;
+    animation: sb-page-out 0.08s var(--ease-exit) both;
   }
   &::view-transition-new(sb-page) {
-    animation: sb-page-in 0.42s var(--ease-out-soft) both;
+    animation: sb-page-in 0.2s var(--ease-out-soft) both;
   }
 }
 html:active-view-transition-type(theme) {
@@ -537,24 +567,80 @@ html:active-view-transition-type(theme) {
   view-transition-name: sb-page;
 }
 
-/* Reduced motion stops decorative motion only. Indicators that show something is happening
-   (spinners, progress, skeletons) keep moving; components use Tailwind's motion-reduce: variant
-   for their own decorative transitions. */
+/* Reduced motion (Apple: a gentler equivalent, not nothing): movement, scaling and blur become
+   short crossfades, so people still see what changed. Indicators that something is happening
+   (spinners, progress, skeletons) keep moving. */
 @media (prefers-reduced-motion: reduce) {
-  .sb-glow,
-  .animate-settle,
-  .animate-enter,
-  .stagger-children > * {
+  :root {
+    --animate-rise: sb-fade-in 0.15s ease-out both;
+    --animate-pop-in: sb-fade-in 0.12s ease-out both;
+    --animate-pop-out: sb-fade-out 0.1s ease-in both;
+    --animate-dialog-in: sb-fade-in 0.15s ease-out both;
+    --animate-dialog-out: sb-fade-out 0.12s ease-in both;
+    --animate-sheet-in-right: sb-fade-in 0.15s ease-out both;
+    --animate-sheet-out-right: sb-fade-out 0.12s ease-in both;
+    --animate-sheet-in-bottom: sb-fade-in 0.15s ease-out both;
+    --animate-sheet-out-bottom: sb-fade-out 0.12s ease-in both;
+    --animate-scale-in: sb-fade-in 0.15s ease-out both;
+    --animate-nudge: none;
+  }
+  .sb-glow {
     animation: none;
+  }
+  .animate-settle {
+    animation: sb-fade-in 0.2s ease-out both;
   }
   .hover-lift,
   .hover-lift:hover,
   .press:active {
     transform: none;
   }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
+  /* Pages and the theme crossfade instead of moving or revealing. */
+  ::view-transition-group(*) {
     animation: none !important;
+  }
+  ::view-transition-old(*) {
+    animation: sb-fade-out 0.1s ease-in both !important;
+    clip-path: none !important;
+  }
+  ::view-transition-new(*) {
+    animation: sb-fade-in 0.18s ease-out both !important;
+    clip-path: none !important;
+  }
+}
+
+/* Reduced transparency: glass becomes solid (no blur), so text never depends on what's behind. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-float {
+    background: var(--sb-opaque);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass-chip {
+    background: var(--sb-opaque-chip);
+  }
+  .sb-backdrop-glows {
+    opacity: 0.25;
+  }
+}
+
+/* More contrast: solid surfaces, defined edges, stronger secondary text. */
+@media (prefers-contrast: more) {
+  :root,
+  :root.dark {
+    --sb-hair: var(--sb-hair-strong);
+    --sb-edge: var(--sb-hair-strong);
+    --sb-ink-3: var(--sb-ink-2);
+  }
+  .glass,
+  .glass-float {
+    background: var(--sb-opaque);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass-chip {
+    background: var(--sb-opaque-chip);
+    border-color: var(--sb-hair-strong);
   }
 }

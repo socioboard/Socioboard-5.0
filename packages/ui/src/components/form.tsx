@@ -10,7 +10,7 @@ const fieldBase = [
   'focus-visible:shadow-[inset_0_1px_0_var(--sb-spec),0_0_0_3px_var(--sb-ring-glow)]',
   'aria-invalid:border-danger aria-invalid:focus-visible:shadow-[0_0_0_3px_var(--sb-danger-tint)]',
   // Becoming invalid nudges the field once; border and glow ease between states.
-  'transition-[border-color,box-shadow,background-color] duration-200 aria-invalid:animate-nudge motion-reduce:animate-none',
+  'transition-[border-color,box-shadow,background-color] duration-200 aria-invalid:animate-nudge',
   'disabled:cursor-not-allowed disabled:opacity-60',
 ];
 

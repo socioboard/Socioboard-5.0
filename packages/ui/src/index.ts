@@ -1,6 +1,7 @@
 // @socioboard/ui: design tokens (styles.css) and shared React components.
 // Tokens and the visual direction: docs/frontend/design-system.md.
 export { Backdrop } from './backdrop';
+export { createVelocityTracker, project, rubberband } from './gestures';
 export { cn } from './cn';
 export {
   THEME_STORAGE_KEY,

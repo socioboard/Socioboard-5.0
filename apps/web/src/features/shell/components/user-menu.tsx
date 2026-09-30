@@ -134,10 +134,7 @@ export function ThemeToggle() {
         className="text-ink-2 hover:bg-chip hover:text-ink inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-[background-color,color,transform] duration-150 active:scale-90"
       >
         {/* The icon turns as it changes (sun ↔ moon). */}
-        <span
-          key={resolved}
-          className="animate-[sb-scale-in_0.4s_var(--ease-spring)_both] motion-reduce:animate-none"
-        >
+        <span key={resolved} className="animate-scale-in">
           {resolved === 'dark' ? (
             <Sun className="size-4" aria-hidden="true" />
           ) : (

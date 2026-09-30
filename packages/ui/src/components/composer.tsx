@@ -127,7 +127,7 @@ export function AccountPicker({
                     {on && (
                       <span
                         aria-hidden="true"
-                        className="bg-ring ring-canvas animate-scale-in absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full text-white ring-2 motion-reduce:animate-none"
+                        className="bg-ring ring-canvas animate-scale-in absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full text-white ring-2"
                       >
                         <Check className="size-2.5" strokeWidth={3} />
                       </span>
@@ -226,7 +226,7 @@ export function IssueList({ issues, labels, className }: IssueListProps) {
   if (issues.length === 0) {
     return labels?.ready === undefined ? null : (
       <p className={cn('text-success animate-enter flex items-center gap-2 text-sm', className)}>
-        <Check className="animate-scale-in size-4 motion-reduce:animate-none" aria-hidden="true" />
+        <Check className="animate-scale-in size-4" aria-hidden="true" />
         {labels.ready}
       </p>
     );
@@ -329,7 +329,7 @@ export function MediaThumb({
   return (
     <div
       className={cn(
-        'group glass-chip animate-scale-in relative shrink-0 overflow-hidden rounded-[14px] motion-reduce:animate-none',
+        'group glass-chip animate-scale-in relative shrink-0 overflow-hidden rounded-[14px]',
         thumbSizes[size],
         className,
       )}

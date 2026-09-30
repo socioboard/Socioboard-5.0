@@ -52,7 +52,7 @@ export function CommandPalette({ open, onOpenChange, title, ...body }: CommandPa
           aria-describedby={undefined}
           className={cn(
             'glass-float rounded-pane fixed top-[12dvh] left-1/2 z-50 flex max-h-[min(28rem,76dvh)] w-[calc(100vw-2rem)] max-w-xl -translate-x-1/2 flex-col overflow-hidden',
-            'data-[state=open]:animate-dialog-in data-[state=closed]:animate-dialog-out motion-reduce:animate-none',
+            'data-[state=open]:animate-dialog-in data-[state=closed]:animate-dialog-out',
           )}
         >
           <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>

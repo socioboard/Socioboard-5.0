@@ -19,13 +19,10 @@ const router = createRouter({
   // Query owns caching, so loaders always hand off to it.
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
-  // Moving to another page animates the content pane (styles.css, type "page"); changes within a
-  // page (opening a drawer, a tab's filter) don't, and nor does anything under reduced motion.
+  // Moving to another page animates the content pane (styles.css, type "page"; a crossfade under
+  // reduced motion); changes within a page (opening a drawer, a tab's filter) don't.
   defaultViewTransition: {
-    types: ({ pathChanged }) =>
-      pathChanged && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? ['page']
-        : false,
+    types: ({ pathChanged }) => (pathChanged ? ['page'] : false),
   },
 });
 

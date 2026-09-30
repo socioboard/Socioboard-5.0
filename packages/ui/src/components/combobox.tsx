@@ -186,7 +186,7 @@ export function Combobox({
           className={cn(
             'glass-float z-50 flex w-(--radix-popover-trigger-width) min-w-64 flex-col overflow-hidden rounded-[14px]',
             'max-h-[min(22rem,var(--radix-popover-content-available-height,22rem))]',
-            'origin-(--radix-popover-content-transform-origin) data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
+            'origin-(--radix-popover-content-transform-origin) data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out',
           )}
         >
           <div className="border-hair flex items-center gap-2 border-b px-3">

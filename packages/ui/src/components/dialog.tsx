@@ -16,7 +16,7 @@ export function DialogOverlay({
     <DialogPrimitive.Overlay
       className={cn(
         'bg-scrim fixed inset-0 z-50 backdrop-blur-[3px]',
-        'data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out motion-reduce:animate-none',
+        'data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out',
         className,
       )}
       {...props}
@@ -49,7 +49,7 @@ export function DialogContent({
         className={cn(
           'glass rounded-pane fixed top-1/2 left-1/2 z-50 flex max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-lg',
           '-translate-x-1/2 -translate-y-1/2 flex-col gap-4 overflow-y-auto p-6',
-          'data-[state=open]:animate-dialog-in data-[state=closed]:animate-dialog-out motion-reduce:animate-none',
+          'data-[state=open]:animate-dialog-in data-[state=closed]:animate-dialog-out',
           // Its parts follow the dialog in, one after another.
           'stagger-children [--stagger-base:80ms]',
           className,
