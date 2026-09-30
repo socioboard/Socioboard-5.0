@@ -46,7 +46,7 @@ Running it again only adds what is missing. It refuses to run with `NODE_ENV=pro
 | `pnpm lint`                          | ESLint (type-aware)                                               |
 | `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)                  |
 | `pnpm format`                        | Format with Prettier                                              |
-| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services             |
+| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services (MinIO too) |
 | `pnpm e2e`                           | Browser tests of each phase's main flow (needs the MinIO profile) |
 | `pnpm catalog`                       | Component catalog (Ladle) at http://localhost:61000               |
 | `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck           |

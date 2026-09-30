@@ -72,16 +72,13 @@ jobs:
         run: COMPOSE_PROFILES=minio $COMPOSE up -d --wait
       - name: Migrate
         run: pnpm --filter @socioboard/db migrate:deploy
-      - name: Integration tests, storage off
-        run: pnpm --filter @socioboard/core test:int
+      # MinIO is the tests' default storage (packages/core/vitest.setup.ts); an empty S3_BUCKET
+      # turns storage off.
       - name: Integration tests, against MinIO
+        run: pnpm --filter @socioboard/core test:int
+      - name: Integration tests, storage off
         env:
-          S3_ENDPOINT: http://localhost:9000
-          S3_BUCKET: socioboard-media
-          S3_REGION: us-east-1
-          S3_ACCESS_KEY_ID: socioboard
-          S3_SECRET_ACCESS_KEY: socioboard-dev-secret
-          S3_FORCE_PATH_STYLE: 'true'
+          S3_BUCKET: ''
         run: pnpm --filter @socioboard/core test:int
       - name: Service logs on failure
         if: failure()
