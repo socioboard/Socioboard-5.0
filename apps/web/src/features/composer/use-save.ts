@@ -57,6 +57,15 @@ export function useSavePost({
   const idempotencyKey = useRef<string | null>(null);
   // The saved key as the queued saves see it (state is a render behind).
   const savedKeyRef = useRef(savedKey);
+  // Whether the composer is still on screen: a save that finishes after the user left (they chose
+  // "Leave" while it ran) mustn't take them back to the post.
+  const onScreen = useRef(true);
+  useEffect(() => {
+    onScreen.current = true;
+    return () => {
+      onScreen.current = false;
+    };
+  }, []);
 
   const dirty = enabled && hasContent && key !== savedKey;
   const saving = state.kind === 'saving';
@@ -89,7 +98,7 @@ export function useSavePost({
         if (!id) {
           postIdRef.current = post.id;
           setPostId(post.id);
-          onCreated(post.id);
+          if (onScreen.current) onCreated(post.id);
         }
         return post.id;
       } catch (error) {
