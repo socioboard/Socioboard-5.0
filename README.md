@@ -9,15 +9,15 @@ Open-source social media management: publish and schedule to every major network
 - Node 24 (see `.nvmrc`)
 - pnpm 12 (`corepack enable`)
 - Docker for local Postgres, Valkey and Mailpit
-- For media: an S3 dev bucket, or local MinIO if you have no S3 (see `.env.example`)
+- For media: an S3 dev bucket, or the local S3 (RustFS) if you have no S3 (see `.env.example`)
 
 ## Getting started
 
 ```sh
 corepack enable
 pnpm install
-cp .env.example .env      # fill in your S3 dev bucket, or enable the MinIO block
-pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI :8025), MinIO :9000 (console :9001) if enabled
+cp .env.example .env      # fill in your S3 dev bucket, or enable the local S3 block
+pnpm services:up          # Postgres :5440, Valkey :6380, Mailpit :1025 (UI :8025), local S3 :9000 (console :9001) if enabled
 pnpm db:migrate           # create or update the database tables
 pnpm db:seed              # optional: demo users, workspace and media (see below)
 pnpm dev                  # api :3000, web :5173
@@ -33,23 +33,23 @@ Running it again only adds what is missing. It refuses to run with `NODE_ENV=pro
 
 ## Commands
 
-| Command                              | What it does                                                       |
-| ------------------------------------ | ------------------------------------------------------------------ |
-| `pnpm install`                       | Install all workspaces                                             |
-| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit                   |
-| `pnpm services:reset`                | Stop services and delete their data                                |
-| `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data      |
-| `pnpm db:seed`                       | Add development data (safe to run again)                           |
-| `pnpm dev`                           | Run api, worker and web in watch mode                              |
-| `pnpm build`                         | Build every app                                                    |
-| `pnpm typecheck`                     | Type-check every workspace                                         |
-| `pnpm lint`                          | ESLint (type-aware)                                                |
-| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)                   |
-| `pnpm format`                        | Format with Prettier                                               |
-| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services (MinIO too)  |
-| `pnpm e2e`                           | Browser tests of each phase's main flow (S3 from .env, else MinIO) |
-| `pnpm catalog`                       | Component catalog (Ladle) at http://localhost:61000                |
-| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck            |
+| Command                              | What it does                                                          |
+| ------------------------------------ | --------------------------------------------------------------------- |
+| `pnpm install`                       | Install all workspaces                                                |
+| `pnpm services:up` / `services:down` | Start or stop local Postgres, Valkey and Mailpit                      |
+| `pnpm services:reset`                | Stop services and delete their data                                   |
+| `pnpm db:migrate` / `db:studio`      | Apply database migrations (and create new ones) / browse data         |
+| `pnpm db:seed`                       | Add development data (safe to run again)                              |
+| `pnpm dev`                           | Run api, worker and web in watch mode                                 |
+| `pnpm build`                         | Build every app                                                       |
+| `pnpm typecheck`                     | Type-check every workspace                                            |
+| `pnpm lint`                          | ESLint (type-aware)                                                   |
+| `pnpm deps:check`                    | Architecture boundary rules (dependency-cruiser)                      |
+| `pnpm format`                        | Format with Prettier                                                  |
+| `pnpm test` / `pnpm test:int`        | Unit tests / integration tests against local services (local S3 too)  |
+| `pnpm e2e`                           | Browser tests of each phase's main flow (S3 from .env, else local S3) |
+| `pnpm catalog`                       | Component catalog (Ladle) at http://localhost:61000                   |
+| `pnpm check`                         | Everything CI runs: format, lint, boundaries, typecheck               |
 
 ## Layout
 

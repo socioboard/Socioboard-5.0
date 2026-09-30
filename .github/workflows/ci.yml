@@ -1,5 +1,5 @@
 # CI (docs/infra.md, P0-I4): secret scan → lint, types, unit tests, build → integration tests
-# (Postgres, Valkey; storage off, then MinIO) → the four images built and smoke-tested → Playwright
+# (Postgres, Valkey, local S3; then storage off) → the four images built and smoke-tested → Playwright
 # end to end on pull requests to main. Services come from the same compose file as local dev.
 name: CI
 
@@ -30,10 +30,12 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+      # Only this branch's history: the repository also holds Socioboard 5.0's branches, which
+      # aren't this code (and are scanned separately, not on every push).
       - name: Scan the history for secrets
         run: >
           docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.28.0
-          git /repo --redact --no-banner --exit-code 1
+          git /repo --log-opts=HEAD --redact --no-banner --exit-code 1
 
   dco:
     name: Sign-off (DCO)
@@ -84,13 +86,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example .env
-      - name: Start Postgres, Valkey, Mailpit, MinIO
-        run: COMPOSE_PROFILES=minio $COMPOSE up -d --wait
+      - name: Start Postgres, Valkey, Mailpit, local S3
+        run: COMPOSE_PROFILES=local-s3 $COMPOSE up -d --wait
       - name: Migrate
         run: pnpm --filter @socioboard/db migrate:deploy
-      # MinIO is the tests' default storage (packages/core/vitest.setup.ts); an empty S3_BUCKET
-      # turns storage off.
-      - name: Integration tests, against MinIO
+      # The local S3 (RustFS in the dev compose) is the tests' default storage
+      # (packages/core/vitest.setup.ts); an empty S3_BUCKET turns storage off.
+      - name: Integration tests, against the local S3
         run: pnpm --filter @socioboard/core test:int
       - name: Integration tests, storage off
         env:
@@ -166,8 +168,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: cp .env.example .env
-      - name: Start Postgres, Valkey, Mailpit, MinIO
-        run: COMPOSE_PROFILES=minio $COMPOSE up -d --wait
+      - name: Start Postgres, Valkey, Mailpit, local S3
+        run: COMPOSE_PROFILES=local-s3 $COMPOSE up -d --wait
       - name: Migrate
         run: pnpm --filter @socioboard/db migrate:deploy
       - name: Install Chromium

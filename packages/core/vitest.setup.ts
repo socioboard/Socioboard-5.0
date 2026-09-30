@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 
-// Integration tests store files in the dev compose's MinIO (`COMPOSE_PROFILES=minio`), never in
+// Integration tests store files in the dev compose's local S3 (RustFS, `COMPOSE_PROFILES=local-s3`), never in
 // the S3 bucket a developer's .env points at: they're fast and local, and test files don't land
 // in real storage. Set S3_BUCKET yourself to choose otherwise (an empty value turns storage off,
 // as CI's "storage off" run does). Values already in the environment win over these and .env.
@@ -12,7 +12,7 @@ if (process.env.S3_BUCKET === undefined) {
     S3_ACCESS_KEY_ID: 'socioboard',
     S3_SECRET_ACCESS_KEY: 'socioboard-dev-secret',
     S3_FORCE_PATH_STYLE: 'true',
-    // The .env's CDN or tunnel serves the real bucket, not MinIO.
+    // The .env's CDN or tunnel serves the real bucket, not the local one.
     STORAGE_PUBLIC_URL: '',
     MEDIA_PUBLIC_URL: '',
   });

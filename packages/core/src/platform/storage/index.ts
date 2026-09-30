@@ -78,6 +78,11 @@ export function createStorage(config: StorageConfig): Storage {
     ...(config.endpoint ? { endpoint: config.endpoint } : {}),
     forcePathStyle: config.forcePathStyle,
     ...(config.credentials ? { credentials: config.credentials } : {}),
+    // Checksums only where S3 requires them. By default the SDK signs a CRC32 of the request body
+    // into presigned URLs, and for a URL signed before the upload that's the checksum of nothing:
+    // AWS ignores it, but S3-compatible stores that check it (RustFS) refuse every browser upload.
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+    responseChecksumValidation: 'WHEN_REQUIRED',
   });
   const Bucket = config.bucket;
 

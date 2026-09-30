@@ -1,6 +1,6 @@
 # Local services for development. The apps (api, worker, web) run on the
 # host with `pnpm dev`. Media goes to Amazon S3 by default; without an S3
-# account, set COMPOSE_PROFILES=minio in .env to run MinIO here instead.
+# account, set COMPOSE_PROFILES=minio in .env to run a local S3 (RustFS) here instead.
 # Host ports can be changed in .env if they clash with something else.
 name: socioboard-dev
 
@@ -51,38 +51,40 @@ services:
       timeout: 3s
       retries: 10
 
-  # --- Optional: MinIO instead of Amazon S3 (COMPOSE_PROFILES=minio) ---
-  # MinIO no longer publishes to Docker Hub; quay.io is its official registry.
-  minio:
-    profiles: [minio]
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z.hotfix.7aa24e772
+  # --- Optional: a local S3 instead of Amazon S3 (COMPOSE_PROFILES=minio) ---
+  # MinIO stopped publishing its images in 2025, so the local S3 is RustFS, an S3-compatible
+  # server built to replace MinIO (Apache-2.0). The profile keeps the name `minio` so existing
+  # .env files keep working; `local-s3` works too. Same address, keys and bucket as before.
+  s3:
+    profiles: [minio, local-s3]
+    image: rustfs/rustfs:1.0.0
     environment:
-      MINIO_ROOT_USER: socioboard
-      MINIO_ROOT_PASSWORD: socioboard-dev-secret
-      MC_HOST_local: http://socioboard:socioboard-dev-secret@localhost:9000
-    # Starts the server, then creates the media bucket once it is ready.
-    entrypoint:
-      - sh
-      - -c
-      - |
-        minio server /data --console-address :9001 &
-        pid=$$!
-        trap 'kill $$pid' TERM INT
-        until mc ready local >/dev/null 2>&1; do sleep 1; done
-        mc mb --ignore-existing local/socioboard-media
-        wait $$pid
+      RUSTFS_ACCESS_KEY: socioboard
+      RUSTFS_SECRET_KEY: socioboard-dev-secret
+      RUSTFS_CONSOLE_ENABLE: 'true'
     ports:
       - '${MINIO_API_PORT:-9000}:9000'
       - '${MINIO_CONSOLE_PORT:-9001}:9001'
     volumes:
-      - minio-data:/data
+      - s3-data:/data
+    # Healthy once it answers, the media bucket exists, and browsers may upload to it (CORS:
+    # PUT/POST from any local origin, ETag exposed for multipart). Each step is safe to repeat,
+    # so `docker compose up --wait` returns only when storage is ready to use.
     healthcheck:
-      test: ['CMD-SHELL', 'mc ls local/socioboard-media >/dev/null']
+      test:
+        - CMD-SHELL
+        - >-
+          curl -sf http://localhost:9000/health >/dev/null &&
+          curl -s -o /dev/null --aws-sigv4 aws:amz:us-east-1:s3 --user socioboard:socioboard-dev-secret
+          -X PUT http://localhost:9000/socioboard-media &&
+          printf '%s' '<CORSConfiguration><CORSRule><AllowedOrigin>*</AllowedOrigin><AllowedMethod>GET</AllowedMethod><AllowedMethod>HEAD</AllowedMethod><AllowedMethod>PUT</AllowedMethod><AllowedMethod>POST</AllowedMethod><AllowedHeader>*</AllowedHeader><ExposeHeader>ETag</ExposeHeader><MaxAgeSeconds>3000</MaxAgeSeconds></CORSRule></CORSConfiguration>' |
+          curl -sf -o /dev/null --aws-sigv4 aws:amz:us-east-1:s3 --user socioboard:socioboard-dev-secret
+          -X PUT -H 'Content-Type: application/xml' --data-binary @- 'http://localhost:9000/socioboard-media?cors'
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 20
 
 volumes:
   postgres-data:
   valkey-data:
-  minio-data:
+  s3-data:

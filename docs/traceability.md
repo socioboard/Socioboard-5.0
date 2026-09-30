@@ -81,7 +81,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | discovery | [discovery](frontend/areas/discovery.md) | 6.1 · P6-F3 |
 
 ## Tests (end-to-end and cross-module)
-Unit and integration tests live next to the code they test (`__tests__/` in each module or area). Integration tests store files in the dev compose's MinIO (`COMPOSE_PROFILES=minio`), never in the S3 bucket `.env` points at; `S3_BUCKET=` (empty) runs them with storage off. Cross-module E2E suites live in `apps/web/e2e/` and chaos/load tests in `tests/`. `pnpm e2e` runs the app suites against the dev services (storage from `.env`, else MinIO); suites that publish to real networks have their own Playwright project and command (`pnpm --filter @socioboard/web e2e:meta`):
+Unit and integration tests live next to the code they test (`__tests__/` in each module or area). Integration tests store files in the dev compose's local S3 (RustFS, `COMPOSE_PROFILES=local-s3`), never in the S3 bucket `.env` points at; `S3_BUCKET=` (empty) runs them with storage off. Cross-module E2E suites live in `apps/web/e2e/` and chaos/load tests in `tests/`. `pnpm e2e` runs the app suites against the dev services (storage from `.env`, else MinIO); suites that publish to real networks have their own Playwright project and command (`pnpm --filter @socioboard/web e2e:meta`):
 
 | Suite | Path | Phases · Tasks |
 | --- | --- | --- |

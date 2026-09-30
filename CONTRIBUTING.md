@@ -45,12 +45,12 @@ refuses pull requests from forks whose commits aren't signed off.
 Every change comes with tests at the right level, and every bug fix with a test that fails
 without the fix.
 
-| Command         | What                                                               | Needs                                                             |
-| --------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| `pnpm test`     | Unit tests (Vitest; the web app with Testing Library)              | Nothing                                                           |
-| `pnpm test:int` | Integration tests: the real API against Postgres, Valkey and MinIO | `COMPOSE_PROFILES=minio pnpm services:up`, then `pnpm db:migrate` |
-| `pnpm e2e`      | Playwright end to end: each phase's main flow in a browser         | Services up; storage from `.env`, else MinIO                      |
-| `pnpm check`    | Format, lint, architecture boundaries, types                       | Nothing                                                           |
+| Command         | What                                                                             | Needs                                                                |
+| --------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `pnpm test`     | Unit tests (Vitest; the web app with Testing Library)                            | Nothing                                                              |
+| `pnpm test:int` | Integration tests: the real API against Postgres, Valkey and a local S3 (RustFS) | `COMPOSE_PROFILES=local-s3 pnpm services:up`, then `pnpm db:migrate` |
+| `pnpm e2e`      | Playwright end to end: each phase's main flow in a browser                       | Services up; storage from `.env`, else the local S3                  |
+| `pnpm check`    | Format, lint, architecture boundaries, types                                     | Nothing                                                              |
 
 CI runs all of these on every pull request, plus a secret scan and a smoke test of the built
 Docker images. The suite that publishes to real Facebook and Instagram accounts

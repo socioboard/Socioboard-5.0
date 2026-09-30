@@ -1,6 +1,6 @@
 // End-to-end tests (docs/traceability.md: `apps/web/e2e/phase-<n>/`). They drive the real app,
-// API and worker against the dev services (Postgres, Valkey, Mailpit, MinIO: `docker compose -f
-// docker/compose.dev.yml up -d` with COMPOSE_PROFILES=minio). `pnpm e2e` starts the api, worker and
+// API and worker against the dev services (Postgres, Valkey, Mailpit, local S3: `docker compose -f
+// docker/compose.dev.yml up -d` with COMPOSE_PROFILES=local-s3). `pnpm e2e` starts the api, worker and
 // web app unless they are already running.
 import { fileURLToPath } from 'node:url';
 
@@ -24,7 +24,7 @@ function envOr(key: string, fallback: string): string {
 }
 
 // Uploads need storage: the S3 bucket from .env when there is one (it must allow PUT/POST from
-// the app's origin and expose ETag: docs/backend/modules/media.md), else the dev MinIO.
+// the app's origin and expose ETag: docs/backend/modules/media.md), else the dev compose's local S3.
 const storage: Record<string, string> = process.env.S3_BUCKET
   ? {}
   : {
