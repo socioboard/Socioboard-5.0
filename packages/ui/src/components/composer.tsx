@@ -14,6 +14,7 @@ import {
 import { useId, useState, type ReactNode } from 'react';
 
 import { cn } from '../cn';
+import { AnimatePresence, motion, springs } from '../motion';
 import { Avatar } from './display';
 import { NetworkIcon, networkName } from './network-icon';
 import { Spinner } from './spinner';
@@ -105,7 +106,9 @@ export function AccountPicker({
                       if (!blocked) toggle(a.id);
                     }}
                     className={cn(
-                      'relative rounded-full p-0.5 transition-transform outline-none',
+                      'relative rounded-full p-0.5 outline-none',
+                      'transition-[transform,opacity,box-shadow,filter] duration-200 ease-out-soft',
+                      !blocked && 'active:scale-95',
                       'focus-visible:ring-selected motion-reduce:transition-none',
                       !blocked && 'hover:-translate-y-px',
                       on ? 'ring-selected' : 'opacity-70',
@@ -124,7 +127,7 @@ export function AccountPicker({
                     {on && (
                       <span
                         aria-hidden="true"
-                        className="bg-ring ring-canvas absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full text-white ring-2"
+                        className="bg-ring ring-canvas animate-scale-in absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full text-white ring-2 motion-reduce:animate-none"
                       >
                         <Check className="size-2.5" strokeWidth={3} />
                       </span>
@@ -169,7 +172,7 @@ export function CharacterCounter({ count, max, network, className }: CharacterCo
       title={spoken}
       data-state={state}
       className={cn(
-        'inline-flex items-center gap-1 text-xs tabular-nums',
+        'inline-flex items-center gap-1 text-xs tabular-nums transition-colors duration-300',
         state === 'ok' && 'text-ink-3',
         state === 'near' && 'text-warning font-semibold',
         state === 'over' && 'text-danger font-semibold',
@@ -222,8 +225,8 @@ export function IssueList({ issues, labels, className }: IssueListProps) {
   const headingId = useId();
   if (issues.length === 0) {
     return labels?.ready === undefined ? null : (
-      <p className={cn('text-success flex items-center gap-2 text-sm', className)}>
-        <Check className="size-4" aria-hidden="true" />
+      <p className={cn('text-success animate-enter flex items-center gap-2 text-sm', className)}>
+        <Check className="animate-scale-in size-4 motion-reduce:animate-none" aria-hidden="true" />
         {labels.ready}
       </p>
     );
@@ -233,40 +236,49 @@ export function IssueList({ issues, labels, className }: IssueListProps) {
       <h3 id={headingId} className="text-ink-2 text-xs font-semibold">
         {(labels?.title ?? defaultTitle)(errors.length, warnings.length)}
       </h3>
-      <ul className="flex flex-col gap-1">
-        {[...errors, ...warnings].map((issue) => {
-          const Icon = issue.severity === 'error' ? CircleAlert : TriangleAlert;
-          const body = (
-            <>
-              <Icon
-                aria-hidden="true"
-                className={cn(
-                  'mt-0.5 size-4 shrink-0',
-                  issue.severity === 'error' ? 'text-danger' : 'text-warning',
+      <ul className="flex flex-col">
+        <AnimatePresence initial={false}>
+          {[...errors, ...warnings].map((issue) => {
+            const Icon = issue.severity === 'error' ? CircleAlert : TriangleAlert;
+            const body = (
+              <>
+                <Icon
+                  aria-hidden="true"
+                  className={cn(
+                    'mt-0.5 size-4 shrink-0',
+                    issue.severity === 'error' ? 'text-danger' : 'text-warning',
+                  )}
+                />
+                {issue.network && (
+                  <NetworkIcon network={issue.network} size="xs" className="mt-0.5" />
                 )}
-              />
-              {issue.network && (
-                <NetworkIcon network={issue.network} size="xs" className="mt-0.5" />
-              )}
-              <span className="text-ink text-left text-[13px] leading-snug">{issue.message}</span>
-            </>
-          );
-          return (
-            <li key={issue.id}>
-              {issue.onSelect ? (
-                <button
-                  type="button"
-                  onClick={issue.onSelect}
-                  className="hover:bg-chip focus-visible:ring-selected flex w-full items-start gap-2 rounded-lg px-2 py-1.5 outline-none"
-                >
-                  {body}
-                </button>
-              ) : (
-                <div className="flex items-start gap-2 px-2 py-1.5">{body}</div>
-              )}
-            </li>
-          );
-        })}
+                <span className="text-ink text-left text-[13px] leading-snug">{issue.message}</span>
+              </>
+            );
+            return (
+              <motion.li
+                key={issue.id}
+                layout="position"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto', transition: springs.gentle }}
+                exit={{ opacity: 0, height: 0, transition: { duration: 0.16 } }}
+                className="overflow-hidden"
+              >
+                {issue.onSelect ? (
+                  <button
+                    type="button"
+                    onClick={issue.onSelect}
+                    className="hover:bg-chip focus-visible:ring-selected flex w-full items-start gap-2 rounded-lg px-2 py-1.5 transition-colors duration-150 outline-none"
+                  >
+                    {body}
+                  </button>
+                ) : (
+                  <div className="flex items-start gap-2 px-2 py-1.5">{body}</div>
+                )}
+              </motion.li>
+            );
+          })}
+        </AnimatePresence>
       </ul>
     </section>
   );
@@ -312,11 +324,12 @@ export function MediaThumb({
   // A picture that doesn't load (expired link, file gone) falls back to the placeholder instead
   // of the browser's broken-image box.
   const [brokenSrc, setBrokenSrc] = useState<string | null>(null);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const showImage = src !== null && src !== brokenSrc && status !== 'failed';
   return (
     <div
       className={cn(
-        'group glass-chip relative shrink-0 overflow-hidden rounded-[14px]',
+        'group glass-chip animate-scale-in relative shrink-0 overflow-hidden rounded-[14px] motion-reduce:animate-none',
         thumbSizes[size],
         className,
       )}
@@ -325,8 +338,18 @@ export function MediaThumb({
         <img
           src={src}
           alt={alt}
-          className="size-full object-cover"
+          className={cn(
+            'size-full object-cover transition-[opacity,filter,scale] duration-500 ease-out-soft motion-reduce:transition-none',
+            loadedSrc === src ? 'opacity-100' : 'scale-105 opacity-0 blur-sm',
+          )}
           loading="lazy"
+          // A cached picture may be complete before React listens for load.
+          ref={(img) => {
+            if (img?.complete && img.naturalWidth > 0) setLoadedSrc(src);
+          }}
+          onLoad={() => {
+            setLoadedSrc(src);
+          }}
           onError={() => {
             setBrokenSrc(src);
           }}

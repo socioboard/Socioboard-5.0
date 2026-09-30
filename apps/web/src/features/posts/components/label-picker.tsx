@@ -1,10 +1,12 @@
 import type { PostLabel } from '@socioboard/contracts';
 import {
+  AnimatePresence,
   Button,
   Checkbox,
   Input,
   LabelChip,
   LabelSwatch,
+  motion,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -84,21 +86,30 @@ export function LabelPicker({
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      {chosen.map((l) => (
-        <LabelChip
-          key={l.id}
-          name={l.name}
-          color={l.color}
-          {...(disabled
-            ? {}
-            : {
-                onRemove: () => {
-                  toggle(l, false);
-                },
-                removeLabel: t('labels.remove', { name: l.name }),
-              })}
-        />
-      ))}
+      {/* Chips spring in (LabelChip), and on removal fade out as the rest close the gap. */}
+      <AnimatePresence initial={false} mode="popLayout">
+        {chosen.map((l) => (
+          <motion.span
+            key={l.id}
+            layout="position"
+            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.12 } }}
+            className="inline-flex"
+          >
+            <LabelChip
+              name={l.name}
+              color={l.color}
+              {...(disabled
+                ? {}
+                : {
+                    onRemove: () => {
+                      toggle(l, false);
+                    },
+                    removeLabel: t('labels.remove', { name: l.name }),
+                  })}
+            />
+          </motion.span>
+        ))}
+      </AnimatePresence>
       {!disabled && (
         <Popover
           open={open}
@@ -108,7 +119,11 @@ export function LabelPicker({
           }}
         >
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-6 px-2 text-xs">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 text-xs transition-[background-color,color,transform,translate]"
+            >
               <Tag aria-hidden="true" className="size-3.5!" />
               {chosen.length > 0 ? t('labels.edit') : t('labels.add')}
             </Button>

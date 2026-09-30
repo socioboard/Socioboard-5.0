@@ -46,7 +46,7 @@ export function Banner({
   return (
     <div
       role={tone === 'danger' ? 'alert' : 'status'}
-      className={cn(bannerVariants({ tone }), className)}
+      className={cn(bannerVariants({ tone }), 'animate-enter', className)}
     >
       <Icon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">

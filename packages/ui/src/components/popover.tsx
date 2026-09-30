@@ -21,7 +21,7 @@ export function PopoverContent({
         sideOffset={sideOffset}
         className={cn(
           'glass-float z-50 w-72 rounded-[14px] p-3',
-          'data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
+          'origin-(--radix-popover-content-transform-origin) data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
           className,
         )}
         {...props}

@@ -30,6 +30,8 @@ export function DrawerContent({
       <DialogPrimitive.Content
         className={cn(
           'glass fixed z-50 flex flex-col gap-4 overflow-y-auto p-6 motion-reduce:animate-none',
+          // Its parts follow the panel in, one after another.
+          'stagger-children [--stagger-base:120ms]',
           // Phone: bottom sheet.
           'inset-x-2 bottom-2 max-h-[85dvh] rounded-pane',
           'data-[state=open]:animate-sheet-in-bottom data-[state=closed]:animate-sheet-out-bottom',

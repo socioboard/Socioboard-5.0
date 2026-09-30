@@ -1,5 +1,5 @@
 import type { Me } from '@socioboard/contracts';
-import { buttonVariants, cn, Kbd, Tooltip } from '@socioboard/ui';
+import { buttonVariants, cn, Kbd, motion, springs, Tooltip } from '@socioboard/ui';
 import { Link } from '@tanstack/react-router';
 import { PanelLeftClose, PanelLeftOpen, Search, SquarePen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -93,15 +93,27 @@ export function Sidebar({
                 to={item.to}
                 params={{ slug: membership.workspace.slug }}
                 className={cn(
-                  'text-ink-2 hover:bg-chip hover:text-ink flex h-[34px] items-center gap-2.5 rounded-control border border-transparent px-2.5 text-[13px] font-medium',
-                  'data-[status=active]:bg-glass data-[status=active]:border-edge data-[status=active]:text-ink',
-                  'data-[status=active]:shadow-[inset_0_1px_0_var(--sb-spec),0_1px_2px_rgb(0_0_0/0.06)]',
+                  'text-ink-2 hover:text-ink relative isolate flex h-[34px] items-center gap-2.5 rounded-control px-2.5 text-[13px] font-medium transition-colors duration-200',
+                  'hover:bg-chip data-[status=active]:text-ink data-[status=active]:hover:bg-transparent',
                   collapsed && 'justify-center px-0',
                 )}
                 {...(collapsed ? { 'aria-label': t(item.label) } : {})}
               >
-                <item.icon className="size-4 shrink-0" aria-hidden="true" />
-                {!collapsed && t(item.label)}
+                {({ isActive }) => (
+                  <>
+                    {/* The highlight glides from the page left to the page opened. */}
+                    {isActive && (
+                      <motion.span
+                        layoutId="sb-nav-active"
+                        aria-hidden="true"
+                        className="bg-glass border-edge rounded-control absolute inset-0 -z-10 border shadow-[inset_0_1px_0_var(--sb-spec),0_1px_2px_rgb(0_0_0/0.06)]"
+                        transition={springs.snappy}
+                      />
+                    )}
+                    <item.icon className="size-4 shrink-0" aria-hidden="true" />
+                    {!collapsed && t(item.label)}
+                  </>
+                )}
               </Link>
             </Tooltip>
           </li>

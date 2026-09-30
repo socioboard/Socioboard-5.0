@@ -45,7 +45,7 @@ export function SelectContent({
         sideOffset={6}
         className={cn(
           'glass-float z-50 max-h-(--radix-select-content-available-height) min-w-(--radix-select-trigger-width) overflow-hidden rounded-[14px] p-1',
-          'data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
+          'origin-(--radix-select-content-transform-origin) data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
           className,
         )}
         {...props}

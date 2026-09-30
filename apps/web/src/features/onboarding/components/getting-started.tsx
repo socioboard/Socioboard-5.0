@@ -72,7 +72,7 @@ export function GettingStarted() {
   return (
     <section
       aria-labelledby="getting-started"
-      className="glass-chip rounded-pane flex w-full max-w-xl flex-col gap-4 p-5"
+      className="glass-chip rounded-pane stagger-children flex w-full max-w-xl flex-col gap-4 p-5"
     >
       <div className="flex items-start gap-3">
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -91,11 +91,16 @@ export function GettingStarted() {
             <span
               className={cn(
                 'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
+                'transition-colors duration-300',
                 s.done ? 'bg-success text-white' : 'border-hair-strong text-ink-3 border',
               )}
               aria-hidden="true"
             >
-              {s.done ? <Check className="size-3.5" /> : i + 1}
+              {s.done ? (
+                <Check className="animate-scale-in size-3.5 motion-reduce:animate-none" />
+              ) : (
+                i + 1
+              )}
             </span>
             <span
               className={cn(

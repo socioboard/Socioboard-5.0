@@ -22,7 +22,7 @@ export function DropdownMenuContent({
         className={cn(
           'glass-float z-50 min-w-56 overflow-hidden rounded-[14px] p-1',
           'max-h-(--radix-dropdown-menu-content-available-height) overflow-y-auto',
-          'data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
+          'origin-(--radix-dropdown-menu-content-transform-origin) data-[state=open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
           className,
         )}
         {...props}

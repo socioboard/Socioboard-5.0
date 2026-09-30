@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
-import type { KeyboardEvent, ReactNode } from 'react';
+import type { CSSProperties, KeyboardEvent, ReactNode } from 'react';
 
 import { cn } from '../cn';
 import { Button } from './button';
@@ -50,6 +50,9 @@ export interface DataTableProps<T> {
   labels?: Partial<DataTableLabels>;
   className?: string;
 }
+
+/** Rows stagger in groups of this many, so rows added by "Load more" arrive quickly too. */
+const PAGE_STAGGER = 25;
 
 const defaultLabels: DataTableLabels = {
   loadMore: 'Load more',
@@ -154,11 +157,13 @@ export function DataTable<T>({
             ))}
           {!loading &&
             !error &&
-            rows.map((row) => (
+            rows.map((row, index) => (
               <tr
                 key={getRowId(row)}
+                // Rows rise in one after another as they arrive (a page, or "Load more").
+                style={{ '--i': index % PAGE_STAGGER } as CSSProperties}
                 className={cn(
-                  'border-hair border-b transition-colors last:border-b-0',
+                  'border-hair animate-enter border-b transition-colors duration-200 last:border-b-0',
                   onRowClick && 'hover:bg-chip focus-visible:bg-chip cursor-pointer',
                 )}
                 {...(onRowClick

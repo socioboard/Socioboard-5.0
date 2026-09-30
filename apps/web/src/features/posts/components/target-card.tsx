@@ -1,5 +1,5 @@
 import { apiRoutes, type PostDetails, type PublishAttempt } from '@socioboard/contracts';
-import { Button, Card, cn, networkName, toast } from '@socioboard/ui';
+import { Button, Card, cn, Collapse, networkName, staggerStyle, Swap, toast } from '@socioboard/ui';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronDown, ExternalLink, RotateCw } from 'lucide-react';
@@ -86,10 +86,12 @@ export function TargetCard({
         <PostStatusChip status={target.status} className="shrink-0" />
       </div>
 
-      <TargetState target={target} network={network} />
+      <Swap id={target.status}>
+        <TargetState target={target} network={network} />
+      </Swap>
 
       {error && (
-        <div className="bg-danger-tint rounded-control flex flex-col gap-1.5 px-3 py-2.5 text-[13px]">
+        <div className="bg-danger-tint rounded-control animate-enter flex flex-col gap-1.5 px-3 py-2.5 text-[13px]">
           <p className="text-ink leading-relaxed">
             {gone ? t('target.accountGone') : t(`target.errors.${error.kind}`, { network })}
           </p>
@@ -102,7 +104,7 @@ export function TargetCard({
       )}
 
       {failed && (
-        <div className="flex flex-wrap gap-2">
+        <div className="animate-enter flex flex-wrap gap-2 [--i:1]">
           {can('posts:publish') && !gone && (
             <Button
               size="sm"
@@ -203,21 +205,25 @@ function History({ attempts, defaultOpen }: { attempts: PublishAttempt[]; defaul
         onClick={() => {
           setOpen((o) => !o);
         }}
-        className="text-ink-2 hover:text-ink -mx-1 flex items-center gap-1 self-start rounded-md px-1 py-1 text-xs font-medium"
+        className="text-ink-2 hover:text-ink -mx-1 flex items-center gap-1 self-start rounded-md px-1 py-1 text-xs font-medium transition-colors"
       >
         <ChevronDown
           className={cn(
-            'size-3.5 transition-transform motion-reduce:transition-none',
+            'ease-spring size-3.5 transition-transform duration-300 motion-reduce:transition-none',
             open || '-rotate-90',
           )}
           aria-hidden="true"
         />
         {t('target.historyToggle', { count: attempts.length })}
       </button>
-      {open && (
-        <ol id={id} aria-label={t('target.history')} className="mt-2 flex flex-col">
+      <Collapse open={open} id={id}>
+        <ol aria-label={t('target.history')} className="flex flex-col pt-2">
           {oldestFirst.map((a, i) => (
-            <li key={a.id} className="relative flex gap-3 pb-3 last:pb-0">
+            <li
+              key={a.id}
+              className="animate-enter relative flex gap-3 pb-3 last:pb-0"
+              style={staggerStyle(i)}
+            >
               {/* The line joining the dots runs down to the next attempt. */}
               {i < oldestFirst.length - 1 && (
                 <span
@@ -249,7 +255,7 @@ function History({ attempts, defaultOpen }: { attempts: PublishAttempt[]; defaul
             </li>
           ))}
         </ol>
-      )}
+      </Collapse>
     </div>
   );
 }

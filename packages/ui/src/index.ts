@@ -4,12 +4,28 @@ export { Backdrop } from './backdrop';
 export { cn } from './cn';
 export {
   THEME_STORAGE_KEY,
+  switchTheme,
   ThemeProvider,
   useTheme,
   type ResolvedTheme,
   type ThemePreference,
 } from './theme';
 
+export {
+  AnimatePresence,
+  Collapse,
+  LayoutGroup,
+  Leaving,
+  listItem,
+  listItemMotion,
+  motion,
+  MotionProvider,
+  skipMotionInTests,
+  springs,
+  staggerStyle,
+  Swap,
+  useChangeMotion,
+} from './motion';
 export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
 export { Card } from './components/card';

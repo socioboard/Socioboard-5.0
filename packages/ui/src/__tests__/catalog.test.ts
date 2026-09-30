@@ -31,6 +31,7 @@ function exportedComponents(): string[] {
 // the scrim other overlays render for you.
 const PROVIDED = new Set([
   'ThemeProvider',
+  'MotionProvider',
   'TooltipProvider',
   'Toaster',
   'Backdrop',

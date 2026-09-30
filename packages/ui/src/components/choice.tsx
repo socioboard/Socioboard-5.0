@@ -32,13 +32,14 @@ export function Checkbox({
         {...(description ? { 'aria-describedby': descriptionId } : {})}
         className={cn(
           'glass-chip mt-0.5 flex size-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px]',
+          'transition-[background-color,border-color,transform] duration-200 ease-out-soft not-disabled:active:scale-90 motion-reduce:transition-none',
           'data-[state=checked]:border-ring data-[state=checked]:bg-ring data-[state=checked]:text-canvas',
           'disabled:cursor-not-allowed disabled:opacity-50',
           focusRing,
         )}
         {...props}
       >
-        <CheckboxPrimitive.Indicator>
+        <CheckboxPrimitive.Indicator className="data-[state=checked]:animate-scale-in motion-reduce:animate-none">
           <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Root>
@@ -61,7 +62,7 @@ export function Switch({ className, ...props }: ComponentProps<typeof SwitchPrim
   return (
     <SwitchPrimitive.Root
       className={cn(
-        'glass-chip relative inline-flex h-6 w-10 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors',
+        'glass-chip group relative inline-flex h-6 w-10 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-200',
         'data-[state=checked]:border-ring data-[state=checked]:bg-ring',
         'disabled:cursor-not-allowed disabled:opacity-50',
         focusRing,
@@ -71,8 +72,8 @@ export function Switch({ className, ...props }: ComponentProps<typeof SwitchPrim
     >
       <SwitchPrimitive.Thumb
         className={cn(
-          'block size-[18px] rounded-full bg-white shadow-[0_1px_3px_rgb(0_0_0/0.25)] transition-transform duration-150',
-          'data-[state=checked]:translate-x-4 motion-reduce:transition-none',
+          'block h-[18px] w-[18px] rounded-full bg-white shadow-[0_1px_3px_rgb(0_0_0/0.25)] transition-[transform,width] duration-300 ease-spring',
+          'group-active:w-[22px] data-[state=checked]:translate-x-4 data-[state=checked]:group-active:translate-x-3 motion-reduce:transition-none',
         )}
       />
     </SwitchPrimitive.Root>
@@ -108,6 +109,7 @@ export function RadioCard({
       {...(description ? { 'aria-describedby': `${id}-description` } : {})}
       className={cn(
         'glass-chip rounded-control flex w-full cursor-pointer items-start gap-3 p-3 text-left',
+        'transition-[box-shadow,border-color,transform] duration-200 ease-out-soft not-disabled:active:scale-[0.99]',
         'hover:border-hair-strong data-[state=checked]:ring-selected',
         'disabled:cursor-not-allowed disabled:opacity-50',
         focusRing,
@@ -116,7 +118,7 @@ export function RadioCard({
       {...props}
     >
       <span className="border-hair-strong mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border">
-        <RadioPrimitive.Indicator className="bg-ring size-2 rounded-full" />
+        <RadioPrimitive.Indicator className="bg-ring data-[state=checked]:animate-scale-in size-2 rounded-full motion-reduce:animate-none" />
       </span>
       <span className="flex flex-col gap-0.5">
         <span id={`${id}-label`} className="text-ink text-sm font-semibold">

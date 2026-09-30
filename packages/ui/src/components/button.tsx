@@ -8,7 +8,9 @@ import { Spinner } from './spinner';
 export const buttonVariants = cva(
   [
     'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-semibold select-none',
-    'transition-[background-color,box-shadow,filter,color] duration-150',
+    // Hovers ease in; a press gives a little (scale), faster going down than coming back.
+    'transition-[background-color,box-shadow,filter,color,transform] duration-150 ease-out-soft',
+    'not-disabled:active:scale-[0.97] not-disabled:active:duration-75 motion-reduce:active:scale-100',
     // Disabled: dimmed, the not-allowed cursor, and no hover change (so it doesn't look clickable).
     'disabled:cursor-not-allowed disabled:opacity-50 aria-busy:cursor-progress',
     '[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',

@@ -24,7 +24,7 @@ export function ProgressBar({ value, label, tone = 'default', className }: Progr
     >
       <div
         className={cn(
-          'h-full rounded-full transition-[width] duration-300 ease-out motion-reduce:transition-none',
+          'h-full rounded-full transition-[width] duration-500 ease-out-soft motion-reduce:transition-none',
           tone === 'danger' ? 'bg-danger' : 'bg-ring',
           !known && 'animate-indeterminate w-1/3',
         )}

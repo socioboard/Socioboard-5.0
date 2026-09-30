@@ -1,4 +1,4 @@
-import { Button, MediaThumb } from '@socioboard/ui';
+import { AnimatePresence, Button, MediaThumb, motion, springs } from '@socioboard/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ImagePlus, ImageUp, RotateCcw, X } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -75,89 +75,103 @@ export function MediaStrip({
   return (
     <div className="flex flex-col gap-2">
       <ul aria-label={label} className="flex flex-wrap gap-2.5">
-        {mediaIds.map((id, i) => {
-          const q = assets[i];
-          const asset = q?.data;
-          const gone = q?.error instanceof ApiError && q.error.status === 404;
-          const name = asset ? (asset.altText ?? asset.name) : gone ? t('media.deleted') : '…';
-          return (
-            <li key={id} className="flex flex-col items-center gap-1">
-              <MediaThumb
-                src={asset?.thumbnailUrl ?? null}
-                alt={name}
-                kind={asset?.kind ?? 'image'}
-                durationSec={asset?.durationSec ?? null}
-                status={
-                  gone || asset?.status === 'failed'
-                    ? 'failed'
-                    : asset && isPending(asset)
-                      ? 'processing'
-                      : 'ready'
-                }
-                {...(disabled
-                  ? {}
-                  : {
-                      onRemove: () => {
-                        onChange(mediaIds.filter((m) => m !== id));
-                      },
-                      removeLabel: t('media.remove'),
-                    })}
-              />
-              {!disabled && i > 0 && (
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="size-6"
-                  aria-label={`${t('media.moveEarlier')}: ${name}`}
-                  onClick={() => {
-                    move(i);
-                  }}
-                >
-                  <ArrowLeft className="size-3.5" aria-hidden="true" />
-                </Button>
-              )}
-            </li>
-          );
-        })}
-        {uploads.map((u) => (
-          <li key={u.id} className="flex flex-col items-center gap-1">
-            <MediaThumb
-              src={null}
-              alt={u.file.name}
-              kind={u.file.type.startsWith('video/') ? 'video' : 'image'}
-              status={u.status === 'failed' || u.status === 'rejected' ? 'failed' : 'uploading'}
-            />
-            {(u.status === 'failed' || u.status === 'rejected') && (
-              <span className="flex items-center gap-0.5">
-                {u.status === 'failed' && (
+        <AnimatePresence initial={false} mode="popLayout">
+          {mediaIds.map((id, i) => {
+            const q = assets[i];
+            const asset = q?.data;
+            const gone = q?.error instanceof ApiError && q.error.status === 404;
+            const name = asset ? (asset.altText ?? asset.name) : gone ? t('media.deleted') : '…';
+            return (
+              <motion.li
+                key={id}
+                layout="position"
+                transition={springs.gentle}
+                exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.14 } }}
+                className="flex flex-col items-center gap-1"
+              >
+                <MediaThumb
+                  src={asset?.thumbnailUrl ?? null}
+                  alt={name}
+                  kind={asset?.kind ?? 'image'}
+                  durationSec={asset?.durationSec ?? null}
+                  status={
+                    gone || asset?.status === 'failed'
+                      ? 'failed'
+                      : asset && isPending(asset)
+                        ? 'processing'
+                        : 'ready'
+                  }
+                  {...(disabled
+                    ? {}
+                    : {
+                        onRemove: () => {
+                          onChange(mediaIds.filter((m) => m !== id));
+                        },
+                        removeLabel: t('media.remove'),
+                      })}
+                />
+                {!disabled && i > 0 && (
                   <Button
                     variant="ghost"
                     size="icon-sm"
                     className="size-6"
-                    aria-label={`${t('media.retry')}: ${u.file.name}`}
+                    aria-label={`${t('media.moveEarlier')}: ${name}`}
                     onClick={() => {
-                      retryUpload(u.id);
+                      move(i);
                     }}
                   >
-                    <RotateCcw className="size-3.5" aria-hidden="true" />
+                    <ArrowLeft className="size-3.5" aria-hidden="true" />
                   </Button>
                 )}
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="size-6"
-                  aria-label={`${t('media.dismiss')}: ${u.file.name}`}
-                  onClick={() => {
-                    dismissUpload(u.id);
-                    onUploadIds((m) => m.filter((x) => x !== u.id));
-                  }}
-                >
-                  <X className="size-3.5" aria-hidden="true" />
-                </Button>
-              </span>
-            )}
-          </li>
-        ))}
+              </motion.li>
+            );
+          })}
+          {uploads.map((u) => (
+            <motion.li
+              key={u.id}
+              layout="position"
+              transition={springs.gentle}
+              exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.14 } }}
+              className="flex flex-col items-center gap-1"
+            >
+              <MediaThumb
+                src={null}
+                alt={u.file.name}
+                kind={u.file.type.startsWith('video/') ? 'video' : 'image'}
+                status={u.status === 'failed' || u.status === 'rejected' ? 'failed' : 'uploading'}
+              />
+              {(u.status === 'failed' || u.status === 'rejected') && (
+                <span className="flex items-center gap-0.5">
+                  {u.status === 'failed' && (
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="size-6"
+                      aria-label={`${t('media.retry')}: ${u.file.name}`}
+                      onClick={() => {
+                        retryUpload(u.id);
+                      }}
+                    >
+                      <RotateCcw className="size-3.5" aria-hidden="true" />
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="size-6"
+                    aria-label={`${t('media.dismiss')}: ${u.file.name}`}
+                    onClick={() => {
+                      dismissUpload(u.id);
+                      onUploadIds((m) => m.filter((x) => x !== u.id));
+                    }}
+                  >
+                    <X className="size-3.5" aria-hidden="true" />
+                  </Button>
+                </span>
+              )}
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
       {uploads.some((u) => u.status === 'failed' || u.status === 'rejected') && (
         <ul className="text-danger flex flex-col gap-0.5 text-xs" role="alert">

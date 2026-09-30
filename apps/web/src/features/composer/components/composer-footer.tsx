@@ -1,4 +1,4 @@
-import { Button, cn, Spinner } from '@socioboard/ui';
+import { Button, cn, Spinner, Swap } from '@socioboard/ui';
 import { CircleAlert, CircleCheck, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -38,6 +38,16 @@ export function ComposerFooter({
 }) {
   const { t } = useTranslation('composer');
   const offerPublish = canPublish && !reviewRequired;
+  const statusKey =
+    state.kind === 'saving' || state.kind === 'error'
+      ? state.kind
+      : dirty
+        ? 'dirty'
+        : state.kind === 'saved'
+          ? `saved-${String(state.at.getTime())}`
+          : saved
+            ? 'all'
+            : 'none';
   const publishBlocked = noAccounts || blocked > 0;
   const why = !canPublish
     ? t('footer.cantPublish')
@@ -51,36 +61,39 @@ export function ComposerFooter({
 
   return (
     <div className="glass-float rounded-pane flex flex-wrap items-center gap-x-4 gap-y-2 p-3 sm:px-5">
-      <p
+      <div
         className={cn(
-          'flex min-w-0 flex-1 items-center gap-1.5 text-[13px]',
+          'relative flex min-w-0 flex-1 text-[13px] transition-colors duration-300',
           state.kind === 'error' ? 'text-danger' : 'text-ink-3',
         )}
         role="status"
       >
-        {state.kind === 'saving' ? (
-          <>
-            <Spinner className="size-3.5" />
-            {t('footer.saving')}
-          </>
-        ) : state.kind === 'error' ? (
-          <>
-            <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
-            <span>
-              {t('footer.saveFailed')} {errorMessage(state.error)}
-            </span>
-          </>
-        ) : dirty ? (
-          t('footer.unsaved')
-        ) : state.kind === 'saved' ? (
-          <>
-            <CircleCheck className="text-success size-4" aria-hidden="true" />
-            {t('footer.savedAt', { time: formatTime(state.at.toISOString()) })}
-          </>
-        ) : saved ? (
-          t('footer.allSaved')
-        ) : null}
-      </p>
+        {/* Where the draft stands changes in place: the old words lift away as the new arrive. */}
+        <Swap id={statusKey} className="flex min-w-0 items-center gap-1.5">
+          {state.kind === 'saving' ? (
+            <>
+              <Spinner className="size-3.5" />
+              {t('footer.saving')}
+            </>
+          ) : state.kind === 'error' ? (
+            <>
+              <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
+              <span>
+                {t('footer.saveFailed')} {errorMessage(state.error)}
+              </span>
+            </>
+          ) : dirty ? (
+            t('footer.unsaved')
+          ) : state.kind === 'saved' ? (
+            <>
+              <CircleCheck className="text-success size-4" aria-hidden="true" />
+              {t('footer.savedAt', { time: formatTime(state.at.toISOString()) })}
+            </>
+          ) : saved ? (
+            t('footer.allSaved')
+          ) : null}
+        </Swap>
+      </div>
       <div className="flex flex-wrap items-center justify-end gap-2">
         {why && <span className="text-ink-3 text-xs">{why}</span>}
         <Button onClick={onSave} disabled={!dirty && state.kind !== 'error'}>
@@ -89,11 +102,19 @@ export function ComposerFooter({
         {offerPublish && (
           <Button
             variant="primary"
+            className="group"
             onClick={onPublish}
             disabled={publishBlocked || publishing}
             aria-busy={publishing || undefined}
           >
-            {publishing ? <Spinner className="size-4" /> : <Send aria-hidden="true" />}
+            {publishing ? (
+              <Spinner className="size-4" />
+            ) : (
+              <Send
+                aria-hidden="true"
+                className="transition-transform duration-300 ease-out-soft group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            )}
             {publishing ? t('footer.publishing') : t('footer.publishNow')}
           </Button>
         )}

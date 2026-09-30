@@ -74,6 +74,7 @@ export function LabelChip({
     <span
       className={cn(
         'inline-flex h-6 max-w-48 shrink-0 items-center gap-1.5 rounded-md px-2 text-xs font-semibold',
+        'animate-scale-in motion-reduce:animate-none',
         LABEL_COLORS[color].chip,
         onRemove && 'pr-1',
         className,

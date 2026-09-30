@@ -31,7 +31,7 @@ export function AssetTile({
   const pending = isPending(asset);
   const kindLabel = t(`kinds.${asset.kind}`);
   return (
-    <Card selected={selected} className="group">
+    <Card selected={selected} className="group hover-lift h-full">
       <button
         type="button"
         onClick={onOpen}
@@ -45,7 +45,7 @@ export function AssetTile({
               // Decorative here: the button is named by the file name below, not the alt text.
               alt=""
               loading="lazy"
-              className="size-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
+              className="size-full object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.04] motion-reduce:transition-none"
             />
           ) : (
             <span className="text-ink-3 flex size-full flex-col items-center justify-center gap-2 text-xs">

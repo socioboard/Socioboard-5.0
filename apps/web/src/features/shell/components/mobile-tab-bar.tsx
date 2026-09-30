@@ -1,5 +1,12 @@
 import type { Me } from '@socioboard/contracts';
-import { buttonVariants, Drawer, DrawerContent, DrawerTitle } from '@socioboard/ui';
+import {
+  buttonVariants,
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  motion,
+  springs,
+} from '@socioboard/ui';
 import { Link } from '@tanstack/react-router';
 import { Menu, Search, SquarePen } from 'lucide-react';
 import { useState } from 'react';
@@ -43,10 +50,22 @@ export function MobileTabBar({
             key={item.id}
             to={item.to}
             params={{ slug: membership.workspace.slug }}
-            className={`${tab} data-[status=active]:bg-chip data-[status=active]:text-ink`}
+            className={`${tab} relative isolate transition-colors duration-200 data-[status=active]:text-ink`}
           >
-            <item.icon className="size-5" aria-hidden="true" />
-            {t(item.label)}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <motion.span
+                    layoutId="sb-tab-active"
+                    aria-hidden="true"
+                    className="bg-chip rounded-control absolute inset-0 -z-10"
+                    transition={springs.snappy}
+                  />
+                )}
+                <item.icon className="size-5" aria-hidden="true" />
+                {t(item.label)}
+              </>
+            )}
           </Link>
         ))}
         <button type="button" className={tab} onClick={onSearch} aria-label={t('search.button')}>

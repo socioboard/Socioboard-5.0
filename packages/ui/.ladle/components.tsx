@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { Backdrop } from '../src/backdrop';
 import { Toaster } from '../src/components/toast';
 import { TooltipProvider } from '../src/components/tooltip';
+import { MotionProvider } from '../src/motion';
 import { ThemeProvider, useTheme } from '../src/theme';
 
 /** Follows Ladle's light/dark switch, so every story renders in the theme it shows. */
@@ -21,10 +22,12 @@ function SyncTheme({ theme }: { theme: 'light' | 'dark' | 'auto' }) {
 export const Provider: GlobalProvider = ({ children, globalState }) => (
   <ThemeProvider>
     <SyncTheme theme={globalState.theme} />
-    <TooltipProvider>
-      <Backdrop />
-      <div className="relative min-h-dvh p-6 sm:p-10">{children}</div>
-      <Toaster />
-    </TooltipProvider>
+    <MotionProvider>
+      <TooltipProvider>
+        <Backdrop />
+        <div className="relative min-h-dvh p-6 sm:p-10">{children}</div>
+        <Toaster />
+      </TooltipProvider>
+    </MotionProvider>
   </ThemeProvider>
 );

@@ -95,6 +95,51 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
+type TransitionDocument = Document & {
+  startViewTransition?: (options: { update: () => void; types: string[] }) => unknown;
+};
+
+/**
+ * Switches to `next` with the new theme revealed in a circle growing from `from` (the toggle's
+ * centre), where the browser has typed view transitions and motion isn't reduced; otherwise it
+ * just switches.
+ */
+export function switchTheme(
+  next: ResolvedTheme,
+  setPreference: (preference: ThemePreference) => void,
+  from?: { x: number; y: number },
+) {
+  const apply = () => {
+    // The class changes at once, so the new snapshot already has the new colours.
+    document.documentElement.classList.toggle('dark', next === 'dark');
+    setPreference(next);
+  };
+  const doc = document as TransitionDocument;
+  const reduced =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (typeof doc.startViewTransition !== 'function' || reduced) {
+    apply();
+    return;
+  }
+  const root = document.documentElement.style;
+  const x = from?.x ?? window.innerWidth / 2;
+  const y = from?.y ?? window.innerHeight / 2;
+  const radius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  );
+  root.setProperty('--sb-reveal-x', `${String(x)}px`);
+  root.setProperty('--sb-reveal-y', `${String(y)}px`);
+  root.setProperty('--sb-reveal-r', `${String(radius)}px`);
+  try {
+    doc.startViewTransition({ update: apply, types: ['theme'] });
+  } catch {
+    // A browser without typed transitions: switch without the reveal.
+    apply();
+  }
+}
+
 export function useTheme(): ThemeState {
   const value = useContext(ThemeContext);
   if (!value) throw new Error('useTheme must be used inside <ThemeProvider>');
