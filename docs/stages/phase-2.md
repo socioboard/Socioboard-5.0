@@ -5,7 +5,7 @@
 **Modules:** [scheduling](../backend/modules/scheduling.md), [publishing](../backend/modules/publishing.md) (hardening), [social-accounts](../backend/modules/social-accounts.md) (token refresh), [notifications](../backend/modules/notifications.md), [admin](../backend/modules/admin.md) (v1) · **Areas:** [calendar](../frontend/areas/calendar.md), [composer](../frontend/areas/composer.md) (schedule controls), [notifications](../frontend/areas/notifications.md), [admin-console](../frontend/areas/admin-console.md) (v1)
 
 ## Contracts
-- [ ] P2-C1 Schedule, reschedule, queue, recurrence, calendar range, queue slots
+- [x] P2-C1 Schedule, reschedule, queue, recurrence, calendar range, queue slots
 - [ ] P2-C2 Notifications, preferences, socket event payloads
 - [ ] P2-C3 Admin v1: overview-lite, publishing health, failed targets, expiring accounts
 

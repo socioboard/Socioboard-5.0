@@ -86,7 +86,7 @@ export const postQuery = (workspaceId: string, postId: string) =>
 
 /**
  * Keeps the cache in step after the server answered with a post (a save, publish or retry). Those
- * answers don't carry the publishing history, so the history already known is kept; a post being
+ * answers don't carry the publishing history or the recurrence, so what's already known is kept; a post being
  * sent is re-asked for every few seconds (postQuery), which brings the new attempts. Lists are
  * marked stale.
  */
@@ -98,6 +98,7 @@ export function rememberPost(queryClient: QueryClient, workspaceId: string, post
       ...t,
       history: old?.targets.find((o) => o.id === t.id)?.history ?? [],
     })),
+    recurrence: old?.recurrence ?? null,
   }));
   void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
 }

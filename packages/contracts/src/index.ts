@@ -10,6 +10,8 @@ export * from './auth';
 export * from './media';
 export * from './networks';
 export * from './posts';
+export * from './recurrence';
+export * from './scheduling';
 export * from './social-accounts';
 export * from './workspaces';
 
@@ -17,6 +19,7 @@ import { authRoutes } from './auth';
 import { mediaRoutes } from './media';
 import { networkRoutes } from './networks';
 import { postRoutes } from './posts';
+import { schedulingRoutes } from './scheduling';
 import { socialAccountRoutes } from './social-accounts';
 import { workspaceRoutes } from './workspaces';
 
@@ -28,4 +31,5 @@ export const apiRoutes = {
   networks: networkRoutes,
   socialAccounts: socialAccountRoutes,
   posts: postRoutes,
+  scheduling: schedulingRoutes,
 };
