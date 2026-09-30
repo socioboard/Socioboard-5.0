@@ -36,7 +36,7 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { accountsQuery, networksQuery } from '../../accounts';
 import { workspaceQuery } from '../../settings';
-import { postQuery } from '../../posts';
+import { LabelPicker, postQuery } from '../../posts';
 import {
   contentFor,
   draftReducer,
@@ -442,6 +442,23 @@ function Composer({
                       dispatch({ type: 'firstComment', firstComment });
                     }}
                   />
+                  {/* Labels organise the posts list; they're saved with the post. */}
+                  <div
+                    role="group"
+                    aria-labelledby={`${panelId}-labels`}
+                    className="flex flex-col gap-1.5"
+                  >
+                    <span id={`${panelId}-labels`} className="text-ink text-sm font-medium">
+                      {t('labels')}
+                    </span>
+                    <LabelPicker
+                      value={draft.labelIds}
+                      disabled={readOnly}
+                      onChange={(labelIds) => {
+                        dispatch({ type: 'labels', labelIds });
+                      }}
+                    />
+                  </div>
                 </>
               )}
               {active === 'instagram' && (

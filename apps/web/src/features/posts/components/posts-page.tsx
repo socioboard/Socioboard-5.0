@@ -4,24 +4,38 @@ import {
   Button,
   DataTable,
   EmptyState,
+  LabelChip,
+  LabelSwatch,
   NavTabs,
   PageHeader,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   type Column,
 } from '@socioboard/ui';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { FileText, Images, Plus } from 'lucide-react';
+import { FileText, Images, Plus, Tags } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { POST_TABS, postListQuery, type PostTab } from '../api';
+import { labelsOf, labelsQuery } from '../labels';
+import { ManageLabelsDialog } from './manage-labels-dialog';
 import { AccountStack, PostStatusChip, PostWhen } from './post-bits';
 
 export interface PostsSearch {
   /** Which tab is open; undefined for All. */
   tab?: PostTab | undefined;
+  /** Only posts with this label. */
+  label?: string | undefined;
 }
+
+type PostLabels = ReturnType<typeof labelsOf>;
 
 const TABS = Object.keys(POST_TABS) as PostTab[];
 
@@ -29,21 +43,31 @@ const TABS = Object.keys(POST_TABS) as PostTab[];
  * `/w/:slug/posts` (docs/frontend/areas/posts.md): every post of the workspace, newest first, by
  * status. A row opens the post's details.
  */
-export function PostsPage({ search }: { search: PostsSearch }) {
+export function PostsPage({
+  search,
+  onSearchChange,
+}: {
+  search: PostsSearch;
+  onSearchChange: (patch: Partial<PostsSearch>) => void;
+}) {
   const { t } = useTranslation('posts');
   const { workspace } = useWorkspace();
   const can = useCan();
   const navigate = useNavigate();
   const tab = search.tab ?? 'all';
-  const posts = useInfiniteQuery(postListQuery(workspace.id, tab));
+  const labels = useQuery(labelsQuery(workspace.id));
+  const label = labels.data?.find((l) => l.id === search.label);
+  const posts = useInfiniteQuery(postListQuery(workspace.id, tab, search.label));
   const rows = posts.data?.pages.flatMap((p) => p.items) ?? [];
   const canCompose = can('posts:create');
+  const canManageLabels = can('posts:approve');
+  const [managing, setManaging] = useState(false);
 
   const columns: Column<Post>[] = [
     {
       id: 'post',
       header: t('table.post'),
-      cell: (post) => <Snippet post={post} />,
+      cell: (post) => <Snippet post={post} labels={labelsOf(post.labelIds, labels.data)} />,
     },
     {
       id: 'accounts',
@@ -89,14 +113,59 @@ export function PostsPage({ search }: { search: PostsSearch }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {/* "New post" lives in the sidebar and the mobile menu, a click away from every page. */}
-      <PageHeader title={t('title')} />
+      <PageHeader
+        title={t('title')}
+        actions={
+          <>
+            {(labels.data?.length ?? 0) > 0 && (
+              <Select
+                value={label?.id ?? 'all'}
+                onValueChange={(id) => {
+                  onSearchChange({ label: id === 'all' ? undefined : id });
+                }}
+              >
+                <SelectTrigger aria-label={t('labels.filter')} className="h-8 w-40 sm:w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="all">{t('labels.filterAll')}</SelectItem>
+                  {labels.data?.map((l) => (
+                    <SelectItem key={l.id} value={l.id}>
+                      <span className="flex min-w-0 items-center gap-2">
+                        <LabelSwatch color={l.color} />
+                        <span className="truncate">{l.name}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {canManageLabels && (
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-label={t('labels.manage')}
+                onClick={() => {
+                  setManaging(true);
+                }}
+              >
+                <Tags aria-hidden="true" />
+                <span className="hidden sm:inline" aria-hidden="true">
+                  {t('labels.manage')}
+                </span>
+              </Button>
+            )}
+          </>
+        }
+      />
       <NavTabs aria-label={t('tabs.label')}>
         {TABS.map((id) => (
           <Link
             key={id}
             to="/w/$slug/posts"
             params={{ slug: workspace.slug }}
-            search={{ tab: id === 'all' ? undefined : id }}
+            // Switching tabs keeps the label filter.
+            search={{ tab: id === 'all' ? undefined : id, label: search.label }}
             // "All" (no ?tab) must not light up on every tab.
             activeOptions={{ includeSearch: true, explicitUndefined: true }}
           >
@@ -107,7 +176,9 @@ export function PostsPage({ search }: { search: PostsSearch }) {
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-6xl px-2 py-3 sm:px-4 sm:py-4">
           <DataTable
-            caption={`${t('table.caption')}: ${t(`tabs.${tab}`)}`}
+            caption={[`${t('table.caption')}: ${t(`tabs.${tab}`)}`, label?.name]
+              .filter(Boolean)
+              .join(', ')}
             columns={columns}
             rows={rows}
             getRowId={(post) => post.id}
@@ -121,12 +192,29 @@ export function PostsPage({ search }: { search: PostsSearch }) {
             error={posts.isError ? t('loadError') : undefined}
             onRetry={() => void posts.refetch()}
             empty={
-              <EmptyState
-                icon={<FileText />}
-                title={t(`empty.${tab}.title`)}
-                description={t(`empty.${tab}.body`)}
-                {...(write && (tab === 'all' || tab === 'drafts') ? { action: write } : {})}
-              />
+              search.label ? (
+                <EmptyState
+                  icon={<FileText />}
+                  title={t('empty.filtered.title')}
+                  description={t('empty.filtered.body')}
+                  action={
+                    <Button
+                      onClick={() => {
+                        onSearchChange({ label: undefined });
+                      }}
+                    >
+                      {t('empty.showAll')}
+                    </Button>
+                  }
+                />
+              ) : (
+                <EmptyState
+                  icon={<FileText />}
+                  title={t(`empty.${tab}.title`)}
+                  description={t(`empty.${tab}.body`)}
+                  {...(write && (tab === 'all' || tab === 'drafts') ? { action: write } : {})}
+                />
+              )
             }
             hasMore={posts.hasNextPage}
             onLoadMore={() => void posts.fetchNextPage()}
@@ -139,12 +227,13 @@ export function PostsPage({ search }: { search: PostsSearch }) {
           />
         </div>
       </div>
+      {canManageLabels && <ManageLabelsDialog open={managing} onOpenChange={setManaging} />}
     </div>
   );
 }
 
 /** The start of the post's text (two lines), or what it carries when it has no text. */
-function Snippet({ post }: { post: Post }) {
+function Snippet({ post, labels }: { post: Post; labels: PostLabels }) {
   const { t } = useTranslation('posts');
   const text = post.text.trim();
   return (
@@ -168,6 +257,18 @@ function Snippet({ post }: { post: Post }) {
           <PostWhen post={post} />
         </span>
       </span>
+      {labels.length > 0 && (
+        <span className="flex flex-wrap gap-1">
+          {labels.map((l) => (
+            <LabelChip
+              key={l.id}
+              name={l.name}
+              color={l.color}
+              className="h-5 px-1.5 text-[11px]"
+            />
+          ))}
+        </span>
+      )}
     </span>
   );
 }

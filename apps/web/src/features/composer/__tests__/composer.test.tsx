@@ -97,6 +97,7 @@ const base = (role = 'owner'): Record<string, Reply | Handler> => ({
   [`GET ${BASE}/media/${M1.id}`]: [200, M1],
   [`GET ${BASE}/media/${M2.id}`]: [200, M2],
   // Nothing to report unless a test says otherwise.
+  [`GET ${BASE}/labels`]: [200, { items: [] }],
   [`POST ${BASE}/posts/validate`]: ({ body }) => [200, validated(body)],
 });
 

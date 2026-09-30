@@ -21,8 +21,8 @@ export const isPostTab = (value: unknown): value is PostTab =>
 export const postKeys = {
   all: (workspaceId: string) => ['workspaces', workspaceId, 'posts'] as const,
   lists: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list'] as const,
-  list: (workspaceId: string, tab: PostTab) =>
-    ['workspaces', workspaceId, 'posts', 'list', tab] as const,
+  list: (workspaceId: string, tab: PostTab, labelId?: string) =>
+    ['workspaces', workspaceId, 'posts', 'list', tab, labelId ?? null] as const,
   // Under `lists`, so it's marked stale whenever a post is saved.
   any: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list', '_any'] as const,
   detail: (workspaceId: string, postId: string) =>
@@ -39,9 +39,9 @@ export const isSending = (post: Post) =>
 // show is being sent.
 const SENDING_POLL_MS = 3000;
 
-export const postListQuery = (workspaceId: string, tab: PostTab) =>
+export const postListQuery = (workspaceId: string, tab: PostTab, labelId?: string) =>
   infiniteQueryOptions({
-    queryKey: postKeys.list(workspaceId, tab),
+    queryKey: postKeys.list(workspaceId, tab, labelId),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam, signal }) => {
       const status = POST_TABS[tab];
@@ -51,6 +51,7 @@ export const postListQuery = (workspaceId: string, tab: PostTab) =>
           limit: PAGE_SIZE,
           ...(pageParam ? { cursor: pageParam } : {}),
           ...(status ? { status: [...status] } : {}),
+          ...(labelId ? { labelId } : {}),
         },
         signal,
       });

@@ -92,10 +92,27 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   const draftRow = ownerPage.getByRole('row', { name: /Autumn menu draft/ });
   await expect(draftRow).toContainText('Draft');
   await expectRightCursors(ownerPage, 'posts');
+  // Labels (P1-F8): add one to the workspace, then put it on the draft.
+  await ownerPage.getByRole('button', { name: 'Manage labels' }).click();
+  const labelsDialog = ownerPage.getByRole('dialog', { name: 'Labels' });
+  await labelsDialog.getByRole('textbox', { name: 'New label name' }).fill('Autumn campaign');
+  await labelsDialog.getByRole('button', { name: 'Add' }).click();
+  await expect(
+    labelsDialog.getByRole('textbox', { name: 'Name of Autumn campaign' }),
+  ).toBeVisible();
+  await expectRightCursors(ownerPage, 'manage labels');
+  await ownerPage.keyboard.press('Escape');
   await draftRow.click();
   await expect(ownerPage.getByRole('heading', { name: 'Post', exact: true })).toBeVisible();
   await expect(ownerPage.getByText('No accounts chosen yet.', { exact: false })).toBeVisible();
   await expectRightCursors(ownerPage, 'post details');
+  await ownerPage.getByRole('button', { name: 'Label', exact: true }).click();
+  await ownerPage.getByRole('checkbox', { name: 'Autumn campaign' }).check();
+  await expectRightCursors(ownerPage, 'label picker');
+  await ownerPage.keyboard.press('Escape');
+  await expect(
+    ownerPage.getByRole('button', { name: 'Remove label Autumn campaign' }),
+  ).toBeVisible();
 
   // --- The owner invites a teammate as an editor. ---
   await ownerPage.getByRole('link', { name: 'Settings' }).first().click();

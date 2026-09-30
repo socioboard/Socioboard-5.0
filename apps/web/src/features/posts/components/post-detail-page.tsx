@@ -30,6 +30,7 @@ import { useWorkspace } from '../../../lib/workspace';
 import { isPending, mediaDetailQuery } from '../../media';
 import { postKeys, postQuery, rememberPost } from '../api';
 import { PostStatusChip } from './post-bits';
+import { LabelPicker } from './label-picker';
 import { TargetCard } from './target-card';
 
 /** Targets in these states make a post history: it can't be edited or deleted any more. */
@@ -104,6 +105,59 @@ function useMayEdit(post: PostDetails) {
   const mine = post.author?.id === me.user.id;
   const locked = post.targets.some((x) => LOCKED.has(x.status));
   return !locked && (mine ? can('posts:create') : can('posts:approve'));
+}
+
+/**
+ * Whether this user may change the post's labels: like editing, but also after it went out
+ * (labels organise the posts list, so the API allows them on sent posts).
+ */
+function useMayLabel(post: PostDetails) {
+  const { me } = useWorkspace();
+  const can = useCan();
+  return post.author?.id === me.user.id ? can('posts:create') : can('posts:approve');
+}
+
+/** The post's labels, saved as soon as they change. */
+function PostLabels({ post }: { post: PostDetails }) {
+  const { t } = useTranslation('posts');
+  const { workspace } = useWorkspace();
+  const queryClient = useQueryClient();
+  const mayLabel = useMayLabel(post);
+  const save = useMutation({
+    mutationFn: (labelIds: string[]) =>
+      api(apiRoutes.posts.updatePost, {
+        params: { workspaceId: workspace.id, postId: post.id },
+        body: { labelIds },
+      }),
+    onSuccess: (saved) => {
+      rememberPost(queryClient, workspace.id, saved);
+    },
+    onError: (err) => toast.error(errorMessage(err)),
+  });
+  // The latest change shows at once (the mutation's own state arrives a tick later) and stays
+  // until its save settles; a failed one falls back to what the server has.
+  const [pending, setPending] = useState<string[] | null>(null);
+  const value = pending ?? post.labelIds;
+  return (
+    <div role="group" aria-labelledby="post-labels" className="flex flex-wrap items-center gap-2">
+      <span id="post-labels" className="sr-only">
+        {t('labels.title')}
+      </span>
+      <LabelPicker
+        value={value}
+        disabled={!mayLabel}
+        onChange={(labelIds) => {
+          setPending(labelIds);
+          save.mutate(labelIds, {
+            // Only the latest change clears it; an earlier save finishing leaves the newer one.
+            onSettled: () => {
+              setPending((current) => (current === labelIds ? null : current));
+            },
+          });
+        }}
+      />
+    </div>
+  );
 }
 
 function Actions({ post }: { post: PostDetails }) {
@@ -217,6 +271,7 @@ function Details({ post }: { post: PostDetails }) {
         <time dateTime={post.createdAt} className="text-ink-3 text-[13px]">
           {t('detail.created', { time: formatDateTime(post.createdAt) })}
         </time>
+        <PostLabels post={post} />
       </div>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
         <section aria-labelledby="post-deliveries" className="flex min-w-0 flex-col gap-3">

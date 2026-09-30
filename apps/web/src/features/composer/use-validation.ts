@@ -47,7 +47,8 @@ export function useValidation({
   rulesOf: (n: NetworkId) => Network['rules'] | undefined;
   enabled: boolean;
 }): Validation {
-  const body = toPostBody(draft, networkOf);
+  // Labels don't change what the networks accept: they're left out of the check.
+  const { labelIds: _labels, ...body } = toPostBody(draft, networkOf);
   const key = JSON.stringify(body);
   const [settled, setSettled] = useState(key);
   useEffect(() => {
@@ -66,7 +67,7 @@ export function useValidation({
     queryFn: ({ signal }) =>
       api(apiRoutes.posts.validatePost, {
         params: { workspaceId },
-        body: JSON.parse(settled) as PostBody,
+        body: JSON.parse(settled) as Omit<PostBody, 'labelIds'>,
         signal,
       }),
     enabled: sendable,

@@ -29,7 +29,7 @@
 - [x] P1-F5 Save draft, Publish now, autosave
 - [x] P1-F6 Posts list + post detail with targets and publishing history; retry failed target
 - [x] P1-F7 Onboarding steps 2 (connect account) and 3 (first post)
-- [ ] P1-F8 Labels: picker in composer, filter + label management in posts list
+- [x] P1-F8 Labels: picker in composer, filter + label management in posts list
 - [x] P1-F9 Design system additions: AccountPicker, NetworkIcon, StatusChip, MediaThumb, CharacterCounter, IssueList, PreviewFrame
 
 ## Reviews

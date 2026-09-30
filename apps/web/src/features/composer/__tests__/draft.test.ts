@@ -77,6 +77,7 @@ describe('draft', () => {
       { type: 'text', network: 'instagram', text: 'left over' },
       { type: 'link', link: '  https://halden.test/beans  ' },
       { type: 'firstComment', firstComment: '   ' },
+      { type: 'labels', labelIds: ['l2', 'l1'] },
     );
     const body = toPostBody(d, networkOf);
     expect(body).toEqual({
@@ -84,6 +85,7 @@ describe('draft', () => {
       mediaIds: [],
       link: 'https://halden.test/beans',
       firstComment: null,
+      labelIds: ['l2', 'l1'],
       targets: [
         { accountId: 'fb1', override: { text: 'Hello Facebook' } },
         { accountId: 'fb2', override: { text: 'Hello Facebook' } },
@@ -121,7 +123,7 @@ describe('draft', () => {
       mediaIds: ['m1'],
       link: null,
       firstComment: 'First!',
-      labelIds: [],
+      labelIds: ['l1'],
       author: null,
       createdAt: '2026-09-28T10:00:00.000Z',
       updatedAt: '2026-09-28T10:00:00.000Z',
@@ -140,6 +142,7 @@ describe('draft', () => {
       link: '',
       firstComment: 'First!',
       overrides: { instagram: { text: 'IG', options: { instagram: { format: 'reel' } } } },
+      labelIds: ['l1'],
     });
     expect(toPostBody(d, networkOf).targets).toEqual([
       { accountId: 'fb1', override: null },

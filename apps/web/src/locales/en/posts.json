@@ -64,7 +64,12 @@
       "title": "Nothing failed",
       "body": "When a post doesn’t go out, it shows up here with what went wrong and how to fix it."
     },
-    "write": "Write a post"
+    "write": "Write a post",
+    "filtered": {
+      "title": "No posts with this label",
+      "body": "Pick another label, or show all labels."
+    },
+    "showAll": "Show all labels"
   },
   "detail": {
     "title": "Post",
@@ -134,5 +139,55 @@
       "failed": "Failed",
       "will_retry": "Didn’t go through; retried automatically"
     }
+  },
+  "labels": {
+    "title": "Labels",
+    "add": "Label",
+    "edit": "Labels",
+    "none": "No labels",
+    "remove": "Remove label {{name}}",
+    "search": "Find a label",
+    "searchOrCreate": "Find or create a label",
+    "loading": "Loading labels…",
+    "noneYet": "This workspace has no labels yet.",
+    "noneYetCreate": "No labels yet. Type a name to create one.",
+    "create": "Create “{{name}}”",
+    "exists": "There’s already a label called “{{name}}”.",
+    "full": "A post can have up to {{max}} labels.",
+    "manage": "Manage labels",
+    "manageTitle": "Labels",
+    "manageBody": "Labels sort posts into groups (campaigns, clients, themes) and filter the list. Everyone in the workspace sees them.",
+    "close": "Close",
+    "newName": "New label name",
+    "newPlaceholder": "e.g. Autumn campaign",
+    "addButton": "Add",
+    "empty": "No labels yet.",
+    "loadError": "The labels didn’t load.",
+    "rename": "Name of {{name}}",
+    "colorOf": "Colour of {{name}}: {{color}}",
+    "delete": "Delete {{name}}",
+    "postCount_one": "{{count}} post",
+    "postCount_other": "{{count}} posts",
+    "deleteTitle": "Delete “{{name}}”?",
+    "deleteBody_one": "It comes off the {{count}} post that has it. The post itself isn’t changed otherwise.",
+    "deleteBody_other": "It comes off the {{count}} posts that have it. The posts themselves aren’t changed otherwise.",
+    "deleteConfirm": "Delete label",
+    "cancel": "Cancel",
+    "filter": "Label",
+    "filterAll": "All labels",
+    "saved": "Labels saved.",
+    "colors": {
+      "gray": "Gray",
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "green": "Green",
+      "teal": "Teal",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "pink": "Pink"
+    },
+    "deleteBodyNone": "No post has it yet."
   }
 }
