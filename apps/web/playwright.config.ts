@@ -16,24 +16,21 @@ try {
   // No .env: the dev defaults below.
 }
 
-/** An environment value, or `fallback` when it is unset or empty (`S3_BUCKET=` in .env). */
-function envOr(key: string, fallback: string): string {
-  const value = process.env[key];
-  if (value) return value;
-  return fallback;
-}
-
 // Uploads need storage: the S3 bucket from .env when there is one (it must allow PUT/POST from
-// the app's origin and expose ETag: docs/backend/modules/media.md), else the dev compose's local S3.
+// the app's origin and expose ETag: docs/backend/modules/media.md), else the dev compose's local S3
+// with all of its settings. None come from .env: its S3_FORCE_PATH_STYLE=false (right for AWS)
+// would send the browser to socioboard-media.localhost, which the local S3 doesn't serve.
 const storage: Record<string, string> = process.env.S3_BUCKET
   ? {}
   : {
-      S3_ENDPOINT: envOr('S3_ENDPOINT', 'http://localhost:9000'),
+      S3_ENDPOINT: 'http://localhost:9000',
       S3_BUCKET: 'socioboard-media',
-      S3_REGION: envOr('S3_REGION', 'us-east-1'),
-      S3_ACCESS_KEY_ID: envOr('S3_ACCESS_KEY_ID', 'socioboard'),
-      S3_SECRET_ACCESS_KEY: envOr('S3_SECRET_ACCESS_KEY', 'socioboard-dev-secret'),
-      S3_FORCE_PATH_STYLE: envOr('S3_FORCE_PATH_STYLE', 'true'),
+      S3_REGION: 'us-east-1',
+      S3_ACCESS_KEY_ID: 'socioboard',
+      S3_SECRET_ACCESS_KEY: 'socioboard-dev-secret',
+      S3_FORCE_PATH_STYLE: 'true',
+      STORAGE_PUBLIC_URL: '',
+      MEDIA_PUBLIC_URL: '',
     };
 
 export default defineConfig({
