@@ -7,8 +7,10 @@ export * from './permissions';
 export * from './route';
 
 export * from './auth';
+export * from './events';
 export * from './media';
 export * from './networks';
+export * from './notifications';
 export * from './posts';
 export * from './recurrence';
 export * from './scheduling';
@@ -18,6 +20,7 @@ export * from './workspaces';
 import { authRoutes } from './auth';
 import { mediaRoutes } from './media';
 import { networkRoutes } from './networks';
+import { notificationRoutes } from './notifications';
 import { postRoutes } from './posts';
 import { schedulingRoutes } from './scheduling';
 import { socialAccountRoutes } from './social-accounts';
@@ -32,4 +35,5 @@ export const apiRoutes = {
   socialAccounts: socialAccountRoutes,
   posts: postRoutes,
   scheduling: schedulingRoutes,
+  notifications: notificationRoutes,
 };

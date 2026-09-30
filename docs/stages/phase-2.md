@@ -6,7 +6,7 @@
 
 ## Contracts
 - [x] P2-C1 Schedule, reschedule, queue, recurrence, calendar range, queue slots
-- [ ] P2-C2 Notifications, preferences, socket event payloads
+- [x] P2-C2 Notifications, preferences, socket event payloads
 - [ ] P2-C3 Admin v1: overview-lite, publishing health, failed targets, expiring accounts
 
 ## Backend
