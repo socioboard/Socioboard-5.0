@@ -39,6 +39,7 @@ export function useValidation({
   selected,
   rulesOf,
   enabled,
+  mediaState = '',
 }: {
   workspaceId: string;
   draft: Draft;
@@ -46,6 +47,11 @@ export function useValidation({
   selected: NetworkId[];
   rulesOf: (n: NetworkId) => Network['rules'] | undefined;
   enabled: boolean;
+  /**
+   * Where the attached files stand (e.g. `id:processing,id:ready`). The server's answer depends on
+   * it too: when a file finishes processing, the check runs again, although the post is the same.
+   */
+  mediaState?: string;
 }): Validation {
   // Labels don't change what the networks accept: they're left out of the check.
   const { labelIds: _labels, ...body } = toPostBody(draft, networkOf);
@@ -63,7 +69,7 @@ export function useValidation({
   const sendable =
     enabled && body.targets.length > 0 && (body.link === null || isWebAddress(body.link));
   const server = useQuery({
-    queryKey: ['workspaces', workspaceId, 'posts', 'validate', settled],
+    queryKey: ['workspaces', workspaceId, 'posts', 'validate', settled, mediaState],
     queryFn: ({ signal }) =>
       api(apiRoutes.posts.validatePost, {
         params: { workspaceId },

@@ -12,7 +12,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "clean": "rm -rf dist .turbo src/routeTree.gen.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test --project=app",
+    "e2e:meta:login": "node e2e/meta-login.ts",
+    "e2e:meta": "playwright test --project=meta"
   },
   "dependencies": {
     "@fontsource-variable/instrument-sans": "~5.3.0",

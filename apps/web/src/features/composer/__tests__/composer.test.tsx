@@ -808,3 +808,50 @@ describe('editing a post', () => {
     });
   });
 });
+
+describe('files that are still processing', () => {
+  it('the check runs again once a file is ready, so the post can be published', async () => {
+    // The file is processing on the first read and ready from the second (the composer re-reads
+    // a processing file every 3 s); the server's check follows what the file is.
+    let reads = 0;
+    let status = 'processing';
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/media`]: [200, { items: [M1], nextCursor: null }],
+      [`GET ${BASE}/media/${M1.id}`]: () => {
+        reads += 1;
+        status = reads === 1 ? 'processing' : 'ready';
+        return [200, { ...M1, status, thumbnailUrl: status === 'ready' ? M1.thumbnailUrl : null }];
+      },
+      [`POST ${BASE}/posts/validate`]: ({ body }) => [
+        200,
+        validated(body, {
+          facebook_page:
+            status === 'ready'
+              ? []
+              : [
+                  {
+                    severity: 'error',
+                    code: 'MEDIA_NOT_READY',
+                    message: 'Still processing',
+                    field: 'media',
+                    mediaId: M1.id,
+                    params: { file: 'latte.jpg' },
+                  },
+                ],
+        }),
+      ],
+    });
+    renderApp('/w/halden/compose');
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Halden Coffee, Facebook' }));
+    await user.click(screen.getByRole('button', { name: 'Choose from library' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Choose from library' });
+    await user.click(await within(dialog).findByRole('button', { name: 'Select latte.jpg' }));
+    await user.click(within(dialog).getByRole('button', { name: 'Attach 1 file' }));
+    expect(await screen.findByText(/latte\.jpg is still being processed/)).toBeInTheDocument();
+    // The file turns ready (re-read every 3 s): the server is asked again, without any edit.
+    expect(await screen.findByText('Ready to publish', {}, { timeout: 8_000 })).toBeInTheDocument();
+    expect(screen.queryByText(/still being processed/)).not.toBeInTheDocument();
+  });
+});

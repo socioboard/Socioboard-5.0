@@ -2,9 +2,19 @@
 // API and worker against the dev services (Postgres, Valkey, Mailpit, MinIO: `docker compose -f
 // docker/compose.dev.yml up -d` with COMPOSE_PROFILES=minio). `pnpm e2e` starts the api, worker and
 // web app unless they are already running.
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig, devices } from '@playwright/test';
 
 const CI = Boolean(process.env.CI);
+
+// The repo's .env (storage, the Meta app) applies to the tests and the servers they start, as it
+// does to `pnpm dev`. Values already in the environment win.
+try {
+  process.loadEnvFile(fileURLToPath(new URL('../../.env', import.meta.url)));
+} catch {
+  // No .env: the dev defaults below.
+}
 
 /** An environment value, or `fallback` when it is unset or empty (`S3_BUCKET=` in .env). */
 function envOr(key: string, fallback: string): string {
@@ -13,15 +23,18 @@ function envOr(key: string, fallback: string): string {
   return fallback;
 }
 
-// Uploads need storage. Without S3 settings in the environment, use the dev MinIO.
-const storage = {
-  S3_ENDPOINT: envOr('S3_ENDPOINT', 'http://localhost:9000'),
-  S3_BUCKET: envOr('S3_BUCKET', 'socioboard-media'),
-  S3_REGION: envOr('S3_REGION', 'us-east-1'),
-  S3_ACCESS_KEY_ID: envOr('S3_ACCESS_KEY_ID', 'socioboard'),
-  S3_SECRET_ACCESS_KEY: envOr('S3_SECRET_ACCESS_KEY', 'socioboard-dev-secret'),
-  S3_FORCE_PATH_STYLE: envOr('S3_FORCE_PATH_STYLE', 'true'),
-};
+// Uploads need storage: the S3 bucket from .env when there is one (it must allow PUT/POST from
+// the app's origin and expose ETag: docs/backend/modules/media.md), else the dev MinIO.
+const storage: Record<string, string> = process.env.S3_BUCKET
+  ? {}
+  : {
+      S3_ENDPOINT: envOr('S3_ENDPOINT', 'http://localhost:9000'),
+      S3_BUCKET: 'socioboard-media',
+      S3_REGION: envOr('S3_REGION', 'us-east-1'),
+      S3_ACCESS_KEY_ID: envOr('S3_ACCESS_KEY_ID', 'socioboard'),
+      S3_SECRET_ACCESS_KEY: envOr('S3_SECRET_ACCESS_KEY', 'socioboard-dev-secret'),
+      S3_FORCE_PATH_STYLE: envOr('S3_FORCE_PATH_STYLE', 'true'),
+    };
 
 export default defineConfig({
   testDir: './e2e',
@@ -39,6 +52,12 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     ...devices['Desktop Chrome'],
   },
+  projects: [
+    // The app against the dev services: `pnpm e2e`.
+    { name: 'app', testIgnore: /meta-publish/ },
+    // Real Facebook and Instagram accounts (it publishes): only `pnpm e2e:meta`.
+    { name: 'meta', testMatch: /meta-publish/ },
+  ],
   webServer: [
     {
       command: 'pnpm --filter @socioboard/api dev',

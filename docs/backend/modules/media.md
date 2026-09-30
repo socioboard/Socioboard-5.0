@@ -27,6 +27,8 @@ The workspace media library: uploads straight from the browser to Amazon S3, met
 
 Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigned PUT; larger files use multipart (16 MB parts) and `complete` sends each part's ETag. Folder routes are registered before `/media/:assetId`.
 
+**Bucket CORS:** because the browser uploads straight to the bucket, the bucket must allow the app's origin to `PUT` (and `POST`) and expose `ETag` (read for each multipart part). Without it every upload fails with a CORS error in the browser; a backend that uploads through the SDK (as AdsGPT does) never needs this. A rule that works: `AllowedOrigins` the app's origins (or `*`), `AllowedMethods` GET, HEAD, PUT, POST, `AllowedHeaders` `*`, `ExposeHeaders` `ETag`.
+
 ## Services
 - `createUpload(kind, mime, size)`: validates type and size, returns presigned URLs.
 - `completeUpload(assetId)`: verifies the object exists, enqueues `media-process`.
