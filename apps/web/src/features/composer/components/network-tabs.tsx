@@ -95,7 +95,7 @@ export function NetworkTabs({
             {custom && (
               <>
                 <span
-                  className="bg-ring animate-scale-in size-1.5 rounded-full motion-reduce:animate-none"
+                  className="bg-ring animate-scale-in size-1.5 rounded-full"
                   aria-hidden="true"
                 />
                 <span className="sr-only">{t('tabs.custom', { network: name })}</span>
@@ -103,10 +103,7 @@ export function NetworkTabs({
             )}
             {bad && (
               <>
-                <CircleAlert
-                  className="text-danger animate-scale-in size-3.5 motion-reduce:animate-none"
-                  aria-hidden="true"
-                />
+                <CircleAlert className="text-danger animate-scale-in size-3.5" aria-hidden="true" />
                 <span className="sr-only">{t('issues.tabHasErrors', { network: name })}</span>
               </>
             )}

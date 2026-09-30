@@ -33,7 +33,7 @@ export function Tooltip({ content, side = 'top', disabled = false, children }: T
           sideOffset={8}
           className={cn(
             'glass-float text-ink z-50 rounded-lg px-2.5 py-1.5 text-xs font-medium',
-            'origin-(--radix-tooltip-content-transform-origin) data-[state=delayed-open]:animate-pop-in data-[state=closed]:animate-pop-out motion-reduce:animate-none',
+            'origin-(--radix-tooltip-content-transform-origin) data-[state=delayed-open]:animate-pop-in data-[state=closed]:animate-pop-out',
           )}
         >
           {content}

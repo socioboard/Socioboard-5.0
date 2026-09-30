@@ -20,10 +20,16 @@ export { AnimatePresence, LayoutGroup, motion };
 /** Leaving: quick, speeding up as it goes (matches --ease-exit in styles.css). */
 const EXIT_EASE = [0.4, 0, 1, 1] as const;
 
-/** The app's springs: `snappy` for controls and highlights, `gentle` for panels and lists. */
+/**
+ * The app's springs, in Apple's terms (bounce ≈ 1 − damping ratio; visualDuration ≈ response):
+ * critically damped by default, so nothing overshoots: `snappy` for controls and highlights,
+ * `gentle` for panels and lists. `momentum` bounces a little, and only for things the person
+ * flicked, threw or released from a drag.
+ */
 export const springs = {
-  snappy: { type: 'spring', stiffness: 520, damping: 38, mass: 0.8 },
-  gentle: { type: 'spring', stiffness: 300, damping: 32 },
+  snappy: { type: 'spring', bounce: 0, visualDuration: 0.3 },
+  gentle: { type: 'spring', bounce: 0, visualDuration: 0.4 },
+  momentum: { type: 'spring', bounce: 0.2, visualDuration: 0.35 },
 } satisfies Record<string, Transition>;
 
 /**
@@ -126,7 +132,7 @@ export function Swap({
 /**
  * Content that changes in place (a tab switched, another account picked) refreshes with a quick
  * rise instead of snapping, without remounting it (focus and typing survive). Put the returned
- * ref on the element; `key` is what changes. Nothing moves under reduced motion.
+ * ref on the element; `key` is what changes. Under reduced motion it crossfades instead.
  */
 export function useChangeMotion<T extends Element = HTMLDivElement>(key: unknown) {
   const [scope, animate] = useAnimate<T>();
@@ -137,12 +143,14 @@ export function useChangeMotion<T extends Element = HTMLDivElement>(key: unknown
       first.current = false;
       return;
     }
-    if (reduced) return;
-    void animate(
-      scope.current,
-      { opacity: [0.4, 1], y: [6, 0], filter: ['blur(2px)', 'blur(0px)'] },
-      springs.gentle,
-    );
+    // Reduced motion: a short crossfade still shows that something changed.
+    void (reduced
+      ? animate(scope.current, { opacity: [0.5, 1] }, { duration: 0.15 })
+      : animate(
+          scope.current,
+          { opacity: [0.4, 1], y: [6, 0], filter: ['blur(2px)', 'blur(0px)'] },
+          springs.gentle,
+        ));
     // Only a change of `key` replays it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);

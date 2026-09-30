@@ -79,7 +79,7 @@ function Steps({ current }: { current: WelcomeStep }) {
             >
               {s.done && (
                 <Check
-                  className="text-success animate-scale-in size-3.5 shrink-0 motion-reduce:animate-none"
+                  className="text-success animate-scale-in size-3.5 shrink-0"
                   aria-hidden="true"
                 />
               )}

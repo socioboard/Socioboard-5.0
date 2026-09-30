@@ -96,11 +96,7 @@ export function GettingStarted() {
               )}
               aria-hidden="true"
             >
-              {s.done ? (
-                <Check className="animate-scale-in size-3.5 motion-reduce:animate-none" />
-              ) : (
-                i + 1
-              )}
+              {s.done ? <Check className="animate-scale-in size-3.5" /> : i + 1}
             </span>
             <span
               className={cn(

@@ -101,8 +101,8 @@ type TransitionDocument = Document & {
 
 /**
  * Switches to `next` with the new theme revealed in a circle growing from `from` (the toggle's
- * centre), where the browser has typed view transitions and motion isn't reduced; otherwise it
- * just switches.
+ * centre), where the browser has typed view transitions; under reduced motion that's a
+ * crossfade (styles.css). Elsewhere it just switches.
  */
 export function switchTheme(
   next: ResolvedTheme,
@@ -115,10 +115,9 @@ export function switchTheme(
     setPreference(next);
   };
   const doc = document as TransitionDocument;
-  const reduced =
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (typeof doc.startViewTransition !== 'function' || reduced) {
+  // Reduced motion still gets a transition: styles.css turns it into a crossfade, so the change
+  // of brightness isn't abrupt.
+  if (typeof doc.startViewTransition !== 'function') {
     apply();
     return;
   }
