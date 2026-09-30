@@ -52,7 +52,7 @@
 - [ ] P0-R4 LinkedIn apps + Community Management access form
 - [ ] P0-R5 Google Cloud projects, OAuth consent screen, verification + YouTube audit form
 - [ ] P0-R6 TikTok app + media domain verification; Pinterest trial; X project + billing cap; Tumblr, Bitly, Microsoft apps
-- [ ] P0-R7 Contribution guide: `CONTRIBUTING.md` with DCO sign-off (`Signed-off-by`), required before accepting outside PRs. No CLA: under MIT, contributions come in under the same license (changed from the AGPL CLA plan on 2026-09-28)
+- [x] P0-R7 Contribution guide: `CONTRIBUTING.md` with DCO sign-off (`Signed-off-by`), required before accepting outside PRs. No CLA: under MIT, contributions come in under the same license (changed from the AGPL CLA plan on 2026-09-28). CI's `dco` job checks every commit of a pull request from a fork is signed off by its author (`.github/check-dco.sh`)
 
 ## Quality
 - [x] P0-Q1 Playwright E2E: sign up → create workspace → invite → accept → upload image (`apps/web/e2e/phase-0/team-media.spec.ts`, `pnpm e2e`)
