@@ -9,7 +9,10 @@ When posts go out: one-time schedules, recurring schedules, per-account posting 
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `PostTarget.scheduledAt`, `scheduleVersion` | (owned by posts) | Version bumps on every reschedule |
-| `RecurringRule` | id, postId, rrule, timezone, startsAt, endsAt?, nextRunAt, active | RFC 5545 RRULE, built from the structured rule the API takes; replaces 5.0's day-of-week schedules |
+| `RecurringRule` | id, postId, rrule, timezone, startsAt, endsAt?, nextRunAt, active | RFC 5545 RRULE, built from the structured rule the API takes; replaces 5.0's day-of-week schedules. `postId` is the **template** post |
+| `Post.recurringRuleId`, `occurrenceAt` | (owned by posts) | Set on each occurrence post: which rule made it, and for which occurrence (unique together, so an occurrence is created once) |
+
+**Recurring posts are a template plus one ordinary post per occurrence** (decided 2026-09-30). The post the rule is set on becomes the template: it holds the content, accounts and rule, and is never published itself. The `recurring` job creates a normal post for each occurrence in the horizon, copying the template's content, overrides and labels, scheduled at the occurrence's time. An occurrence then behaves like any other post: its own targets, status, history and retry; it can be edited, moved or deleted alone, and it appears in the posts list and on the calendar (`recurring: true`). Why not many targets on one post: a target is one account's delivery of one post (unique per post and account), and everything that reads posts (status, editing, retry, history, tenant checks) would have to learn about occurrences.
 | `QueueSlot` | id, socialAccountId, weekday (0–6), time (HH:mm), timezone | Preferred posting times per account |
 
 ## API
@@ -48,7 +51,8 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - `schedule(postId, at | perTarget)`: validates (future time, approved, accounts active), sets `scheduledAt`, bumps `scheduleVersion`, adds delayed `publish` jobs.
 - `reschedule(targetId, at)`: bump version, remove the old job, add a new one.
 - `nextFreeSlot(accountId, after)`: finds the next unused QueueSlot.
-- `expandRecurring(ruleId, horizon)`: creates PostTargets for occurrences in the horizon.
+- `expandRecurring(ruleId, horizon)`: creates an occurrence post for each occurrence in the horizon that doesn't have one yet (the unique `recurringRuleId` + `occurrenceAt` makes a repeat run harmless).
+- Changing the rule or the template's content replaces the occurrence posts that are still waiting (not yet publishing, and not edited on their own); sent and hand-edited ones stay. Stopping the rule (`DELETE …/recurrence`) removes the waiting occurrences; sent ones stay as history.
 
 ## Jobs
 | Queue | Runs | Does |
