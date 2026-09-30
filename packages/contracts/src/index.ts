@@ -6,6 +6,7 @@ export * from './fields';
 export * from './permissions';
 export * from './route';
 
+export * from './admin';
 export * from './auth';
 export * from './events';
 export * from './media';
@@ -17,6 +18,7 @@ export * from './scheduling';
 export * from './social-accounts';
 export * from './workspaces';
 
+import { adminRoutes } from './admin';
 import { authRoutes } from './auth';
 import { mediaRoutes } from './media';
 import { networkRoutes } from './networks';
@@ -26,7 +28,10 @@ import { schedulingRoutes } from './scheduling';
 import { socialAccountRoutes } from './social-accounts';
 import { workspaceRoutes } from './workspaces';
 
-/** Every route the API serves under /api/v1, by module. The API must implement all of them. */
+/**
+ * Every route the API serves, by module: under /api/v1, and the admin console's under /api/admin.
+ * The API must implement all of them.
+ */
 export const apiRoutes = {
   auth: authRoutes,
   workspaces: workspaceRoutes,
@@ -36,4 +41,5 @@ export const apiRoutes = {
   posts: postRoutes,
   scheduling: schedulingRoutes,
   notifications: notificationRoutes,
+  admin: adminRoutes,
 };

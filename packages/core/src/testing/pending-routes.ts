@@ -20,6 +20,12 @@ export const PENDING_ROUTES: Readonly<Record<string, string>> = {
   markNotificationRead: 'P2-B8',
   getNotificationPreferences: 'P2-B8',
   updateNotificationPreferences: 'P2-B8',
+  getAdminOverview: 'P2-B10',
+  getPublishingHealth: 'P2-B10',
+  listProblemTargets: 'P2-B10',
+  adminRetryTarget: 'P2-B10',
+  adminCancelTarget: 'P2-B10',
+  listAttentionAccounts: 'P2-B10',
 };
 
 /** Every contract route with its name (route names are unique across modules). */

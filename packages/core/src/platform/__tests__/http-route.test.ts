@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import {
+  AppError,
   createApiRouter,
   createErrorHandler,
   rateLimit,
@@ -261,5 +262,63 @@ describe('request id and rate limit', () => {
     expect(Number(last.headers['retry-after'])).toBeGreaterThan(0);
     expect(last.headers['ratelimit-limit']).toBe('3');
     expect(code(last)).toBe('RATE_LIMITED');
+  });
+});
+
+describe('platform admin routes', () => {
+  const adminRoute = defineRoute({
+    method: 'GET',
+    path: '/api/admin/stats',
+    access: 'platform_admin',
+    summary: 'x',
+    responses: { 200: z.object({ ok: z.boolean() }) },
+  });
+  const lookupMembership = () => Promise.resolve(null);
+
+  it('cannot be mounted without a guard, so no admin route is open to any signed-in user', () => {
+    const api = createApiRouter({ lookupMembership });
+    expect(() => {
+      api.route(adminRoute, () => ({ ok: true }));
+    }).toThrow(/platformAdminGuard/);
+    expect(api.mounted.has(adminRoute)).toBe(false);
+  });
+
+  it('must live under /api/admin, and only admin routes may', () => {
+    expect(() =>
+      defineRoute({ ...adminRoute, path: '/api/v1/stats', access: 'platform_admin' }),
+    ).toThrow(/api\/admin/);
+    expect(() => defineRoute({ ...adminRoute, path: '/api/admin/x', access: 'user' })).toThrow(
+      /api\/admin/,
+    );
+  });
+
+  it('asks the guard after the session check, and its error is the answer', async () => {
+    const seen: string[] = [];
+    const api = createApiRouter({
+      lookupMembership,
+      platformAdminGuard: (who) => {
+        seen.push(who.user.id);
+        if (who.user.id !== 'staff') throw new AppError(403, 'NOT_PLATFORM_ADMIN', 'Staff only');
+      },
+    });
+    api.route(adminRoute, () => ({ ok: true }));
+    const admin = express();
+    admin.use(
+      '/api/admin',
+      session((headers) => {
+        const id = headers.get('x-test-user');
+        return Promise.resolve({ auth: id ? auth(id) : null, setCookies: [] });
+      }),
+    );
+    admin.use(api.router);
+    admin.use(createErrorHandler(logger));
+
+    const anonymous = await request(admin).get('/api/admin/stats');
+    expect(anonymous.status).toBe(401);
+    const owner = await request(admin).get('/api/admin/stats').set('x-test-user', 'owner');
+    expect([owner.status, code(owner)]).toEqual([403, 'NOT_PLATFORM_ADMIN']);
+    const staff = await request(admin).get('/api/admin/stats').set('x-test-user', 'staff');
+    expect(staff.body).toEqual({ ok: true });
+    expect(seen).toEqual(['owner', 'staff']);
   });
 });
