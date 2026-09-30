@@ -95,7 +95,9 @@ export function TargetCard({
           <p className="text-ink leading-relaxed">
             {gone ? t('target.accountGone') : t(`target.errors.${error.kind}`, { network })}
           </p>
-          {error.message && (
+          {/* Only the network's own words (they come with its error code); a timeout or an
+              unreadable answer is described by the sentence above, not quoted as Facebook's. */}
+          {error.message && error.networkCode !== null && (
             <p className="text-ink-2 text-xs leading-relaxed wrap-break-word">
               {t('target.networkSaid', { network, message: error.message })}
             </p>

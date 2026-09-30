@@ -351,3 +351,53 @@ describe('post detail', () => {
     );
   });
 });
+
+describe('failure messages (P1-Q2 drills)', () => {
+  const failedWith = (lastError: PostDetails['targets'][number]['lastError']) =>
+    postWith({
+      status: 'failed',
+      targets: [target({ status: 'failed', attempts: 3, lastError })],
+    });
+
+  it('a timeout: says Facebook couldn’t be reached, offers Retry, and quotes nobody', async () => {
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/posts/${POST_ID}`]: [
+        200,
+        failedWith({
+          kind: 'retryable',
+          networkCode: null,
+          message: 'Meta did not answer in time',
+        }),
+      ],
+    });
+    renderApp(`/w/halden/posts/${POST_ID}`);
+    expect(
+      await screen.findByText(/Facebook couldn’t be reached, and the automatic retries ran out/),
+    ).toBeInTheDocument();
+    // Our own words about the failure aren't presented as Facebook's.
+    expect(screen.queryByText(/Facebook said/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Reconnect account' })).not.toBeInTheDocument();
+  });
+
+  it('a rate limit: asks to retry in a few minutes, with what Facebook said', async () => {
+    mockServer({
+      ...base(),
+      [`GET ${BASE}/posts/${POST_ID}`]: [
+        200,
+        failedWith({
+          kind: 'rate_limited',
+          networkCode: '4',
+          message: '(#4) Application request limit reached',
+        }),
+      ],
+    });
+    renderApp(`/w/halden/posts/${POST_ID}`);
+    expect(await screen.findByText(/Facebook asked us to slow down/)).toBeInTheDocument();
+    expect(
+      screen.getByText('Facebook said: “(#4) Application request limit reached”'),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+  });
+});
