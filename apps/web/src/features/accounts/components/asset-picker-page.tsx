@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 
 import { api, ApiError } from '../../../lib/api';
 import { errorMessage } from '../../../lib/i18n';
+import { takeConnectReturn } from '../../../lib/return-to';
 import { useWorkspace } from '../../../lib/workspace';
 import { FormError } from '../../auth';
 import {
@@ -178,7 +179,13 @@ function Picker({
     else next.delete(id);
     setChosen(next);
   };
-  const done = () => void navigate({ to: '/w/$slug/accounts', params: { slug: workspace.slug } });
+  // Back to the Accounts page, or wherever the connect started from (onboarding's next step).
+  const done = () => {
+    const back = takeConnectReturn(workspace.id);
+    void (back
+      ? navigate({ href: back })
+      : navigate({ to: '/w/$slug/accounts', params: { slug: workspace.slug } }));
+  };
 
   const add = async () => {
     setSaving(true);

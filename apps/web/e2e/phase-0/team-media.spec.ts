@@ -1,7 +1,7 @@
 // P0-Q1: phase 0's "done when" (docs/stages/phase-0.md). A new user signs up, verifies their
 // email, creates a workspace, uploads an image and invites a teammate, who signs up from the
 // invitation, verifies, joins with the role they were given, and sees the same image. Along the
-// way the owner opens Accounts and the composer (phase 1, nothing connected yet), saves a draft
+// way the owner skips onboarding's steps 2–3 (the calendar then lists them), opens Accounts and the composer (phase 1, nothing connected yet), saves a draft
 // and finds it under Posts, and every screen
 // is checked for the right cursors (support/cursors.ts).
 import { fileURLToPath } from 'node:url';
@@ -49,8 +49,20 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   await expectRightCursors(ownerPage, 'onboarding');
   await ownerPage.getByLabel('Workspace name').fill(workspaceName);
   await ownerPage.getByRole('button', { name: 'Create workspace' }).click();
-  await expect(ownerPage).toHaveURL(/\/w\/[a-z0-9-]+\/calendar$/);
+  // Steps 2–3 (connect an account, first post) can be skipped; the calendar keeps a checklist.
+  await expect(ownerPage).toHaveURL(/\/w\/[a-z0-9-]+\/welcome$/);
   const slug = new URL(ownerPage.url()).pathname.split('/')[2] ?? '';
+  await expect(
+    ownerPage.getByRole('heading', { name: 'Connect your first account' }),
+  ).toBeVisible();
+  await expectRightCursors(ownerPage, 'onboarding step 2');
+  await ownerPage.getByRole('link', { name: 'Skip for now' }).click();
+  await expect(ownerPage.getByRole('heading', { name: 'Write your first post' })).toBeVisible();
+  await expectRightCursors(ownerPage, 'onboarding step 3');
+  await ownerPage.getByRole('link', { name: 'Skip for now' }).click();
+  await expect(ownerPage).toHaveURL(new RegExp(`/w/${slug}/calendar$`));
+  await expect(ownerPage.getByRole('region', { name: 'Get started' })).toContainText('1 of 3 done');
+  await expectRightCursors(ownerPage, 'calendar with getting started');
 
   // --- The owner uploads an image, and it finishes processing. ---
   await ownerPage.getByRole('link', { name: 'Media' }).first().click();

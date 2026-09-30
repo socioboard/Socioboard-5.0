@@ -27,8 +27,7 @@ type Values = z.infer<typeof schema>;
 
 /**
  * Onboarding step 1: name the workspace and pick its time zone. The server makes the URL slug from
- * the name and switches to the new workspace. Steps 2–3 (connect an account, first post) arrive
- * with phase 1 (P1-F7).
+ * the name and switches to the new workspace, then steps 2–3 follow (WelcomePage).
  */
 export function CreateWorkspaceScreen({ me }: { me: Me }) {
   const { t } = useTranslation('onboarding');
@@ -48,7 +47,8 @@ export function CreateWorkspaceScreen({ me }: { me: Me }) {
     mutationFn: (body: Values) => api(apiRoutes.workspaces.createWorkspace, { body }),
     onSuccess: async (workspace) => {
       await queryClient.invalidateQueries({ queryKey: meQuery.queryKey });
-      await navigate({ href: `/w/${encodeURIComponent(workspace.slug)}`, replace: true });
+      // Steps 2–3: connect an account, then write a first post.
+      await navigate({ href: `/w/${encodeURIComponent(workspace.slug)}/welcome`, replace: true });
     },
   });
   const notVerified =

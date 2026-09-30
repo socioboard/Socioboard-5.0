@@ -23,6 +23,8 @@ export const postKeys = {
   lists: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list'] as const,
   list: (workspaceId: string, tab: PostTab) =>
     ['workspaces', workspaceId, 'posts', 'list', tab] as const,
+  // Under `lists`, so it's marked stale whenever a post is saved.
+  any: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list', '_any'] as const,
   detail: (workspaceId: string, postId: string) =>
     ['workspaces', workspaceId, 'posts', 'detail', postId] as const,
 };
@@ -56,6 +58,20 @@ export const postListQuery = (workspaceId: string, tab: PostTab) =>
     getNextPageParam: (last) => last.nextCursor ?? undefined,
     refetchInterval: (query) =>
       query.state.data?.pages.some((p) => p.items.some(isSending)) ? SENDING_POLL_MS : false,
+  });
+
+/** Whether the workspace has any post yet (the getting-started checklist). */
+export const hasPostsQuery = (workspaceId: string) =>
+  queryOptions({
+    queryKey: postKeys.any(workspaceId),
+    queryFn: async ({ signal }) =>
+      (
+        await api(apiRoutes.posts.listPosts, {
+          params: { workspaceId },
+          query: { limit: 1 },
+          signal,
+        })
+      ).items.length > 0,
   });
 
 export const postQuery = (workspaceId: string, postId: string) =>

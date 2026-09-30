@@ -4,6 +4,7 @@ import { focusManager } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { rememberConnectReturn, takeConnectReturn } from '../../../lib/return-to';
 import { halden, meWith, mockServer, renderApp } from '../../../testing/render';
 import { browser, groupAccounts } from '../api';
 
@@ -189,6 +190,8 @@ describe('connecting', () => {
     );
     const dialog = await screen.findByRole('dialog', { name: 'Adding another Facebook account?' });
     expect(dialog).toHaveTextContent('sign out of Facebook first');
+    // A way back left over from onboarding is forgotten: this connect ends on the Accounts page.
+    rememberConnectReturn(WID, '/w/halden/welcome?step=post');
     await user.click(within(dialog).getByRole('button', { name: 'Continue to Facebook' }));
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith('https://facebook.test/auth');
@@ -196,6 +199,7 @@ describe('connecting', () => {
     expect(calls.find((c) => c.key.startsWith('POST'))?.body).toEqual({
       forceAccountSelection: true,
     });
+    expect(takeConnectReturn(WID)).toBeUndefined();
   });
 
   it('Instagram offers both ways to sign in; a first Instagram login goes straight there', async () => {
@@ -331,6 +335,40 @@ const asset = (overrides: object) => ({
 
 describe('asset picker', () => {
   const picker = `/w/halden/accounts/connect/facebook?connection=${priya.id}`;
+
+  it('a connect started from onboarding ends on its next step, once', async () => {
+    mockServer({
+      ...asAdmin(),
+      [`GET ${BASE}/connections/${priya.id}/assets`]: [
+        200,
+        {
+          connection: priya,
+          items: [asset({ externalId: 'new', displayName: 'Halden Roastery' })],
+        },
+      ],
+      [`POST ${BASE}/connections/${priya.id}/assets`]: [201, { items: [coffee] }],
+    });
+    rememberConnectReturn(WID, '/w/halden/welcome?step=post');
+    const { history } = renderApp(picker);
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: 'Add 1 account' }));
+    await waitFor(() => {
+      expect(history.location.pathname + history.location.search).toBe(
+        '/w/halden/welcome?step=post',
+      );
+    });
+    // Read once: the next connect ends on the Accounts page again.
+    expect(takeConnectReturn(WID)).toBeUndefined();
+  });
+
+  it('a remembered way back is only followed for its workspace, and only inside the app', () => {
+    rememberConnectReturn('another-workspace', '/w/other/welcome');
+    expect(takeConnectReturn(WID)).toBeUndefined();
+    rememberConnectReturn(WID, '//evil.test/steal');
+    expect(takeConnectReturn(WID)).toBeUndefined();
+    rememberConnectReturn(WID, '/w/halden/welcome?step=post');
+    expect(takeConnectReturn(WID)).toBe('/w/halden/welcome?step=post');
+  });
 
   it('ticks what’s new, marks what’s added, and adds the chosen ones', async () => {
     const calls = mockServer({
