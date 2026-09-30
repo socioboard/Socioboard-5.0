@@ -67,6 +67,18 @@ describe('createApiClient', () => {
     expect((init?.headers as Record<string, string>)['Content-Type']).toBe('application/json');
   });
 
+  it('sends extra headers (Idempotency-Key), without letting them change Accept', async () => {
+    const fetch = fakeFetch(202, {});
+    const api = createApiClient({ fetch });
+    await api(apiRoutes.posts.publishNow, {
+      params: { workspaceId: WS, postId: WS },
+      headers: { 'Idempotency-Key': 'publish-1', Accept: 'text/html' },
+    });
+    const headers = fetch.mock.calls[0]?.[1]?.headers as Record<string, string>;
+    expect(headers['Idempotency-Key']).toBe('publish-1');
+    expect(headers.Accept).toBe('application/json');
+  });
+
   it('returns undefined for an empty success (204)', async () => {
     const api = createApiClient({
       fetch: vi.fn<typeof fetch>(() => Promise.resolve(new Response(null, { status: 204 }))),

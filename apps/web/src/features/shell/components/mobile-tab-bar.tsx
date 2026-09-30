@@ -1,7 +1,7 @@
 import type { Me } from '@socioboard/contracts';
-import { Drawer, DrawerContent, DrawerTitle } from '@socioboard/ui';
+import { buttonVariants, Drawer, DrawerContent, DrawerTitle } from '@socioboard/ui';
 import { Link } from '@tanstack/react-router';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search, SquarePen } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,11 +21,13 @@ export function MobileTabBar({
   me,
   membership,
   items,
+  canCompose,
   onSearch,
 }: {
   me: Me;
   membership: Membership;
   items: readonly NavItem[];
+  canCompose: boolean;
   onSearch: () => void;
 }) {
   const { t } = useTranslation('shell');
@@ -69,6 +71,19 @@ export function MobileTabBar({
           <div className="pr-10">
             <WorkspaceSwitcher me={me} current={membership.workspace} />
           </div>
+          {canCompose && (
+            <Link
+              to="/w/$slug/compose/{-$postId}"
+              params={{ slug: membership.workspace.slug, postId: undefined }}
+              className={buttonVariants({ variant: 'primary', size: 'lg' })}
+              onClick={() => {
+                setMenuOpen(false);
+              }}
+            >
+              <SquarePen aria-hidden="true" />
+              {t('compose')}
+            </Link>
+          )}
           <div className="border-hair flex items-center gap-1 border-t pt-3">
             <UserMenu me={me} role={membership.role} side="top" />
             <ThemeToggle />

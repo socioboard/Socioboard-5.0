@@ -161,5 +161,35 @@
       "gif": "GIFs"
     },
     "aFile": "A file"
+  },
+  "footer": {
+    "saving": "Saving…",
+    "saveFailed": "Didn’t save.",
+    "unsaved": "Unsaved changes",
+    "savedAt": "Saved at {{time}}",
+    "allSaved": "All changes saved",
+    "saveDraft": "Save draft",
+    "retry": "Try saving again",
+    "publishNow": "Publish now",
+    "publishing": "Publishing…",
+    "cantPublish": "Someone who can publish sends this out.",
+    "reviewRequired": "This workspace reviews every post before it goes out; sending for review arrives with approvals.",
+    "chooseAccounts": "Choose accounts to publish to.",
+    "fixFirst_one": "Fix the problem above to publish.",
+    "fixFirst_other": "Fix the problems above to publish."
+  },
+  "publish": {
+    "started_one": "Publishing to {{count}} account.",
+    "started_other": "Publishing to {{count}} accounts.",
+    "hasErrors": "Some networks have problems to fix first; they’re listed above.",
+    "reviewRequired": "This workspace reviews every post before it goes out.",
+    "alreadySent": "This post has already been sent.",
+    "notEditable": "This post is being published or was published, so it can’t be changed."
+  },
+  "leave": {
+    "title": "Leave without saving?",
+    "body": "Your latest changes to this post aren’t saved yet.",
+    "confirm": "Leave",
+    "cancel": "Stay"
   }
 }

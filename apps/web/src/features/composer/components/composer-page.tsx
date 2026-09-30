@@ -8,6 +8,7 @@ import {
 import {
   AccountPicker,
   Banner,
+  ConfirmDialog,
   Button,
   cn,
   CharacterCounter,
@@ -20,18 +21,21 @@ import {
   RadioGroup,
   Skeleton,
   Textarea,
+  toast,
   type PickerAccount,
 } from '@socioboard/ui';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
 import { MessageSquarePlus, RotateCcw, Trash2 } from 'lucide-react';
 import { useEffect, useId, useReducer, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ApiError } from '../../../lib/api';
+import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { accountsQuery, networksQuery } from '../../accounts';
+import { workspaceQuery } from '../../settings';
 import { postQuery } from '../api';
 import {
   contentFor,
@@ -39,13 +43,16 @@ import {
   emptyDraft,
   fromPost,
   selectedNetworks,
+  toPostBody,
   type Draft,
 } from '../draft';
 import { MediaStrip } from './media-strip';
 import { useAttachedMedia } from '../media';
+import { useSavePost } from '../use-save';
 import { useValidation } from '../use-validation';
 import { isWebAddress, type ComposerIssue } from '../validation';
 import { useIssueWording } from '../issue-wording';
+import { ComposerFooter } from './composer-footer';
 import { IssuesPanel } from './issues-panel';
 import { NetworkTabs } from './network-tabs';
 import { PreviewPanel } from './preview-panel';
@@ -55,8 +62,7 @@ const LOCKED = new Set(['publishing', 'published']);
 
 /**
  * `/w/:slug/compose` and `/w/:slug/compose/:postId` (docs/frontend/areas/composer.md): write
- * once, tailor per network. Previews (P1-F3), the issues panel (P1-F4) and saving (P1-F5) join
- * this screen next.
+ * once, tailor per network, see it as each network will show it, then save or publish.
  */
 export function ComposerPage({ postId }: { postId?: string | undefined }) {
   const { t } = useTranslation('composer');
@@ -67,6 +73,33 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
     ...postQuery(workspace.id, postId ?? ''),
     enabled: postId !== undefined,
   });
+  const navigate = useNavigate();
+  // Which composer is on screen. Saving a new post puts its id in the address; that composer
+  // stays (keeping focus and anything typed during the save). Opening another post, or "New post"
+  // again, starts a fresh one.
+  const [session, setSession] = useState<{
+    postId: string | undefined;
+    n: number;
+    created: string | null;
+  }>({ postId, n: 0, created: null });
+  // Coming back to "New post" from a post is a fresh start; any other move keeps the count.
+  if (session.postId !== postId) {
+    setSession({
+      postId,
+      n: postId === undefined ? session.n + 1 : session.n,
+      created: postId === undefined ? null : session.created,
+    });
+  }
+  const mountKey =
+    postId === undefined || postId === session.created ? `session-${String(session.n)}` : postId;
+  const onCreated = (id: string) => {
+    setSession((s) => ({ ...s, created: id }));
+    void navigate({
+      to: '/w/$slug/compose/{-$postId}',
+      params: { slug: workspace.slug, postId: id },
+      replace: true,
+    });
+  };
 
   const title = postId ? t('editTitle') : t('newTitle');
   let body: ReactNode;
@@ -114,11 +147,11 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
   } else {
     body = (
       <Composer
-        // A different post (or new) starts from its own content.
-        key={postId ?? 'new'}
+        key={mountKey}
         post={post.data}
         accounts={accounts.data}
         networks={networks.data}
+        onCreated={onCreated}
       />
     );
   }
@@ -137,10 +170,12 @@ function Composer({
   post,
   accounts,
   networks,
+  onCreated,
 }: {
   post: Post | undefined;
   accounts: SocialAccount[];
   networks: Network[];
+  onCreated: (postId: string) => void;
 }) {
   const { t } = useTranslation('composer');
   const { me, workspace } = useWorkspace();
@@ -193,6 +228,40 @@ function Composer({
     draft.accountIds.length > 0 || draft.text.trim() !== '' || draft.mediaIds.length > 0;
   const [touched, setTouched] = useState(hasContent);
   if (hasContent && !touched) setTouched(true);
+
+  const saving = useSavePost({
+    workspaceId: workspace.id,
+    initialPost: post,
+    body: toPostBody(draft, networkOf),
+    hasContent,
+    enabled: !readOnly,
+    onCreated,
+  });
+  const reviewRequired = useQuery(workspaceQuery(workspace.id)).data?.requireReviewForAll ?? false;
+  const publish = async () => {
+    try {
+      const published = await saving.publish();
+      if (published) {
+        toast.success(t('publish.started', { count: published.targets.length }));
+      }
+    } catch (err) {
+      const code = err instanceof ApiError ? err.code : '';
+      const words: Record<string, string> = {
+        POST_HAS_ERRORS: t('publish.hasErrors'),
+        REVIEW_REQUIRED: t('publish.reviewRequired'),
+        POST_ALREADY_SENT: t('publish.alreadySent'),
+        POST_NOT_EDITABLE: t('publish.notEditable'),
+      };
+      toast.error(words[code] ?? errorMessage(err));
+    }
+  };
+  // Leaving with unsaved changes asks first, in the app and when closing the tab. Moving within
+  // this route (a new post getting its id in the address) never asks.
+  const blocker = useBlocker({
+    shouldBlockFn: ({ current, next }) => saving.dirty && current.routeId !== next.routeId,
+    enableBeforeUnload: () => saving.dirty,
+    withResolver: true,
+  });
   const editorRef = useRef<HTMLDivElement>(null);
   // Jumping to an issue: switch to the tab that holds the field, then focus it once drawn.
   const pendingFocus = useRef<string | null>(null);
@@ -388,6 +457,36 @@ function Composer({
           />
         </aside>
       </div>
+      {!readOnly && (
+        <div className="sticky bottom-0 z-10">
+          <ComposerFooter
+            state={saving.state}
+            dirty={saving.dirty}
+            saved={saving.postId !== null}
+            onSave={() => void saving.save()}
+            onPublish={() => void publish()}
+            publishing={saving.publishing}
+            canPublish={can('posts:publish')}
+            reviewRequired={reviewRequired}
+            blocked={validation.blocked.size}
+            noAccounts={draft.accountIds.length === 0}
+          />
+        </div>
+      )}
+      <ConfirmDialog
+        open={blocker.status === 'blocked'}
+        onOpenChange={(open) => {
+          if (!open && blocker.status === 'blocked') blocker.reset();
+        }}
+        tone="danger"
+        title={t('leave.title')}
+        description={t('leave.body')}
+        confirmLabel={t('leave.confirm')}
+        cancelLabel={t('leave.cancel')}
+        onConfirm={() => {
+          if (blocker.status === 'blocked') blocker.proceed();
+        }}
+      />
     </>
   );
 }

@@ -40,7 +40,11 @@ type Body<R extends RouteDefinition> = R['body'] extends z.ZodType
 
 export type CallInput<R extends RouteDefinition> = Params<R> &
   Query<R> &
-  Body<R> & { signal?: AbortSignal };
+  Body<R> & {
+    signal?: AbortSignal;
+    /** Extra request headers, e.g. `Idempotency-Key` on publish-now. */
+    headers?: Record<string, string>;
+  };
 
 /** Required keys only when the route has params or a body; otherwise the input can be left out. */
 type CallArgs<R extends RouteDefinition> = R['params'] extends z.ZodType
@@ -91,11 +95,12 @@ export function createApiClient({ baseUrl = '', fetch: customFetch }: ApiClientO
     route: R,
     ...[input]: CallArgs<R>
   ): Promise<RouteResponse<R>> {
-    const { params, query, body, signal } = (input ?? {}) as {
+    const { params, query, body, signal, headers } = (input ?? {}) as {
       params?: PathParams;
       query?: Record<string, unknown>;
       body?: unknown;
       signal?: AbortSignal;
+      headers?: Record<string, string>;
     };
     const url = baseUrl + buildPath(route, params) + buildQuery(query);
     let res: Response;
@@ -103,10 +108,11 @@ export function createApiClient({ baseUrl = '', fetch: customFetch }: ApiClientO
       res = await fetch(url, {
         method: route.method,
         credentials: 'include',
-        headers:
-          body === undefined
-            ? { Accept: 'application/json' }
-            : { Accept: 'application/json', 'Content-Type': 'application/json' },
+        headers: {
+          ...headers,
+          Accept: 'application/json',
+          ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
         ...(signal ? { signal } : {}),
       });

@@ -40,7 +40,8 @@
     "current": "Current",
     "themeLight": "Use the light theme",
     "themeDark": "Use the dark theme",
-    "themeSystem": "Match the system theme"
+    "themeSystem": "Match the system theme",
+    "create": "Create"
   },
   "banners": {
     "verifyEmail": "Verify your email address. We sent a link to {{email}}.",
@@ -66,5 +67,6 @@
     "menu": "Menu",
     "search": "Search",
     "close": "Close menu"
-  }
+  },
+  "compose": "New post"
 }

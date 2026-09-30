@@ -13,6 +13,11 @@ export function formatDateTime(iso: string, locale?: string): string {
   );
 }
 
+/** "14:05" (or "2:05 PM"), in the reader's own clock style. */
+export function formatTime(iso: string, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(new Date(iso));
+}
+
 /** "312 KB", "1.1 MB", "1 GB": binary units, as file managers show them. */
 export function formatBytes(bytes: number, locale?: string): string {
   const units = ['B', 'KB', 'MB', 'GB'];
