@@ -384,7 +384,8 @@ function LoadFailed({
     }
     setBusy(true);
     try {
-      await startReconnect(workspace.id, connectionId);
+      // Part of the connect under way: keep where it ends (onboarding's next step).
+      await startReconnect(workspace.id, connectionId, { keepReturn: true });
     } catch (err) {
       toast.error(errorMessage(err));
       setBusy(false);

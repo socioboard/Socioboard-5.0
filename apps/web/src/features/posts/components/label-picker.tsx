@@ -85,7 +85,7 @@ export function LabelPicker({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
+    <div className="relative flex flex-wrap items-center gap-1.5">
       {/* Chips spring in (LabelChip), and on removal fade out as the rest close the gap. */}
       <AnimatePresence initial={false} mode="popLayout">
         {chosen.map((l) => (

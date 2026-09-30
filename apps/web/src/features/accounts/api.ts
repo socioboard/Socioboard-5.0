@@ -9,6 +9,7 @@ import {
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 
 import { api, ApiError, INVALID_RESPONSE } from '../../lib/api';
+import { forgetConnectReturn } from '../../lib/return-to';
 
 export const accountKeys = {
   all: (workspaceId: string) => ['workspaces', workspaceId, 'accounts'] as const,
@@ -104,11 +105,20 @@ export async function startConnect(
   leaveFor(authUrl);
 }
 
-/** Signs in again as the same person to refresh a login. */
-export async function startReconnect(workspaceId: string, connectionId: string) {
+/**
+ * Signs in again as the same person to refresh a login. It ends on the Accounts page: a way back
+ * left over from an abandoned onboarding connect is forgotten, unless this reconnect is part of
+ * that connect (`keepReturn`: the picker offering it when listing the login's accounts failed).
+ */
+export async function startReconnect(
+  workspaceId: string,
+  connectionId: string,
+  { keepReturn = false }: { keepReturn?: boolean } = {},
+) {
   const { authUrl } = await api(apiRoutes.socialAccounts.reconnect, {
     params: { workspaceId, connectionId },
   });
+  if (!keepReturn) forgetConnectReturn();
   leaveFor(authUrl);
 }
 

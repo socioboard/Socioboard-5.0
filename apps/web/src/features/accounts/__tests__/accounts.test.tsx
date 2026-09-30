@@ -235,12 +235,16 @@ describe('connecting', () => {
         { authUrl: 'https://facebook.test/again' },
       ],
     });
+    // A way back left from an onboarding connect that was abandoned at Facebook.
+    rememberConnectReturn(WID, '/w/halden/welcome?step=post');
     renderApp('/w/halden/accounts');
     const user = userEvent.setup();
     await user.click(await screen.findByRole('button', { name: 'Reconnect' }));
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith('https://facebook.test/again');
     });
+    // This reconnect ends on the Accounts page, not on onboarding.
+    expect(takeConnectReturn(WID)).toBeUndefined();
   });
 });
 
@@ -490,6 +494,8 @@ describe('asset picker', () => {
       ],
       [`POST ${BASE}/connections/${priya.id}/reconnect`]: [200, { authUrl: 'https://fb.test/r' }],
     });
+    // Mid-connect from onboarding: reconnecting here is part of it and keeps where it ends.
+    rememberConnectReturn(WID, '/w/halden/welcome?step=post');
     renderApp(picker);
     const user = userEvent.setup();
     expect(
@@ -499,6 +505,7 @@ describe('asset picker', () => {
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith('https://fb.test/r');
     });
+    expect(takeConnectReturn(WID)).toBe('/w/halden/welcome?step=post');
   });
 
   it('a failed connect reads as what happened, with a way to try again', async () => {
