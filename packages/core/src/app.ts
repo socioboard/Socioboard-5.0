@@ -123,12 +123,15 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
-  const { socialAccounts, posts, scheduling, mediaUrls } = createPublishingServices(platform, {
-    registry: options.registry,
-  });
+  const { socialAccounts, posts, scheduling, queueSlots, mediaUrls } = createPublishingServices(
+    platform,
+    {
+      registry: options.registry,
+    },
+  );
   registerSocialAccountRoutes(api, socialAccounts);
   registerPostRoutes(api, posts);
-  registerSchedulingRoutes(api, scheduling);
+  registerSchedulingRoutes(api, scheduling, queueSlots);
 
   const app = express();
   app.disable('x-powered-by');
