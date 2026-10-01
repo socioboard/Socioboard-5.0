@@ -121,7 +121,7 @@ Modules talk asynchronously through an in-process typed event bus (`platform/eve
 
 ## Jobs
 
-- **Queue names** are kebab-case and owned by one module: `publish`, `media-prepare`, `token-refresh`, `metrics-sync`, `recurring`, `reconcile`, `ai-result`, `reports`, `notifications`.
+- **Queue names** are kebab-case and owned by one module: `publish`, `media-prepare`, `token-refresh`, `account-health`, `metrics-sync`, `recurring`, `reconcile`, `ai-result`, `reports`, `notifications`.
 - **Job IDs** are deterministic where duplicates would be harmful (e.g. `publish:<targetId>:v<scheduleVersion>`).
 - **Processors are idempotent:** re-running a job must never double-post.
 - **Retries:** exponential backoff; errors are classified `retryable`, `auth` or `content` (see [publishing](modules/publishing.md)).

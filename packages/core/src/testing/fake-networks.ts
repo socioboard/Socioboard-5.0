@@ -27,7 +27,9 @@ export interface FakeLogin extends LoginAdapter {
   /** People by the `code` the callback receives. */
   people: Map<string, FakePerson>;
   /** Set to make the next call of that kind fail. */
-  failNext: { exchange?: ProviderError; listAssets?: ProviderError };
+  failNext: { exchange?: ProviderError; listAssets?: ProviderError; refresh?: ProviderError };
+  /** Tokens passed to `refresh` (Instagram's only, like Meta's: Facebook logins can't refresh). */
+  refreshed: TokenSet[];
   /** The last auth URL's parameters, e.g. to read `state`. */
   lastAuthUrl: URL | null;
 }
@@ -35,8 +37,10 @@ export interface FakeLogin extends LoginAdapter {
 function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boolean): FakeLogin {
   const people = new Map<string, FakePerson>();
   const failNext: FakeLogin['failNext'] = {};
+  const refreshed: TokenSet[] = [];
   const personOf = (tokens: TokenSet) => {
-    const person = people.get(tokens.accessToken.replace(/^token-/, ''));
+    // `token-<code>`, with `~<n>` added each time it is refreshed.
+    const person = people.get(tokens.accessToken.replace(/^token-/, '').replace(/~\d+$/, ''));
     if (!person) throw new ProviderError({ kind: 'auth', message: 'Invalid token' });
     return person;
   };
@@ -48,6 +52,7 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
     requiredScopes: id === 'facebook' ? ['pages_show_list'] : ['instagram_business_basic'],
     people,
     failNext,
+    refreshed,
     lastAuthUrl: null,
     getAuthUrl({ state, redirectUri, forceAccountSelection }) {
       const url = new URL(`https://${id}.example.test/oauth`);
@@ -78,6 +83,21 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
       return Promise.resolve(personOf(tokens).assets);
     },
   };
+  if (id === 'instagram') {
+    // A fresh token for the same person, good for 60 days.
+    login.refresh = (tokens) => {
+      refreshed.push(tokens);
+      const err = failNext.refresh;
+      delete failNext.refresh;
+      if (err) return Promise.reject(err);
+      personOf(tokens);
+      return Promise.resolve({
+        ...tokens,
+        accessToken: `${tokens.accessToken.replace(/~\d+$/, '')}~${String(refreshed.length)}`,
+        expiresAt: new Date(Date.now() + 60 * 86_400_000),
+      });
+    };
+  }
   return login;
 }
 
