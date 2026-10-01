@@ -745,7 +745,9 @@ export function createPostService(deps: PostServiceDeps) {
             id: { in: jobs.filter((j) => j.revertTo === status).map((j) => j.targetId) },
             status: 'publishing',
           },
-          data: { status },
+          // A scheduled target also gets its version back, so its delayed job is valid again
+          // (publish-now bumped it, and drops that job only after queueing succeeds).
+          data: status === 'scheduled' ? { status, scheduleVersion: { decrement: 1 } } : { status },
         });
       }
       throw err;
