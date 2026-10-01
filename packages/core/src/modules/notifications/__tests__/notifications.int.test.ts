@@ -111,11 +111,11 @@ async function post(who: Browser = editor) {
   return res.body as { id: string; targets: { id: string }[] };
 }
 
-const failed = (postId: string, message = 'Session expired') =>
+const failed = (postId: string, message = 'Session expired', targetId = postId) =>
   emit('target.failed', {
     workspaceId: ws,
     postId,
-    targetId: postId,
+    targetId,
     network: 'facebook_page',
     errorKind: 'auth',
     message,
@@ -348,8 +348,9 @@ describe('emails', () => {
 
   it('several failures of one post become one email, sent once its window closes', async () => {
     const p = await post();
-    await failed(p.id, 'Facebook said no');
-    await failed(p.id, 'Instagram said no');
+    const targetId = p.targets[0]?.id;
+    await failed(p.id, 'Facebook said no', targetId);
+    await failed(p.id, 'Instagram said no', targetId);
     const window = Math.floor(Date.now() / EMAIL_WINDOW_MS);
     const jobId = `email-${editor.userId}-post-${p.id}-${String(window)}`;
     const job = await emailQueue.getJob(jobId);
@@ -366,14 +367,35 @@ describe('emails', () => {
     expect(sent).toHaveLength(1);
     expect(sent[0]).toMatchObject({
       to: t.email('nt-editor'),
-      subject: 'A post couldn’t be published to Facebook (and 1 more)',
+      subject: "A post couldn't be published to 2 accounts",
     });
+    // Its own design: each delivery's account, network and reason.
+    expect(sent[0]?.text).toContain('Halden Coffee on Facebook');
     expect(sent[0]?.text).toContain('Facebook said no');
     expect(sent[0]?.text).toContain('Instagram said no');
     expect(sent[0]?.text).toContain(`https://app.example.test/w/${slug}/posts/${p.id}`);
     // Sent once: the items are gone.
     await sendNotificationEmail(deps, job.data);
     expect(sent).toHaveLength(1);
+  });
+
+  it('a login’s accounts needing reconnecting: one email naming each, for the admins', async () => {
+    // Earlier tests in this window queued some too.
+    const key = `notify-email:${owner.userId}:accounts:${ws}:${String(Math.floor(Date.now() / EMAIL_WINDOW_MS))}`;
+    await t.platform.kv.delete(key);
+    for (const reason of ['Priya lost access', 'Token revoked']) {
+      await emit('account.reauth_required', {
+        workspaceId: ws,
+        accountId,
+        connectionId: accountId,
+        reason,
+      });
+    }
+    await sendNotificationEmail(deps, { userId: owner.userId, key });
+    expect(sent[0]?.subject).toMatch(/^2 accounts need reconnecting in /);
+    expect(sent[0]?.text).toContain('Halden Coffee on Facebook');
+    expect(sent[0]?.text).toContain('Token revoked');
+    expect(sent[0]?.text).toContain(`https://app.example.test/w/${slug}/accounts?account=`);
   });
 
   it('only types with email on: a published post isn’t emailed by default', async () => {

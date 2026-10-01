@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  accountsNeedReconnectingEmail,
   invitation,
   magicLink,
   notificationEmail,
+  publishFailedEmail,
   resetPassword,
   verifyEmail,
+  weeklyDigestEmail,
   type RenderedEmail,
 } from '../index';
 
@@ -91,5 +94,80 @@ describe('notification email', () => {
     });
     expect(email.html).not.toContain('<script>');
     expect(email.html).toContain('&lt;script&gt;');
+  });
+});
+
+describe('publish failed', () => {
+  it('one delivery: its network in the subject, the account and reason in the body', async () => {
+    const email = await publishFailedEmail({
+      workspace: 'Acme',
+      failures: [{ account: 'Halden Coffee', network: 'Facebook', reason: 'Session expired' }],
+      url,
+    });
+    expect(email.subject).toBe("A post couldn't be published to Facebook");
+    expect(email.text).toContain('In Acme, Halden Coffee on Facebook didn');
+    expect(email.text).toContain('Session expired');
+    expect(email.text).toContain(url);
+  });
+
+  it('several: counted in the subject, each with its own reason', async () => {
+    const email = await publishFailedEmail({
+      workspace: 'Acme',
+      failures: [
+        { account: 'Halden Coffee', network: 'Facebook', reason: 'Session expired' },
+        { account: 'halden.coffee', network: 'Instagram', reason: 'Image too small' },
+      ],
+      url,
+    });
+    expect(email.subject).toBe("A post couldn't be published to 2 accounts");
+    expect(email.text).toContain('halden.coffee on Instagram');
+    expect(email.text).toContain('Image too small');
+  });
+});
+
+describe('accounts need reconnecting', () => {
+  it('names one account, or counts several, and says scheduled posts will fail', async () => {
+    const one = await accountsNeedReconnectingEmail({
+      workspace: 'Acme',
+      accounts: [{ name: 'Halden Coffee', network: 'Facebook', reason: 'Priya lost access' }],
+      url,
+    });
+    expect(one.subject).toBe('Halden Coffee needs reconnecting');
+    expect(one.text).toContain('Scheduled posts to it will fail');
+    const two = await accountsNeedReconnectingEmail({
+      workspace: 'Acme',
+      accounts: [
+        { name: 'Halden Coffee', network: 'Facebook', reason: 'x' },
+        { name: 'halden.coffee', network: 'Instagram', reason: 'y' },
+      ],
+      url,
+    });
+    expect(two.subject).toBe('2 accounts need reconnecting in Acme');
+    expect(two.text).toContain('Reconnect accounts');
+  });
+});
+
+describe('weekly digest', () => {
+  it('totals in the subject, each workspace’s week, problems only when there are any', async () => {
+    const email = await weeklyDigestEmail({
+      name: 'Ana',
+      workspaces: [
+        { name: 'Acme', published: 12, failed: 1, scheduled: 5, needsReconnecting: 0, url },
+        { name: 'Side', published: 1, failed: 0, scheduled: 0, needsReconnecting: 2, url },
+      ],
+    });
+    expect(email.subject).toBe('Your week on Socioboard: 13 published, 1 failed');
+    expect(email.text).toContain('12 posts published, 5 posts scheduled');
+    expect(email.text).toContain("1 post couldn't be published.");
+    expect(email.text).toContain('1 post published, 0 posts scheduled');
+    expect(email.text).toContain('2 accounts need reconnecting.');
+    expect(email.text).not.toContain('0 accounts');
+    const quiet = await weeklyDigestEmail({
+      name: 'Ana',
+      workspaces: [
+        { name: 'Acme', published: 2, failed: 0, scheduled: 1, needsReconnecting: 0, url },
+      ],
+    });
+    expect(quiet.subject).toBe('Your week on Socioboard: 2 published');
   });
 });

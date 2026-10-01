@@ -21,7 +21,7 @@
 - [x] P2-B9 Calendar endpoint (`GET /calendar`: `[from, to)` by each target's time, oldest first, filters by account, status and label, 1000 at most with `truncated`; calendar and queue entries are in time order)
 - [x] P2-B10 Admin v1 endpoints + Bull Board mount; platform-admin guard with 2FA check (`modules/admin`; guard reads the database and needs the session's 2FA mark; Bull Board read-only behind it; the worker checks its queues against `WORKER_QUEUES`)
 - [x] P2-B11 `platform/realtime` (Socket.IO + Valkey adapter) and `platform/flags` (FeatureFlag reader); also emits `post.status_changed` (whenever a post's or its targets' status changes: posts' `recomputeStatus`, scheduling, publishing) and `account.status_changed` (an account needing reconnecting, back to active, or disconnected) to `workspace:<id>`, so the calendar and accounts page stay live
-- [ ] P2-B12 Email templates: publish failed, account reconnect, digest
+- [x] P2-B12 Email templates: publish failed, account reconnect, digest (`packages/emails/src/notifications.tsx`; the weekly digest is opt-in, Monday from 08:00 in the user's timezone, sent by the hourly `notification-digest` job)
 
 ## Frontend
 - [ ] P2-F1 Composer: Schedule (date/time in workspace timezone), Add to queue, recurrence picker
