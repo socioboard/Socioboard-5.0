@@ -13,6 +13,10 @@ export interface Kv {
   delete(key: string): Promise<void>;
   /** Increments a counter, starting its expiry window on first use; returns the new count. */
   incr(key: string, windowSec: number): Promise<number>;
+  /** Appends to a list, (re)setting its expiry. */
+  listPush(key: string, value: string, ttlSec: number): Promise<void>;
+  /** The whole list, oldest first; empty when there is none. */
+  listRange(key: string): Promise<string[]>;
   close(): void;
 }
 
@@ -36,6 +40,10 @@ export function createKv({ url, prefix = 'sb:' }: { url: string; prefix?: string
       if (err) throw err;
       return Number(count);
     },
+    async listPush(key, value, ttlSec) {
+      await client.multi().rpush(key, value).expire(key, Math.ceil(ttlSec)).exec();
+    },
+    listRange: (key) => client.lrange(key, 0, -1),
     close: () => {
       client.disconnect();
     },

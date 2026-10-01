@@ -6,6 +6,7 @@ export * from './domain';
 export * from './modules/audit';
 export * from './modules/auth';
 export * from './modules/media';
+export * from './modules/notifications';
 export * from './modules/posts';
 export * from './modules/publishing';
 export * from './modules/scheduling';
