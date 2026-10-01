@@ -8,7 +8,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Post` | id, workspaceId, authorId, status, text, mediaIds[], link?, labelIds[], firstComment?, createdAt, updatedAt | status is derived from targets (see below) |
+| `Post` | id, workspaceId, authorId, status, text, mediaIds[], link?, labelIds[], firstComment?, recurringRuleId?, occurrenceAt?, createdAt, updatedAt | status is derived from targets (see below). `recurringRuleId` + `occurrenceAt` (unique together) mark a recurring rule's occurrence post ([scheduling](scheduling.md)); no foreign key, so sent occurrences keep the link after the rule or its template goes |
 | `PostLabel` | id, workspaceId, name, color, createdAt | Workspace label list for organizing and filtering posts. `color` is a name (gray, red, orange, amber, green, teal, blue, indigo, violet, pink), not a hex value: the UI maps it to a shade that reads in light and dark. Names are unique per workspace, ignoring case |
 | `PostTarget` | id, workspaceId, postId, socialAccountId, override JSON (text, mediaIds, options), scheduledAt?, scheduleVersion, status, externalPostId?, permalink?, attempts, lastError JSON?, publishedAt? | One per selected account |
 

@@ -10,7 +10,7 @@
 - [x] P2-C3 Admin v1: overview-lite, publishing health, failed targets, expiring accounts
 
 ## Backend
-- [ ] P2-B1 Prisma: RecurringRule, QueueSlot, Notification, NotificationPreference, FeatureFlag
+- [x] P2-B1 Prisma: RecurringRule, QueueSlot, Notification, NotificationPreference, FeatureFlag; `Post.recurringRuleId` + `occurrenceAt` for occurrence posts (migration `20261001090000_phase2_scheduling_notifications_flags`; seed adds weekday queue slots)
 - [ ] P2-B2 Schedule/unschedule/reschedule with `scheduleVersion` + deterministic delayed jobs
 - [ ] P2-B3 Queue slots + "add to queue" (`nextFreeSlot`)
 - [ ] P2-B4 Recurring rules + `recurring` expansion job

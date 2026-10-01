@@ -110,12 +110,21 @@ describe('seedDevData', () => {
     expect(scheduledAt).toBeGreaterThan(Date.now());
   });
 
+  it('gives the sample accounts weekday queue slots in the workspace timezone', async () => {
+    expect(first.queueSlots).toBe(20);
+    const slots = await t.db.forWorkspace(first.workspace.id).queueSlot.findMany();
+    expect(new Set(slots.map((x) => x.time))).toEqual(new Set(['09:00', '15:00']));
+    expect(new Set(slots.map((x) => x.weekday))).toEqual(new Set([1, 2, 3, 4, 5]));
+    expect(slots.every((x) => x.timezone === 'UTC')).toBe(true);
+  });
+
   it('running again adds nothing', async () => {
     const again = await seedDevData(platform, options);
     expect(again.users.every((u) => !u.created)).toBe(true);
     expect(again.workspace).toEqual({ ...first.workspace, created: false });
     expect(again.media).toBe(t.platform.storage ? 'exists' : 'no-storage');
     expect(again.posts).toBe('exists');
+    expect(again.queueSlots).toBe('exists');
     expect(await t.db.forWorkspace(first.workspace.id).socialAccount.count()).toBe(2);
     const members = await t.db.forWorkspace(first.workspace.id).member.count();
     expect(members).toBe(5);

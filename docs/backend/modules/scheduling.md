@@ -9,11 +9,11 @@ When posts go out: one-time schedules, recurring schedules, per-account posting 
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `PostTarget.scheduledAt`, `scheduleVersion` | (owned by posts) | Version bumps on every reschedule |
-| `RecurringRule` | id, postId, rrule, timezone, startsAt, endsAt?, nextRunAt, active | RFC 5545 RRULE, built from the structured rule the API takes; replaces 5.0's day-of-week schedules. `postId` is the **template** post |
+| `RecurringRule` | id, workspaceId, postId (one rule per post), rule JSON (the structured rule as the API took it), rrule, timezone, startsAt, endsAt?, nextRunAt?, active, createdById? | RFC 5545 RRULE, built from the structured rule; replaces 5.0's day-of-week schedules. `postId` is the **template** post; deleting the template deletes its rule. Stopping a rule sets `active = false` |
 | `Post.recurringRuleId`, `occurrenceAt` | (owned by posts) | Set on each occurrence post: which rule made it, and for which occurrence (unique together, so an occurrence is created once) |
 
 **Recurring posts are a template plus one ordinary post per occurrence** (decided 2026-09-30). The post the rule is set on becomes the template: it holds the content, accounts and rule, and is never published itself. The `recurring` job creates a normal post for each occurrence in the horizon, copying the template's content, overrides and labels, scheduled at the occurrence's time. An occurrence then behaves like any other post: its own targets, status, history and retry; it can be edited, moved or deleted alone, and it appears in the posts list and on the calendar (`recurring: true`). Why not many targets on one post: a target is one account's delivery of one post (unique per post and account), and everything that reads posts (status, editing, retry, history, tenant checks) would have to learn about occurrences.
-| `QueueSlot` | id, socialAccountId, weekday (0–6), time (HH:mm), timezone | Preferred posting times per account |
+| `QueueSlot` | id, workspaceId, socialAccountId, weekday (0–6, 0 = Sunday), time (HH:mm), timezone | Preferred posting times per account; unique per account, weekday and time; go with the account. `pnpm db:seed` gives the sample accounts weekdays at 09:00 and 15:00 |
 
 ## API
 | Method | Path | Permission | Description |

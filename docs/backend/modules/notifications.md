@@ -8,8 +8,8 @@ Tells people what happened: in-app notification feed with live updates over WebS
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Notification` | id, userId, workspaceId?, type, title, body, link, params JSON, readAt?, createdAt | Kept 90 days |
-| `NotificationPreference` | userId, type, inApp (bool), email (bool) | Defaults per type |
+| `Notification` | id, userId, workspaceId?, type, title, body, link?, params JSON, readAt?, createdAt | Kept 90 days. `type` is a string (new types need no migration). Read through the user; listed as workspace-scoped only so writes for a workspace are stamped. Deleting a workspace deletes its notifications |
+| `NotificationPreference` | userId, type, inApp (bool), email (bool) | Unique per user and type; types with no row use their defaults |
 
 ## API
 | Method | Path | Permission | Description |

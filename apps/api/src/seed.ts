@@ -18,6 +18,7 @@ try {
       ),
       `Media: ${typeof result.media === 'number' ? `${String(result.media)} sample files` : result.media}`,
       `Posts: ${typeof result.posts === 'number' ? `${String(result.posts)} sample posts (on paused sample accounts)` : result.posts}`,
+      `Queue slots: ${typeof result.queueSlots === 'number' ? `${String(result.queueSlots)} (weekdays 09:00 and 15:00)` : result.queueSlots}`,
       '',
     ].join('\n'),
   );
