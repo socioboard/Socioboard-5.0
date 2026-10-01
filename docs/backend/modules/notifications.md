@@ -31,6 +31,8 @@ Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a use
 - `account.status_changed` (to the workspace): account id and status.
 - `ai.job.updated` joins in phase 4.
 
+**How it's served (P2-B11):** the API attaches the Socket.IO server to its HTTP server. The handshake needs the app's origin (a WebSocket isn't covered by CORS) and a session cookie; the socket joins its user's room and its live workspaces' rooms, and rooms follow membership on every open socket (`workspace.created` and `member.joined` join, `member.removed` leaves, `workspace.deleted` empties the room). `post.status_changed` is sent by posts' `recomputeStatus`, which runs after every target change (publish, schedule, reschedule, unschedule, retry, cancel, recurring copies); `account.status_changed` by social-accounts whenever an account needs reconnecting, comes back, is added or is disconnected. A deleted post sends nothing yet (the page refetches on its own action). A socket outlives a revoked session until it reconnects. In front of the API, a proxy must pass WebSocket upgrades on `/api/socket.io` (Vite's dev proxy does, with `ws`); the web client should connect with `transports: ['websocket']`, so several API instances need no sticky sessions.
+
 ## Event → notification map
 | Event | Who gets it | Email by default |
 | --- | --- | --- |

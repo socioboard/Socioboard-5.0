@@ -3,6 +3,8 @@ import { createHash, randomBytes } from 'node:crypto';
 import {
   can,
   LoginProvider,
+  realtimeRooms,
+  type AccountStatus,
   type ConnectableAsset,
   type ConnectErrorCode,
   type ConnectResult,
@@ -37,6 +39,7 @@ import {
   type Logger,
   type MemberContext,
   type MembershipLookup,
+  type Realtime,
 } from '../../platform';
 import type { SocialAccountEvents } from './events';
 
@@ -50,6 +53,8 @@ export interface SocialAccountServiceDeps {
   /** The web app's origin; OAuth redirects come back to `<appUrl>/api/oauth/<provider>/callback`. */
   appUrl: string;
   lookupMembership: MembershipLookup;
+  /** Live updates: `account.status_changed` to the workspace's room. */
+  realtime: Realtime;
 }
 
 /** `token-refresh`: tokens expiring within this long are renewed (social-accounts.md, Jobs). */
@@ -111,6 +116,14 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
   const { db, crypto, clock, logger, registry } = deps;
   const events = typedEvents<SocialAccountEvents>(deps.events);
   const scoped = (workspaceId: string) => db.forWorkspace(workspaceId);
+  /** Tells the workspace's open pages (accounts, composer) that an account's status changed. */
+  const announce = (workspaceId: string, accountId: string, status: AccountStatus) => {
+    deps.realtime.emit(realtimeRooms.workspace(workspaceId), 'account.status_changed', {
+      workspaceId,
+      accountId,
+      status,
+    });
+  };
   const redirectUri = (provider: LoginProvider) =>
     new URL(`/api/oauth/${provider}/callback`, deps.appUrl).toString();
 
@@ -427,6 +440,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
           ...(account.status === 'reauth_required' ? { status: 'active', statusReason: null } : {}),
         },
       });
+      if (account.status === 'reauth_required') announce(workspaceId, account.id, 'active');
     }
   }
 
@@ -608,6 +622,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
               : {}),
           },
         });
+        if (account.status === 'reauth_required') announce(c.workspaceId, account.id, 'active');
         continue;
       }
       if (!markLost || account.status === 'reauth_required') continue;
@@ -633,6 +648,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
       data: { status: 'reauth_required', statusReason: reason },
     });
     if (moved.count === 0) return;
+    announce(workspaceId, accountId, 'reauth_required');
     await events.emit('account.reauth_required', { workspaceId, accountId, connectionId, reason });
   }
 
@@ -727,6 +743,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
             include: accountInclude,
           });
       added.push(row);
+      if (existing?.status !== 'active') announce(member.workspaceId, row.id, 'active');
       // New, back from disconnected, or moved to this login: all worth an audit entry.
       if (!existing || existing.status === 'disconnected' || existing.connectionId !== c.id) {
         await events.emit('account.connected', {
@@ -831,6 +848,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
       });
       return byAccount(a.id);
     });
+    announce(member.workspaceId, a.id, 'disconnected');
     await events.emit('account.disconnected', {
       workspaceId: member.workspaceId,
       accountId: a.id,
@@ -873,6 +891,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
       userId: caller.user.id,
     });
     for (const a of live) {
+      announce(member.workspaceId, a.id, 'disconnected');
       await events.emit('account.disconnected', {
         workspaceId: member.workspaceId,
         accountId: a.id,
@@ -947,6 +966,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
       data: { status: 'reauth_required', statusReason: reason },
     });
     for (const a of accounts) {
+      announce(workspaceId, a.id, 'reauth_required');
       await events.emit('account.reauth_required', {
         workspaceId,
         accountId: a.id,

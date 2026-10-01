@@ -23,7 +23,7 @@ export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions =
   });
   // Fake logins in front of the real Meta network adapters: tests never call a network.
   const networks = createFakeNetworks();
-  const { app, authModule, missingRoutes } = createApiApp(platform, {
+  const { app, authModule, missingRoutes, attachRealtime } = createApiApp(platform, {
     requireVerifiedEmail,
     registry: networks.registry,
   });
@@ -102,6 +102,7 @@ export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions =
     platform,
     authModule,
     missingRoutes,
+    attachRealtime,
     networks,
     browser,
     signUp,
