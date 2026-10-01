@@ -13,7 +13,7 @@ APIs behind the platform admin console (`/admin` in the web app) for Socioboard 
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `FeatureFlag` | key, enabled, rules JSON (workspace ids, % rollout), updatedBy | Read by all modules through `flags.isOn(key, ctx)` |
+| `FeatureFlag` | key (unique), description, enabled, rules JSON (`{ workspaceIds?, percent? }`, `{}` = everyone), updatedById? | Read by all modules through `flags.isOn(key, ctx)`; table from P2-B1 |
 | `Announcement` | id, message, level, startsAt, endsAt, audience | Shown as an in-app banner |
 | `MaintenanceWindow` | id, startsAt, endsAt, message, blockWrites | Optional read-only mode |
 | `AbuseFlag` | id, workspaceId, reason, status, createdBy | Suspended workspaces can't publish |

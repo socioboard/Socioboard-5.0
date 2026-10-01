@@ -242,6 +242,115 @@ describe('database schema', () => {
       const users = await db.client.post.findMany({ where: { mediaIds: { has: media.id } } });
       expect(users.map((p) => p.text)).toEqual([`uses-${run}`]);
     });
+
+    describe('scheduling (phase 2)', () => {
+      const rule = (workspaceId: string, postId: string) =>
+        db.client.recurringRule.create({
+          data: {
+            workspaceId,
+            postId,
+            rule: { frequency: 'daily', time: '09:00', timezone: 'UTC', startsOn: '2030-01-01' },
+            rrule: 'FREQ=DAILY',
+            timezone: 'UTC',
+            startsAt: new Date('2030-01-01T09:00:00Z'),
+          },
+        });
+
+      it('a recurring rule belongs to one post of its own workspace, one rule per post', async () => {
+        const postA = await db.client.post.create({ data: { workspaceId: wsA } });
+        await expect(rule(wsB, postA.id)).rejects.toMatchObject({ code: 'P2003' });
+        await rule(wsA, postA.id);
+        await expect(rule(wsA, postA.id)).rejects.toMatchObject({ code: 'P2002' });
+      });
+
+      it('creates each occurrence post once; sent occurrences outlive their template', async () => {
+        const template = await db.client.post.create({ data: { workspaceId: wsA } });
+        const { id: ruleId } = await rule(wsA, template.id);
+        const occurrenceAt = new Date('2030-01-02T09:00:00Z');
+        const occurrence = await db.client.post.create({
+          data: { workspaceId: wsA, recurringRuleId: ruleId, occurrenceAt },
+        });
+        await expect(
+          db.client.post.create({
+            data: { workspaceId: wsA, recurringRuleId: ruleId, occurrenceAt },
+          }),
+        ).rejects.toMatchObject({ code: 'P2002' });
+
+        // Deleting the template removes its rule; the occurrence stays, still marked recurring.
+        await db.client.post.delete({ where: { id: template.id } });
+        expect(await db.client.recurringRule.count({ where: { id: ruleId } })).toBe(0);
+        const kept = await db.client.post.findUnique({ where: { id: occurrence.id } });
+        expect(kept?.recurringRuleId).toBe(ruleId);
+      });
+
+      it('queue slots: one per account, weekday and time, never on another workspace’s account', async () => {
+        const accountB = await account(wsB, (await connection(wsB)).id);
+        const slot = (workspaceId: string, socialAccountId: string) =>
+          db.client.queueSlot.create({
+            data: { workspaceId, socialAccountId, weekday: 1, time: '09:00', timezone: 'UTC' },
+          });
+        await expect(slot(wsA, accountB.id)).rejects.toMatchObject({ code: 'P2003' });
+        await slot(wsB, accountB.id);
+        await expect(slot(wsB, accountB.id)).rejects.toMatchObject({ code: 'P2002' });
+      });
+
+      it('scopes rules and slots to one workspace through forWorkspace', async () => {
+        const accountB = await account(wsB, (await connection(wsB)).id);
+        await db.client.queueSlot.create({
+          data: {
+            workspaceId: wsB,
+            socialAccountId: accountB.id,
+            weekday: 2,
+            time: '10:30',
+            timezone: 'UTC',
+          },
+        });
+        const a = db.forWorkspace(wsA);
+        expect(await a.queueSlot.count({ where: { socialAccountId: accountB.id } })).toBe(0);
+        await expect(
+          a.queueSlot.create({
+            data: {
+              workspaceId: wsB,
+              socialAccountId: accountB.id,
+              weekday: 3,
+              time: '11:00',
+              timezone: 'UTC',
+            },
+          }),
+        ).rejects.toThrow(/another workspace/);
+      });
+    });
+  });
+
+  describe('notifications and flags (phase 2)', () => {
+    it('a workspace’s notifications go with it; ones about the user alone stay', async () => {
+      const ws = await db.client.workspace.create({
+        data: { name: 'gone3', slug: `gone3-${run}`, timezone: 'UTC' },
+      });
+      const note = (workspaceId: string | null) =>
+        db.client.notification.create({
+          data: { userId, workspaceId, type: 'publish_failed', title: 't', body: 'b' },
+        });
+      const inWorkspace = await note(ws.id);
+      const personal = await note(null);
+      await db.client.workspace.delete({ where: { id: ws.id } });
+      expect(await db.client.notification.count({ where: { id: inWorkspace.id } })).toBe(0);
+      expect(await db.client.notification.count({ where: { id: personal.id } })).toBe(1);
+    });
+
+    it('one preference per user and type; one flag per key', async () => {
+      const pref = { userId, type: 'publish_failed', inApp: true, email: false };
+      await db.client.notificationPreference.create({ data: pref });
+      await expect(db.client.notificationPreference.create({ data: pref })).rejects.toMatchObject({
+        code: 'P2002',
+      });
+      const key = `test.flag-${run}`;
+      await db.client.featureFlag.create({ data: { key } });
+      await expect(db.client.featureFlag.create({ data: { key } })).rejects.toMatchObject({
+        code: 'P2002',
+      });
+      await db.client.featureFlag.delete({ where: { key } });
+    });
   });
 
   it('keeps uploads when the uploader’s account is deleted', async () => {

@@ -27,6 +27,8 @@ export interface SeedResult {
   media: number | 'no-storage' | 'exists';
   /** Sample posts added (a draft and a scheduled post), or "exists". */
   posts: number | 'exists';
+  /** Queue slots added to the sample accounts (weekdays 09:00 and 15:00), or "exists". */
+  queueSlots: number | 'exists';
 }
 
 /** Marks the sample accounts: paused, so validation says they can't publish. */
@@ -309,10 +311,29 @@ export async function seedDevData(platform: Platform, options: SeedOptions): Pro
     posts = SAMPLE_POSTS.length;
   }
 
+  // Queue slots (P2-B1): weekdays at 09:00 and 15:00 in the workspace's timezone, for "Add to queue".
+  const slots = sampleAccounts.flatMap((account) =>
+    [1, 2, 3, 4, 5].flatMap((weekday) =>
+      ['09:00', '15:00'].map((time) => ({
+        id: newId(),
+        workspaceId,
+        socialAccountId: account.id,
+        weekday,
+        time,
+        timezone: workspace.timezone,
+      })),
+    ),
+  );
+  const { count: slotsAdded } = await scoped.queueSlot.createMany({
+    data: slots,
+    skipDuplicates: true,
+  });
+
   return {
     users: users.map(({ email, role, created }) => ({ email, role, created })),
     workspace: { id: workspaceId, slug, created: workspaceCreated },
     media,
     posts,
+    queueSlots: slotsAdded > 0 ? slotsAdded : 'exists',
   };
 }

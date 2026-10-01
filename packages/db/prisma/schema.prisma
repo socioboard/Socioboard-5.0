@@ -42,16 +42,19 @@ model User {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  sessions         Session[]
-  accounts         Account[]
-  twoFactors       TwoFactor[]
-  memberships      Member[]
-  invitationsSent  Invitation[]
-  mediaUploaded    MediaAsset[]
-  connectionsAdded SocialConnection[] @relation("ConnectionsAdded")
-  accountsAdded    SocialAccount[]    @relation("AccountsAdded")
-  oauthStates      OAuthState[]
-  posts            Post[]
+  sessions          Session[]
+  accounts          Account[]
+  twoFactors        TwoFactor[]
+  memberships       Member[]
+  invitationsSent   Invitation[]
+  mediaUploaded     MediaAsset[]
+  connectionsAdded  SocialConnection[]       @relation("ConnectionsAdded")
+  accountsAdded     SocialAccount[]          @relation("AccountsAdded")
+  oauthStates       OAuthState[]
+  posts             Post[]
+  notifications     Notification[]
+  notificationPrefs NotificationPreference[]
+  flagsUpdated      FeatureFlag[]
 }
 
 model Session {
@@ -152,6 +155,9 @@ model Workspace {
   postTargets       PostTarget[]
   publishAttempts   PublishAttempt[]
   postLabels        PostLabel[]
+  recurringRules    RecurringRule[]
+  queueSlots        QueueSlot[]
+  notifications     Notification[]
 }
 
 model Member {
@@ -364,6 +370,7 @@ model SocialAccount {
   connectedBy User?                    @relation("AccountsAdded", fields: [connectedById], references: [id], onDelete: SetNull)
   groupItems  SocialAccountGroupItem[]
   postTargets PostTarget[]
+  queueSlots  QueueSlot[]
 
   @@unique([id, workspaceId])
   @@unique([workspaceId, network, externalId])
@@ -459,27 +466,35 @@ enum PublishErrorKind {
 }
 
 model Post {
-  id           String     @id @default(uuid(7)) @db.Uuid
-  workspaceId  String     @db.Uuid
-  authorId     String?    @db.Uuid
+  id              String     @id @default(uuid(7)) @db.Uuid
+  workspaceId     String     @db.Uuid
+  authorId        String?    @db.Uuid
   /// Derived from the targets by the posts service (recomputeStatus).
-  status       PostStatus @default(draft)
-  text         String     @default("")
+  status          PostStatus @default(draft)
+  text            String     @default("")
   /// MediaAsset ids in display order. No foreign key: checked by the service; a media delete
   /// looks here before removing a file a scheduled post uses.
-  mediaIds     String[]   @db.Uuid
-  link         String?
-  firstComment String?
+  mediaIds        String[]   @db.Uuid
+  link            String?
+  firstComment    String?
   /// PostLabel ids (P1-B11).
-  labelIds     String[]   @db.Uuid
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  labelIds        String[]   @db.Uuid
+  /// Set on a recurring rule's occurrence posts (P2-B4): the rule that made it, and the occurrence
+  /// it is for. No foreign key: a rule is deactivated, not deleted, so sent occurrences keep the
+  /// link; and a composite key couldn't clear this one column (it would null workspaceId too).
+  recurringRuleId String?    @db.Uuid
+  occurrenceAt    DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
-  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  author    User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
-  targets   PostTarget[]
+  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  author        User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  targets       PostTarget[]
+  recurringRule RecurringRule?
 
   @@unique([id, workspaceId])
+  /// Each occurrence is created once, however often the expansion job runs.
+  @@unique([recurringRuleId, occurrenceAt])
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([workspaceId, status])
   @@index([mediaIds], type: Gin)
@@ -594,4 +609,113 @@ model AuditLog {
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([entityType, entityId])
   @@index([actorUserId, createdAt(sort: Desc)])
+}
+
+// ── Phase 2: scheduling, notifications, feature flags ─────────────────────────────────────────
+
+/// How a post repeats (docs/backend/modules/scheduling.md). `postId` is the template post: it holds
+/// the content and is never published itself; the `recurring` job creates an ordinary post per
+/// occurrence (Post.recurringRuleId + occurrenceAt). Stopping a rule deactivates it.
+model RecurringRule {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  workspaceId String    @db.Uuid
+  postId      String    @db.Uuid
+  /// RecurrenceRule from the contracts, as the API took it (and returns it).
+  rule        Json
+  /// RFC 5545 RRULE built from `rule`, read by the expansion job.
+  rrule       String
+  /// IANA timezone the rule's wall-clock time is in.
+  timezone    String
+  /// First and last possible occurrence (UTC); endsAt null = no end date.
+  startsAt    DateTime
+  endsAt      DateTime?
+  /// The next occurrence not yet created; null once the rule has ended.
+  nextRunAt   DateTime?
+  active      Boolean   @default(true)
+  createdById String?   @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  post      Post      @relation(fields: [postId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@unique([id, workspaceId])
+  /// One rule per template post (post ids are unique; the pair is what the relation needs).
+  @@unique([postId, workspaceId])
+  @@index([active, nextRunAt])
+}
+
+/// An account's preferred posting time, for "Add to queue" (P2-B3).
+model QueueSlot {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  workspaceId     String   @db.Uuid
+  socialAccountId String   @db.Uuid
+  /// 0 = Sunday … 6 = Saturday.
+  weekday         Int      @db.SmallInt
+  /// HH:mm, wall-clock in `timezone`.
+  time            String
+  timezone        String
+  createdAt       DateTime @default(now())
+
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account   SocialAccount @relation(fields: [socialAccountId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@unique([id, workspaceId])
+  @@unique([socialAccountId, weekday, time])
+}
+
+/// A user's notification (docs/backend/modules/notifications.md), across workspaces. Kept 90 days.
+/// Read through the user, never through a workspace-scoped client: workspaceId only says where
+/// it came from (null: about the user alone).
+model Notification {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  userId      String    @db.Uuid
+  workspaceId String?   @db.Uuid
+  /// NotificationType from the contracts (a string, so new types need no migration).
+  type        String
+  /// English fallback; the UI words it from type + params.
+  title       String
+  body        String
+  /// A path inside the app (AppPath in the contracts).
+  link        String?
+  params      Json      @default("{}")
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, readAt])
+  @@index([createdAt])
+}
+
+/// A user's choice for one notification type; types with no row use their defaults.
+model NotificationPreference {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String   @db.Uuid
+  type      String
+  inApp     Boolean
+  email     Boolean
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+}
+
+/// Platform feature flags, read through `flags.isOn(key, ctx)` (platform/flags, P2-B11).
+model FeatureFlag {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  /// e.g. "network.tiktok"
+  key         String   @unique
+  description String   @default("")
+  enabled     Boolean  @default(false)
+  /// Who it's on for when enabled: { workspaceIds?: string[], percent?: 0–100 }; {} = everyone.
+  rules       Json     @default("{}")
+  updatedById String?  @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  updatedBy User? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 }
