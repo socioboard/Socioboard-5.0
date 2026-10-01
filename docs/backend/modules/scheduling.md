@@ -36,6 +36,7 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 ## Errors (API)
 | Code | Status | When |
 | --- | --- | --- |
+| `NO_ACCOUNTS` | 422 | Scheduling a post with no accounts |
 | `POST_NOT_FOUND`, `TARGET_NOT_FOUND`, `ACCOUNT_NOT_FOUND` | 404 | Not in this workspace (or a `targets[].targetId` that isn't on the post) |
 | `SCHEDULE_TOO_SOON` / `SCHEDULE_TOO_FAR` | 422 | A time before now + 2 minutes / more than a year ahead |
 | `POST_HAS_ERRORS` | 422 | Validation finds errors; `details` is the validation report |
@@ -48,8 +49,10 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 | `RECURRENCE_NOT_FOUND` | 404 | Stopping a post that doesn't repeat |
 
 ## Services
-- `schedule(postId, at | perTarget)`: validates (future time, approved, accounts active), sets `scheduledAt`, bumps `scheduleVersion`, adds delayed `publish` jobs.
-- `reschedule(targetId, at)`: bump version, remove the old job, add a new one.
+- `schedule(postId, at | perTarget)`: every live target must be waiting (`pending` or `scheduled`, so scheduling again moves the whole post); checks each time (now + 2 minutes to a year), the review setting and validation (as publish-now does); then, under the post lock, sets `scheduledAt`, bumps `scheduleVersion` and queues a delayed `publish` job per target (`publish-<targetId>-v<version>`, carrying the version). If queueing fails, the targets go back to their previous time and version, whose jobs are still there. Older versions' jobs are then dropped (best effort: a stale job does nothing anyway).
+- `unschedule(postId)`: scheduled targets go back to `pending` (no time), version bumped, jobs dropped; the post becomes a draft.
+- `reschedule(targetId, at, previousAt)`: under the post lock, the target must still be `scheduled` (`TARGET_NOT_SCHEDULED`) and at `previousAt` (`SCHEDULE_CHANGED`, with the current time in `details.at`); then a new version and job, and the old job dropped.
+- Exactly once: the publish job claims a target only at its own version (see [publishing](publishing.md)), and publish-now bumps the version too, so a post that moved, was unscheduled or was sent now never goes out a second time.
 - `nextFreeSlot(accountId, after)`: finds the next unused QueueSlot.
 - `expandRecurring(ruleId, horizon)`: creates an occurrence post for each occurrence in the horizon that doesn't have one yet (the unique `recurringRuleId` + `occurrenceAt` makes a repeat run harmless).
 - Changing the rule or the template's content replaces the occurrence posts that are still waiting (not yet publishing, and not edited on their own); sent and hand-edited ones stay. Stopping the rule (`DELETE …/recurrence`) removes the waiting occurrences; sent ones stay as history.
@@ -66,4 +69,4 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - Times are stored in UTC. Recurring rules keep their own timezone so they don't drift with daylight saving.
 - Wall-clock times that don't exist or happen twice (a recurring rule's or a queue slot's time on a daylight-saving change day): a time skipped by the clock change moves forward by the gap (02:30 on a spring-forward night that jumps 02:00 → 03:00 becomes 03:30); a time that happens twice uses the first. Both are covered by the daylight-saving tests (P2-Q2).
 - Scheduled count respects `checkLimit('scheduledPosts')` when billing is on.
-- Emits `post.scheduled`, `post.rescheduled`, `post.unscheduled`.
+- Emits `post.scheduled` (targets and times), `post.rescheduled` (from, to), `post.unscheduled`; all three are audited.

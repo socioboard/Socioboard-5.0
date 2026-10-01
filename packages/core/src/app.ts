@@ -20,6 +20,7 @@ import {
 } from './modules/media';
 import { createPublishingServices } from './domain';
 import { registerPostRoutes } from './modules/posts';
+import { registerSchedulingRoutes } from './modules/scheduling';
 import { createOAuthCallbackRouter, registerSocialAccountRoutes } from './modules/social-accounts';
 import {
   createMembershipLookup,
@@ -122,11 +123,12 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
-  const { socialAccounts, posts, mediaUrls } = createPublishingServices(platform, {
+  const { socialAccounts, posts, scheduling, mediaUrls } = createPublishingServices(platform, {
     registry: options.registry,
   });
   registerSocialAccountRoutes(api, socialAccounts);
   registerPostRoutes(api, posts);
+  registerSchedulingRoutes(api, scheduling);
 
   const app = express();
   app.disable('x-powered-by');

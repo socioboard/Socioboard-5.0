@@ -3,8 +3,19 @@
 import type { Registry } from '@socioboard/providers';
 
 import { createMediaUrlSigner, type MediaUrlSigner } from './modules/media';
-import { createPostService, registerPostListeners, type PostService } from './modules/posts';
-import { publishJobId, publishQueue, type PublishJobData } from './modules/publishing';
+import {
+  createPostService,
+  registerPostListeners,
+  type PostService,
+  type ScheduledJob,
+} from './modules/posts';
+import {
+  publishJobId,
+  publishQueue,
+  scheduledJobId,
+  type PublishJobData,
+} from './modules/publishing';
+import { createSchedulingService, type SchedulingService } from './modules/scheduling';
 import {
   createNetworkRegistry,
   createSocialAccountService,
@@ -17,6 +28,7 @@ export interface PublishingServices {
   registry: Registry;
   socialAccounts: SocialAccountService;
   posts: PostService;
+  scheduling: SchedulingService;
   /** Signed public media addresses (served by the API at /public-media). */
   mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
@@ -78,8 +90,45 @@ export function createPublishingServices(
         })),
       );
     },
+    enqueueScheduled,
+    dropScheduledJobs,
   });
   registerPostListeners(events, posts, logger);
+  const scheduling = createSchedulingService({
+    db,
+    clock,
+    events,
+    posts,
+    enqueueScheduled,
+    dropScheduledJobs,
+  });
 
-  return { registry, socialAccounts, posts, mediaUrls, publishQueue: queue };
+  /** A delayed job per scheduled target, named and keyed by its schedule version. */
+  async function enqueueScheduled(jobs: ScheduledJob[]) {
+    const now = clock.now().getTime();
+    await platform.queues.get(queue).addBulk(
+      jobs.map((j) => ({
+        name: 'publish',
+        data: { workspaceId: j.workspaceId, targetId: j.targetId, scheduleVersion: j.version },
+        opts: {
+          jobId: scheduledJobId(j.targetId, j.version),
+          delay: Math.max(0, j.at.getTime() - now),
+        },
+      })),
+    );
+  }
+
+  /** Best effort: a job that is running or already gone stays; an older version does nothing. */
+  async function dropScheduledJobs(jobs: { targetId: string; version: number }[]) {
+    const q = platform.queues.get(queue);
+    await Promise.all(
+      jobs.map((j) =>
+        q.remove(scheduledJobId(j.targetId, j.version)).catch((err: unknown) => {
+          logger.warn({ err, targetId: j.targetId }, 'could not drop an old scheduled job');
+        }),
+      ),
+    );
+  }
+
+  return { registry, socialAccounts, posts, scheduling, mediaUrls, publishQueue: queue };
 }

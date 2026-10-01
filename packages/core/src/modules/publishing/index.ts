@@ -6,6 +6,7 @@ export {
   publishJobId,
   publishQueue,
   publishTarget,
+  scheduledJobId,
   type PublishDeps,
   type PublishJobData,
 } from './jobs';

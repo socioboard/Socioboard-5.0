@@ -46,6 +46,11 @@ export interface PublishDeps {
 export interface PublishJobData {
   workspaceId: string;
   targetId: string;
+  /**
+   * Set on scheduled jobs: the target's schedule version when the job was queued. A reschedule,
+   * unschedule or publish-now bumps the version, so an older job finds nothing to do.
+   */
+  scheduleVersion?: number;
 }
 
 /** docs/backend/modules/publishing.md: retry with backoff, at most 5 tries. */
@@ -58,6 +63,10 @@ const BACKOFF_BASE_MS = 30_000;
  */
 export const publishJobId = (targetId: string, tries: number) =>
   `publish-${targetId}-${String(tries)}`;
+
+/** A scheduled target's delayed job: one per schedule version (scheduling, P2-B2). */
+export const scheduledJobId = (targetId: string, version: number) =>
+  `publish-${targetId}-v${String(version)}`;
 
 /** Waits what the network asked for, else 30 s, 1 min, 2 min, 4 min between tries. */
 export function publishBackoff(attemptsMade: number, err?: Error): number {
@@ -90,11 +99,26 @@ export async function publishTarget(
   if (!target || target.externalPostId || !(WAITING as readonly string[]).includes(target.status)) {
     return;
   }
+  const scheduled = data.scheduleVersion !== undefined;
+  // A scheduled job for an older version (moved, unscheduled or sent now since); and a scheduled
+  // target only goes out through its own scheduled job.
+  if (scheduled ? target.scheduleVersion !== data.scheduleVersion : target.status === 'scheduled') {
+    return;
+  }
 
-  // Claim this try: only one run moves the attempt counter, so two jobs can't both post.
+  // Claim this try: only one run moves the attempt counter, so two jobs can't both post. A
+  // scheduled job also claims its version, so a reschedule committing meanwhile wins or loses
+  // as a whole.
   const attemptNo = target.attempts + 1;
   const claimed = await ws.postTarget.updateMany({
-    where: { id: target.id, attempts: target.attempts, externalPostId: null },
+    where: {
+      id: target.id,
+      attempts: target.attempts,
+      externalPostId: null,
+      ...(scheduled
+        ? { scheduleVersion: data.scheduleVersion, status: { in: ['scheduled', 'publishing'] } }
+        : {}),
+    },
     data: { status: 'publishing', attempts: attemptNo },
   });
   if (claimed.count === 0) return;

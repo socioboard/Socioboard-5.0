@@ -40,7 +40,13 @@ import {
   type MemberContext,
   type Storage,
 } from '../../platform';
-import { deriveStatus, LOCKED_TARGET, resolveContent, type SharedContent } from './content';
+import {
+  deriveStatus,
+  LOCKED_TARGET,
+  resolveContent,
+  WAITING_TARGET,
+  type SharedContent,
+} from './content';
 import type { PostEvents } from './events';
 
 export interface PostServiceDeps {
@@ -52,6 +58,21 @@ export interface PostServiceDeps {
   kv: Kv;
   /** publishing: queue one publish job per target (`tries` = the target's attempts so far). */
   enqueuePublish(jobs: { workspaceId: string; targetId: string; tries: number }[]): Promise<void>;
+  /** publishing: queue a delayed publish job per scheduled target, for its schedule version. */
+  enqueueScheduled(jobs: ScheduledJob[]): Promise<void>;
+  /**
+   * publishing: drops scheduled jobs no longer wanted. Best effort: an older version's job finds
+   * nothing to do anyway, this only keeps the queue tidy.
+   */
+  dropScheduledJobs(jobs: { targetId: string; version: number }[]): Promise<void>;
+}
+
+/** A scheduled target's delayed publish job. */
+export interface ScheduledJob {
+  workspaceId: string;
+  targetId: string;
+  version: number;
+  at: Date;
 }
 
 const IDEMPOTENCY_TTL_SEC = 24 * 3600;
@@ -481,6 +502,17 @@ export function createPostService(deps: PostServiceDeps) {
       new Set(post.targets.map((t) => t.socialAccountId)),
     );
 
+    // Accounts added to a post that's scheduled (every account at one time) join it at that time,
+    // so the post doesn't fall back to a draft while its other accounts still go out.
+    const live = post.targets.filter((t) => t.status !== 'cancelled');
+    const first = live[0]?.scheduledAt?.getTime();
+    const joinAt =
+      first !== undefined &&
+      live.every((t) => t.status === 'scheduled' && t.scheduledAt?.getTime() === first)
+        ? new Date(first)
+        : null;
+    const joined: ScheduledJob[] = [];
+
     await db.client.$transaction(async (tx) => {
       if (body.labelIds) await lockLabels(tx, member.workspaceId, body.labelIds);
       if (!labelsOnly) await lockUnpublished(tx, member.workspaceId, post.id, notEditable);
@@ -515,18 +547,32 @@ export function createPostService(deps: PostServiceDeps) {
             },
           });
         } else {
+          const id = newId();
           await tx.postTarget.create({
             data: {
-              id: newId(),
+              id,
               workspaceId: member.workspaceId,
               postId: post.id,
               socialAccountId: t.accountId,
               override: overrideJson(t.override),
+              ...(joinAt ? { status: 'scheduled', scheduledAt: joinAt, scheduleVersion: 1 } : {}),
             },
           });
+          if (joinAt) {
+            joined.push({ workspaceId: member.workspaceId, targetId: id, version: 1, at: joinAt });
+          }
         }
       }
     });
+    // Removed accounts' scheduled jobs find no target; dropped to keep the queue tidy.
+    const removed = targets
+      ? post.targets.filter(
+          (t) =>
+            t.status === 'scheduled' && !targets.some((x) => x.accountId === t.socialAccountId),
+        )
+      : [];
+    await dropScheduled(removed);
+    if (joined.length) await deps.enqueueScheduled(joined);
     await recomputeStatus(member.workspaceId, post.id);
     await events.emit('post.updated', {
       workspaceId: member.workspaceId,
@@ -545,6 +591,7 @@ export function createPostService(deps: PostServiceDeps) {
       await lockUnpublished(tx, member.workspaceId, post.id, notDeletable);
       await tx.post.delete({ where: { id: post.id, workspaceId: member.workspaceId } });
     });
+    await dropScheduled(post.targets.filter((t) => t.status === 'scheduled'));
     await events.emit('post.deleted', {
       workspaceId: member.workspaceId,
       postId: post.id,
@@ -685,14 +732,14 @@ export function createPostService(deps: PostServiceDeps) {
   /** Queues the jobs; if that fails, the targets go back to how they were so nothing is stuck. */
   async function enqueueOrRevert(
     workspaceId: string,
-    jobs: { targetId: string; tries: number; revertTo: 'pending' | 'failed' }[],
+    jobs: { targetId: string; tries: number; revertTo: 'pending' | 'scheduled' | 'failed' }[],
   ) {
     try {
       await deps.enqueuePublish(
         jobs.map(({ targetId, tries }) => ({ workspaceId, targetId, tries })),
       );
     } catch (err) {
-      for (const status of ['pending', 'failed'] as const) {
+      for (const status of ['pending', 'scheduled', 'failed'] as const) {
         await scoped(workspaceId).postTarget.updateMany({
           where: {
             id: { in: jobs.filter((j) => j.revertTo === status).map((j) => j.targetId) },
@@ -757,26 +804,39 @@ export function createPostService(deps: PostServiceDeps) {
     }
     const live = post.targets.filter((t) => t.status !== 'cancelled');
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
-    if (live.some((t) => t.status !== 'pending')) throw alreadySent();
+    // A scheduled post can be sent now too: its scheduled jobs become stale (version bump).
+    if (live.some((t) => !WAITING_TARGET.includes(t.status))) throw alreadySent();
     await assertPublishable(member, post, live);
 
-    const jobs = await db.client.$transaction(async (tx) => {
+    const { jobs, unscheduled } = await db.client.$transaction(async (tx) => {
       await lockUnpublished(tx, member.workspaceId, post.id, alreadySent);
       const waiting = await tx.postTarget.findMany({
-        where: { workspaceId: member.workspaceId, postId: post.id, status: 'pending' },
-        select: { id: true, attempts: true },
+        where: {
+          workspaceId: member.workspaceId,
+          postId: post.id,
+          status: { in: [...WAITING_TARGET] },
+        },
+        select: { id: true, attempts: true, status: true, scheduleVersion: true },
       });
       await tx.postTarget.updateMany({
         where: { workspaceId: member.workspaceId, id: { in: waiting.map((t) => t.id) } },
-        data: { status: 'publishing', lastError: Prisma.DbNull },
+        data: {
+          status: 'publishing',
+          lastError: Prisma.DbNull,
+          scheduleVersion: { increment: 1 },
+        },
       });
-      return waiting.map((t) => ({
-        targetId: t.id,
-        tries: t.attempts,
-        revertTo: 'pending' as const,
-      }));
+      return {
+        jobs: waiting.map((t) => ({
+          targetId: t.id,
+          tries: t.attempts,
+          revertTo: t.status === 'scheduled' ? ('scheduled' as const) : ('pending' as const),
+        })),
+        unscheduled: waiting.filter((t) => t.status === 'scheduled'),
+      };
     });
     await enqueueOrRevert(member.workspaceId, jobs);
+    await dropScheduled(unscheduled);
     await recomputeStatus(member.workspaceId, post.id);
     await events.emit('post.publish_requested', {
       workspaceId: member.workspaceId,
@@ -948,7 +1008,50 @@ export function createPostService(deps: PostServiceDeps) {
     });
   }
 
+  /** Drops the delayed jobs of targets that were scheduled (each at its schedule version). */
+  async function dropScheduled(targets: { id: string; scheduleVersion: number }[]) {
+    if (targets.length === 0) return;
+    await deps.dropScheduledJobs(
+      targets.map((t) => ({ targetId: t.id, version: t.scheduleVersion })),
+    );
+  }
+
+  /** The post as the API shows it (scheduling answers with it). */
+  async function view(workspaceId: string, postId: string): Promise<Post> {
+    return toPost(await findPost(workspaceId, postId));
+  }
+
+  /**
+   * Refuses (POST_HAS_ERRORS, with the report) unless these targets of the post would publish
+   * as they are. Scheduling checks this when a post is scheduled, as publish-now does.
+   */
+  async function checkPublishable(member: MemberContext, postId: string, targetIds: string[]) {
+    const post = await findPost(member.workspaceId, postId);
+    await assertPublishable(
+      member,
+      post,
+      post.targets.filter((t) => targetIds.includes(t.id)),
+    );
+  }
+
+  /** REVIEW_REQUIRED when the workspace reviews every post (approvals arrive in phase 4). */
+  async function assertNoReviewRequired(workspaceId: string) {
+    const workspace = await db.client.workspace.findUnique({
+      where: { id: workspaceId },
+      select: { requireReviewForAll: true },
+    });
+    if (workspace?.requireReviewForAll) {
+      throw unprocessable(
+        'REVIEW_REQUIRED',
+        'Posts in this workspace need review before publishing',
+      );
+    }
+  }
+
   return {
+    view,
+    checkPublishable,
+    assertNoReviewRequired,
     listLabels,
     createLabel,
     updateLabel,

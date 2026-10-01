@@ -11,7 +11,7 @@
 
 ## Backend
 - [x] P2-B1 Prisma: RecurringRule, QueueSlot, Notification, NotificationPreference, FeatureFlag; `Post.recurringRuleId` + `occurrenceAt` for occurrence posts (migration `20261001090000_phase2_scheduling_notifications_flags`; seed adds weekday queue slots)
-- [ ] P2-B2 Schedule/unschedule/reschedule with `scheduleVersion` + deterministic delayed jobs
+- [x] P2-B2 Schedule/unschedule/reschedule with `scheduleVersion` + deterministic delayed jobs (`packages/core/src/modules/scheduling`; publish-now also takes scheduled posts; accounts added to a scheduled post join at its time)
 - [ ] P2-B3 Queue slots + "add to queue" (`nextFreeSlot`)
 - [ ] P2-B4 Recurring rules + `recurring` expansion job
 - [ ] P2-B5 `reconcile` job: rebuild missing jobs, resolve stuck `publishing` targets
