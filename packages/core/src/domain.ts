@@ -15,7 +15,13 @@ import {
   scheduledJobId,
   type PublishJobData,
 } from './modules/publishing';
-import { createSchedulingService, type SchedulingService } from './modules/scheduling';
+import {
+  createCalendarEntries,
+  createQueueSlotService,
+  createSchedulingService,
+  type QueueSlotService,
+  type SchedulingService,
+} from './modules/scheduling';
 import {
   createNetworkRegistry,
   createSocialAccountService,
@@ -29,6 +35,7 @@ export interface PublishingServices {
   socialAccounts: SocialAccountService;
   posts: PostService;
   scheduling: SchedulingService;
+  queueSlots: QueueSlotService;
   /** Signed public media addresses (served by the API at /public-media). */
   mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
@@ -130,5 +137,20 @@ export function createPublishingServices(
     );
   }
 
-  return { registry, socialAccounts, posts, scheduling, mediaUrls, publishQueue: queue };
+  const queueSlots = createQueueSlotService({
+    db,
+    clock,
+    events,
+    entries: createCalendarEntries(db, storage),
+  });
+
+  return {
+    registry,
+    socialAccounts,
+    posts,
+    scheduling,
+    queueSlots,
+    mediaUrls,
+    publishQueue: queue,
+  };
 }

@@ -19,6 +19,7 @@ import {
 } from '../../platform';
 import { WAITING_TARGET, type PostService, type ScheduledJob } from '../posts';
 import type { SchedulingEvents } from './events';
+import { slotTimes } from './time';
 
 export interface SchedulingDeps {
   db: Db;
@@ -76,6 +77,14 @@ export function createSchedulingService(deps: SchedulingDeps) {
     await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${postId}::uuid AND "workspaceId" = ${workspaceId}::uuid FOR UPDATE`;
   }
 
+  const targetSelect = {
+    id: true,
+    socialAccountId: true,
+    status: true,
+    scheduledAt: true,
+    scheduleVersion: true,
+  } as const;
+
   async function liveTargets(workspaceId: string, postId: string) {
     const post = await scoped(workspaceId).post.findUnique({
       where: { id: postId },
@@ -84,7 +93,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
     if (!post) throw notFound('POST_NOT_FOUND', 'Post not found');
     return scoped(workspaceId).postTarget.findMany({
       where: { postId, status: { not: 'cancelled' } },
-      select: { id: true, status: true, scheduledAt: true, scheduleVersion: true },
+      select: targetSelect,
       orderBy: { id: 'asc' },
     });
   }
@@ -126,47 +135,56 @@ export function createSchedulingService(deps: SchedulingDeps) {
     await deps.dropScheduledJobs(old.map((t) => ({ targetId: t.id, version: t.scheduleVersion })));
   }
 
-  /** Schedules every waiting target at `at`, or the listed ones at their own times. */
-  async function schedule(
-    caller: AuthContext,
-    member: MemberContext,
-    postId: string,
-    body: SchedulePostBody,
-  ) {
+  /** The post's live targets, if they can be scheduled: all waiting, reviewed, no errors. */
+  async function prepare(member: MemberContext, postId: string) {
     const { workspaceId } = member;
     const live = await liveTargets(workspaceId, postId);
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
     if (live.some((t) => !WAITING_TARGET.includes(t.status))) throw alreadySent();
     await posts.assertNoReviewRequired(workspaceId);
-
-    const times = new Map(live.map((t) => [t.id, new Date(body.at)]));
-    for (const own of body.targets) {
-      if (!times.has(own.targetId)) throw notFound('TARGET_NOT_FOUND', 'Target not found');
-      times.set(own.targetId, new Date(own.at));
-    }
-    for (const [targetId, at] of times) checkTime(at, body.targets.length ? targetId : undefined);
     await posts.checkPublishable(
       member,
       postId,
       live.map((t) => t.id),
     );
+    return live;
+  }
 
+  type LiveRow = Awaited<ReturnType<typeof liveTargets>>[number];
+
+  /**
+   * Under the post lock: checks nothing changed since `prepare`, asks `decide` for each target's
+   * time, then gives every target its time and a new version; after commit, queues the jobs
+   * (reverting if that fails), recomputes the status and emits post.scheduled.
+   */
+  async function commit(
+    caller: AuthContext,
+    member: MemberContext,
+    postId: string,
+    live: LiveRow[],
+    decide: (tx: Prisma.TransactionClient, rows: LiveRow[]) => Promise<Map<string, Date>>,
+  ) {
+    const { workspaceId } = member;
     const { before, after } = await db.client.$transaction(async (tx) => {
       await lockPost(tx, workspaceId, postId);
-      const now = await tx.postTarget.findMany({
+      const rows = await tx.postTarget.findMany({
         where: { workspaceId, postId, status: { not: 'cancelled' } },
-        select: { id: true, status: true, scheduledAt: true, scheduleVersion: true },
+        select: targetSelect,
+        orderBy: { id: 'asc' },
       });
       // Something was sent or changed between the checks and the lock.
+      const known = new Set(live.map((t) => t.id));
       if (
-        now.length !== live.length ||
-        now.some((t) => !WAITING_TARGET.includes(t.status) || !times.has(t.id))
+        rows.length !== live.length ||
+        rows.some((t) => !WAITING_TARGET.includes(t.status) || !known.has(t.id))
       ) {
         throw alreadySent();
       }
+      const times = await decide(tx, rows);
       const jobs: ScheduledJob[] = [];
-      for (const t of now) {
-        const at = times.get(t.id) ?? new Date(body.at);
+      for (const t of rows) {
+        const at = times.get(t.id);
+        if (!at) throw new Error(`No time decided for target ${t.id}`);
         const version = t.scheduleVersion + 1;
         await tx.postTarget.update({
           where: { id: t.id, workspaceId },
@@ -179,7 +197,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
         });
         jobs.push({ workspaceId, targetId: t.id, version, at });
       }
-      return { before: now, after: jobs };
+      return { before: rows, after: jobs };
     });
     await queueOrRevert(workspaceId, before, after);
     await posts.recomputeStatus(workspaceId, postId);
@@ -190,6 +208,89 @@ export function createSchedulingService(deps: SchedulingDeps) {
       targets: after.map((j) => ({ targetId: j.targetId, at: j.at.toISOString() })),
     });
     return posts.view(workspaceId, postId);
+  }
+
+  /** Schedules every waiting target at `at`, or the listed ones at their own times. */
+  async function schedule(
+    caller: AuthContext,
+    member: MemberContext,
+    postId: string,
+    body: SchedulePostBody,
+  ) {
+    const live = await liveTargets(member.workspaceId, postId);
+    const times = new Map(live.map((t) => [t.id, new Date(body.at)]));
+    for (const own of body.targets) {
+      if (!times.has(own.targetId)) throw notFound('TARGET_NOT_FOUND', 'Target not found');
+      times.set(own.targetId, new Date(own.at));
+    }
+    for (const [targetId, at] of times) checkTime(at, body.targets.length ? targetId : undefined);
+    const ready = await prepare(member, postId);
+    return commit(caller, member, postId, ready, () => Promise.resolve(times));
+  }
+
+  /**
+   * "Add to queue": each waiting target goes in its account's next free queue slot (from now +
+   * 2 minutes, within a year). Accounts are locked (advisory, per account, in id order) while
+   * their slots are picked, so two posts queued at once never take the same slot. Refused with
+   * NO_QUEUE_SLOTS, naming the accounts, if any has no free slot.
+   */
+  async function queue(caller: AuthContext, member: MemberContext, postId: string) {
+    const { workspaceId } = member;
+    const live = await prepare(member, postId);
+    return commit(caller, member, postId, live, async (tx, rows) => {
+      const accountIds = [...new Set(rows.map((t) => t.socialAccountId))].sort();
+      for (const id of accountIds) {
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`queue:${id}`}, 0))`;
+      }
+      const now = clock.now().getTime();
+      const earliest = new Date(now + SCHEDULE_MIN_LEAD_MINUTES * MINUTE);
+      const latest = new Date(now + SCHEDULE_MAX_AHEAD_DAYS * 24 * 60 * MINUTE);
+      const slots = await tx.queueSlot.findMany({
+        where: { workspaceId, socialAccountId: { in: accountIds } },
+      });
+      // Taken: other posts' targets on these accounts at a slot's time (this post's don't count).
+      const taken = await tx.postTarget.findMany({
+        where: {
+          workspaceId,
+          socialAccountId: { in: accountIds },
+          postId: { not: postId },
+          status: { in: ['scheduled', 'publishing', 'published'] },
+          scheduledAt: { gte: earliest },
+        },
+        select: { socialAccountId: true, scheduledAt: true },
+      });
+      const busy = new Set(
+        taken.map((t) => `${t.socialAccountId} ${String(t.scheduledAt?.getTime())}`),
+      );
+      const times = new Map<string, Date>();
+      const missing: string[] = [];
+      for (const t of rows) {
+        const own = slots.filter((x) => x.socialAccountId === t.socialAccountId);
+        const timezone = own[0]?.timezone ?? 'UTC';
+        let found: Date | undefined;
+        for (const at of slotTimes(own, timezone, earliest)) {
+          if (at > latest) break;
+          if (!busy.has(`${t.socialAccountId} ${String(at.getTime())}`)) {
+            found = at;
+            break;
+          }
+        }
+        if (!found) {
+          missing.push(t.socialAccountId);
+          continue;
+        }
+        busy.add(`${t.socialAccountId} ${String(found.getTime())}`);
+        times.set(t.id, found);
+      }
+      if (missing.length) {
+        throw unprocessable(
+          'NO_QUEUE_SLOTS',
+          'Some accounts have no free posting time; add queue slots for them first',
+          { accountIds: [...new Set(missing)] },
+        );
+      }
+      return times;
+    });
   }
 
   /** Takes the scheduled targets back to waiting; the post becomes a draft again. */
@@ -278,7 +379,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
     return posts.view(workspaceId, target.postId);
   }
 
-  return { schedule, unschedule, reschedule };
+  return { schedule, queue, unschedule, reschedule };
 }
 
 export type SchedulingService = ReturnType<typeof createSchedulingService>;

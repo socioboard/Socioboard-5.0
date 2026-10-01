@@ -45,6 +45,7 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 | `POST_NOT_SCHEDULED` | 409 | Unscheduling a post with no scheduled target |
 | `TARGET_NOT_SCHEDULED` | 409 | Moving a target that is publishing, published, failed or cancelled |
 | `SCHEDULE_CHANGED` | 409 | `previousAt` isn't the target's time any more; `details.at` is the current one |
+| `ACCOUNT_NOT_AVAILABLE` | 422 | Giving queue slots to a disconnected account |
 | `NO_QUEUE_SLOTS` | 422 | Add to queue when some accounts have no free slot in the next year; `details.accountIds` names them |
 | `RECURRENCE_NOT_FOUND` | 404 | Stopping a post that doesn't repeat |
 
@@ -53,7 +54,9 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - `unschedule(postId)`: scheduled targets go back to `pending` (no time), version bumped, jobs dropped; the post becomes a draft.
 - `reschedule(targetId, at, previousAt)`: under the post lock, the target must still be `scheduled` (`TARGET_NOT_SCHEDULED`) and at `previousAt` (`SCHEDULE_CHANGED`, with the current time in `details.at`); then a new version and job, and the old job dropped.
 - Exactly once: the publish job claims a target only at its own version (see [publishing](publishing.md)), and publish-now bumps the version too, so a post that moved, was unscheduled or was sent now never goes out a second time.
-- `nextFreeSlot(accountId, after)`: finds the next unused QueueSlot.
+- `queue(postId)` ("Add to queue"): the same checks as `schedule`, then, under the post lock and a per-account advisory lock (taken in account id order, so two posts queued at once never take the same slot), each waiting target gets its account's next free slot from now + 2 minutes, within a year. A slot is free when no other post's target on that account is scheduled, publishing or published at that instant. Any account without a free slot refuses the whole request (`NO_QUEUE_SLOTS`, naming the accounts).
+- Queue slots: `GET` gives the slots by weekday and time, their timezone (the workspace's while there are none) and the next 14 slot times with the posts already in each (calendar entries); `PUT` replaces them all in one timezone (disconnected accounts refused: `ACCOUNT_NOT_AVAILABLE`) and emits `queue_slots.updated` (audited).
+- Wall-clock times become instants in `scheduling/time.ts` (`zonedTime`, `slotTimes`) with the runtime's timezone database, applying the daylight-saving rule below; recurring rules (P2-B4) use the same code.
 - `expandRecurring(ruleId, horizon)`: creates an occurrence post for each occurrence in the horizon that doesn't have one yet (the unique `recurringRuleId` + `occurrenceAt` makes a repeat run harmless).
 - Changing the rule or the template's content replaces the occurrence posts that are still waiting (not yet publishing, and not edited on their own); sent and hand-edited ones stay. Stopping the rule (`DELETE …/recurrence`) removes the waiting occurrences; sent ones stay as history.
 

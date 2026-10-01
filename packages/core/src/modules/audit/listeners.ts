@@ -179,6 +179,12 @@ export const AUDITED: Mapping = {
     entity: { type: 'post_target', id: p.targetId },
     diff: { postId: p.postId, from: p.from, to: p.to },
   }),
+  'queue_slots.updated': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'social_account', id: p.accountId },
+    diff: { slots: p.slots, timezone: p.timezone },
+  }),
   'post.unscheduled': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),

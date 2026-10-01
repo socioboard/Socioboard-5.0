@@ -15,4 +15,11 @@ export interface SchedulingEvents extends Record<string, unknown> {
     to: string;
   };
   'post.unscheduled': { workspaceId: string; postId: string; userId: string; targetIds: string[] };
+  'queue_slots.updated': {
+    workspaceId: string;
+    accountId: string;
+    userId: string;
+    slots: number;
+    timezone: string;
+  };
 }
