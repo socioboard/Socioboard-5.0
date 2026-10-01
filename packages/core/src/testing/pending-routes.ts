@@ -5,14 +5,7 @@ import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
  * contracts land first (docs/backend/contracts.md); the task that mounts a route removes it here.
  * The route checks skip only these, and fail when a listed route is already mounted.
  */
-export const PENDING_ROUTES: Readonly<Record<string, string>> = {
-  getAdminOverview: 'P2-B10',
-  getPublishingHealth: 'P2-B10',
-  listProblemTargets: 'P2-B10',
-  adminRetryTarget: 'P2-B10',
-  adminCancelTarget: 'P2-B10',
-  listAttentionAccounts: 'P2-B10',
-};
+export const PENDING_ROUTES: Readonly<Record<string, string>> = {};
 
 /** Every contract route with its name (route names are unique across modules). */
 export function namedRoutes(): [string, RouteDefinition][] {

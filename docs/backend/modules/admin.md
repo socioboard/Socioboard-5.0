@@ -53,8 +53,15 @@ Shapes are in `packages/contracts/src/admin.ts`; routes use `access: 'platform_a
 | `TARGET_NOT_RETRYABLE` / `TARGET_NOT_CANCELLABLE` | 409 | Retry of a target that isn't failed or stuck / cancel of one already published or cancelled |
 
 ## Mounting (P2-B10)
-- The API router refuses to mount a `platform_admin` route unless `createApiRouter` gets a `platformAdminGuard`, so an admin route can never be open to any signed-in user. The guard throws `NOT_PLATFORM_ADMIN` or `ADMIN_2FA_REQUIRED`; it runs after the session check and before anything else.
-- `/api/admin` needs the same middleware as `/api/v1` (origin check, rate limit, session); until then an admin route answers 401.
+- The API router refuses to mount a `platform_admin` route unless `createApiRouter` gets a `platformAdminGuard`, so an admin route can never be open to any signed-in user. The guard (`auth/platform-admin.ts`) throws `NOT_PLATFORM_ADMIN` or `ADMIN_2FA_REQUIRED`; it runs after the session check and before anything else. It reads `isPlatformAdmin` and `twoFactorEnabled` from the database, not the session (Better Auth caches the user there), so taking admin away or turning 2FA off applies at once, and it requires the session's 2FA mark ([auth](auth.md)).
+- `/api/admin` has the same middleware as `/api/v1`: origin check, rate limit (`admin`), session.
+- Bull Board is at `/api/admin/queues` behind the same guard, **read-only** (`readOnlyMode`): retrying or cancelling a delivery goes through the audited endpoints, never a raw job action. It shows `WORKER_QUEUES` (`admin/queues.ts`), the list the overview counts too; the worker refuses to start if the queues it runs differ from that list, so a new queue can't be left out (the CI smoke test starts the worker).
+
+## Behaviour (P2-B10)
+- **Overview** and **publishing health** are cached in Valkey for 60 s. Health counts each finished attempt in the range by outcome (`published`, `failed` = final, `retried` = `will_retry`) per network, with the five most common final errors (kind, network code, message).
+- **Problem targets**: `failed`, and `stuck` = `publishing` for over 15 minutes (it may be waiting on a retry or a rate limit; `reconcile` fails the ones with no job behind them). Live workspaces only, newest first.
+- **Retry** (`TARGET_NOT_RETRYABLE` unless failed or stuck): back to `publishing`, a new try queued with publish-now's job id; a stuck one may already be on the network, which is why `reconcile` never retries it: the admin decides, and says why. **Cancel** (`TARGET_NOT_CANCELLABLE` for published, cancelled, or publishing and not stuck): failed, stuck, scheduled (its delayed job dropped) or pending. Both recompute the post's status and write an audit entry (`admin.target_retried` / `admin.target_cancelled`, actor type `admin`, the reason, the post and the status before).
+- **Accounts needing attention**: `reauth_required`, or active with the token it posts with expiring within `withinDays`: its own where it has one, else its login's (a Facebook Page's own token outlives its login's, so the login expiring doesn't put it at risk). Each says how many scheduled targets it would fail.
 
 ## Rules
 - Admin endpoints never return decrypted tokens or secrets, and never post content (text, media, overrides): the console shows that a delivery failed and why, not what the customer wrote. Viewing content is phase 5's read-only view-as.

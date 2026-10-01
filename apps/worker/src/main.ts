@@ -14,6 +14,7 @@ import {
   registerAuditListeners,
   registerNotificationListeners,
   tokenRefreshQueue,
+  WORKER_QUEUES,
   workspacePurgeQueue,
 } from '@socioboard/core';
 
@@ -86,5 +87,14 @@ platform.queues.startWorker(auditPurge);
 await platform.queues
   .get(auditPurge)
   .upsertJobScheduler('nightly', { pattern: '30 3 * * *', tz: 'UTC' }, { name: 'purge' });
+
+// The admin console counts and shows WORKER_QUEUES: a queue started here must be listed there.
+const started = [...platform.queues.workerNames()].sort();
+const listed = [...WORKER_QUEUES].sort();
+if (started.join() !== listed.join()) {
+  throw new Error(
+    `Worker queues differ from WORKER_QUEUES (admin module): started ${started.join(', ')}; listed ${listed.join(', ')}`,
+  );
+}
 
 logger.info('worker started');

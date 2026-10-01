@@ -18,6 +18,11 @@ import {
   type Mailer,
 } from '../../platform';
 import { promoteFirstUser } from './bootstrap';
+import {
+  TWO_FACTOR_MARK_TTL_SEC,
+  TWO_FACTOR_VERIFY_PATHS,
+  twoFactorVerifiedKey,
+} from './platform-admin';
 import type { AuthEvents } from './events';
 import { workspaceAc, workspaceRoles } from './roles';
 
@@ -154,6 +159,14 @@ export function createAuth({ config, db, kv, mailer, logger, events }: AuthDeps)
         const session = ctx.context.session;
         if (ctx.path === '/change-password' && session && !isAPIError(ctx.context.returned)) {
           await events.emit('user.password_changed', { userId: session.user.id });
+        }
+        // A passed 2FA check marks its session (the one it signed in, the new one made when 2FA
+        // was turned on, or the current one): the admin console requires it (platform-admin.ts).
+        if (TWO_FACTOR_VERIFY_PATHS.includes(ctx.path) && !isAPIError(ctx.context.returned)) {
+          const verified = ctx.context.newSession?.session.id ?? session?.session.id;
+          if (verified) {
+            await kv.set(twoFactorVerifiedKey(verified), '1', TWO_FACTOR_MARK_TTL_SEC);
+          }
         }
       }),
     },

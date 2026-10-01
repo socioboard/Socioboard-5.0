@@ -49,7 +49,7 @@ Request and response schemas: `packages/contracts/src/auth.ts`.
 ## Rules
 - Better Auth is configured to generate **UUIDv7** ids (`advanced.database.generateId`), so users, sessions and workspaces follow the API's id rule.
 - Email verification is required before creating a workspace (cloud); optional when self-hosted with no SMTP.
-- 2FA is optional for users and **mandatory for platform admins** (enforced when opening `/admin`).
+- 2FA is optional for users and **mandatory for platform admins** (enforced when opening `/admin`). A successful `two-factor/verify-totp`, `verify-otp` or `verify-backup-code` marks its session as 2FA-verified in Valkey (`2fa-verified:<sessionId>`, from an after-hook: the session it signs in, the new one made when 2FA is turned on, or the current one when verifying again). Sessions from Google, Microsoft, a magic link or a trusted device have no mark, so an admin on one verifies a code before using the console (P2-B10).
 - Rate limits per client IP, counted in Valkey: sign-in 10/min; sign-up 5/hour; magic link 5/min; password-reset and verification emails 5/hour each; 2FA code 10/min; everything else under `/api/auth` 100/min. The IP is the one Express resolves under `TRUST_PROXY` (our router passes it to Better Auth), so clients can't spoof it.
 - Password rules: 10–128 characters, checked against Have I Been Pwned's range API (only the first 5 characters of the password's hash leave the server). `AUTH_BREACHED_PASSWORD_CHECK=false` turns the check off for installs without internet access.
 - Google and Microsoft login register only if both their client ID and secret are set (Google always shows the account picker).

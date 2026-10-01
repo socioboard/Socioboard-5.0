@@ -3,6 +3,7 @@ export * from './platform';
 export * from './app';
 export * from './domain';
 
+export * from './modules/admin';
 export * from './modules/audit';
 export * from './modules/auth';
 export * from './modules/media';

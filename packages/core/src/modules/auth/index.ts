@@ -18,6 +18,7 @@ import type { AuthEvents } from './events';
 export type { Auth } from './auth';
 export type { AuthEvents } from './events';
 export { promoteFirstUser } from './bootstrap';
+export { createPlatformAdminGuard, twoFactorVerifiedKey } from './platform-admin';
 export { registerAuthRoutes } from './routes';
 export { workspaceRoles } from './roles';
 export { createMeService, type MeService } from './service';

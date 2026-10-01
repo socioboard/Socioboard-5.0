@@ -4,10 +4,17 @@ import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
 import type { Registry } from '@socioboard/providers';
 import express, { type Express } from 'express';
 
+import {
+  createAdminService,
+  createBullBoardRouter,
+  createQueueCounts,
+  registerAdminRoutes,
+} from './modules/admin';
 import { createAuditLog, registerAuditListeners } from './modules/audit';
 import {
   createAuthModule,
   createMeService,
+  createPlatformAdminGuard,
   createWorkspaceAuthPort,
   registerAuthRoutes,
   type AuthModule,
@@ -43,6 +50,7 @@ import {
   requestId,
   requestLogger,
   session,
+  unauthorized,
   type ApiRouter,
   type Health,
   type Platform,
@@ -71,7 +79,8 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   const { config, logger } = platform;
 
   // Audit first, so it hears every event the modules emit.
-  registerAuditListeners(platform.events, createAuditLog(platform), logger);
+  const audit = createAuditLog(platform);
+  registerAuditListeners(platform.events, audit, logger);
   // Notifications: events emitted here (e.g. a login refused while listing its Pages) notify too.
   const notifications = createNotifications(platform).service;
   registerNotificationListeners(platform.events, notifications, platform.db, logger);
@@ -80,7 +89,10 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   // Verification can only be required when the server can send the email.
   const requireVerifiedEmail = options.requireVerifiedEmail ?? Boolean(config.mail.smtpUrl);
   const lookupMembership = createMembershipLookup(platform.db);
-  const api = createApiRouter({ lookupMembership });
+  // Platform admins with 2FA verified in this session (admin.md, Access): the admin routes and
+  // Bull Board.
+  const platformAdminGuard = createPlatformAdminGuard(platform);
+  const api = createApiRouter({ lookupMembership, platformAdminGuard });
   registerAuthRoutes(
     api,
     createMeService({
@@ -131,14 +143,26 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
+  const publishing = createPublishingServices(platform, { registry: options.registry });
   const { socialAccounts, posts, scheduling, queueSlots, calendar, recurrence, mediaUrls } =
-    createPublishingServices(platform, {
-      registry: options.registry,
-    });
+    publishing;
   registerSocialAccountRoutes(api, socialAccounts);
   registerPostRoutes(api, posts);
   registerSchedulingRoutes(api, scheduling, queueSlots, recurrence, calendar);
   registerNotificationRoutes(api, notifications);
+  registerAdminRoutes(
+    api,
+    createAdminService({
+      db: platform.db,
+      kv: platform.kv,
+      clock: platform.clock,
+      audit,
+      queueCounts: createQueueCounts(platform.queues),
+      enqueuePublish: (job) => publishing.enqueuePublish([job]),
+      dropScheduledJobs: (jobs) => publishing.dropScheduledJobs(jobs),
+      recomputeStatus: posts.recomputeStatus,
+    }),
+  );
 
   const app = express();
   app.disable('x-powered-by');
@@ -156,7 +180,26 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     rateLimit({ kv: platform.kv, name: 'api', windowSec: 60, max: config.api.rateLimitPerMin }),
     session(authModule.resolveSession),
   );
+  // The admin console: same pipeline, outside the versioned API.
+  app.use(
+    '/api/admin',
+    originCheck(config.appUrl),
+    rateLimit({ kv: platform.kv, name: 'admin', windowSec: 60, max: config.api.rateLimitPerMin }),
+    session(authModule.resolveSession),
+  );
   app.use(api.router);
+  app.use(
+    createBullBoardRouter(platform.queues, (_req, res, next) => {
+      const auth = res.locals.auth;
+      if (!auth) {
+        next(unauthorized());
+        return;
+      }
+      platformAdminGuard(auth).then(() => {
+        next();
+      }, next);
+    }),
+  );
   // Network sign-in comes back here (a browser redirect, not a JSON call): session, not origin check.
   app.use(
     '/api/oauth',
