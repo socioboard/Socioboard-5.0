@@ -9,7 +9,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { createPublishingServices } from '../../../domain';
 import { createTestApp } from '../../../testing';
-import { publishTarget, type PublishDeps } from '../index';
+import { appRateKey, PublishDeferred, publishTarget, type PublishDeps } from '../index';
 
 /** How the played Meta answers the next publish call. */
 type Scenario = 'expired' | 'refused' | 'timeout' | 'down' | 'rate' | 'ok';
@@ -274,6 +274,13 @@ describe('failure drills against the Facebook Page adapter', () => {
       status: 'failed',
       lastError: { kind: 'rate_limited', networkCode: '4' },
     });
+    // Code 4 is the app's own limit: the next post on any Meta account waits, Meta not called.
+    const next = await queued('Drill: after the app limit');
+    const calls = graphCalls.length;
+    scenario = 'ok';
+    await expect(run(next.targetId)).rejects.toBeInstanceOf(PublishDeferred);
+    expect(graphCalls).toHaveLength(calls);
+    await t.platform.rateLimiter.resume(appRateKey('facebook'));
   });
 
   it('after reconnecting, retrying the failed delivery publishes it', async () => {

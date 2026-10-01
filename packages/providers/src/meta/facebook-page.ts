@@ -8,6 +8,7 @@ import type {
   PublishInput,
   PublishMedia,
   PublishResult,
+  RateLimits,
 } from '../types';
 import { checkRules, issue, IssueCode } from '../validation';
 import type { GraphClient } from './graph-client';
@@ -44,6 +45,16 @@ export const FACEBOOK_IMAGE_PREP: ImagePrep = {
   maxBytes: 10 * MB,
 };
 
+/**
+ * Meta sets no fixed number of Page posts; its limits move with each Page's activity and answer
+ * with an error when hit (which holds the Page, or the whole app for code 4, back). This keeps a
+ * runaway queue from posting faster than a person would: one a minute on average per Page.
+ */
+export const FACEBOOK_RATE_LIMITS: RateLimits = {
+  perAccount: [{ max: 60, perSec: 3600 }],
+  perApp: [],
+};
+
 export const FACEBOOK_PREVIEW: PreviewSpec = {
   // Desktop feed cuts long text at about 480 characters with "See more".
   truncateAt: 480,
@@ -70,6 +81,7 @@ export function createFacebookPage(graph: GraphClient): NetworkAdapter {
     rules: FACEBOOK_RULES,
     preview: FACEBOOK_PREVIEW,
     imagePrep: FACEBOOK_IMAGE_PREP,
+    rateLimits: FACEBOOK_RATE_LIMITS,
 
     validate(input) {
       const issues: ValidationIssue[] = checkRules(FACEBOOK_RULES, input, 'Facebook', {

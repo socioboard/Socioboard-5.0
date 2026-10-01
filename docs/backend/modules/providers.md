@@ -32,6 +32,7 @@ interface NetworkAdapter {
   capabilities: NetworkCapabilities;   // postTypes (text, link, image, carousel, video, reel, story), firstComment, altText
   rules: ContentRules;                 // maxChars, hashtags/mentions, media count/kinds/sizes, aspect ratios, video length, link handling
   preview: PreviewSpec;                // layout hints for the frontend live preview (text cut: truncateAt characters, truncateLines lines; caption position; media layout; crop; link card)
+  rateLimits: RateLimits;              // perAccount / perApp moving windows ({ max, perSec }), enforced by the publish worker
   validate(input: PublishInput): ValidationIssue[];                          // pure, used by composer + API
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;   // externalId, permalink
   deletePost?(externalId: string, account: AccountCredentials): Promise<void>;
@@ -46,7 +47,7 @@ interface NetworkAdapter {
 
 The shared HTTP client keeps integers too large for a JS number (Instagram's 17-digit ids, which some endpoints send as JSON numbers) as exact strings.
 
-Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth' | 'content' | 'rate_limited', retryAfter?, networkCode, message }`.
+Errors thrown by adapters are always `ProviderError { kind: 'retryable' | 'auth' | 'content' | 'rate_limited', retryAfter?, networkCode, message, limitScope }`. `limitScope` says whose limit a `rate_limited` hit: `account` (default) or `app` (the whole OAuth app; Meta code 4), so the worker holds back the right posts.
 
 ## Layout
 ```

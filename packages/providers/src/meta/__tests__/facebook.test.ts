@@ -513,6 +513,20 @@ describe('classifyGraphError', () => {
       kind: 'retryable',
       networkCode: null,
       message: 'Meta answered HTTP 502',
+      limitScope: 'account',
     });
+  });
+
+  it('tells the app’s own rate limit (code 4) from a Page’s or an account’s', () => {
+    const scope = (code: number) =>
+      classifyGraphError(400, { error: { code, message: 'x' } }).limitScope;
+    expect(scope(4)).toBe('app');
+    expect([32, 80001, 9, 613, 17].map(scope)).toEqual([
+      'account',
+      'account',
+      'account',
+      'account',
+      'account',
+    ]);
   });
 });

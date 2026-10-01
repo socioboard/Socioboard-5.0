@@ -9,6 +9,7 @@ import type {
   PublishInput,
   PublishMedia,
   PublishResult,
+  RateLimits,
 } from '../types';
 import { checkRules, issue, IssueCode } from '../validation';
 import type { GraphClient } from './graph-client';
@@ -67,6 +68,15 @@ export const INSTAGRAM_IMAGE_PREP: ImagePrep = {
   mimes: ['image/jpeg'],
   maxWidth: 1440,
   maxBytes: 8 * MB,
+};
+
+/**
+ * IG User Content Publishing Limit: 50 API-published posts per account in any 24 hours (a
+ * carousel counts once). Posts made in the Instagram app don't count.
+ */
+export const INSTAGRAM_RATE_LIMITS: RateLimits = {
+  perAccount: [{ max: 50, perSec: 86_400 }],
+  perApp: [],
 };
 
 export const INSTAGRAM_PREVIEW: PreviewSpec = {
@@ -275,6 +285,7 @@ export function createInstagram(
     rules: INSTAGRAM_RULES,
     preview: INSTAGRAM_PREVIEW,
     imagePrep: INSTAGRAM_IMAGE_PREP,
+    rateLimits: INSTAGRAM_RATE_LIMITS,
 
     validate(input) {
       const format = formatOf(input);

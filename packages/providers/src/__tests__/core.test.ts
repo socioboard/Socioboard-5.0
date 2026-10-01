@@ -217,6 +217,7 @@ function network(id: NetworkId): NetworkAdapter {
       cropAspectRatio: null,
       linkCard: false,
     },
+    rateLimits: { perAccount: [], perApp: [] },
     validate: () => [],
     publish: () => Promise.reject(new Error('not in this test')),
   };
