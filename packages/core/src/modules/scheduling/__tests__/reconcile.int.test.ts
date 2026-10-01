@@ -7,11 +7,19 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createPublishingServices } from '../../../domain';
 import { createTestApp } from '../../../testing';
-import { publishJobId, scheduledJobId } from '../../publishing';
+import { publishJobId, publishTarget, scheduledJobId, type PublishDeps } from '../../publishing';
 
 const t = createTestApp();
 const services = createPublishingServices(t.platform, { registry: t.networks.registry });
 const queue = t.platform.queues.get(services.publishQueue);
+const deps: PublishDeps = {
+  ...t.platform,
+  registry: t.networks.registry,
+  mediaUrls: services.mediaUrls,
+  getCredentials: services.socialAccounts.getCredentials,
+  markReauthRequired: services.socialAccounts.markReauthRequired,
+  recomputeStatus: services.posts.recomputeStatus,
+};
 const reconcile = () => services.reconciler.run({ workspaceId: ws });
 type Browser = Awaited<ReturnType<typeof t.signUp>>;
 
@@ -119,8 +127,8 @@ describe('scheduled targets', () => {
 });
 
 describe('targets stuck publishing', () => {
-  /** A target that started publishing (attempt 1 running) `minutesAgo` minutes ago. */
-  async function publishing(minutesAgo: number) {
+  /** A target publishing since `minutesAgo` minutes ago, on its `attempts`th try. */
+  async function publishing(minutesAgo: number, attempts = 1) {
     const created = await owner.post(`${base()}/posts`, {
       text: 'Stuck',
       targets: [{ accountId: account }],
@@ -129,13 +137,13 @@ describe('targets stuck publishing', () => {
     const target = await t.db.client.postTarget.findFirstOrThrow({ where: { postId: post.id } });
     await t.db.client.postTarget.update({
       where: { id: target.id },
-      data: { status: 'publishing', attempts: 1 },
+      data: { status: 'publishing', attempts },
     });
     await t.db.client.publishAttempt.create({
       data: {
         workspaceId: ws,
         postTargetId: target.id,
-        attemptNo: 1,
+        attemptNo: attempts,
         startedAt: minutesFromNow(-minutesAgo),
       },
     });
@@ -169,5 +177,99 @@ describe('targets stuck publishing', () => {
       const row = await t.db.client.postTarget.findUniqueOrThrow({ where: { id } });
       expect(row.status).toBe('publishing');
     }
+  });
+
+  it('left alone on a later try: the job keeps the id it was queued with', async () => {
+    // Queued at 0 attempts, now on its 3rd try, waiting out a long rate limit.
+    const later = await publishing(40, 3);
+    await queue.add(
+      'publish',
+      { workspaceId: ws, targetId: later.id },
+      { jobId: publishJobId(later.id, 0), delay: 3_600_000 },
+    );
+    expect((await reconcile()).stuck).toBe(0);
+    const row = await t.db.client.postTarget.findUniqueOrThrow({ where: { id: later.id } });
+    expect(row.status).toBe('publishing');
+  });
+});
+
+describe('a deleted workspace', () => {
+  it('stops everything it had scheduled; a job already queued publishes nothing', async () => {
+    const other = await owner.post('/api/v1/workspaces', {
+      name: t.workspaceName('RcGone'),
+      timezone: 'UTC',
+    });
+    const goneWs = (other.body as { id: string; name: string }).id;
+    const goneName = (other.body as { name: string }).name;
+    const goneAccount = await t.db.client.socialAccount.create({
+      data: {
+        workspaceId: goneWs,
+        network: 'facebook_page',
+        externalId: '499',
+        displayName: 'Closing down',
+      },
+    });
+    const created = await owner.post(`/api/v1/workspaces/${goneWs}/posts`, {
+      text: 'Never',
+      targets: [{ accountId: goneAccount.id }],
+    });
+    const post = Post.parse(created.body);
+    await owner.post(`/api/v1/workspaces/${goneWs}/posts/${post.id}/schedule`, {
+      at: minutesFromNow(60).toISOString(),
+    });
+    const repeating = Post.parse(
+      (
+        await owner.post(`/api/v1/workspaces/${goneWs}/posts`, {
+          text: 'Weekly',
+          targets: [{ accountId: goneAccount.id }],
+        })
+      ).body,
+    );
+    const day = new Date(Date.now() + 86_400_000);
+    await owner.send('PUT', `/api/v1/workspaces/${goneWs}/posts/${repeating.id}/recurrence`, {
+      frequency: 'weekly',
+      weekdays: [day.getUTCDay()],
+      time: '12:00',
+      timezone: 'UTC',
+      startsOn: day.toISOString().slice(0, 10),
+    });
+    const target = await t.db.client.postTarget.findFirstOrThrow({ where: { postId: post.id } });
+    expect(target.status).toBe('scheduled');
+
+    const res = await owner.send('DELETE', `/api/v1/workspaces/${goneWs}`, {
+      confirmName: goneName,
+    });
+    expect(res.status, JSON.stringify(res.body)).toBe(204);
+
+    const after = await t.db.client.postTarget.findUniqueOrThrow({ where: { id: target.id } });
+    expect(after.status).toBe('cancelled');
+    expect(await queue.getJob(scheduledJobId(target.id, 1))).toBeUndefined();
+    const rule = await t.db.client.recurringRule.findFirstOrThrow({
+      where: { postId: repeating.id },
+    });
+    expect(rule.active).toBe(false);
+    expect(
+      await t.db.client.postTarget.count({
+        where: { workspaceId: goneWs, status: 'scheduled' },
+      }),
+    ).toBe(0);
+
+    // Even a job that slipped through does nothing for a deleted workspace.
+    await t.db.client.postTarget.update({
+      where: { id: target.id },
+      data: { status: 'scheduled' },
+    });
+    await publishTarget(
+      deps,
+      { workspaceId: goneWs, targetId: target.id, scheduleVersion: 1 },
+      { isLast: false },
+    );
+    expect(t.networks.published).toHaveLength(0);
+    // And the reconcile job leaves it alone.
+    expect(await services.reconciler.run({ workspaceId: goneWs })).toEqual({
+      rebuilt: 0,
+      missed: 0,
+      stuck: 0,
+    });
   });
 });

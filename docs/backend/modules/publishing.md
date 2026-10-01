@@ -22,7 +22,7 @@ None directly (triggered via posts and scheduling). Read access to attempts is t
 | `media-prepare` | (inline in `publish` for now) | Get each file into the form the network takes (the adapter's `imagePrep`: media's `prepareImageVariant` converts, shrinks and re-compresses images once per spec) and give it a read URL and, when configured, a public address. Video transcoding (phase 3 networks) may move this to its own queue |
 
 **Publish processor steps:**
-1. Load target; exit if its status isn't `pending`/`scheduled`/`publishing` or `externalPostId` is already set (idempotency).
+1. Load target; exit if its workspace was deleted, or if its status isn't `pending`/`scheduled`/`publishing` or `externalPostId` is already set (idempotency).
 2. **Claim the try**: move `attempts` from n to n+1 only if it is still n, so two runs of the same target can't both publish. Record a `PublishAttempt` (`running`).
 3. Check the account is `active` (else an `auth` failure without calling the network) and the network is enabled. A scheduled job only runs if its schedule version is still the target's (checked on load and again in the atomic claim, so a reschedule committing at the same moment wins or loses as a whole); a job without a version never sends a `scheduled` target. Phase 4 adds: the post is still approved.
 4. Resolve content (shared content + override); prepare media; get the token (`getCredentials`: the asset's own, else its login's).

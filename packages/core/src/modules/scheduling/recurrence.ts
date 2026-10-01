@@ -16,6 +16,7 @@ import {
   type MemberContext,
 } from '../../platform';
 import type { PostEvents, PostService, ScheduledJob } from '../posts';
+import type { WorkspaceEvents } from '../workspaces';
 import type { SchedulingEvents } from './events';
 import { nextOccurrence, occurrencesBetween, ruleBounds, toRRule } from './occurrences';
 
@@ -294,7 +295,11 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
   async function expandDue(): Promise<number> {
     const to = new Date(clock.now().getTime() + RECURRING_HORIZON_DAYS * 24 * 60 * MINUTE);
     const due = await db.client.recurringRule.findMany({
-      where: { active: true, OR: [{ nextRunAt: null }, { nextRunAt: { lte: to } }] },
+      where: {
+        active: true,
+        workspace: { deletedAt: null },
+        OR: [{ nextRunAt: null }, { nextRunAt: { lte: to } }],
+      },
       select: { id: true, workspaceId: true },
       take: 1000,
     });
@@ -309,8 +314,49 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
     return created;
   }
 
-  /** Listeners: a template's content changed (replace its copies), or it was deleted. */
+  /**
+   * A deleted workspace publishes nothing more: its repeating rules stop and its scheduled
+   * targets are cancelled (their jobs dropped). Returns how many targets were cancelled.
+   */
+  async function stopWorkspace(workspaceId: string): Promise<number> {
+    const ws = scoped(workspaceId);
+    await ws.recurringRule.updateMany({
+      where: { active: true },
+      data: { active: false, nextRunAt: null },
+    });
+    const scheduled = await ws.postTarget.findMany({
+      where: { status: 'scheduled' },
+      select: { id: true, postId: true, scheduleVersion: true },
+    });
+    if (scheduled.length === 0) return 0;
+    await ws.postTarget.updateMany({
+      where: { id: { in: scheduled.map((t) => t.id) }, status: 'scheduled' },
+      data: { status: 'cancelled' },
+    });
+    await deps.dropScheduledJobs(
+      scheduled.map((t) => ({ targetId: t.id, version: t.scheduleVersion })),
+    );
+    for (const postId of new Set(scheduled.map((t) => t.postId))) {
+      await posts.recomputeStatus(workspaceId, postId);
+    }
+    return scheduled.length;
+  }
+
+  /**
+   * Listeners: a template's content changed (replace its copies), or it was deleted; a workspace
+   * was deleted (stop everything it had scheduled).
+   */
   function registerListeners() {
+    typedEvents<WorkspaceEvents>(deps.events).on('workspace.deleted', async (p) => {
+      try {
+        await stopWorkspace(p.workspaceId);
+      } catch (err) {
+        logger.error(
+          { err, workspaceId: p.workspaceId },
+          'stopping a deleted workspace’s posts failed',
+        );
+      }
+    });
     const postEvents = typedEvents<PostEvents>(deps.events);
     postEvents.on('post.updated', async (p) => {
       try {
@@ -333,7 +379,7 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
     });
   }
 
-  return { get, set, stop, sync, expandDue, registerListeners };
+  return { get, set, stop, sync, expandDue, stopWorkspace, registerListeners };
 }
 
 export type RecurrenceService = ReturnType<typeof createRecurrenceService>;

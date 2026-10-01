@@ -99,6 +99,13 @@ export async function publishTarget(
   if (!target || target.externalPostId || !(WAITING as readonly string[]).includes(target.status)) {
     return;
   }
+  // A deleted workspace never publishes (its scheduled posts are cancelled when it's deleted;
+  // this covers a job already queued or running then).
+  const workspace = await db.client.workspace.findUnique({
+    where: { id: data.workspaceId },
+    select: { deletedAt: true },
+  });
+  if (!workspace || workspace.deletedAt) return;
   const scheduled = data.scheduleVersion !== undefined;
   // A scheduled job for an older version (moved, unscheduled or sent now since); and a scheduled
   // target only goes out through its own scheduled job.
