@@ -74,3 +74,40 @@ export function Invitation({ inviter, workspace, role, url }: InvitationProps) {
 }
 
 const article = (word: string) => (/^[aeiou]/i.test(word) ? 'an' : 'a');
+
+// Notifications (phase 2): one email for a burst of notifications of one kind (several targets of
+// one post failing, several accounts needing reconnecting). P2-B12 gives each kind its own design.
+
+export interface NotificationEmailProps {
+  /** The workspace they're about, when there is one. */
+  workspace: string | null;
+  /** Oldest first; at least one. */
+  items: { title: string; body: string }[];
+  /** Where to look in the app (the post, the accounts page). */
+  url: string;
+}
+
+export function Notifications({ workspace, items, url }: NotificationEmailProps) {
+  const [first] = items;
+  const heading = first?.title ?? 'Something needs your attention';
+  return (
+    <EmailLayout
+      preview={first?.body ?? heading}
+      footer={`You're receiving this because of your notification settings${workspace ? ` in ${workspace}` : ''} on Socioboard. You can choose which emails you get in your notification settings.`}
+    >
+      <Heading>{heading}</Heading>
+      {items.map((item, i) => (
+        <Paragraph key={i}>
+          {i > 0 || items.length > 1 ? (
+            <>
+              <strong>{item.title}</strong>
+              <br />
+            </>
+          ) : null}
+          {item.body}
+        </Paragraph>
+      ))}
+      <Action href={url} label="Open in Socioboard" />
+    </EmailLayout>
+  );
+}

@@ -7,9 +7,11 @@ import { createElement, type ReactElement } from 'react';
 import {
   Invitation,
   MagicLink,
+  Notifications,
   ResetPassword,
   VerifyEmail,
   type InvitationProps,
+  type NotificationEmailProps,
 } from './templates';
 
 export interface RenderedEmail {
@@ -37,3 +39,12 @@ export const invitation = (input: InvitationProps) =>
     `${input.inviter} invited you to ${input.workspace} on Socioboard`,
     createElement(Invitation, input),
   );
+
+/** A burst of notifications of one kind, as one email (notifications module). */
+export const notificationEmail = (input: NotificationEmailProps) => {
+  const [first] = input.items;
+  const title = first?.title ?? 'Something needs your attention';
+  const subject =
+    input.items.length > 1 ? `${title} (and ${String(input.items.length - 1)} more)` : title;
+  return renderEmail(subject, createElement(Notifications, input));
+};

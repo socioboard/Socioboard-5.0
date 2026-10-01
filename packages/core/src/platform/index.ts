@@ -10,6 +10,7 @@ export * from './kv';
 export * from './logger';
 export * from './mailer';
 export * from './queue';
+export * from './realtime';
 export * from './storage';
 export * from './services';
 export * from './process';

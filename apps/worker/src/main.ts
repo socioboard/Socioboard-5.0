@@ -4,6 +4,7 @@ import {
   bootstrap,
   createAuditLog,
   createPlatform,
+  createNotifications,
   createPublishingServices,
   mediaProcessQueue,
   mediaPurgeQueue,
@@ -11,6 +12,7 @@ import {
   reconcileQueue,
   recurringQueue,
   registerAuditListeners,
+  registerNotificationListeners,
   tokenRefreshQueue,
   workspacePurgeQueue,
 } from '@socioboard/core';
@@ -24,6 +26,11 @@ onShutdown(logger, async () => {
 });
 const audit = createAuditLog(platform);
 registerAuditListeners(platform.events, audit, logger);
+// Notifications: publishing and the account jobs emit here; emails go out from the
+// `notifications` queue, grouped per burst.
+const notifications = createNotifications(platform);
+registerNotificationListeners(platform.events, notifications.service, platform.db, logger);
+platform.queues.startWorker(notifications.emailQueue);
 
 // Queue processors, one per module that owns background work.
 platform.queues.startWorker(mediaProcessQueue({ ...platform, tools: config.media }));
@@ -67,6 +74,12 @@ platform.queues.startWorker(mediaPurge);
 await platform.queues
   .get(mediaPurge)
   .upsertJobScheduler('nightly', { pattern: '15 3 * * *', tz: 'UTC' }, { name: 'purge' });
+
+const notificationPurge = notifications.purgeQueue;
+platform.queues.startWorker(notificationPurge);
+await platform.queues
+  .get(notificationPurge)
+  .upsertJobScheduler('nightly', { pattern: '45 3 * * *', tz: 'UTC' }, { name: 'purge' });
 
 const auditPurge = auditPurgeQueue({ audit, retentionDays: config.audit.retentionDays, logger });
 platform.queues.startWorker(auditPurge);

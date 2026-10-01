@@ -19,6 +19,11 @@ import {
   registerMediaRoutes,
 } from './modules/media';
 import { createPublishingServices } from './domain';
+import {
+  createNotifications,
+  registerNotificationListeners,
+  registerNotificationRoutes,
+} from './modules/notifications';
 import { registerPostRoutes } from './modules/posts';
 import { registerSchedulingRoutes } from './modules/scheduling';
 import { createOAuthCallbackRouter, registerSocialAccountRoutes } from './modules/social-accounts';
@@ -67,6 +72,9 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
 
   // Audit first, so it hears every event the modules emit.
   registerAuditListeners(platform.events, createAuditLog(platform), logger);
+  // Notifications: events emitted here (e.g. a login refused while listing its Pages) notify too.
+  const notifications = createNotifications(platform).service;
+  registerNotificationListeners(platform.events, notifications, platform.db, logger);
 
   const authModule = createAuthModule(platform);
   // Verification can only be required when the server can send the email.
@@ -130,6 +138,7 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   registerSocialAccountRoutes(api, socialAccounts);
   registerPostRoutes(api, posts);
   registerSchedulingRoutes(api, scheduling, queueSlots, recurrence);
+  registerNotificationRoutes(api, notifications);
 
   const app = express();
   app.disable('x-powered-by');

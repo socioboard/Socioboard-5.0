@@ -29,6 +29,8 @@ function memoryKv(): Kv {
     getAndDelete: () => Promise.resolve(null),
     set: () => Promise.resolve(),
     delete: () => Promise.resolve(),
+    listPush: () => Promise.resolve(),
+    listRange: () => Promise.resolve([]),
     incr: (key) => {
       const n = (counts.get(key) ?? 0) + 1;
       counts.set(key, n);

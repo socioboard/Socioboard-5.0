@@ -21,6 +21,7 @@
     "@socioboard/db": "workspace:*",
     "@socioboard/emails": "workspace:*",
     "@socioboard/providers": "workspace:*",
+    "@socket.io/redis-emitter": "^5.1.0",
     "better-auth": "~1.7.5",
     "bullmq": "^6.3.8",
     "express": "^5.2.1",

@@ -7,11 +7,6 @@ import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
  */
 export const PENDING_ROUTES: Readonly<Record<string, string>> = {
   getCalendar: 'P2-B9',
-  listNotifications: 'P2-B8',
-  markAllNotificationsRead: 'P2-B8',
-  markNotificationRead: 'P2-B8',
-  getNotificationPreferences: 'P2-B8',
-  updateNotificationPreferences: 'P2-B8',
   getAdminOverview: 'P2-B10',
   getPublishingHealth: 'P2-B10',
   listProblemTargets: 'P2-B10',
