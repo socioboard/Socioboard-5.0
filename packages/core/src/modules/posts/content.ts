@@ -63,5 +63,8 @@ export function deriveStatus(current: PostStatus, targets: { status: TargetStatu
   return EDITORIAL.includes(current) ? current : 'draft';
 }
 
+/** Target states still waiting to go out: publish-now and scheduling take these. */
+export const WAITING_TARGET: readonly TargetStatus[] = ['pending', 'scheduled'];
+
 /** Target states that can no longer be edited, removed or deleted with the post. */
 export const LOCKED_TARGET: readonly TargetStatus[] = ['publishing', 'published'];

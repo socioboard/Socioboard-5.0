@@ -55,13 +55,13 @@ The content users write once and send to many accounts. A **Post** holds the sha
 | `LABEL_EXISTS` | 409 | A label name already used in the workspace, whatever its case |
 | `POST_HAS_ERRORS` | 422 | Publish-now or retry with validation errors; `details` is the validation report |
 | `REVIEW_REQUIRED` | 422 | The workspace reviews every post (approvals arrive in phase 4) |
-| `POST_ALREADY_SENT` | 409 | Publish-now on a post whose targets aren't all waiting (retry the failed ones instead) |
+| `POST_ALREADY_SENT` | 409 | Publish-now on a post whose targets aren't all waiting (`pending` or `scheduled`; retry the failed ones instead) |
 | `TARGET_NOT_FOUND` / `TARGET_NOT_FAILED` | 404 / 409 | Retry of a target that isn't on the post / isn't failed |
 
 ## Rules
 - Only the author (or `posts:approve` roles) can edit or delete a post; once any target is `publishing` or `published`, the post can't be edited or deleted. Edit, delete and publish-now lock the post row (`SELECT … FOR UPDATE`) and check again under the lock, so an edit can't land while a publish starts.
 - Labels: posts keep label ids in `labelIds` (at most 20). Labels stay editable after publishing (an update with only `labelIds` isn't locked), since they organise the posts list. Deleting a label removes its id from every post in the same transaction. Saving a post checks its labels under a share lock (`FOR SHARE`) taken before the post's own lock, and deleting a label deletes its row before stripping posts, so a label deleted while a post is being saved with it never stays on that post. `GET /labels` returns each label's `postCount`.
-- Updating `targets` replaces the selection: removed accounts' targets go, new ones join as `pending`, kept ones keep their id and history and take the new override.
+- Updating `targets` replaces the selection: removed accounts' targets go, new ones join as `pending`, kept ones keep their id and history and take the new override. On a post that is scheduled (every account at one time), new accounts join `scheduled` at that time with their own delayed job, so the post stays scheduled; removed accounts' jobs are dropped. Deleting a scheduled post drops its jobs.
 - Duplicating copies content and overrides as a new draft by the caller, leaving out disconnected accounts and deleted files.
 - `pnpm db:seed` adds a sample Facebook login with two **paused** sample accounts (fake tokens), a draft and a post scheduled for the next day.
 - A post needs approval before scheduling or publishing if the author lacks `posts:publish` **or** the workspace has `requireReviewForAll`.

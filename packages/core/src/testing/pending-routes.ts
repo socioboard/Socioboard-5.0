@@ -6,9 +6,6 @@ import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
  * The route checks skip only these, and fail when a listed route is already mounted.
  */
 export const PENDING_ROUTES: Readonly<Record<string, string>> = {
-  schedulePost: 'P2-B2',
-  unschedulePost: 'P2-B2',
-  rescheduleTarget: 'P2-B2',
   queuePost: 'P2-B3',
   getQueueSlots: 'P2-B3',
   putQueueSlots: 'P2-B3',

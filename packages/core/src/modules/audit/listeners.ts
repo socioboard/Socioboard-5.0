@@ -2,11 +2,17 @@ import type { EventBus, Logger } from '../../platform';
 import type { AuthEvents } from '../auth';
 import type { MediaEvents } from '../media';
 import type { PostEvents } from '../posts';
+import type { SchedulingEvents } from '../scheduling';
 import type { SocialAccountEvents } from '../social-accounts';
 import type { WorkspaceEvents } from '../workspaces';
 import type { AuditEntry, AuditLog } from './service';
 
-type AllEvents = AuthEvents & WorkspaceEvents & MediaEvents & SocialAccountEvents & PostEvents;
+type AllEvents = AuthEvents &
+  WorkspaceEvents &
+  MediaEvents &
+  SocialAccountEvents &
+  PostEvents &
+  SchedulingEvents;
 /** The real event names, without the `Record<string, unknown>` index signature the maps extend. */
 type EventName = keyof { [K in keyof AllEvents as string extends K ? never : K]: true };
 type Mapping = {
@@ -160,6 +166,24 @@ export const AUDITED: Mapping = {
     actor: user(p.userId),
     entity: { type: 'post_label', id: p.labelId },
     diff: { name: p.name },
+  }),
+  'post.scheduled': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { targets: p.targets },
+  }),
+  'post.rescheduled': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post_target', id: p.targetId },
+    diff: { postId: p.postId, from: p.from, to: p.to },
+  }),
+  'post.unscheduled': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { targets: p.targetIds.length },
   }),
   'post.deleted': (p) => ({
     workspaceId: p.workspaceId,
