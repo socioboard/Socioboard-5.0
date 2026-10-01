@@ -23,7 +23,7 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 | GET | `/api/v1/workspaces/:wid` | member | Workspace details + my role |
 | PATCH | `/api/v1/workspaces/:wid` | `workspace:update` | Name, slug, logo (`logoKey`), timezone, review setting |
 | POST | `/api/v1/workspaces/:wid/logo-upload` | `workspace:update` | Presigned URL for the logo image; then PATCH `logoKey` |
-| DELETE | `/api/v1/workspaces/:wid` | `workspace:delete` | Soft-delete (body `confirmName` must equal the name); hard-deleted after 30 days |
+| DELETE | `/api/v1/workspaces/:wid` | `workspace:delete` | Soft-delete (body `confirmName` must equal the name); hard-deleted after 30 days. Nothing more is published: its scheduled posts are cancelled (jobs dropped) and its repeating rules stopped ([scheduling](scheduling.md)) |
 | GET | `/api/v1/workspaces/:wid/members` | member | List members |
 | PATCH | `/api/v1/workspaces/:wid/members/:mid` | `members:manage` | Change role, set account access |
 | DELETE | `/api/v1/workspaces/:wid/members/:mid` | `members:manage` or self | Remove member / leave |

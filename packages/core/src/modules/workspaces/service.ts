@@ -284,7 +284,8 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
         data: { status: 'canceled' },
       }),
     ]);
-    // Later phases add: cancel scheduled publish jobs, revoke stored social tokens.
+    // Scheduling stops its scheduled posts and repeating rules on this event; revoking stored
+    // social tokens comes with the purge (phase 5).
     await events.emit('workspace.deleted', { workspaceId: current.id, userId: caller.user.id });
   }
 

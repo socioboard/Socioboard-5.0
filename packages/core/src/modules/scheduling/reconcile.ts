@@ -9,7 +9,12 @@ import {
   type Logger,
 } from '../../platform';
 import type { ScheduledJob } from '../posts';
-import { publishJobId, scheduledJobId, type PublishingEvents } from '../publishing';
+import {
+  PUBLISH_ATTEMPTS,
+  publishJobId,
+  scheduledJobId,
+  type PublishingEvents,
+} from '../publishing';
 
 /** A job's state in BullMQ, or `unknown` when there is no such job. */
 export type JobState =
@@ -112,6 +117,7 @@ export function createReconciler(deps: ReconcileDeps) {
     const scheduled = await db.client.postTarget.findMany({
       where: {
         ...(workspaceId ? { workspaceId } : {}),
+        workspace: { deletedAt: null },
         status: 'scheduled',
         scheduledAt: { lte: new Date(now + RECONCILE_WINDOW_HOURS * 60 * MINUTE) },
       },
@@ -160,6 +166,7 @@ export function createReconciler(deps: ReconcileDeps) {
     const stuck = await db.client.postTarget.findMany({
       where: {
         ...(workspaceId ? { workspaceId } : {}),
+        workspace: { deletedAt: null },
         status: 'publishing',
         updatedAt: { lt: new Date(now - STUCK_AFTER_MINUTES * MINUTE) },
       },
@@ -174,12 +181,15 @@ export function createReconciler(deps: ReconcileDeps) {
       take: BATCH,
     });
     for (const t of stuck) {
-      // Publish-now and retries queue `publish-<id>-<attempts before the claim>`; scheduled
-      // targets `publish-<id>-v<version>`. Either one alive (running, or waiting to retry) wins.
-      const states = await Promise.all([
-        deps.jobState(publishJobId(t.id, Math.max(0, t.attempts - 1))),
-        deps.jobState(scheduledJobId(t.id, t.scheduleVersion)),
-      ]);
+      // Publish-now and retries queue `publish-<id>-<attempts when queued>`, and one job makes
+      // up to PUBLISH_ATTEMPTS tries, so its id can be any of the last few counts; scheduled
+      // targets use `publish-<id>-v<version>`. Any of them alive (running, or waiting to retry,
+      // even an hour for a rate limit) wins.
+      const ids = [scheduledJobId(t.id, t.scheduleVersion)];
+      for (let k = Math.max(0, t.attempts - PUBLISH_ATTEMPTS); k <= t.attempts; k++) {
+        ids.push(publishJobId(t.id, k));
+      }
+      const states = await Promise.all(ids.map((id) => deps.jobState(id)));
       if (states.some((s) => LIVE.includes(s))) continue;
       const failed = await fail(
         { ...t, network: t.account.network },
