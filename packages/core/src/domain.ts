@@ -18,8 +18,10 @@ import {
 import {
   createCalendarEntries,
   createQueueSlotService,
+  createRecurrenceService,
   createSchedulingService,
   type QueueSlotService,
+  type RecurrenceService,
   type SchedulingService,
 } from './modules/scheduling';
 import {
@@ -36,6 +38,7 @@ export interface PublishingServices {
   posts: PostService;
   scheduling: SchedulingService;
   queueSlots: QueueSlotService;
+  recurrence: RecurrenceService;
   /** Signed public media addresses (served by the API at /public-media). */
   mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
@@ -99,6 +102,8 @@ export function createPublishingServices(
     },
     enqueueScheduled,
     dropScheduledJobs,
+    // Bound late: the recurrence service is created below, with the posts service.
+    recurrenceOf: (workspaceId, postId) => recurrence.get(workspaceId, postId),
   });
   registerPostListeners(events, posts, logger);
   const scheduling = createSchedulingService({
@@ -144,12 +149,24 @@ export function createPublishingServices(
     entries: createCalendarEntries(db, storage),
   });
 
+  const recurrence = createRecurrenceService({
+    db,
+    clock,
+    logger,
+    events,
+    posts,
+    enqueueScheduled,
+    dropScheduledJobs,
+  });
+  recurrence.registerListeners();
+
   return {
     registry,
     socialAccounts,
     posts,
     scheduling,
     queueSlots,
+    recurrence,
     mediaUrls,
     publishQueue: queue,
   };

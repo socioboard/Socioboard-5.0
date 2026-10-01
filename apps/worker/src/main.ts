@@ -7,6 +7,7 @@ import {
   mediaProcessQueue,
   mediaPurgeQueue,
   onShutdown,
+  recurringQueue,
   registerAuditListeners,
   workspacePurgeQueue,
 } from '@socioboard/core';
@@ -23,8 +24,15 @@ registerAuditListeners(platform.events, audit, logger);
 
 // Queue processors, one per module that owns background work.
 platform.queues.startWorker(mediaProcessQueue({ ...platform, tools: config.media }));
-// Publishing: one job per post target (publish-now and retries from the API).
-platform.queues.startWorker(createPublishingServices(platform).publishQueue);
+// Publishing: one job per post target (publish-now, retries and scheduled posts from the API).
+const publishing = createPublishingServices(platform);
+platform.queues.startWorker(publishing.publishQueue);
+// Repeating posts: hourly, each active rule's copies are created a week ahead.
+const recurring = recurringQueue(publishing.recurrence);
+platform.queues.startWorker(recurring);
+await platform.queues
+  .get(recurring)
+  .upsertJobScheduler('hourly', { pattern: '5 * * * *', tz: 'UTC' }, { name: 'expand' });
 
 const purge = workspacePurgeQueue(platform);
 platform.queues.startWorker(purge);

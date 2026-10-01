@@ -179,6 +179,18 @@ export const AUDITED: Mapping = {
     entity: { type: 'post_target', id: p.targetId },
     diff: { postId: p.postId, from: p.from, to: p.to },
   }),
+  'post.recurrence_set': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { rrule: p.rrule, timezone: p.timezone },
+  }),
+  'post.recurrence_stopped': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'post', id: p.postId },
+    diff: { removedOccurrences: p.removedOccurrences },
+  }),
   'queue_slots.updated': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),

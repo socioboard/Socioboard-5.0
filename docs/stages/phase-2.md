@@ -13,7 +13,7 @@
 - [x] P2-B1 Prisma: RecurringRule, QueueSlot, Notification, NotificationPreference, FeatureFlag; `Post.recurringRuleId` + `occurrenceAt` for occurrence posts (migration `20261001090000_phase2_scheduling_notifications_flags`; seed adds weekday queue slots)
 - [x] P2-B2 Schedule/unschedule/reschedule with `scheduleVersion` + deterministic delayed jobs (`packages/core/src/modules/scheduling`; publish-now also takes scheduled posts; accounts added to a scheduled post join at its time)
 - [x] P2-B3 Queue slots + "add to queue" (`nextFreeSlot`): slots read and replace, the queue view's next 14 slots with their posts, next free slot per account under a per-account lock; daylight-saving-aware times in `scheduling/time.ts`
-- [ ] P2-B4 Recurring rules + `recurring` expansion job
+- [x] P2-B4 Recurring rules + `recurring` expansion job (template + one post per occurrence a week ahead; `scheduling/recurrence.ts`, `occurrences.ts`; migration `20261001120000_post_customized_at`)
 - [ ] P2-B5 `reconcile` job: rebuild missing jobs, resolve stuck `publishing` targets
 - [ ] P2-B6 Per-network/per-account rate limiting in the publish queue
 - [ ] P2-B7 `token-refresh` + `account-health` jobs; `reauth_required` flow

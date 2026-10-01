@@ -9,8 +9,8 @@ When posts go out: one-time schedules, recurring schedules, per-account posting 
 | Table | Key fields | Notes |
 | --- | --- | --- |
 | `PostTarget.scheduledAt`, `scheduleVersion` | (owned by posts) | Version bumps on every reschedule |
-| `RecurringRule` | id, workspaceId, postId (one rule per post), rule JSON (the structured rule as the API took it), rrule, timezone, startsAt, endsAt?, nextRunAt?, active, createdById? | RFC 5545 RRULE, built from the structured rule; replaces 5.0's day-of-week schedules. `postId` is the **template** post; deleting the template deletes its rule. Stopping a rule sets `active = false` |
-| `Post.recurringRuleId`, `occurrenceAt` | (owned by posts) | Set on each occurrence post: which rule made it, and for which occurrence (unique together, so an occurrence is created once) |
+| `RecurringRule` | id, workspaceId, postId (one rule per post), rule JSON (the structured rule as the API took it; expansion reads this), rrule (RFC 5545, for interoperability), timezone, startsAt, endsAt?, nextRunAt?, active, createdById? | RFC 5545 RRULE, built from the structured rule; replaces 5.0's day-of-week schedules. `postId` is the **template** post; deleting the template deletes its rule. Stopping a rule sets `active = false` |
+| `Post.recurringRuleId`, `occurrenceAt`, `customizedAt` | (owned by posts) | Set on each occurrence post: which rule made it, and for which occurrence (unique together, so an occurrence is created once); `customizedAt` once it was edited, scheduled, moved or unscheduled by hand |
 
 **Recurring posts are a template plus one ordinary post per occurrence** (decided 2026-09-30). The post the rule is set on becomes the template: it holds the content, accounts and rule, and is never published itself. The `recurring` job creates a normal post for each occurrence in the horizon, copying the template's content, overrides and labels, scheduled at the occurrence's time. An occurrence then behaves like any other post: its own targets, status, history and retry; it can be edited, moved or deleted alone, and it appears in the posts list and on the calendar (`recurring: true`). Why not many targets on one post: a target is one account's delivery of one post (unique per post and account), and everything that reads posts (status, editing, retry, history, tenant checks) would have to learn about occurrences.
 | `QueueSlot` | id, workspaceId, socialAccountId, weekday (0–6, 0 = Sunday), time (HH:mm), timezone | Preferred posting times per account; unique per account, weekday and time; go with the account. `pnpm db:seed` gives the sample accounts weekdays at 09:00 and 15:00 |
@@ -48,6 +48,10 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 | `ACCOUNT_NOT_AVAILABLE` | 422 | Giving queue slots to a disconnected account |
 | `NO_QUEUE_SLOTS` | 422 | Add to queue when some accounts have no free slot in the next year; `details.accountIds` names them |
 | `RECURRENCE_NOT_FOUND` | 404 | Stopping a post that doesn't repeat |
+| `POST_IS_RECURRING` | 409 | Publishing, scheduling or queueing a repeating post's template (its copies go out) |
+| `POST_IS_OCCURRENCE` | 409 | Making a copy of a repeating post repeat on its own |
+| `POST_IS_SCHEDULED` | 409 | Making a scheduled post repeat (unschedule it first) |
+| `RECURRENCE_ENDED` | 422 | A rule with no dates left |
 
 ## Services
 - `schedule(postId, at | perTarget)`: every live target must be waiting (`pending` or `scheduled`, so scheduling again moves the whole post); checks each time (now + 2 minutes to a year), the review setting and validation (as publish-now does); then, under the post lock, sets `scheduledAt`, bumps `scheduleVersion` and queues a delayed `publish` job per target (`publish-<targetId>-v<version>`, carrying the version). If queueing fails, the targets go back to their previous time and version, whose jobs are still there. Older versions' jobs are then dropped (best effort: a stale job does nothing anyway).
@@ -57,13 +61,16 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - `queue(postId)` ("Add to queue"): the same checks as `schedule`, then, under the post lock and a per-account advisory lock (taken in account id order, so two posts queued at once never take the same slot), each waiting target gets its account's next free slot from now + 2 minutes, within a year. A slot is free when no other post's target on that account is scheduled, publishing or published at that instant. Any account without a free slot refuses the whole request (`NO_QUEUE_SLOTS`, naming the accounts).
 - Queue slots: `GET` gives the slots by weekday and time, their timezone (the workspace's while there are none) and the next 14 slot times with the posts already in each (calendar entries); `PUT` replaces them all in one timezone (disconnected accounts refused: `ACCOUNT_NOT_AVAILABLE`) and emits `queue_slots.updated` (audited).
 - Wall-clock times become instants in `scheduling/time.ts` (`zonedTime`, `slotTimes`) with the runtime's timezone database, applying the daylight-saving rule below; recurring rules (P2-B4) use the same code.
-- `expandRecurring(ruleId, horizon)`: creates an occurrence post for each occurrence in the horizon that doesn't have one yet (the unique `recurringRuleId` + `occurrenceAt` makes a repeat run harmless).
+- `setRecurrence(postId, rule)`: the post must be a draft (every live target `pending`; `POST_IS_SCHEDULED` / `POST_ALREADY_SENT` otherwise), not itself an occurrence (`POST_IS_OCCURRENCE`), and pass the same checks as scheduling (accounts, review, validation); the rule must still have a date ahead (`RECURRENCE_ENDED`). It is stored (structured, plus its RRULE), then synced. The answer gives `nextRunAt`, the next occurrence from now.
+- `sync(ruleId)` (on set, on template edits, and from the `recurring` job), under the rule's row lock: optionally replaces the waiting copies, then creates a post for every occurrence from now + 2 minutes to 7 days ahead that has none yet (the unique `recurringRuleId` + `occurrenceAt` makes a repeat run harmless): the template's text, media, link, first comment, labels and targets (disconnected accounts left out, overrides kept), each target `scheduled` at the occurrence with its own delayed job. `nextRunAt` in the row is the first occurrence past the window.
+- The template never goes out itself: publish-now, schedule and queue refuse it (`POST_IS_RECURRING`) while its rule is active. Its edits (any field) replace the waiting copies through the `post.updated` event; deleting it removes them (`post.deleted` carries the rule's id).
+- Occurrences are computed from the structured rule in `scheduling/occurrences.ts` (daily / weekly on weekdays, weeks starting Monday / monthly on a day, a month without it skipped, -1 the last day; ends on a date or after a count from the start) with the same daylight-saving rule as queue slots. Every loop is bounded (a rule that never falls on a day ends instead of spinning), and far dates are reached by jumping, not walking from the start.
 - Changing the rule or the template's content replaces the occurrence posts that are still waiting (not yet publishing, and not edited on their own); sent and hand-edited ones stay. Stopping the rule (`DELETE …/recurrence`) removes the waiting occurrences; sent ones stay as history.
 
 ## Jobs
 | Queue | Runs | Does |
 | --- | --- | --- |
-| `recurring` | hourly | Expand active rules 7 days ahead |
+| `recurring` | hourly (`:05`, `upsertJobScheduler`) | Sync every active rule whose `nextRunAt` is within 7 days |
 | `reconcile` | every 5 min | For every target `scheduled` in the next 48 h, ensure its delayed job exists (recreate from Postgres if Valkey lost it); fail or verify targets stuck in `publishing` |
 
 ## Rules
@@ -72,4 +79,4 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 - Times are stored in UTC. Recurring rules keep their own timezone so they don't drift with daylight saving.
 - Wall-clock times that don't exist or happen twice (a recurring rule's or a queue slot's time on a daylight-saving change day): a time skipped by the clock change moves forward by the gap (02:30 on a spring-forward night that jumps 02:00 → 03:00 becomes 03:30); a time that happens twice uses the first. Both are covered by the daylight-saving tests (P2-Q2).
 - Scheduled count respects `checkLimit('scheduledPosts')` when billing is on.
-- Emits `post.scheduled` (targets and times), `post.rescheduled` (from, to), `post.unscheduled`; all three are audited.
+- Emits `post.scheduled` (targets and times), `post.rescheduled` (from, to), `post.unscheduled`, `post.recurrence_set` (RRULE, timezone), `post.recurrence_stopped` (copies removed), `queue_slots.updated`; all are audited.

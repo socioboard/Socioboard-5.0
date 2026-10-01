@@ -8,6 +8,7 @@ export * from './modules/auth';
 export * from './modules/media';
 export * from './modules/posts';
 export * from './modules/publishing';
+export * from './modules/scheduling';
 export * from './modules/social-accounts';
 export * from './modules/workspaces';
 export * from './seed';

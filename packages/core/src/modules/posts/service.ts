@@ -10,6 +10,7 @@ import {
   type PostDetails,
   type PostLabel,
   type PostTarget,
+  type Recurrence,
   type TargetInput,
   type UpdateLabelBody,
   type UpdatePostBody,
@@ -65,6 +66,8 @@ export interface PostServiceDeps {
    * nothing to do anyway, this only keeps the queue tidy.
    */
   dropScheduledJobs(jobs: { targetId: string; version: number }[]): Promise<void>;
+  /** scheduling: how a post repeats, for `GET /posts/:id` (null when it doesn't). */
+  recurrenceOf?(workspaceId: string, postId: string): Promise<Recurrence | null>;
 }
 
 /** A scheduled target's delayed publish job. */
@@ -524,6 +527,8 @@ export function createPostService(deps: PostServiceDeps) {
           ...(body.link !== undefined ? { link: body.link } : {}),
           ...(body.firstComment !== undefined ? { firstComment: body.firstComment } : {}),
           ...(body.labelIds !== undefined ? { labelIds: body.labelIds } : {}),
+          // An occurrence edited on its own: its rule no longer replaces it.
+          ...(post.recurringRuleId && !labelsOnly ? { customizedAt: new Date() } : {}),
         },
       });
       if (!targets) return;
@@ -587,6 +592,11 @@ export function createPostService(deps: PostServiceDeps) {
     const post = await findPost(member.workspaceId, postId);
     assertCanEdit(caller, member, post);
     if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) throw notDeletable();
+    // A template's rule goes with it (cascade); its id lets scheduling remove the waiting copies.
+    const rule = await scoped(member.workspaceId).recurringRule.findFirst({
+      where: { postId: post.id },
+      select: { id: true },
+    });
     await db.client.$transaction(async (tx) => {
       await lockUnpublished(tx, member.workspaceId, post.id, notDeletable);
       await tx.post.delete({ where: { id: post.id, workspaceId: member.workspaceId } });
@@ -596,6 +606,7 @@ export function createPostService(deps: PostServiceDeps) {
       workspaceId: member.workspaceId,
       postId: post.id,
       userId: caller.user.id,
+      templateOfRuleId: rule?.id ?? null,
     });
   }
 
@@ -689,8 +700,7 @@ export function createPostService(deps: PostServiceDeps) {
               : null,
           })),
       })),
-      // Recurring rules arrive with P2-B4.
-      recurrence: null,
+      recurrence: deps.recurrenceOf ? await deps.recurrenceOf(member.workspaceId, post.id) : null,
     };
   }
 
@@ -804,6 +814,7 @@ export function createPostService(deps: PostServiceDeps) {
         'Posts in this workspace need review before publishing',
       );
     }
+    await assertNotTemplate(member.workspaceId, post.id);
     const live = post.targets.filter((t) => t.status !== 'cancelled');
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
     // A scheduled post can be sent now too: its scheduled jobs become stale (version bump).
@@ -1036,6 +1047,23 @@ export function createPostService(deps: PostServiceDeps) {
     );
   }
 
+  /**
+   * A repeating post's template holds the content and never goes out itself: its copies do
+   * (POST_IS_RECURRING otherwise).
+   */
+  async function assertNotTemplate(workspaceId: string, postId: string) {
+    const rule = await scoped(workspaceId).recurringRule.findFirst({
+      where: { postId, active: true },
+      select: { id: true },
+    });
+    if (rule) {
+      throw conflict(
+        'POST_IS_RECURRING',
+        'This post repeats: its scheduled copies go out. Stop repeating it to send it on its own',
+      );
+    }
+  }
+
   /** REVIEW_REQUIRED when the workspace reviews every post (approvals arrive in phase 4). */
   async function assertNoReviewRequired(workspaceId: string) {
     const workspace = await db.client.workspace.findUnique({
@@ -1053,6 +1081,7 @@ export function createPostService(deps: PostServiceDeps) {
   return {
     view,
     checkPublishable,
+    assertNotTemplate,
     assertNoReviewRequired,
     listLabels,
     createLabel,

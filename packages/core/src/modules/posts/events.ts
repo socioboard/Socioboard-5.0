@@ -2,7 +2,13 @@
 export interface PostEvents extends Record<string, unknown> {
   'post.created': { workspaceId: string; postId: string; userId: string };
   'post.updated': { workspaceId: string; postId: string; userId: string; fields: string[] };
-  'post.deleted': { workspaceId: string; postId: string; userId: string };
+  'post.deleted': {
+    workspaceId: string;
+    postId: string;
+    userId: string;
+    /** Set when the post was a repeating post's template: its rule, deleted with it. */
+    templateOfRuleId: string | null;
+  };
   'label.created': { workspaceId: string; labelId: string; userId: string; name: string };
   'label.updated': { workspaceId: string; labelId: string; userId: string; fields: string[] };
   'label.deleted': { workspaceId: string; labelId: string; userId: string; name: string };

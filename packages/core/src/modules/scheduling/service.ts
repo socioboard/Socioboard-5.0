@@ -73,6 +73,14 @@ export function createSchedulingService(deps: SchedulingDeps) {
     }
   }
 
+  /** A repeating post's occurrence changed by hand: its rule no longer replaces it. */
+  async function markCustomized(tx: Prisma.TransactionClient, workspaceId: string, postId: string) {
+    await tx.post.updateMany({
+      where: { id: postId, workspaceId, recurringRuleId: { not: null } },
+      data: { customizedAt: clock.now() },
+    });
+  }
+
   async function lockPost(tx: Prisma.TransactionClient, workspaceId: string, postId: string) {
     await tx.$queryRaw`SELECT id FROM "Post" WHERE id = ${postId}::uuid AND "workspaceId" = ${workspaceId}::uuid FOR UPDATE`;
   }
@@ -141,6 +149,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
     const live = await liveTargets(workspaceId, postId);
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
     if (live.some((t) => !WAITING_TARGET.includes(t.status))) throw alreadySent();
+    await posts.assertNotTemplate(workspaceId, postId);
     await posts.assertNoReviewRequired(workspaceId);
     await posts.checkPublishable(
       member,
@@ -181,6 +190,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
         throw alreadySent();
       }
       const times = await decide(tx, rows);
+      await markCustomized(tx, workspaceId, postId);
       const jobs: ScheduledJob[] = [];
       for (const t of rows) {
         const at = times.get(t.id);
@@ -307,6 +317,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
         select: { id: true, status: true, scheduledAt: true, scheduleVersion: true },
       });
       if (scheduled.length === 0) throw notScheduled();
+      await markCustomized(tx, workspaceId, postId);
       await tx.postTarget.updateMany({
         where: { workspaceId, id: { in: scheduled.map((t) => t.id) }, status: 'scheduled' },
         data: { status: 'pending', scheduledAt: null, scheduleVersion: { increment: 1 } },
@@ -365,6 +376,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
         where: { id: targetId, workspaceId },
         data: { scheduledAt: at, scheduleVersion: version },
       });
+      await markCustomized(tx, workspaceId, target.postId);
       return { before: [now], after: [{ workspaceId, targetId, version, at }] };
     });
     await queueOrRevert(workspaceId, before, after);
