@@ -16,7 +16,7 @@
 - [x] P2-B4 Recurring rules + `recurring` expansion job (template + one post per occurrence a week ahead; `scheduling/recurrence.ts`, `occurrences.ts`; migration `20261001120000_post_customized_at`)
 - [x] P2-B5 `reconcile` job: rebuild missing jobs, resolve stuck `publishing` targets (`scheduling/reconcile.ts`, every 5 minutes; over an hour late fails as missed; stuck deliveries are stopped, not retried blindly)
 - [x] P2-B6 Per-network/per-account rate limiting in the publish queue (adapter `rateLimits`, Valkey `RateLimiter` in `platform/queue`; held jobs wait without using a try; a network's "slow down" pauses the account, or the app for Meta code 4)
-- [ ] P2-B7 `token-refresh` + `account-health` jobs; `reauth_required` flow
+- [x] P2-B7 `token-refresh` + `account-health` jobs; `reauth_required` flow (`social-accounts` service `refreshExpiringTokens` / `checkHealth`, `jobs.ts`; worker schedules hourly and daily; a Facebook login's expiry only stops accounts posting with its token)
 - [ ] P2-B8 Notifications: event listeners, in-app feed, email templates (React Email), Socket.IO rooms + events
 - [ ] P2-B9 Calendar endpoint
 - [ ] P2-B10 Admin v1 endpoints + Bull Board mount; platform-admin guard with 2FA check

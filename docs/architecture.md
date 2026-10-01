@@ -220,6 +220,7 @@ The post's status is computed from its targets' statuses. Whether an author can 
 | `publish` | Publish one PostTarget | Delayed until `scheduledAt`. Up to 5 attempts with exponential backoff, only for retryable errors. Idempotent: skips if `externalPostId` is already set |
 | `media-prepare` | Transcode or resize for a network | Runs before publishing, e.g. IG aspect ratio, X size limits, YouTube/TikTok upload sessions |
 | `token-refresh` | Refresh expiring OAuth tokens | Runs every hour; marks the account `reauth_required` and notifies admins if refresh fails |
+| `account-health` | Check each login can still post to its accounts | Runs daily; an account the login lost access to becomes `reauth_required` with the reason, one that came back is active again |
 | `metrics-sync` | Pull account and post metrics | Runs daily per account, plus at 1h/24h/7d after each publish |
 | `recurring` | Expand RecurringRule into PostTargets | Runs hourly and looks 7 days ahead |
 | `reconcile` | Recreate missing delayed jobs, fail stuck `publishing` targets | Runs every 5 minutes |

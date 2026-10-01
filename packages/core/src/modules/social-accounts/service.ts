@@ -52,6 +52,27 @@ export interface SocialAccountServiceDeps {
   lookupMembership: MembershipLookup;
 }
 
+/** `token-refresh`: tokens expiring within this long are renewed (social-accounts.md, Jobs). */
+export const TOKEN_REFRESH_AHEAD_HOURS = 72;
+/** `account-health`: a login checked more recently than this is left until the next run. */
+export const HEALTH_CHECK_EVERY_HOURS = 20;
+/** Logins handled per run of either job; the rest wait for the next run. */
+const JOB_BATCH = 500;
+const HOUR = 3_600_000;
+
+/** How reasons name each login's network. */
+const PROVIDER_NAMES: Record<LoginProvider, string> = {
+  facebook: 'Facebook',
+  instagram: 'Instagram',
+  linkedin: 'LinkedIn',
+  x: 'X',
+  youtube: 'YouTube',
+  pinterest: 'Pinterest',
+  tiktok: 'TikTok',
+  snapchat: 'Snapchat',
+  tumblr: 'Tumblr',
+};
+
 /** A sign-in attempt must come back within this long (docs: 10-minute expiry, single use). */
 const STATE_TTL_MS = 10 * 60_000;
 /** Delivery states that disconnecting an account cancels (drafts keep theirs; validation flags them). */
@@ -409,6 +430,212 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     }
   }
 
+  // ---------------------------------------------------------------- background checks
+
+  /** Usable logins in live workspaces (optionally one workspace: tests, an admin repair). */
+  const usableConnections = (workspaceId: string | undefined) =>
+    ({
+      ...(workspaceId ? { workspaceId } : {}),
+      status: 'active',
+      workspace: { deletedAt: null },
+    }) satisfies Prisma.SocialConnectionWhereInput;
+
+  /**
+   * `token-refresh` (hourly): renews login tokens expiring within 72 hours where the network
+   * allows it (Instagram Login), and asset tokens expiring as soon (fetched again through their
+   * login). A login the network refuses, or one that expired with no way to renew it, needs
+   * reconnecting. A network that doesn't answer is tried again next hour.
+   */
+  async function refreshExpiringTokens({ workspaceId }: { workspaceId?: string } = {}) {
+    const now = clock.now();
+    const soon = new Date(now.getTime() + TOKEN_REFRESH_AHEAD_HOURS * HOUR);
+    const report = { refreshed: 0, assetsRefreshed: 0, reauth: 0, failed: 0 };
+    const due = await db.client.socialConnection.findMany({
+      where: {
+        ...usableConnections(workspaceId),
+        OR: [
+          { tokenExpiresAt: { lte: soon } },
+          {
+            accounts: {
+              some: { status: { in: ['active', 'paused'] }, assetTokenExpiresAt: { lte: soon } },
+            },
+          },
+        ],
+      },
+      orderBy: [{ tokenExpiresAt: { sort: 'asc', nulls: 'last' } }, { id: 'asc' }],
+      take: JOB_BATCH,
+    });
+    for (const c of due) {
+      if (!registry.hasLogin(c.provider)) continue;
+      const login = registry.login(c.provider);
+      const name = PROVIDER_NAMES[c.provider];
+      let current = c;
+      if (c.tokenExpiresAt && c.tokenExpiresAt <= soon) {
+        const expired = c.tokenExpiresAt <= now;
+        if (!login.refresh) {
+          // Nothing to renew it with: once it expires, whatever posts with it needs a new sign-in.
+          if (expired) {
+            await needsReconnect(c.workspaceId, c.id, `The ${name} sign-in expired`, {
+              onlyLoginToken: true,
+            });
+            report.reauth++;
+          }
+          continue;
+        }
+        try {
+          const fresh = await login.refresh(tokensOf(c));
+          current = await scoped(c.workspaceId).socialConnection.update({
+            where: { id: c.id },
+            data: {
+              accessTokenEnc: crypto.encrypt(fresh.accessToken),
+              ...(fresh.refreshToken
+                ? { refreshTokenEnc: crypto.encrypt(fresh.refreshToken) }
+                : {}),
+              tokenExpiresAt: fresh.expiresAt,
+              ...(fresh.scopes.length ? { scopes: fresh.scopes } : {}),
+            },
+          });
+          report.refreshed++;
+        } catch (err) {
+          const refused = isProviderError(err) && err.kind === 'auth';
+          if (refused || expired) {
+            const why = refused ? err.message : 'it expired';
+            await needsReconnect(c.workspaceId, c.id, `${name} didn’t renew the sign-in: ${why}`);
+            report.reauth++;
+          } else {
+            logger.warn({ err, connectionId: c.id }, 'renewing a sign-in failed; next run retries');
+            report.failed++;
+          }
+          continue;
+        }
+      }
+      const assetsExpiring = await scoped(c.workspaceId).socialAccount.count({
+        where: {
+          connectionId: c.id,
+          status: { in: ['active', 'paused'] },
+          assetTokenExpiresAt: { lte: soon },
+        },
+      });
+      if (assetsExpiring > 0) {
+        const outcome = await checkAssets(current, { markLost: false });
+        if (outcome === 'ok') report.assetsRefreshed += assetsExpiring;
+        else if (outcome === 'reauth') report.reauth++;
+        else report.failed++;
+      }
+    }
+    if (report.refreshed || report.assetsRefreshed || report.reauth || report.failed) {
+      logger.info(report, 'token-refresh finished');
+    }
+    return report;
+  }
+
+  /**
+   * `account-health` (daily): asks each login's network what it can post to now (who it is, and
+   * its access to each asset, e.g. still an admin of the Page). Accounts it can no longer post to
+   * need reconnecting, with the reason; ones that came back are active again; names, pictures and
+   * asset tokens are brought up to date. A login the network refuses needs reconnecting with all
+   * its accounts. A network that doesn't answer changes nothing.
+   */
+  async function checkHealth({ workspaceId }: { workspaceId?: string } = {}) {
+    const now = clock.now();
+    const report = { checked: 0, reauth: 0, failed: 0 };
+    const due = await db.client.socialConnection.findMany({
+      where: {
+        ...usableConnections(workspaceId),
+        OR: [
+          { lastCheckedAt: null },
+          { lastCheckedAt: { lt: new Date(now.getTime() - HEALTH_CHECK_EVERY_HOURS * HOUR) } },
+        ],
+      },
+      orderBy: [{ lastCheckedAt: { sort: 'asc', nulls: 'first' } }, { id: 'asc' }],
+      take: JOB_BATCH,
+    });
+    for (const c of due) {
+      if (!registry.hasLogin(c.provider)) continue;
+      const outcome = await checkAssets(c, { markLost: true });
+      if (outcome === 'ok') report.checked++;
+      else if (outcome === 'reauth') report.reauth++;
+      else report.failed++;
+    }
+    if (report.checked || report.reauth || report.failed) {
+      logger.info(report, 'account-health finished');
+    }
+    return report;
+  }
+
+  /**
+   * Lists the login's assets and brings its accounts up to date. With `markLost` (the health
+   * check), an account the login no longer reaches, or can't post to, needs reconnecting; a token
+   * refresh leaves that for the health check to judge.
+   */
+  async function checkAssets(
+    c: ConnectionRow,
+    { markLost }: { markLost: boolean },
+  ): Promise<'ok' | 'reauth' | 'failed'> {
+    const ws = scoped(c.workspaceId);
+    const name = PROVIDER_NAMES[c.provider];
+    let assets: ProviderAsset[];
+    try {
+      assets = await registry.login(c.provider).listAssets(tokensOf(c));
+    } catch (err) {
+      if (isProviderError(err) && err.kind === 'auth') {
+        await needsReconnect(c.workspaceId, c.id, `${name} refused the sign-in: ${err.message}`);
+        return 'reauth';
+      }
+      logger.warn(
+        { err, connectionId: c.id },
+        'checking a login’s accounts failed; next run retries',
+      );
+      return 'failed';
+    }
+    await ws.socialConnection.update({ where: { id: c.id }, data: { lastCheckedAt: clock.now() } });
+    const accounts = await ws.socialAccount.findMany({
+      where: { connectionId: c.id, status: { in: ['active', 'paused', 'reauth_required'] } },
+    });
+    for (const account of accounts) {
+      // A network switched off on this server says nothing about the account.
+      if (!registry.isEnabled(account.network)) continue;
+      const asset = assets.find(
+        (a) => a.network === account.network && a.externalId === account.externalId,
+      );
+      if (asset && !asset.unavailableReason) {
+        await ws.socialAccount.update({
+          where: { id: account.id },
+          data: {
+            ...assetFields(asset),
+            ...(account.status === 'reauth_required'
+              ? { status: 'active', statusReason: null }
+              : {}),
+          },
+        });
+        continue;
+      }
+      if (!markLost || account.status === 'reauth_required') continue;
+      const reason = !asset
+        ? `${c.displayName} can no longer reach this account on ${name}`
+        : asset.unavailableReason === 'not_professional'
+          ? 'This is no longer a professional Instagram account'
+          : `${c.displayName} no longer has permission to post here`;
+      await accountNeedsReconnect(c.workspaceId, c.id, account.id, reason);
+    }
+    return 'ok';
+  }
+
+  /** One account the login can no longer post to; the login itself still works. */
+  async function accountNeedsReconnect(
+    workspaceId: string,
+    connectionId: string,
+    accountId: string,
+    reason: string,
+  ) {
+    const moved = await scoped(workspaceId).socialAccount.updateMany({
+      where: { id: accountId, status: { in: ['active', 'paused'] } },
+      data: { status: 'reauth_required', statusReason: reason },
+    });
+    if (moved.count === 0) return;
+    await events.emit('account.reauth_required', { workspaceId, accountId, connectionId, reason });
+  }
+
   const assetFields = (a: ProviderAsset) => ({
     displayName: a.displayName,
     username: a.username,
@@ -685,10 +912,30 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
   }
 
   /** The network refused this login's tokens: it and its accounts need reconnecting. */
-  async function markReauthRequired(workspaceId: string, connectionId: string, reason: string) {
+  function markReauthRequired(workspaceId: string, connectionId: string, reason: string) {
+    return needsReconnect(workspaceId, connectionId, reason);
+  }
+
+  /**
+   * The login needs signing in again. Its accounts do too, except, with `onlyLoginToken`, those
+   * posting with their own token that still works (a Facebook Page token outlives its login's).
+   * Only accounts that were working are moved and announced, so a repeat notifies nobody twice.
+   */
+  async function needsReconnect(
+    workspaceId: string,
+    connectionId: string,
+    reason: string,
+    { onlyLoginToken = false }: { onlyLoginToken?: boolean } = {},
+  ) {
     const ws = scoped(workspaceId);
     const accounts = await ws.socialAccount.findMany({
-      where: { connectionId, status: { in: ['active', 'paused'] } },
+      where: {
+        connectionId,
+        status: { in: ['active', 'paused'] },
+        ...(onlyLoginToken
+          ? { OR: [{ assetTokenEnc: null }, { assetTokenExpiresAt: { lte: clock.now() } }] }
+          : {}),
+      },
       select: { id: true },
     });
     await ws.socialConnection.update({
@@ -696,7 +943,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
       data: { status: 'reauth_required', statusReason: reason },
     });
     await ws.socialAccount.updateMany({
-      where: { id: { in: accounts.map((a) => a.id) } },
+      where: { id: { in: accounts.map((a) => a.id) }, status: { in: ['active', 'paused'] } },
       data: { status: 'reauth_required', statusReason: reason },
     });
     for (const a of accounts) {
@@ -723,6 +970,8 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     removeConnection,
     getCredentials,
     markReauthRequired,
+    refreshExpiringTokens,
+    checkHealth,
   };
 }
 

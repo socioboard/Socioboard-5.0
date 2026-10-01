@@ -1,4 +1,5 @@
 import {
+  accountHealthQueue,
   auditPurgeQueue,
   bootstrap,
   createAuditLog,
@@ -10,6 +11,7 @@ import {
   reconcileQueue,
   recurringQueue,
   registerAuditListeners,
+  tokenRefreshQueue,
   workspacePurgeQueue,
 } from '@socioboard/core';
 
@@ -40,6 +42,18 @@ platform.queues.startWorker(reconcile);
 await platform.queues
   .get(reconcile)
   .upsertJobScheduler('every-5-min', { pattern: '*/5 * * * *', tz: 'UTC' }, { name: 'run' });
+// Social accounts: renew tokens before they expire (hourly), and check each login can still post
+// to its accounts (daily); either marks what needs reconnecting.
+const tokenRefresh = tokenRefreshQueue(publishing.socialAccounts);
+platform.queues.startWorker(tokenRefresh);
+await platform.queues
+  .get(tokenRefresh)
+  .upsertJobScheduler('hourly', { pattern: '20 * * * *', tz: 'UTC' }, { name: 'refresh' });
+const accountHealth = accountHealthQueue(publishing.socialAccounts);
+platform.queues.startWorker(accountHealth);
+await platform.queues
+  .get(accountHealth)
+  .upsertJobScheduler('daily', { pattern: '0 4 * * *', tz: 'UTC' }, { name: 'check' });
 
 const purge = workspacePurgeQueue(platform);
 platform.queues.startWorker(purge);
