@@ -218,13 +218,20 @@ describe('what the app sends', () => {
 describe('shutting down', () => {
   it('closes the sockets but leaves the HTTP server to the API’s graceful close', async () => {
     const socket = await open(owner);
-    const gone = new Promise<void>((resolve) => socket.on('disconnect', () => resolve()));
+    const gone = new Promise<void>((resolve) => {
+      socket.on('disconnect', () => {
+        resolve();
+      });
+    });
     await realtime.close();
     await gone;
     expect(server.listening).toBe(true);
     // The API closes it next (closeServer); that must not fail.
     await new Promise<void>((resolve, reject) => {
-      server.close((err) => (err ? reject(err) : resolve()));
+      server.close((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
     });
   });
 });
