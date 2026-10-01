@@ -22,7 +22,7 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 | Method | Path | Who | Description |
 | --- | --- | --- | --- |
 | GET | `/api/v1/auth/options` | public | What the sign-in screens offer on this server: `socialProviders` (Google/Microsoft when configured) and `emailVerificationRequired` (when SMTP is set). No secrets |
-| GET | `/api/v1/me` | signed in | Current user, memberships, active workspace |
+| GET | `/api/v1/me` | signed in | Current user, memberships (each workspace's id, name, slug, logo and timezone), active workspace |
 | PATCH | `/api/v1/me` | signed in | Update name, avatar (`avatarKey`), timezone, locale |
 | POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB; the URL only accepts the declared size); then PATCH `avatarKey`, which checks the object exists under the caller's own prefix. Replacing or removing an avatar deletes the old file. 503 `STORAGE_NOT_CONFIGURED` without S3/MinIO |
 | POST | `/api/v1/me/active-workspace` | signed in | Switch the active workspace (404 if not a member); `/me` reports null when the active one was deleted or left |

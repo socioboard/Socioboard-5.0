@@ -7,10 +7,10 @@ import { useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { api, ApiError } from '../../../lib/api';
-import { formatDateTime } from '../../../lib/format';
 import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
+import { WorkspaceTime } from '../../../lib/workspace-time';
 import { postKeys, rememberPost } from '../api';
 import { AccountAvatar, PostStatusChip } from './post-bits';
 
@@ -154,9 +154,9 @@ function TargetState({ target, network }: { target: Target; network: string }) {
       return (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]">
           {target.publishedAt && (
-            <span className="text-ink-2">
-              {t('target.publishedAt', { time: formatDateTime(target.publishedAt) })}
-            </span>
+            <WorkspaceTime iso={target.publishedAt} className="text-ink-2">
+              {(time) => t('target.publishedAt', { time })}
+            </WorkspaceTime>
           )}
           {/* The address comes from the network; only web addresses become links. */}
           {target.permalink && /^https?:\/\//i.test(target.permalink) && (
@@ -177,7 +177,9 @@ function TargetState({ target, network }: { target: Target; network: string }) {
     case 'scheduled':
       return target.scheduledAt ? (
         <p className="text-ink-2 text-[13px]">
-          {t('target.scheduledFor', { time: formatDateTime(target.scheduledAt) })}
+          <WorkspaceTime iso={target.scheduledAt}>
+            {(time) => t('target.scheduledFor', { time })}
+          </WorkspaceTime>
         </p>
       ) : null;
     case 'pending':
@@ -247,9 +249,7 @@ function History({ attempts, defaultOpen }: { attempts: PublishAttempt[]; defaul
                 <span className="text-ink font-medium">
                   {t('target.attempt', { n: a.attemptNo })}: {t(`target.outcome.${a.outcome}`)}
                 </span>
-                <time dateTime={a.startedAt} className="text-ink-3">
-                  {formatDateTime(a.startedAt)}
-                </time>
+                <WorkspaceTime iso={a.startedAt} className="text-ink-3" />
                 {a.error?.message && (
                   <span className="text-ink-2 wrap-break-word">{a.error.message}</span>
                 )}

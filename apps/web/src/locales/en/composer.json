@@ -175,7 +175,16 @@
     "reviewRequired": "This workspace reviews every post before it goes out; sending for review arrives with approvals.",
     "chooseAccounts": "Choose accounts to publish to.",
     "fixFirst_one": "Fix the problem above to publish.",
-    "fixFirst_other": "Fix the problems above to publish."
+    "fixFirst_other": "Fix the problems above to publish.",
+    "saveChanges": "Save changes",
+    "addToQueue": "Add to queue",
+    "schedule": {
+      "draft": "Schedule",
+      "scheduled": "Reschedule",
+      "repeating": "Change repeat"
+    },
+    "noSlots_one": "{{accounts}} has no posting times yet, so the queue can’t take this post.",
+    "noSlots_other": "{{accounts}} have no posting times yet, so the queue can’t take this post."
   },
   "publish": {
     "started_one": "Publishing to {{count}} account.",
@@ -193,5 +202,87 @@
   },
   "seeDelivery": "See how it went",
   "backToPosts": "Back to posts",
-  "labels": "Labels"
+  "labels": "Labels",
+  "schedule": {
+    "title": "Schedule post",
+    "titleChange": "Change schedule",
+    "description": "Times are in {{zone}}, this workspace’s time zone.",
+    "close": "Close",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "time": "Time",
+    "today": "today",
+    "repeat": {
+      "label": "Repeat",
+      "none": "Doesn’t repeat",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "interval": {
+      "label": "How often",
+      "daily_one": "Every day",
+      "daily_other": "Every {{count}} days",
+      "weekly_one": "Every week",
+      "weekly_other": "Every {{count}} weeks",
+      "monthly_one": "Every month",
+      "monthly_other": "Every {{count}} months"
+    },
+    "weekdays": "On these days",
+    "monthDay": {
+      "label": "On",
+      "same": "Day {{day}} of the month",
+      "last": "The last day of the month",
+      "skips": "Months without a day {{day}} are skipped."
+    },
+    "ends": {
+      "label": "Ends",
+      "never": "Never",
+      "on": "On a date",
+      "after": "After a number of times",
+      "date": "Last date",
+      "count": "Number of times"
+    },
+    "goesOut": "Goes out {{time}}",
+    "yourTime": "{{time}} your time",
+    "problems": {
+      "tooSoon_one": "Pick a time at least {{count}} minute from now.",
+      "tooSoon_other": "Pick a time at least {{count}} minutes from now.",
+      "tooFar": "Posts can be scheduled up to a year ahead.",
+      "endsBeforeStart": "The last date is before the first one.",
+      "endDateMissing": "Pick the last date.",
+      "count": "Enter a number from 1 to 365."
+    },
+    "severalTimes": "Its accounts are set to different times now. This moves them all to one time.",
+    "cancel": "Cancel",
+    "confirm": "Schedule",
+    "confirmRepeat": "Repeat post",
+    "done": "Scheduled for {{time}}.",
+    "repeating": "Repeating. The first one goes out {{time}}.",
+    "repeatingNoDate": "Repeating.",
+    "queued_one": "Added to the queue. It goes out {{time}}.",
+    "queued_other": "Added to the queue. The first account goes out {{time}}.",
+    "unschedule": "Unschedule",
+    "unscheduled": "Unscheduled. It’s a draft again.",
+    "scheduledFor": "Scheduled for {{time}}.",
+    "savedGoOut": "Changes you save go out then.",
+    "occurrence": "It’s a copy of a repeating post: changes here apply to this copy only.",
+    "repeats": "{{rule}}.",
+    "next": "Next: {{time}}.",
+    "templateNote": "Each date gets its own copy of this post; saving changes here replaces the copies that haven’t gone out.",
+    "stop": "Stop repeating",
+    "stopTitle": "Stop repeating this post?",
+    "stopBody": "Copies that haven’t gone out are removed. The ones already published stay, and this post becomes a draft.",
+    "stopped": "Stopped repeating. It’s a draft again.",
+    "errors": {
+      "tooSoon": "That time is too close. Pick one at least 2 minutes from now.",
+      "noSlots": "Some accounts have no free posting time in the queue. Schedule the post at a time instead.",
+      "isRecurring": "This post repeats: its copies go out. Stop repeating it to send it on its own.",
+      "isOccurrence": "A copy of a repeating post can’t repeat on its own.",
+      "isScheduled": "Unschedule this post before making it repeat.",
+      "notScheduled": "This post isn’t scheduled any more.",
+      "ended": "That repeat has no dates left. Pick a later last date, or more times.",
+      "notRepeating": "This post doesn’t repeat any more."
+    }
+  }
 }

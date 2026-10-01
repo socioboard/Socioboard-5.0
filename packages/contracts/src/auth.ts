@@ -28,6 +28,8 @@ export const Me = z.object({
         name: z.string(),
         slug: z.string(),
         logoUrl: z.url().nullable(),
+        /** Scheduled times are shown and picked in this timezone. */
+        timezone: z.string(),
       }),
       role: z.enum(ROLES),
     }),

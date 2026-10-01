@@ -5,6 +5,7 @@ export * from './openapi';
 export * from './fields';
 export * from './permissions';
 export * from './route';
+export * from './time';
 
 export * from './admin';
 export * from './auth';

@@ -1,5 +1,5 @@
-// Dates for people: short, in their language (docs/frontend/README.md: dates follow the workspace
-// time zone once scheduling exists; account and membership dates are shown in the browser's zone).
+// Dates for people: short, in their language, on the reader's own clock (account, membership and
+// session dates). Posts' times follow the workspace's timezone instead: lib/workspace-time.tsx.
 
 /** "28 Sep 2026". */
 export function formatDate(iso: string, locale?: string): string {

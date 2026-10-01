@@ -1,8 +1,9 @@
 import type { Post, PostStatus, PostTarget, TargetStatus } from '@socioboard/contracts';
 import { Avatar, cn, NetworkIcon, networkName, StatusChip, Tooltip } from '@socioboard/ui';
+import { Repeat } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { formatDateTime } from '../../../lib/format';
+import { WorkspaceTime } from '../../../lib/workspace-time';
 
 /** A post's or a delivery's status, in the app's language, with the app-wide colors. */
 export function PostStatusChip({
@@ -95,6 +96,18 @@ function postWhen(post: Post): { key: 'published' | 'scheduled' | 'created'; at:
   return { key: 'created', at: post.createdAt };
 }
 
+/** Marks a post that repeats (the template) or that a repeating post made (a copy). */
+export function RepeatMark({ recurring }: { recurring: Post['recurring'] }) {
+  const { t } = useTranslation('posts');
+  if (!recurring) return null;
+  return (
+    <span className="flex items-center gap-1">
+      <Repeat className="size-3.5" aria-hidden="true" />
+      {t(`repeat.${recurring}`)}
+    </span>
+  );
+}
+
 export function PostWhen({ post }: { post: Post }) {
   const { t } = useTranslation('posts');
   if (post.status === 'publishing') {
@@ -102,8 +115,8 @@ export function PostWhen({ post }: { post: Post }) {
   }
   const when = postWhen(post);
   return (
-    <time dateTime={when.at} className="text-ink-2 text-[13px] whitespace-nowrap">
-      {t(`when.${when.key}`, { time: formatDateTime(when.at) })}
-    </time>
+    <WorkspaceTime iso={when.at} className="text-ink-2 text-[13px] whitespace-nowrap">
+      {(time) => t(`when.${when.key}`, { time })}
+    </WorkspaceTime>
   );
 }

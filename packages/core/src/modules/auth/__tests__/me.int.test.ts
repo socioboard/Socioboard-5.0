@@ -169,6 +169,16 @@ describe('active workspace', () => {
     let body = await me(b);
     expect(body.memberships.map((m) => m.workspace.id)).toEqual([first, second]);
     expect(body.memberships.every((m) => m.role === 'owner')).toBe(true);
+    // Each workspace's timezone comes along: scheduled times are shown and picked in it.
+    await db.client.workspace.update({ where: { id: second }, data: { timezone: 'Asia/Tokyo' } });
+    const zones = await db.client.workspace.findMany({
+      where: { id: { in: [first, second] } },
+      select: { id: true, timezone: true },
+    });
+    expect(
+      (await me(b)).memberships.map((m) => [m.workspace.id, m.workspace.timezone]).sort(),
+    ).toEqual(zones.map((z) => [z.id, z.timezone]).sort());
+    expect(zones.find((z) => z.id === second)?.timezone).toBe('Asia/Tokyo');
     expect(body.activeWorkspaceId).toBe(second);
 
     expect((await b.post('/api/v1/me/active-workspace', { workspaceId: first })).status).toBe(204);

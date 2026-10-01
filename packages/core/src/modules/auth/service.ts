@@ -63,7 +63,9 @@ export function createMeService({
     const user = await db.client.user.findUniqueOrThrow({ where: { id: caller.user.id } });
     const memberships = await db.client.member.findMany({
       where: { userId: user.id, workspace: { deletedAt: null } },
-      include: { workspace: { select: { id: true, name: true, slug: true, logo: true } } },
+      include: {
+        workspace: { select: { id: true, name: true, slug: true, logo: true, timezone: true } },
+      },
       orderBy: { createdAt: 'asc' },
     });
     const activeId = caller.session.activeWorkspaceId;
@@ -88,6 +90,7 @@ export function createMeService({
             name: m.workspace.name,
             slug: m.workspace.slug,
             logoUrl: await signUrl(m.workspace.logo),
+            timezone: m.workspace.timezone,
           },
           // Roles are validated when written; the contract rejects anything else.
           role: m.role as Me['memberships'][number]['role'],

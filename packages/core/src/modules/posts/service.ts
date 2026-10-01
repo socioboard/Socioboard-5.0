@@ -114,6 +114,8 @@ const targetInclude = {
 } as const;
 const postInclude = {
   author: { select: { id: true, name: true, image: true, avatarKey: true } },
+  // The rule set on this post, when it is a repeating post's template.
+  recurringRule: { select: { active: true } },
   // One statement creates all of a post's targets, so they share createdAt; ids (UUIDv7,
   // increasing) keep the order stable and as created.
   targets: {
@@ -179,6 +181,7 @@ export function createPostService(deps: PostServiceDeps) {
           }
         : null,
       targets: p.targets.map(toTarget),
+      recurring: p.recurringRuleId ? 'occurrence' : p.recurringRule?.active ? 'template' : null,
       createdAt: p.createdAt.toISOString(),
       updatedAt: p.updatedAt.toISOString(),
     };

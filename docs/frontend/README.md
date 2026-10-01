@@ -83,7 +83,7 @@ The workspace lives in the URL (`/w/:slug`), so links are shareable and tabs can
 - **Errors:** API error `code` maps to a translated message; unknown errors show a generic message plus a request ID.
 - **Mutations:** optimistic updates only where rollback is simple (marking read, reordering); otherwise disable and show progress.
 - **Realtime:** socket events invalidate the matching Query keys (e.g. `post.status_changed` → `['posts', id]`); no parallel client state.
-- **Dates:** shown in the workspace timezone, with the user's timezone on hover when they differ.
+- **Dates:** shown in the workspace timezone, with the user's timezone on hover when they differ. Posts' times do this since P2-F1 (`useWorkspaceTime` in `lib/use-workspace-time.ts`, `WorkspaceTime` in `lib/workspace-time.tsx`; the timezone comes with each membership in `GET /me`); account, member and session dates stay on the reader's own clock.
 - **Accessibility:** keyboard reachable, visible focus, labels on every control, WCAG AA contrast in light and dark themes.
 - **Responsive:** works from 360px wide; the composer and calendar have mobile layouts.
 - **No `localStorage` for data:** only UI preferences (sidebar collapsed, last view).

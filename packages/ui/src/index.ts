@@ -84,6 +84,12 @@ export {
 } from './components/display';
 export { ConfirmDialog, type ConfirmDialogProps } from './components/confirm-dialog';
 export {
+  DateTimePicker,
+  type DateTimePickerLabels,
+  type DateTimePickerProps,
+  type DateTimeValue,
+} from './components/date-time-picker';
+export {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,

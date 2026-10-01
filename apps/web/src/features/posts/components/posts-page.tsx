@@ -26,7 +26,7 @@ import { useWorkspace } from '../../../lib/workspace';
 import { POST_TABS, postListQuery, type PostTab } from '../api';
 import { labelsOf, labelsQuery } from '../labels';
 import { ManageLabelsDialog } from './manage-labels-dialog';
-import { AccountStack, PostStatusChip, PostWhen } from './post-bits';
+import { AccountStack, PostStatusChip, PostWhen, RepeatMark } from './post-bits';
 
 export interface PostsSearch {
   /** Which tab is open; undefined for All. */
@@ -252,6 +252,7 @@ function Snippet({ post, labels }: { post: Post; labels: PostLabels }) {
             {t('files', { count: post.mediaIds.length })}
           </span>
         )}
+        <RepeatMark recurring={post.recurring} />
         {/* Where the columns are hidden (narrow screens), the essentials ride along here. */}
         <span className="lg:hidden">
           <PostWhen post={post} />

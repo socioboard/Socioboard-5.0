@@ -73,7 +73,7 @@ export const meWith = (overrides: {
   emailVerified?: boolean;
   timezone?: string | null;
   memberships?: {
-    workspace: { id: string; name: string; slug: string; logoUrl: null };
+    workspace: { id: string; name: string; slug: string; logoUrl: null; timezone: string };
     role: string;
   }[];
   activeWorkspaceId?: string | null;
@@ -100,6 +100,7 @@ export const halden = {
     name: 'Halden Coffee',
     slug: 'halden',
     logoUrl: null,
+    timezone: 'UTC',
   },
   role: 'owner',
 };

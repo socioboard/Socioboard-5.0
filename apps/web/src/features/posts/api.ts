@@ -1,4 +1,10 @@
-import { apiRoutes, type Post, type PostDetails, type PostStatus } from '@socioboard/contracts';
+import {
+  apiRoutes,
+  type Post,
+  type PostDetails,
+  type PostStatus,
+  type Recurrence,
+} from '@socioboard/contracts';
 import { infiniteQueryOptions, queryOptions, type QueryClient } from '@tanstack/react-query';
 
 import { api } from '../../lib/api';
@@ -100,5 +106,21 @@ export function rememberPost(queryClient: QueryClient, workspaceId: string, post
     })),
     recurrence: old?.recurrence ?? null,
   }));
+  void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
+}
+
+/**
+ * After a post was set to repeat, or stopped (null): its details carry the rule, and the lists
+ * are marked stale (a rule makes a post for each of its dates; stopping removes those waiting).
+ */
+export function rememberRecurrence(
+  queryClient: QueryClient,
+  workspaceId: string,
+  postId: string,
+  recurrence: Recurrence | null,
+) {
+  queryClient.setQueryData<PostDetails>(postKeys.detail(workspaceId, postId), (old) =>
+    old ? { ...old, recurrence, recurring: recurrence?.active ? 'template' : null } : old,
+  );
   void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
 }
