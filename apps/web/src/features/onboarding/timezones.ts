@@ -1,28 +1,8 @@
 import type { ComboboxOption } from '@socioboard/ui';
 
-/**
- * Cities renamed since the IANA ID was made. Browsers still report some old IDs (Chrome gives
- * "Asia/Calcutta"), so the label uses today's name and search accepts both.
- */
-const RENAMED: Record<string, string> = {
-  Calcutta: 'Kolkata',
-  Saigon: 'Ho Chi Minh City',
-  Katmandu: 'Kathmandu',
-  Rangoon: 'Yangon',
-  Kiev: 'Kyiv',
-  Godthab: 'Nuuk',
-  Ulan_Bator: 'Ulaanbaatar',
-  Faeroe: 'Faroe',
-};
+import { RENAMED_CITIES } from '../../lib/time';
 
-/** The browser's time zone, the default for a new workspace. */
-export function browserTimezone(): string {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-  } catch {
-    return 'UTC';
-  }
-}
+export { browserTimezone } from '../../lib/time';
 
 function zoneName(timeZone: string, style: 'shortOffset' | 'long', at: Date): string {
   return (
@@ -60,7 +40,7 @@ export function timezoneOptions(include: readonly string[] = [], at = new Date()
     }
     const parts = id.split('/');
     const last = parts.at(-1) ?? id;
-    const city = (RENAMED[last] ?? last).replaceAll('_', ' ');
+    const city = (RENAMED_CITIES[last] ?? last).replaceAll('_', ' ');
     options.push({
       value: id,
       label: id === 'UTC' ? 'UTC' : city,

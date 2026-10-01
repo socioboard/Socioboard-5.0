@@ -1,43 +1,58 @@
 import { Button, cn, Spinner, Swap } from '@socioboard/ui';
-import { CircleAlert, CircleCheck, Send } from 'lucide-react';
+import { CalendarClock, CircleAlert, CircleCheck, ListPlus, Repeat, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { formatTime } from '../../../lib/format';
 import { errorMessage } from '../../../lib/i18n';
-import type { SaveState } from '../use-save';
+import type { Acting, SaveState } from '../use-save';
+
+/** Where the post stands: not yet set to go out, due at a time, or repeating. */
+export type ComposerMode = 'draft' | 'scheduled' | 'repeating';
 
 /**
  * The composer's actions (docs/frontend/areas/composer.md, "Actions"): where the draft stands on
- * the left (saving, saved at…, unsaved changes, or why it didn't save), Save draft and Publish now
- * on the right. Publish is only offered to people who can publish, and says why it's unavailable.
+ * the left (saving, saved at…, unsaved changes, or why it didn't save); on the right Save, then
+ * the ways to send it: Add to queue, Schedule and Publish now. Those are only offered to people
+ * who can publish, and say why they're unavailable. A post that's already scheduled or repeats
+ * keeps its timing: saving is the main action, and the timing can be changed.
  */
 export function ComposerFooter({
   state,
   dirty,
   saved,
+  mode,
+  acting,
   onSave,
   onPublish,
-  publishing,
+  onSchedule,
+  onQueue,
   canPublish,
   reviewRequired,
   blocked,
   noAccounts,
+  queue,
 }: {
   state: SaveState;
   dirty: boolean;
   /** The post exists on the server (so "all changes saved" can be said). */
   saved: boolean;
+  mode: ComposerMode;
+  acting: Acting;
   onSave: () => void;
   onPublish: () => void;
-  publishing: boolean;
+  /** Opens the schedule dialog. */
+  onSchedule: () => void;
+  onQueue: () => void;
   canPublish: boolean;
   reviewRequired: boolean;
   /** Networks with a problem to fix. */
   blocked: number;
   noAccounts: boolean;
+  /** Add to queue: offered once a chosen account has posting times; `why` when it can't be used. */
+  queue: { offered: boolean; why: string | null };
 }) {
   const { t } = useTranslation('composer');
-  const offerPublish = canPublish && !reviewRequired;
+  const offerSend = canPublish && !reviewRequired;
   const statusKey =
     state.kind === 'saving' || state.kind === 'error'
       ? state.kind
@@ -48,7 +63,8 @@ export function ComposerFooter({
           : saved
             ? 'all'
             : 'none';
-  const publishBlocked = noAccounts || blocked > 0;
+  const sendBlocked = noAccounts || blocked > 0;
+  const busy = acting !== null;
   const why = !canPublish
     ? t('footer.cantPublish')
     : reviewRequired
@@ -57,7 +73,9 @@ export function ComposerFooter({
         ? t('footer.chooseAccounts')
         : blocked > 0
           ? t('footer.fixFirst', { count: blocked })
-          : null;
+          : mode === 'draft' && queue.offered
+            ? queue.why
+            : null;
 
   return (
     <div className="glass-float rounded-pane flex flex-wrap items-center gap-x-4 gap-y-2 p-3 sm:px-5">
@@ -96,18 +114,51 @@ export function ComposerFooter({
       </div>
       <div className="flex flex-wrap items-center justify-end gap-2">
         {why && <span className="text-ink-3 text-xs">{why}</span>}
-        <Button onClick={onSave} disabled={!dirty && state.kind !== 'error'}>
-          {state.kind === 'error' ? t('footer.retry') : t('footer.saveDraft')}
+        <Button
+          // Once the post has its time, saving is what's left to do here.
+          variant={mode === 'draft' ? 'secondary' : 'primary'}
+          onClick={onSave}
+          disabled={(!dirty && state.kind !== 'error') || busy}
+        >
+          {state.kind === 'error'
+            ? t('footer.retry')
+            : mode === 'draft'
+              ? t('footer.saveDraft')
+              : t('footer.saveChanges')}
         </Button>
-        {offerPublish && (
+        {offerSend && mode === 'draft' && queue.offered && (
           <Button
-            variant="primary"
+            onClick={onQueue}
+            disabled={sendBlocked || queue.why !== null || busy}
+            loading={acting === 'queue'}
+          >
+            <ListPlus aria-hidden="true" />
+            {t('footer.addToQueue')}
+          </Button>
+        )}
+        {offerSend && (
+          <Button
+            onClick={onSchedule}
+            disabled={sendBlocked || busy}
+            loading={acting === 'schedule' || acting === 'repeat'}
+          >
+            {mode === 'repeating' ? (
+              <Repeat aria-hidden="true" />
+            ) : (
+              <CalendarClock aria-hidden="true" />
+            )}
+            {t(`footer.schedule.${mode}`)}
+          </Button>
+        )}
+        {offerSend && mode !== 'repeating' && (
+          <Button
+            variant={mode === 'draft' ? 'primary' : 'secondary'}
             className="group"
             onClick={onPublish}
-            disabled={publishBlocked || publishing}
-            aria-busy={publishing || undefined}
+            disabled={sendBlocked || busy}
+            aria-busy={acting === 'publish' || undefined}
           >
-            {publishing ? (
+            {acting === 'publish' ? (
               <Spinner className="size-4" />
             ) : (
               <Send
@@ -115,7 +166,7 @@ export function ComposerFooter({
                 className="transition-transform duration-300 ease-out-soft group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
             )}
-            {publishing ? t('footer.publishing') : t('footer.publishNow')}
+            {acting === 'publish' ? t('footer.publishing') : t('footer.publishNow')}
           </Button>
         )}
       </div>

@@ -2,7 +2,8 @@ import {
   textLength,
   type Network,
   type NetworkId,
-  type Post,
+  type PostDetails,
+  type RecurrenceRuleInput,
   type SocialAccount,
 } from '@socioboard/contracts';
 import {
@@ -27,7 +28,7 @@ import {
   toast,
   type PickerAccount,
 } from '@socioboard/ui';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
 import { MessageSquarePlus, RotateCcw, Trash2 } from 'lucide-react';
 import { useEffect, useId, useReducer, useRef, useState, type ReactNode } from 'react';
@@ -37,9 +38,12 @@ import { ApiError } from '../../../lib/api';
 import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
+import { useWorkspaceTime } from '../../../lib/use-workspace-time';
+import { WorkspaceTime } from '../../../lib/workspace-time';
 import { accountsQuery, networksQuery } from '../../accounts';
+import { queueSlotsQuery } from '../../calendar';
 import { workspaceQuery } from '../../settings';
-import { LabelPicker, postQuery } from '../../posts';
+import { LabelPicker, postQuery, useRepeatWording } from '../../posts';
 import {
   contentFor,
   draftReducer,
@@ -55,10 +59,12 @@ import { useSavePost } from '../use-save';
 import { useValidation } from '../use-validation';
 import { isWebAddress, type ComposerIssue } from '../validation';
 import { useIssueWording } from '../issue-wording';
-import { ComposerFooter } from './composer-footer';
+import { scheduledAt } from '../schedule';
+import { ComposerFooter, type ComposerMode } from './composer-footer';
 import { IssuesPanel } from './issues-panel';
 import { NetworkTabs } from './network-tabs';
 import { PreviewPanel } from './preview-panel';
+import { ScheduleDialog } from './schedule-dialog';
 
 /** Targets in these states make a post history: it can't be edited any more. */
 const LOCKED = new Set(['publishing', 'published']);
@@ -113,7 +119,8 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
         <Skeleton className="rounded-control h-72" />
       </div>
     );
-  } else if (postId && post.isError) {
+  } else if (postId && post.isError && !post.data) {
+    // Only when the post never loaded: a failed re-read keeps the composer and what's typed.
     const gone = post.error instanceof ApiError && post.error.status === 404;
     body = (
       <EmptyState
@@ -185,7 +192,7 @@ function Composer({
   onCreated,
   onPublished,
 }: {
-  post: Post | undefined;
+  post: PostDetails | undefined;
   accounts: SocialAccount[];
   networks: Network[];
   onCreated: (postId: string) => void;
@@ -194,6 +201,8 @@ function Composer({
   const { t } = useTranslation('composer');
   const { me, workspace } = useWorkspace();
   const can = useCan();
+  const time = useWorkspaceTime();
+  const describeRepeat = useRepeatWording();
   const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
   const [tab, setTab] = useState<NetworkId | null>(null);
   // The preview follows the editor to a network's tab, and can be switched on its own.
@@ -251,15 +260,71 @@ function Composer({
   const [touched, setTouched] = useState(hasContent);
   if (hasContent && !touched) setTouched(true);
 
+  // Where the post stands (as the server has it): repeating, due at a time, or neither yet.
+  const recurrence = post?.recurrence?.active ? post.recurrence : null;
+  const due = scheduledAt(post);
+  const mode: ComposerMode = recurrence
+    ? 'repeating'
+    : post?.status === 'scheduled' && due
+      ? 'scheduled'
+      : 'draft';
   const saving = useSavePost({
     workspaceId: workspace.id,
     initialPost: post,
     body: toPostBody(draft, networkOf),
     hasContent,
     enabled: !readOnly,
+    // What's saved on a scheduled or repeating post goes out: it's saved when the person says so.
+    autosave: mode === 'draft',
     onCreated,
   });
   const reviewRequired = useQuery(workspaceQuery(workspace.id)).data?.requireReviewForAll ?? false;
+  const maySend = can('posts:publish') && !reviewRequired && !readOnly;
+  const [scheduling, setScheduling] = useState(false);
+  const [confirmStop, setConfirmStop] = useState(false);
+
+  // Add to queue is offered once a chosen account has posting times; every chosen account needs
+  // some for it to work (the server refuses the whole post otherwise).
+  const slots = useQueries({
+    queries: draft.accountIds.map((id) => ({
+      ...queueSlotsQuery(workspace.id, id),
+      enabled: maySend && mode === 'draft' && can('calendar:read'),
+    })),
+  });
+  const withoutSlots = draft.accountIds.filter((_, i) => slots[i]?.data?.slots.length === 0);
+  const queue = {
+    offered: slots.some((q) => (q.data?.slots.length ?? 0) > 0),
+    why:
+      withoutSlots.length > 0
+        ? t('footer.noSlots', {
+            count: withoutSlots.length,
+            accounts: new Intl.ListFormat(undefined, { type: 'conjunction' }).format(
+              withoutSlots.map((id) => accounts.find((a) => a.id === id)?.displayName ?? ''),
+            ),
+          })
+        : null,
+  };
+
+  /** A refusal in the person's words; anything else gets the general message. */
+  const explain = (err: unknown) => {
+    const code = err instanceof ApiError ? err.code : '';
+    const words: Record<string, string> = {
+      POST_HAS_ERRORS: t('publish.hasErrors'),
+      REVIEW_REQUIRED: t('publish.reviewRequired'),
+      POST_ALREADY_SENT: t('publish.alreadySent'),
+      POST_NOT_EDITABLE: t('publish.notEditable'),
+      SCHEDULE_TOO_SOON: t('schedule.errors.tooSoon'),
+      SCHEDULE_TOO_FAR: t('schedule.problems.tooFar'),
+      NO_QUEUE_SLOTS: t('schedule.errors.noSlots'),
+      POST_IS_RECURRING: t('schedule.errors.isRecurring'),
+      POST_IS_OCCURRENCE: t('schedule.errors.isOccurrence'),
+      POST_IS_SCHEDULED: t('schedule.errors.isScheduled'),
+      POST_NOT_SCHEDULED: t('schedule.errors.notScheduled'),
+      RECURRENCE_ENDED: t('schedule.errors.ended'),
+      RECURRENCE_NOT_FOUND: t('schedule.errors.notRepeating'),
+    };
+    toast.error(words[code] ?? errorMessage(err));
+  };
   const publish = async () => {
     try {
       const published = await saving.publish();
@@ -269,14 +334,59 @@ function Composer({
         onPublished(published.id);
       }
     } catch (err) {
-      const code = err instanceof ApiError ? err.code : '';
-      const words: Record<string, string> = {
-        POST_HAS_ERRORS: t('publish.hasErrors'),
-        REVIEW_REQUIRED: t('publish.reviewRequired'),
-        POST_ALREADY_SENT: t('publish.alreadySent'),
-        POST_NOT_EDITABLE: t('publish.notEditable'),
-      };
-      toast.error(words[code] ?? errorMessage(err));
+      explain(err);
+    }
+  };
+  const schedule = async (at: Date) => {
+    try {
+      const scheduled = await saving.schedule(at, { repeating: mode === 'repeating' });
+      // A save that failed says so in the footer, behind the dialog.
+      setScheduling(false);
+      if (!scheduled) return;
+      toast.success(
+        t('schedule.done', { time: time.format(scheduledAt(scheduled) ?? at, 'long') }),
+      );
+      onPublished(scheduled.id);
+    } catch (err) {
+      explain(err);
+    }
+  };
+  const repeat = async (rule: RecurrenceRuleInput) => {
+    try {
+      const set = await saving.repeat(rule, { scheduled: mode === 'scheduled' });
+      setScheduling(false);
+      if (!set) return;
+      toast.success(
+        set.recurrence.nextRunAt
+          ? t('schedule.repeating', { time: time.format(set.recurrence.nextRunAt, 'long') })
+          : t('schedule.repeatingNoDate'),
+      );
+      onPublished(set.postId);
+    } catch (err) {
+      explain(err);
+    }
+  };
+  const addToQueue = async () => {
+    try {
+      const queued = await saving.addToQueue();
+      if (!queued) return;
+      const times = new Set(queued.targets.map((x) => x.scheduledAt).filter(Boolean));
+      toast.success(
+        t('schedule.queued', {
+          count: times.size,
+          time: time.format(scheduledAt(queued) ?? new Date(), 'long'),
+        }),
+      );
+      onPublished(queued.id);
+    } catch (err) {
+      explain(err);
+    }
+  };
+  const unschedule = async () => {
+    try {
+      if (await saving.unschedule()) toast.success(t('schedule.unscheduled'));
+    } catch (err) {
+      explain(err);
     }
   };
   // Leaving with unsaved changes asks first, in the app and when closing the tab. Moving within
@@ -349,6 +459,56 @@ function Composer({
         </Banner>
       )}
       {!locked && !mayEdit && <Banner tone="warning">{t('notYours')}</Banner>}
+      {!readOnly && mode === 'scheduled' && due && (
+        <Banner
+          action={
+            maySend && (
+              <Button
+                size="sm"
+                variant="ghost"
+                loading={saving.acting === 'unschedule'}
+                disabled={saving.acting !== null}
+                onClick={() => void unschedule()}
+              >
+                {t('schedule.unschedule')}
+              </Button>
+            )
+          }
+        >
+          <WorkspaceTime iso={due} style="long">
+            {(at) => t('schedule.scheduledFor', { time: at })}
+          </WorkspaceTime>{' '}
+          {post?.recurring === 'occurrence' ? t('schedule.occurrence') : t('schedule.savedGoOut')}
+        </Banner>
+      )}
+      {!readOnly && recurrence && (
+        <Banner
+          action={
+            maySend && (
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={saving.acting !== null}
+                onClick={() => {
+                  setConfirmStop(true);
+                }}
+              >
+                {t('schedule.stop')}
+              </Button>
+            )
+          }
+        >
+          {t('schedule.repeats', { rule: describeRepeat(recurrence.rule) })}{' '}
+          {recurrence.nextRunAt && (
+            <>
+              <WorkspaceTime iso={recurrence.nextRunAt} style="long">
+                {(at) => t('schedule.next', { time: at })}
+              </WorkspaceTime>{' '}
+            </>
+          )}
+          {t('schedule.templateNote')}
+        </Banner>
+      )}
       <ViewSwitch value={view} onChange={setView} />
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
         <fieldset
@@ -516,9 +676,15 @@ function Composer({
             state={saving.state}
             dirty={saving.dirty}
             saved={saving.postId !== null}
+            mode={mode}
+            acting={saving.acting}
             onSave={() => void saving.save()}
             onPublish={() => void publish()}
-            publishing={saving.publishing}
+            onSchedule={() => {
+              setScheduling(true);
+            }}
+            onQueue={() => void addToQueue()}
+            queue={queue}
             canPublish={can('posts:publish')}
             reviewRequired={reviewRequired}
             blocked={validation.blocked.size}
@@ -526,6 +692,30 @@ function Composer({
           />
         </div>
       )}
+      <ScheduleDialog
+        open={scheduling}
+        onOpenChange={setScheduling}
+        post={post}
+        recurrence={recurrence}
+        canRepeat={post?.recurring !== 'occurrence'}
+        busy={saving.acting === 'schedule' || saving.acting === 'repeat'}
+        onSchedule={(at) => void schedule(at)}
+        onRepeat={(rule) => void repeat(rule)}
+      />
+      <ConfirmDialog
+        open={confirmStop}
+        onOpenChange={setConfirmStop}
+        tone="danger"
+        title={t('schedule.stopTitle')}
+        description={t('schedule.stopBody')}
+        confirmLabel={t('schedule.stop')}
+        cancelLabel={t('schedule.cancel')}
+        onConfirm={async () => {
+          await saving.stopRepeating();
+          toast.success(t('schedule.stopped'));
+        }}
+        errorMessage={errorMessage}
+      />
       <ConfirmDialog
         open={blocker.status === 'blocked'}
         onOpenChange={(open) => {

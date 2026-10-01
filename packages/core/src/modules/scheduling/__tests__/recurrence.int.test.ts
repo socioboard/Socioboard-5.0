@@ -116,6 +116,17 @@ describe('making a post repeat', () => {
     const details = PostDetails.parse((await owner.get(`${base()}/posts/${post.id}`)).body);
     expect(details.status).toBe('draft');
     expect(details.recurrence?.rule.weekdays).toEqual([tomorrow.getUTCDay()]);
+    // Posts say which they are (the list marks them): the template, its copy, or neither.
+    expect(details.recurring).toBe('template');
+    const listed = (await owner.get(`${base()}/posts?limit=100`)).body as {
+      items: { id: string; recurring: string | null }[];
+    };
+    expect(listed.items.find((p) => p.id === post.id)?.recurring).toBe('template');
+    expect(listed.items.find((p) => p.id === copy?.id)?.recurring).toBe('occurrence');
+    const plain = await template();
+    expect(
+      PostDetails.parse((await owner.get(`${base()}/posts/${plain.id}`)).body).recurring,
+    ).toBeNull();
     const audit = await t.db.client.auditLog.findFirst({
       where: { workspaceId: ws, action: 'post.recurrence_set', entityId: post.id },
     });
@@ -216,6 +227,7 @@ describe('stopping', () => {
     expect(await queue.getJob(scheduledJobId(copy?.targets[0]?.id ?? '', 1))).toBeUndefined();
     const details = PostDetails.parse((await owner.get(`${base()}/posts/${post.id}`)).body);
     expect(details.recurrence).toBeNull();
+    expect(details.recurring).toBeNull();
     const again = await owner.send('DELETE', `${base()}/posts/${post.id}/recurrence`);
     expect([again.status, code(again)]).toEqual([404, 'RECURRENCE_NOT_FOUND']);
 

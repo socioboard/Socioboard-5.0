@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pane } from '../stories/frame';
 import { Checkbox, RadioCard, RadioGroup, Switch } from './choice';
 import { Combobox } from './combobox';
+import { DateTimePicker, type DateTimeValue } from './date-time-picker';
 import { FormField, Input, Textarea } from './form';
 import {
   Select,
@@ -114,3 +115,23 @@ export const Choices: Story = () => (
     </RadioGroup>
   </Pane>
 );
+
+export const DateAndTime: Story = () => {
+  // A wall-clock day and time in the workspace's timezone; the screen turns it into an instant.
+  const [value, setValue] = useState<DateTimeValue>({ date: '2026-10-06', time: '09:00' });
+  return (
+    <Pane>
+      <DateTimePicker
+        value={value}
+        onChange={setValue}
+        timeZone="Europe/Lisbon"
+        minDate="2026-10-01"
+        maxDate="2027-10-01"
+        locale="en-GB"
+      />
+      <p className="text-ink-2 text-sm">
+        {value.date} at {value.time}, Lisbon time. Days before 1 October 2026 are off.
+      </p>
+    </Pane>
+  );
+};

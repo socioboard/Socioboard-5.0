@@ -1,6 +1,7 @@
 import { apiRoutes, type NetworkId, type PostDetails } from '@socioboard/contracts';
 import {
   Avatar,
+  Banner,
   Button,
   Card,
   ConfirmDialog,
@@ -24,12 +25,14 @@ import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { api, ApiError } from '../../../lib/api';
-import { formatDateTime } from '../../../lib/format';
+import { useWorkspaceTime } from '../../../lib/use-workspace-time';
+import { WorkspaceTime } from '../../../lib/workspace-time';
 import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { isPending, mediaDetailQuery } from '../../media';
 import { postKeys, postQuery, rememberPost } from '../api';
+import { useRepeatWording } from '../repeat';
 import { PostStatusChip } from './post-bits';
 import { LabelPicker } from './label-picker';
 import { TargetCard } from './target-card';
@@ -257,6 +260,9 @@ function Actions({ post }: { post: PostDetails }) {
 function Details({ post }: { post: PostDetails }) {
   const { t } = useTranslation('posts');
   const mayEdit = useMayEdit(post);
+  const time = useWorkspaceTime();
+  const describeRepeat = useRepeatWording();
+  const recurrence = post.recurrence?.active ? post.recurrence : null;
   const live = post.targets.filter((x) => x.status !== 'cancelled');
   const cancelled = post.targets.filter((x) => x.status === 'cancelled');
   return (
@@ -269,11 +275,26 @@ function Details({ post }: { post: PostDetails }) {
           )}
           {post.author ? t('detail.by', { name: post.author.name }) : t('detail.unknownAuthor')}
         </span>
-        <time dateTime={post.createdAt} className="text-ink-3 text-[13px]">
-          {t('detail.created', { time: formatDateTime(post.createdAt) })}
-        </time>
+        <WorkspaceTime iso={post.createdAt} className="text-ink-3 text-[13px]">
+          {(at) => t('detail.created', { time: at })}
+        </WorkspaceTime>
         <PostLabels post={post} />
       </div>
+      {/* A repeating post never goes out itself: say how it repeats, and where its copies are. */}
+      {recurrence && (
+        <Banner>
+          {t('detail.repeats', { rule: describeRepeat(recurrence.rule), zone: time.zone })}{' '}
+          {recurrence.nextRunAt && (
+            <>
+              <WorkspaceTime iso={recurrence.nextRunAt} style="long">
+                {(at) => t('detail.repeatsNext', { time: at })}
+              </WorkspaceTime>{' '}
+            </>
+          )}
+          {t('detail.repeatsNote')}
+        </Banner>
+      )}
+      {post.recurring === 'occurrence' && <Banner>{t('detail.occurrence')}</Banner>}
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
         <section aria-labelledby="post-deliveries" className="flex min-w-0 flex-col gap-3">
           <div className="flex flex-col gap-0.5">

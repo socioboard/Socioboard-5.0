@@ -24,7 +24,7 @@
 - [x] P2-B12 Email templates: publish failed, account reconnect, digest (`packages/emails/src/notifications.tsx`; the weekly digest is opt-in, Monday from 08:00 in the user's timezone, sent by the hourly `notification-digest` job)
 
 ## Frontend
-- [ ] P2-F1 Composer: Schedule (date/time in workspace timezone), Add to queue, recurrence picker
+- [x] P2-F1 Composer: Schedule (date/time in workspace timezone), Add to queue, recurrence picker
 - [ ] P2-F2 Calendar month/week with event cards, quick preview, click-to-compose, drag-to-reschedule; replaces the placeholder `/w/$slug/calendar` page from P0-F5
 - [ ] P2-F3 Queue view per account + queue slots editor
 - [ ] P2-F4 Notification bell (in the app shell's sidebar and phone menu), feed page, preferences; toasts for failures

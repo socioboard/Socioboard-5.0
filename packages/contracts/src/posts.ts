@@ -225,6 +225,11 @@ export const Post = PostContent.extend({
   labelIds: z.array(Id),
   author: z.object({ id: Id, name: z.string(), avatarUrl: z.url().nullable() }).nullable(),
   targets: z.array(PostTarget),
+  /**
+   * `template`: the post repeats (it holds the content and the rule; its copies go out).
+   * `occurrence`: a copy a repeating post made for one of its dates. Null for an ordinary post.
+   */
+  recurring: z.enum(['template', 'occurrence']).nullable(),
   createdAt: IsoDateTime,
   updatedAt: IsoDateTime,
 });

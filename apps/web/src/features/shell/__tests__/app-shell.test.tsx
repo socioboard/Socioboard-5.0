@@ -12,6 +12,7 @@ const roastery = {
     name: 'Roastery Social',
     slug: 'roastery',
     logoUrl: null,
+    timezone: 'UTC',
   },
   role: 'editor',
 };

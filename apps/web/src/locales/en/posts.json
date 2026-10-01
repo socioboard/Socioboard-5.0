@@ -102,7 +102,11 @@
     "firstComment": "First comment",
     "noContent": "Nothing written yet.",
     "fileDeleted": "A deleted file",
-    "labels": "Labels"
+    "labels": "Labels",
+    "repeats": "{{rule}}, {{zone}}.",
+    "repeatsNext": "Next: {{time}}.",
+    "repeatsNote": "This post is the template: each date gets its own copy, listed with the other posts.",
+    "occurrence": "A copy of a repeating post. Changing it changes this copy only."
   },
   "target": {
     "view": "View on {{network}}",
@@ -189,5 +193,21 @@
       "pink": "Pink"
     },
     "deleteBodyNone": "No post has it yet."
+  },
+  "repeat": {
+    "daily_one": "Every day",
+    "daily_other": "Every {{count}} days",
+    "weekly_one": "Every week on {{days}}",
+    "weekly_other": "Every {{count}} weeks on {{days}}",
+    "monthly_one": "Every month on day {{day}}",
+    "monthly_other": "Every {{count}} months on day {{day}}",
+    "monthlyLast_one": "Every month on the last day",
+    "monthlyLast_other": "Every {{count}} months on the last day",
+    "at": "{{rule}} at {{time}}",
+    "until": "{{rule}}, until {{date}}",
+    "times_one": "{{rule}}, once",
+    "times_other": "{{rule}}, {{count}} times",
+    "template": "Repeats",
+    "occurrence": "From a repeating post"
   }
 }

@@ -1,9 +1,14 @@
-import { apiRoutes, type Post } from '@socioboard/contracts';
+import {
+  apiRoutes,
+  type Post,
+  type Recurrence,
+  type RecurrenceRuleInput,
+} from '@socioboard/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { api, ApiError, NETWORK_ERROR } from '../../lib/api';
-import { rememberPost } from '../posts';
+import { postKeys, rememberPost, rememberRecurrence } from '../posts';
 import type { PostBody } from './draft';
 
 /** Autosave runs at most this long after the first unsaved change (docs: "every 10 s"). */
@@ -15,14 +20,20 @@ export type SaveState =
   | { kind: 'saved'; at: Date }
   | { kind: 'error'; error: unknown };
 
+/** What the composer is sending the post off to do, if anything. */
+export type Acting = 'publish' | 'schedule' | 'queue' | 'repeat' | 'unschedule' | 'stop' | null;
+
 /**
- * Saving and publishing the composer's post (docs/frontend/areas/composer.md, "Actions").
+ * Saving the composer's post and sending it on its way (docs/frontend/areas/composer.md,
+ * "Actions").
  * - The first save creates the draft (`onCreated` gets its id); later ones update it.
  * - Saves run one at a time; changes made while one is under way stay unsaved and go next.
  * - Autosave: while there are unsaved changes, at most `AUTOSAVE_MS` after the first of them,
- *   so steady typing is still saved every 10 s.
- * - Publish saves first when needed, then publishes with an Idempotency-Key that is kept for a
- *   retry after a dropped connection, so the post can't go out twice.
+ *   so steady typing is still saved every 10 s. Off for a post that's scheduled or repeats: what
+ *   is saved there goes out, so it's saved when the person says so.
+ * - Publish, schedule, add to queue and repeat save first when needed. Publish sends an
+ *   Idempotency-Key that is kept for a retry after a dropped connection, so the post can't go out
+ *   twice.
  */
 export function useSavePost({
   workspaceId,
@@ -30,6 +41,7 @@ export function useSavePost({
   body,
   hasContent,
   enabled,
+  autosave = true,
   onCreated,
 }: {
   workspaceId: string;
@@ -38,6 +50,7 @@ export function useSavePost({
   /** Something worth saving (accounts, text or media); an empty new post isn't created. */
   hasContent: boolean;
   enabled: boolean;
+  autosave?: boolean;
   onCreated: (postId: string) => void;
 }) {
   const queryClient = useQueryClient();
@@ -46,7 +59,7 @@ export function useSavePost({
   // What the server has: the body last saved (or loaded). Unsaved when the draft differs.
   const [savedKey, setSavedKey] = useState<string | null>(initialPost ? key : null);
   const [state, setState] = useState<SaveState>({ kind: 'idle' });
-  const [publishing, setPublishing] = useState(false);
+  const [acting, setActing] = useState<Acting>(null);
   // What the next save sends, kept current after each render (saves run later, in a queue).
   const latest = useRef({ body, key });
   useLayoutEffect(() => {
@@ -112,7 +125,7 @@ export function useSavePost({
 
   // Autosave: a timer starts with the first unsaved change and isn't reset by typing.
   useEffect(() => {
-    if (!dirty || saving) return;
+    if (!autosave || !dirty || saving) return;
     const timer = setTimeout(() => {
       void save();
     }, AUTOSAVE_MS);
@@ -121,31 +134,146 @@ export function useSavePost({
     };
     // Restart only when the saved version changes, not on every keystroke.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dirty, savedKey, saving]);
+  }, [autosave, dirty, savedKey, saving]);
 
-  const publish = useCallback(async (): Promise<Post | null> => {
-    setPublishing(true);
-    try {
-      const id = await save();
-      if (!id) return null;
-      idempotencyKey.current ??= crypto.randomUUID();
-      const post = await api(apiRoutes.posts.publishNow, {
-        params: { workspaceId, postId: id },
-        headers: { 'Idempotency-Key': idempotencyKey.current },
-      });
-      idempotencyKey.current = null;
-      remember(post);
-      return post;
-    } catch (error) {
-      // A dropped connection may have reached the server: the retry reuses the key, so the
-      // server answers it without publishing twice. Any real answer ends this attempt.
-      if (!(error instanceof ApiError && error.code === NETWORK_ERROR))
-        idempotencyKey.current = null;
-      throw error;
-    } finally {
-      setPublishing(false);
-    }
-  }, [save, workspaceId, remember]);
+  /**
+   * One thing at a time: saves first (unless told not to), then runs `send` with the post's id.
+   * Null when the save failed (the footer says why). If the server refuses `send` (which may be
+   * two requests), the post is re-read so the screen shows where the server left it.
+   */
+  const act = useCallback(
+    async <T>(
+      kind: NonNullable<Acting>,
+      send: (params: { workspaceId: string; postId: string }) => Promise<T>,
+      { saveFirst = true } = {},
+    ): Promise<T | null> => {
+      setActing(kind);
+      try {
+        const id = saveFirst ? await save() : postIdRef.current;
+        if (!id) return null;
+        try {
+          return await send({ workspaceId, postId: id });
+        } catch (error) {
+          // The server answered, and may have done part of it: read the post again. (With no
+          // answer there's nothing new to read, and the same key retries it safely.)
+          if (!(error instanceof ApiError && error.code === NETWORK_ERROR)) {
+            void queryClient.invalidateQueries({ queryKey: postKeys.detail(workspaceId, id) });
+          }
+          throw error;
+        }
+      } finally {
+        setActing(null);
+      }
+    },
+    [save, workspaceId, queryClient],
+  );
 
-  return { postId, state, dirty, save, publish, publishing };
+  const publish = useCallback(
+    () =>
+      act('publish', async (params) => {
+        idempotencyKey.current ??= crypto.randomUUID();
+        try {
+          const post = await api(apiRoutes.posts.publishNow, {
+            params,
+            headers: { 'Idempotency-Key': idempotencyKey.current },
+          });
+          idempotencyKey.current = null;
+          remember(post);
+          return post;
+        } catch (error) {
+          // A dropped connection may have reached the server: the retry reuses the key, so the
+          // server answers it without publishing twice. Any real answer ends this attempt.
+          if (!(error instanceof ApiError && error.code === NETWORK_ERROR))
+            idempotencyKey.current = null;
+          throw error;
+        }
+      }),
+    [act, remember],
+  );
+
+  /** Every account at `at`. A post that repeats stops repeating first (the server asks for it). */
+  const schedule = useCallback(
+    (at: Date, was: { repeating: boolean }) =>
+      act('schedule', async (params) => {
+        if (was.repeating) {
+          await api(apiRoutes.scheduling.deleteRecurrence, { params });
+          rememberRecurrence(queryClient, workspaceId, params.postId, null);
+        }
+        const post = await api(apiRoutes.scheduling.schedulePost, {
+          params,
+          body: { at: at.toISOString() },
+        });
+        remember(post);
+        return post;
+      }),
+    [act, remember, queryClient, workspaceId],
+  );
+
+  /** Each account's next free posting time. */
+  const addToQueue = useCallback(
+    () =>
+      act('queue', async (params) => {
+        const post = await api(apiRoutes.scheduling.queuePost, { params });
+        remember(post);
+        return post;
+      }),
+    [act, remember],
+  );
+
+  /** Repeat by `rule`. A scheduled post is unscheduled first (the server asks for it). */
+  const repeat = useCallback(
+    (rule: RecurrenceRuleInput, was: { scheduled: boolean }) =>
+      act('repeat', async (params): Promise<{ postId: string; recurrence: Recurrence }> => {
+        if (was.scheduled) remember(await api(apiRoutes.scheduling.unschedulePost, { params }));
+        const recurrence = await api(apiRoutes.scheduling.setRecurrence, { params, body: rule });
+        rememberRecurrence(queryClient, workspaceId, params.postId, recurrence);
+        return { postId: params.postId, recurrence };
+      }),
+    [act, remember, queryClient, workspaceId],
+  );
+
+  /** Back to a draft. Unsaved changes stay unsaved: nothing is sent but the unscheduling. */
+  const unschedule = useCallback(
+    () =>
+      act(
+        'unschedule',
+        async (params) => {
+          const post = await api(apiRoutes.scheduling.unschedulePost, { params });
+          remember(post);
+          return post;
+        },
+        { saveFirst: false },
+      ),
+    [act, remember],
+  );
+
+  /** Stops repeating; copies that haven't gone out are removed by the server. */
+  const stopRepeating = useCallback(
+    () =>
+      act(
+        'stop',
+        async (params) => {
+          await api(apiRoutes.scheduling.deleteRecurrence, { params });
+          rememberRecurrence(queryClient, workspaceId, params.postId, null);
+          return true;
+        },
+        { saveFirst: false },
+      ),
+    [act, queryClient, workspaceId],
+  );
+
+  return {
+    postId,
+    state,
+    dirty,
+    save,
+    acting,
+    publishing: acting === 'publish',
+    publish,
+    schedule,
+    addToQueue,
+    repeat,
+    unschedule,
+    stopRepeating,
+  };
 }

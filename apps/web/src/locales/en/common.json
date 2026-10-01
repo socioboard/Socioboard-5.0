@@ -8,6 +8,10 @@
     "dark": "Dark",
     "system": "System"
   },
+  "time": {
+    "yours": "{{time}} your time",
+    "zone": "{{city}} time"
+  },
   "status": {
     "loading": "Loading…",
     "retry": "Try again"

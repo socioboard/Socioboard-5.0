@@ -23,6 +23,10 @@
 - **Live status:** until the socket arrives (P2-F5), the list and the page re-ask every 3 s while a post on screen is being sent.
 - Not yet: the sidebar's Failed count badge (with live updates, P2-F5), bulk actions and the other filters (phase 2), comments, approval history and tasks (phase 4).
 
+**Built in P2-F1** (with the composer's scheduling):
+- **Times on the workspace's clock:** when a post is due, went out or was created, and each attempt's time, are shown in the workspace's timezone (`WorkspaceTime` in `lib/workspace-time.tsx`); hovering shows the reader's own time when their clock is on another timezone.
+- **Repeating posts:** the list marks the post that repeats ("Repeats") and the copies it made ("From a repeating post"), from the post's `recurring`. The page of a post that repeats says how ("Every week on Friday at 09:00, Lisbon time"), when next, and that each date gets its own copy; a copy's page says it is one. Changing or stopping the repeat is done in the composer (Edit).
+
 **Built in P1-F8** (labels; `features/posts/labels.ts`, `LabelPicker`, `ManageLabelsDialog`):
 - **List:** each row shows its labels under the text. A label filter ("All labels" or one label, `?label=`) sits in the header once the workspace has labels; it's kept when switching tabs, and a filtered empty list offers "Show all labels". **Manage labels** (`posts:approve`) opens the workspace's list: add one (colours are offered in turn), rename in place (Enter or leaving the field saves, Escape undoes), recolour from a menu of the ten colours, delete with a confirmation that says how many posts carry it. A name already in use is explained.
 - **Picker** (`LabelPicker`): the chosen labels as removable chips and a "Label" button opening a searchable list of checkboxes; people with `posts:approve` can create a label by typing a new name. At most 20 per post.
