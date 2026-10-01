@@ -2,6 +2,7 @@ import { schedulingRoutes as r } from '@socioboard/contracts';
 
 import type { ApiRouter } from '../../platform';
 import type { QueueSlotService } from './queue-slots';
+import type { RecurrenceService } from './recurrence';
 import type { SchedulingService } from './service';
 
 /** Mounts the scheduling routes built so far (contracts: schedulingRoutes). */
@@ -9,7 +10,14 @@ export function registerSchedulingRoutes(
   api: ApiRouter,
   scheduling: SchedulingService,
   queueSlots: QueueSlotService,
+  recurrence: RecurrenceService,
 ) {
+  api.route(r.setRecurrence, ({ auth, member, params, body }) =>
+    recurrence.set(auth, member, params.postId, body),
+  );
+  api.route(r.deleteRecurrence, ({ auth, member, params }) =>
+    recurrence.stop(auth, member, params.postId),
+  );
   api.route(r.queuePost, ({ auth, member, params }) =>
     scheduling.queue(auth, member, params.postId),
   );

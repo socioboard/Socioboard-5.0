@@ -484,6 +484,9 @@ model Post {
   /// link; and a composite key couldn't clear this one column (it would null workspaceId too).
   recurringRuleId String?    @db.Uuid
   occurrenceAt    DateTime?
+  /// An occurrence edited or moved on its own: changing the rule or the template no longer
+  /// replaces it.
+  customizedAt    DateTime?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 

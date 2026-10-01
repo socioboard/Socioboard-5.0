@@ -8,7 +8,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Post` | id, workspaceId, authorId, status, text, mediaIds[], link?, labelIds[], firstComment?, recurringRuleId?, occurrenceAt?, createdAt, updatedAt | status is derived from targets (see below). `recurringRuleId` + `occurrenceAt` (unique together) mark a recurring rule's occurrence post ([scheduling](scheduling.md)); no foreign key, so sent occurrences keep the link after the rule or its template goes |
+| `Post` | id, workspaceId, authorId, status, text, mediaIds[], link?, labelIds[], firstComment?, recurringRuleId?, occurrenceAt?, customizedAt?, createdAt, updatedAt | status is derived from targets (see below). `recurringRuleId` + `occurrenceAt` (unique together) mark a recurring rule's occurrence post ([scheduling](scheduling.md)); no foreign key, so sent occurrences keep the link after the rule or its template goes. Editing an occurrence (not just its labels) sets `customizedAt`, so its rule no longer replaces it. `GET /posts/:id` includes `recurrence` for a template |
 | `PostLabel` | id, workspaceId, name, color, createdAt | Workspace label list for organizing and filtering posts. `color` is a name (gray, red, orange, amber, green, teal, blue, indigo, violet, pink), not a hex value: the UI maps it to a shade that reads in light and dark. Names are unique per workspace, ignoring case |
 | `PostTarget` | id, workspaceId, postId, socialAccountId, override JSON (text, mediaIds, options), scheduledAt?, scheduleVersion, status, externalPostId?, permalink?, attempts, lastError JSON?, publishedAt? | One per selected account |
 
@@ -55,6 +55,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 | `LABEL_EXISTS` | 409 | A label name already used in the workspace, whatever its case |
 | `POST_HAS_ERRORS` | 422 | Publish-now or retry with validation errors; `details` is the validation report |
 | `REVIEW_REQUIRED` | 422 | The workspace reviews every post (approvals arrive in phase 4) |
+| `POST_IS_RECURRING` | 409 | Publish-now on a repeating post's template (its copies go out; [scheduling](scheduling.md)) |
 | `POST_ALREADY_SENT` | 409 | Publish-now on a post whose targets aren't all waiting (`pending` or `scheduled`; retry the failed ones instead) |
 | `TARGET_NOT_FOUND` / `TARGET_NOT_FAILED` | 404 / 409 | Retry of a target that isn't on the post / isn't failed |
 
