@@ -24,19 +24,27 @@ interface GraphErrorBody {
 /** Meta error codes by what the worker should do (Graph API "Handling errors"). */
 const AUTH_CODES = new Set([102, 190, 10, 459, 460, 463, 467]);
 // 9: Instagram's 100 posts per 24 hours (subcode 2207042).
+/** "Application request limit reached": counts every call the app makes. */
+const APP_RATE_CODE = 4;
 const RATE_CODES = new Set([4, 9, 17, 32, 341, 613, 80001, 80002, 80004, 80005, 80006]);
 const RETRYABLE_CODES = new Set([1, 2]);
 
 export function classifyGraphError(
   status: number,
   body: unknown,
-): { kind: PublishErrorKind; networkCode: string | null; message: string } {
+): {
+  kind: PublishErrorKind;
+  networkCode: string | null;
+  message: string;
+  limitScope: 'account' | 'app';
+} {
   const err = (body as GraphErrorBody | null)?.error;
   if (!err) {
     return {
       kind: kindFromStatus(status),
       networkCode: null,
       message: `Meta answered HTTP ${String(status)}`,
+      limitScope: 'account',
     };
   }
   const code = err.code ?? null;
@@ -56,7 +64,10 @@ export function classifyGraphError(
   else kind = 'content';
   // error_user_msg is written for end users; message is for developers.
   const message = err.error_user_msg ?? err.message ?? `Meta answered HTTP ${String(status)}`;
-  return { kind, networkCode, message };
+  // Code 4 is the app's own limit (every account on it); the others are a Page's, an Instagram
+  // account's or a user's.
+  const limitScope = code === APP_RATE_CODE ? 'app' : 'account';
+  return { kind, networkCode, message, limitScope };
 }
 
 export interface GraphClient {

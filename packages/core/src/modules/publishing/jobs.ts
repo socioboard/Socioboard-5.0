@@ -4,11 +4,13 @@ import {
   isProviderError,
   ProviderError,
   type AccountCredentials,
+  type RateLimits,
   type Registry,
 } from '@socioboard/providers';
 
 import {
   defineQueue,
+  DelayedError,
   newId,
   typedEvents,
   type Clock,
@@ -16,6 +18,8 @@ import {
   type EventBus,
   type Job,
   type Logger,
+  type RateBucket,
+  type RateLimiter,
   type Storage,
 } from '../../platform';
 import { resolveContent } from '../posts';
@@ -30,6 +34,8 @@ export interface PublishDeps {
   logger: Logger;
   events: EventBus<Record<string, unknown>>;
   registry: Registry;
+  /** Per-account and per-app publishing limits, shared by every worker. */
+  rateLimiter: RateLimiter;
   /** media: signed public addresses for networks that fetch files themselves. */
   mediaUrls: MediaUrlSigner;
   /** social-accounts: the token to publish with. */
@@ -78,6 +84,31 @@ export function publishBackoff(attemptsMade: number, err?: Error): number {
 
 const WAITING = ['pending', 'scheduled', 'publishing'] as const;
 
+/** Rate-limit buckets: one account, and every account on one login's OAuth app. */
+export const accountRateKey = (accountId: string) => `publish:account:${accountId}`;
+export const appRateKey = (provider: string) => `publish:app:${provider}`;
+
+function rateBuckets(limits: RateLimits, accountId: string, provider: string): RateBucket[] {
+  return [
+    { key: accountRateKey(accountId), windows: limits.perAccount },
+    { key: appRateKey(provider), windows: limits.perApp },
+  ];
+}
+
+/** Spreads out jobs held back by the same limit, so they don't all wake at the same moment. */
+const RATE_JITTER_MS = 1000;
+
+/**
+ * Thrown by publishTarget when a rate limit holds the target back: the job waits until `until`
+ * (epoch ms) without using up a try. Nothing was claimed or recorded.
+ */
+export class PublishDeferred extends Error {
+  constructor(readonly until: number) {
+    super('Held back by a rate limit');
+    this.name = 'PublishDeferred';
+  }
+}
+
 /**
  * publish: sends one target to its network (publishing.md, "Publish processor steps").
  * Throws only to ask BullMQ for another try; every final outcome is recorded and returns.
@@ -93,7 +124,10 @@ export async function publishTarget(
 
   const target = await ws.postTarget.findUnique({
     where: { id: data.targetId },
-    include: { post: true, account: true },
+    include: {
+      post: true,
+      account: { include: { connection: { select: { provider: true } } } },
+    },
   });
   // Deleted, cancelled, already done or already posted: nothing to do (idempotency).
   if (!target || target.externalPostId || !(WAITING as readonly string[]).includes(target.status)) {
@@ -111,6 +145,24 @@ export async function publishTarget(
   // target only goes out through its own scheduled job.
   if (scheduled ? target.scheduleVersion !== data.scheduleVersion : target.status === 'scheduled') {
     return;
+  }
+
+  // Rate limits: wait for room without using a try. Skipped when this try fails without calling
+  // the network anyway (account needs reconnecting, network off). Each try counts once, however
+  // often its job runs.
+  const network = target.account.network;
+  const provider = target.account.connection?.provider;
+  if (target.account.status === 'active' && provider && registry.isEnabled(network)) {
+    const wait = await deps.rateLimiter.take(
+      rateBuckets(registry.network(network).rateLimits, target.account.id, provider),
+      `${target.id}:${String(target.attempts + 1)}`,
+    );
+    if (wait > 0) {
+      logger.info({ targetId: target.id, network, waitMs: wait }, 'publish held by a rate limit');
+      throw new PublishDeferred(
+        clock.now().getTime() + wait + Math.floor(Math.random() * RATE_JITTER_MS),
+      );
+    }
   }
 
   // Claim this try: only one run moves the attempt counter, so two jobs can't both post. A
@@ -139,7 +191,6 @@ export async function publishTarget(
       startedAt: clock.now(),
     },
   });
-  const network = target.account.network;
 
   try {
     if (target.account.status !== 'active' || !target.account.connectionId) {
@@ -235,6 +286,17 @@ export async function publishTarget(
     ) {
       await deps.markReauthRequired(data.workspaceId, target.account.connectionId, failure.message);
     }
+    if (failure.kind === 'rate_limited') {
+      // The network asked us to slow down: hold back everything on that limit (this account,
+      // or the whole app) for as long as this target waits, not only this target.
+      const key =
+        failure.limitScope === 'app' && provider
+          ? appRateKey(provider)
+          : accountRateKey(target.account.id);
+      await deps.rateLimiter.pause(key, publishBackoff(attemptNo, failure)).catch((e: unknown) => {
+        logger.warn({ err: e, key }, 'could not pause a rate limit');
+      });
+    }
     await deps.recomputeStatus(data.workspaceId, target.postId);
     if (willRetry) throw failure;
     await events.emit('target.failed', {
@@ -251,10 +313,20 @@ export async function publishTarget(
 export const publishQueue = (deps: PublishDeps) =>
   defineQueue<PublishJobData>(
     'publish',
-    (job: Job<PublishJobData>) =>
-      publishTarget(deps, job.data, {
-        isLast: job.attemptsMade + 1 >= (job.opts.attempts ?? PUBLISH_ATTEMPTS),
-      }),
+    async (job: Job<PublishJobData>, token?: string) => {
+      try {
+        await publishTarget(deps, job.data, {
+          isLast: job.attemptsMade + 1 >= (job.opts.attempts ?? PUBLISH_ATTEMPTS),
+        });
+      } catch (err) {
+        // Held back by a rate limit: wait, keeping every try.
+        if (err instanceof PublishDeferred) {
+          await job.moveToDelayed(err.until, token);
+          throw new DelayedError();
+        }
+        throw err;
+      }
+    },
     {
       jobDefaults: { attempts: PUBLISH_ATTEMPTS, backoff: { type: 'custom' } },
       worker: {

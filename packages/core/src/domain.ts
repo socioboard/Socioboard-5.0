@@ -84,6 +84,7 @@ export function createPublishingServices(
     logger,
     events,
     registry,
+    rateLimiter: platform.rateLimiter,
     getCredentials: socialAccounts.getCredentials,
     markReauthRequired: socialAccounts.markReauthRequired,
     recomputeStatus: (workspaceId, postId) => posts.recomputeStatus(workspaceId, postId),

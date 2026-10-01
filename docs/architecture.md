@@ -230,7 +230,7 @@ The post's status is computed from its targets' statuses. Whether an author can 
 ### Rules
 
 - **Validate before scheduling, not at publish time.** Each network adapter exposes its rules (character limit, media count, aspect ratio, video length, file size). The composer shows errors live, and the API rejects posts that break them. In 5.0 these checks happened at publish time.
-- **Rate limits per network and per account.** BullMQ group rate limiting keeps us under each API's quota. HTTP 429 responses are retried at the time the network's headers say.
+- **Rate limits per network and per account.** Each adapter declares its limits; the publish worker keeps every account and every OAuth app under them with a shared limiter in Valkey (BullMQ's group limiter is Pro-only), delaying a job without using a try. A "slow down" answer pauses that account or app, and is retried at the time the network's headers say.
 - **Retry only what can succeed.** Errors are classified as `retryable` (timeout, 5xx, 429), `auth` (token revoked → reauth, no retry) or `content` (rejected by the network → fail with the network's message).
 - **Timezones.** All times are stored in UTC and shown in the workspace or user timezone. Recurring rules keep their timezone so they don't shift with daylight saving time.
 

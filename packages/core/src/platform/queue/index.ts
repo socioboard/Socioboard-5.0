@@ -3,12 +3,14 @@ import { Redis } from 'ioredis';
 
 import { runWithLogContext, type Logger } from '../logger';
 
-export type { Job } from 'bullmq';
+export { DelayedError, type Job } from 'bullmq';
+export * from './rate-limiter';
 
 /** A queue and its processor, declared by the module that owns the work. */
 export interface QueueDefinition<Data = unknown, Result = unknown> {
   name: string;
-  processor: (job: Job<Data, Result>) => Promise<Result>;
+  /** `token` is the worker's lock on the job, needed to move it (e.g. `job.moveToDelayed`). */
+  processor: (job: Job<Data, Result>, token?: string) => Promise<Result>;
   /** Defaults for jobs added to this queue (attempts, backoff, removeOnComplete…). */
   jobDefaults?: JobsOptions;
   /** `settings.backoffStrategy` backs jobs with `backoff: { type: 'custom' }`. */
@@ -17,7 +19,7 @@ export interface QueueDefinition<Data = unknown, Result = unknown> {
 
 export function defineQueue<Data, Result = void>(
   name: string,
-  processor: (job: Job<Data, Result>) => Promise<Result>,
+  processor: (job: Job<Data, Result>, token?: string) => Promise<Result>,
   options: Omit<QueueDefinition<Data, Result>, 'name' | 'processor'> = {},
 ): QueueDefinition<Data, Result> {
   return { name, processor, ...options };
@@ -75,9 +77,9 @@ export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions
     startWorker<Data, Result>(def: QueueDefinition<Data, Result>) {
       const worker = new Worker(
         def.name,
-        (job: Job<Data, Result>) =>
+        (job: Job<Data, Result>, token?: string) =>
           runWithLogContext({ queue: def.name, ...(job.id ? { jobId: job.id } : {}) }, () =>
-            def.processor(job),
+            def.processor(job, token),
           ),
         { connection, prefix, concurrency: 5, ...def.worker },
       );

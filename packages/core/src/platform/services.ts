@@ -8,7 +8,7 @@ import { createEventBus, type EventBus } from './events';
 import { createKv, type Kv } from './kv';
 import type { Logger } from './logger';
 import { createMailer, type Mailer } from './mailer';
-import { createQueues, type Queues } from './queue';
+import { createQueues, createRateLimiter, type Queues, type RateLimiter } from './queue';
 import { createStorage, type Storage } from './storage';
 
 /** Every external client, created once per process and passed to module factories. */
@@ -20,6 +20,8 @@ export interface Platform {
   db: Db;
   queues: Queues;
   kv: Kv;
+  /** Shared rate limits across workers (publishing's per-account and per-app limits). */
+  rateLimiter: RateLimiter;
   /** App-wide event bus; each module declares its events and listeners subscribe by name. */
   events: EventBus<Record<string, unknown>>;
   /** Undefined until S3 (or MinIO) is configured. */
@@ -46,6 +48,7 @@ export function createPlatform(
   });
   const queues = createQueues({ url: config.redis.url, logger, prefix });
   const kv = createKv({ url: config.redis.url, prefix: `${prefix}:` });
+  const rateLimiter = createRateLimiter({ url: config.redis.url, prefix: `${prefix}:` });
   const storage = config.storage ? createStorage(config.storage) : undefined;
   const mailer = createMailer({ smtpUrl: config.mail.smtpUrl, from: config.mail.from, logger });
 
@@ -59,12 +62,14 @@ export function createPlatform(
     db,
     queues,
     kv,
+    rateLimiter,
     events: createEventBus({ logger }),
     storage,
     mailer,
     async close() {
       await queues.close(30_000);
       kv.close();
+      rateLimiter.close();
       mailer.close();
       storage?.close();
       await db.close();

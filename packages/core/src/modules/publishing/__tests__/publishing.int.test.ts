@@ -2,7 +2,7 @@
 // BullMQ worker runs it against a played network, and every outcome is recorded. Failure paths
 // call the job function directly to walk through retries without waiting for backoff.
 import { ErrorEnvelope, Post, PostDetails, ValidatePostResponse } from '@socioboard/contracts';
-import { INSTAGRAM_IMAGE_PREP, ProviderError } from '@socioboard/providers';
+import { FACEBOOK_RATE_LIMITS, INSTAGRAM_IMAGE_PREP, ProviderError } from '@socioboard/providers';
 import sharp from 'sharp';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -11,8 +11,11 @@ import { createTestApp } from '../../../testing';
 import { mediaKeys } from '../../media';
 import { newId } from '../../../platform';
 import {
+  accountRateKey,
+  appRateKey,
   prepareMedia,
   publishBackoff,
+  PublishDeferred,
   publishJobId,
   publishTarget,
   type PublishDeps,
@@ -87,6 +90,10 @@ beforeAll(async () => {
 beforeEach(async () => {
   played.published.length = 0;
   played.publishAnswers.length = 0;
+  // A rate limit a test hit (and the pause it set) stays with that test.
+  for (const key of [accountRateKey(acc.fb), accountRateKey(acc.ig), appRateKey('facebook')]) {
+    await t.platform.rateLimiter.resume(key);
+  }
   await t.db.client.socialAccount.updateMany({
     where: { workspaceId: ws },
     data: { status: 'active', statusReason: null },
@@ -376,6 +383,117 @@ describe('the publish job', () => {
       expect(again?.sizeBytes).toBe(media?.sizeBytes);
     },
   );
+});
+
+describe('rate limits', () => {
+  const run = (targetId: string) =>
+    publishTarget(deps, { workspaceId: ws, targetId }, { isLast: false });
+  async function queued(accountId: string) {
+    const post = await draft({ text: 'Limited', targets: [{ accountId }] });
+    const [target] = post.targets;
+    if (!target) throw new Error('no target');
+    await t.db.client.postTarget.update({
+      where: { id: target.id },
+      data: { status: 'publishing' },
+    });
+    return target.id;
+  }
+  const target = (id: string) => t.db.client.postTarget.findUniqueOrThrow({ where: { id } });
+  const deferredBy = async (p: Promise<void>) => {
+    const err = await p.then(
+      () => null,
+      (e: unknown) => e,
+    );
+    expect(err).toBeInstanceOf(PublishDeferred);
+    return (err as PublishDeferred).until - Date.now();
+  };
+
+  it('a Page at its limit waits for room, without using a try or calling the network', async () => {
+    // Its own Page, so the full window doesn't hold back other tests.
+    const full = await t.db.client.socialAccount.create({
+      data: {
+        workspaceId: ws,
+        connectionId,
+        network: 'facebook_page',
+        externalId: '199',
+        displayName: 'Busy Page',
+        assetTokenEnc: t.platform.crypto.encrypt('page-token-199'),
+      },
+    });
+    const [hourly] = FACEBOOK_RATE_LIMITS.perAccount;
+    if (!hourly) throw new Error('no Facebook limit');
+    const bucket = [{ key: accountRateKey(full.id), windows: FACEBOOK_RATE_LIMITS.perAccount }];
+    for (let i = 0; i < hourly.max; i++) {
+      expect(await t.platform.rateLimiter.take(bucket, `earlier-${String(i)}`)).toBe(0);
+    }
+    const id = await queued(full.id);
+    const wait = await deferredBy(run(id));
+    expect(wait).toBeGreaterThan((hourly.perSec - 60) * 1000);
+    expect(await target(id)).toMatchObject({ status: 'publishing', attempts: 0 });
+    expect(await t.db.client.publishAttempt.count({ where: { postTargetId: id } })).toBe(0);
+    expect(played.published).toHaveLength(0);
+    // Other Pages on the same login go on.
+    const other = await queued(acc.fb);
+    await run(other);
+    expect((await target(other)).status).toBe('published');
+  });
+
+  it('a network’s "slow down" holds back that account for as long as it asked', async () => {
+    const first = await queued(acc.fb);
+    played.publishAnswers.push(
+      new ProviderError({ kind: 'rate_limited', message: 'Page limit', retryAfterSec: 120 }),
+    );
+    await expect(run(first)).rejects.toMatchObject({ kind: 'rate_limited' });
+    const next = await queued(acc.fb);
+    const wait = await deferredBy(run(next));
+    expect(wait).toBeGreaterThan(110_000);
+    expect(wait).toBeLessThanOrEqual(121_000);
+    expect((await target(next)).attempts).toBe(0);
+    // Another account on the same app isn't held back.
+    const ig = await queued(acc.ig);
+    await run(ig);
+    expect((await target(ig)).status).toBe('published');
+    expect(played.published.map((p) => p.network)).toEqual(['facebook_page', 'instagram']);
+  });
+
+  it('the app’s own limit holds back every account on that login’s app', async () => {
+    const first = await queued(acc.fb);
+    played.publishAnswers.push(
+      new ProviderError({
+        kind: 'rate_limited',
+        message: 'Application request limit reached',
+        networkCode: '4',
+        limitScope: 'app',
+      }),
+    );
+    await expect(run(first)).rejects.toMatchObject({ kind: 'rate_limited' });
+    for (const accountId of [acc.fb, acc.ig]) {
+      const id = await queued(accountId);
+      // Meta gave no time: held for this try's backoff.
+      expect(await deferredBy(run(id))).toBeGreaterThan(25_000);
+    }
+    expect(played.published).toHaveLength(1);
+  });
+
+  it('the worker waits out a pause and keeps every try', async () => {
+    await t.platform.rateLimiter.pause(accountRateKey(acc.fb), 1500);
+    const post = await draft({ text: 'After the pause', targets: [{ accountId: acc.fb }] });
+    expect((await owner.post(`${base()}/posts/${post.id}/publish-now`)).status).toBe(202);
+    const [queuedTarget] = post.targets;
+    if (!queuedTarget) throw new Error('no target');
+    const job = () =>
+      t.platform.queues.get(services.publishQueue).getJob(publishJobId(queuedTarget.id, 0));
+    for (let i = 0; i < 20 && (await job())?.attemptsStarted === 0; i++) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    expect(await (await job())?.getState()).toBe('delayed');
+    expect(await target(queuedTarget.id)).toMatchObject({ status: 'publishing', attempts: 0 });
+
+    const done = await settled(post.id);
+    expect(done.targets[0]).toMatchObject({ status: 'published', attempts: 1 });
+    expect(done.targets[0]?.history.map((h) => h.outcome)).toEqual(['published']);
+    expect((await job())?.attemptsMade).toBeLessThanOrEqual(1);
+  });
 });
 
 describe('retry', () => {

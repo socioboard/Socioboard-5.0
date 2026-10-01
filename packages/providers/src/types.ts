@@ -138,6 +138,22 @@ export interface ImagePrep {
   maxBytes: number;
 }
 
+/** At most `max` publishes in any `perSec` seconds (a moving window). */
+export interface RateWindow {
+  max: number;
+  perSec: number;
+}
+
+/**
+ * How fast the network lets us publish, enforced by the publishing worker before each try
+ * (docs/backend/modules/publishing.md, "Rate limits"). `perAccount` counts each account's
+ * publishes; `perApp` counts every publish through one login's OAuth app (e.g. all of Meta's).
+ */
+export interface RateLimits {
+  perAccount: readonly RateWindow[];
+  perApp: readonly RateWindow[];
+}
+
 /** A kind of postable asset: its rules, preview, validation and publishing. */
 export interface NetworkAdapter {
   id: NetworkId;
@@ -147,6 +163,7 @@ export interface NetworkAdapter {
   preview: PreviewSpec;
   /** Set when the worker should fit images to the network before publishing. */
   imagePrep?: ImagePrep;
+  rateLimits: RateLimits;
   /** Pure: the composer's live checks and the API's check before saving and publishing. */
   validate(input: ContentInput): ValidationIssue[];
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;

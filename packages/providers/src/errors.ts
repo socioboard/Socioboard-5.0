@@ -13,6 +13,11 @@ export class ProviderError extends Error {
   readonly retryAfterSec: number | null;
   /** HTTP status of the failed call, or null when the request never got an answer. */
   readonly status: number | null;
+  /**
+   * For `rate_limited`: whose limit was hit. `app` (the whole OAuth app, e.g. Meta code 4) holds
+   * back every account on that login's app; `account` (the default) holds back this account.
+   */
+  readonly limitScope: 'account' | 'app';
 
   constructor(input: {
     kind: PublishErrorKind;
@@ -20,6 +25,7 @@ export class ProviderError extends Error {
     networkCode?: string | null;
     retryAfterSec?: number | null;
     status?: number | null;
+    limitScope?: 'account' | 'app';
     cause?: unknown;
   }) {
     super(input.message, input.cause === undefined ? undefined : { cause: input.cause });
@@ -28,6 +34,7 @@ export class ProviderError extends Error {
     this.networkCode = input.networkCode ?? null;
     this.retryAfterSec = input.retryAfterSec ?? null;
     this.status = input.status ?? null;
+    this.limitScope = input.limitScope ?? 'account';
   }
 }
 
