@@ -71,6 +71,7 @@ export function createPublishingServices(
     registry,
     appUrl: config.appUrl,
     lookupMembership: createMembershipLookup(db),
+    realtime: platform.realtime,
   });
 
   const mediaUrls = createMediaUrlSigner({
@@ -103,6 +104,7 @@ export function createPublishingServices(
     events,
     registry,
     kv: platform.kv,
+    realtime: platform.realtime,
     enqueuePublish,
     enqueueScheduled,
     dropScheduledJobs,

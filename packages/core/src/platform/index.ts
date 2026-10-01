@@ -4,6 +4,7 @@ export * from './config';
 export * from './crypto';
 export * from './db';
 export * from './events';
+export * from './flags';
 export * from './http';
 export * from './ids';
 export * from './kv';

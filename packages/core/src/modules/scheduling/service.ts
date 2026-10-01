@@ -380,6 +380,8 @@ export function createSchedulingService(deps: SchedulingDeps) {
       return { before: [now], after: [{ workspaceId, targetId, version, at }] };
     });
     await queueOrRevert(workspaceId, before, after);
+    // The status stays; recomputing tells open calendars the new time.
+    await posts.recomputeStatus(workspaceId, target.postId);
     await events.emit('post.rescheduled', {
       workspaceId,
       postId: target.postId,

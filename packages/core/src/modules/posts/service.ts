@@ -1,6 +1,7 @@
 import {
   can,
   PublishError,
+  realtimeRooms,
   TargetOverride,
   type CreateLabelBody,
   type CreatePostBody,
@@ -39,6 +40,7 @@ import {
   type Kv,
   type EventBus,
   type MemberContext,
+  type Realtime,
   type Storage,
 } from '../../platform';
 import {
@@ -68,6 +70,8 @@ export interface PostServiceDeps {
   dropScheduledJobs(jobs: { targetId: string; version: number }[]): Promise<void>;
   /** scheduling: how a post repeats, for `GET /posts/:id` (null when it doesn't). */
   recurrenceOf?(workspaceId: string, postId: string): Promise<Recurrence | null>;
+  /** Live updates: `post.status_changed` to the workspace's room. */
+  realtime: Realtime;
 }
 
 /** A scheduled target's delayed publish job. */
@@ -294,15 +298,36 @@ export function createPostService(deps: PostServiceDeps) {
       'Posts that are being published or were published stay in the history',
     );
 
+  /**
+   * The post's status from its targets, after any of them changed (status or time). Also tells
+   * the workspace's open pages (calendar, posts) live, with each target's status and times.
+   */
   async function recomputeStatus(workspaceId: string, postId: string) {
     const ws = scoped(workspaceId);
     const post = await ws.post.findUnique({
       where: { id: postId },
-      select: { status: true, targets: { select: { status: true } } },
+      select: {
+        status: true,
+        targets: {
+          select: { id: true, status: true, scheduledAt: true, publishedAt: true },
+          orderBy: { id: 'asc' },
+        },
+      },
     });
     if (!post) return;
     const status = deriveStatus(post.status, post.targets);
     if (status !== post.status) await ws.post.update({ where: { id: postId }, data: { status } });
+    deps.realtime.emit(realtimeRooms.workspace(workspaceId), 'post.status_changed', {
+      workspaceId,
+      postId,
+      status,
+      targets: post.targets.map((t) => ({
+        id: t.id,
+        status: t.status,
+        scheduledAt: t.scheduledAt?.toISOString() ?? null,
+        publishedAt: t.publishedAt?.toISOString() ?? null,
+      })),
+    });
   }
 
   // ---------------------------------------------------------------- validation

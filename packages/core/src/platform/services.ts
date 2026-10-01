@@ -5,6 +5,7 @@ import type { Config } from './config';
 import { createCrypto, type Crypto } from './crypto';
 import { createDb, type Db } from './db';
 import { createEventBus, type EventBus } from './events';
+import { createFlags, type Flags } from './flags';
 import { createKv, type Kv } from './kv';
 import type { Logger } from './logger';
 import { createMailer, type Mailer } from './mailer';
@@ -15,6 +16,8 @@ import { createStorage, type Storage } from './storage';
 /** Every external client, created once per process and passed to module factories. */
 export interface Platform {
   config: Config;
+  /** Prefix of every Valkey key, queue and channel of this install (tests use their own). */
+  prefix: string;
   logger: Logger;
   clock: Clock;
   crypto: Crypto;
@@ -25,6 +28,8 @@ export interface Platform {
   rateLimiter: RateLimiter;
   /** Live updates to browsers, sent from any process (delivered by the API's Socket.IO server). */
   realtime: Realtime;
+  /** Feature flags (FeatureFlag rows, cached 30 s). */
+  flags: Flags;
   /** App-wide event bus; each module declares its events and listeners subscribe by name. */
   events: EventBus<Record<string, unknown>>;
   /** Undefined until S3 (or MinIO) is configured. */
@@ -60,6 +65,7 @@ export function createPlatform(
 
   return {
     config,
+    prefix,
     logger,
     clock: systemClock,
     crypto: createCrypto(config.encryption.keys),
@@ -68,6 +74,7 @@ export function createPlatform(
     kv,
     rateLimiter,
     realtime,
+    flags: createFlags({ db, clock: systemClock, logger }),
     events: createEventBus({ logger }),
     storage,
     mailer,

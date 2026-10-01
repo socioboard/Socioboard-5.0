@@ -2,6 +2,8 @@
 // it; integration tests build the same app, so they exercise the real wiring.
 import { apiRoutes, type RouteDefinition } from '@socioboard/contracts';
 import type { Registry } from '@socioboard/providers';
+import type { Server as HttpServer } from 'node:http';
+
 import express, { type Express } from 'express';
 
 import {
@@ -42,6 +44,8 @@ import {
 import {
   createApiRouter,
   createErrorHandler,
+  createRealtimeServer,
+  typedEvents,
   createHealth,
   notFoundHandler,
   originCheck,
@@ -54,7 +58,9 @@ import {
   type ApiRouter,
   type Health,
   type Platform,
+  type RealtimeServer,
 } from './platform';
+import type { WorkspaceEvents } from './modules/workspaces';
 
 export interface ApiAppOptions {
   /** Defaults to "the server can send email" (SMTP configured). */
@@ -73,6 +79,8 @@ export interface ApiApp {
   health: Health;
   /** Contract routes that have no handler yet (should be empty). */
   missingRoutes: RouteDefinition[];
+  /** Starts live updates (Socket.IO at REALTIME_PATH) on the API's HTTP server. */
+  attachRealtime: (server: HttpServer) => RealtimeServer;
 }
 
 export function createApiApp(platform: Platform, options: ApiAppOptions = {}): ApiApp {
@@ -226,5 +234,40 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     .flatMap((m) => Object.values(m) as RouteDefinition[])
     .filter((r) => !api.mounted.has(r));
 
-  return { app, api, authModule, health, missingRoutes };
+  function attachRealtime(server: HttpServer): RealtimeServer {
+    const realtime = createRealtimeServer(server, {
+      url: config.redis.url,
+      prefix: platform.prefix,
+      appUrl: config.appUrl,
+      logger,
+      async resolveUser(headers) {
+        const { auth } = await authModule.resolveSession(headers);
+        return auth ? { userId: auth.user.id } : null;
+      },
+      async workspacesOf(userId) {
+        const rows = await platform.db.client.member.findMany({
+          where: { userId, workspace: { deletedAt: null } },
+          select: { workspaceId: true },
+        });
+        return rows.map((r) => r.workspaceId);
+      },
+    });
+    // Rooms follow membership, on every socket the person has open.
+    const workspaceEvents = typedEvents<WorkspaceEvents>(platform.events);
+    workspaceEvents.on('workspace.created', (p) => {
+      realtime.joinWorkspace(p.userId, p.workspaceId);
+    });
+    workspaceEvents.on('member.joined', (p) => {
+      realtime.joinWorkspace(p.userId, p.workspaceId);
+    });
+    workspaceEvents.on('member.removed', (p) => {
+      realtime.leaveWorkspace(p.removedUserId, p.workspaceId);
+    });
+    workspaceEvents.on('workspace.deleted', (p) => {
+      realtime.closeWorkspace(p.workspaceId);
+    });
+    return realtime;
+  }
+
+  return { app, api, authModule, health, missingRoutes, attachRealtime };
 }

@@ -12,6 +12,7 @@ export default defineConfig({
   ],
   server: {
     port: 5173,
-    proxy: { '/api': 'http://localhost:3000' },
+    // `ws`: live updates (Socket.IO at /api/socket.io) upgrade to a WebSocket through the proxy.
+    proxy: { '/api': { target: 'http://localhost:3000', ws: true } },
   },
 });
