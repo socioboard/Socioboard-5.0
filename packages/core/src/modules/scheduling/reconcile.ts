@@ -10,6 +10,7 @@ import {
 } from '../../platform';
 import type { ScheduledJob } from '../posts';
 import {
+  MAX_LATE_MINUTES,
   PUBLISH_ATTEMPTS,
   publishJobId,
   scheduledJobId,
@@ -53,7 +54,7 @@ const MINUTE = 60_000;
 /** Scheduled targets due within this window get their job checked. */
 export const RECONCILE_WINDOW_HOURS = 48;
 /** A scheduled target this late without a job is failed instead of sent hours late. */
-export const MISSED_GRACE_MINUTES = 60;
+export const MISSED_GRACE_MINUTES = MAX_LATE_MINUTES;
 /** A target `publishing` this long with no job behind it is stuck. */
 export const STUCK_AFTER_MINUTES = 15;
 const BATCH = 5000;

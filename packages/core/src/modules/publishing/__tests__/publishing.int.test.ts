@@ -438,6 +438,64 @@ describe('rate limits', () => {
     expect((await target(other)).status).toBe('published');
   });
 
+  it('a scheduled post a limit would hold over an hour fails, rather than going out late', async () => {
+    const busy = await t.db.client.socialAccount.create({
+      data: {
+        workspaceId: ws,
+        connectionId,
+        network: 'facebook_page',
+        externalId: '198',
+        displayName: 'Busy Page 2',
+        assetTokenEnc: t.platform.crypto.encrypt('page-token-198'),
+      },
+    });
+    const bucket = [{ key: accountRateKey(busy.id), windows: FACEBOOK_RATE_LIMITS.perAccount }];
+    for (let i = 0; i < (FACEBOOK_RATE_LIMITS.perAccount[0]?.max ?? 0); i++) {
+      await t.platform.rateLimiter.take(bucket, `earlier-${String(i)}`);
+    }
+    const id = await queued(busy.id);
+    await t.db.client.postTarget.update({
+      where: { id },
+      data: { status: 'scheduled', scheduledAt: new Date(), scheduleVersion: 1 },
+    });
+    await publishTarget(
+      deps,
+      { workspaceId: ws, targetId: id, scheduleVersion: 1 },
+      { isLast: false },
+    );
+    expect(await target(id)).toMatchObject({
+      status: 'failed',
+      attempts: 1,
+      lastError: { kind: 'rate_limited' },
+    });
+    expect((await target(id)).lastError).toMatchObject({
+      message: expect.stringContaining('over an hour late') as unknown,
+    });
+    expect(played.published).toHaveLength(0);
+    // Our own limit asked the network nothing, so nothing was paused.
+    const other = await queued(acc.fb);
+    await run(other);
+    expect((await target(other)).status).toBe('published');
+
+    // Held for less than an hour past its time, it waits instead.
+    const soon = await queued(busy.id);
+    await t.db.client.postTarget.update({
+      where: { id: soon },
+      data: {
+        status: 'scheduled',
+        scheduledAt: new Date(Date.now() + 3 * 3_600_000),
+        scheduleVersion: 1,
+      },
+    });
+    await expect(
+      publishTarget(
+        deps,
+        { workspaceId: ws, targetId: soon, scheduleVersion: 1 },
+        { isLast: false },
+      ),
+    ).rejects.toBeInstanceOf(PublishDeferred);
+  });
+
   it('a network’s "slow down" holds back that account for as long as it asked', async () => {
     const first = await queued(acc.fb);
     played.publishAnswers.push(

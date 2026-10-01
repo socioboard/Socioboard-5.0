@@ -3,6 +3,7 @@ export type { PublishingEvents } from './events';
 export {
   accountRateKey,
   appRateKey,
+  MAX_LATE_MINUTES,
   PUBLISH_ATTEMPTS,
   publishBackoff,
   publishJobId,
