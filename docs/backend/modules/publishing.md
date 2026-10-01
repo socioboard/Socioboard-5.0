@@ -42,5 +42,5 @@ None directly (triggered via posts and scheduling). Read access to attempts is t
 - **Rate limits:** BullMQ group limiter keyed by `network:account` and `network:app`, tuned per network.
 - **Timeouts:** 60 s per API call; video uploads use resumable sessions with their own timeout.
 - **Never double-post:** the job ID is deterministic, `externalPostId` is checked first, and network idempotency keys are used where supported.
-- **Stuck jobs:** targets in `publishing` for over 15 minutes are picked up by the `reconcile` job ([scheduling](scheduling.md)), which checks the network before retrying.
+- **Stuck jobs:** targets in `publishing` for over 15 minutes with no live job behind them (a job waiting to retry counts as live) are stopped by the `reconcile` job ([scheduling](scheduling.md)): failed with a message asking to check the account before publishing again, never retried blindly, since the network may already have the post. Looking the post up on the network first arrives when adapters can.
 - **AI labels:** if any media has `source = ai`, set the network's AI-disclosure flag where the adapter supports it.

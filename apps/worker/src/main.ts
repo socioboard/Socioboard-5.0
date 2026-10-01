@@ -7,6 +7,7 @@ import {
   mediaProcessQueue,
   mediaPurgeQueue,
   onShutdown,
+  reconcileQueue,
   recurringQueue,
   registerAuditListeners,
   workspacePurgeQueue,
@@ -33,6 +34,12 @@ platform.queues.startWorker(recurring);
 await platform.queues
   .get(recurring)
   .upsertJobScheduler('hourly', { pattern: '5 * * * *', tz: 'UTC' }, { name: 'expand' });
+// Every 5 minutes: rebuild publish jobs Valkey lost, stop deliveries stuck while publishing.
+const reconcile = reconcileQueue(publishing.reconciler);
+platform.queues.startWorker(reconcile);
+await platform.queues
+  .get(reconcile)
+  .upsertJobScheduler('every-5-min', { pattern: '*/5 * * * *', tz: 'UTC' }, { name: 'run' });
 
 const purge = workspacePurgeQueue(platform);
 platform.queues.startWorker(purge);

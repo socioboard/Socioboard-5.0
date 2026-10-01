@@ -18,9 +18,11 @@ import {
 import {
   createCalendarEntries,
   createQueueSlotService,
+  createReconciler,
   createRecurrenceService,
   createSchedulingService,
   type QueueSlotService,
+  type Reconciler,
   type RecurrenceService,
   type SchedulingService,
 } from './modules/scheduling';
@@ -39,6 +41,8 @@ export interface PublishingServices {
   scheduling: SchedulingService;
   queueSlots: QueueSlotService;
   recurrence: RecurrenceService;
+  /** Rebuilds lost publish jobs and stops stuck deliveries (the `reconcile` job). */
+  reconciler: Reconciler;
   /** Signed public media addresses (served by the API at /public-media). */
   mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
@@ -159,6 +163,18 @@ export function createPublishingServices(
     dropScheduledJobs,
   });
   recurrence.registerListeners();
+  const reconciler = createReconciler({
+    db,
+    clock,
+    logger,
+    events,
+    jobState: (jobId) => platform.queues.get(queue).getJobState(jobId),
+    removeJob: async (jobId) => {
+      await platform.queues.get(queue).remove(jobId);
+    },
+    enqueueScheduled,
+    recomputeStatus: posts.recomputeStatus,
+  });
 
   return {
     registry,
@@ -167,6 +183,7 @@ export function createPublishingServices(
     scheduling,
     queueSlots,
     recurrence,
+    reconciler,
     mediaUrls,
     publishQueue: queue,
   };
