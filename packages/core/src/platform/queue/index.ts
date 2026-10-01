@@ -37,6 +37,8 @@ export interface Queues {
   get<Data, Result>(def: QueueDefinition<Data, Result>): Queue<Data, Result>;
   /** Consumer side (worker only): start processing a definition's jobs. */
   startWorker<Data, Result>(def: QueueDefinition<Data, Result>): Worker<Data, Result>;
+  /** Names of the queues this process started workers for. */
+  workerNames(): string[];
   /** Valkey/Redis reachable (health endpoint). */
   ping(): Promise<boolean>;
   /** Stops workers (waiting for active jobs up to the timeout), then closes queues. */
@@ -95,6 +97,8 @@ export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions
       workers.push(worker as Worker);
       return worker;
     },
+
+    workerNames: () => workers.map((w) => w.name),
 
     async ping() {
       healthClient ??= new Redis(url, { lazyConnect: true, maxRetriesPerRequest: 1 });

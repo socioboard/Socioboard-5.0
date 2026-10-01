@@ -50,6 +50,10 @@ export interface PublishingServices {
   mediaUrls: MediaUrlSigner;
   /** The `publish` queue: the API adds to it, the worker processes it. */
   publishQueue: QueueDefinition<PublishJobData, void>;
+  /** Queue publish tries now (publish-now's job ids), for the admin console's retry. */
+  enqueuePublish(jobs: { workspaceId: string; targetId: string; tries: number }[]): Promise<void>;
+  /** Drop scheduled targets' delayed jobs (best effort). */
+  dropScheduledJobs(jobs: { targetId: string; version: number }[]): Promise<void>;
 }
 
 export function createPublishingServices(
@@ -99,15 +103,7 @@ export function createPublishingServices(
     events,
     registry,
     kv: platform.kv,
-    async enqueuePublish(jobs) {
-      await platform.queues.get(queue).addBulk(
-        jobs.map((j) => ({
-          name: 'publish',
-          data: { workspaceId: j.workspaceId, targetId: j.targetId },
-          opts: { jobId: publishJobId(j.targetId, j.tries) },
-        })),
-      );
-    },
+    enqueuePublish,
     enqueueScheduled,
     dropScheduledJobs,
     // Bound late: the recurrence service is created below, with the posts service.
@@ -122,6 +118,17 @@ export function createPublishingServices(
     enqueueScheduled,
     dropScheduledJobs,
   });
+
+  /** Publish-now and retries: one job per target and try, so a repeat queues nothing twice. */
+  async function enqueuePublish(jobs: { workspaceId: string; targetId: string; tries: number }[]) {
+    await platform.queues.get(queue).addBulk(
+      jobs.map((j) => ({
+        name: 'publish',
+        data: { workspaceId: j.workspaceId, targetId: j.targetId },
+        opts: { jobId: publishJobId(j.targetId, j.tries) },
+      })),
+    );
+  }
 
   /** A delayed job per scheduled target, named and keyed by its schedule version. */
   async function enqueueScheduled(jobs: ScheduledJob[]) {
@@ -188,5 +195,7 @@ export function createPublishingServices(
     reconciler,
     mediaUrls,
     publishQueue: queue,
+    enqueuePublish,
+    dropScheduledJobs,
   };
 }
