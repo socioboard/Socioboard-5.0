@@ -1,17 +1,20 @@
 import { schedulingRoutes as r } from '@socioboard/contracts';
 
 import type { ApiRouter } from '../../platform';
+import type { CalendarService } from './calendar';
 import type { QueueSlotService } from './queue-slots';
 import type { RecurrenceService } from './recurrence';
 import type { SchedulingService } from './service';
 
-/** Mounts the scheduling routes built so far (contracts: schedulingRoutes). */
+/** Mounts the scheduling routes (contracts: schedulingRoutes). */
 export function registerSchedulingRoutes(
   api: ApiRouter,
   scheduling: SchedulingService,
   queueSlots: QueueSlotService,
   recurrence: RecurrenceService,
+  calendar: CalendarService,
 ) {
+  api.route(r.getCalendar, ({ member, query }) => calendar.get(member, query));
   api.route(r.setRecurrence, ({ auth, member, params, body }) =>
     recurrence.set(auth, member, params.postId, body),
   );

@@ -1,7 +1,15 @@
-import { PublishError, TargetOverride, type CalendarEntry } from '@socioboard/contracts';
+import {
+  CALENDAR_MAX_ENTRIES,
+  PublishError,
+  TargetOverride,
+  type CalendarEntry,
+  type CalendarQuery,
+  type CalendarResponse,
+  type TargetStatus,
+} from '@socioboard/contracts';
 import type { Prisma } from '@socioboard/db';
 
-import { createUrlSigner, type Db, type Storage } from '../../platform';
+import { createUrlSigner, type Db, type MemberContext, type Storage } from '../../platform';
 
 const TEXT_MAX = 280;
 
@@ -23,8 +31,8 @@ function httpUrl(value: string | null): string | null {
 
 /**
  * Targets as calendar entries (contracts: CalendarEntry): what the calendar and the queue view
- * show. `at` is when it went out, else when it's due, else when it was last tried; targets with
- * none of these (drafts) are left out.
+ * show, in time order. `at` is when it went out, else when it's due, else when it was last tried;
+ * targets with none of these (drafts) are left out.
  */
 export function createCalendarEntries(db: Db, storage: Storage | undefined) {
   const signUrl = createUrlSigner(storage);
@@ -75,7 +83,7 @@ export function createCalendarEntries(db: Db, storage: Storage | undefined) {
       await Promise.all(media.map(async (m) => [m.id, await signUrl(m.thumbnailKey)] as const)),
     );
 
-    return shaped.flatMap(({ row: t, at, text, mediaIds }) =>
+    const items = shaped.flatMap(({ row: t, at, text, mediaIds }) =>
       at
         ? [
             {
@@ -96,7 +104,52 @@ export function createCalendarEntries(db: Db, storage: Storage | undefined) {
           ]
         : [],
     );
+    // Stable: same-time entries keep the database's order (scheduled time, then id).
+    return items.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
   };
 }
+
+/** What the calendar shows unless `status` says otherwise: everything with a time. */
+const CALENDAR_STATUSES: TargetStatus[] = ['scheduled', 'publishing', 'published', 'failed'];
+
+/**
+ * `GET /calendar` (scheduling.md): targets whose `at` falls in [from, to), oldest first, at most
+ * CALENDAR_MAX_ENTRIES (`truncated` when there were more).
+ */
+export function createCalendarService(deps: { entries: CalendarEntries }) {
+  async function get(member: MemberContext, query: CalendarQuery): Promise<CalendarResponse> {
+    const from = new Date(query.from);
+    const to = new Date(query.to);
+    const inRange = { gte: from, lt: to };
+    // `at` is a fallback chain the database can't index, so this narrows by each link and the
+    // exact `at` is checked below (a failed publish-now tried in range but tried again later).
+    const where: Prisma.PostTargetWhereInput = {
+      status: { in: query.status ?? CALENDAR_STATUSES },
+      ...(query.accountId ? { socialAccountId: { in: query.accountId } } : {}),
+      ...(query.labelId ? { post: { labelIds: { has: query.labelId } } } : {}),
+      OR: [
+        { publishedAt: inRange },
+        { publishedAt: null, scheduledAt: inRange },
+        {
+          publishedAt: null,
+          scheduledAt: null,
+          history: { some: { startedAt: inRange } },
+        },
+      ],
+    };
+    const rows = await deps.entries(member.workspaceId, where, CALENDAR_MAX_ENTRIES + 1);
+    const items = rows.filter((e) => {
+      const at = Date.parse(e.at);
+      return at >= from.getTime() && at < to.getTime();
+    });
+    return {
+      items: items.slice(0, CALENDAR_MAX_ENTRIES),
+      truncated: rows.length > CALENDAR_MAX_ENTRIES,
+    };
+  }
+  return { get };
+}
+
+export type CalendarService = ReturnType<typeof createCalendarService>;
 
 export type CalendarEntries = ReturnType<typeof createCalendarEntries>;

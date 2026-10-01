@@ -18,7 +18,7 @@
 - [x] P2-B6 Per-network/per-account rate limiting in the publish queue (adapter `rateLimits`, Valkey `RateLimiter` in `platform/queue`; held jobs wait without using a try; a network's "slow down" pauses the account, or the app for Meta code 4)
 - [x] P2-B7 `token-refresh` + `account-health` jobs; `reauth_required` flow (`social-accounts` service `refreshExpiringTokens` / `checkHealth`, `jobs.ts`; worker schedules hourly and daily; a Facebook login's expiry only stops accounts posting with its token)
 - [x] P2-B8 Notifications: event listeners, in-app feed, email templates (React Email), Socket.IO rooms + events (`modules/notifications`: the 5 routes, listeners in api and worker, grouped emails through the `notifications` queue with one plain template, `notification.new` / `notification.read` sent through `platform/realtime`'s Valkey emitter; the Socket.IO server that delivers them is P2-B11, a template per type and the digest P2-B12)
-- [ ] P2-B9 Calendar endpoint
+- [x] P2-B9 Calendar endpoint (`GET /calendar`: `[from, to)` by each target's time, oldest first, filters by account, status and label, 1000 at most with `truncated`; calendar and queue entries are in time order)
 - [ ] P2-B10 Admin v1 endpoints + Bull Board mount; platform-admin guard with 2FA check
 - [ ] P2-B11 `platform/realtime` (Socket.IO + Valkey adapter) and `platform/flags` (FeatureFlag reader)
 - [ ] P2-B12 Email templates: publish failed, account reconnect, digest
