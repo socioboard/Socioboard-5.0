@@ -95,6 +95,12 @@ function rateBuckets(limits: RateLimits, accountId: string, provider: string): R
   ];
 }
 
+/**
+ * A scheduled post goes out at most this late; past it, it fails with a message instead (the
+ * `reconcile` job's rule after an outage, and a rate limit's when it would hold a post longer).
+ */
+export const MAX_LATE_MINUTES = 60;
+
 /** Spreads out jobs held back by the same limit, so they don't all wake at the same moment. */
 const RATE_JITTER_MS = 1000;
 
@@ -152,16 +158,24 @@ export async function publishTarget(
   // often its job runs.
   const network = target.account.network;
   const provider = target.account.connection?.provider;
+  // Set when a limit would hold a scheduled post past MAX_LATE_MINUTES: it fails instead.
+  let tooLate = false;
   if (target.account.status === 'active' && provider && registry.isEnabled(network)) {
     const wait = await deps.rateLimiter.take(
       rateBuckets(registry.network(network).rateLimits, target.account.id, provider),
       `${target.id}:${String(target.attempts + 1)}`,
     );
     if (wait > 0) {
-      logger.info({ targetId: target.id, network, waitMs: wait }, 'publish held by a rate limit');
-      throw new PublishDeferred(
-        clock.now().getTime() + wait + Math.floor(Math.random() * RATE_JITTER_MS),
-      );
+      const until = clock.now().getTime() + wait + Math.floor(Math.random() * RATE_JITTER_MS);
+      const latest =
+        scheduled && target.scheduledAt
+          ? target.scheduledAt.getTime() + MAX_LATE_MINUTES * 60_000
+          : Infinity;
+      if (until <= latest) {
+        logger.info({ targetId: target.id, network, waitMs: wait }, 'publish held by a rate limit');
+        throw new PublishDeferred(until);
+      }
+      tooLate = true;
     }
   }
 
@@ -206,6 +220,12 @@ export async function publishTarget(
       throw new ProviderError({
         kind: 'content',
         message: 'This network is not enabled on this server',
+      });
+    }
+    if (tooLate) {
+      throw new ProviderError({
+        kind: 'rate_limited',
+        message: `${registry.network(network).displayName} limits how often this account can post, and this post would have gone out over an hour late. Pick a new time.`,
       });
     }
     const content = resolveContent(
@@ -256,7 +276,9 @@ export async function publishTarget(
     if (!isProviderError(err))
       logger.error({ err, targetId: target.id }, 'publish failed unexpectedly');
     const willRetry =
-      (failure.kind === 'retryable' || failure.kind === 'rate_limited') && !attempt.isLast;
+      !tooLate &&
+      (failure.kind === 'retryable' || failure.kind === 'rate_limited') &&
+      !attempt.isLast;
     const lastError: PublishError = {
       kind: failure.kind,
       networkCode: failure.networkCode,
@@ -286,7 +308,8 @@ export async function publishTarget(
     ) {
       await deps.markReauthRequired(data.workspaceId, target.account.connectionId, failure.message);
     }
-    if (failure.kind === 'rate_limited') {
+    // Our own limit (tooLate) didn't ask the network anything: nothing to pause.
+    if (failure.kind === 'rate_limited' && !tooLate) {
       // The network asked us to slow down: hold back everything on that limit (this account,
       // or the whole app) for as long as this target waits, not only this target.
       const key =
