@@ -6,6 +6,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { createPublishingServices } from '../../../domain';
 import { createTestApp } from '../../../testing';
+import { createPostService } from '../../posts';
 import { publishTarget, scheduledJobId, type PublishDeps } from '../../publishing';
 
 const t = createTestApp();
@@ -292,6 +293,46 @@ describe('publishing exactly once', () => {
       await new Promise((r) => setTimeout(r, 100));
     }
     // Even if the old job had already been picked up, it would find nothing to do.
+    await publishTarget(
+      deps,
+      { workspaceId: ws, targetId: row?.id ?? '', scheduleVersion: 1 },
+      { isLast: false },
+    );
+    expect(played.published).toHaveLength(1);
+  });
+});
+
+describe('when queueing fails', () => {
+  it('publish now on a scheduled post puts it back as it was, its job still valid', async () => {
+    const post = await draft([acc.fb]);
+    await owner.post(`${base()}/posts/${post.id}/schedule`, { at: inMinutes(60) });
+    const [row] = await targetRows(post.id);
+    // The same posts service, with a queue that refuses the publish-now job.
+    const broken = createPostService({
+      ...t.platform,
+      registry: played.registry,
+      enqueuePublish: () => Promise.reject(new Error('queue down')),
+      enqueueScheduled: () => Promise.resolve(),
+      dropScheduledJobs: () => Promise.resolve(),
+    });
+    const auth = {
+      user: {
+        id: owner.userId,
+        email: t.email('sch-owner'),
+        name: 'Owner',
+        emailVerified: true,
+        isPlatformAdmin: false,
+      },
+      session: { id: 'test', activeWorkspaceId: ws },
+    };
+    const member = { workspaceId: ws, memberId: 'test', role: 'owner' as const };
+    await expect(broken.publishNow(auth, member, post.id, undefined)).rejects.toThrow('queue down');
+
+    const [after] = await targetRows(post.id);
+    expect([after?.status, after?.scheduleVersion]).toEqual(['scheduled', 1]);
+    expect(after?.scheduledAt?.getTime()).toBe(row?.scheduledAt?.getTime());
+    // Its delayed job is the one that will run.
+    expect((await jobOf(row?.id ?? '', 1))?.data.scheduleVersion).toBe(1);
     await publishTarget(
       deps,
       { workspaceId: ws, targetId: row?.id ?? '', scheduleVersion: 1 },
