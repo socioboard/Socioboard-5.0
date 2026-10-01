@@ -154,15 +154,16 @@ export function createRealtimeServer(
         realtimeRooms.workspace(workspaceId),
       );
     },
-    async close() {
+    /**
+     * Disconnects every socket and the Valkey clients. Leaves the HTTP server alone (Socket.IO's
+     * own `close()` would close it too, and the API's graceful close then fails).
+     */
+    close() {
       io.disconnectSockets(true);
-      await new Promise<void>((resolve) => {
-        void io.close(() => {
-          resolve();
-        });
-      });
+      io.engine.close();
       pub.disconnect();
       sub.disconnect();
+      return Promise.resolve();
     },
   };
 }
