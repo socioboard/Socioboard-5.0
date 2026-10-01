@@ -43,6 +43,8 @@ export interface EmailItem {
   body: string;
   link: string | null;
   workspace: string;
+  /** What its email design shows (e.g. account, network, reason), in English. */
+  facts: Record<string, string>;
 }
 
 /** Notifications are kept this long (docs: 90 days), then the nightly purge deletes them. */
@@ -68,6 +70,8 @@ export interface NotifyInput {
   params: Record<string, string | number>;
   /** Notifications sharing a group within a few minutes become one email (e.g. `post:<id>`). */
   group: string;
+  /** For the email's design: account, network and reason, as people read them. */
+  facts?: Record<string, string>;
 }
 
 const withWorkspace = { workspace: { select: { id: true, slug: true, name: true } } } as const;
@@ -247,6 +251,7 @@ export function createNotificationService(deps: NotificationServiceDeps) {
           body: input.body,
           link: input.link,
           workspace: input.workspace.name,
+          facts: input.facts ?? {},
         });
       }
     }

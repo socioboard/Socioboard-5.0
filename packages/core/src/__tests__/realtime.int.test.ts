@@ -109,8 +109,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   for (const s of sockets) s.disconnect();
-  await realtime.close();
-  await new Promise((resolve) => server.close(resolve));
   await t.cleanup();
 });
 
@@ -213,5 +211,20 @@ describe('what the app sends', () => {
     const got = next(socket, 'account.status_changed');
     await owner.send('DELETE', `/api/v1/workspaces/${ws}/accounts/${accountId}`);
     expect(await got).toEqual({ workspaceId: ws, accountId, status: 'disconnected' });
+  });
+});
+
+// Last: it shuts the server down.
+describe('shutting down', () => {
+  it('closes the sockets but leaves the HTTP server to the API’s graceful close', async () => {
+    const socket = await open(owner);
+    const gone = new Promise<void>((resolve) => socket.on('disconnect', () => resolve()));
+    await realtime.close();
+    await gone;
+    expect(server.listening).toBe(true);
+    // The API closes it next (closeServer); that must not fail.
+    await new Promise<void>((resolve, reject) => {
+      server.close((err) => (err ? reject(err) : resolve()));
+    });
   });
 });

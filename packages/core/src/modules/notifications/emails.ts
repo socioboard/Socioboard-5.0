@@ -1,4 +1,9 @@
-import { notificationEmail } from '@socioboard/emails';
+import {
+  accountsNeedReconnectingEmail,
+  notificationEmail,
+  publishFailedEmail,
+  type RenderedEmail,
+} from '@socioboard/emails';
 
 import {
   defineQueue,
@@ -85,13 +90,46 @@ export async function sendNotificationEmail(deps: SendEmailsDeps, job: Notificat
     .filter((i) => prefs.find((p) => p.type === i.type)?.email);
   const [first] = items;
   if (!first) return;
-  const email = await notificationEmail({
-    workspace: first.workspace,
-    items: items.map((i) => ({ title: i.title, body: i.body })),
-    url: new URL(first.link ?? '/', deps.appUrl).toString(),
-  });
+  const email = await render(items, new URL(first.link ?? '/', deps.appUrl).toString());
   await deps.mailer.send({ to: user.email, ...email });
   await deps.kv.delete(job.key);
+}
+
+/**
+ * The email for a window's items: each kind has its own design (packages/emails); a mix (a post's
+ * failures with its published copies, for someone who turned those emails on) gets the plain one.
+ */
+function render(items: EmailItem[], url: string): Promise<RenderedEmail> {
+  const [first] = items;
+  const workspace = first?.workspace ?? '';
+  const fact = (i: EmailItem, key: string) => i.facts[key] ?? '';
+  if (items.every((i) => i.type === 'publish_failed')) {
+    return publishFailedEmail({
+      workspace,
+      url,
+      failures: items.map((i) => ({
+        account: fact(i, 'account'),
+        network: fact(i, 'network'),
+        reason: fact(i, 'reason') || i.body,
+      })),
+    });
+  }
+  if (items.every((i) => i.type === 'account_reauth_required')) {
+    return accountsNeedReconnectingEmail({
+      workspace,
+      url,
+      accounts: items.map((i) => ({
+        name: fact(i, 'account'),
+        network: fact(i, 'network'),
+        reason: fact(i, 'reason') || i.body,
+      })),
+    });
+  }
+  return notificationEmail({
+    workspace,
+    url,
+    items: items.map((i) => ({ title: i.title, body: i.body })),
+  });
 }
 
 /** `notifications`: sends grouped emails off the request path, retrying on SMTP errors. */

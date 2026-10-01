@@ -76,6 +76,13 @@ await platform.queues
   .get(mediaPurge)
   .upsertJobScheduler('nightly', { pattern: '15 3 * * *', tz: 'UTC' }, { name: 'purge' });
 
+// Weekly summaries: checked hourly, sent Monday from 08:00 in each subscriber's timezone.
+const digest = notifications.digestQueue;
+platform.queues.startWorker(digest);
+await platform.queues
+  .get(digest)
+  .upsertJobScheduler('hourly', { pattern: '30 * * * *', tz: 'UTC' }, { name: 'digest' });
+
 const notificationPurge = notifications.purgeQueue;
 platform.queues.startWorker(notificationPurge);
 await platform.queues

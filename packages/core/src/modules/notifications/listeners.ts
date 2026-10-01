@@ -59,10 +59,16 @@ export function registerNotificationListeners(
 
   // A delivery failed for good: its author and the workspace's admins, by email too.
   publishing.on('target.failed', async (p) => {
-    const post = await db.client.post.findFirst({
-      where: { id: p.postId, workspaceId: p.workspaceId },
-      select: { authorId: true },
-    });
+    const [post, target] = await Promise.all([
+      db.client.post.findFirst({
+        where: { id: p.postId, workspaceId: p.workspaceId },
+        select: { authorId: true },
+      }),
+      db.client.postTarget.findFirst({
+        where: { id: p.targetId, workspaceId: p.workspaceId },
+        select: { account: { select: { displayName: true } } },
+      }),
+    ]);
     const who = await audience(p.workspaceId, [post?.authorId ?? null]);
     if (!post || !who) return;
     const network = NETWORK_NAMES[p.network];
@@ -75,6 +81,7 @@ export function registerNotificationListeners(
       link: `/w/${who.workspace.slug}/posts/${p.postId}`,
       params: { postId: p.postId, targetId: p.targetId, network: p.network, kind: p.errorKind },
       group: `post:${p.postId}`,
+      facts: { account: target?.account.displayName ?? network, network, reason: p.message },
     });
   });
 
@@ -123,6 +130,11 @@ export function registerNotificationListeners(
         network: account.network,
       },
       group: `accounts:${p.workspaceId}`,
+      facts: {
+        account: account.displayName,
+        network: NETWORK_NAMES[account.network],
+        reason: p.reason,
+      },
     });
   });
 

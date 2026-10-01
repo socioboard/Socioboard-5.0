@@ -5,6 +5,14 @@ import { render } from '@react-email/components';
 import { createElement, type ReactElement } from 'react';
 
 import {
+  AccountsNeedReconnecting,
+  PublishFailed,
+  WeeklyDigest,
+  type AccountsNeedReconnectingProps,
+  type PublishFailedProps,
+  type WeeklyDigestProps,
+} from './notifications';
+import {
   Invitation,
   MagicLink,
   Notifications,
@@ -47,4 +55,34 @@ export const notificationEmail = (input: NotificationEmailProps) => {
   const subject =
     input.items.length > 1 ? `${title} (and ${String(input.items.length - 1)} more)` : title;
   return renderEmail(subject, createElement(Notifications, input));
+};
+
+export type { DigestWorkspace } from './notifications';
+
+/** A post's deliveries that failed for good (notifications: publish_failed). */
+export const publishFailedEmail = (input: PublishFailedProps) => {
+  const [first] = input.failures;
+  const subject =
+    input.failures.length === 1 && first
+      ? `A post couldn't be published to ${first.network}`
+      : `A post couldn't be published to ${String(input.failures.length)} accounts`;
+  return renderEmail(subject, createElement(PublishFailed, input));
+};
+
+/** Accounts that stopped posting until someone reconnects them (account_reauth_required). */
+export const accountsNeedReconnectingEmail = (input: AccountsNeedReconnectingProps) => {
+  const [first] = input.accounts;
+  const subject =
+    input.accounts.length === 1 && first
+      ? `${first.name} needs reconnecting`
+      : `${String(input.accounts.length)} accounts need reconnecting in ${input.workspace}`;
+  return renderEmail(subject, createElement(AccountsNeedReconnecting, input));
+};
+
+/** The weekly summary (digest), for people who turned it on. */
+export const weeklyDigestEmail = (input: WeeklyDigestProps) => {
+  const total = (k: 'published' | 'failed') => input.workspaces.reduce((n, w) => n + w[k], 0);
+  const failed = total('failed');
+  const subject = `Your week on Socioboard: ${String(total('published'))} published${failed ? `, ${String(failed)} failed` : ''}`;
+  return renderEmail(subject, createElement(WeeklyDigest, input));
 };

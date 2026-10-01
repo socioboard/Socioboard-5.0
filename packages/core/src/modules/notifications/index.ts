@@ -6,6 +6,7 @@ import {
   notificationPurgeQueue,
   type NotificationEmailJob,
 } from './emails';
+import { notificationDigestQueue } from './digest';
 import { createNotificationService, type NotificationService } from './service';
 
 export {
@@ -17,6 +18,14 @@ export {
   type EmailItem,
   type NotificationEmailJob,
 } from './emails';
+export {
+  DIGEST_FROM_HOUR,
+  DIGEST_WEEKDAY,
+  localTime,
+  notificationDigestQueue,
+  sendDigests,
+  type DigestDeps,
+} from './digest';
 export { registerNotificationListeners } from './listeners';
 export { registerNotificationRoutes } from './routes';
 export {
@@ -35,6 +44,7 @@ export function createNotifications(platform: Platform): {
   service: NotificationService;
   emailQueue: ReturnType<typeof notificationEmailQueue>;
   purgeQueue: ReturnType<typeof notificationPurgeQueue>;
+  digestQueue: ReturnType<typeof notificationDigestQueue>;
 } {
   const { db, kv, clock, logger, mailer, realtime, queues, config } = platform;
   const queueEmail = createEmailQueuer({
@@ -54,5 +64,13 @@ export function createNotifications(platform: Platform): {
     appUrl: config.appUrl,
   });
   const purgeQueue = notificationPurgeQueue({ notifications: service, logger });
-  return { service, emailQueue, purgeQueue };
+  const digestQueue = notificationDigestQueue({
+    db,
+    kv,
+    clock,
+    mailer,
+    logger,
+    appUrl: config.appUrl,
+  });
+  return { service, emailQueue, purgeQueue, digestQueue };
 }

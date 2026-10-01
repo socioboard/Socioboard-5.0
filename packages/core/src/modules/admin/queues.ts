@@ -20,6 +20,7 @@ export const WORKER_QUEUES = [
   'account-health',
   'notifications',
   'notification-purge',
+  'notification-digest',
   'workspace-purge',
   'media-purge',
   'audit-purge',
