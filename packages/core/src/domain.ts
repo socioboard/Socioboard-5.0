@@ -17,10 +17,12 @@ import {
 } from './modules/publishing';
 import {
   createCalendarEntries,
+  createCalendarService,
   createQueueSlotService,
   createReconciler,
   createRecurrenceService,
   createSchedulingService,
+  type CalendarService,
   type QueueSlotService,
   type Reconciler,
   type RecurrenceService,
@@ -40,6 +42,7 @@ export interface PublishingServices {
   posts: PostService;
   scheduling: SchedulingService;
   queueSlots: QueueSlotService;
+  calendar: CalendarService;
   recurrence: RecurrenceService;
   /** Rebuilds lost publish jobs and stops stuck deliveries (the `reconcile` job). */
   reconciler: Reconciler;
@@ -147,12 +150,9 @@ export function createPublishingServices(
     );
   }
 
-  const queueSlots = createQueueSlotService({
-    db,
-    clock,
-    events,
-    entries: createCalendarEntries(db, storage),
-  });
+  const entries = createCalendarEntries(db, storage);
+  const queueSlots = createQueueSlotService({ db, clock, events, entries });
+  const calendar = createCalendarService({ entries });
 
   const recurrence = createRecurrenceService({
     db,
@@ -183,6 +183,7 @@ export function createPublishingServices(
     posts,
     scheduling,
     queueSlots,
+    calendar,
     recurrence,
     reconciler,
     mediaUrls,

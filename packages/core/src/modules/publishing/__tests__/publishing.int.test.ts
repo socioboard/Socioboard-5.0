@@ -456,7 +456,8 @@ describe('rate limits', () => {
     const id = await queued(busy.id);
     await t.db.client.postTarget.update({
       where: { id },
-      data: { status: 'scheduled', scheduledAt: new Date(), scheduleVersion: 1 },
+      // Due a minute ago: the hour's wait would take it well past an hour late.
+      data: { status: 'scheduled', scheduledAt: new Date(Date.now() - 60_000), scheduleVersion: 1 },
     });
     await publishTarget(
       deps,

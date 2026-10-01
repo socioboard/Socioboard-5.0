@@ -131,13 +131,13 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     }),
   );
 
-  const { socialAccounts, posts, scheduling, queueSlots, recurrence, mediaUrls } =
+  const { socialAccounts, posts, scheduling, queueSlots, calendar, recurrence, mediaUrls } =
     createPublishingServices(platform, {
       registry: options.registry,
     });
   registerSocialAccountRoutes(api, socialAccounts);
   registerPostRoutes(api, posts);
-  registerSchedulingRoutes(api, scheduling, queueSlots, recurrence);
+  registerSchedulingRoutes(api, scheduling, queueSlots, recurrence, calendar);
   registerNotificationRoutes(api, notifications);
 
   const app = express();

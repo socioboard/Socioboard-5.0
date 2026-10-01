@@ -1,6 +1,11 @@
 // Public surface of the scheduling module (docs/backend/modules/scheduling.md).
 export type { SchedulingEvents } from './events';
-export { createCalendarEntries, type CalendarEntries } from './calendar';
+export {
+  createCalendarEntries,
+  createCalendarService,
+  type CalendarEntries,
+  type CalendarService,
+} from './calendar';
 export { nextOccurrence, occurrences, occurrencesBetween, toRRule } from './occurrences';
 export { createQueueSlotService, type QueueSlotService } from './queue-slots';
 export {
