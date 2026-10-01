@@ -14,7 +14,7 @@
 - [x] P2-B2 Schedule/unschedule/reschedule with `scheduleVersion` + deterministic delayed jobs (`packages/core/src/modules/scheduling`; publish-now also takes scheduled posts; accounts added to a scheduled post join at its time)
 - [x] P2-B3 Queue slots + "add to queue" (`nextFreeSlot`): slots read and replace, the queue view's next 14 slots with their posts, next free slot per account under a per-account lock; daylight-saving-aware times in `scheduling/time.ts`
 - [x] P2-B4 Recurring rules + `recurring` expansion job (template + one post per occurrence a week ahead; `scheduling/recurrence.ts`, `occurrences.ts`; migration `20261001120000_post_customized_at`)
-- [ ] P2-B5 `reconcile` job: rebuild missing jobs, resolve stuck `publishing` targets
+- [x] P2-B5 `reconcile` job: rebuild missing jobs, resolve stuck `publishing` targets (`scheduling/reconcile.ts`, every 5 minutes; over an hour late fails as missed; stuck deliveries are stopped, not retried blindly)
 - [ ] P2-B6 Per-network/per-account rate limiting in the publish queue
 - [ ] P2-B7 `token-refresh` + `account-health` jobs; `reauth_required` flow
 - [ ] P2-B8 Notifications: event listeners, in-app feed, email templates (React Email), Socket.IO rooms + events

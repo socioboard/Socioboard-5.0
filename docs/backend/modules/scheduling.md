@@ -71,7 +71,7 @@ Shapes are in `packages/contracts/src/scheduling.ts` and `recurrence.ts`:
 | Queue | Runs | Does |
 | --- | --- | --- |
 | `recurring` | hourly (`:05`, `upsertJobScheduler`) | Sync every active rule whose `nextRunAt` is within 7 days |
-| `reconcile` | every 5 min | For every target `scheduled` in the next 48 h, ensure its delayed job exists (recreate from Postgres if Valkey lost it); fail or verify targets stuck in `publishing` |
+| `reconcile` | every 5 min (`*/5`, `upsertJobScheduler`) | Postgres is the source of truth. Every target `scheduled` within the next 48 h (or overdue) must have a live job for its version: a missing one, or one that finished without sending, is queued again (delay to `scheduledAt`, or now when up to an hour late); a target over an hour late is failed instead (`retryable`, "missed its time"), so nothing goes out hours late. A target `publishing` for over 15 minutes with no live job (its publish-now/retry job or its scheduled job) is failed with "we lost track of this delivery", its running attempt closed: the network may or may not have the post, so it is never retried blindly. Checking the network for the post first needs an adapter lookup (later). Emits `target.failed` for both |
 
 ## Rules
 - Postgres is the source of truth; Valkey jobs can always be rebuilt.

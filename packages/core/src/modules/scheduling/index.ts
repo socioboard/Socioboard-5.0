@@ -4,6 +4,16 @@ export { createCalendarEntries, type CalendarEntries } from './calendar';
 export { nextOccurrence, occurrences, occurrencesBetween, toRRule } from './occurrences';
 export { createQueueSlotService, type QueueSlotService } from './queue-slots';
 export {
+  createReconciler,
+  MISSED_GRACE_MINUTES,
+  RECONCILE_WINDOW_HOURS,
+  reconcileQueue,
+  STUCK_AFTER_MINUTES,
+  type JobState,
+  type Reconciler,
+  type ReconcileReport,
+} from './reconcile';
+export {
   createRecurrenceService,
   RECURRING_HORIZON_DAYS,
   recurringQueue,
