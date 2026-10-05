@@ -5,6 +5,7 @@ import { PanelLeftClose, PanelLeftOpen, Search, SquarePen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import type { Membership } from '../../../lib/workspace';
+import { NotificationBell } from '../../notifications';
 import { commandShortcutLabel } from '../hooks';
 import type { NavItem } from '../nav';
 import { ThemeToggle, UserMenu } from './user-menu';
@@ -64,26 +65,30 @@ export function Sidebar({
         </Tooltip>
       )}
 
-      <Tooltip content={t('search.button')} side="right" disabled={!collapsed}>
-        <button
-          type="button"
-          onClick={onSearch}
-          aria-label={t('search.button')}
-          aria-keyshortcuts="Meta+K Control+K"
-          className={cn(
-            'glass-chip text-ink-3 hover:text-ink mt-2 mb-3 flex h-9 w-full cursor-pointer items-center gap-2 rounded-control px-2.5 text-[13px] font-medium whitespace-nowrap',
-            collapsed && 'size-9 justify-center px-0',
-          )}
-        >
-          <Search className="size-4 shrink-0" aria-hidden="true" />
-          {!collapsed && (
-            <>
-              <span className="min-w-0 flex-1 truncate text-left">{t('search.button')}</span>
-              <Kbd>{commandShortcutLabel()}</Kbd>
-            </>
-          )}
-        </button>
-      </Tooltip>
+      <div className={cn('mt-2 mb-3 flex w-full gap-1.5', collapsed && 'flex-col items-center')}>
+        <Tooltip content={t('search.button')} side="right" disabled={!collapsed}>
+          <button
+            type="button"
+            onClick={onSearch}
+            aria-label={t('search.button')}
+            aria-keyshortcuts="Meta+K Control+K"
+            className={cn(
+              'glass-chip text-ink-3 hover:text-ink flex h-9 min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-control px-2.5 text-[13px] font-medium whitespace-nowrap',
+              collapsed && 'size-9 justify-center px-0',
+            )}
+          >
+            <Search className="size-4 shrink-0" aria-hidden="true" />
+            {!collapsed && (
+              <>
+                {/* Short beside the bell; the button's name is the full "Search or jump to". */}
+                <span className="min-w-0 flex-1 truncate text-left">{t('mobile.search')}</span>
+                <Kbd>{commandShortcutLabel()}</Kbd>
+              </>
+            )}
+          </button>
+        </Tooltip>
+        <NotificationBell compact={collapsed} />
+      </div>
 
       <ul className="flex w-full flex-col gap-0.5">
         {items.map((item) => (

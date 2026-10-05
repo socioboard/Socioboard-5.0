@@ -119,6 +119,9 @@ async function calendarServer(page: Page, role = 'owner') {
     else if (path === '/api/v1/networks') body = { items: [] };
     else if (path === `${BASE}/accounts`) body = { items: [FB, IG] };
     else if (path === `${BASE}/labels`) body = { items: [] };
+    // The shell's bell: nothing new.
+    else if (path === '/api/v1/notifications')
+      body = { items: [], nextCursor: null, unreadCount: 0 };
     else if (path.endsWith('/queue-slots')) {
       const id = path.split('/').at(-2) ?? '';
       const queue = queues[id];

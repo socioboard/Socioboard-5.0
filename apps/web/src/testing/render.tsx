@@ -34,6 +34,8 @@ export type Handler = (request: { body: unknown; url: URL }) => Reply | Promise<
  * Fakes the server by "METHOD /path". Unhandled requests fail the test with a clear message.
  * Returns the calls made, for asserting on what was sent.
  */
+const NO_NOTIFICATIONS: Reply = [200, { items: [], nextCursor: null, unreadCount: 0 }];
+
 export function mockServer(handlers: Record<string, Handler | Reply>) {
   const calls: { key: string; body: unknown; headers: Record<string, string> }[] = [];
   vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
@@ -53,7 +55,9 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
       [...request.headers.entries()].map(([name, value]) => [name.toLowerCase(), value]),
     );
     calls.push({ key, body, headers });
-    const handler = handlers[key];
+    // The app shell's bell asks on every page; tests that don't care get an empty list.
+    const handler =
+      handlers[key] ?? (key === 'GET /api/v1/notifications' ? NO_NOTIFICATIONS : undefined);
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);
     const [status, reply] = typeof handler === 'function' ? await handler({ body, url }) : handler;
     return new Response(reply === undefined ? null : JSON.stringify(reply), {

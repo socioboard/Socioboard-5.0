@@ -68,7 +68,10 @@
   "mobile": {
     "menu": "Menu",
     "search": "Search",
-    "close": "Close menu"
+    "close": "Close menu",
+    "notifications": "Notifications",
+    "menuUnread_one": "Menu, {{count}} unread notification",
+    "menuUnread_other": "Menu, {{count}} unread notifications"
   },
   "compose": "New post"
 }
