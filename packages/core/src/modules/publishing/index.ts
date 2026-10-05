@@ -3,6 +3,7 @@ export type { PublishingEvents } from './events';
 export {
   accountRateKey,
   appRateKey,
+  LOST_TRACK_MESSAGE,
   MAX_LATE_MINUTES,
   PUBLISH_ATTEMPTS,
   publishBackoff,
@@ -11,6 +12,7 @@ export {
   publishTarget,
   PublishDeferred,
   scheduledJobId,
+  STUCK_AFTER_MINUTES,
   type PublishDeps,
   type PublishJobData,
 } from './jobs';

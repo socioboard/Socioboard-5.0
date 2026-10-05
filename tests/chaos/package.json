@@ -1,0 +1,20 @@
+{
+  "name": "@socioboard/chaos-tests",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test:chaos": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@socioboard/contracts": "workspace:*",
+    "@socioboard/core": "workspace:*",
+    "@socioboard/providers": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "vitest": "^5.0.1"
+  }
+}

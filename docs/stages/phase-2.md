@@ -35,7 +35,7 @@
 - [x] P2-I1 Observability, free and self-hosted (decided 2026-10-05: no paid services): OpenTelemetry traces, metrics and logs from api and worker to any OTLP backend, self-hosted OpenObserve recommended (off without `OTEL_EXPORTER_OTLP_ENDPOINT`); browser errors through the API (`POST /client-errors`); built-in alerts emailed to platform admins on failed-publish spikes and queue backlog
 
 ## Quality
-- [ ] P2-Q1 Chaos tests: restart api, worker and Valkey around scheduled times; every post publishes exactly once
+- [x] P2-Q1 Chaos tests: restart api, worker and Valkey around scheduled times; every post publishes exactly once (`tests/chaos`, `pnpm test:chaos`, CI on pull requests and on demand; found and fixed a double post when a worker dies mid-send: such a try is now stopped as "lost track", never sent again; `PublishAttempt.sentAt`, migration `20261005220000_publish_attempt_sent_at`)
 - [ ] P2-Q2 Daylight-saving test for recurring rules
 - [ ] P2-Q3 E2E: schedule → appears on calendar → drag to new time → publishes at new time
 

@@ -569,6 +569,9 @@ model PublishAttempt {
   postTargetId String            @db.Uuid
   attemptNo    Int
   startedAt    DateTime          @default(now())
+  /// Set just before the network is called: a try still `running` with it set may be on the
+  /// network already (its worker died mid-call), so it is never sent blindly again.
+  sentAt       DateTime?
   finishedAt   DateTime?
   outcome      PublishOutcome    @default(running)
   errorKind    PublishErrorKind?

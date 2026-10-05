@@ -17,6 +17,7 @@ import {
   publishBackoff,
   PublishDeferred,
   publishJobId,
+  LOST_TRACK_MESSAGE,
   publishTarget,
   type PublishDeps,
 } from '../index';
@@ -280,6 +281,70 @@ describe('the publish job', () => {
         [1, 'will_retry', 'retryable'],
       ],
     );
+  });
+
+  describe('a worker that died during a try (P2-Q1)', () => {
+    /** The state a dead run leaves: its try claimed and still `running`. */
+    async function deadRun(sentAt: Date | null, startedAt = new Date()) {
+      const q = await queued();
+      await t.db.client.postTarget.update({ where: { id: q.targetId }, data: { attempts: 1 } });
+      const attempt = await t.db.client.publishAttempt.create({
+        data: { workspaceId: ws, postTargetId: q.targetId, attemptNo: 1, startedAt, sentAt },
+      });
+      return { ...q, attemptId: attempt.id };
+    }
+    const resume = (targetId: string) =>
+      publishTarget(deps, { workspaceId: ws, targetId }, { isLast: false, resumed: true });
+    const attemptOf = (id: string) =>
+      t.db.client.publishAttempt.findUniqueOrThrow({ where: { id } });
+
+    it('it had called the network: the resumed run never sends again, it stops for a person', async () => {
+      const { targetId, attemptId } = await deadRun(new Date());
+      const before = played.published.length;
+      await resume(targetId);
+      expect(played.published).toHaveLength(before);
+      expect(await target(targetId)).toMatchObject({
+        status: 'failed',
+        attempts: 1,
+        lastError: { kind: 'retryable', message: LOST_TRACK_MESSAGE },
+      });
+      expect(await attemptOf(attemptId)).toMatchObject({ outcome: 'failed' });
+    });
+
+    it('it died before calling the network: the resumed run sends it, once', async () => {
+      const { targetId, attemptId } = await deadRun(null);
+      const before = played.published.length;
+      await resume(targetId);
+      expect(played.published).toHaveLength(before + 1);
+      expect(await target(targetId)).toMatchObject({ status: 'published', attempts: 2 });
+      expect(await attemptOf(attemptId)).toMatchObject({ outcome: 'will_retry' });
+    });
+
+    it('another run is sending it right now: this one stands back', async () => {
+      const { targetId } = await deadRun(new Date());
+      const before = played.published.length;
+      await run(targetId);
+      expect(played.published).toHaveLength(before);
+      expect(await target(targetId)).toMatchObject({ status: 'publishing', attempts: 1 });
+    });
+
+    it('stuck for over 15 minutes and retried by an admin: it goes again', async () => {
+      const { targetId } = await deadRun(new Date(), new Date(Date.now() - 20 * 60_000));
+      const before = played.published.length;
+      await run(targetId);
+      expect(played.published).toHaveLength(before + 1);
+      expect(await target(targetId)).toMatchObject({ status: 'published', attempts: 2 });
+    });
+
+    it('every try records when it called the network', async () => {
+      const { targetId } = await queued();
+      await run(targetId);
+      const [attempt] = await t.db.client.publishAttempt.findMany({
+        where: { postTargetId: targetId },
+      });
+      expect(attempt?.sentAt).toBeInstanceOf(Date);
+      expect(attempt?.outcome).toBe('published');
+    });
   });
 
   it('content errors fail at once, even with tries left', async () => {
