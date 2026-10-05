@@ -1,27 +1,35 @@
-// Placeholder until the calendar (phase 2) replaces it; it gives the shell a page to open on.
-import { EmptyState, PageHeader } from '@socioboard/ui';
+import { Id, TargetStatus } from '@socioboard/contracts';
 import { createFileRoute } from '@tanstack/react-router';
-import { CalendarDays } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { CalendarPage, calendarDate, type CalendarSearch } from '../features/calendar';
 
-import { GettingStarted } from '../features/onboarding';
+const idParam = (value: unknown) => {
+  const id = Id.safeParse(value);
+  return id.success ? id.data : undefined;
+};
 
 export const Route = createFileRoute('/w/$slug/calendar')({
+  validateSearch: (search): CalendarSearch => {
+    const status = TargetStatus.safeParse(search.status);
+    return {
+      view: search.view === 'week' || search.view === 'month' ? search.view : undefined,
+      date: calendarDate(search.date),
+      account: idParam(search.account),
+      status: status.success ? status.data : undefined,
+      label: idParam(search.label),
+      separate: search.separate === true || search.separate === 'true' ? true : undefined,
+    };
+  },
   component: function Calendar() {
-    const { t } = useTranslation('shell');
+    const navigate = Route.useNavigate();
+    const { slug } = Route.useParams();
     return (
-      <>
-        <PageHeader title={t('calendar.title')} />
-        <div className="flex flex-1 flex-col items-center gap-6 overflow-y-auto p-6">
-          <GettingStarted />
-          <EmptyState
-            className="my-auto"
-            icon={<CalendarDays />}
-            title={t('calendar.emptyTitle')}
-            description={t('calendar.emptyBody')}
-          />
-        </div>
-      </>
+      <CalendarPage
+        key={slug}
+        search={Route.useSearch()}
+        onSearchChange={(patch) =>
+          void navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true })
+        }
+      />
     );
   },
 });

@@ -60,6 +60,8 @@ function weekStart(): 0 | 1 | 6 {
 }
 
 export interface ScheduleDialogProps {
+  /** A calendar cell's proposed time; saved schedules always take precedence. */
+  initialAt?: string | undefined;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** The post as the server has it (its schedule, if any, is where the dialog starts). */
@@ -94,6 +96,7 @@ export function ScheduleDialog({ open, onOpenChange, ...props }: ScheduleDialogP
 }
 
 function ScheduleBody({
+  initialAt,
   post,
   recurrence,
   canRepeat,
@@ -117,7 +120,7 @@ function ScheduleBody({
     };
   }, []);
   const [form, setForm] = useState<ScheduleForm>(() =>
-    initialForm({ post, recurrence, now, timeZone: time.timeZone }),
+    initialForm({ post, recurrence, now, timeZone: time.timeZone, initialAt }),
   );
   const set = (patch: Partial<ScheduleForm>) => {
     setForm((f) => ({ ...f, ...patch }));

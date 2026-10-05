@@ -67,6 +67,22 @@ describe('the workspace’s clock', () => {
 });
 
 describe('what the dialog opens on', () => {
+  it('keeps a calendar proposal in the workspace timezone, with a saved schedule taking priority', () => {
+    const input = {
+      initialAt: '2026-10-07T03:30:00Z',
+      post: undefined,
+      recurrence: null,
+      now: NOW,
+      timeZone: 'Asia/Kolkata',
+    };
+    expect(initialForm(input).when).toEqual({ date: '2026-10-07', time: '09:00' });
+    expect(
+      initialForm({
+        ...input,
+        post: postWith([{ status: 'scheduled', scheduledAt: '2026-10-09T08:30:00Z' }]),
+      }).when,
+    ).toEqual({ date: '2026-10-09', time: '14:00' });
+  });
   it('an hour from now, on the next quarter of an hour', () => {
     expect(defaultWhen(NOW, 'UTC')).toEqual({ date: '2026-10-05', time: '11:15' });
     expect(defaultWhen(new Date('2026-10-05T10:00:00Z'), 'UTC')).toEqual({

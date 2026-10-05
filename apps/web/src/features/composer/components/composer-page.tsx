@@ -73,7 +73,13 @@ const LOCKED = new Set(['publishing', 'published']);
  * `/w/:slug/compose` and `/w/:slug/compose/:postId` (docs/frontend/areas/composer.md): write
  * once, tailor per network, see it as each network will show it, then save or publish.
  */
-export function ComposerPage({ postId }: { postId?: string | undefined }) {
+export function ComposerPage({
+  postId,
+  initialAt,
+}: {
+  postId?: string | undefined;
+  initialAt?: string | undefined;
+}) {
   const { t } = useTranslation('composer');
   const { workspace } = useWorkspace();
   const accounts = useQuery(accountsQuery(workspace.id));
@@ -158,6 +164,7 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
     body = (
       <Composer
         key={mountKey}
+        initialAt={initialAt}
         post={post.data}
         accounts={accounts.data}
         networks={networks.data}
@@ -186,12 +193,14 @@ export function ComposerPage({ postId }: { postId?: string | undefined }) {
 }
 
 function Composer({
+  initialAt,
   post,
   accounts,
   networks,
   onCreated,
   onPublished,
 }: {
+  initialAt?: string | undefined;
   post: PostDetails | undefined;
   accounts: SocialAccount[];
   networks: Network[];
@@ -203,6 +212,7 @@ function Composer({
   const can = useCan();
   const time = useWorkspaceTime();
   const describeRepeat = useRepeatWording();
+  const [preferredAt] = useState(initialAt);
   const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
   const [tab, setTab] = useState<NetworkId | null>(null);
   // The preview follows the editor to a network's tab, and can be switched on its own.
@@ -459,6 +469,9 @@ function Composer({
         </Banner>
       )}
       {!locked && !mayEdit && <Banner tone="warning">{t('notYours')}</Banner>}
+      {!readOnly && mode === 'draft' && preferredAt && (
+        <Banner>{t('calendarTime', { time: time.format(preferredAt, 'long') })}</Banner>
+      )}
       {!readOnly && mode === 'scheduled' && due && (
         <Banner
           action={
@@ -693,6 +706,7 @@ function Composer({
         </div>
       )}
       <ScheduleDialog
+        initialAt={preferredAt}
         open={scheduling}
         onOpenChange={setScheduling}
         post={post}

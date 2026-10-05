@@ -8,6 +8,7 @@ import accounts from '../locales/en/accounts.json';
 import auth from '../locales/en/auth.json';
 import common from '../locales/en/common.json';
 import composer from '../locales/en/composer.json';
+import calendar from '../locales/en/calendar.json';
 import errors from '../locales/en/errors.json';
 import media from '../locales/en/media.json';
 import onboarding from '../locales/en/onboarding.json';
@@ -29,6 +30,7 @@ export const resources = {
     accounts,
     composer,
     posts,
+    calendar,
   },
 } as const;
 
@@ -48,6 +50,7 @@ void i18n.use(initReactI18next).init({
     'accounts',
     'composer',
     'posts',
+    'calendar',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes

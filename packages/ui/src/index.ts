@@ -30,6 +30,7 @@ export {
 export { Banner, type BannerProps } from './components/banner';
 export { Button, buttonVariants, type ButtonProps } from './components/button';
 export { Card } from './components/card';
+export { CalendarEventCard } from './components/calendar-event-card';
 export {
   AccountPicker,
   CharacterCounter,

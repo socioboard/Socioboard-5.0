@@ -1,0 +1,107 @@
+/* P2-F2: FullCalendar structure, Socioboard tokens. No vendor palette or hashed selectors. */
+.sb-calendar {
+  --fc-classic-background: transparent;
+  --fc-classic-faint: var(--sb-chip);
+  --fc-classic-muted: var(--sb-chip);
+  --fc-classic-strong: var(--sb-hair-strong);
+  --fc-classic-foreground: var(--sb-ink);
+  --fc-classic-muted-foreground: var(--sb-ink-3);
+  --fc-classic-faint-foreground: var(--sb-ink-3);
+  --fc-classic-border: var(--sb-hair);
+  --fc-classic-strong-border: var(--sb-hair-strong);
+  --fc-classic-border-style: solid;
+  --fc-classic-primary: var(--sb-ring);
+  --fc-classic-primary-foreground: var(--sb-ink);
+  --fc-classic-event: var(--sb-chip);
+  --fc-classic-event-contrast: var(--sb-ink);
+  --fc-classic-today: color-mix(in srgb, var(--sb-ring) 5%, transparent);
+  --fc-classic-highlight: color-mix(in srgb, var(--sb-ring) 10%, transparent);
+  --fc-classic-now: var(--sb-accent);
+  font-size: 12px;
+}
+.sb-calendar-event {
+  cursor: pointer;
+  border: 1px solid var(--sb-hair-strong);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--sb-opaque) 65%, transparent);
+  color: var(--sb-ink);
+  overflow: hidden;
+  transition:
+    box-shadow 180ms var(--ease-out-soft),
+    background 180ms;
+}
+.sb-calendar-event:hover {
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--sb-ink) 10%, transparent);
+}
+.sb-calendar-event:focus-visible,
+.sb-calendar-day-number:focus-visible {
+  outline: 2px solid var(--sb-ring);
+  outline-offset: 2px;
+}
+.sb-calendar-event--published {
+  border-inline-start: 3px solid var(--sb-success);
+}
+.sb-calendar-event--failed {
+  border-inline-start: 3px solid var(--sb-danger);
+}
+.sb-calendar-event--publishing {
+  border-inline-start: 3px solid var(--sb-ring);
+}
+.sb-calendar-event--scheduled {
+  border-inline-start: 3px solid var(--sb-hair-strong);
+}
+.sb-calendar-event--cancelled {
+  opacity: 0.6;
+}
+.sb-calendar-day {
+  border: 1px solid var(--sb-hair);
+  min-height: 120px;
+}
+.sb-calendar-today {
+  background: var(--fc-classic-today);
+}
+.sb-calendar-day-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  min-width: 28px;
+  margin: 4px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--sb-ink-2);
+  transition: background 180ms;
+}
+button.sb-calendar-day-number:hover {
+  background: var(--sb-chip);
+}
+.sb-calendar-day-number[aria-current='date'] {
+  background: var(--sb-ring);
+  color: var(--sb-base);
+  font-weight: 600;
+}
+.sb-calendar-slot {
+  height: 26px;
+}
+.sb-calendar-heading {
+  padding: 10px 4px;
+  color: var(--sb-ink-3);
+  font-size: 11px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--sb-hair);
+}
+.sb-calendar [role='button'],
+.sb-calendar a {
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-calendar-event,
+  .sb-calendar-day-number {
+    transition: none;
+  }
+}
+@media (max-width: 639px) {
+  .sb-calendar {
+    min-height: 260px;
+  }
+}

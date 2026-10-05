@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DateTimePicker, type DateTimePickerProps, type DateTimeValue } from '../index';
 
@@ -31,6 +31,11 @@ const selected = () =>
     .getAllByRole('gridcell')
     .filter((c) => c.getAttribute('aria-selected') === 'true')
     .map((c) => c.textContent);
+
+beforeEach(() => {
+  // Calendar labels include "Today"; keep unrelated day/keyboard checks independent of the date.
+  vi.useFakeTimers({ now: new Date('2026-10-01T10:00:00Z'), toFake: ['Date'] });
+});
 
 afterEach(() => {
   vi.useRealTimers();

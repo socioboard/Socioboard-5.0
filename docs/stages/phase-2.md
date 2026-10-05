@@ -25,7 +25,7 @@
 
 ## Frontend
 - [x] P2-F1 Composer: Schedule (date/time in workspace timezone), Add to queue, recurrence picker
-- [ ] P2-F2 Calendar month/week with event cards, quick preview, click-to-compose, drag-to-reschedule; replaces the placeholder `/w/$slug/calendar` page from P0-F5
+- [x] P2-F2 Calendar month/week with event cards, quick preview, click-to-compose, drag-to-reschedule; grouped deliveries with single-account moves, URL filters, conflict rollback and mobile agenda (`features/calendar`; browser suite `e2e/phase-2/calendar.spec.ts`)
 - [ ] P2-F3 Queue view per account + queue slots editor
 - [ ] P2-F4 Notification bell (in the app shell's sidebar and phone menu), feed page, preferences; toasts for failures
 - [ ] P2-F5 Socket client → Query invalidation for post/account status

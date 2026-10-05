@@ -1,5 +1,6 @@
 {
   "newTitle": "New post",
+  "calendarTime": "Proposed time: {{time}}. Choose Schedule when your post is ready.",
   "editTitle": "Edit post",
   "postTo": "Post to",
   "accountsLabel": "Accounts to post to",
