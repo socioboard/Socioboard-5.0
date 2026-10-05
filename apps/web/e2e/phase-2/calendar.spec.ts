@@ -254,6 +254,14 @@ test('date button opens a composer with that workspace day and proposed time', a
   await expect(page.getByText(/Proposed time:/)).toContainText(/Oct 7, 2026|7 Oct 2026/);
 });
 
+test('a past day opens a new post without proposing its time', async ({ page }) => {
+  await calendarServer(page);
+  await page.goto('/w/halden/calendar?date=2026-10-05');
+  await page.getByRole('button', { name: /Write a post for (4 Oct 2026|Oct 4, 2026)/ }).click();
+  await expect(page).toHaveURL(/\/w\/halden\/compose$/);
+  await expect(page.getByText(/Proposed time:/)).toHaveCount(0);
+});
+
 test('deleting in the preview requires confirmation and removes all deliveries from the calendar', async ({
   page,
 }) => {

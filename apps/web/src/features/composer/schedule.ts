@@ -89,7 +89,13 @@ export function initialForm(input: {
   timeZone: string;
 }): ScheduleForm {
   const { post, recurrence, now, timeZone } = input;
-  const due = scheduledAt(post) ?? input.initialAt;
+  // A proposed time that has already passed isn't offered.
+  const proposed =
+    input.initialAt &&
+    Date.parse(input.initialAt) >= now.getTime() + SCHEDULE_MIN_LEAD_MINUTES * 60_000
+      ? input.initialAt
+      : undefined;
+  const due = scheduledAt(post) ?? proposed;
   const base: ScheduleForm = {
     when: due ? whenOf(due, timeZone) : defaultWhen(now, timeZone),
     repeat: 'none',
