@@ -44,6 +44,8 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   await expectRightCursors(ownerPage, 'onboarding step 3');
   await ownerPage.getByRole('link', { name: 'Skip for now' }).click();
   await expect(ownerPage).toHaveURL(new RegExp(`/w/${slug}/calendar$`));
+  // Live updates: the app's socket reaches the API (through the dev proxy, with the session).
+  await expect(ownerPage.locator('html')).toHaveAttribute('data-live', 'live');
   await expect(ownerPage.getByRole('region', { name: 'Get started' })).toContainText('1 of 3 done');
   await expectRightCursors(ownerPage, 'calendar with getting started');
 

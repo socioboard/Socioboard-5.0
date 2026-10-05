@@ -2,6 +2,7 @@ import { apiRoutes, type CalendarQuery } from '@socioboard/contracts';
 import { queryOptions } from '@tanstack/react-query';
 
 import { api } from '../../lib/api';
+import { isLive } from '../../lib/realtime';
 
 export const calendarKeys = {
   all: (workspaceId: string) => ['workspaces', workspaceId, 'calendar'] as const,
@@ -14,6 +15,6 @@ export const calendarQuery = (workspaceId: string, query: CalendarQuery) =>
     queryKey: calendarKeys.range(workspaceId, query),
     queryFn: ({ signal }) =>
       api(apiRoutes.scheduling.getCalendar, { params: { workspaceId }, query, signal }),
-    // P2-F5 replaces polling with realtime invalidation. Due cards must still advance today.
-    refetchInterval: 30_000,
+    // Live, the socket says when a post changes; without it, ask every 30 s.
+    refetchInterval: () => (isLive() ? false : 30_000),
   });

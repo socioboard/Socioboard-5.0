@@ -6,7 +6,8 @@
     "posts": "Posts",
     "settings": "Settings",
     "media": "Media",
-    "accounts": "Accounts"
+    "accounts": "Accounts",
+    "needsFixing": "{{count}} need fixing"
   },
   "switcher": {
     "label": "Switch workspace",

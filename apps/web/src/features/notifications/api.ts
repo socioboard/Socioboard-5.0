@@ -12,6 +12,7 @@ import {
 } from '@tanstack/react-query';
 
 import { api } from '../../lib/api';
+import { isLive } from '../../lib/realtime';
 
 /** Notifications are the user's own, across workspaces: not under a workspace key. */
 export const notificationKeys = {
@@ -30,8 +31,8 @@ export interface NotificationFilter {
 /** The bell shows the latest 20. */
 export const BELL_SIZE = 20;
 /**
- * How often the bell asks for news until the socket delivers it (P2-F5); new failures are
- * toasted when they arrive.
+ * How often the bell asks for news while the socket is down; while it's live, news arrives as it
+ * happens. New failures are toasted when they arrive either way.
  */
 export const BELL_POLL_MS = 30_000;
 const PAGE_SIZE = 25;
@@ -40,7 +41,7 @@ export const bellQuery = queryOptions({
   queryKey: notificationKeys.bell,
   queryFn: ({ signal }) =>
     api(apiRoutes.notifications.listNotifications, { query: { limit: BELL_SIZE }, signal }),
-  refetchInterval: BELL_POLL_MS,
+  refetchInterval: () => (isLive() ? false : BELL_POLL_MS),
 });
 
 export const notificationListQuery = (filter: NotificationFilter) =>

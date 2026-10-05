@@ -105,6 +105,13 @@ test('connect a Page, publish an image post, see where it went', async ({ browse
   await expect(page.getByText('Published', { exact: true }).first()).toBeVisible();
   await expectRightCursors(page, 'published post');
 
+  // --- Live (P2-F5): the news came over the socket. While it's live the bell never asks the
+  // server on a timer, so the "your post is live" notification can only have arrived as an event.
+  await expect(page.locator('html')).toHaveAttribute('data-live', 'live');
+  const [bell] = await page.getByRole('button', { name: /^Notifications/ }).all();
+  if (!bell) throw new Error('No bell');
+  await expect(bell).toHaveAccessibleName(/Notifications, \d+ unread/, { timeout: 20_000 });
+
   // --- Clean up: take the post back off Facebook. ---
   const workspaceId = await page.evaluate(async (s) => {
     const me = (await (await fetch('/api/v1/me')).json()) as {

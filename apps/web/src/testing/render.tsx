@@ -37,7 +37,8 @@ export type Handler = (request: { body: unknown; url: URL }) => Reply | Promise<
 const NO_NOTIFICATIONS: Reply = [200, { items: [], nextCursor: null, unreadCount: 0 }];
 
 export function mockServer(handlers: Record<string, Handler | Reply>) {
-  const calls: { key: string; body: unknown; headers: Record<string, string> }[] = [];
+  const calls: { key: string; search: string; body: unknown; headers: Record<string, string> }[] =
+    [];
   vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
     const request = input instanceof Request ? input : new Request(input, init);
     const url = new URL(request.url, 'http://localhost');
@@ -54,7 +55,7 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
     const headers = Object.fromEntries(
       [...request.headers.entries()].map(([name, value]) => [name.toLowerCase(), value]),
     );
-    calls.push({ key, body, headers });
+    calls.push({ key, search: url.search, body, headers });
     // The app shell's bell asks on every page; tests that don't care get an empty list.
     const handler =
       handlers[key] ?? (key === 'GET /api/v1/notifications' ? NO_NOTIFICATIONS : undefined);

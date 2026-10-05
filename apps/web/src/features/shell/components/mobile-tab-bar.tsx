@@ -33,12 +33,14 @@ export function MobileTabBar({
   me,
   membership,
   items,
+  badges = {},
   canCompose,
   onSearch,
 }: {
   me: Me;
   membership: Membership;
   items: readonly NavItem[];
+  badges?: Partial<Record<NavItem['id'], string>>;
   canCompose: boolean;
   onSearch: () => void;
 }) {
@@ -68,7 +70,16 @@ export function MobileTabBar({
                     transition={springs.snappy}
                   />
                 )}
-                <item.icon className="size-5" aria-hidden="true" />
+                <span className="relative inline-flex">
+                  <item.icon className="size-5" aria-hidden="true" />
+                  {badges[item.id] && (
+                    <span className="bg-danger absolute -top-0.5 -right-1 size-2 rounded-full">
+                      <span className="sr-only">
+                        {t('nav.needsFixing', { count: badges[item.id] })}
+                      </span>
+                    </span>
+                  )}
+                </span>
                 {t(item.label)}
               </>
             )}

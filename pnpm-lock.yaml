@@ -230,6 +230,9 @@ importers:
       react-i18next:
         specifier: ~17.0.15
         version: 17.0.15(i18next@26.4.2(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
+      socket.io-client:
+        specifier: ^4.8.4
+        version: 4.8.4(supports-color@7.2.0)
       temporal-polyfill:
         specifier: 1.0.1
         version: 1.0.1

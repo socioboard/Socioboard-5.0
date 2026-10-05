@@ -1,7 +1,7 @@
 import { can } from '@socioboard/contracts';
 import { TooltipProvider } from '@socioboard/ui';
 import { Outlet, useParams } from '@tanstack/react-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useMe } from '../../../lib/session';
 import { membershipFor, WorkspaceContext } from '../../../lib/workspace';
@@ -11,7 +11,12 @@ import {
   useSessionWatcher,
   useSidebarCollapsed,
 } from '../hooks';
+import { useQuery } from '@tanstack/react-query';
+
+import { useRealtimeStatus } from '../../../lib/realtime';
+import { useLiveUpdates } from '../../live';
 import { useNotificationToasts, useUnreadTitle } from '../../notifications';
+import { failedPostsQuery } from '../../posts';
 import { NAV_ITEMS } from '../nav';
 import { CommandMenu } from './command-menu';
 import { MobileTabBar } from './mobile-tab-bar';
@@ -67,8 +72,14 @@ function ShellLayout({
   }, []);
   useCommandShortcut(toggleSearch);
   useActiveWorkspaceSync(membership.workspace.id, me.activeWorkspaceId);
+  useLiveUpdates();
   useNotificationToasts();
   useUnreadTitle();
+  // Whether live updates arrive, on the page for tests and support ("<html data-live>").
+  const live = useRealtimeStatus();
+  useEffect(() => {
+    document.documentElement.dataset.live = live;
+  }, [live]);
   const items = useMemo(
     () =>
       NAV_ITEMS.filter((item) => !('permission' in item) || can(membership.role, item.permission)),
@@ -76,6 +87,18 @@ function ShellLayout({
   );
 
   const canCompose = can(membership.role, 'posts:create');
+  // Posts needing a fix, counted on the Posts link.
+  const failed = useQuery({
+    ...failedPostsQuery(membership.workspace.id),
+    enabled: can(membership.role, 'posts:read'),
+  }).data;
+  const badges = useMemo(
+    () =>
+      failed && failed.count > 0
+        ? { posts: `${String(failed.count)}${failed.more ? '+' : ''}` }
+        : {},
+    [failed],
+  );
 
   const scope = useMemo(
     () => ({ me, workspace: membership.workspace, role: membership.role }),
@@ -92,6 +115,7 @@ function ShellLayout({
             membership={membership}
             items={items}
             canCompose={canCompose}
+            badges={badges}
             collapsed={collapsed}
             onCollapsedChange={setCollapsed}
             onSearch={openSearch}
@@ -106,6 +130,7 @@ function ShellLayout({
             me={me}
             membership={membership}
             items={items}
+            badges={badges}
             canCompose={canCompose}
             onSearch={openSearch}
           />
