@@ -73,9 +73,13 @@ export function MembersSettings() {
         <div className="flex min-w-0 items-center gap-3">
           <Avatar name={m.user.name} src={m.user.avatarUrl} decorative />
           <div className="flex min-w-0 flex-col">
-            <span className="text-ink flex items-center gap-2 truncate text-sm font-medium">
-              {m.user.name}
-              {m.user.id === me.user.id && <Badge tone="outline">{t('members.you')}</Badge>}
+            <span className="text-ink flex min-w-0 items-center gap-2 text-sm font-medium">
+              <span className="truncate">{m.user.name}</span>
+              {m.user.id === me.user.id && (
+                <Badge tone="outline" className="shrink-0">
+                  {t('members.you')}
+                </Badge>
+              )}
             </span>
             <span className="text-ink-3 truncate text-xs">{m.user.email}</span>
           </div>
@@ -85,7 +89,8 @@ export function MembersSettings() {
     {
       id: 'role',
       header: t('members.role'),
-      className: 'w-44',
+      // Narrow on phones, so the member's name and email keep most of the row.
+      className: 'w-28 @xl:w-44',
       cell: (m) =>
         // Admins manage everyone except the owner and themselves (no locking yourself out).
         canManage && m.role !== 'owner' && m.user.id !== me.user.id ? (
@@ -98,7 +103,7 @@ export function MembersSettings() {
           >
             <SelectTrigger
               aria-label={t('members.roleOf', { name: m.user.name })}
-              className="h-8 w-36"
+              className="h-8 w-full max-w-36"
             >
               <SelectValue />
             </SelectTrigger>
@@ -117,7 +122,7 @@ export function MembersSettings() {
     {
       id: 'joined',
       header: t('members.joined'),
-      className: 'hidden w-32 sm:table-cell',
+      className: 'hidden w-32 @xl:table-cell',
       cell: (m) => (
         <span className="text-ink-3 text-sm whitespace-nowrap">{formatDate(m.joinedAt)}</span>
       ),
@@ -125,7 +130,7 @@ export function MembersSettings() {
     {
       id: 'actions',
       header: <span className="sr-only">{t('members.actions')}</span>,
-      className: 'w-24 text-right',
+      className: 'w-[4.5rem] text-right @xl:w-24',
       cell: (m) => {
         if (m.role === 'owner') return null;
         if (m.user.id === me.user.id) {

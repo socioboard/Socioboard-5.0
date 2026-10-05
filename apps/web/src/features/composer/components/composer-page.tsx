@@ -544,11 +544,11 @@ function Composer({
         </Banner>
       )}
       <ViewSwitch value={view} onChange={setView} />
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-start">
+      <div className="grid gap-5 @4xl:grid-cols-[minmax(0,1fr)_minmax(0,420px)] @4xl:items-start">
         <fieldset
           ref={editorRef as unknown as React.Ref<HTMLFieldSetElement>}
           disabled={readOnly}
-          className={cn('flex min-w-0 flex-col gap-5', view === 'preview' && 'max-lg:hidden')}
+          className={cn('flex min-w-0 flex-col gap-5', view === 'preview' && '@max-4xl:hidden')}
         >
           <Section title={t('postTo')}>
             {accounts.length === 0 ? (
@@ -686,8 +686,8 @@ function Composer({
         <aside
           aria-labelledby={`${panelId}-preview`}
           className={cn(
-            'glass-chip rounded-pane flex min-w-0 flex-col gap-3 p-4 sm:p-5 lg:sticky lg:top-0',
-            view === 'edit' && 'max-lg:hidden',
+            'glass-chip rounded-pane flex min-w-0 flex-col gap-3 p-4 sm:p-5 @4xl:sticky @4xl:top-0',
+            view === 'edit' && '@max-4xl:hidden',
           )}
         >
           <h2 id={`${panelId}-preview`} className="text-ink-2 text-xs font-semibold">
@@ -782,7 +782,7 @@ function ViewSwitch({
     <div
       role="group"
       aria-label={t('view.label')}
-      className="glass-chip rounded-control flex self-start p-1 lg:hidden"
+      className="glass-chip rounded-control flex self-start p-1 @4xl:hidden"
     >
       {(['edit', 'preview'] as const).map((v) => (
         <button
@@ -1090,7 +1090,7 @@ function InstagramFormat({ value, onChange }: { value: Format; onChange: (f: For
         onValueChange={(v) => {
           onChange(v as Format);
         }}
-        className="grid gap-2 sm:grid-cols-3"
+        className="grid gap-2 @xl:grid-cols-3"
       >
         {(['feed', 'reel', 'story'] as const).map((f) => (
           <RadioCard

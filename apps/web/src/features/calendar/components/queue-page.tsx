@@ -58,7 +58,7 @@ export function QueuePage({
   let body;
   if (accounts.isPending) {
     body = (
-      <div className="grid gap-4 md:grid-cols-[240px_minmax(0,1fr)]" aria-hidden="true">
+      <div className="grid gap-4 @2xl:grid-cols-[240px_minmax(0,1fr)]" aria-hidden="true">
         <Skeleton className="rounded-pane h-64" />
         <Skeleton className="rounded-pane h-96" />
       </div>
@@ -87,7 +87,7 @@ export function QueuePage({
     );
   } else {
     body = (
-      <div className="grid gap-4 md:grid-cols-[240px_minmax(0,1fr)] md:items-start">
+      <div className="grid gap-4 @2xl:grid-cols-[240px_minmax(0,1fr)] @2xl:items-start">
         <AccountList
           accounts={list}
           selected={account.id}
@@ -123,7 +123,7 @@ function AccountList({
   const { t } = useTranslation('calendar');
   return (
     <>
-      <div className="md:hidden">
+      <div className="@2xl:hidden">
         <Select value={selected} onValueChange={onSelect}>
           <SelectTrigger aria-label={t('queue.account')}>
             <SelectValue />
@@ -139,7 +139,7 @@ function AccountList({
       </div>
       <nav
         aria-label={t('queue.accounts')}
-        className="glass-chip rounded-pane hidden flex-col gap-0.5 p-2 md:flex"
+        className="glass-chip rounded-pane hidden flex-col gap-0.5 p-2 @2xl:flex"
       >
         {accounts.map((a) => {
           const on = a.id === selected;

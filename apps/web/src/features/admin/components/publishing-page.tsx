@@ -112,7 +112,7 @@ function Health({ range, onRange }: { range: HealthRange; onRange: (r: HealthRan
         </div>
       </div>
       {health.isPending ? (
-        <div className="grid gap-3 md:grid-cols-2" aria-hidden="true">
+        <div className="grid gap-3 @2xl:grid-cols-2" aria-hidden="true">
           <Skeleton className="rounded-pane h-40" />
           <Skeleton className="rounded-pane h-40" />
         </div>
@@ -126,7 +126,7 @@ function Health({ range, onRange }: { range: HealthRange; onRange: (r: HealthRan
       ) : health.data.networks.length === 0 ? (
         <p className="text-ink-3 text-sm">{t('publishing.quiet')}</p>
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        <ul className="grid gap-3 @2xl:grid-cols-2">
           {health.data.networks.map((n) => (
             <NetworkCard key={n.network} health={n} percent={percent} number={number} />
           ))}
@@ -285,7 +285,7 @@ function Problems({
         ) : (
           <span className="text-ink-3 text-xs">{t('problems.noError')}</span>
         ),
-      className: 'max-md:hidden',
+      className: '@max-2xl:hidden',
     },
     {
       id: 'tries',
@@ -300,7 +300,7 @@ function Problems({
           )}
         </span>
       ),
-      className: 'w-44 max-lg:hidden',
+      className: 'w-44 @max-3xl:hidden',
     },
     {
       id: 'actions',

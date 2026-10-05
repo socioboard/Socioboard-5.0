@@ -47,7 +47,7 @@ export function SettingsSection({
     <section
       {...(headingId ? { 'aria-labelledby': headingId } : {})}
       className={cn(
-        'grid gap-4 md:grid-cols-[14rem_1fr] md:gap-8',
+        'grid gap-4 @2xl:grid-cols-[14rem_1fr] @2xl:gap-8',
         tone === 'danger' && 'border-danger/30 rounded-pane border p-4 sm:p-5',
         className,
       )}

@@ -85,7 +85,7 @@ export function AdminOverviewPage() {
                 <h2 id="admin-kpis" className="text-ink-2 text-xs font-semibold">
                   {t('overview.last24h')}
                 </h2>
-                <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+                <ul className="grid grid-cols-2 gap-3 @2xl:grid-cols-3 @5xl:grid-cols-6">
                   {overview.isPending
                     ? [0, 1, 2, 3, 4, 5].map((i) => (
                         <li key={i}>

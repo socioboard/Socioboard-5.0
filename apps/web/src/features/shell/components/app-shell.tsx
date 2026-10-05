@@ -122,7 +122,9 @@ function ShellLayout({
           />
           <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3">
             <ShellBanners me={me} />
-            <main className="glass rounded-pane animate-settle sb-page flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
+            {/* A container: pages lay out by the room they have (@2xl: …), not the window's
+                width, which also counts the sidebar. */}
+            <main className="glass rounded-pane animate-settle sb-page @container flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
               <Outlet />
             </main>
           </div>
