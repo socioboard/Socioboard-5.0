@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 
 import { formatLocalDate } from '../../../lib/time';
 import { useWorkspaceTime } from '../../../lib/use-workspace-time';
-import type { CalendarGroup } from '../model';
+import type { CalendarGroup, OpenSlot } from '../model';
 
 const PLUGINS = [themePlugin, dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin];
 
@@ -37,12 +37,14 @@ export interface GridHandlers {
   enter: (info: EventHoveringInfo) => void;
   leave: () => void;
   open: (entries: CalendarGroup) => void;
+  openSlot: (slot: OpenSlot) => void;
   createOn: (day: string) => void;
   lane: (el: HTMLElement, day: string | null) => void;
 }
 
 const entriesOf = (info: EventDisplayInfo): CalendarGroup =>
   info.event.extendedProps.entries as CalendarGroup;
+const slotOf = (props: Record<string, unknown>) => props.slot as OpenSlot | undefined;
 
 /**
  * FullCalendar, kept apart from the page so it re-renders only when what it shows changes (the
@@ -96,14 +98,16 @@ export const CalendarGrid = memo(function CalendarGrid({
         handlers.current?.dragStop();
       },
       enter: (info: EventHoveringInfo) => {
-        handlers.current?.enter(info);
+        if (!slotOf(info.event.extendedProps)) handlers.current?.enter(info);
       },
       leave: () => {
         handlers.current?.leave();
       },
       click: (info: { jsEvent: MouseEvent; event: { extendedProps: Record<string, unknown> } }) => {
         info.jsEvent.preventDefault();
-        handlers.current?.open(info.event.extendedProps.entries as CalendarGroup);
+        const slot = slotOf(info.event.extendedProps);
+        if (slot) handlers.current?.openSlot(slot);
+        else handlers.current?.open(info.event.extendedProps.entries as CalendarGroup);
       },
     }),
     [handlers],
@@ -181,31 +185,55 @@ export const CalendarGrid = memo(function CalendarGrid({
       nowIndicatorHeaderContent={(info) => (
         <span className="sb-calendar-now-label">{time.format(info.date, 'time')}</span>
       )}
-      eventContent={(info) => (
-        <>
-          <span className="sr-only">{eventLabel(entriesOf(info))}</span>
-          <div aria-hidden="true" className="min-w-0 flex-1">
-            <CalendarEventCard
-              entries={entriesOf(info)}
-              time={time.format(entriesOf(info)[0].at, 'time')}
-              noText={t('noText')}
-              statusLabels={statusLabels}
-              compact={compactCards}
-            />
-          </div>
-        </>
-      )}
+      eventContent={(info) => {
+        const slot = slotOf(info.event.extendedProps);
+        if (slot) {
+          const names = slot.accounts.map((a) => a.name).join(', ');
+          return (
+            <span
+              className="sb-calendar-slot-card"
+              aria-label={t('writeForSlot', {
+                time: time.format(slot.at, 'long'),
+                accounts: names,
+              })}
+            >
+              <Plus className="size-3 shrink-0" aria-hidden="true" />
+              <span className="truncate">
+                {time.format(slot.at, 'time')} · {names}
+              </span>
+            </span>
+          );
+        }
+        return (
+          <>
+            <span className="sr-only">{eventLabel(entriesOf(info))}</span>
+            <div aria-hidden="true" className="min-w-0 flex-1">
+              <CalendarEventCard
+                entries={entriesOf(info)}
+                time={time.format(entriesOf(info)[0].at, 'time')}
+                noText={t('noText')}
+                statusLabels={statusLabels}
+                compact={compactCards}
+              />
+            </div>
+          </>
+        );
+      }}
       eventClass={(info) =>
-        cn(
-          'sb-calendar-event',
-          `sb-calendar-event--${entriesOf(info)[0].status}`,
-          info.isMirror && 'sb-calendar-event--lifted',
-          info.isDragging && !info.isMirror && 'sb-calendar-event--origin',
-          info.isPast && 'sb-calendar-event--past',
-        )
+        slotOf(info.event.extendedProps)
+          ? 'sb-calendar-open-slot'
+          : cn(
+              'sb-calendar-event',
+              `sb-calendar-event--${entriesOf(info)[0].status}`,
+              info.isMirror && 'sb-calendar-event--lifted',
+              info.isDragging && !info.isMirror && 'sb-calendar-event--origin',
+              info.isPast && 'sb-calendar-event--past',
+            )
       }
       eventDidMount={(info) => {
-        info.el.setAttribute('data-calendar-target', info.event.id);
+        const slot = slotOf(info.event.extendedProps);
+        if (slot) info.el.setAttribute('data-open-slot', slot.at);
+        else info.el.setAttribute('data-calendar-target', info.event.id);
       }}
       dayCellClass={(info) =>
         cn(

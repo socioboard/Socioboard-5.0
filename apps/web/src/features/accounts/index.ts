@@ -1,5 +1,6 @@
 // Public surface of the accounts area (docs/frontend/areas/accounts.md).
-export { accountsQuery, networksQuery } from './api';
+export { accountsQuery, networksQuery, queueKeys, queueSlotsQuery } from './api';
+export { PostingTimesDialog } from './components/posting-times-dialog';
 export { ConnectDialog } from './components/connect-dialog';
 export { AccountsPage, type AccountsSearch } from './components/accounts-page';
 export { AssetPickerPage, type ConnectSearch } from './components/asset-picker-page';

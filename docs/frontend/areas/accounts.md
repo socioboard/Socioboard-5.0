@@ -43,3 +43,7 @@ The composer's account picker lists every account across all logins (grouped by 
 - Disconnect confirms and states how many scheduled posts will be cancelled.
 - Network-specific notes on connect: TikTok/YouTube posts are private until our app passes review; LinkedIn company pages need admin rights.
 - Plan limit reached (cloud) → upgrade prompt in the network chooser.
+
+**Built in P2-F3** (posting times; `features/accounts/posting-times.ts`, `PostingTimesDialog`):
+- **Posting times** (`accounts:manage`, not for a disconnected account) opens from the account's details and from the queue page: a week, Monday first, each day's times as removable chips with **Add** (a time field) and a menu to copy that day's times to the weekdays or every day; **Start from** a preset (weekdays at 09:00 and 15:00, every day at 10:00, or clear all); the slots' time zone (the workspace's until changed). It says how many times a week there are, and refuses more than the server takes (140). **Save posting times** replaces them all (`PUT /accounts/:id/queue-slots`); a refusal for a disconnected account is explained. Saving refreshes the queue, the composer's "Add to queue" and the calendar's free slots.
+- Times are kept sorted and never twice on one day, so what is saved is what the server keeps.

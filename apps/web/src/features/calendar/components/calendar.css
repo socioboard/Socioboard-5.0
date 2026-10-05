@@ -181,6 +181,33 @@ button.sb-calendar-day-number:hover {
   }
 }
 
+/* A free posting time (week view): dashed, quiet, and a click writes a post for it. */
+.sb-calendar-open-slot {
+  cursor: pointer;
+  border: 1px dashed color-mix(in srgb, var(--sb-ink) 22%, transparent);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sb-ink-3);
+  transition:
+    background 160ms,
+    color 160ms,
+    border-color 160ms;
+}
+.sb-calendar-open-slot:hover {
+  border-color: var(--sb-ring);
+  background: color-mix(in srgb, var(--sb-ring) 8%, transparent);
+  color: var(--sb-ring);
+}
+.sb-calendar-slot-card {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 0;
+}
+
 /* The "now" line's time, in the hour column. */
 .sb-calendar-now-label {
   padding: 1px 5px;

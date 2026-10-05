@@ -112,3 +112,36 @@ export function swipeOf(dx: number, dy: number): -1 | 1 | null {
   if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6) return null;
   return dx < 0 ? 1 : -1;
 }
+
+/** A posting time nothing is scheduled in yet, for one or more accounts. */
+export interface OpenSlot {
+  at: string;
+  accounts: { id: string; name: string }[];
+}
+
+/**
+ * The free queue slots to show in a range: each account's upcoming slot times with nothing in
+ * them, merged by instant, from now + 2 minutes (an earlier one can't be scheduled into).
+ */
+export function openSlots(
+  queues: readonly {
+    account: { id: string; name: string };
+    upcoming: readonly { at: string; entries: readonly unknown[] }[];
+  }[],
+  from: string,
+  to: string,
+  now = new Date(),
+): OpenSlot[] {
+  const byAt = new Map<string, OpenSlot>();
+  for (const q of queues) {
+    for (const slot of q.upcoming) {
+      if (slot.entries.length > 0) continue;
+      if (!belongsToRange(slot.at, from, to) || scheduleProblem(new Date(slot.at), now)) continue;
+      const key = new Date(slot.at).toISOString();
+      const open = byAt.get(key) ?? { at: key, accounts: [] };
+      if (!open.accounts.some((a) => a.id === q.account.id)) open.accounts.push(q.account);
+      byAt.set(key, open);
+    }
+  }
+  return [...byAt.values()].sort((a, b) => a.at.localeCompare(b.at));
+}

@@ -55,6 +55,28 @@ async function calendarServer(page: Page, role = 'owner') {
   ];
   let post = structuredClone(POST);
   let fail: 'conflict' | 'review' | null = null;
+  // Posting times: Facebook on Tuesday and Thursday at 11:00 Kolkata; Instagram has none yet.
+  const queues: Record<
+    string,
+    {
+      timezone: string;
+      slots: { weekday: number; time: string }[];
+      upcoming: { at: string; entries: CalendarEntry[] }[];
+    }
+  > = {
+    [FB.id]: {
+      timezone: 'Asia/Kolkata',
+      slots: [
+        { weekday: 2, time: '11:00' },
+        { weekday: 4, time: '11:00' },
+      ],
+      upcoming: [
+        { at: '2026-10-06T05:30:00.000Z', entries: [] },
+        { at: '2026-10-08T05:30:00.000Z', entries: [ENTRY] },
+      ],
+    },
+    [IG.id]: { timezone: 'Asia/Kolkata', slots: [], upcoming: [] },
+  };
   const writes: { path: string; body: unknown }[] = [];
   const unknown: string[] = [];
   await page.clock.setFixedTime(NOW);
@@ -97,7 +119,19 @@ async function calendarServer(page: Page, role = 'owner') {
     else if (path === '/api/v1/networks') body = { items: [] };
     else if (path === `${BASE}/accounts`) body = { items: [FB, IG] };
     else if (path === `${BASE}/labels`) body = { items: [] };
-    else if (path === `${BASE}/posts`) body = { items: [post], nextCursor: null };
+    else if (path.endsWith('/queue-slots')) {
+      const id = path.split('/').at(-2) ?? '';
+      const queue = queues[id];
+      if (request.method() === 'PUT') {
+        const change = request.postDataJSON() as {
+          timezone: string;
+          slots: { weekday: number; time: string }[];
+        };
+        writes.push({ path, body: change });
+        if (queue) Object.assign(queue, change);
+      }
+      body = queue;
+    } else if (path === `${BASE}/posts`) body = { items: [post], nextCursor: null };
     else if (path === `${BASE}/calendar`)
       body = {
         items: entries.filter(
@@ -416,4 +450,98 @@ test('a drag shows where the card will land, and Undo moves it back', async ({ p
   await expect(page.getByText(/is back at/)).toBeVisible();
   // Undoing isn't itself undoable.
   await expect(page.getByRole('button', { name: 'Undo' })).toHaveCount(0);
+});
+
+// ── Queue (P2-F3) ─────────────────────────────────────────────────────────────────────────────
+
+test('queue: an account’s next posting times, the free ones offered to write for', async ({
+  page,
+}) => {
+  const server = await calendarServer(page);
+  await page.goto('/w/halden/queue');
+  const queue = page.getByRole('region', { name: 'Halden Coffee' });
+  await expect(queue).toContainText('2 posting times a week');
+  await expect(queue).toContainText('Free');
+  // The slot with a post shows the post, linking to it.
+  await expect(queue.getByRole('link', { name: /Autumn menu is here/ })).toBeVisible();
+  await expectRightCursors(page, 'queue');
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: 'test-results/queue.png' });
+  expect(server.unknown).toEqual([]);
+  await queue.getByRole('link', { name: /Write a post for/ }).click();
+  await expect(page).toHaveURL(/compose\?at=2026-10-06T05%3A30%3A00\.000Z&account=/);
+  // That account is already chosen.
+  await expect(page.getByRole('button', { name: 'Halden Coffee, Facebook' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByRole('button', { name: 'halden.coffee, Instagram' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  );
+});
+
+test('posting times: start from a preset, change a day, copy it, save', async ({ page }) => {
+  const server = await calendarServer(page);
+  await page.goto(`/w/halden/queue?account=${IG.id}`);
+  await expect(page.getByText('No posting times yet')).toBeVisible();
+  await page.getByRole('button', { name: 'Set posting times' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Posting times' });
+  await dialog.getByRole('button', { name: 'Start from' }).click();
+  await page.getByRole('menuitem', { name: 'Weekdays at 09:00 and 15:00' }).click();
+  await expect(dialog).toContainText('10 posting times a week.');
+  // Monday: drop 15:00, add 18:30, then give every weekday Monday's times.
+  await dialog.getByRole('button', { name: /Remove (3:00 PM|15:00) on Monday/ }).click();
+  await dialog.getByRole('button', { name: 'Add a time on Monday' }).click();
+  await dialog.getByLabel('New time on Monday').fill('18:30');
+  await dialog.getByRole('button', { name: 'Add', exact: true }).click();
+  // The account posts on Tokyo time.
+  await dialog.getByRole('button', { name: /Time zone/ }).click();
+  await page.getByRole('combobox', { name: 'Search time zones' }).fill('Tokyo');
+  await page.keyboard.press('Enter');
+  await expect(dialog.getByRole('button', { name: /Time zone/ })).toContainText('Tokyo');
+  await dialog.getByRole('button', { name: 'Copy Monday’s times' }).click();
+  await page.getByRole('menuitem', { name: 'Copy to weekdays' }).click();
+  await expectRightCursors(page, 'posting times');
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: 'test-results/posting-times.png' });
+  await dialog.getByRole('button', { name: 'Save posting times' }).click();
+  await expect(dialog).toBeHidden();
+  const put = server.writes.find((w) => w.path.endsWith('/queue-slots'))?.body as {
+    timezone: string;
+    slots: { weekday: number; time: string }[];
+  };
+  expect(put.timezone).toBe('Asia/Tokyo');
+  expect(put.slots).toEqual(
+    [1, 2, 3, 4, 5].flatMap((weekday) => [
+      { weekday, time: '09:00' },
+      { weekday, time: '18:30' },
+    ]),
+  );
+  await expect(page.getByText(/halden.coffee has 10 posting times a week/)).toBeVisible();
+});
+
+test('week view shows free posting times; one opens a post for that account and time', async ({
+  page,
+}) => {
+  await calendarServer(page);
+  await page.goto('/w/halden/calendar?date=2026-10-05&view=week');
+  // Tuesday 11:00 is free; Thursday 11:00 has a post, so it isn't offered.
+  const open = page.locator('[data-open-slot="2026-10-06T05:30:00.000Z"]');
+  await expect(open).toContainText('Halden Coffee');
+  await expect(page.locator('[data-open-slot="2026-10-08T05:30:00.000Z"]')).toHaveCount(0);
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: 'test-results/calendar-open-slot.png' });
+  await open.click();
+  await expect(page).toHaveURL(/at=2026-10-06T05%3A30%3A00\.000Z&account=/);
+});
+
+test('people who can’t manage accounts see the queue but can’t change posting times', async ({
+  page,
+}) => {
+  await calendarServer(page, 'viewer');
+  await page.goto('/w/halden/queue');
+  await expect(page.getByRole('region', { name: 'Halden Coffee' })).toContainText('Free');
+  await expect(page.getByRole('button', { name: 'Posting times' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /Write a post for/ })).toHaveCount(0);
 });

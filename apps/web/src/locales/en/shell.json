@@ -1,7 +1,8 @@
 {
   "nav": {
-    "label": "Main",
     "calendar": "Calendar",
+    "queue": "Queue",
+    "label": "Main",
     "posts": "Posts",
     "settings": "Settings",
     "media": "Media",

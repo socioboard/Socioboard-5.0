@@ -5,6 +5,7 @@ import {
   composeAt,
   groupEntries,
   laneTime,
+  openSlots,
   scheduleProblem,
   shortcutOf,
   swipeOf,
@@ -144,5 +145,52 @@ describe('swiping the agenda', () => {
     expect(swipeOf(90, -20)).toBe(-1);
     expect(swipeOf(-40, 0)).toBeNull();
     expect(swipeOf(-80, 70)).toBeNull();
+  });
+});
+
+describe('free posting times on the calendar', () => {
+  const fb = { id: 'fb', name: 'Halden Coffee' };
+  const ig = { id: 'ig', name: 'halden.coffee' };
+  const from = '2026-10-05T00:00:00Z';
+  const to = '2026-10-12T00:00:00Z';
+  it('one per instant, with every account free then; slots with a post are left out', () => {
+    expect(
+      openSlots(
+        [
+          {
+            account: fb,
+            upcoming: [
+              { at: '2026-10-06T05:30:00.000Z', entries: [] },
+              { at: '2026-10-08T05:30:00.000Z', entries: [{}] },
+            ],
+          },
+          { account: ig, upcoming: [{ at: '2026-10-06T05:30:00Z', entries: [] }] },
+        ],
+        from,
+        to,
+        NOW,
+      ),
+    ).toEqual([{ at: '2026-10-06T05:30:00.000Z', accounts: [fb, ig] }]);
+  });
+  it('only inside the range, and not in the next 2 minutes or the past', () => {
+    const at = (iso: string) => ({ at: iso, entries: [] });
+    expect(
+      openSlots(
+        [
+          {
+            account: fb,
+            upcoming: [
+              at('2026-10-05T10:01:00.000Z'),
+              at('2026-10-05T10:03:00.000Z'),
+              at('2026-10-12T00:00:00.000Z'),
+              at('2026-10-04T23:59:00.000Z'),
+            ],
+          },
+        ],
+        from,
+        to,
+        NOW,
+      ).map((s) => s.at),
+    ).toEqual(['2026-10-05T10:03:00.000Z']);
   });
 });

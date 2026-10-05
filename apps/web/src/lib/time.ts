@@ -46,6 +46,8 @@ const STYLES = {
   },
   /** "6 Oct 2026". */
   date: { dateStyle: 'medium' },
+  /** "Tuesday, 6 October": a day in a list of the coming days. */
+  day: { weekday: 'long', day: 'numeric', month: 'long' },
   /** "09:00". */
   time: { timeStyle: 'short' },
 } as const satisfies Record<string, Intl.DateTimeFormatOptions>;

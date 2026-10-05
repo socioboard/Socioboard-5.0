@@ -132,7 +132,8 @@
     "disconnectNone": "Nothing is scheduled to it.",
     "disconnectHistory": "Its post history stays, and it comes back if you connect it again.",
     "disconnectConfirm": "Disconnect",
-    "disconnected": "{{name}} disconnected."
+    "disconnected": "{{name}} disconnected.",
+    "postingTimes": "Posting times"
   },
   "loginDetails": {
     "title": "{{provider}} login",
