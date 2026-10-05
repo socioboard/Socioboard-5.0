@@ -55,5 +55,24 @@
     "review": "This post needs approval before it can be scheduled.",
     "validation": "This post needs changes. Open the composer to review its validation issues.",
     "gone": "This delivery was removed. The calendar has been refreshed."
-  }
+  },
+  "undo": "Undo",
+  "undone": "{{account}} is back at {{time}}",
+  "newAt": "New post at {{time}}",
+  "moveTo": "Move to {{time}}",
+  "cantMove": "Can’t move into the past",
+  "open": "Open",
+  "shortcuts": {
+    "previous": "←",
+    "next": "→",
+    "today": "T",
+    "month": "M",
+    "week": "W",
+    "new": "N"
+  },
+  "failedBecause": "Didn’t go out: {{reason}}",
+  "moreAccounts_one": "+{{count}} more account",
+  "moreAccounts_other": "+{{count}} more accounts",
+  "now": "Now",
+  "quickLook": "Quick look"
 }

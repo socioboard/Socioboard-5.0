@@ -1,18 +1,4 @@
-import FullCalendar, {
-  type CalendarRef,
-  type DatesSetInfo,
-  type EventDisplayInfo,
-  type EventDropInfo,
-  type EventInput,
-  type DateClickInfo,
-} from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/react/daygrid';
-import interactionPlugin from '@fullcalendar/react/interaction';
-import listPlugin from '@fullcalendar/react/list';
-import timeGridPlugin from '@fullcalendar/react/timegrid';
-import themePlugin from '@fullcalendar/react/themes/classic';
-import '@fullcalendar/react/skeleton.css';
-import '@fullcalendar/react/themes/classic/theme.css';
+import type { CalendarRef, DateClickInfo, EventDropInfo, EventInput } from '@fullcalendar/react';
 import {
   addDays,
   toLocalDate,
@@ -23,7 +9,7 @@ import {
 import {
   Banner,
   Button,
-  CalendarEventCard,
+  Kbd,
   cn,
   PageHeader,
   Select,
@@ -40,11 +26,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, RefreshCw } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useCan } from '../../../lib/permissions';
-import { formatLocalDate } from '../../../lib/time';
 import { useWorkspaceTime } from '../../../lib/use-workspace-time';
 import { useWorkspace } from '../../../lib/workspace';
 import { accountsQuery } from '../../accounts';
@@ -57,14 +43,18 @@ import {
   groupEntries,
   scheduleProblem,
   type CalendarSearch,
+  shortcutOf,
+  swipeOf,
   type CalendarGroup,
 } from '../model';
 import { useReschedule } from '../use-reschedule';
+import { CalendarGrid, type GridHandlers } from './calendar-grid';
+import { HoverCreate } from './hover-create';
+import { HoverPreview, type HoverTarget } from './hover-preview';
 import { PostPreview } from './post-preview';
 import { RescheduleDialog } from './reschedule-dialog';
 import './calendar.css';
 
-const PLUGINS = [themePlugin, dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin];
 const STATUSES = [
   'scheduled',
   'publishing',
@@ -128,6 +118,54 @@ export function CalendarPage({
   const [preview, setPreview] = useState<string | null>(null);
   const [rescheduling, setRescheduling] = useState<CalendarEntry | null>(null);
   const { moves, move } = useReschedule();
+  // The section the calendar draws in, and each week column with its day (hover to create).
+  const section = useRef<HTMLElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
+  const lanes = useRef(new Map<HTMLElement, string>());
+  // Hover preview: shown after the pointer rests on a card, kept while it moves onto the preview.
+  const [hover, setHover] = useState<HoverTarget | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const hoverAt = (delay: number, next: HoverTarget | null) => {
+    clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => {
+      if (!dragging.current) setHover(next);
+    }, delay);
+  };
+  useEffect(
+    () => () => {
+      clearTimeout(hoverTimer.current);
+    },
+    [],
+  );
+  const finePointer = useFinePointer();
+  // While a card is dragged: a label by the pointer says where it would land. Kept out of React
+  // state: re-rendering the calendar mid-drag would cancel the drag.
+  const dragging = useRef(false);
+  const dragLabel = useRef<HTMLDivElement>(null);
+  const followDrag = useRef((e: PointerEvent) => {
+    const el = dragLabel.current;
+    if (el)
+      el.style.transform = `translate(${String(e.clientX + 16)}px, ${String(e.clientY + 18)}px)`;
+  });
+  const setDragging = (on: boolean) => {
+    dragging.current = on;
+    if (on) {
+      clearTimeout(hoverTimer.current);
+      document.documentElement.setAttribute('data-sb-calendar-dragging', '');
+      window.addEventListener('pointermove', followDrag.current);
+    } else {
+      document.documentElement.removeAttribute('data-sb-calendar-dragging');
+      window.removeEventListener('pointermove', followDrag.current);
+      showDragTime(null, false);
+    }
+  };
+  useEffect(
+    () => () => {
+      document.documentElement.removeAttribute('data-sb-calendar-dragging');
+      window.removeEventListener('pointermove', followDrag.current);
+    },
+    [],
+  );
   const accounts = useQuery(accountsQuery(workspace.id));
   const labels = useQuery(labelsQuery(workspace.id));
   const result = useQuery({
@@ -148,7 +186,7 @@ export function CalendarPage({
       >,
     [postT],
   );
-  const datesSet = useCallback((info: DatesSetInfo) => {
+  const datesSet = (info: { start: Date; end: Date; view: { title: string } }) => {
     const next = {
       from: info.start.toISOString(),
       to: info.end.toISOString(),
@@ -157,7 +195,7 @@ export function CalendarPage({
     setPeriod((old) =>
       old?.from === next.from && old.to === next.to && old.title === next.title ? old : next,
     );
-  }, []);
+  };
   useEffect(() => {
     const api = calendar.current?.getApi();
     api?.changeView(actualView, date);
@@ -194,17 +232,6 @@ export function CalendarPage({
       }),
     [groups, can, moves, t],
   );
-  const entriesOf = (info: EventDisplayInfo): CalendarGroup =>
-    info.event.extendedProps.entries as CalendarGroup;
-  const eventLabel = (entries: CalendarGroup) => {
-    const first = entries[0];
-    return t('eventLabel', {
-      text: first.text || t('noText'),
-      accounts: entries.map((e) => e.account.displayName).join(', '),
-      time: time.format(first.at, 'long'),
-      status: [...new Set(entries.map((e) => statusLabels[e.status]))].join(', '),
-    });
-  };
   const drop = (info: EventDropInfo) => {
     const entries = info.oldEvent.extendedProps.entries as CalendarEntry[];
     const first = entries[0];
@@ -225,6 +252,16 @@ export function CalendarPage({
   const dateClick = (info: DateClickInfo) => {
     create(info.allDay ? composeAt(info.dateStr.slice(0, 10), time.timeZone) : info.date);
   };
+  const showDragTime = (at: Date | null, invalid: boolean) => {
+    const el = dragLabel.current;
+    if (!el) return;
+    el.textContent = invalid
+      ? t('cantMove')
+      : at
+        ? t('moveTo', { time: time.format(at, 'long') })
+        : '';
+    el.dataset.invalid = String(invalid);
+  };
   const shift = (direction: -1 | 1) => {
     const d = parseLocalDate(date);
     const next =
@@ -233,6 +270,98 @@ export function CalendarPage({
         : new Date(Date.UTC(d.year, d.month - 1 + direction, 1)).toISOString().slice(0, 10);
     onSearchChange({ date: next });
   };
+  const buildHandlers = (): GridHandlers => ({
+    datesSet,
+    dateClick,
+    drop,
+    allow: (start) => {
+      const ok = scheduleProblem(start) === null;
+      showDragTime(start, !ok);
+      return ok;
+    },
+    dragStart: () => {
+      showDragTime(null, false);
+      setDragging(true);
+    },
+    dragStop: () => {
+      setDragging(false);
+      setHover(null);
+    },
+    enter: (info) => {
+      if (!finePointer || dragging.current) return;
+      hoverAt(380, {
+        entries: info.event.extendedProps.entries as CalendarGroup,
+        rect: info.el.getBoundingClientRect(),
+      });
+    },
+    leave: () => {
+      hoverAt(160, null);
+    },
+    open: (entries) => {
+      setHover(null);
+      setPreview(entries[0].postId);
+    },
+    createOn: (day) => {
+      create(composeAt(day, time.timeZone));
+    },
+    lane: (el, day) => {
+      if (day) lanes.current.set(el, day);
+      else lanes.current.delete(el);
+    },
+  });
+  const handlers = useRef<GridHandlers | null>(null);
+  handlers.current ??= buildHandlers();
+  useLayoutEffect(() => {
+    handlers.current = buildHandlers();
+  });
+  // Keys: ← → periods, T today, M/W views, N new post.
+  const onShortcut = useEffectEvent((e: KeyboardEvent) => {
+    const key = shortcutOf(e);
+    if (!key || (key === 'new' && !can('posts:create'))) return;
+    e.preventDefault();
+    if (key === 'previous') shift(-1);
+    else if (key === 'next') shift(1);
+    else if (key === 'today') onSearchChange({ date: today });
+    else if (key === 'month' || key === 'week') onSearchChange({ view: key });
+    else
+      void navigate({
+        to: '/w/$slug/compose/{-$postId}',
+        params: { slug: workspace.slug, postId: undefined },
+      });
+  });
+  useEffect(() => {
+    window.addEventListener('keydown', onShortcut);
+    return () => {
+      window.removeEventListener('keydown', onShortcut);
+    };
+  }, []);
+  // A new period slides in from the side it lies on; a new view settles in place.
+  const shown = useRef<{ from: string; view: string } | null>(null);
+  useEffect(() => {
+    const el = grid.current;
+    if (!period || !el) return;
+    const before = shown.current;
+    shown.current = { from: period.from, view: actualView };
+    if (!before || (before.from === period.from && before.view === actualView)) return;
+    if (typeof el.animate !== 'function') return;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const direction = period.from > before.from ? 1 : -1;
+    const from = still
+      ? { opacity: 0.4 }
+      : before.view !== actualView
+        ? { opacity: 0.3, transform: 'scale(0.985)', filter: 'blur(3px)' }
+        : {
+            opacity: 0.35,
+            transform: `translateX(${String(direction * 28)}px)`,
+            filter: 'blur(2px)',
+          };
+    el.animate([from, { opacity: 1, transform: 'none', filter: 'blur(0px)' }], {
+      duration: still ? 150 : 420,
+      easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+    });
+  }, [period, actualView]);
+  // Phones: swipe the agenda sideways to change period.
+  const swipe = useRef<{ x: number; y: number } | null>(null);
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <PageHeader
@@ -255,34 +384,43 @@ export function CalendarPage({
         <GettingStarted />
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1">
-            <Button
-              size="icon-sm"
-              variant="ghost"
-              aria-label={t('previous')}
-              onClick={() => {
-                shift(-1);
-              }}
-            >
-              <ChevronLeft aria-hidden="true" />
-            </Button>
-            <Button
-              size="icon-sm"
-              variant="ghost"
-              aria-label={t('next')}
-              onClick={() => {
-                shift(1);
-              }}
-            >
-              <ChevronRight aria-hidden="true" />
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => {
-                onSearchChange({ date: today });
-              }}
-            >
-              {t('today')}
-            </Button>
+            <Tooltip content={<Hint label={t('previous')} keys={t('shortcuts.previous')} />}>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                aria-label={t('previous')}
+                aria-keyshortcuts="ArrowLeft"
+                onClick={() => {
+                  shift(-1);
+                }}
+              >
+                <ChevronLeft aria-hidden="true" />
+              </Button>
+            </Tooltip>
+            <Tooltip content={<Hint label={t('next')} keys={t('shortcuts.next')} />}>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                aria-label={t('next')}
+                aria-keyshortcuts="ArrowRight"
+                onClick={() => {
+                  shift(1);
+                }}
+              >
+                <ChevronRight aria-hidden="true" />
+              </Button>
+            </Tooltip>
+            <Tooltip content={<Hint label={t('today')} keys={t('shortcuts.today')} />}>
+              <Button
+                size="sm"
+                aria-keyshortcuts="T"
+                onClick={() => {
+                  onSearchChange({ date: today });
+                }}
+              >
+                {t('today')}
+              </Button>
+            </Tooltip>
           </div>
           <h2
             className="text-ink min-w-0 text-base font-semibold tracking-tight"
@@ -316,25 +454,27 @@ export function CalendarPage({
               aria-label={t('views')}
             >
               {(['month', 'week'] as const).map((v) => (
-                <Button
-                  key={v}
-                  variant="ghost"
-                  size="sm"
-                  aria-pressed={view === v}
-                  className="relative isolate"
-                  onClick={() => {
-                    onSearchChange({ view: v });
-                  }}
-                >
-                  {view === v && (
-                    <motion.span
-                      layoutId={`calendar-view-${workspace.id}`}
-                      className="bg-chip border-hair absolute inset-0 -z-10 rounded-[7px] border shadow-sm"
-                      transition={springs.snappy}
-                    />
-                  )}
-                  {t(v)}
-                </Button>
+                <Tooltip key={v} content={<Hint label={t(v)} keys={t(`shortcuts.${v}`)} />}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-pressed={view === v}
+                    aria-keyshortcuts={v === 'month' ? 'M' : 'W'}
+                    className="relative isolate"
+                    onClick={() => {
+                      onSearchChange({ view: v });
+                    }}
+                  >
+                    {view === v && (
+                      <motion.span
+                        layoutId={`calendar-view-${workspace.id}`}
+                        className="bg-chip border-hair absolute inset-0 -z-10 rounded-[7px] border shadow-sm"
+                        transition={springs.snappy}
+                      />
+                    )}
+                    {t(v)}
+                  </Button>
+                </Tooltip>
               ))}
             </div>
           </div>
@@ -406,106 +546,71 @@ export function CalendarPage({
           </div>
         )}
         <section
+          ref={section}
           className="sb-calendar glass-chip rounded-pane min-h-[520px] flex-1 overflow-hidden"
+          onPointerDown={(e) => {
+            swipe.current = e.pointerType === 'touch' ? { x: e.clientX, y: e.clientY } : null;
+          }}
+          onPointerUp={(e) => {
+            const start = swipe.current;
+            swipe.current = null;
+            if (!start || !mobile) return;
+            const direction = swipeOf(e.clientX - start.x, e.clientY - start.y);
+            if (direction) shift(direction);
+          }}
           aria-label={mobile ? t('agenda') : t('title')}
           data-view={mobile ? 'agenda' : view}
           aria-busy={result.isFetching}
         >
-          <FullCalendar
-            ref={calendar}
-            plugins={PLUGINS}
-            initialView={actualView}
-            initialDate={date}
+          <div ref={grid} className="h-full">
+            <CalendarGrid
+              calendarRef={calendar}
+              handlers={handlers}
+              events={events}
+              initialView={actualView}
+              initialDate={date}
+              weekTitle={view === 'week'}
+              height={actualView === 'timeGridWeek' ? 600 : 'auto'}
+              editable={can('posts:publish')}
+              compactCards={view === 'week' && !mobile}
+              canCreate={can('posts:create')}
+              statusLabels={statusLabels}
+            />
+          </div>
+          <HoverCreate
+            container={section}
+            lanes={lanes}
             timeZone={time.timeZone}
-            headerToolbar={false}
-            firstDay={1}
-            titleFormat={{
-              year: 'numeric',
-              month: 'long',
-              ...(view === 'week' ? { day: 'numeric' } : {}),
-            }}
-            height={actualView === 'timeGridWeek' ? 600 : 'auto'}
-            fixedWeekCount
-            dayMaxEvents={3}
-            allDaySlot={false}
-            slotDuration="00:30:00"
-            slotLaneClass="sb-calendar-slot"
-            snapDuration="00:15:00"
-            scrollTime="08:00:00"
-            nowIndicator
-            eventDisplay="block"
-            events={events}
-            editable={can('posts:publish')}
-            eventDurationEditable={false}
-            eventMinHeight={56}
-            eventInteractive
-            eventLongPressDelay={350}
-            eventDragMinDistance={8}
-            dragRevertDuration={150}
-            datesSet={datesSet}
-            dateClick={dateClick}
-            eventDrop={drop}
-            eventAllow={(info) => scheduleProblem(info.start) === null}
-            eventClick={(info) => {
-              info.jsEvent.preventDefault();
-              setPreview((info.event.extendedProps.entries as CalendarGroup)[0].postId);
-            }}
-            eventContent={(info) => (
-              <>
-                <span className="sr-only">{eventLabel(entriesOf(info))}</span>
-                <div aria-hidden="true" className="min-w-0 flex-1">
-                  <CalendarEventCard
-                    entries={entriesOf(info)}
-                    time={time.format(entriesOf(info)[0].at, 'time')}
-                    noText={t('noText')}
-                    statusLabels={statusLabels}
-                    compact={view === 'week' && !mobile}
-                  />
-                </div>
-              </>
-            )}
-            eventClass={(info) =>
-              `sb-calendar-event sb-calendar-event--${entriesOf(info)[0].status}`
-            }
-            eventDidMount={(info) => {
-              info.el.setAttribute('data-calendar-target', info.event.id);
-            }}
-            dayCellClass={(info) => `sb-calendar-day ${info.isToday ? 'sb-calendar-today' : ''}`}
-            dayCellTopInnerClass="sb-calendar-date-control"
-            dayCellDidMount={(info) => {
-              // FullCalendar hides its decorative date label; ours contains a compose button.
-              if (can('posts:create'))
-                info.el.querySelector('.sb-calendar-date-control')?.removeAttribute('aria-hidden');
-            }}
-            dayCellTopContent={(info) => {
-              const day = toLocalDate(wallClock(info.date.getTime(), time.timeZone));
-              return can('posts:create') ? (
-                <button
-                  type="button"
-                  className="sb-calendar-day-number"
-                  aria-label={t('createOn', { date: formatLocalDate(day) })}
-                  aria-current={info.isToday ? 'date' : undefined}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    create(composeAt(day, time.timeZone));
-                  }}
-                >
-                  {info.dayNumberText}
-                </button>
-              ) : (
-                <span
-                  className="sb-calendar-day-number"
-                  aria-current={info.isToday ? 'date' : undefined}
-                >
-                  {info.dayNumberText}
-                </span>
-              );
-            }}
-            dayHeaderClass="sb-calendar-heading"
-            noEventsContent={t('emptyBody')}
+            enabled={view === 'week' && !mobile && can('posts:create')}
+            format={(at) => time.format(at, 'time')}
+            label={(at) => t('newAt', { time: at })}
+            onCreate={create}
           />
         </section>
       </div>
+      <HoverPreview
+        target={preview !== null || rescheduling !== null ? null : hover}
+        statusLabels={statusLabels}
+        canReschedule={can('posts:publish')}
+        onOpen={(entries) => {
+          setHover(null);
+          setPreview(entries[0].postId);
+        }}
+        onReschedule={(entry) => {
+          setHover(null);
+          setRescheduling(entry);
+        }}
+        onPointerEnter={() => {
+          clearTimeout(hoverTimer.current);
+        }}
+        onPointerLeave={() => {
+          hoverAt(160, null);
+        }}
+      />
+      {createPortal(
+        <div ref={dragLabel} className="sb-calendar-drag-label" role="status" aria-live="polite" />,
+        document.body,
+      )}
       {preview && (
         <PostPreview
           key={preview}
@@ -569,4 +674,32 @@ function Filter({
       </SelectContent>
     </Select>
   );
+}
+
+/** A tooltip's words with its key. */
+function Hint({ label, keys }: { label: string; keys: string }) {
+  return (
+    <span className="flex items-center gap-2">
+      {label}
+      <Kbd>{keys}</Kbd>
+    </span>
+  );
+}
+
+/** A mouse or trackpad (hover previews and hover-to-create are for these only). */
+function useFinePointer() {
+  const [fine, setFine] = useState(
+    () => window.matchMedia('(hover: hover) and (pointer: fine)').matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => {
+      setFine(media.matches);
+    };
+    media.addEventListener('change', update);
+    return () => {
+      media.removeEventListener('change', update);
+    };
+  }, []);
+  return fine;
 }

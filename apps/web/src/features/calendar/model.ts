@@ -59,3 +59,56 @@ export function belongsToRange(at: string, from: string, to: string) {
   const n = Date.parse(at);
   return n >= Date.parse(from) && n < Date.parse(to);
 }
+
+/** Hovering a week column: the minute it points at, on the workspace's clock, snapped to 15. */
+export const HOVER_SNAP_MINUTES = 15;
+export function laneTime(day: string, fraction: number, zone: string): Date {
+  const steps = (24 * 60) / HOVER_SNAP_MINUTES;
+  const step = Math.min(steps - 1, Math.max(0, Math.floor(fraction * steps)));
+  const minutes = step * HOVER_SNAP_MINUTES;
+  return zonedTime(
+    parseLocalDate(day),
+    { hour: Math.floor(minutes / 60), minute: minutes % 60 },
+    zone,
+  );
+}
+
+export type Shortcut = 'previous' | 'next' | 'today' | 'month' | 'week' | 'new';
+
+/**
+ * The calendar's keys: ← → between periods, T today, M month, W week, N new post. Not while
+ * typing, with a modifier held (browser and app shortcuts), or when the key was already used.
+ */
+export function shortcutOf(event: {
+  key: string;
+  ctrlKey: boolean;
+  metaKey: boolean;
+  altKey: boolean;
+  defaultPrevented: boolean;
+  target: EventTarget | null;
+}): Shortcut | null {
+  if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return null;
+  // A key pressed with nothing focused comes from the document, which has no `closest`.
+  const target = event.target instanceof Element ? event.target : null;
+  if (
+    target?.closest(
+      'input, textarea, select, [contenteditable=""], [contenteditable="true"], [role="dialog"], [role="menu"], [role="listbox"], [role="combobox"], [role="option"], [role="grid"]',
+    )
+  )
+    return null;
+  const keys: Record<string, Shortcut> = {
+    ArrowLeft: 'previous',
+    ArrowRight: 'next',
+    t: 'today',
+    m: 'month',
+    w: 'week',
+    n: 'new',
+  };
+  return keys[event.key.length === 1 ? event.key.toLowerCase() : event.key] ?? null;
+}
+
+/** A horizontal swipe on the agenda: -1 back, 1 forward, null when it wasn't one. */
+export function swipeOf(dx: number, dy: number): -1 | 1 | null {
+  if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6) return null;
+  return dx < 0 ? 1 : -1;
+}

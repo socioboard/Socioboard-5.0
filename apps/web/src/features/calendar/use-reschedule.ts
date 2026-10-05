@@ -18,7 +18,14 @@ import { rememberPost } from '../posts';
 import { calendarKeys } from './api';
 import { belongsToRange, scheduleProblem } from './model';
 
-/** One write per target; optimistic moves survive range changes and concurrent other moves. */
+/** A moved card settles with a small bounce for this long. */
+export const LANDED_MS = 900;
+
+/**
+ * One write per target; optimistic moves survive range changes and concurrent other moves. A
+ * successful move offers Undo (a move back, with the new time as `previousAt`), and marks the
+ * card as just landed so it can settle visibly.
+ */
 export function useReschedule() {
   const { t } = useTranslation('calendar');
   const { workspace } = useWorkspace();
@@ -26,6 +33,17 @@ export function useReschedule() {
   const client = useQueryClient();
   const pending = useRef(new Map<string, string>());
   const [moves, setMoves] = useState(new Map<string, string>());
+  // Set on the card's element, not in React state: re-rendering the calendar cancels a drag, and
+  // the next drag may start before the bounce ends. Once the card is drawn in its new place.
+  const land = (targetId: string) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.querySelector(`[data-calendar-target="${targetId}"]`);
+        el?.classList.add('sb-calendar-event--landed');
+        setTimeout(() => el?.classList.remove('sb-calendar-event--landed'), LANDED_MS);
+      });
+    });
+  };
   const patch = (targetId: string, at: string) => {
     for (const [key, data] of client.getQueriesData<CalendarResponse>({
       queryKey: calendarKeys.all(workspace.id),
@@ -44,7 +62,11 @@ export function useReschedule() {
       });
     }
   };
-  const move = async (entry: CalendarEntry, at: Date): Promise<boolean> => {
+  const move = async (
+    entry: CalendarEntry,
+    at: Date,
+    { undoable = true }: { undoable?: boolean } = {},
+  ): Promise<boolean> => {
     if (pending.current.has(entry.targetId) || entry.status !== 'scheduled') return false;
     const problem = scheduleProblem(at);
     if (problem) {
@@ -62,11 +84,25 @@ export function useReschedule() {
       rememberPost(client, workspace.id, saved);
       const confirmed = saved.targets.find((x) => x.id === entry.targetId)?.scheduledAt;
       if (confirmed) patch(entry.targetId, confirmed);
+      land(entry.targetId);
+      const message = t(undoable ? 'rescheduled' : 'undone', {
+        account: entry.account.displayName,
+        time: time.format(confirmed ?? at, 'long'),
+      });
       toast.success(
-        t('rescheduled', {
-          account: entry.account.displayName,
-          time: time.format(confirmed ?? at, 'long'),
-        }),
+        message,
+        undoable
+          ? {
+              action: {
+                label: t('undo'),
+                onClick: () => {
+                  void move({ ...entry, at: confirmed ?? at.toISOString() }, new Date(entry.at), {
+                    undoable: false,
+                  });
+                },
+              },
+            }
+          : {},
       );
       return true;
     } catch (err) {

@@ -28,6 +28,8 @@
   overflow: hidden;
   transition:
     box-shadow 180ms var(--ease-out-soft),
+    transform 180ms var(--ease-out-soft),
+    opacity 180ms,
     background 180ms;
 }
 .sb-calendar-event:hover {
@@ -103,5 +105,167 @@ button.sb-calendar-day-number:hover {
 @media (max-width: 639px) {
   .sb-calendar {
     min-height: 260px;
+  }
+}
+
+/* ── Polish: what's past, what's now, and what the pointer would do ───────────────────────── */
+
+/* The past is quieter: it can be read, not scheduled into. */
+.sb-calendar-past {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 7px,
+    color-mix(in srgb, var(--sb-ink) 3.5%, transparent) 7px 8px
+  );
+}
+.sb-calendar-past .sb-calendar-day-number {
+  color: var(--sb-ink-3);
+}
+.sb-calendar-event--past {
+  opacity: 0.85;
+}
+.sb-calendar-today-lane {
+  background: color-mix(in srgb, var(--sb-ring) 4%, transparent);
+}
+.sb-calendar-lane {
+  position: relative;
+}
+
+/* Month: a day's number gains a "+" on hover, saying a click writes a post for that day. */
+.sb-calendar-add {
+  width: 0;
+  height: 12px;
+  opacity: 0;
+  transition:
+    width 180ms var(--ease-out-soft),
+    opacity 180ms var(--ease-out-soft),
+    margin 180ms var(--ease-out-soft);
+}
+.sb-calendar-day:hover .sb-calendar-add,
+.sb-calendar-day-number:focus-visible .sb-calendar-add {
+  width: 12px;
+  margin-right: 2px;
+  opacity: 1;
+}
+.sb-calendar-day:hover button.sb-calendar-day-number:not([aria-current='date']) {
+  background: var(--sb-chip);
+  color: var(--sb-ink);
+}
+
+/* Week: the hover-to-create ghost. */
+.sb-calendar-ghost {
+  position: absolute;
+  inset-inline: 3px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  border: 1px dashed color-mix(in srgb, var(--sb-ring) 55%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--sb-ring) 9%, transparent);
+  color: var(--sb-ring);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  animation: sb-ghost-in 160ms var(--ease-out-soft) both;
+  transition: top 90ms var(--ease-out-soft);
+}
+.sb-calendar-ghost:hover {
+  background: color-mix(in srgb, var(--sb-ring) 15%, transparent);
+}
+@keyframes sb-ghost-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* The "now" line's time, in the hour column. */
+.sb-calendar-now-label {
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: var(--sb-accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dragging: the card lifts off the page; its old place stays as a faint outline. */
+:root[data-sb-calendar-dragging] .sb-calendar {
+  cursor: grabbing;
+}
+:root[data-sb-calendar-dragging] .sb-calendar-quicklook,
+:root[data-sb-calendar-dragging] .sb-calendar-ghost {
+  display: none;
+}
+.sb-calendar-event--lifted {
+  box-shadow:
+    0 18px 40px -12px color-mix(in srgb, var(--sb-ink) 35%, transparent),
+    0 0 0 2px var(--sb-ring);
+  cursor: grabbing;
+  z-index: 10;
+}
+/* FullCalendar positions the card itself: transforming it breaks dragging, so the tilt goes on
+   what is inside. */
+.sb-calendar-event--lifted > * {
+  transform: rotate(-1.2deg) scale(1.03);
+}
+.sb-calendar-event--origin {
+  opacity: 0.35;
+  border-style: dashed;
+}
+.sb-calendar-drag-label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: var(--sb-ink);
+  color: var(--sb-base);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--sb-ink) 25%, transparent);
+}
+.sb-calendar-drag-label:empty {
+  display: none;
+}
+.sb-calendar-drag-label[data-invalid='true'] {
+  background: var(--sb-danger);
+  color: #fff;
+}
+
+/* Dropped: the card settles into its new place. */
+.sb-calendar-event--landed > * {
+  animation: sb-landed 620ms var(--ease-spring) both;
+}
+@keyframes sb-landed {
+  0% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sb-ring) 45%, transparent);
+  }
+  60% {
+    transform: scale(0.99);
+  }
+  100% {
+    transform: none;
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-calendar-ghost,
+  .sb-calendar-event--landed > * {
+    animation: none;
+  }
+  .sb-calendar-event--lifted > * {
+    transform: none;
+  }
+  .sb-calendar-add {
+    transition: none;
   }
 }
