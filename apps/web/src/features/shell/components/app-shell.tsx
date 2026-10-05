@@ -11,6 +11,7 @@ import {
   useSessionWatcher,
   useSidebarCollapsed,
 } from '../hooks';
+import { useNotificationToasts, useUnreadTitle } from '../../notifications';
 import { NAV_ITEMS } from '../nav';
 import { CommandMenu } from './command-menu';
 import { MobileTabBar } from './mobile-tab-bar';
@@ -66,6 +67,8 @@ function ShellLayout({
   }, []);
   useCommandShortcut(toggleSearch);
   useActiveWorkspaceSync(membership.workspace.id, me.activeWorkspaceId);
+  useNotificationToasts();
+  useUnreadTitle();
   const items = useMemo(
     () =>
       NAV_ITEMS.filter((item) => !('permission' in item) || can(membership.role, item.permission)),

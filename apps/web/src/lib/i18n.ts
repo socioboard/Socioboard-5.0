@@ -11,6 +11,7 @@ import composer from '../locales/en/composer.json';
 import calendar from '../locales/en/calendar.json';
 import errors from '../locales/en/errors.json';
 import media from '../locales/en/media.json';
+import notifications from '../locales/en/notifications.json';
 import onboarding from '../locales/en/onboarding.json';
 import posts from '../locales/en/posts.json';
 import settings from '../locales/en/settings.json';
@@ -31,6 +32,7 @@ export const resources = {
     composer,
     posts,
     calendar,
+    notifications,
   },
 } as const;
 
@@ -51,6 +53,7 @@ void i18n.use(initReactI18next).init({
     'composer',
     'posts',
     'calendar',
+    'notifications',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes

@@ -1,0 +1,68 @@
+{
+  "title": "Notifications",
+  "unread": "Unread:",
+  "markAllRead": "Mark all read",
+  "seeAll": "See all notifications",
+  "loadError": "Notifications didn’t load.",
+  "retry": "Try again",
+  "bell": {
+    "label": "Notifications",
+    "labelUnread_one": "Notifications, {{count}} unread",
+    "labelUnread_other": "Notifications, {{count}} unread"
+  },
+  "empty": {
+    "title": "You’re all caught up",
+    "body": "Failed posts and accounts that need you show up here."
+  },
+  "toast": {
+    "open": "Open"
+  },
+  "types": {
+    "publish_failed": {
+      "name": "A post couldn’t go out",
+      "description": "A delivery failed for good: you wrote the post, or you run the workspace.",
+      "title": "A post couldn’t go out to {{network}}"
+    },
+    "post_published": {
+      "name": "Your post went out",
+      "description": "Each account a post of yours was published to.",
+      "title": "Your post is live on {{network}}",
+      "body": "It went out to {{network}}."
+    },
+    "account_reauth_required": {
+      "name": "An account needs reconnecting",
+      "description": "An account stopped accepting posts until someone signs in to it again.",
+      "title": "{{account}} needs reconnecting"
+    },
+    "digest": {
+      "name": "Weekly summary",
+      "description": "On Mondays: what went out, what failed and what’s coming up in each workspace."
+    }
+  },
+  "page": {
+    "feed": "Notifications",
+    "feedBody": "Everything Socioboard told you about in the last 90 days, newest first.",
+    "show": "Show",
+    "all": "All",
+    "unread_one": "Unread ({{count}})",
+    "unread_other": "Unread ({{count}})",
+    "type": "Kind",
+    "allTypes": "All kinds",
+    "emptyBody": "Failed posts, published posts and accounts that need reconnecting show up here.",
+    "emptyFiltered": "Nothing here",
+    "emptyFilteredBody": "No notifications match. Show all to see the rest.",
+    "showAll": "Show all",
+    "loadMore": "Load more",
+    "preferences": "What you hear about",
+    "preferencesBody": "In the app is the bell; email goes to your account’s address. Changes apply at once."
+  },
+  "preferences": {
+    "kind": "Kind",
+    "inApp": "In the app",
+    "email": "Email",
+    "inAppFor": "{{kind}} in the app",
+    "emailFor": "{{kind}} by email",
+    "notOffered": "Not offered",
+    "loadError": "Your notification settings didn’t load."
+  }
+}

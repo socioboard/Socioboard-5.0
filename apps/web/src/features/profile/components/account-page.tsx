@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { SettingsPage } from '../../settings';
 
-/** `/me/*`: the account header and its Profile / Security tabs. */
+/** `/me/*`: the account header and its Profile / Security / Notifications tabs. */
 export function AccountPage({ children }: { children: ReactNode }) {
   const { t } = useTranslation('account');
   return (
@@ -14,6 +14,7 @@ export function AccountPage({ children }: { children: ReactNode }) {
         <>
           <Link to="/me/profile">{t('tabs.profile')}</Link>
           <Link to="/me/security">{t('tabs.security')}</Link>
+          <Link to="/me/notifications">{t('tabs.notifications')}</Link>
         </>
       }
     >
