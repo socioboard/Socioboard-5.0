@@ -338,7 +338,7 @@ function LoginGroupView({
             )}
           </p>
         ) : (
-          <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-2 @xl:grid-cols-2 @4xl:grid-cols-3">
             {group.accounts.map((a, i) => (
               <li key={a.id} className="animate-enter" style={staggerStyle(i)}>
                 <AccountRow
@@ -415,7 +415,7 @@ function SkeletonSections() {
             <Skeleton className="size-7 rounded-lg" />
             <Skeleton className="h-4 w-28" />
           </div>
-          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-2 @xl:grid-cols-2 @4xl:grid-cols-3">
             {Array.from({ length: n }, (_, j) => (
               <Skeleton key={j} className="rounded-control h-16" />
             ))}

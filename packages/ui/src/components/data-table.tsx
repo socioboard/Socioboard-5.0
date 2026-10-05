@@ -96,8 +96,11 @@ export function DataTable<T>({
   };
 
   return (
-    <div className={cn('flex flex-col', className)}>
-      <table className="w-full border-collapse text-sm" aria-busy={loading || undefined}>
+    <div className={cn('flex min-w-0 flex-col overflow-x-auto', className)}>
+      <table
+        className="w-full table-fixed border-collapse text-sm"
+        aria-busy={loading || undefined}
+      >
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="border-hair border-b">

@@ -73,19 +73,19 @@ export function PostsPage({
       id: 'accounts',
       header: t('table.accounts'),
       cell: (post) => <AccountStack targets={post.targets} />,
-      className: 'w-36 max-md:hidden',
+      className: 'w-36 @max-2xl:hidden',
     },
     {
       id: 'status',
       header: t('table.status'),
       cell: (post) => <PostStatusChip status={post.status} />,
-      className: 'w-40',
+      className: 'w-28 @xl:w-40',
     },
     {
       id: 'when',
       header: t('table.when'),
       cell: (post) => <PostWhen post={post} />,
-      className: 'w-52 max-lg:hidden',
+      className: 'w-52 @max-3xl:hidden',
     },
     {
       id: 'author',
@@ -97,7 +97,7 @@ export function PostsPage({
             <span className="text-ink-2 truncate text-[13px]">{post.author.name}</span>
           </span>
         ) : null,
-      className: 'w-44 max-xl:hidden',
+      className: 'w-44 @max-5xl:hidden',
     },
   ];
 
@@ -254,7 +254,7 @@ function Snippet({ post, labels }: { post: Post; labels: PostLabels }) {
         )}
         <RepeatMark recurring={post.recurring} />
         {/* Where the columns are hidden (narrow screens), the essentials ride along here. */}
-        <span className="lg:hidden">
+        <span className="@3xl:hidden">
           <PostWhen post={post} />
         </span>
       </span>

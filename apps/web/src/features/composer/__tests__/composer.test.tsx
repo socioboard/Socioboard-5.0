@@ -556,10 +556,10 @@ describe('live preview', () => {
       'aria-pressed',
       'true',
     );
-    expect(preview()).toHaveClass('max-lg:hidden');
+    expect(preview()).toHaveClass('@max-4xl:hidden');
     await user.click(previewButton);
     expect(previewButton).toHaveAttribute('aria-pressed', 'true');
-    expect(preview()).not.toHaveClass('max-lg:hidden');
+    expect(preview()).not.toHaveClass('@max-4xl:hidden');
   });
 });
 

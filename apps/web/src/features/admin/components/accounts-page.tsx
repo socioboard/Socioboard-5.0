@@ -108,7 +108,7 @@ export function AdminAccountsPage({
           {number.format(row.scheduledTargets)}
         </span>
       ),
-      className: 'w-36 text-right',
+      className: 'w-20 text-right @xl:w-36',
     },
     {
       id: 'checked',
@@ -121,7 +121,7 @@ export function AdminAccountsPage({
         ) : (
           <span className="text-ink-3 text-xs">{t('accounts.never')}</span>
         ),
-      className: 'w-44 max-lg:hidden',
+      className: 'w-44 @max-3xl:hidden',
     },
   ];
 

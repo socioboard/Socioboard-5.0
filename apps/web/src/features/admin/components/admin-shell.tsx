@@ -110,7 +110,7 @@ export function AdminShell() {
             </Link>
           </div>
         </nav>
-        <main className="glass rounded-pane animate-settle sb-page relative flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
+        <main className="glass rounded-pane animate-settle sb-page @container relative flex min-h-0 flex-1 flex-col overflow-hidden [animation-delay:60ms]">
           {/* The band that says "you're in the admin console", across the top of every page. */}
           <div
             aria-hidden="true"

@@ -52,7 +52,7 @@ export function PostDetailPage({ postId }: { postId: string }) {
   let body: ReactNode;
   if (post.isPending) {
     body = (
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)]" aria-hidden="true">
+      <div className="grid gap-5 @4xl:grid-cols-[minmax(0,1fr)_minmax(0,380px)]" aria-hidden="true">
         <div className="flex flex-col gap-3">
           <Skeleton className="rounded-control h-32" />
           <Skeleton className="rounded-control h-32" />
@@ -296,7 +296,7 @@ function Details({ post }: { post: PostDetails }) {
         </Banner>
       )}
       {post.recurring === 'occurrence' && <Banner>{t('detail.occurrence')}</Banner>}
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start">
+      <div className="grid gap-5 @4xl:grid-cols-[minmax(0,1fr)_minmax(0,380px)] @4xl:items-start">
         <section aria-labelledby="post-deliveries" className="flex min-w-0 flex-col gap-3">
           <div className="flex flex-col gap-0.5">
             <h2 id="post-deliveries" className="text-ink text-[15px] font-semibold tracking-tight">

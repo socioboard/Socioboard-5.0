@@ -195,7 +195,7 @@ export function MediaPage({
         <div className="flex flex-col gap-4 px-4 py-4 sm:px-5">
           <div className="flex flex-wrap items-center gap-3">
             {/* Folders get their own row on phones; beside the filters from tablet width. */}
-            <div className="min-w-0 basis-full md:basis-0 md:flex-1">
+            <div className="min-w-0 basis-full @2xl:basis-0 @2xl:flex-1">
               <FolderBar
                 workspaceId={workspace.id}
                 selected={search.folder}
@@ -224,7 +224,7 @@ export function MediaPage({
 
 function Grid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="relative grid grid-cols-2 gap-3 @xl:grid-cols-3 @xl:gap-4 @3xl:grid-cols-4 @5xl:grid-cols-5">
       {children}
     </div>
   );
@@ -240,14 +240,17 @@ function Filters({
   const { t } = useTranslation('media');
   const kinds: MediaKind[] = ['image', 'gif', 'video'];
   return (
-    <div className="flex w-full gap-2 md:w-auto md:shrink-0">
+    <div className="flex w-full gap-2 @2xl:w-auto @2xl:shrink-0">
       <Select
         value={search.kind ?? ALL}
         onValueChange={(v) => {
           onSearchChange({ kind: v === ALL ? undefined : (v as MediaKind) });
         }}
       >
-        <SelectTrigger aria-label={t('filters.kind')} className="h-8 flex-1 md:w-32 md:flex-none">
+        <SelectTrigger
+          aria-label={t('filters.kind')}
+          className="h-8 flex-1 @2xl:w-32 @2xl:flex-none"
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -265,7 +268,10 @@ function Filters({
           onSearchChange({ source: v === ALL ? undefined : (v as 'upload' | 'ai') });
         }}
       >
-        <SelectTrigger aria-label={t('filters.source')} className="h-8 flex-1 md:w-36 md:flex-none">
+        <SelectTrigger
+          aria-label={t('filters.source')}
+          className="h-8 flex-1 @2xl:w-36 @2xl:flex-none"
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
