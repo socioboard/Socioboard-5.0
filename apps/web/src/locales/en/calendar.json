@@ -128,5 +128,7 @@
     "saved_other": "{{account}} has {{count}} posting times a week.",
     "savedNone": "{{account}} has no posting times now.",
     "disconnected": "This account is disconnected. Reconnect it to give it posting times."
-  }
+  },
+  "more_one": "+{{count}} more",
+  "more_other": "+{{count}} more"
 }

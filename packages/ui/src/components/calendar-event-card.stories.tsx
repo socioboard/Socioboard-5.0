@@ -47,3 +47,29 @@ export function Deliveries() {
     </div>
   );
 }
+
+/** The forms by view: one line in a month, two in a week. */
+export function MonthAndWeek() {
+  return (
+    <div className="flex max-w-xs flex-col gap-3">
+      <div className="glass-chip rounded-control border-hair border">
+        <CalendarEventCard
+          entries={[entry]}
+          time="09:00"
+          noText="No text"
+          statusLabels={labels}
+          line
+        />
+      </div>
+      <div className="glass-chip rounded-control border-hair border">
+        <CalendarEventCard
+          entries={[entry]}
+          time="09:00"
+          noText="No text"
+          statusLabels={labels}
+          compact
+        />
+      </div>
+    </div>
+  );
+}

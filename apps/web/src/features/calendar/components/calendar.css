@@ -57,7 +57,26 @@
 }
 .sb-calendar-day {
   border: 1px solid var(--sb-hair);
-  min-height: 120px;
+}
+/* "+2 more": the day's other posts, in FullCalendar's popover. */
+.sb-calendar-more {
+  display: inline-flex;
+  margin: 1px 4px 0;
+  padding: 0 8px;
+  line-height: 18px;
+  border-radius: 999px;
+  background: var(--sb-chip);
+  color: var(--sb-ink-2);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 150ms,
+    color 150ms;
+}
+.sb-calendar-more:hover {
+  background: color-mix(in srgb, var(--sb-ring) 12%, transparent);
+  color: var(--sb-ring);
 }
 .sb-calendar-today {
   background: var(--fc-classic-today);
@@ -66,9 +85,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 28px;
-  min-width: 28px;
-  margin: 4px;
+  height: 24px;
+  min-width: 24px;
+  margin: 3px 4px 2px;
   border-radius: 8px;
   font-size: 12px;
   color: var(--sb-ink-2);

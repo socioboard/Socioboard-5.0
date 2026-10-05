@@ -61,7 +61,7 @@ export const CalendarGrid = memo(function CalendarGrid({
   weekTitle,
   height,
   editable,
-  compactCards,
+  cards,
   canCreate,
   statusLabels,
 }: {
@@ -71,9 +71,10 @@ export const CalendarGrid = memo(function CalendarGrid({
   initialView: string;
   initialDate: string;
   weekTitle: boolean;
-  height: number | 'auto';
+  height: '100%' | 'auto';
   editable: boolean;
-  compactCards: boolean;
+  /** Month (one line), week (two lines) or the phone's agenda (full). */
+  cards: 'line' | 'compact' | 'full';
   canCreate: boolean;
   statusLabels: Record<CalendarEntry['status'], string>;
 }) {
@@ -142,7 +143,9 @@ export const CalendarGrid = memo(function CalendarGrid({
       titleFormat={{ year: 'numeric', month: 'long', ...(weekTitle ? { day: 'numeric' } : {}) }}
       height={height}
       fixedWeekCount
-      dayMaxEvents={3}
+      // As many as fit in a day; the rest behind "+2 more".
+      dayMaxEvents
+      expandRows
       allDaySlot={false}
       slotDuration="00:30:00"
       slotLaneClass="sb-calendar-slot"
@@ -213,7 +216,8 @@ export const CalendarGrid = memo(function CalendarGrid({
                 time={time.format(entriesOf(info)[0].at, 'time')}
                 noText={t('noText')}
                 statusLabels={statusLabels}
-                compact={compactCards}
+                compact={cards === 'compact'}
+                line={cards === 'line'}
               />
             </div>
           </>
@@ -271,6 +275,8 @@ export const CalendarGrid = memo(function CalendarGrid({
         );
       }}
       dayHeaderClass="sb-calendar-heading"
+      moreLinkClass="sb-calendar-more"
+      moreLinkContent={(info) => t('more', { count: Number(info.text.replace(/\D/g, '')) || 0 })}
       noEventsContent={t('emptyBody')}
     />
   );
