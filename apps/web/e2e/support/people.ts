@@ -19,7 +19,8 @@ export function person(role: string) {
  */
 export async function browserFor(
   browser: Browser,
-  options: { storageState?: string } = {},
+  /** A saved session to start from, and the timezone the browser reports. */
+  options: { storageState?: string; timezoneId?: string } = {},
 ): Promise<BrowserContext> {
   const octet = () => Math.floor(Math.random() * 250) + 1;
   const ip = `10.${octet()}.${octet()}.${octet()}`;

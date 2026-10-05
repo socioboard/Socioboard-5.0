@@ -85,7 +85,8 @@ Unit and integration tests live next to the code they test (`__tests__/` in each
 
 | Suite | Path | Phases · Tasks |
 | --- | --- | --- |
-| Calendar UI (fixture API; real browser and drag engine) | `apps/web/e2e/phase-2/calendar.spec.ts` | P2-F2; real-network publishing acceptance remains P2-Q3 |
+| Calendar UI (fixture API; real browser and drag engine) | `apps/web/e2e/phase-2/calendar.spec.ts` | P2-F2 |
+| Schedule → calendar → drag → publishes at the new time (a real Facebook Page; Meta project, never in CI: it publishes) | `apps/web/e2e/phase-2/meta-schedule.spec.ts` | P2-Q3 |
 | E2E per phase | `apps/web/e2e/phase-<n>/` | P0-Q1 · P1-Q1, P1-Q2, P1-Q3 · P2-Q3 · P3-Q1 · P4-Q1, P4-Q2 · P5-Q1, P5-Q2 · P6-Q1, P6-Q2 |
 | Chaos (`pnpm test:chaos`: real api and worker processes, the suite's own Valkey in Docker, a ledger network counting every send) + DST (`pnpm test:dst`: every clock change in every timezone against a walk of the real clock, and repeating posts through the real pipeline across the next changes) | `tests/chaos/`, `tests/scheduling/` | P2-Q1, P2-Q2 |
 | Adapter coverage | `packages/providers/src/**/__tests__/` | P1-B9 (Meta) · P3-Q2 |
