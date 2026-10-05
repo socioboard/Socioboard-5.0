@@ -4,6 +4,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import account from '../locales/en/account.json';
+import admin from '../locales/en/admin.json';
 import accounts from '../locales/en/accounts.json';
 import auth from '../locales/en/auth.json';
 import common from '../locales/en/common.json';
@@ -33,6 +34,7 @@ export const resources = {
     posts,
     calendar,
     notifications,
+    admin,
   },
 } as const;
 
@@ -54,6 +56,7 @@ void i18n.use(initReactI18next).init({
     'posts',
     'calendar',
     'notifications',
+    'admin',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes
