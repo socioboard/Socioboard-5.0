@@ -604,7 +604,9 @@ export function CalendarPage({
         )}
         <section
           ref={section}
-          className="sb-calendar glass-chip rounded-pane min-h-[520px] flex-1 overflow-hidden"
+          // Grows to fill, never shrinks below its grid: with overflow hidden (the rounded corners),
+          // shrinking clipped the month's last weeks instead of letting the page scroll.
+          className="sb-calendar glass-chip rounded-pane min-h-[520px] flex-[1_0_auto] overflow-hidden"
           onPointerDown={(e) => {
             swipe.current = e.pointerType === 'touch' ? { x: e.clientX, y: e.clientY } : null;
           }}
