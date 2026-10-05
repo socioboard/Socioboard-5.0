@@ -51,9 +51,9 @@ export default defineConfig({
   },
   projects: [
     // The app against the dev services: `pnpm e2e`.
-    { name: 'app', testIgnore: /phase-1\/meta-/ },
+    { name: 'app', testIgnore: /\/meta-[^/]*\.spec\.ts$/ },
     // Real Facebook and Instagram accounts (it publishes): only `pnpm e2e:meta`.
-    { name: 'meta', testMatch: /phase-1\/meta-/ },
+    { name: 'meta', testMatch: /\/meta-[^/]*\.spec\.ts$/ },
   ],
   webServer: [
     {

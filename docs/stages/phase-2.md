@@ -37,7 +37,7 @@
 ## Quality
 - [x] P2-Q1 Chaos tests: restart api, worker and Valkey around scheduled times; every post publishes exactly once (`tests/chaos`, `pnpm test:chaos`, CI on pull requests and on demand; found and fixed a double post when a worker dies mid-send: such a try is now stopped as "lost track", never sent again; `PublishAttempt.sentAt`, migration `20261005220000_publish_attempt_sent_at`)
 - [x] P2-Q2 Daylight-saving test for recurring rules (`tests/scheduling`, `pnpm test:dst`, run by CI's integration job: every clock change in every timezone for two years against a walk of the real clock, and the recurring pipeline across the next real changes; no fault found)
-- [ ] P2-Q3 E2E: schedule → appears on calendar → drag to new time → publishes at new time
+- [x] P2-Q3 E2E: schedule → appears on calendar → drag to new time → publishes at new time (`e2e/phase-2/meta-schedule.spec.ts`, Meta project, a real Facebook Page: scheduled half an hour ahead, dragged on the week calendar to a quarter hour a few minutes ahead, goes out then (within 90 s, never before), once, shown live on the calendar, then deleted from Facebook; 18 minutes on 2026-10-05)
 
 ## Done when
 Scheduled and recurring posts publish on time, exactly once, surviving restarts of every component. Users get notified of failures, the calendar reflects reality live, and admins can retry failed posts from the console.
