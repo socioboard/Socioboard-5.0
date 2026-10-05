@@ -15,7 +15,7 @@ import {
   useTheme,
   type ThemePreference,
 } from '@socioboard/ui';
-import { LogOut, Moon, ShieldCheck, Sun, UserRound } from 'lucide-react';
+import { LogOut, Moon, ShieldCheck, Sun, UserRound, ShieldAlert } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
@@ -84,6 +84,16 @@ export function UserMenu({
           <ShieldCheck aria-hidden="true" />
           {t('user.security')}
         </DropdownMenuItem>
+        {me.user.isPlatformAdmin && (
+          <DropdownMenuItem
+            onSelect={() => {
+              void navigate({ to: '/admin' });
+            }}
+          >
+            <ShieldAlert aria-hidden="true" />
+            {t('user.admin')}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuLabel>{t('common:theme.label')}</DropdownMenuLabel>
         <DropdownMenuRadioGroup

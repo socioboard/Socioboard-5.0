@@ -19,7 +19,8 @@
     "signOut": "Sign out",
     "toggleTheme": "Switch to {{theme}} theme",
     "profile": "Profile",
-    "security": "Security"
+    "security": "Security",
+    "admin": "Admin console"
   },
   "roles": {
     "owner": "Owner",

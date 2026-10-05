@@ -29,6 +29,8 @@ export interface ConfirmDialogProps {
   errorMessage?: (error: unknown) => ReactNode;
   /** Ask the person to type this (e.g. the workspace name) before the confirm button works. */
   typeToConfirm?: { value: string; label: ReactNode };
+  /** Holds the confirm button back (e.g. until a required reason is filled in). */
+  confirmDisabled?: boolean;
   /** Extra content between the description and the buttons (a select, a warning). */
   children?: ReactNode;
   closeLabel?: string;
@@ -60,6 +62,7 @@ function ConfirmBody({
   onConfirm,
   errorMessage,
   typeToConfirm,
+  confirmDisabled = false,
   children,
   close,
 }: Omit<ConfirmDialogProps, 'open' | 'onOpenChange' | 'closeLabel'> & { close: () => void }) {
@@ -86,7 +89,7 @@ function ConfirmBody({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (matches && !busy) void confirm();
+        if (matches && !confirmDisabled && !busy) void confirm();
       }}
       className="flex flex-col gap-4"
     >
@@ -122,7 +125,7 @@ function ConfirmBody({
           type="submit"
           variant={tone === 'danger' ? 'danger' : 'primary'}
           loading={busy}
-          disabled={!matches}
+          disabled={!matches || confirmDisabled}
         >
           {confirmLabel}
         </Button>

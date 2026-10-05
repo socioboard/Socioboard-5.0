@@ -29,7 +29,7 @@
 - [x] P2-F3 Queue view per account + queue slots editor (`/w/:slug/queue`, posting times in the account drawer, free slots on the week view)
 - [x] P2-F4 Notification bell (in the app shell's sidebar and phone menu), feed page, preferences; toasts for failures (`features/notifications`, `/me/notifications`)
 - [x] P2-F5 Socket client → Query invalidation for post/account status (`lib/realtime.ts`, `features/live`; the Failed count on Posts)
-- [ ] P2-F6 Admin console v1: overview-lite, publishing health, failed targets (retry/cancel), queues, expiring accounts
+- [x] P2-F6 Admin console v1: overview-lite, publishing health, failed targets (retry/cancel), queues, expiring accounts (`features/admin`, `/admin/*`)
 
 ## Infra
 - [ ] P2-I1 Sentry for api, worker and web; alert on failed-publish spikes and queue backlog

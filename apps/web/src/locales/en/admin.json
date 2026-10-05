@@ -1,0 +1,148 @@
+{
+  "title": "Admin console",
+  "subtitle": "Every workspace",
+  "loadError": "This didn’t load.",
+  "retry": "Try again",
+  "loadMore": "Load more",
+  "loading": "Loading",
+  "cancel": "Keep it",
+  "nav": {
+    "label": "Admin console",
+    "overview": "Overview",
+    "publishing": "Publishing",
+    "queues": "Queues",
+    "accounts": "Accounts",
+    "back": "Back to Socioboard"
+  },
+  "gate": {
+    "noTwoFactor": {
+      "title": "Turn on two-factor authentication",
+      "body": "The admin console sees every customer, so it needs two-factor authentication on your account.",
+      "action": "Set up two-factor"
+    },
+    "verify": {
+      "title": "Confirm it’s you",
+      "body": "This sign-in didn’t use your two-factor code. Sign in again with it to open the admin console.",
+      "action": "Sign in again"
+    },
+    "notAdmin": {
+      "title": "Not available",
+      "body": "Your account isn’t a platform admin any more."
+    }
+  },
+  "overview": {
+    "title": "Overview",
+    "refresh": "Refresh",
+    "updated": "Updated {{time}}",
+    "last24h": "Last 24 hours",
+    "tiles": {
+      "signups": "Sign-ups",
+      "activeWorkspaces": "Workspaces that posted (30 days)",
+      "published": "Deliveries published",
+      "failed": "Deliveries failed",
+      "stuck": "Stuck in publishing (over 15 min)",
+      "accounts": "Accounts needing attention"
+    },
+    "queues": "Queues",
+    "openQueues": "Open Bull Board",
+    "queue": "Queue",
+    "counts": {
+      "waiting": "Waiting",
+      "delayed": "Delayed",
+      "active": "Active",
+      "failed": "Failed"
+    }
+  },
+  "publishing": {
+    "title": "Publishing",
+    "health": "Health by network",
+    "range": "Period",
+    "ranges": {
+      "24h": "24 hours",
+      "7d": "7 days",
+      "30d": "30 days"
+    },
+    "quiet": "Nothing finished publishing in this period.",
+    "successRate": "Success rate on {{network}}",
+    "counts": {
+      "published": "Published",
+      "failed": "Failed",
+      "retried": "Retried"
+    },
+    "topErrors": "Most common errors"
+  },
+  "kinds": {
+    "retryable": "Network trouble",
+    "rate_limited": "Rate limited",
+    "auth": "Sign-in",
+    "content": "Content refused"
+  },
+  "problems": {
+    "title": "Failed and stuck deliveries",
+    "account": "Account",
+    "state": "State",
+    "stuck": "Stuck",
+    "states": {
+      "failed": "Failed",
+      "stuck": "Stuck"
+    },
+    "allStates": "Failed and stuck",
+    "network": "Network",
+    "allNetworks": "All networks",
+    "kind": "Error kind",
+    "allKinds": "All errors",
+    "error": "Last error",
+    "noError": "No error recorded",
+    "tries": "Tries",
+    "attempts_one": "{{count}} attempt",
+    "attempts_other": "{{count}} attempts",
+    "actions": "Actions",
+    "retry": "Retry",
+    "cancel": "Cancel delivery",
+    "retryFor": "Retry {{account}}",
+    "cancelFor": "Cancel delivery to {{account}}",
+    "retryTitle": "Retry the delivery to {{account}}?",
+    "retryBody": "It’s published again now, for {{workspace}}. A stuck delivery may already be on the network, so check first: it could appear twice.",
+    "cancelTitle": "Cancel the delivery to {{account}}?",
+    "cancelBody": "It won’t be sent to {{account}} ({{workspace}}). The post’s other accounts aren’t affected.",
+    "retryDone": "Publishing to {{account}} again.",
+    "cancelDone": "The delivery to {{account}} is cancelled.",
+    "empty": "Nothing failed or stuck",
+    "emptyBody": "Every delivery is going out.",
+    "emptyFiltered": "Nothing matches",
+    "emptyFilteredBody": "No delivery matches these filters."
+  },
+  "reason": {
+    "label": "Why",
+    "placeholder": "e.g. Network outage ended; customer asked us to resend",
+    "hint_one": "Kept in the audit log. {{count}} character (3 to 500).",
+    "hint_other": "Kept in the audit log. {{count}} characters (3 to 500)."
+  },
+  "queues": {
+    "title": "Queues",
+    "newTab": "Open in a new tab",
+    "body": "Bull Board, read-only. To retry or cancel a delivery, use Publishing: it asks why and keeps it in the audit log.",
+    "frame": "Bull Board"
+  },
+  "accounts": {
+    "title": "Accounts needing attention",
+    "body": "Accounts that stopped accepting posts, or whose sign-in runs out soon. Their owners are told; this shows how many scheduled posts are at risk across every workspace.",
+    "account": "Account",
+    "why": "Why",
+    "reauth": "Needs reconnecting",
+    "expiring": "Sign-in expiring",
+    "expiresAt": "Expires {{time}}",
+    "atRisk": "Scheduled posts at risk",
+    "checked": "Last checked",
+    "never": "Not checked yet",
+    "state": "Show",
+    "allStates": "Both",
+    "within": "Expiring within",
+    "withinDays_one": "{{count}} day",
+    "withinDays_other": "{{count}} days",
+    "empty": "No account needs attention",
+    "emptyFiltered": "Nothing matches",
+    "emptyBody_one": "No account needs reconnecting or expires within {{count}} day.",
+    "emptyBody_other": "No account needs reconnecting or expires within {{count}} days."
+  }
+}
