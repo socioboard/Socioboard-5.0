@@ -102,6 +102,9 @@ jobs:
         env:
           S3_BUCKET: ''
         run: pnpm --filter @socioboard/core test:int
+      # P2-Q2: every clock change in every timezone, and repeating posts across the next ones.
+      - name: Daylight-saving tests
+        run: pnpm test:dst
       - name: Service logs on failure
         if: failure()
         run: $COMPOSE logs --tail 200
