@@ -149,4 +149,42 @@ describe('moving one delivery', () => {
     });
     expect(calls).toHaveLength(0);
   });
+  it('a move offers Undo: a move back, sent with the new time as previousAt, not itself undoable', async () => {
+    const replies = (at: string) => [
+      200,
+      {
+        ...POST,
+        targets: POST.targets.map((x) => (x.id === ENTRY.targetId ? { ...x, scheduledAt: at } : x)),
+      },
+    ];
+    let count = 0;
+    const calls = mockServer({
+      [`PATCH ${BASE}/targets/${ENTRY.targetId}/schedule`]: () => {
+        count += 1;
+        return replies(count === 1 ? next.toISOString() : ENTRY.at) as [number, unknown];
+      },
+    });
+    const success = vi.spyOn(toast, 'success');
+    const { result } = setup();
+    await act(async () => {
+      await result.current.move(ENTRY, next);
+    });
+    const [, options] = success.mock.calls[0] ?? [];
+    const undo = (options as { action?: { label: string; onClick: () => void } } | undefined)
+      ?.action;
+    expect(undo?.label).toBe('Undo');
+    await act(async () => {
+      undo?.onClick();
+      await new Promise((r) => setTimeout(r, 0));
+    });
+    await waitFor(() => {
+      expect(calls).toHaveLength(2);
+    });
+    expect(calls[1]?.body).toEqual({ at: ENTRY.at, previousAt: next.toISOString() });
+    await waitFor(() => {
+      expect(success).toHaveBeenCalledTimes(2);
+    });
+    expect(success.mock.calls[1]?.[0]).toMatch(/is back at/);
+    expect(success.mock.calls[1]?.[1]).toEqual({});
+  });
 });

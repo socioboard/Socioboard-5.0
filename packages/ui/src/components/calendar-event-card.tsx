@@ -2,7 +2,6 @@ import type { CalendarEntry } from '@socioboard/contracts';
 import { Repeat } from 'lucide-react';
 import { cn } from '../cn';
 import { Avatar } from './display';
-import { MediaThumb } from './composer';
 import { NetworkIcon } from './network-icon';
 import { StatusChip } from './status-chip';
 
@@ -44,6 +43,17 @@ export function CalendarEventCard({
         )}
         {first.recurring && <Repeat className="text-ink-3 size-3 shrink-0" aria-hidden="true" />}
       </div>
+      {!compact && first.thumbnailUrl && (
+        <img
+          src={first.thumbnailUrl}
+          alt=""
+          loading="lazy"
+          className="h-16 w-full rounded-md object-cover"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+      )}
       <div className="flex min-w-0 items-start gap-2">
         <p
           className={cn(
@@ -53,14 +63,6 @@ export function CalendarEventCard({
         >
           {first.text || noText}
         </p>
-        {!compact && first.thumbnailUrl && (
-          <MediaThumb
-            src={first.thumbnailUrl}
-            kind="image"
-            alt={first.text || noText}
-            className="size-9 shrink-0"
-          />
-        )}
       </div>
       <div className={cn('flex flex-wrap items-center gap-1', compact && 'hidden')}>
         {[...new Set(entries.map((e) => e.account.network))].map((n) => (

@@ -76,7 +76,7 @@ Using them in screens:
 | 5 | UsageMeter, PlanCard, KpiTile |
 | 6.1 | Chart wrappers (Line, Bar, Area) with theme tokens, DateRangePicker, MetricDelta |
 
-Phase 2: DateTimePicker arrived with P2-F1. CalendarEventCard arrives with P2-F2: grouped account avatars and networks, workspace time, text, optional thumbnail, recurrence marker and distinct delivery statuses; FullCalendar owns interaction, focus and dragging. Catalogue story: `CalendarEventCard.Deliveries`.
+Phase 2: DateTimePicker arrived with P2-F1. CalendarEventCard arrives with P2-F2: grouped account avatars and networks, workspace time, text, the post's picture leading the card (month) or a single line (`compact`, week), recurrence marker and distinct delivery statuses; FullCalendar owns interaction, focus and dragging. Catalogue story: `CalendarEventCard.Deliveries`.
 
 Phase 0 components are built with the task that first uses them: Button through CommandPalette so far (P0-F2, P0-F4 Combobox, P0-F5 menus, tooltip, banner, palette, page header); Checkbox, Switch, RadioGroup, NavTabs and ConfirmDialog with settings (P0-F6); FileDropzone, ProgressBar, Card and Popover with the media library (P0-F7); AvatarStack with approvals and comments (P4-F7), where several people first appear together. IconButton is `Button size="icon"`. The Sidebar is app-specific, so it lives in `apps/web` (`features/shell`), not here. P0-F8 catalogs them all.
 

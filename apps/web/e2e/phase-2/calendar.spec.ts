@@ -298,3 +298,122 @@ test('viewer can preview but cannot compose, edit, delete, duplicate or reschedu
   await expectRightCursors(page, 'viewer preview');
   expect(server.writes).toHaveLength(0);
 });
+
+// ── Polish: hover, keys, Undo ────────────────────────────────────────────────────────────────
+
+/** A point in a week column, at a wall-clock time on the workspace's (Kolkata) clock. */
+async function laneAt(page: Page, day: string, hour: number, minute: number) {
+  // The day's full-height column (the header has a short one with the same date).
+  const lane = page.locator(`.sb-calendar-lane[data-date="${day}"]`).last();
+  await lane.evaluate((el) => {
+    el.scrollIntoView({ block: 'center' });
+  });
+  const box = await lane.boundingBox();
+  if (!box) throw new Error(`No column for ${day}`);
+  // Into the middle of the quarter hour, so rounding can't land on its neighbour.
+  const fraction = (hour * 60 + minute + 7) / (24 * 60);
+  return { x: box.x + box.width / 2, y: box.y + box.height * fraction };
+}
+
+test('week: hovering an empty slot offers a post at that quarter hour, never in the past', async ({
+  page,
+}) => {
+  await calendarServer(page);
+  await page.goto('/w/halden/calendar?date=2026-10-05&view=week');
+  await expect(page.locator(`[data-calendar-target="${ENTRY.targetId}"]`)).toBeVisible();
+  const later = await laneAt(page, '2026-10-07', 11, 15);
+  await page.mouse.move(later.x, later.y, { steps: 4 });
+  const ghost = page.locator('.sb-calendar-ghost');
+  await expect(ghost).toContainText(/11:15 AM|11:15/);
+  // NOW is 15:30 in Kolkata on Monday 5 October: that morning is past, so the ghost goes.
+  const past = await laneAt(page, '2026-10-05', 7, 0);
+  await page.mouse.move(past.x, past.y, { steps: 4 });
+  await expect(ghost).toHaveCount(0);
+  await page.mouse.move(later.x, later.y, { steps: 4 });
+  await expect(ghost).toContainText(/11:15 AM|11:15/);
+  await page.screenshot({ path: 'test-results/calendar-week-ghost.png' });
+  await ghost.click();
+  // 11:15 in Kolkata is 05:45 UTC.
+  await expect(page).toHaveURL(/at=2026-10-07T05%3A45%3A00/);
+  await expect(page.getByText(/Proposed time:/)).toBeVisible();
+});
+
+test('resting on a card shows a quick look; moving away hides it', async ({ page }) => {
+  await calendarServer(page);
+  await page.goto('/w/halden/calendar?date=2026-10-05');
+  const failed = page.locator('[data-calendar-target="01a0d816-827a-74d6-a46e-409c7db35004"]');
+  await failed.hover();
+  const look = page.getByRole('dialog', { name: 'Quick look' });
+  await expect(look).toContainText('Our weekend tasting notes');
+  await expect(look).toContainText('Reconnect this account to publish.');
+  await expectRightCursors(page, 'quick look');
+  await page.screenshot({ path: 'test-results/calendar-quick-look.png' });
+  await page.mouse.move(5, 5);
+  await expect(look).toBeHidden();
+  // Open from it: the full preview.
+  await page.locator(`[data-calendar-target="${ENTRY.targetId}"]`).hover();
+  await look.getByRole('button', { name: 'Open' }).click();
+  await expect(page.getByRole('dialog', { name: 'Post preview' })).toContainText(ENTRY.text);
+  await expect(look).toBeHidden();
+});
+
+test('keys: arrows change period, T today, W and M views, N a new post', async ({ page }) => {
+  await calendarServer(page);
+  await page.goto('/w/halden/calendar?date=2026-10-05');
+  await expect(page.getByRole('heading', { name: 'October 2026' })).toBeVisible();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('heading', { name: 'November 2026' })).toBeVisible();
+  await page.keyboard.press('t');
+  await expect(page.getByRole('heading', { name: 'October 2026' })).toBeVisible();
+  await page.keyboard.press('w');
+  await expect(page.getByRole('region', { name: 'Calendar', exact: true })).toHaveAttribute(
+    'data-view',
+    'week',
+  );
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.getByRole('heading', { name: /September 28 – October 4, 2026/ })).toBeVisible();
+  await page.keyboard.press('m');
+  await expect(page.getByRole('region', { name: 'Calendar', exact: true })).toHaveAttribute(
+    'data-view',
+    'month',
+  );
+  // Typing in a field isn't a shortcut.
+  await page.getByRole('combobox', { name: 'Status', exact: true }).focus();
+  await page.keyboard.press('n');
+  await expect(page).toHaveURL(/\/calendar/);
+  await page.locator('body').click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('n');
+  await expect(page).toHaveURL(/\/w\/halden\/compose$/);
+});
+
+test('a drag shows where the card will land, and Undo moves it back', async ({ page }) => {
+  const server = await calendarServer(page);
+  await page.goto('/w/halden/calendar?view=week&separate=true');
+  const event = page.locator(`[data-calendar-target="${ENTRY.targetId}"]`);
+  await expect(event).toBeVisible();
+  // Scroll first (finding the column scrolls the grid), then measure where the card is.
+  const to = await laneAt(page, '2026-10-08', 16, 0);
+  const start = await event.boundingBox();
+  if (!start) throw new Error('No card');
+  await page.mouse.move(start.x + start.width / 2, start.y + 10);
+  await page.mouse.down();
+  await page.mouse.move((start.x + to.x) / 2, (start.y + to.y) / 2, { steps: 12 });
+  // The page re-renders mid-drag (T puts today's date in the address); the drag carries on.
+  await page.keyboard.press('t');
+  await expect(page).toHaveURL(/date=2026-10-05/);
+  await page.mouse.move(to.x, to.y, { steps: 12 });
+  const label = page.locator('.sb-calendar-drag-label');
+  await expect(label).toContainText(/Move to Thu, Oct 8, 2026|Move to Thu, 8 Oct 2026/);
+  await page.screenshot({ path: 'test-results/calendar-dragging.png' });
+  await page.mouse.up();
+  await expect.poll(() => server.writes.length).toBe(1);
+  const moved = server.writes[0]?.body as { at: string; previousAt: string };
+  expect(moved.previousAt).toBe(ENTRY.at);
+  await page.screenshot({ path: 'test-results/calendar-landed.png' });
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect.poll(() => server.writes.length).toBe(2);
+  expect(server.writes[1]?.body).toEqual({ at: ENTRY.at, previousAt: moved.at });
+  await expect(page.getByText(/is back at/)).toBeVisible();
+  // Undoing isn't itself undoable.
+  await expect(page.getByRole('button', { name: 'Undo' })).toHaveCount(0);
+});
