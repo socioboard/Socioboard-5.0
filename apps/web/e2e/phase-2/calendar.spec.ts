@@ -199,6 +199,14 @@ async function calendarServer(page: Page, role = 'owner') {
   };
 }
 
+/** The calendar's box shows its whole grid (it grows; the page scrolls), never clips it. */
+async function expectWholeGrid(page: Page) {
+  const box = page.locator('section.sb-calendar');
+  await expect
+    .poll(() => box.evaluate((el) => el.scrollHeight - el.clientHeight))
+    .toBeLessThanOrEqual(1);
+}
+
 test('calendar: month, preview, a single-account drag, rollback, filters, week and mobile', async ({
   page,
 }) => {
@@ -209,6 +217,11 @@ test('calendar: month, preview, a single-account drag, rollback, filters, week a
   await expect(event).toBeVisible();
   await expect(event).toContainText(/2:00 PM|14:00/);
   await expect(page.getByRole('heading', { name: 'October 2026' })).toBeVisible();
+  // The whole month is there: nothing clipped, the last week reachable by scrolling.
+  await expectWholeGrid(page);
+  const lastDay = page.getByRole('button', { name: /Write a post for (8 Nov 2026|Nov 8, 2026)/ });
+  await lastDay.scrollIntoViewIfNeeded();
+  await expect(lastDay).toBeInViewport();
   await expectRightCursors(page, 'month calendar');
   await page.screenshot({ path: 'test-results/calendar-month-light.png', fullPage: true });
   await page.emulateMedia({ colorScheme: 'dark' });
@@ -269,6 +282,7 @@ test('calendar: month, preview, a single-account drag, rollback, filters, week a
   await expectRightCursors(page, 'week calendar');
   await expect(event).toContainText(/2:00 PM|14:00/);
   await expect(event).toContainText('Scheduled');
+  await expectWholeGrid(page);
   await expect(page.getByRole('heading', { name: 'October 5 – 11, 2026' })).toBeVisible();
   await page.getByText(/Someone moved this delivery/).waitFor({ state: 'hidden' });
   await page.screenshot({ path: 'test-results/calendar-week-dark.png', fullPage: true });
