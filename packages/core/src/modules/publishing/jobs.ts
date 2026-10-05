@@ -102,6 +102,13 @@ function rateBuckets(limits: RateLimits, accountId: string, provider: string): R
  */
 export const MAX_LATE_MINUTES = 60;
 
+/** A target `publishing` this long with nothing working on it is stuck (reconcile's rule). */
+export const STUCK_AFTER_MINUTES = 15;
+
+/** A delivery that may or may not be on the network: a person checks before it goes again. */
+export const LOST_TRACK_MESSAGE =
+  'We lost track of this delivery and stopped it; check the account before publishing it again';
+
 /** Spreads out jobs held back by the same limit, so they don't all wake at the same moment. */
 const RATE_JITTER_MS = 1000;
 
@@ -123,7 +130,11 @@ export class PublishDeferred extends Error {
 export async function publishTarget(
   deps: PublishDeps,
   data: PublishJobData,
-  attempt: { isLast: boolean },
+  /**
+   * `isLast`: no try after this one. `resumed`: BullMQ took the job back from a worker that
+   * stopped answering (died or hung past its lock) and runs it again.
+   */
+  attempt: { isLast: boolean; resumed?: boolean },
 ): Promise<void> {
   const { db, logger, clock, registry } = deps;
   const events = typedEvents<PublishingEvents>(deps.events);
@@ -152,6 +163,36 @@ export async function publishTarget(
   // target only goes out through its own scheduled job.
   if (scheduled ? target.scheduleVersion !== data.scheduleVersion : target.status === 'scheduled') {
     return;
+  }
+
+  // A try still `running` belongs to another run, alive or dead (P2-Q1's restart tests).
+  if (target.status === 'publishing') {
+    const unfinished = await ws.publishAttempt.findFirst({
+      where: { postTargetId: target.id, attemptNo: target.attempts, outcome: 'running' },
+    });
+    const stuckBefore = clock.now().getTime() - STUCK_AFTER_MINUTES * 60_000;
+    if (unfinished && attempt.resumed) {
+      // BullMQ took this job back from a worker that died (its lock expired) in this try.
+      if (unfinished.sentAt) {
+        // It had called the network, which may have the post: never send it blindly again.
+        await stopLostDelivery(deps, data.workspaceId, target, unfinished.id);
+        return;
+      }
+      // It died before calling the network: that try didn't happen, this run makes it again.
+      await ws.publishAttempt.update({
+        where: { id: unfinished.id },
+        data: {
+          outcome: 'will_retry',
+          finishedAt: clock.now(),
+          errorKind: 'retryable',
+          message: 'The worker stopped before sending; tried again',
+        },
+      });
+    } else if (unfinished && unfinished.startedAt.getTime() > stuckBefore) {
+      // Another run is sending it right now: two runs must never both send.
+      return;
+    }
+    // Older and not resumed: stuck, and an admin retried it on purpose; it goes again.
   }
 
   // Rate limits: wait for room without using a try. Skipped when this try fails without calling
@@ -236,6 +277,8 @@ export async function publishTarget(
     const adapter = registry.network(network);
     const media = await prepareMedia(deps, data.workspaceId, adapter.imagePrep, content.mediaIds);
     const { credentials } = await deps.getCredentials(data.workspaceId, target.account.id);
+    // From here the network may have it: a worker dying now leaves a try that is never resent.
+    await ws.publishAttempt.update({ where: { id: attemptId }, data: { sentAt: clock.now() } });
     const result = await adapter.publish({ ...content, media }, credentials);
 
     // Saved at once: from here on, a re-run sees externalPostId and never posts again.
@@ -336,6 +379,50 @@ export async function publishTarget(
   }
 }
 
+/**
+ * A try that reached the network and whose worker died before recording the answer: the post
+ * may be on the network or not. Sending again could post it twice, so the delivery fails for a
+ * person to check (reconcile's "lost track" rule, without waiting 15 minutes).
+ */
+async function stopLostDelivery(
+  deps: PublishDeps,
+  workspaceId: string,
+  target: { id: string; postId: string; attempts: number; account: { network: NetworkId } },
+  attemptId: string,
+): Promise<void> {
+  const ws = deps.db.forWorkspace(workspaceId);
+  const lastError: PublishError = {
+    kind: 'retryable',
+    networkCode: null,
+    message: LOST_TRACK_MESSAGE,
+  };
+  const stopped = await ws.postTarget.updateMany({
+    where: { id: target.id, status: 'publishing', attempts: target.attempts, externalPostId: null },
+    data: { status: 'failed', lastError },
+  });
+  if (stopped.count === 0) return;
+  await ws.publishAttempt.update({
+    where: { id: attemptId },
+    data: {
+      outcome: 'failed',
+      finishedAt: deps.clock.now(),
+      errorKind: 'retryable',
+      message: LOST_TRACK_MESSAGE,
+    },
+  });
+  deps.logger.warn({ targetId: target.id }, 'delivery lost track of after a worker died');
+  await deps.recomputeStatus(workspaceId, target.postId);
+  recordDelivery(target.account.network, 'failed');
+  await typedEvents<PublishingEvents>(deps.events).emit('target.failed', {
+    workspaceId,
+    postId: target.postId,
+    targetId: target.id,
+    network: target.account.network,
+    errorKind: 'retryable',
+    message: LOST_TRACK_MESSAGE,
+  });
+}
+
 export const publishQueue = (deps: PublishDeps) =>
   defineQueue<PublishJobData>(
     'publish',
@@ -343,6 +430,7 @@ export const publishQueue = (deps: PublishDeps) =>
       try {
         await publishTarget(deps, job.data, {
           isLast: job.attemptsMade + 1 >= (job.opts.attempts ?? PUBLISH_ATTEMPTS),
+          resumed: job.stalledCounter > 0,
         });
       } catch (err) {
         // Held back by a rate limit: wait, keeping every try.

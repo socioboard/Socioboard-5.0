@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - tests/*
 allowBuilds:
   '@prisma/engines': true
   # Ladle's compiler: its binary comes from the platform package, no install script needed.

@@ -30,7 +30,8 @@
     "db:seed": "pnpm --filter @socioboard/api seed",
     "db:studio": "pnpm --filter @socioboard/db studio",
     "catalog": "pnpm --filter @socioboard/ui catalog",
-    "e2e": "pnpm --filter @socioboard/web e2e"
+    "e2e": "pnpm --filter @socioboard/web e2e",
+    "test:chaos": "pnpm --filter @socioboard/chaos-tests test:chaos"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

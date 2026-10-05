@@ -155,6 +155,42 @@ jobs:
       - name: Smoke test (health, worker start, web routes, graceful SIGTERM)
         run: bash docker/smoke-test.sh
 
+  chaos:
+    name: Restarts (chaos)
+    # P2-Q1: kills the api, the worker and Valkey around scheduled times and counts every send
+    # (tests/chaos). About 5 minutes, so with the browser tests: pull requests and on demand.
+    if: >-
+      (github.event_name == 'pull_request' &&
+       (github.base_ref == 'main' || github.base_ref == '6.0')) ||
+      github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: cp .env.example .env
+      - name: Generate the database client
+        run: pnpm generate
+      # Postgres from the dev compose; the suite starts its own Valkey, which it kills.
+      - name: Start Postgres, Valkey, Mailpit
+        run: $COMPOSE up -d --wait
+      - name: Migrate
+        run: pnpm --filter @socioboard/db migrate:deploy
+      - name: Restart tests
+        run: pnpm test:chaos
+      - name: Ledger and process logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chaos-run
+          path: /tmp/sb-chaos-*
+          retention-days: 7
+
   e2e:
     name: End to end (Playwright)
     # On pull requests to main (docs/infra.md), and to `6.0` until the repo migration puts 6.0 on

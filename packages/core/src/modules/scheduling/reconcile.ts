@@ -10,10 +10,12 @@ import {
 } from '../../platform';
 import type { ScheduledJob } from '../posts';
 import {
+  LOST_TRACK_MESSAGE,
   MAX_LATE_MINUTES,
   PUBLISH_ATTEMPTS,
   publishJobId,
   scheduledJobId,
+  STUCK_AFTER_MINUTES,
   type PublishingEvents,
 } from '../publishing';
 
@@ -55,8 +57,8 @@ const MINUTE = 60_000;
 export const RECONCILE_WINDOW_HOURS = 48;
 /** A scheduled target this late without a job is failed instead of sent hours late. */
 export const MISSED_GRACE_MINUTES = MAX_LATE_MINUTES;
-/** A target `publishing` this long with no job behind it is stuck. */
-export const STUCK_AFTER_MINUTES = 15;
+/** A target `publishing` this long with no job behind it is stuck (publishing's rule). */
+export { STUCK_AFTER_MINUTES };
 const BATCH = 5000;
 
 export interface ReconcileReport {
@@ -199,8 +201,7 @@ export function createReconciler(deps: ReconcileDeps) {
         {
           kind: 'retryable',
           networkCode: null,
-          message:
-            'We lost track of this delivery and stopped it; check the account before publishing it again',
+          message: LOST_TRACK_MESSAGE,
         },
       );
       if (failed) report.stuck++;
