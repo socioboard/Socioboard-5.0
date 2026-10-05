@@ -1,5 +1,6 @@
 // Public surface of the posts area (docs/frontend/areas/posts.md).
 export {
+  failedPostsQuery,
   hasPostsQuery,
   isPostTab,
   postKeys,

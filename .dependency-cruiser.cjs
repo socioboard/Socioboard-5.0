@@ -110,7 +110,8 @@ module.exports = {
       name: 'testing-only-from-tests',
       severity: 'error',
       comment: 'Test utilities (src/testing) are for tests only, never production code.',
-      from: { pathNot: '(__tests__/|\\.test\\.tsx?$|/src/testing/)' },
+      // vitest.setup.ts runs only for tests (it mocks the socket with src/testing/fake-socket.ts).
+      from: { pathNot: '(__tests__/|\\.test\\.tsx?$|/src/testing/|vitest\\.setup\\.ts$)' },
       to: { path: '/src/testing/' },
     },
     {

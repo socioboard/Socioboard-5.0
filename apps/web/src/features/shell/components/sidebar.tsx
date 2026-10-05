@@ -1,5 +1,5 @@
 import type { Me } from '@socioboard/contracts';
-import { buttonVariants, cn, Kbd, motion, springs, Tooltip } from '@socioboard/ui';
+import { AnimatePresence, buttonVariants, cn, Kbd, motion, springs, Tooltip } from '@socioboard/ui';
 import { Link } from '@tanstack/react-router';
 import { PanelLeftClose, PanelLeftOpen, Search, SquarePen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,8 @@ export interface SidebarProps {
   items: readonly NavItem[];
   /** Shows the primary "New post" button (people who can write posts). */
   canCompose: boolean;
+  /** A count beside a page (Posts: how many need fixing). */
+  badges?: Partial<Record<NavItem['id'], string>>;
   collapsed: boolean;
   onCollapsedChange: (collapsed: boolean) => void;
   onSearch: () => void;
@@ -28,6 +30,7 @@ export function Sidebar({
   membership,
   items,
   canCompose,
+  badges = {},
   collapsed,
   onCollapsedChange,
   onSearch,
@@ -116,7 +119,12 @@ export function Sidebar({
                       />
                     )}
                     <item.icon className="size-4 shrink-0" aria-hidden="true" />
-                    {!collapsed && t(item.label)}
+                    {!collapsed && <span className="min-w-0 flex-1 truncate">{t(item.label)}</span>}
+                    <NavBadge
+                      value={badges[item.id]}
+                      dot={collapsed}
+                      label={t('nav.needsFixing', { count: badges[item.id] ?? '' })}
+                    />
                   </>
                 )}
               </Link>
@@ -148,5 +156,38 @@ export function Sidebar({
         </Tooltip>
       </div>
     </nav>
+  );
+}
+
+/** A count beside a page in the sidebar (a dot when it's collapsed); it pops in when it changes. */
+export function NavBadge({
+  value,
+  dot = false,
+  label,
+}: {
+  value: string | undefined;
+  dot?: boolean;
+  label: string;
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      {value && (
+        <motion.span
+          key={dot ? 'dot' : value}
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1, transition: springs.momentum }}
+          exit={{ scale: 0.5, opacity: 0, transition: { duration: 0.12 } }}
+          className={cn(
+            'bg-danger-tint text-danger shrink-0 rounded-full font-semibold tabular-nums',
+            dot
+              ? 'absolute top-1 right-1 size-2 bg-[var(--sb-danger)]'
+              : 'px-1.5 py-px text-[11px]',
+          )}
+        >
+          <span className="sr-only">{label}</span>
+          {!dot && <span aria-hidden="true">{value}</span>}
+        </motion.span>
+      )}
+    </AnimatePresence>
   );
 }

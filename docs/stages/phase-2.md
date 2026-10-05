@@ -28,7 +28,7 @@
 - [x] P2-F2 Calendar month/week with event cards, quick preview, click-to-compose, drag-to-reschedule; grouped deliveries with single-account moves, URL filters, conflict rollback and mobile agenda (`features/calendar`; browser suite `e2e/phase-2/calendar.spec.ts`)
 - [x] P2-F3 Queue view per account + queue slots editor (`/w/:slug/queue`, posting times in the account drawer, free slots on the week view)
 - [x] P2-F4 Notification bell (in the app shell's sidebar and phone menu), feed page, preferences; toasts for failures (`features/notifications`, `/me/notifications`)
-- [ ] P2-F5 Socket client → Query invalidation for post/account status
+- [x] P2-F5 Socket client → Query invalidation for post/account status (`lib/realtime.ts`, `features/live`; the Failed count on Posts)
 - [ ] P2-F6 Admin console v1: overview-lite, publishing health, failed targets (retry/cancel), queues, expiring accounts
 
 ## Infra

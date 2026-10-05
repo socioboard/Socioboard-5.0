@@ -151,6 +151,9 @@ describe('getting started on the calendar', () => {
     expect(await screen.findByRole('heading', { name: 'Calendar' })).toBeInTheDocument();
     await new Promise((r) => setTimeout(r, 50));
     expect(screen.queryByRole('region', { name: 'Get started' })).not.toBeInTheDocument();
-    expect(calls.some((c) => c.key === `GET ${BASE}/posts`)).toBe(false);
+    // The checklist's question (any post yet?) isn't asked; the Posts badge's count of failed ones is.
+    expect(calls.some((c) => c.key === `GET ${BASE}/posts` && !c.search.includes('status='))).toBe(
+      false,
+    );
   });
 });

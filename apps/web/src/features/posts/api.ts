@@ -8,6 +8,7 @@ import {
 import { infiniteQueryOptions, queryOptions, type QueryClient } from '@tanstack/react-query';
 
 import { api } from '../../lib/api';
+import { isLive } from '../../lib/realtime';
 
 /**
  * The posts list's tabs (docs/frontend/areas/posts.md), each a set of post statuses. A partly
@@ -31,6 +32,8 @@ export const postKeys = {
     ['workspaces', workspaceId, 'posts', 'list', tab, labelId ?? null] as const,
   // Under `lists`, so it's marked stale whenever a post is saved.
   any: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list', '_any'] as const,
+  // Under `lists` too: a save, a send or a live status change refreshes it.
+  failed: (workspaceId: string) => ['workspaces', workspaceId, 'posts', 'list', '_failed'] as const,
   detail: (workspaceId: string, postId: string) =>
     ['workspaces', workspaceId, 'posts', 'detail', postId] as const,
 };
@@ -41,9 +44,12 @@ const PAGE_SIZE = 25;
 export const isSending = (post: Post) =>
   post.status === 'publishing' || post.targets.some((t) => t.status === 'publishing');
 
-// Until live updates arrive (socket `post.status_changed`, P2-F5), screens poll while a post they
-// show is being sent.
+// While a post on screen is being sent, screens ask every 3 s when the socket is down. Live, its
+// status changes arrive as they happen (`post.status_changed`); a slow look every 15 s still picks
+// up attempts that don't change a status (a retry under way).
 const SENDING_POLL_MS = 3000;
+const SENDING_POLL_LIVE_MS = 15_000;
+const sendingPoll = () => (isLive() ? SENDING_POLL_LIVE_MS : SENDING_POLL_MS);
 
 export const postListQuery = (workspaceId: string, tab: PostTab, labelId?: string) =>
   infiniteQueryOptions({
@@ -64,7 +70,24 @@ export const postListQuery = (workspaceId: string, tab: PostTab, labelId?: strin
     },
     getNextPageParam: (last) => last.nextCursor ?? undefined,
     refetchInterval: (query) =>
-      query.state.data?.pages.some((p) => p.items.some(isSending)) ? SENDING_POLL_MS : false,
+      query.state.data?.pages.some((p) => p.items.some(isSending)) ? sendingPoll() : false,
+  });
+
+/** Up to this many failed posts are counted on the sidebar's Posts link ("50+" past it). */
+export const FAILED_COUNT_MAX = 50;
+
+/** How many posts need fixing (failed or partly published): the badge on Posts. */
+export const failedPostsQuery = (workspaceId: string) =>
+  queryOptions({
+    queryKey: postKeys.failed(workspaceId),
+    queryFn: async ({ signal }) => {
+      const page = await api(apiRoutes.posts.listPosts, {
+        params: { workspaceId },
+        query: { limit: FAILED_COUNT_MAX, status: [...POST_TABS.failed] },
+        signal,
+      });
+      return { count: page.items.length, more: page.nextCursor !== null };
+    },
   });
 
 /** Whether the workspace has any post yet (the getting-started checklist). */
@@ -87,7 +110,7 @@ export const postQuery = (workspaceId: string, postId: string) =>
     queryFn: ({ signal }) =>
       api(apiRoutes.posts.getPost, { params: { workspaceId, postId }, signal }),
     refetchInterval: (query) =>
-      query.state.data && isSending(query.state.data) ? SENDING_POLL_MS : false,
+      query.state.data && isSending(query.state.data) ? sendingPoll() : false,
   });
 
 /**
