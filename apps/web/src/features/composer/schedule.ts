@@ -82,13 +82,14 @@ export function hasSeveralTimes(post: Post | undefined): boolean {
 
 /** The dialog's starting point: the post's schedule or rule when it has one, else an hour away. */
 export function initialForm(input: {
+  initialAt?: string | undefined;
   post: Post | undefined;
   recurrence: Recurrence | null;
   now: Date;
   timeZone: string;
 }): ScheduleForm {
   const { post, recurrence, now, timeZone } = input;
-  const due = scheduledAt(post);
+  const due = scheduledAt(post) ?? input.initialAt;
   const base: ScheduleForm = {
     when: due ? whenOf(due, timeZone) : defaultWhen(now, timeZone),
     repeat: 'none',

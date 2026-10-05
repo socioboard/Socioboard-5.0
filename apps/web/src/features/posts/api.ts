@@ -107,6 +107,11 @@ export function rememberPost(queryClient: QueryClient, workspaceId: string, post
     recurrence: old?.recurrence ?? null,
   }));
   void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
+  void queryClient.invalidateQueries({ queryKey: ['workspaces', workspaceId, 'calendar'] });
+  void queryClient.invalidateQueries({
+    queryKey: ['workspaces', workspaceId, 'accounts'],
+    predicate: (q) => q.queryKey.at(-1) === 'queue-slots',
+  });
 }
 
 /**
@@ -123,4 +128,5 @@ export function rememberRecurrence(
     old ? { ...old, recurrence, recurring: recurrence?.active ? 'template' : null } : old,
   );
   void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
+  void queryClient.invalidateQueries({ queryKey: ['workspaces', workspaceId, 'calendar'] });
 }

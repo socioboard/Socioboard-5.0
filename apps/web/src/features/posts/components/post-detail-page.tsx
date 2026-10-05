@@ -195,6 +195,7 @@ function Actions({ post }: { post: PostDetails }) {
     });
     toast.success(t('detail.deleted'));
     void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspace.id) });
+    void queryClient.invalidateQueries({ queryKey: ['workspaces', workspace.id, 'calendar'] });
     await navigate({ to: '/w/$slug/posts', params: { slug: workspace.slug }, replace: true });
     queryClient.removeQueries({ queryKey: postKeys.detail(workspace.id, post.id) });
   };
