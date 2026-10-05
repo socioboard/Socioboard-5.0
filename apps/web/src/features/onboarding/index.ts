@@ -2,4 +2,4 @@
 export { CreateWorkspaceScreen } from './components/create-workspace-screen';
 export { GettingStarted } from './components/getting-started';
 export { WelcomePage, type WelcomeStep } from './components/welcome-page';
-export { browserTimezone, timezoneOptions } from './timezones';
+export { browserTimezone, timezoneOptions } from '../../lib/timezones';

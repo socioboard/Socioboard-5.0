@@ -14,7 +14,7 @@ import {
   toast,
 } from '@socioboard/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CircleAlert, CircleCheck, RefreshCw, Unplug } from 'lucide-react';
+import { CircleAlert, CircleCheck, RefreshCw, Unplug, Clock } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,7 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { FormError } from '../../auth';
 import { accountDetailQuery, refreshAccounts, startReconnect } from '../api';
+import { PostingTimesDialog } from './posting-times-dialog';
 
 /** One account's health and the login it comes through (`?account=<id>`, so it can be linked). */
 export function AccountDrawer({
@@ -84,6 +85,7 @@ function Loaded({ account, onClose }: { account: SocialAccountDetails; onClose: 
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const [reconnecting, setReconnecting] = useState(false);
+  const [postingTimes, setPostingTimes] = useState(false);
   const healthy = account.status === 'active';
   // Paused is a choice (or a sample), not a fault: amber, like its badge.
   const paused = account.status === 'paused';
@@ -180,6 +182,16 @@ function Loaded({ account, onClose }: { account: SocialAccountDetails; onClose: 
             {t('details.reconnect')}
           </Button>
         )}
+        {can('accounts:manage') && account.status !== 'disconnected' && (
+          <Button
+            onClick={() => {
+              setPostingTimes(true);
+            }}
+          >
+            <Clock aria-hidden="true" />
+            {t('details.postingTimes')}
+          </Button>
+        )}
         {can('accounts:manage') && (
           <Button
             variant="ghost"
@@ -194,6 +206,9 @@ function Loaded({ account, onClose }: { account: SocialAccountDetails; onClose: 
         )}
       </div>
 
+      {can('accounts:manage') && (
+        <PostingTimesDialog account={account} open={postingTimes} onOpenChange={setPostingTimes} />
+      )}
       <ConfirmDialog
         open={confirming}
         onOpenChange={setConfirming}

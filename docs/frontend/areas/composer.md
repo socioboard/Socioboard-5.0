@@ -90,6 +90,8 @@ The most important screen in the product: write once, tailor per network, see ex
 - The server's refusals are explained in plain words (too soon, too far, no free posting time, already sent, repeats, a copy can't repeat, review required, no dates left).
 - Not yet: per-account times (the calendar's drag-and-drop moves one account, P2-F2), and editing posting times (P2-F3).
 
+- Since P2-F3, `?account=<id>` (a queue slot's "Write a post") starts a new post with that account chosen, when it can post.
+
 ## AI panel (phase 4)
 "Generate" opens [ai-studio](ai-studio.md) as a side panel: generate a caption into the editor, or an image/video into the media strip. Generated text is always editable. Results follow the studio's show → apply → undo pattern: options are proposed (a caption as a change against the current text), nothing enters the post until "Use this", and every applied change can be undone.
 

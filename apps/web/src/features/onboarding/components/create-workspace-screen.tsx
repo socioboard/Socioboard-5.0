@@ -12,7 +12,7 @@ import { api, ApiError } from '../../../lib/api';
 import { errorMessage } from '../../../lib/i18n';
 import { meQuery } from '../../../lib/session';
 import { AuthLayout, FormError, useSignOut } from '../../auth';
-import { browserTimezone, timezoneOptions } from '../timezones';
+import { browserTimezone, timezoneOptions } from '../../../lib/timezones';
 
 // The server's limits (contracts WorkspaceName); the time zone comes from the list, so it's valid.
 const schema = z.object({

@@ -41,8 +41,7 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { useWorkspaceTime } from '../../../lib/use-workspace-time';
 import { WorkspaceTime } from '../../../lib/workspace-time';
-import { accountsQuery, networksQuery } from '../../accounts';
-import { queueSlotsQuery } from '../../calendar';
+import { accountsQuery, networksQuery, queueSlotsQuery } from '../../accounts';
 import { workspaceQuery } from '../../settings';
 import { LabelPicker, postQuery, useRepeatWording } from '../../posts';
 import {
@@ -77,9 +76,12 @@ const LOCKED = new Set(['publishing', 'published']);
 export function ComposerPage({
   postId,
   initialAt,
+  initialAccount,
 }: {
   postId?: string | undefined;
   initialAt?: string | undefined;
+  /** A new post starts with this account chosen (a queue slot's "Write a post"). */
+  initialAccount?: string | undefined;
 }) {
   const { t } = useTranslation('composer');
   const { workspace } = useWorkspace();
@@ -166,6 +168,7 @@ export function ComposerPage({
       <Composer
         key={mountKey}
         initialAt={initialAt}
+        initialAccount={initialAccount}
         post={post.data}
         accounts={accounts.data}
         networks={networks.data}
@@ -195,6 +198,7 @@ export function ComposerPage({
 
 function Composer({
   initialAt,
+  initialAccount,
   post,
   accounts,
   networks,
@@ -202,6 +206,7 @@ function Composer({
   onPublished,
 }: {
   initialAt?: string | undefined;
+  initialAccount?: string | undefined;
   post: PostDetails | undefined;
   accounts: SocialAccount[];
   networks: Network[];
@@ -219,7 +224,17 @@ function Composer({
       ? initialAt
       : undefined,
   );
-  const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
+  const [draft, dispatch] = useReducer(draftReducer, post, (p) =>
+    p
+      ? fromPost(p)
+      : {
+          ...emptyDraft(),
+          // Only an account that can be posted to; anything else is left for the person to pick.
+          accountIds: accounts.some((a) => a.id === initialAccount && a.status === 'active')
+            ? [initialAccount ?? '']
+            : [],
+        },
+  );
   const [tab, setTab] = useState<NetworkId | null>(null);
   // The preview follows the editor to a network's tab, and can be switched on its own.
   const [previewTab, setPreviewTab] = useState<NetworkId | null>(null);

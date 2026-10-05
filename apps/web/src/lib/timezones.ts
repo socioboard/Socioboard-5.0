@@ -1,8 +1,8 @@
 import type { ComboboxOption } from '@socioboard/ui';
 
-import { RENAMED_CITIES } from '../../lib/time';
+import { RENAMED_CITIES } from './time';
 
-export { browserTimezone } from '../../lib/time';
+export { browserTimezone } from './time';
 
 function zoneName(timeZone: string, style: 'shortOffset' | 'long', at: Date): string {
   return (

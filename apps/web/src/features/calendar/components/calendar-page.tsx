@@ -23,7 +23,7 @@ import {
   motion,
   springs,
 } from '@socioboard/ui';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -33,7 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspaceTime } from '../../../lib/use-workspace-time';
 import { useWorkspace } from '../../../lib/workspace';
-import { accountsQuery } from '../../accounts';
+import { accountsQuery, queueSlotsQuery } from '../../accounts';
 import { GettingStarted } from '../../onboarding';
 import { labelsQuery } from '../../posts';
 import { calendarQuery } from '../api';
@@ -41,6 +41,7 @@ import {
   belongsToRange,
   composeAt,
   groupEntries,
+  openSlots,
   scheduleProblem,
   type CalendarSearch,
   shortcutOf,
@@ -178,6 +179,37 @@ export function CalendarPage({
     }),
     enabled: period !== null,
   });
+  // Week view on a desktop shows each account's free posting times (at most 20 accounts).
+  const queueAccounts = (accounts.data ?? [])
+    .filter((a) => a.status === 'active' && (!search.account || a.id === search.account))
+    .slice(0, 20);
+  const showSlots = view === 'week' && !mobile && !search.status && !search.label;
+  const queues = useQueries({
+    queries: queueAccounts.map((a) => ({
+      ...queueSlotsQuery(workspace.id, a.id),
+      enabled: showSlots,
+    })),
+  });
+  const slotKey = queues.map((q) => q.dataUpdatedAt).join(',');
+  const slotAccounts = queueAccounts.map((a) => a.id).join(',');
+  const open = useMemo(
+    () =>
+      showSlots && period
+        ? openSlots(
+            queueAccounts.flatMap((a, i) => {
+              const data = queues[i]?.data;
+              return data
+                ? [{ account: { id: a.id, name: a.displayName }, upcoming: data.upcoming }]
+                : [];
+            }),
+            period.from,
+            period.to,
+          )
+        : [],
+    // The queries' data, by when each last changed (the arrays themselves are new each render).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showSlots, period, slotKey, slotAccounts],
+  );
   const statusLabels = useMemo(
     () =>
       Object.fromEntries(STATUSES.map((s) => [s, postT(`status.${s}`)])) as Record<
@@ -231,6 +263,20 @@ export function CalendarPage({
         };
       }),
     [groups, can, moves, t],
+  );
+  const allEvents = useMemo<EventInput[]>(
+    () => [
+      ...open.map((slot) => ({
+        id: `slot:${slot.at}`,
+        title: t('openSlot'),
+        start: slot.at,
+        startEditable: false,
+        durationEditable: false,
+        extendedProps: { slot },
+      })),
+      ...events,
+    ],
+    [open, events, t],
   );
   const drop = (info: EventDropInfo) => {
     const entries = info.oldEvent.extendedProps.entries as CalendarEntry[];
@@ -296,6 +342,17 @@ export function CalendarPage({
     },
     leave: () => {
       hoverAt(160, null);
+    },
+    openSlot: (slot) => {
+      if (!can('posts:create')) return;
+      void navigate({
+        to: '/w/$slug/compose/{-$postId}',
+        params: { slug: workspace.slug, postId: undefined },
+        search: {
+          at: slot.at,
+          ...(slot.accounts.length === 1 ? { account: slot.accounts[0]?.id } : {}),
+        },
+      });
     },
     open: (entries) => {
       setHover(null);
@@ -566,7 +623,7 @@ export function CalendarPage({
             <CalendarGrid
               calendarRef={calendar}
               handlers={handlers}
-              events={events}
+              events={allEvents}
               initialView={actualView}
               initialDate={date}
               weekTitle={view === 'week'}

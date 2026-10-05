@@ -1,5 +1,13 @@
 import type { Permission } from '@socioboard/contracts';
-import { AtSign, CalendarDays, Images, LayoutList, Settings, type LucideIcon } from 'lucide-react';
+import {
+  AtSign,
+  CalendarDays,
+  Images,
+  LayoutList,
+  ListOrdered,
+  Settings,
+  type LucideIcon,
+} from 'lucide-react';
 
 /**
  * The sidebar, bottom tab bar and command palette all read this list. A page joins it when its
@@ -14,6 +22,14 @@ export const NAV_ITEMS = [
     icon: CalendarDays,
     label: 'nav.calendar',
     keywords: 'schedule week month plan',
+    permission: 'calendar:read',
+  },
+  {
+    id: 'queue',
+    to: '/w/$slug/queue',
+    icon: ListOrdered,
+    label: 'nav.queue',
+    keywords: 'slots posting times next free upcoming',
     permission: 'calendar:read',
   },
   {
