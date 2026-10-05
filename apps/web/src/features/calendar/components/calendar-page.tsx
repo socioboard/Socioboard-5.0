@@ -604,9 +604,13 @@ export function CalendarPage({
         )}
         <section
           ref={section}
-          // Grows to fill, never shrinks below its grid: with overflow hidden (the rounded corners),
-          // shrinking clipped the month's last weeks instead of letting the page scroll.
-          className="sb-calendar glass-chip rounded-pane min-h-[520px] flex-[1_0_auto] overflow-hidden"
+          // Desktop: the month or week fills the screen below the toolbar, and the grid is sized to
+          // it (no page scroll; only a very short window scrolls, below 480 px). Phones: the agenda
+          // is a list as long as it needs, and the page scrolls.
+          className={cn(
+            'sb-calendar glass-chip rounded-pane overflow-hidden',
+            mobile ? 'min-h-[260px] flex-[1_0_auto]' : 'min-h-[480px] flex-1',
+          )}
           onPointerDown={(e) => {
             swipe.current = e.pointerType === 'touch' ? { x: e.clientX, y: e.clientY } : null;
           }}
@@ -629,9 +633,9 @@ export function CalendarPage({
               initialView={actualView}
               initialDate={date}
               weekTitle={view === 'week'}
-              height={actualView === 'timeGridWeek' ? 600 : 'auto'}
+              height={mobile ? 'auto' : '100%'}
               editable={can('posts:publish')}
-              compactCards={view === 'week' && !mobile}
+              cards={mobile ? 'full' : view === 'month' ? 'line' : 'compact'}
               canCreate={can('posts:create')}
               statusLabels={statusLabels}
             />

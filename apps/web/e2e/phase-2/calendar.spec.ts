@@ -16,7 +16,8 @@ import { expectRightCursors } from '../support/cursors';
 
 // The workspace is on Kolkata time; the browser is not (nor is this machine or CI), so a day or
 // time read on the browser's clock instead of the workspace's would land in the wrong place.
-test.use({ timezoneId: 'America/Los_Angeles' });
+// A common desktop size: the month fills it with no scrolling, and a day with two posts shows both.
+test.use({ timezoneId: 'America/Los_Angeles', viewport: { width: 1440, height: 900 } });
 
 async function calendarServer(page: Page, role = 'owner') {
   let entries: CalendarEntry[] = [
@@ -199,11 +200,19 @@ async function calendarServer(page: Page, role = 'owner') {
   };
 }
 
-/** The calendar's box shows its whole grid (it grows; the page scrolls), never clips it. */
+/** The calendar fills the screen with its whole grid: nothing clipped, and no page scroll. */
 async function expectWholeGrid(page: Page) {
   const box = page.locator('section.sb-calendar');
   await expect
-    .poll(() => box.evaluate((el) => el.scrollHeight - el.clientHeight))
+    .poll(() =>
+      box.evaluate((el) => {
+        const page = el.parentElement;
+        return Math.max(
+          el.scrollHeight - el.clientHeight,
+          page ? page.scrollHeight - page.clientHeight : 0,
+        );
+      }),
+    )
     .toBeLessThanOrEqual(1);
 }
 
@@ -217,11 +226,11 @@ test('calendar: month, preview, a single-account drag, rollback, filters, week a
   await expect(event).toBeVisible();
   await expect(event).toContainText(/2:00 PM|14:00/);
   await expect(page.getByRole('heading', { name: 'October 2026' })).toBeVisible();
-  // The whole month is there: nothing clipped, the last week reachable by scrolling.
+  // The whole month fits on the screen: nothing clipped, no scrolling to reach its last week.
   await expectWholeGrid(page);
-  const lastDay = page.getByRole('button', { name: /Write a post for (8 Nov 2026|Nov 8, 2026)/ });
-  await lastDay.scrollIntoViewIfNeeded();
-  await expect(lastDay).toBeInViewport();
+  await expect(
+    page.getByRole('button', { name: /Write a post for (8 Nov 2026|Nov 8, 2026)/ }),
+  ).toBeInViewport();
   await expectRightCursors(page, 'month calendar');
   await page.screenshot({ path: 'test-results/calendar-month-light.png', fullPage: true });
   await page.emulateMedia({ colorScheme: 'dark' });
