@@ -542,10 +542,14 @@ describe('rate limits', () => {
     if (!queuedTarget) throw new Error('no target');
     const job = () =>
       t.platform.queues.get(services.publishQueue).getJob(publishJobId(queuedTarget.id, 0));
-    for (let i = 0; i < 20 && (await job())?.attemptsStarted === 0; i++) {
-      await new Promise((r) => setTimeout(r, 50));
+    // The worker takes the job (active), finds the pause and parks it (delayed): wait for the
+    // second step, not the first, or a slow machine looks in between.
+    let state = await (await job())?.getState();
+    for (let i = 0; i < 50 && state !== 'delayed'; i++) {
+      await new Promise((r) => setTimeout(r, 20));
+      state = await (await job())?.getState();
     }
-    expect(await (await job())?.getState()).toBe('delayed');
+    expect(state).toBe('delayed');
     expect(await target(queuedTarget.id)).toMatchObject({ status: 'publishing', attempts: 0 });
 
     const done = await settled(post.id);
