@@ -83,6 +83,17 @@ describe('what the dialog opens on', () => {
       }).when,
     ).toEqual({ date: '2026-10-09', time: '14:00' });
   });
+  it('a proposed time that has passed is ignored: it opens an hour from now instead', () => {
+    expect(
+      initialForm({
+        initialAt: '2026-10-05T09:00:00Z',
+        post: undefined,
+        recurrence: null,
+        now: NOW,
+        timeZone: 'UTC',
+      }).when,
+    ).toEqual(defaultWhen(NOW, 'UTC'));
+  });
   it('an hour from now, on the next quarter of an hour', () => {
     expect(defaultWhen(NOW, 'UTC')).toEqual({ date: '2026-10-05', time: '11:15' });
     expect(defaultWhen(new Date('2026-10-05T10:00:00Z'), 'UTC')).toEqual({

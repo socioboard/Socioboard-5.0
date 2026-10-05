@@ -1,4 +1,5 @@
 import {
+  SCHEDULE_MIN_LEAD_MINUTES,
   textLength,
   type Network,
   type NetworkId,
@@ -212,7 +213,12 @@ function Composer({
   const can = useCan();
   const time = useWorkspaceTime();
   const describeRepeat = useRepeatWording();
-  const [preferredAt] = useState(initialAt);
+  // A proposed time from the calendar, unless it has passed (an old link, a tab left open).
+  const [preferredAt] = useState(() =>
+    initialAt && Date.parse(initialAt) >= Date.now() + SCHEDULE_MIN_LEAD_MINUTES * 60_000
+      ? initialAt
+      : undefined,
+  );
   const [draft, dispatch] = useReducer(draftReducer, post, (p) => (p ? fromPost(p) : emptyDraft()));
   const [tab, setTab] = useState<NetworkId | null>(null);
   // The preview follows the editor to a network's tab, and can be switched on its own.

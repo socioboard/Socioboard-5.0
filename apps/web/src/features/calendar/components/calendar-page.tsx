@@ -218,7 +218,8 @@ export function CalendarPage({
     void navigate({
       to: '/w/$slug/compose/{-$postId}',
       params: { slug: workspace.slug, postId: undefined },
-      search: { at: at.toISOString() },
+      // A day or slot already past still opens a new post, but proposes no time for it.
+      search: scheduleProblem(at) === 'tooSoon' ? {} : { at: at.toISOString() },
     });
   };
   const dateClick = (info: DateClickInfo) => {
