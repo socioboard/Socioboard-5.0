@@ -13,5 +13,6 @@ export * from './mailer';
 export * from './queue';
 export * from './realtime';
 export * from './storage';
+export * from './telemetry';
 export * from './services';
 export * from './process';

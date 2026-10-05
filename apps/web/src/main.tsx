@@ -8,8 +8,13 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { createErrorReporter, installErrorReporting } from './lib/error-reporting';
 import { createQueryClient } from './lib/query';
 import { routeTree } from './routeTree.gen';
+
+// Crashes go to the API's logs (and OpenObserve), from the first line on.
+const reportError = createErrorReporter();
+installErrorReporting(reportError);
 
 const queryClient = createQueryClient();
 const router = createRouter({
@@ -35,7 +40,13 @@ declare module '@tanstack/react-router' {
 const root = document.getElementById('root');
 if (!root) throw new Error('#root element missing');
 
-createRoot(root).render(
+createRoot(root, {
+  // A render that threw past every error boundary: the page is blank, so it's always reported.
+  onUncaughtError: (error) => {
+    reportError('render', error);
+    console.error(error);
+  },
+}).render(
   <StrictMode>
     <ThemeProvider>
       <MotionProvider>

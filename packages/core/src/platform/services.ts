@@ -54,7 +54,12 @@ export function createPlatform(
     poolSize: config.db.poolSize,
     scopedModels: WORKSPACE_SCOPED_MODELS,
   });
-  const queues = createQueues({ url: config.redis.url, logger, prefix });
+  const queues = createQueues({
+    url: config.redis.url,
+    logger,
+    prefix,
+    telemetry: config.telemetry.enabled,
+  });
   const kv = createKv({ url: config.redis.url, prefix: `${prefix}:` });
   const rateLimiter = createRateLimiter({ url: config.redis.url, prefix: `${prefix}:` });
   const realtime = createRealtime({ url: config.redis.url, prefix, logger });

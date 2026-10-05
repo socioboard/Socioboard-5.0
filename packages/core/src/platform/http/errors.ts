@@ -1,3 +1,4 @@
+import { SpanStatusCode, trace } from '@opentelemetry/api';
 import { CommonErrorCode, type ErrorEnvelope, type ValidationDetails } from '@socioboard/contracts';
 import type { ErrorRequestHandler, RequestHandler } from 'express';
 import { ZodError } from 'zod';
@@ -104,13 +105,25 @@ export function createErrorHandler(logger: Logger): ErrorRequestHandler {
       status = 500;
       error = { code: CommonErrorCode.INTERNAL_ERROR, message: 'Something went wrong on our side' };
       logger.error({ err }, 'unhandled error');
+      recordException(err);
     }
 
-    if (status >= 500 && err instanceof AppError) logger.error({ err }, err.message);
+    if (status >= 500 && err instanceof AppError) {
+      logger.error({ err }, err.message);
+      recordException(err);
+    }
     res.status(status).json({
       error: { ...error, ...(typeof requestId === 'string' ? { requestId } : {}) },
     } satisfies ErrorEnvelope);
   };
+}
+
+/** A server failure, recorded on the request's span (telemetry on): an exception in OpenObserve. */
+function recordException(err: unknown): void {
+  const span = trace.getActiveSpan();
+  if (!span) return;
+  span.recordException(err instanceof Error ? err : String(err));
+  span.setStatus({ code: SpanStatusCode.ERROR });
 }
 
 const PRISMA_ERRORS: Record<string, { status: number; error: ErrorEnvelope['error'] }> = {

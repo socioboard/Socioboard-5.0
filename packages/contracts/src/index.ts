@@ -17,6 +17,7 @@ export * from './posts';
 export * from './recurrence';
 export * from './scheduling';
 export * from './social-accounts';
+export * from './telemetry';
 export * from './workspaces';
 
 import { adminRoutes } from './admin';
@@ -27,6 +28,7 @@ import { notificationRoutes } from './notifications';
 import { postRoutes } from './posts';
 import { schedulingRoutes } from './scheduling';
 import { socialAccountRoutes } from './social-accounts';
+import { telemetryRoutes } from './telemetry';
 import { workspaceRoutes } from './workspaces';
 
 /**
@@ -43,4 +45,5 @@ export const apiRoutes = {
   scheduling: schedulingRoutes,
   notifications: notificationRoutes,
   admin: adminRoutes,
+  telemetry: telemetryRoutes,
 };

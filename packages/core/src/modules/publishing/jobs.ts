@@ -12,6 +12,7 @@ import {
   defineQueue,
   DelayedError,
   newId,
+  recordDelivery,
   typedEvents,
   type Clock,
   type Db,
@@ -258,6 +259,7 @@ export async function publishTarget(
       },
     });
     await deps.recomputeStatus(data.workspaceId, target.postId);
+    recordDelivery(network, 'published');
     await events.emit('target.published', {
       workspaceId: data.workspaceId,
       postId: target.postId,
@@ -322,6 +324,7 @@ export async function publishTarget(
     }
     await deps.recomputeStatus(data.workspaceId, target.postId);
     if (willRetry) throw failure;
+    recordDelivery(network, 'failed');
     await events.emit('target.failed', {
       workspaceId: data.workspaceId,
       postId: target.postId,

@@ -1,8 +1,15 @@
-import { bootstrap, closeServer, createApiApp, createPlatform, onShutdown } from '@socioboard/core';
+import {
+  bootstrap,
+  closeServer,
+  createApiApp,
+  createPlatform,
+  onShutdown,
+  opsAlertsFor,
+} from '@socioboard/core';
 
 import { createDocsRouter } from './docs';
 
-const { config, logger } = bootstrap('api');
+const { config, logger, telemetry } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
 const { app, health, missingRoutes, attachRealtime } = createApiApp(platform, {
@@ -20,11 +27,15 @@ const server = app.listen(config.api.port, () => {
 });
 // Live updates for browsers, on the same server and port.
 const realtime = attachRealtime(server);
+// Built-in alerts, here as well as in the worker: they must still fire when the worker is down.
+const stopAlerts = opsAlertsFor(platform).start();
 
 onShutdown(logger, async () => {
   // Readiness turns 503 first, then in-flight requests get up to 25 s to finish.
   health.markShuttingDown();
+  stopAlerts();
   await realtime.close();
   await closeServer(server);
   await platform.close();
+  await telemetry.shutdown();
 });

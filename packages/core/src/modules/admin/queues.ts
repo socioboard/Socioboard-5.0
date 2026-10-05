@@ -1,4 +1,5 @@
 import { createBullBoard } from '@bull-board/api';
+import { metrics } from '@opentelemetry/api';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { ExpressAdapter } from '@bull-board/express';
 import { createRequire } from 'node:module';
@@ -44,6 +45,25 @@ export function createQueueCounts(queues: Queues) {
         };
       }),
     );
+}
+
+/**
+ * `socioboard.queue.jobs` by queue and state (waiting, delayed, active, failed), read when the
+ * metrics are exported: a backlog alert in OpenObserve watches it. Telemetry on, worker only (the
+ * api would report the same numbers again).
+ */
+export function observeQueueDepth(queues: Queues): void {
+  const counts = createQueueCounts(queues);
+  metrics
+    .getMeter('socioboard')
+    .createObservableGauge('socioboard.queue.jobs', { description: 'Jobs per queue and state' })
+    .addCallback(async (result) => {
+      for (const q of await counts()) {
+        for (const state of ['waiting', 'delayed', 'active', 'failed'] as const) {
+          result.observe(q[state], { queue: q.name, state });
+        }
+      }
+    });
 }
 
 export const BULL_BOARD_PATH = '/api/admin/queues';
