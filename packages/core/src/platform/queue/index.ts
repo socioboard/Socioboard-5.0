@@ -1,4 +1,14 @@
-import { Queue, Worker, type Job, type JobsOptions, type WorkerOptions } from 'bullmq';
+import { SpanStatusCode, trace, type Context } from '@opentelemetry/api';
+import {
+  DelayedError,
+  Queue,
+  Worker,
+  type Job,
+  type JobsOptions,
+  type Telemetry,
+  type WorkerOptions,
+} from 'bullmq';
+import { BullMQOtel } from 'bullmq-otel';
 import { Redis } from 'ioredis';
 
 import { runWithLogContext, type Logger } from '../logger';
@@ -51,11 +61,71 @@ export interface CreateQueuesOptions {
   logger: Logger;
   /** Key prefix, so several installs or test runs can share one Valkey. */
   prefix?: string;
+  /**
+   * OpenTelemetry on: jobs carry the trace of whoever queued them (an API request), and each
+   * run is a span with its job metrics (docs/infra.md#observability).
+   */
+  telemetry?: boolean;
 }
 
-export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions): Queues {
+/**
+ * BullMQ's spans, minus event attributes that have no value. A job that returns nothing gets a
+ * "job completed" event with `bullmq.job.result: undefined`, which the OTLP/JSON exporter writes as
+ * an empty value; OpenObserve then refuses the whole batch (400), losing every span in it. Checked
+ * on 2026-10-05: worker job spans never arrived until this.
+ */
+export function withoutEmptyEventValues(otel: BullMQOtel): Telemetry<Context> {
+  return {
+    contextManager: otel.contextManager,
+    ...(otel.meter ? { meter: otel.meter } : {}),
+    tracer: {
+      startSpan(name, options, ctx) {
+        const span = otel.tracer.startSpan(name, options, ctx);
+        const addEvent = span.addEvent.bind(span);
+        span.addEvent = (event, attributes) => {
+          addEvent(
+            event,
+            attributes &&
+              Object.fromEntries(Object.entries(attributes).filter(([, v]) => v !== undefined)),
+          );
+        };
+        return span;
+      },
+    },
+  };
+}
+
+/**
+ * A job that threw, recorded on its span (BullMQ only adds a "job failed" event). Moving a job
+ * back to delayed (rate limits) is how a processor waits, not a failure.
+ */
+function recordJobError(err: unknown): void {
+  if (err instanceof DelayedError) return;
+  const span = trace.getActiveSpan();
+  if (!span) return;
+  span.recordException(err instanceof Error ? err : String(err));
+  span.setStatus({ code: SpanStatusCode.ERROR });
+}
+
+export function createQueues({
+  url,
+  logger,
+  prefix = 'sb',
+  telemetry: traced = false,
+}: CreateQueuesOptions): Queues {
   // Workers use blocking commands, so BullMQ needs maxRetriesPerRequest: null.
   const connection = { url, maxRetriesPerRequest: null };
+  const telemetry: { telemetry?: Telemetry } = traced
+    ? {
+        telemetry: withoutEmptyEventValues(
+          new BullMQOtel({
+            tracerName: 'socioboard-queues',
+            meterName: 'socioboard-queues',
+            enableMetrics: true,
+          }),
+        ),
+      }
+    : {};
   const queues = new Map<string, Queue>();
   const workers: Worker[] = [];
   let healthClient: Redis | undefined;
@@ -66,6 +136,7 @@ export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions
       q = new Queue(def.name, {
         connection,
         prefix,
+        ...telemetry,
         defaultJobOptions: { ...DEFAULT_JOB_OPTIONS, ...def.jobDefaults },
       });
       queues.set(def.name, q);
@@ -81,9 +152,12 @@ export function createQueues({ url, logger, prefix = 'sb' }: CreateQueuesOptions
         def.name,
         (job: Job<Data, Result>, token?: string) =>
           runWithLogContext({ queue: def.name, ...(job.id ? { jobId: job.id } : {}) }, () =>
-            def.processor(job, token),
+            def.processor(job, token).catch((err: unknown) => {
+              recordJobError(err);
+              throw err;
+            }),
           ),
-        { connection, prefix, concurrency: 5, ...def.worker },
+        { connection, prefix, concurrency: 5, ...telemetry, ...def.worker },
       );
       worker.on('failed', (job, err) => {
         logger.warn(

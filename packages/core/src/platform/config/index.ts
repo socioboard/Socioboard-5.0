@@ -140,6 +140,18 @@ const envSchema = z.object({
   /** How long audit entries are kept (2 years on the hosted cloud). */
   AUDIT_RETENTION_DAYS: z.coerce.number().int().positive().default(730),
 
+  /**
+   * OpenTelemetry collector (docs/infra.md#observability), e.g. http://127.0.0.1:5080/api/default
+   * for self-hosted OpenObserve: traces, metrics and logs go to <url>/v1/traces, /v1/metrics and
+   * /v1/logs.
+   * Unset: nothing is exported. OTEL_EXPORTER_OTLP_HEADERS and OTEL_RESOURCE_ATTRIBUTES apply.
+   */
+  OTEL_EXPORTER_OTLP_ENDPOINT: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
+  /** Built-in alerts (docs/backend/modules/admin.md#alerts-p2-i1), emailed to platform admins. */
+  ALERT_FAILED_PUBLISHES: z.coerce.number().int().positive().default(10),
+  ALERT_QUEUE_WAITING: z.coerce.number().int().positive().default(1000),
+  ALERT_QUEUE_LAG_MINUTES: z.coerce.number().int().positive().default(10),
+
   STRIPE_SECRET_KEY: optional,
   AI_SERVICE_URL: optional,
 });
@@ -178,6 +190,10 @@ export interface Config {
     storagePublicUrl: string | undefined;
   };
   audit: { retentionDays: number };
+  /** OpenTelemetry export; off without an endpoint. */
+  telemetry: { endpoint: string | undefined; enabled: boolean };
+  /** Built-in alerts: failed deliveries in 15 minutes, jobs waiting, minutes a queue may stall. */
+  alerts: { failedPublishes: number; queueWaiting: number; queueLagMinutes: number };
   auth: {
     secret: string;
     breachedPasswordCheck: boolean;
@@ -289,6 +305,15 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       storagePublicUrl: e.STORAGE_PUBLIC_URL,
     },
     audit: { retentionDays: e.AUDIT_RETENTION_DAYS },
+    telemetry: {
+      endpoint: e.OTEL_EXPORTER_OTLP_ENDPOINT,
+      enabled: Boolean(e.OTEL_EXPORTER_OTLP_ENDPOINT),
+    },
+    alerts: {
+      failedPublishes: e.ALERT_FAILED_PUBLISHES,
+      queueWaiting: e.ALERT_QUEUE_WAITING,
+      queueLagMinutes: e.ALERT_QUEUE_LAG_MINUTES,
+    },
     auth: {
       secret: e.AUTH_SECRET,
       breachedPasswordCheck: e.AUTH_BREACHED_PASSWORD_CHECK,

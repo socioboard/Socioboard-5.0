@@ -15,6 +15,7 @@ import { Router, type Request, type RequestHandler, type Response } from 'expres
 import type { z } from 'zod';
 
 import { addLogContext } from '../logger';
+import { setRouteName } from '../telemetry/http';
 import type { AuthContext, MemberContext, MembershipLookup } from './context';
 import { AppError, forbidden, notFound, unauthorized } from './errors';
 
@@ -109,6 +110,7 @@ export function createApiRouter({
     }
 
     const run: RequestHandler = async (req, res) => {
+      setRouteName(res, def.path);
       const auth = res.locals.auth ?? null;
       if (def.access !== 'public' && !auth) throw unauthorized();
       if (def.access === 'platform_admin' && auth) await platformAdminGuard?.(auth);

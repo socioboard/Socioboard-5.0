@@ -35,7 +35,8 @@
     "happy-dom": "~20.14.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "tailwindcss": "~4.3.3"
+    "tailwindcss": "~4.3.3",
+    "vitest": "^5.0.1"
   },
   "dependencies": {
     "@socioboard/contracts": "workspace:*",

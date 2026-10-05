@@ -2,12 +2,14 @@ import type { IncomingMessage, Server, ServerResponse } from 'node:http';
 
 import { ConfigError, loadConfig, type Config } from './config';
 import { createLogger, type Logger } from './logger';
+import { startTelemetry, type Telemetry } from './telemetry';
 
 /**
- * Loads config and the logger for an app entrypoint. Bad config prints every
- * problem and exits, so a misconfigured deploy fails fast and readably.
+ * Loads config, telemetry and the logger for an app entrypoint. Bad config prints every
+ * problem and exits, so a misconfigured deploy fails fast and readably. Telemetry starts before
+ * anything else, so the platform's clients are traced from their first call.
  */
-export function bootstrap(name: string): { config: Config; logger: Logger } {
+export function bootstrap(name: string): { config: Config; logger: Logger; telemetry: Telemetry } {
   let config: Config;
   try {
     config = loadConfig();
@@ -18,23 +20,33 @@ export function bootstrap(name: string): { config: Config; logger: Logger } {
     }
     throw err;
   }
+  const telemetry = startTelemetry({
+    serviceName: `socioboard-${name}`,
+    endpoint: config.telemetry.endpoint,
+    environment: config.env,
+  });
   const logger = createLogger({
     level: config.logLevel,
     name,
     pretty: config.env === 'development' && process.stdout.isTTY,
+    exportLogs: telemetry.enabled,
   });
+  if (telemetry.enabled) logger.info({ endpoint: config.telemetry.endpoint }, 'telemetry on');
   // A crash is logged as one JSON line (with the stack) before exiting, instead of Node's raw
   // stderr dump. The state is unknown after an uncaught error, so no graceful shutdown: the
-  // orchestrator restarts the process, and BullMQ retries any job it held.
+  // orchestrator restarts the process, and BullMQ retries any job it held. Telemetry gets 2 s
+  // to send the crash (and what led to it) first.
+  const crash = (err: unknown, message: string) => {
+    logger.fatal({ err }, message);
+    void telemetry.shutdown(2_000).finally(() => process.exit(1));
+  };
   process.on('uncaughtException', (err) => {
-    logger.fatal({ err }, 'uncaught exception');
-    process.exit(1);
+    crash(err, 'uncaught exception');
   });
   process.on('unhandledRejection', (err) => {
-    logger.fatal({ err }, 'unhandled promise rejection');
-    process.exit(1);
+    crash(err, 'unhandled promise rejection');
   });
-  return { config, logger };
+  return { config, logger, telemetry };
 }
 
 /**

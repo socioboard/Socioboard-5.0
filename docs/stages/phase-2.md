@@ -32,7 +32,7 @@
 - [x] P2-F6 Admin console v1: overview-lite, publishing health, failed targets (retry/cancel), queues, expiring accounts (`features/admin`, `/admin/*`)
 
 ## Infra
-- [ ] P2-I1 Sentry for api, worker and web; alert on failed-publish spikes and queue backlog
+- [x] P2-I1 Observability, free and self-hosted (decided 2026-10-05: no paid services): OpenTelemetry traces, metrics and logs from api and worker to any OTLP backend, self-hosted OpenObserve recommended (off without `OTEL_EXPORTER_OTLP_ENDPOINT`); browser errors through the API (`POST /client-errors`); built-in alerts emailed to platform admins on failed-publish spikes and queue backlog
 
 ## Quality
 - [ ] P2-Q1 Chaos tests: restart api, worker and Valkey around scheduled times; every post publishes exactly once

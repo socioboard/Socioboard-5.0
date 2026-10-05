@@ -30,7 +30,7 @@
 
 ## Infra & release
 - [ ] P5-I1 Production environment on the chosen cloud (managed Postgres with backups, Valkey, Amazon S3, CDN for web)
-- [ ] P5-I2 Monitoring: Sentry, OpenTelemetry → Grafana, uptime checks
+- [ ] P5-I2 Monitoring: production OpenObserve (dashboards and alert rules on the P2-I1 telemetry), uptime checks with a free self-hosted checker (e.g. Uptime Kuma); GlitchTip for the web app only if minified browser stack traces turn out to matter
 - [ ] P5-I3 Load test: 10k scheduled posts in one hour across accounts; queue stays healthy
 - [ ] P5-I4 Self-host package: production Compose (Postgres, Valkey, Caddy, S3 bucket supplied by the installer or optional `minio` profile, optional `ai` profile with the pinned `socioboard-ai` image), `.env` reference, per-network setup guides, upgrade notes
 - [ ] P5-I5 Versioned release: images on GHCR, changelog, `v6.0.0` tag

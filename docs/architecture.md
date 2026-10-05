@@ -158,7 +158,7 @@ The stack below includes the agreed decisions (React + Vite, Node TS, Postgres +
 | Realtime* | Socket.IO on the api server, Redis adapter | Notifications and live job status; scales across api instances |
 | Email* | Nodemailer (SMTP) + React Email templates | Any SMTP provider works; no vendor lock-in like 5.0's SendGrid |
 | PDF reports* | Headless Chromium (Playwright) rendering React pages | Reports reuse the dashboard components |
-| Observability* | Pino logs, OpenTelemetry traces, Sentry, Bull Board | Structured logs; queue dashboard for ops |
+| Observability* | Pino logs, OpenTelemetry (traces, metrics, logs) to self-hosted OpenObserve, built-in alerts, Bull Board | Structured logs; free, self-hosted tracing and error views; queue dashboard for ops |
 | Testing* | Vitest, Supertest, Playwright E2E, recorded provider fixtures | Adapters are tested against recorded API responses |
 | Tooling* | pnpm, Turborepo, ESLint, Prettier, Changesets, GitHub Actions | Monorepo builds with caching |
 
@@ -345,7 +345,7 @@ A `/admin` section inside the same web app for Socioboard staff (platform admins
 
 - **Access:** a platform-admin flag on the user, separate from workspace roles. 2FA is mandatory for platform admins.
 - **Support access is view-only.** "View as user" can read but never post or change settings, is audit-logged, and is visible to the customer.
-- **Infrastructure monitoring stays in standard tools** (Sentry, Grafana, Bull Board). The console covers the business and operations view and links out for the rest.
+- **Infrastructure monitoring stays in standard tools** (OpenObserve, Bull Board). The console covers the business and operations view and links out for the rest.
 - **Self-hosted:** included, since there is one edition. The first user on an install becomes platform admin.
 - **Phasing:** queues and publishing health in phase 2; users, workspaces, billing, AI, controls and audit log in phase 5; growth and usage dashboards in 6.1.
 
@@ -394,4 +394,4 @@ The web app and API share one origin per environment, with the API served under 
 
 ### Observability
 
-Pino JSON logs carry request and job IDs. OpenTelemetry traces follow a request from the API through the queue and worker to the network call. Sentry catches errors. Bull Board shows queue health inside the admin console. Every post shows its publishing history, with the network's error message, to the user.
+Pino JSON logs carry request and job IDs. OpenTelemetry traces follow a request from the API through the queue and worker to the network call, and go with logs, metrics and errors (the browser's too) to self-hosted OpenObserve; nothing is paid for (see [infra](infra.md#observability)). Built-in alerts email platform admins when publishing fails in bulk or queues back up. Bull Board shows queue health inside the admin console. Every post shows its publishing history, with the network's error message, to the user.

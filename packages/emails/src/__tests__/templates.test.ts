@@ -5,6 +5,7 @@ import {
   invitation,
   magicLink,
   notificationEmail,
+  opsAlertEmail,
   publishFailedEmail,
   resetPassword,
   verifyEmail,
@@ -169,5 +170,26 @@ describe('weekly digest', () => {
       ],
     });
     expect(quiet.subject).toBe('Your week on Socioboard: 2 published');
+  });
+});
+
+describe('ops alert', () => {
+  it('says what was seen, lists each detail and links to the console', async () => {
+    const email = await opsAlertEmail({
+      title: 'Publishing is failing',
+      summary: '23 deliveries failed for good in the last 15 minutes.',
+      rows: [
+        { name: 'facebook_page', detail: '20 failed' },
+        { name: '<instagram>', detail: '3 failed' },
+      ],
+      url: 'https://app.example.com/admin/publishing',
+      actionLabel: 'Open publishing',
+    });
+    expect(email.subject).toBe('Socioboard alert: Publishing is failing');
+    expect(email.text).toContain('23 deliveries failed for good');
+    expect(email.text).toContain('facebook_page');
+    expect(email.text).toContain('https://app.example.com/admin/publishing');
+    expect(email.html).toContain('Open publishing');
+    expect(email.html).toContain('&lt;instagram&gt;');
   });
 });

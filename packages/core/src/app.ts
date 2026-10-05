@@ -42,6 +42,7 @@ import {
   registerWorkspaceRoutes,
 } from './modules/workspaces';
 import {
+  CLIENT_ERRORS_PER_MIN,
   createApiRouter,
   createErrorHandler,
   createRealtimeServer,
@@ -50,10 +51,12 @@ import {
   notFoundHandler,
   originCheck,
   rateLimit,
+  registerClientErrorRoutes,
   requestContext,
   requestId,
   requestLogger,
   session,
+  traceRequests,
   unauthorized,
   type ApiRouter,
   type Health,
@@ -158,6 +161,7 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   registerPostRoutes(api, posts);
   registerSchedulingRoutes(api, scheduling, queueSlots, recurrence, calendar);
   registerNotificationRoutes(api, notifications);
+  registerClientErrorRoutes(api, logger);
   registerAdminRoutes(
     api,
     createAdminService({
@@ -177,6 +181,8 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   // One rule for the client IP, used by every rate limit (ours and Better Auth's): TRUST_PROXY.
   app.set('trust proxy', config.api.trustedProxies);
 
+  // Telemetry on: a span per request, around everything else (docs/infra.md#observability).
+  if (config.telemetry.enabled) app.use(traceRequests());
   // Global pipeline (docs/backend/README.md#middleware-chain).
   app.use('/api', requestId, requestContext, requestLogger(logger));
   // Better Auth reads the raw body and has its own rate limits, so it comes before the JSON parser.
@@ -194,6 +200,16 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
     originCheck(config.appUrl),
     rateLimit({ kv: platform.kv, name: 'admin', windowSec: 60, max: config.api.rateLimitPerMin }),
     session(authModule.resolveSession),
+  );
+  // Browser errors: a tighter limit than the API's, since anyone can send them.
+  app.use(
+    '/api/v1/client-errors',
+    rateLimit({
+      kv: platform.kv,
+      name: 'client-errors',
+      windowSec: 60,
+      max: CLIENT_ERRORS_PER_MIN,
+    }),
   );
   app.use(api.router);
   app.use(

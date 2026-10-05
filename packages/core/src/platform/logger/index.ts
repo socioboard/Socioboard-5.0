@@ -8,6 +8,8 @@ import {
   type LoggerOptions,
 } from 'pino';
 
+import { exportLogLine, traceFields } from '../telemetry/logs';
+
 export type { Logger } from 'pino';
 
 /** Correlation IDs attached to every log line written inside `runWithLogContext`. */
@@ -84,6 +86,8 @@ export interface CreateLoggerOptions {
   name?: string;
   /** Where lines go (tests); defaults to stdout. Ignored when `pretty` is on. */
   destination?: DestinationStream;
+  /** Also send each line to OpenTelemetry (telemetry on: docs/infra.md#observability). */
+  exportLogs?: boolean;
 }
 
 export function createLogger({
@@ -91,6 +95,7 @@ export function createLogger({
   pretty = false,
   name,
   destination,
+  exportLogs = false,
 }: CreateLoggerOptions): Logger {
   const options: LoggerOptions = {
     level,
@@ -99,7 +104,19 @@ export function createLogger({
     // key), so Pino's own err serializer is a pass-through to avoid serializing them twice.
     formatters: { log: (obj) => redactSecrets(obj) as Record<string, unknown> },
     serializers: { err: (value: unknown) => value },
-    mixin: () => ({ ...contextStore.getStore() }),
+    mixin: () => ({ ...contextStore.getStore(), ...traceFields() }),
+    // The finished line, after redaction, goes to OpenTelemetry as it is written (same call, so
+    // the record joins the current trace).
+    ...(exportLogs
+      ? {
+          hooks: {
+            streamWrite: (line: string) => {
+              exportLogLine(line);
+              return line;
+            },
+          },
+        }
+      : {}),
     ...(pretty
       ? {
           transport: {

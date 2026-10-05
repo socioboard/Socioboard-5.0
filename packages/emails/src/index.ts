@@ -12,6 +12,7 @@ import {
   type PublishFailedProps,
   type WeeklyDigestProps,
 } from './notifications';
+import { OpsAlert, type OpsAlertProps } from './ops';
 import {
   Invitation,
   MagicLink,
@@ -86,3 +87,9 @@ export const weeklyDigestEmail = (input: WeeklyDigestProps) => {
   const subject = `Your week on Socioboard: ${String(total('published'))} published${failed ? `, ${String(failed)} failed` : ''}`;
   return renderEmail(subject, createElement(WeeklyDigest, input));
 };
+
+export type { OpsAlertProps } from './ops';
+
+/** An alert for platform admins (admin module: built-in alerts). */
+export const opsAlertEmail = (input: OpsAlertProps) =>
+  renderEmail(`Socioboard alert: ${input.title}`, createElement(OpsAlert, input));

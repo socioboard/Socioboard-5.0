@@ -35,6 +35,9 @@ ENV=(
   -e "APP_URL=http://localhost:5173"
   -e "SMTP_URL=smtp://${DB_HOST}:1025"
   -e "TRUST_PROXY=loopback"
+  # Telemetry on (nothing listens there; failed exports are silent): the bundles must load
+  # OpenTelemetry and still start, serve and stop cleanly (docs/infra.md#observability).
+  -e "OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318"
 )
 
 fail() { echo "SMOKE FAILED: $*" >&2; docker logs smoke-api 2>/dev/null | tail -40 >&2 || true; docker logs smoke-worker 2>/dev/null | tail -40 >&2 || true; exit 1; }
@@ -66,6 +69,7 @@ for _ in $(seq 1 60); do
 done
 [ "$status" = "200" ] || fail "api /api/health answered ${status:-nothing} after 60 s"
 echo "api: /api/health 200 $(cat /tmp/health.json)"
+docker logs smoke-api 2>&1 | grep -q 'telemetry on' || fail "api did not start telemetry"
 stop_cleanly smoke-api
 
 echo "== worker"
@@ -78,7 +82,8 @@ done
 docker logs smoke-worker 2>&1 | grep -q 'worker started' || fail "worker did not start in 60 s"
 docker exec smoke-worker sh -c 'ffmpeg -version >/dev/null && ffprobe -version >/dev/null' \
   || fail "ffmpeg/ffprobe missing from the worker image"
-echo "worker: started, ffmpeg and ffprobe present"
+docker logs smoke-worker 2>&1 | grep -q 'telemetry on' || fail "worker did not start telemetry"
+echo "worker: started with telemetry, ffmpeg and ffprobe present"
 stop_cleanly smoke-worker
 
 echo "== web"

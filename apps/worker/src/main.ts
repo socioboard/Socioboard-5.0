@@ -7,8 +7,10 @@ import {
   createNotifications,
   createPublishingServices,
   mediaProcessQueue,
+  observeQueueDepth,
   mediaPurgeQueue,
   onShutdown,
+  opsAlertsFor,
   reconcileQueue,
   recurringQueue,
   registerAuditListeners,
@@ -18,13 +20,19 @@ import {
   workspacePurgeQueue,
 } from '@socioboard/core';
 
-const { config, logger } = bootstrap('worker');
+const { config, logger, telemetry } = bootstrap('worker');
 const platform = createPlatform(config, logger);
+// Built-in alerts (the api runs them too; one process takes each round).
+const stopAlerts = opsAlertsFor(platform).start();
 // Registered before anything starts, so a stop signal during startup still shuts down cleanly:
 // workers finish their current jobs (up to 30 s), then connections close.
 onShutdown(logger, async () => {
+  stopAlerts();
   await platform.close();
+  await telemetry.shutdown();
 });
+// Queue depth for backlog alerts in OpenObserve (telemetry on).
+if (telemetry.enabled) observeQueueDepth(platform.queues);
 const audit = createAuditLog(platform);
 registerAuditListeners(platform.events, audit, logger);
 // Notifications: publishing and the account jobs emit here; emails go out from the

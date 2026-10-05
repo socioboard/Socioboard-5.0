@@ -150,6 +150,8 @@ const CLASSIFIED: Record<string, Kind> = {
   adminRetryTarget: { kind: 'admin', body: () => ({ reason: 'support ticket' }) },
   adminCancelTarget: { kind: 'admin', body: () => ({ reason: 'support ticket' }) },
   listAttentionAccounts: { kind: 'admin' },
+  // telemetry: browser errors, public; they read nothing back (client-errors.int.test.ts)
+  reportClientError: { kind: 'user' },
 };
 
 /** A valid schedule time: a day ahead. */

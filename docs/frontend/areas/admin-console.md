@@ -24,7 +24,7 @@ Only for platform admins (`isPlatformAdmin`) with 2FA. Uses the same shell with 
 - Every destructive action asks for confirmation and a reason, 3–500 characters (stored in the audit log).
 - Phase 2 API: `GET /api/admin/overview`, `/publishing/health`, `/publishing/failed`, `POST /publishing/targets/:tid/retry` and `/cancel`, `GET /accounts/expiring` (shapes in `packages/contracts/src/admin.ts`). The console shows deliveries, errors and accounts, never post content.
 - **View-as mode:** opens the customer's workspace in a new tab with a persistent "Viewing as <user>, read-only" banner; all write buttons are disabled.
-- Links to Grafana and Sentry for infrastructure detail.
+- Links to OpenObserve for infrastructure detail.
 
 **Built in P2-F6** (`features/admin`, routes `/admin`, `/admin/publishing`, `/admin/queues`, `/admin/accounts`):
 - **Frame:** its own (not a workspace's): a pane with "Admin console · Every workspace", the four pages and "Back to Socioboard", and an amber-to-orange band across the top of every page, so staff always know they're looking across customers. Phones: the pages scroll in a row, with a back arrow. Reached from the user menu ("Admin console"), shown to platform admins only.
@@ -34,4 +34,4 @@ Only for platform admins (`isPlatformAdmin`) with 2FA. Uses the same shell with 
 - **Queues:** Bull Board (read-only) in the page, with "Open in a new tab" and a note that retries go through Publishing.
 - **Accounts:** accounts needing reconnecting (with the network's reason) or whose sign-in expires within 7, 14 or 30 days, with how many scheduled posts each puts at risk and when it was last checked; filtered by state, window and network.
 - Times are on the reader's own clock (the console spans workspaces). It never shows post content.
-- Not yet: links to Grafana and Sentry (no infrastructure URLs are configured; Sentry arrives with P2-I1), trend charts and the phase 5 pages.
+- Not yet: a link to OpenObserve (no address is configured; production OpenObserve is P5-I2), trend charts and the phase 5 pages.

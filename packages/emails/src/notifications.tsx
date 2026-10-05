@@ -12,7 +12,7 @@ const danger = '#b42318';
 const SETTINGS = 'You can choose which emails you get in your notification settings on Socioboard.';
 
 /** One row of a list: a bold name, a small line under it. */
-function Row({
+export function Row({
   name,
   detail,
   detailColor,
