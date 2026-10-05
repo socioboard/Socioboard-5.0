@@ -19,6 +19,19 @@ import { expectRightCursors } from '../support/cursors';
 // A common desktop size: the month fills it with no scrolling, and a day with two posts shows both.
 test.use({ timezoneId: 'America/Los_Angeles', viewport: { width: 1440, height: 900 } });
 
+// No test may leave an uncaught error in the page (FullCalendar once threw switching views
+// quickly). Chrome's ResizeObserver notice isn't an error of ours.
+let pageErrors: string[] = [];
+test.beforeEach(({ page }) => {
+  pageErrors = [];
+  page.on('pageerror', (err) => {
+    if (!err.message.startsWith('ResizeObserver loop')) pageErrors.push(err.message);
+  });
+});
+test.afterEach(() => {
+  expect(pageErrors, 'uncaught errors in the page').toEqual([]);
+});
+
 async function calendarServer(page: Page, role = 'owner') {
   let entries: CalendarEntry[] = [
     ENTRY,

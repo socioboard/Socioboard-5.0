@@ -105,6 +105,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@fullcalendar/react@7.1.0': a5fc6dd4a046aa17ebed3622984ab258f6f7b2a29b6eeebcbaf4cc6a1240ecf6
+
 importers:
 
   .:
@@ -187,7 +190,7 @@ importers:
         version: 5.3.0
       '@fullcalendar/react':
         specifier: 7.1.0
-        version: 7.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(temporal-polyfill@1.0.1)
+        version: 7.1.0(patch_hash=a5fc6dd4a046aa17ebed3622984ab258f6f7b2a29b6eeebcbaf4cc6a1240ecf6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(temporal-polyfill@1.0.1)
       '@hookform/resolvers':
         specifier: ~5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv@8.20.0)(effect@3.20.0)(react-hook-form@7.88.0(react@19.3.0))(valibot@1.4.2(typescript@6.0.3))(zod@4.6.5)
@@ -8043,7 +8046,7 @@ snapshots:
       '@full-ui/headless-calendar': 7.1.0(temporal-polyfill@1.0.1)
       temporal-polyfill: 1.0.1
 
-  '@fullcalendar/react@7.1.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(temporal-polyfill@1.0.1)':
+  '@fullcalendar/react@7.1.0(patch_hash=a5fc6dd4a046aa17ebed3622984ab258f6f7b2a29b6eeebcbaf4cc6a1240ecf6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(temporal-polyfill@1.0.1)':
     dependencies:
       '@full-ui/headless-calendar': 7.1.0(temporal-polyfill@1.0.1)
       '@fullcalendar/core': 7.1.0(@full-ui/headless-calendar@7.1.0(temporal-polyfill@1.0.1))(temporal-polyfill@1.0.1)

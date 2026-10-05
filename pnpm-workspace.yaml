@@ -14,3 +14,5 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - framer-motion@13.4.6
   - motion@13.4.6
+patchedDependencies:
+  '@fullcalendar/react@7.1.0': patches/@fullcalendar__react@7.1.0.patch
