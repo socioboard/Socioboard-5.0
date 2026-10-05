@@ -103,6 +103,11 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   await ownerPage.getByRole('link', { name: 'Settings' }).first().click();
   await ownerPage.getByRole('link', { name: 'Members' }).click();
   await expectRightCursors(ownerPage, 'members');
+  // The member column keeps room for a name and address on a desktop screen (the table sits in
+  // the settings' right-hand column; it once sized itself by the whole page and squeezed it out).
+  const ownerEmail = ownerPage.getByRole('row').getByText(owner.email, { exact: true });
+  await expect(ownerEmail).toBeVisible();
+  expect((await ownerEmail.boundingBox())?.width ?? 0).toBeGreaterThan(150);
   await ownerPage.getByRole('button', { name: 'Invite people' }).click();
   const invite = ownerPage.getByRole('dialog');
   await expectRightCursors(ownerPage, 'invite dialog');

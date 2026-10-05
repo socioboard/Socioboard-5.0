@@ -1,0 +1,15 @@
+diff --git a/chunks/fcbe493e.js b/chunks/fcbe493e.js
+index efca54ca9b458bdbb3fd68638516446c7fc6436e..23abdb45f230174653e7067f50f81cc9e0e3ddcf 100644
+--- a/chunks/fcbe493e.js
++++ b/chunks/fcbe493e.js
+@@ -1685,7 +1685,9 @@ class TimeGridLayout extends BaseComponent {
+                 }
+                 scrollState.y = y; // HACK: store raw pixel value
+             }
+-            if (y != null) {
++            // Socioboard patch: the scroller is gone during cleanup (FullCalendar 7.1.0 guards the
++            // computation above, not this call); a quick week-to-month switch threw here.
++            if (y != null && timeScroller) {
+                 timeScroller.scrollTo({ y });
+             }
+         };

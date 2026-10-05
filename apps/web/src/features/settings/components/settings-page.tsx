@@ -61,7 +61,8 @@ export function SettingsSection({
         </h2>
         {description && <p className="text-ink-3 text-[13px] leading-relaxed">{description}</p>}
       </div>
-      <div className="flex min-w-0 flex-col gap-4">{children}</div>
+      {/* A container: what's inside (the members table) sizes itself by this column, not the page. */}
+      <div className="@container flex min-w-0 flex-col gap-4">{children}</div>
     </section>
   );
 }
