@@ -48,6 +48,7 @@ import {
   createRealtimeServer,
   typedEvents,
   createHealth,
+  createStorageUploadRouter,
   notFoundHandler,
   originCheck,
   rateLimit,
@@ -56,6 +57,7 @@ import {
   requestId,
   requestLogger,
   session,
+  STORAGE_UPLOAD_PATH,
   traceRequests,
   unauthorized,
   type ApiRouter,
@@ -187,6 +189,14 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   app.use('/api', requestId, requestContext, requestLogger(logger));
   // Better Auth reads the raw body and has its own rate limits, so it comes before the JSON parser.
   app.use(authModule.router);
+  // Uploads through the API (NAS storage): the body is the file, so before the JSON parser.
+  if (platform.storage?.acceptUpload) {
+    app.use(
+      STORAGE_UPLOAD_PATH,
+      rateLimit({ kv: platform.kv, name: 'storage-upload', windowSec: 60, max: 600 }),
+    );
+    app.use(createStorageUploadRouter(platform.storage, logger));
+  }
   app.use(express.json({ limit: '1mb' }));
   app.use(
     '/api/v1',

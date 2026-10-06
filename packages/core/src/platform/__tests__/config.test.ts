@@ -62,6 +62,7 @@ describe('loadConfig', () => {
       S3_SECRET_ACCESS_KEY: 'b',
     });
     expect(config.storage).toEqual({
+      driver: 's3',
       bucket: 'media',
       region: 'us-east-1',
       endpoint: 'http://localhost:9000',
@@ -76,9 +77,30 @@ describe('loadConfig', () => {
       loadConfig({ ...base, S3_BUCKET: 'media', S3_REGION: 'eu-west-1', S3_ACCESS_KEY_ID: 'a' }),
     ).toThrow(/set together/);
     // No keys at all is fine: the SDK uses the IAM role.
-    expect(
-      loadConfig({ ...base, S3_BUCKET: 'm', S3_REGION: 'eu-west-1' }).storage?.credentials,
-    ).toBeUndefined();
+    const s3 = loadConfig({ ...base, S3_BUCKET: 'm', S3_REGION: 'eu-west-1' }).storage;
+    expect(s3?.driver === 's3' && s3.credentials).toBeUndefined();
+  });
+
+  it('NAS storage: needs its address, public address and token, and wins over S3 settings', () => {
+    const nas = {
+      STORAGE_DRIVER: 'nas',
+      NAS_API_URL: 'http://10.0.0.5:8119/socioboard-dev/',
+      NAS_PUBLIC_URL: 'https://media.example.com/',
+      NAS_API_TOKEN: 'ak:sk',
+    };
+    expect(loadConfig({ ...base, ...nas, S3_BUCKET: 'ignored' }).storage).toEqual({
+      driver: 'nas',
+      apiUrl: 'http://10.0.0.5:8119/socioboard-dev',
+      publicUrl: 'https://media.example.com',
+      token: 'ak:sk',
+      tempDir: undefined,
+    });
+    expect(() => loadConfig({ ...base, ...nas, NAS_API_TOKEN: '' })).toThrow(/NAS_API_TOKEN/);
+    expect(() => loadConfig({ ...base, ...nas, NAS_PUBLIC_URL: undefined })).toThrow(
+      /NAS_PUBLIC_URL/,
+    );
+    expect(() => loadConfig({ ...base, STORAGE_DRIVER: 's3' })).toThrow(/S3_BUCKET/);
+    expect(() => loadConfig({ ...base, STORAGE_DRIVER: 'ftp' })).toThrow(/STORAGE_DRIVER/);
   });
 
   it('parses several encryption keys in order and rejects bad ones', () => {

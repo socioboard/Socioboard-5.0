@@ -6,3 +6,4 @@ export * from './pagination';
 export * from './request-context';
 export * from './health';
 export * from './client-errors';
+export * from './storage-upload';

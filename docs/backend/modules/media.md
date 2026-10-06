@@ -47,8 +47,24 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 - Deleting is soft. A file used by a post that is scheduled or being published (in its content or a network's override) can't be deleted: `MEDIA_IN_USE` (409); drafts don't block, their validation flags the missing file. `media-purge` removes stored files later (P1-B10).
 - Error codes: `STORAGE_NOT_CONFIGURED`, `MEDIA_NOT_FOUND`, `FOLDER_NOT_FOUND`, `FOLDER_CYCLE`, `UPLOAD_ALREADY_COMPLETED`, `PARTS_REQUIRED`, `UPLOAD_INCOMPLETE`, `UPLOAD_INVALID`, `MEDIA_IN_USE`, `INVALID_CURSOR`.
 - Allowed: JPEG, PNG, WebP, GIF, MP4, MOV. Max 20 MB per image, 1 GB per video (configurable).
-- Objects are private; the browser views them through signed URLs.
+- Objects are private; the browser views them through signed URLs (with S3; NAS storage below serves them publicly).
 - Storage used counts against `checkLimit('storage')` when billing is on.
+
+## NAS storage
+Decided 2026-10-06: besides S3, media can live on a NAS behind a small HTTP API (`STORAGE_DRIVER=nas`, `platform/storage/nas.ts`), used by staging. The NAS API uploads (`POST <NAS_API_URL>/upload`, form fields `key` and `file`) and deletes (`DELETE <NAS_API_URL><path>`) with a bearer token (`NAS_API_TOKEN`), and serves every file publicly at `<NAS_PUBLIC_URL><path>`. The rest of the app doesn't know which storage it has: the driver fills the same `Storage` contract.
+
+| Storage operation | With the NAS |
+| --- | --- |
+| Browser upload (`presignPut`, multipart parts) | The browser can't hold the NAS token, so the signed upload links point at our API: `PUT /api/storage/upload/<token>` (an HMAC with `AUTH_SECRET` under its own label naming the key, and for single uploads the exact type and size; 15 minutes, parts 1 hour). The body waits in `STORAGE_TEMP_DIR` (default the OS temp folder) on the API host; the answer carries the part's ETag, as S3's does. A single upload goes to the NAS at once; multipart parts are kept until `complete`, which checks every part's ETag and sends the joined file in one request |
+| Server writes (`put`: thumbnails, converted images) | Sent straight to the NAS |
+| `head` (size, type) | From `StoredObject`, a table of what the driver has stored (key, NAS path, size, type): the NAS can't report it |
+| `presignGet`, `getBytes` | The public NAS URL: **no expiry** (decided 2026-10-06 for staging). Paths contain random ids, so they can't be guessed, but a link that is shared stays valid |
+| `delete`, `deletePrefix` | `DELETE` per file; a folder is deleted key by key from `StoredObject` (the NAS can't delete a folder) |
+| `ping` (`/api/health`) | `GET <NAS origin>/health` |
+
+- Uploads route through the API host, so it carries every uploaded byte and needs disk for files in flight (up to 1 GB per video, until `complete`). Abandoned multipart uploads are removed by `media-purge` (`abortMultipart` deletes their parts).
+- `NAS_API_URL` may be plain HTTP (staging uses `http://<ip>:8119/<bucket>`, since Cloudflare in front of the NAS's domain caps a request at 100 MB): the token and files then cross the network unencrypted. Accepted for staging on 2026-10-06; production needs HTTPS.
+- The browser reaches the upload route on the app's own origin, so no CORS rule is needed; it's rate-limited per IP (600 a minute) and needs no session, like a presigned S3 URL.
 
 ## Delivering media to networks (P1-B8)
 Networks get a post's files in one of two ways, chosen per network by the adapter:

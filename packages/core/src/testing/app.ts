@@ -4,18 +4,24 @@ import { randomUUID } from 'node:crypto';
 import request from 'supertest';
 
 import { createApiApp } from '../app';
-import { createLogger, createPlatform, loadConfig } from '../platform';
+import { createLogger, createPlatform, loadConfig, type Config } from '../platform';
 import { createFakeNetworks } from './fake-networks';
 
 export interface TestAppOptions {
   /** Defaults to false, so tests can create workspaces without clicking email links. */
   requireVerifiedEmail?: boolean;
+  /** Another storage than the environment's (e.g. NAS storage against startFakeNas()). */
+  storage?: Config['storage'];
 }
 
-export function createTestApp({ requireVerifiedEmail = false }: TestAppOptions = {}) {
+export function createTestApp({ requireVerifiedEmail = false, ...options }: TestAppOptions = {}) {
   const base = loadConfig();
   // No calls to the breached-password API from tests.
-  const config = { ...base, auth: { ...base.auth, breachedPasswordCheck: false } };
+  const config = {
+    ...base,
+    auth: { ...base.auth, breachedPasswordCheck: false },
+    ...('storage' in options ? { storage: options.storage } : {}),
+  };
   const run = randomUUID().slice(0, 8);
   // Own key/queue prefix, so tests never touch dev data or each other's rate-limit counters.
   const platform = createPlatform(config, createLogger({ level: 'silent' }), {
