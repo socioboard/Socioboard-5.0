@@ -14,7 +14,16 @@ The content users write once and send to many accounts. A **Post** holds the sha
 
 **Post status:** `draft` → `in_review` → `approved` → `scheduled` → `publishing` → `published` / `partial` / `failed`. Target status: `pending`, `scheduled`, `publishing`, `published`, `failed`, `cancelled`.
 
-`override.options` holds network-specific settings under the network's key, e.g. `{ instagram: { format: 'reel' } }` (Instagram feed/reel/story; a feed post with 2–10 files is a carousel). Phase 3 adds Pinterest board, YouTube title/privacy, TikTok privacy level and toggles. Keys for another network than the target account's are rejected.
+`override.options` holds network-specific settings under the network's key, e.g. `{ instagram: { format: 'reel' } }` (contracts: `network-options.ts`, P3-C1). Every field is optional so drafts can be unfinished; the adapter's validation says what publishing still needs.
+
+| Key | Fields |
+| --- | --- |
+| `instagram` | `format`: feed, reel or story (a feed post with 2–10 files is a carousel) |
+| `pinterest` | `boardId` (from the account's choices), `title` |
+| `youtube` | `title` (the post's text is the description), `privacy` (public, unlisted, private), `tags`, `madeForKids` |
+| `tiktok` | `privacy` (everyone, friends, followers, only_me; no default), `allowComments`, `allowDuets`, `allowStitches`, `commercial` (`yourBrand`, `brandedContent`, or null) |
+
+Keys for another network than the target account's are rejected (`OPTIONS_NETWORKS`). What an account offers for these (boards, privacy levels) comes from `GET /accounts/:aid/options` ([social-accounts](social-accounts.md)).
 
 ## API
 | Method | Path | Permission | Description |

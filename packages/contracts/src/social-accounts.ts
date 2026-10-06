@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { Id, IsoDateTime } from './common';
+import { AccountOptionChoices } from './network-options';
 import { LoginProvider, NetworkId } from './networks';
 import { defineRoute } from './route';
 
@@ -191,6 +192,14 @@ export const socialAccountRoutes = {
     summary: 'Account details, health and the login it comes through',
     params: accountParams,
     responses: { 200: SocialAccountDetails },
+  }),
+  getAccountOptions: defineRoute({
+    method: 'GET',
+    path: '/api/v1/workspaces/:workspaceId/accounts/:accountId/options',
+    access: 'posts:create',
+    summary: "What the account offers for its network's post options (boards, privacy levels…)",
+    params: accountParams,
+    responses: { 200: AccountOptionChoices },
   }),
   disconnectAccount: defineRoute({
     method: 'DELETE',

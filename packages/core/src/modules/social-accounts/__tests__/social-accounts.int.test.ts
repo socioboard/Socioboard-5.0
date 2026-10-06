@@ -448,3 +448,97 @@ describe('picking and managing accounts', () => {
     expect(SocialAccountDetails.parse(details.body).connection).toBeNull();
   });
 });
+
+describe('option choices (P3-C1)', () => {
+  let page = '';
+  let insta = '';
+  let connectionId = '';
+  const options = (who: Browser, id: string) => who.get(`${base()}/accounts/${id}/options`);
+  // The fake Meta adapters have no choices of their own; a test lends Instagram's adapter one.
+  const instagramAdapter = () => t.networks.registry.network('instagram');
+
+  beforeAll(async () => {
+    facebook.people.set(
+      'opts',
+      person('fb-opts', 'Options Owner', [
+        fakePage('301', 'Options Page'),
+        {
+          ...fakePage('ig-3', 'options.insta'),
+          network: 'instagram',
+          token: { accessToken: 'page-token-301', expiresAt: null },
+          meta: { via: 'facebook', pageId: '301' },
+        },
+      ]),
+    );
+    const { location } = await connect(owner, 'opts');
+    connectionId = location.searchParams.get('connection') ?? '';
+    const res = await owner.post(`${base()}/connections/${connectionId}/assets`, {
+      externalIds: ['301', 'ig-3'],
+    });
+    const { items } = z.object({ items: z.array(SocialAccount) }).parse(res.body);
+    page = items.find((a) => a.network === 'facebook_page')?.id ?? '';
+    insta = items.find((a) => a.network === 'instagram')?.id ?? '';
+  });
+
+  afterAll(async () => {
+    delete instagramAdapter().optionChoices;
+    // Removing the login disconnects its accounts, so the file's clean-up can delete it.
+    expect((await owner.send('DELETE', `${base()}/connections/${connectionId}`)).status).toBe(204);
+  });
+
+  it('a network whose options need nothing from the account answers with its id', async () => {
+    const res = await options(owner, page);
+    expect([res.status, res.body]).toEqual([200, { network: 'facebook_page' }]);
+  });
+
+  it('only people who write posts may ask, in their own workspace', async () => {
+    expect((await options(viewer, page)).status).toBe(403);
+    expect((await options(outsider, page)).status).toBe(404);
+    const missing = await options(owner, '01890a5d-ac96-774b-bcce-b302099a8057');
+    expect([missing.status, code(missing)]).toEqual([404, 'ACCOUNT_NOT_FOUND']);
+  });
+
+  it('asks the network with the account’s own token, each time', async () => {
+    const asked: string[] = [];
+    instagramAdapter().optionChoices = (account) => {
+      asked.push(account.accessToken);
+      return Promise.resolve({ network: 'instagram' });
+    };
+    for (let i = 0; i < 2; i++) {
+      const res = await options(owner, insta);
+      expect([res.status, res.body]).toEqual([200, { network: 'instagram' }]);
+    }
+    expect(asked).toEqual(['page-token-301', 'page-token-301']);
+  });
+
+  it('a network that fails is a 502 and changes nothing', async () => {
+    instagramAdapter().optionChoices = () =>
+      Promise.reject(new ProviderError({ kind: 'retryable', message: 'Service unavailable' }));
+    const res = await options(owner, insta);
+    expect([res.status, code(res)]).toEqual([502, 'NETWORK_ERROR']);
+    const account = await owner.get(`${base()}/accounts/${insta}`);
+    expect(SocialAccountDetails.parse(account.body).status).toBe('active');
+  });
+
+  it('choices for another network are a bug, not an answer', async () => {
+    instagramAdapter().optionChoices = () =>
+      Promise.resolve({ network: 'youtube', privacyLevels: ['private'] });
+    expect((await options(owner, insta)).status).toBe(500);
+  });
+
+  it('a refused token: the account needs reconnecting, and isn’t asked again until it is', async () => {
+    let calls = 0;
+    instagramAdapter().optionChoices = () => {
+      calls++;
+      return Promise.reject(new ProviderError({ kind: 'auth', message: 'Session expired' }));
+    };
+    const res = await options(owner, insta);
+    expect([res.status, code(res)]).toEqual([409, 'ACCOUNT_REAUTH_REQUIRED']);
+    const account = SocialAccountDetails.parse(
+      (await owner.get(`${base()}/accounts/${insta}`)).body,
+    );
+    expect([account.status, account.statusReason]).toEqual(['reauth_required', 'Session expired']);
+    const again = await options(owner, insta);
+    expect([again.status, code(again), calls]).toEqual([409, 'ACCOUNT_REAUTH_REQUIRED', 1]);
+  });
+});

@@ -31,6 +31,9 @@ export function registerSocialAccountRoutes(api: ApiRouter, accounts: SocialAcco
     items: await accounts.listAccounts(member, query.network),
   }));
   api.route(r.getAccount, ({ member, params }) => accounts.getAccount(member, params.accountId));
+  api.route(r.getAccountOptions, ({ member, params }) =>
+    accounts.getAccountOptions(member, params.accountId),
+  );
   api.route(r.disconnectAccount, ({ auth, member, params }) =>
     accounts.disconnectAccount(auth, member, params.accountId),
   );

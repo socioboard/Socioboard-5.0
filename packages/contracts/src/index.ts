@@ -11,11 +11,13 @@ export * from './admin';
 export * from './auth';
 export * from './events';
 export * from './media';
+export * from './network-options';
 export * from './networks';
 export * from './notifications';
 export * from './posts';
 export * from './recurrence';
 export * from './scheduling';
+export * from './shortlinks';
 export * from './social-accounts';
 export * from './telemetry';
 export * from './workspaces';
@@ -27,6 +29,7 @@ import { networkRoutes } from './networks';
 import { notificationRoutes } from './notifications';
 import { postRoutes } from './posts';
 import { schedulingRoutes } from './scheduling';
+import { shortlinkRoutes } from './shortlinks';
 import { socialAccountRoutes } from './social-accounts';
 import { telemetryRoutes } from './telemetry';
 import { workspaceRoutes } from './workspaces';
@@ -44,6 +47,7 @@ export const apiRoutes = {
   posts: postRoutes,
   scheduling: schedulingRoutes,
   notifications: notificationRoutes,
+  shortlinks: shortlinkRoutes,
   admin: adminRoutes,
   telemetry: telemetryRoutes,
 };

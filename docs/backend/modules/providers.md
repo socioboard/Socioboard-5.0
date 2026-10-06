@@ -36,12 +36,15 @@ interface NetworkAdapter {
   validate(input: PublishInput): ValidationIssue[];                          // pure, used by composer + API
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;   // externalId, permalink
   deletePost?(externalId: string, account: AccountCredentials): Promise<void>;
+  optionChoices?(account: AccountCredentials): Promise<AccountOptionChoices>;   // P3-C1: boards, TikTok creator info, YouTube privacy levels
   fetchAccountMetrics?(account: AccountCredentials, range: DateRange): Promise<AccountMetrics>;   // 6.1
   fetchPostMetrics?(externalIds: string[], account: AccountCredentials): Promise<PostMetrics[]>;   // 6.1
   fetchFeed?(account: AccountCredentials, cursor?: string): Promise<FeedPage>;                    // 6.1 (feeds module)
 }
 ```
 `AccountCredentials` is the asset's external id plus the token to use (the asset token where the network issues one, else the login's).
+
+**Post options** (P3-C1, `packages/contracts/src/network-options.ts`): each network's settings live under its key in `override.options` (`TargetOptions`; `OPTIONS_NETWORKS` says which networks a key applies to). The contract only bounds stored values; the network's own rules (required board, title length, TikTok's branded-content-can't-be-private) are the adapter's `validate`, reported as issues with `field: 'options'`. A network whose options need something from the account (`AccountOptionChoices`: Pinterest, TikTok, YouTube) implements `optionChoices`; the API refuses to answer for one that doesn't.
 
 **No network SDKs.** Adapters call each network's HTTP API directly through the shared client, not vendor SDKs (e.g. not `facebook-nodejs-business-sdk`, which targets the Marketing API and doesn't cover Instagram Login on graph.instagram.com). Reasons: a phase uses a handful of endpoints per network; the shared client gives every network the same timeouts, token-free logs, error classification and replayable tests; and the API version is one setting (`META_GRAPH_VERSION`) instead of an SDK upgrade. Revisit only for something an SDK does that we can't do simply (e.g. ads management, not in scope).
 

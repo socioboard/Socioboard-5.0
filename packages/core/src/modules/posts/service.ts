@@ -1,12 +1,12 @@
 import {
   can,
+  optionsApplyTo,
   PublishError,
   realtimeRooms,
   TargetOverride,
   type CreateLabelBody,
   type CreatePostBody,
   type ListPostsQuery,
-  type NetworkId,
   type Post,
   type PostDetails,
   type PostLabel,
@@ -98,8 +98,6 @@ export const PostIssueCode = {
 } as const;
 
 /** Keys of `override.options` by the network they belong to. */
-const OPTION_NETWORK: Record<string, NetworkId> = { instagram: 'instagram' };
-
 const targetInclude = {
   account: {
     select: {
@@ -244,7 +242,7 @@ export function createPostService(deps: PostServiceDeps) {
     for (const t of targets) {
       const network = byId.get(t.accountId)?.network;
       const wrong = Object.keys(t.override?.options ?? {}).filter(
-        (k) => OPTION_NETWORK[k] !== network,
+        (k) => !network || !optionsApplyTo(k, network),
       );
       if (wrong.length > 0) {
         throw unprocessable(
@@ -398,7 +396,7 @@ export function createPostService(deps: PostServiceDeps) {
         add('error', PostIssueCode.ACCOUNT_PAUSED, 'This account is paused.', { field: 'account' });
       }
       for (const key of Object.keys(t.override?.options ?? {})) {
-        if (OPTION_NETWORK[key] !== network) {
+        if (!optionsApplyTo(key, network)) {
           add(
             'error',
             PostIssueCode.OPTIONS_NOT_FOR_NETWORK,

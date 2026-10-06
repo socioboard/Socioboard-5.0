@@ -34,7 +34,7 @@ The most important screen in the product: write once, tailor per network, see ex
 - **Errors block** publishing for that network (e.g. too long, wrong video length); **warnings allow** (e.g. link in Instagram caption isn't clickable; X link posts cost more).
 
 ## Per-network tabs
-"All networks" edits the shared content. A network tab creates an **override** for that network only; a "Reset to shared" button removes it. Network-specific options live here: Pinterest board + title, YouTube title/description/privacy, TikTok privacy level and comment/duet/stitch toggles + commercial disclosure (required by TikTok's audit), Instagram format (feed, reel or story; a feed post with 2–10 files is a carousel).
+"All networks" edits the shared content. A network tab creates an **override** for that network only; a "Reset to shared" button removes it. Network-specific options live here: Pinterest board + title, YouTube title/description/privacy, TikTok privacy level and comment/duet/stitch toggles + commercial disclosure (required by TikTok's audit), Instagram format (feed, reel or story; a feed post with 2–10 files is a carousel). The choices a panel offers (Pinterest boards, TikTok's privacy levels and locked toggles, YouTube's allowed privacy) come from `GET /accounts/:aid/options`, asked when the network's tab opens (TikTok: again before each post).
 
 ## Actions
 | Button | Shown when | API |

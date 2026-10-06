@@ -1,4 +1,5 @@
 import type {
+  AccountOptionChoices,
   ContentRules,
   LoginProvider,
   MediaKind,
@@ -168,4 +169,9 @@ export interface NetworkAdapter {
   validate(input: ContentInput): ValidationIssue[];
   publish(input: PublishInput, account: AccountCredentials): Promise<PublishResult>;
   deletePost?(externalId: string, account: AccountCredentials): Promise<void>;
+  /**
+   * What the account offers for this network's options (Pinterest boards, TikTok creator info),
+   * for the composer. Absent when the options need nothing from the account.
+   */
+  optionChoices?(account: AccountCredentials): Promise<AccountOptionChoices>;
 }

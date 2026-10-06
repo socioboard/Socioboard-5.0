@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { Id, IsoDateTime, page, PageQuery } from './common';
+import { TargetOptions } from './network-options';
 import { NetworkId } from './networks';
 import { Recurrence } from './recurrence';
 import { AccountStatus } from './social-accounts';
@@ -42,18 +43,6 @@ const MediaIds = z
   .array(Id)
   .max(POST_MAX_MEDIA)
   .refine((ids) => new Set(ids).size === ids.length, 'The same file is attached twice');
-
-/** Instagram: a feed post (one file, or a carousel of 2–10), a reel or a story. */
-export const InstagramFormat = z.enum(['feed', 'reel', 'story']);
-
-/**
- * Network-specific settings, under the key of the target account's network (the API rejects
- * keys for other networks). Phase 3 adds Pinterest, YouTube and TikTok options.
- */
-export const TargetOptions = z.object({
-  instagram: z.object({ format: InstagramFormat }).partial().optional(),
-});
-export type TargetOptions = z.infer<typeof TargetOptions>;
 
 /** What one network gets instead of the shared content. Unset fields use the shared content. */
 export const TargetOverride = z.object({
