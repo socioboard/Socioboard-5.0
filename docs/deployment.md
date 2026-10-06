@@ -90,7 +90,7 @@ npm install -g pnpm@12.3.4 pm2
 1. Install PostgreSQL (staging uses the server's 16; production 17 from apt.postgresql.org).
 2. Create a database and a user that owns it, reachable on `127.0.0.1:5432` with a password.
 3. **Names use underscores:** staging is `socioboard_staging_db` / `socioboard_staging_usr`. The first message about them said hyphens, and the app couldn't log in until the names were corrected; give engineering the names exactly as created.
-4. Backups: daily plus point-in-time, one restore tested (P0-I6). **Not confirmed on staging yet.**
+4. Backups: daily plus point-in-time, one restore tested (P0-I6). Done on staging by DevOps (recorded 2026-10-06).
 
 ### 4. Valkey (app user)
 1. Binary at `~/.local/bin/valkey-server`, config at `~/.config/valkey/valkey.conf`:
@@ -279,7 +279,6 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 | Item | Owner | Why it matters |
 | --- | --- | --- |
 | **SMTP relay** (`SMTP_URL`) | DevOps | Nobody can verify an email or accept an invitation |
-| **Postgres backups** (daily + point-in-time, one restore tested) | DevOps | P0-I6 |
 | Ports **3000 and 3001 reachable from the internet** | Left open on purpose (2026-10-06) | Skips Cloudflare, HTTPS and nginx; close for production |
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
 | Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Needed to connect accounts on staging |
