@@ -31,6 +31,7 @@ A React single-page app built with Vite. It holds no business logic: it calls th
 | [composer](areas/composer.md) | Create/edit post, per-network overrides, live validation, **live preview** | 1 |
 | [posts](areas/posts.md) | Posts list, post detail + history, failures, tasks | 1, 4 |
 | [calendar](areas/calendar.md) | Calendar (month/week), queue view, drag-to-reschedule | 2 |
+| [home](areas/home.md) | What needs attention, up next, get started, quick actions, my tasks; the workspace's landing page from phase 4 | 4 |
 | [notifications](areas/notifications.md) | Bell + feed, preferences | 2 |
 | [admin-console](areas/admin-console.md) | Platform admin screens | 2, 5 |
 | [approvals](areas/approvals.md) | Review queue, approve / request changes, comments | 4 |
@@ -60,7 +61,7 @@ Features import each other, and routes and `lib` import features, only through `
 ## Routes
 ```
 /login  /signup  /verify-email  /reset-password  /invite/:invitationId  /onboarding
-/w/:slug                        → redirects to /w/:slug/calendar
+/w/:slug                        → redirects to /w/:slug/calendar (Home from phase 4, P4-F8)
 /w/:slug/compose                /w/:slug/compose/:postId
 /w/:slug/calendar               /w/:slug/queue
 /w/:slug/posts                  /w/:slug/posts/:postId
