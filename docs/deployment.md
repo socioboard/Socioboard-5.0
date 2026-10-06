@@ -167,14 +167,16 @@ Static build in `~/.local/bin` (`ffmpeg`, `ffprobe`). It is on the PATH only in 
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://127.0.0.1:5080/api/default` | |
 | `OTEL_EXPORTER_OTLP_HEADERS` | `Authorization=Basic%20<secret>` | |
 | `MAIL_FROM` | `"Socioboard <no-reply@socioboard.ai>"` | |
-| `SMTP_URL` | **not set yet** | Without it emails are only logged; nobody can verify an email |
+| `SMTP_URL` | `smtp://apikey:<secret>@smtp.sendgrid.net:587` | SendGrid (key from the company's SendGrid account, added 2026-10-06). The sender in `MAIL_FROM` must be a verified Sender Identity there. While it's unset, emails are only logged **and email verification is off** (the app requires it only when SMTP is set), so set it before anyone signs up |
 | `STORAGE_DRIVER` | `nas` | |
 | `NAS_API_URL` | `http://<NAS API host>:<port>/socioboard-dev` (from the password manager) | Must include the bucket |
 | `NAS_PUBLIC_URL` | `https://media.globussoft.com` | Only the path is stored in the database; changing this moves every file's address |
 | `NAS_API_TOKEN` | `<secret>` (`<access key>:<secret>`) | From the NAS team |
 | `STORAGE_TEMP_DIR` | `/home/<app user>/data/uploads` | Uploads wait here until sent to the NAS |
 | `FFMPEG_PATH`, `FFPROBE_PATH` | `/home/<app user>/.local/bin/ffmpeg`, `…/ffprobe` | |
-| Network app keys (`META_APP_ID`, …) | not set yet | Development apps; see step 12 |
+| `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`, `META_GRAPH_VERSION` | `<secret>` (the development Meta app) | Copied from the development `.env` on 2026-10-06; Facebook Pages and Instagram are then enabled. Other networks' keys join with their phase 3 tasks |
+| `AUTH_BREACHED_PASSWORD_CHECK`, `API_RATE_LIMIT_PER_MIN`, `AUDIT_RETENTION_DAYS`, `ALERT_FAILED_PUBLISHES`, `ALERT_QUEUE_WAITING`, `ALERT_QUEUE_LAG_MINUTES` | `true`, `300`, `730`, `10`, `1000`, `10` | The defaults, written out |
+| Not on staging | | `STORAGE_PUBLIC_URL` (a development shortcut that makes storage public), the local compose ports (`POSTGRES_PORT`, `VALKEY_PORT`, `MAILPIT_*`), `S3_*` (NAS storage instead), `GOOGLE_*` / `MICROSOFT_*` (social sign-in, not set up), `STRIPE_SECRET_KEY`, `AI_SERVICE_URL` (later phases) |
 
 ### 8. First deploy (app user)
 ```bash
@@ -236,6 +238,8 @@ The staging setup as it happened, each item pointing at its step above; tick the
 14. Media storage: S3 dropped for cost, an S3 server on the NAS ruled out (DevOps couldn't host it), so the app gained a NAS storage driver for the NAS team's upload/delete API. Checked against the real NAS (upload, public read, ranges, overwrite, delete), then staging switched to it (`STORAGE_DRIVER=nas`, the `StoredObject` migration). → step 11
 15. End-to-end media check through the public domain: sign-up and verification (link from the API log, no SMTP yet), a workspace, an image upload with its thumbnail, a 17 MB video in two parts, files served from the NAS. The NAS refused one connection during the first video; sends now retry. → step 11, [Checks](#checks-after-a-deploy)
 16. Valkey, found running outside PM2 (it wouldn't have come back after a reboot), moved under PM2 with all its data; the PM2 list saved again. → steps 4, 9
+17. SendGrid added (`SMTP_URL`, key entered by hand); its login checked from the server. Turning SMTP on also turns email verification on, so an account made before that stays unverified. → step 7
+18. The rest of the settings copied from the development `.env` without printing them: the Meta development app's keys and the plain settings; Facebook Pages and Instagram reported enabled. → steps 7, 12
 
 ## Day to day
 
@@ -278,7 +282,8 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 
 | Item | Owner | Why it matters |
 | --- | --- | --- |
-| **SMTP relay** (`SMTP_URL`) | DevOps | Nobody can verify an email or accept an invitation |
+| Confirm SendGrid accepts `no-reply@socioboard.ai` as sender (first real email) | You + SendGrid account owner | Otherwise every email is refused |
+| Meta development app: add `https://app-dev.socioboard.ai/api/oauth/facebook/callback` and `…/instagram/callback`, and the app domain | You | Connecting Facebook and Instagram on staging |
 | Ports **3000 and 3001 reachable from the internet** | Left open on purpose (2026-10-06) | Skips Cloudflare, HTTPS and nginx; close for production |
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
 | Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Needed to connect accounts on staging |
