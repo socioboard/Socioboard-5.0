@@ -4,7 +4,7 @@ As of 2026-10-06 · See also: [Infra](infra.md#staging-pm2), [Architecture](arch
 
 Staging was set up end to end on 2026-10-06 and is live at `https://app-dev.socioboard.ai`. This page records exactly how, so production can be built the same way without anything forgotten. Follow the sections in order on a new server; [Production](#production-what-changes) lists what must differ.
 
-Secrets never go in this file, the repo or chat. Where a value is secret it says `<secret>`; the values live in the team's password manager and in the server's env file.
+Secrets and infrastructure details never go in this file: the repo is public. Passwords, tokens, server and NAS addresses, SSH ports and user names live in the team's password manager (entry "Socioboard staging") and in the server's env file; here they appear as `<secret>` or `<from the password manager>`.
 
 ## How it fits together
 
@@ -24,7 +24,7 @@ socioboard-worker (PM2, no port): publishing, scheduling, media processing (ffmp
 On the same server, local only:
    PostgreSQL 16 :5432      Valkey 8 :6380 (PM2)      OpenObserve :5080/:5081 (PM2)
 
-Media: NAS API http://14.194.130.138:8119/socioboard-dev (upload/delete, server side)
+Media: NAS API http://<NAS API host>:<port>/socioboard-dev (upload/delete, server side)
        public reads https://media.globussoft.com/socioboard-dev/stream/...
 ```
 
@@ -36,7 +36,7 @@ Media: NAS API http://14.194.130.138:8119/socioboard-dev (upload/delete, server 
 | | Staging | Production |
 | --- | --- | --- |
 | App URL | `https://app-dev.socioboard.ai` | To decide: `app.socioboard.ai`? (the docs still say `socioboard.com`) |
-| Server | `163.227.175.102`, SSH port `2637`, user `staging-socioboard-ftp` (key login, no sudo) | A server of its own (see Production) |
+| Server | Address, SSH port, user and key in the password manager (key login, no sudo) | A server of its own (see Production) |
 | Branch deployed | `6.0` (becomes `main` after the repo migration) | Tagged releases |
 | Data | Test accounts only | Customers |
 
@@ -57,7 +57,7 @@ Media: NAS API http://14.194.130.138:8119/socioboard-dev (upload/delete, server 
 | Size | 8 vCPU, 7.8 GB RAM, 4 GB swap, 196 GB disk (about 150 GB free) |
 | OS | Ubuntu 24.04.5 LTS |
 | Shared? | Yes: other Globussoft projects run on it (their own PM2 services, MySQL, PHP-FPM, nginx sites). Our processes use about 1.3 GB RAM |
-| Our user's home | `~/socioboard` (code), `~/socioboard.env` (settings), `~/data/openobserve`, `~/data/uploads`, `~/.local/bin` (valkey-server, ffmpeg, ffprobe), `~/.local/share/valkey` (Valkey data), `~/.config/valkey/valkey.conf`, `~/openobserve` (binary), `~/logs` |
+| The app user's home | `~/socioboard` (code), `~/socioboard.env` (settings), `~/data/openobserve`, `~/data/uploads`, `~/.local/bin` (valkey-server, ffmpeg, ffprobe), `~/.local/share/valkey` (Valkey data), `~/.config/valkey/valkey.conf`, `~/openobserve` (binary), `~/logs` |
 
 ## Versions
 
@@ -75,7 +75,7 @@ Media: NAS API http://14.194.130.138:8119/socioboard-dev (upload/delete, server 
 ## Setup, step by step
 
 ### 1. Server access (DevOps)
-1. Create the app user (staging: `staging-socioboard-ftp`) with an SSH key; give engineering the key. Staging's SSH port is `2637`.
+1. Create the app user with an SSH key (SSH on a non-standard port); give engineering the key. Record the address, port, user and key in the password manager.
 2. Firewall: 80 and 443 open. Everything else closed from outside (see [Still open](#still-open-on-staging) for staging's exception).
 
 ### 2. Node, pnpm and PM2 (app user)
@@ -116,11 +116,11 @@ npm install -g pnpm@12.3.4 pm2
    cd ~ && ZO_DATA_DIR=$HOME/data/openobserve/ ZO_HTTP_ADDR=127.0.0.1 ZO_GRPC_ADDR=127.0.0.1 ZO_TELEMETRY=false \
      pm2 start ./openobserve --name openobserve --time
    ```
-   The first start creates the root user from `ZO_ROOT_USER_EMAIL` / `ZO_ROOT_USER_PASSWORD` (staging: `admin@socioboard.ai`, password `<secret>`).
+   The first start creates the root user from `ZO_ROOT_USER_EMAIL` / `ZO_ROOT_USER_PASSWORD` (both in the password manager).
 2. **Never start `./openobserve` by hand while the PM2 one runs:** two copies on one data folder can damage it (a hand-started copy on staging failed on its ports, luckily).
 3. Viewing it: an SSH tunnel, then `http://localhost:15080` (15080 avoids a local OpenObserve on 5080):
    ```bash
-   ssh -i <key.pem> -p 2637 -N -L 15080:127.0.0.1:5080 staging-socioboard-ftp@163.227.175.102
+   ssh -i <key.pem> -p <ssh port> -N -L 15080:127.0.0.1:5080 <user>@<server>
    ```
 4. The app sends to it with `OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:5080/api/default` and `OTEL_EXPORTER_OTLP_HEADERS=Authorization=Basic%20<base64 of email:password>` (see [infra](infra.md#observability)).
 
@@ -169,11 +169,11 @@ Static build in `~/.local/bin` (`ffmpeg`, `ffprobe`). It is on the PATH only in 
 | `MAIL_FROM` | `"Socioboard <no-reply@socioboard.ai>"` | |
 | `SMTP_URL` | **not set yet** | Without it emails are only logged; nobody can verify an email |
 | `STORAGE_DRIVER` | `nas` | |
-| `NAS_API_URL` | `http://14.194.130.138:8119/socioboard-dev` | Must include the bucket |
+| `NAS_API_URL` | `http://<NAS API host>:<port>/socioboard-dev` (from the password manager) | Must include the bucket |
 | `NAS_PUBLIC_URL` | `https://media.globussoft.com` | Only the path is stored in the database; changing this moves every file's address |
 | `NAS_API_TOKEN` | `<secret>` (`<access key>:<secret>`) | From the NAS team |
-| `STORAGE_TEMP_DIR` | `/home/staging-socioboard-ftp/data/uploads` | Uploads wait here until sent to the NAS |
-| `FFMPEG_PATH`, `FFPROBE_PATH` | `/home/staging-socioboard-ftp/.local/bin/ffmpeg`, `…/ffprobe` | |
+| `STORAGE_TEMP_DIR` | `/home/<app user>/data/uploads` | Uploads wait here until sent to the NAS |
+| `FFMPEG_PATH`, `FFPROBE_PATH` | `/home/<app user>/.local/bin/ffmpeg`, `…/ffprobe` | |
 | Network app keys (`META_APP_ID`, …) | not set yet | Development apps; see step 12 |
 
 ### 8. First deploy (app user)
@@ -211,11 +211,31 @@ It fast-forwards the checkout, runs `pnpm install --frozen-lockfile` and `pnpm b
 - The NAS API (from the NAS team): `POST <NAS_API_URL>/upload` with form fields `key` and `file`, `DELETE <NAS_API_URL>/stream/<key>`, bearer token; files public at `<NAS_PUBLIC_URL>/<bucket>/stream/<key>`, no expiry. How the app uses it: [media](backend/modules/media.md#nas-storage).
 - The NAS refuses a file whose name extension doesn't match its type (415). The app's keys always match.
 - Uploads go **browser → our API → NAS**: the API host needs disk in `STORAGE_TEMP_DIR` for files in flight (up to 1 GB per video).
-- Big uploads use the NAS's direct address over **plain HTTP** (`14.194.130.138:8119`): Cloudflare in front of `media.globussoft.com` caps a request at 100 MB. Accepted for staging; the token and files cross the network unencrypted.
+- Big uploads use the NAS's direct address over **plain HTTP** (an IP and port, in the password manager): Cloudflare in front of `media.globussoft.com` caps a request at 100 MB. Accepted for staging; the token and files cross the network unencrypted.
 - The NAS refused one connection for a moment during the first test; sends now retry up to 3 times.
 
 ### 12. Network developer apps (engineering)
 Each network's **development** app gets the staging callback `https://app-dev.socioboard.ai/api/oauth/<network>/callback` (`facebook`, `instagram`, `linkedin`, `x`, `youtube`, `pinterest`, `tiktok`, `snapchat`, `tumblr`, `bitly`), then its keys go in the env file and the apps are restarted (`pm2 reload socioboard-api socioboard-worker --update-env`). Per-network details: [developer apps](developer-apps.md).
+
+## What was done on 2026-10-06, in order
+The staging setup as it happened, each item pointing at its step above; tick these off for production.
+
+1. Server checked (read-only): OS, CPU, memory, disk, what's installed, which ports are taken, other projects on it. → [The server](#the-server)
+2. DevOps prepared: the app user and key, nvm with Node 24, PM2, the OpenObserve binary, a Valkey binary and config, the Postgres database and user. → steps 1–5
+3. Code cloned to `~/socioboard`, pnpm installed, dependencies installed and the three apps built on the server. → steps 2, 7
+4. OpenObserve started under PM2 on 127.0.0.1 with its vendor pings off; its login checked from the server. → step 5
+5. Env file written with the URLs and `NODE_ENV=production`; `AUTH_SECRET` and `ENCRYPTION_KEYS` generated on the server; the database, Valkey and OpenObserve passwords added by hand. → step 7
+6. Valkey checked through the env file: login and `noeviction` fine, `appendonly` was off and was turned on (saved to its config). → step 4
+7. ffmpeg (static 7.0.2) installed in `~/.local/bin`; its full paths added to the env file after PM2 couldn't find it. → step 6
+8. First deploy failed at the database login: the names had underscores, not hyphens; fixed in the env file, then all six migrations applied and the three apps started. → steps 3, 8
+9. Web moved from port 8080 to 3001 at DevOps' request (PM2 config and nginx reference updated, redeployed). → step 9
+10. DevOps: DNS through Cloudflare, Let's Encrypt certificate, the nginx site. Checked from outside: HTTPS redirect, app pages, `/api/health`, Socket.IO polling and the WebSocket upgrade (101), `/public-media/`. → step 10
+11. DevOps added the real visitor IP from Cloudflare (`CF-Connecting-IP`, all 22 ranges, checked against Cloudflare's list). → step 10
+12. Ports 3000 and 3001 found reachable from the internet; left open on purpose for staging. → [Still open](#still-open-on-staging)
+13. DevOps set up `pm2 startup` for the app user; the PM2 list saved. → step 9
+14. Media storage: S3 dropped for cost, an S3 server on the NAS ruled out (DevOps couldn't host it), so the app gained a NAS storage driver for the NAS team's upload/delete API. Checked against the real NAS (upload, public read, ranges, overwrite, delete), then staging switched to it (`STORAGE_DRIVER=nas`, the `StoredObject` migration). → step 11
+15. End-to-end media check through the public domain: sign-up and verification (link from the API log, no SMTP yet), a workspace, an image upload with its thumbnail, a 17 MB video in two parts, files served from the NAS. The NAS refused one connection during the first video; sends now retry. → step 11, [Checks](#checks-after-a-deploy)
+16. Valkey, found running outside PM2 (it wouldn't have come back after a reboot), moved under PM2 with all its data; the PM2 list saved again. → steps 4, 9
 
 ## Day to day
 
@@ -264,7 +284,7 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
 | Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Needed to connect accounts on staging |
 | Cloudflare SSL mode "Full (strict)" | DevOps | Confirm |
-| NAS's DSM admin page open to the internet (`125.16.67.187:5000/5001`) | DevOps / NAS team | Restrict to office or VPN |
+| NAS's DSM admin page open to the internet (ports 5000/5001) | DevOps / NAS team | Restrict to office or VPN |
 | Test data: accounts `nas-check-…@example.test`, workspaces "Staging NAS check …" | Engineering | Remove when convenient |
 
 ## Production: what changes
