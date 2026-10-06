@@ -43,6 +43,7 @@ export default tseslint.config(
       'apps/api/**',
       'apps/worker/**',
       'packages/{core,db,providers,billing,contracts}/**',
+      'deploy/**',
       '*.js',
     ],
     languageOptions: { globals: globals.node },

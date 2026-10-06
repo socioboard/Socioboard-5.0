@@ -13,7 +13,7 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | Health checks | Load balancer and uptime checks use `GET /api/health` (readiness: 503 when Postgres or Valkey is down or while shutting down); container restart policies use `GET /api/health/live`, which never checks dependencies, so a database outage doesn't restart every api instance | 0 | P0-B11 |
 | Repository | One repo, `socioboard/socioboard` (the renamed 5.0 repo): 6.0 on `main`, older code on `archive/*` branches; see [repo migration](repo-migration.md) | 0 | P0-I9 |
 | Dev tunnels | Cloudflare Tunnel: `dev1..dev3.dev.socioboard.com` | 0 | P0-I8 |
-| Staging | `app.staging.socioboard.com`, `media.staging.socioboard.com`; auto-deploy from `main` | 0 | P0-I7 |
+| Staging | `app-dev.socioboard.ai` on one server: web, api and worker under PM2, Postgres, Valkey and OpenObserve installed on it, nginx in front ([Staging (PM2)](#staging-pm2)); `deploy/staging/deploy.sh` on every merge | 0 | P0-I7 |
 | Storage bucket CORS | Browsers upload straight to the bucket (presigned PUTs) and view files through signed URLs, so the bucket allows `PUT` and `GET` from the app's origin with the `Content-Type` header, and exposes `ETag` (multipart uploads read each part's ETag; without it large uploads fail with "upload failed"). the dev compose sets it on the local S3; S3 needs the rule | 0 (staging), 5 (production, self-host guide) | P0-I7, P5-I1, P5-I4 |
 | Backups | Daily + point-in-time Postgres backups; storage bucket versioning; one tested restore; bucket lifecycle rule aborting incomplete multipart uploads after 1 day | 0 (staging), 5 (production) | P0-I6, P5-I1 (DevOps team) |
 | Secrets | Env files locally; secret manager in staging/production; no secrets in the repo (gitleaks in CI with its default rules; `.gitleaks.toml` allows only the named, public dev-only example values that config validation refuses in production) | 0 | P0-I4 |
@@ -28,8 +28,23 @@ Everything that isn't application code but still has to be built: repo tooling, 
 | Env | URL | Deploys | Data |
 | --- | --- | --- | --- |
 | Local | `localhost` / `devN.dev.socioboard.com` | manual | seed data |
-| Staging | `app.staging.socioboard.com` | every merge to `main` | test accounts only |
+| Staging | `app-dev.socioboard.ai` | every merge to `main` (`6.0` until the repo migration) | test accounts only |
 | Production | `app.socioboard.com` | tagged releases | customers |
+
+## Staging (PM2)
+Decided 2026-10-06: staging is one server (8 vCPU, 8 GB RAM) running the apps under PM2 from a checkout of the repo, not the Docker images, with the services installed on it. Production and self-host keep the images. Files: `deploy/staging/`.
+
+| What | Where | Port |
+| --- | --- | --- |
+| `socioboard-web` | PM2's static server for `apps/web/dist`, app routes → `index.html` | 8080 |
+| `socioboard-api` | `node apps/api/dist/main.mjs` | 3000 |
+| `socioboard-worker` | `node apps/worker/dist/main.mjs` (takes no traffic) | none |
+| PostgreSQL 17, Valkey 8.1, OpenObserve v1.0.4, Node 24, ffmpeg 5.1+ | Installed on the server; Valkey with `appendonly yes` and `maxmemory-policy noeviction` (scheduled posts are its jobs) | internal only |
+
+- **One host:** `app-dev.socioboard.ai`. nginx (`deploy/staging/nginx.conf`) sends `/api/` (WebSockets included) and `/public-media/` to 3000 and everything else to 8080, so the session cookie stays first-party and the networks' callbacks and media links are on the app's host. `MEDIA_PUBLIC_URL=https://app-dev.socioboard.ai/public-media`; TikTok verifies that URL prefix. `TRUST_PROXY=loopback` (nginx is on the same machine).
+- **Processes** (`deploy/staging/ecosystem.config.cjs`): one fork-mode instance each (live updates hold sockets per process), settings from `SOCIOBOARD_ENV_FILE` (default `/etc/socioboard/staging.env`, outside the checkout) through Node's `--env-file`. PM2 stops them with SIGINT and waits 40 s; the apps finish in-flight requests and jobs and exit within 35 s.
+- **Deploy** (`deploy/staging/deploy.sh`, as the deploy user): fast-forward the checkout, `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm db:deploy`, `pm2 startOrReload … --update-env`, `pm2 save`, then wait for `/api/health`. It stops rather than lose local changes on the server.
+- **Checked 2026-10-06** on a workspace checkout: all three processes start and reload under PM2, `/api/health` 200, app routes served by the web process, the nginx file passes `nginx -t`. The first run found the built API couldn't find Bull Board's UI files outside the image's flat `node_modules`; `bullBoardUiPath` now falls back to resolving through `@socioboard/core`.
 
 ## Public media address
 `media.<domain>` (and the dev tunnels) must proxy to the API's `/public-media` path, e.g. Caddy `media.socioboard.com { rewrite * /public-media{uri}; reverse_proxy api:3000 }`, with `MEDIA_PUBLIC_URL=https://media.socioboard.com`. Networks that fetch media themselves (Instagram images, TikTok) read files there; addresses are signed and expire (see [media](backend/modules/media.md#delivering-media-to-networks-p1-b8)). TikTok's URL-prefix verification covers `https://media.socioboard.com/`.

@@ -72,11 +72,19 @@ export const BULL_BOARD_PATH = '/api/admin/queues';
  * Where Bull Board's UI files are. It finds them itself with an eval'd `require`, which an ESM
  * bundle (the API's build) doesn't have, so they're found here instead: through `@bull-board/api`,
  * which depends on the UI package, from wherever this code runs (source in dev, the bundle in the
- * image).
+ * image, the bundle in a workspace checkout on staging).
  */
 function bullBoardUiPath() {
-  const fromApi = createRequire(createRequire(import.meta.url).resolve('@bull-board/api'));
-  return dirname(fromApi.resolve('@bull-board/ui/package.json'));
+  const here = createRequire(import.meta.url);
+  let api: string;
+  try {
+    // Source, and the built api image (one flat node_modules beside the bundle).
+    api = here.resolve('@bull-board/api');
+  } catch {
+    // The bundle in a workspace checkout (staging under PM2): only this package depends on it.
+    api = createRequire(here.resolve('@socioboard/core')).resolve('@bull-board/api');
+  }
+  return dirname(createRequire(api).resolve('@bull-board/ui/package.json'));
 }
 
 /**

@@ -372,7 +372,7 @@ The web app and API share one origin per environment, with the API served under 
 | Environment | App + API | Media (public URLs for IG, Pinterest, TikTok) | Notes |
 | --- | --- | --- | --- |
 | Production | `app.socioboard.com` (API at `/api`) | `media.socioboard.com` | Marketing site and legal pages stay on `socioboard.com` |
-| Staging | `app.staging.socioboard.com` | `media.staging.socioboard.com` | Mirrors production; used for QA and app-review demos |
+| Staging | `app-dev.socioboard.ai` | Same host, `/public-media/` | Used for QA and app-review demos. Runs under PM2 on one server, not the images (decided 2026-10-06, [infra](infra.md#staging-pm2)) |
 | Local dev | `https://<name>.dev.socioboard.com`, a Cloudflare Tunnel to localhost | Same tunnel | A public HTTPS URL is needed because TikTok and Instagram reject plain localhost callbacks, and Stripe/AI webhooks must reach the machine |
 
 - **OAuth callbacks:** `https://<app host>/api/oauth/<network>/callback`, e.g. `https://app.socioboard.com/api/oauth/linkedin/callback`.
