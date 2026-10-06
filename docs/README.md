@@ -17,7 +17,7 @@ Socioboard 6.0 is a from-scratch rebuild of [Socioboard 5.0](https://github.com/
 | --- | --- |
 | Backend developer | [Backend conventions](backend/README.md) → [contracts](backend/contracts.md) → [platform](backend/modules/platform.md) → the module docs for your current tasks |
 | Frontend developer | [Frontend conventions](frontend/README.md) → [design system](frontend/design-system.md) → the area docs for your current tasks |
-| DevOps | [Infra](infra.md) → [phase 0](stages/phase-0.md) infra tasks |
+| DevOps | [Infra](infra.md) → [Deployment runbook](deployment.md) → [phase 0](stages/phase-0.md) infra tasks |
 | Platform accounts owner (Chethan) | [Developer apps](developer-apps.md) |
 
 **Picking up a task:** find its ID in the phase doc → open the module/area doc linked there → build it following the working rules at the end of the [traceability map](traceability.md).
@@ -34,6 +34,7 @@ Socioboard 6.0 is a from-scratch rebuild of [Socioboard 5.0](https://github.com/
 | [Stages](stages/README.md) | How we build (vertical slices) and task checklists for phases 0–6 with done criteria |
 | [Traceability map](traceability.md) | Every code unit (app, package, module, area, test suite) → phase → task IDs, plus branch/commit/PR rules |
 | [Infra](infra.md) | Tooling, containers, CI/CD, environments, backups, monitoring, self-host package |
+| [Deployment runbook](deployment.md) | How staging was set up, step by step (server, services, PM2, nginx, Cloudflare, NAS storage, env file), checks, lessons, and what production must change |
 
 ## Source of truth
 
