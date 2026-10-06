@@ -51,6 +51,7 @@ export function totp(base32Secret: string, now = Date.now()): string {
 }
 
 export { createTestApp } from './app';
+export { startFakeNas, type FakeNas, type FakeNasFile } from './fake-nas';
 export { namedRoutes, PENDING_ROUTES } from './pending-routes';
 export {
   createFakeNetworks,

@@ -725,3 +725,18 @@ model FeatureFlag {
 
   updatedBy User? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 }
+
+/// Files kept by the NAS storage driver (STORAGE_DRIVER=nas, platform/storage/nas.ts): what the
+/// NAS's own API can't answer. It has no "file info" or "list a folder", so size and type come
+/// from here, and deleting a folder deletes the keys found here. S3 needs none of this.
+model StoredObject {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  /// The app's storage key, e.g. workspaces/<id>/media/<id>/original.jpg
+  key         String   @unique
+  /// Where the NAS keeps it, as its upload answered (read at <NAS_PUBLIC_URL><path>).
+  path        String
+  size        Int
+  contentType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

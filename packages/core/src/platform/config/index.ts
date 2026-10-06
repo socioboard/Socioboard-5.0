@@ -66,6 +66,20 @@ const envSchema = z.object({
   S3_SECRET_ACCESS_KEY: optional,
   S3_ENDPOINT: optional,
   S3_FORCE_PATH_STYLE: bool,
+  /**
+   * Where media is kept: `s3` (Amazon S3 or any S3-compatible service; the default when
+   * S3_BUCKET is set) or `nas` (a NAS behind a small upload/delete API with public reads:
+   * docs/backend/modules/media.md, "NAS storage").
+   */
+  STORAGE_DRIVER: z.enum(['s3', 'nas']).optional(),
+  /** NAS upload and delete endpoint, including its bucket, e.g. http://host:8119/socioboard-dev */
+  NAS_API_URL: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
+  /** Where the NAS serves files (public, no expiry): <NAS_PUBLIC_URL><path it returned>. */
+  NAS_PUBLIC_URL: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
+  /** The NAS API's token, `<access key>:<secret>`. */
+  NAS_API_TOKEN: optional,
+  /** Browser uploads wait here (API host) until they're sent to the NAS; default: the OS temp dir. */
+  STORAGE_TEMP_DIR: optional,
 
   /** Comma-separated `id:base64key` pairs, 32-byte keys; the first one encrypts. */
   ENCRYPTION_KEYS: z
@@ -172,14 +186,22 @@ export interface Config {
   db: { url: string; poolSize: number };
   redis: { url: string };
   mail: { smtpUrl: string | undefined; from: string };
-  /** Undefined when no bucket is set; media features then report "storage not configured". */
+  /** Undefined when no storage is set; media features then report "storage not configured". */
   storage:
     | {
+        driver: 's3';
         bucket: string;
         region: string;
         endpoint: string | undefined;
         forcePathStyle: boolean;
         credentials: { accessKeyId: string; secretAccessKey: string } | undefined;
+      }
+    | {
+        driver: 'nas';
+        apiUrl: string;
+        publicUrl: string;
+        token: string;
+        tempDir: string | undefined;
       }
     | undefined;
   encryption: { keys: EncryptionKey[] };
@@ -228,7 +250,15 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     return value === '' ? undefined : value;
   };
   const problems: string[] = [];
-  if (raw('S3_BUCKET')) {
+  const nas = raw('STORAGE_DRIVER') === 'nas';
+  if (nas) {
+    for (const name of ['NAS_API_URL', 'NAS_PUBLIC_URL', 'NAS_API_TOKEN']) {
+      if (!raw(name)) problems.push(`${name}: required when STORAGE_DRIVER=nas`);
+    }
+  } else if (raw('STORAGE_DRIVER') === 's3' && !raw('S3_BUCKET')) {
+    problems.push('S3_BUCKET: required when STORAGE_DRIVER=s3');
+  }
+  if (!nas && raw('S3_BUCKET')) {
     if (!raw('S3_REGION')) problems.push('S3_REGION: required when S3_BUCKET is set');
     if (Boolean(raw('S3_ACCESS_KEY_ID')) !== Boolean(raw('S3_SECRET_ACCESS_KEY'))) {
       problems.push('S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set together');
@@ -269,8 +299,17 @@ export function loadConfig(source: Record<string, string | undefined> = process.
   const e = parsed.data;
 
   let storage: Config['storage'];
-  if (e.S3_BUCKET) {
+  if (e.STORAGE_DRIVER === 'nas') {
     storage = {
+      driver: 'nas',
+      apiUrl: (e.NAS_API_URL ?? '').replace(/\/+$/, ''),
+      publicUrl: (e.NAS_PUBLIC_URL ?? '').replace(/\/+$/, ''),
+      token: e.NAS_API_TOKEN ?? '',
+      tempDir: e.STORAGE_TEMP_DIR,
+    };
+  } else if (e.S3_BUCKET) {
+    storage = {
+      driver: 's3',
       bucket: e.S3_BUCKET,
       region: e.S3_REGION ?? '',
       endpoint: e.S3_ENDPOINT,

@@ -63,10 +63,13 @@ export function createPlatform(
   const kv = createKv({ url: config.redis.url, prefix: `${prefix}:` });
   const rateLimiter = createRateLimiter({ url: config.redis.url, prefix: `${prefix}:` });
   const realtime = createRealtime({ url: config.redis.url, prefix, logger });
-  const storage = config.storage ? createStorage(config.storage) : undefined;
+  const storage = config.storage
+    ? createStorage(config.storage, { db, appUrl: config.appUrl, secret: config.auth.secret })
+    : undefined;
   const mailer = createMailer({ smtpUrl: config.mail.smtpUrl, from: config.mail.from, logger });
 
   if (!storage) logger.warn('S3_BUCKET not set: media uploads are disabled');
+  else logger.info({ driver: config.storage?.driver }, 'storage ready');
 
   return {
     config,
