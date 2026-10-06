@@ -25,7 +25,7 @@ Each network gets **two apps**: a **production app** (production URLs only, the 
 | App | Callback URL pattern |
 | --- | --- |
 | Production | `https://app.socioboard.com/api/oauth/<network>/callback` |
-| Development | `https://app.staging.socioboard.com/api/oauth/<network>/callback` |
+| Development | `https://app-dev.socioboard.ai/api/oauth/<network>/callback` |
 | Development (local) | `https://dev1.dev.socioboard.com/api/oauth/<network>/callback` (and `dev2`, `dev3`…) |
 
 Most networks need exact-match URLs (no wildcards), so give each developer a fixed tunnel name (`dev1`, `dev2`, …) rather than random ones. `<network>` values: `facebook`, `instagram`, `linkedin`, `x`, `youtube`, `pinterest`, `tiktok`, `snapchat`, `tumblr`, `bitly`.
