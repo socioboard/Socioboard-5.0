@@ -110,8 +110,8 @@ function Card({
       aria-label={t('quickLook')}
       className="sb-calendar-quicklook glass-float fixed z-40 flex flex-col gap-3 rounded-[14px] p-4"
       style={{ left, top, width: WIDTH, transformOrigin: right ? 'left top' : 'right top' }}
-      initial={{ opacity: 0, scale: 0.94, x: right ? -6 : 6, filter: 'blur(4px)' }}
-      animate={{ opacity: 1, scale: 1, x: 0, filter: 'blur(0px)', transition: springs.snappy }}
+      initial={{ opacity: 0, scale: 0.94, x: right ? -6 : 6 }}
+      animate={{ opacity: 1, scale: 1, x: 0, transition: springs.snappy }}
       exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.12 } }}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}

@@ -66,7 +66,7 @@ export function NavTabs({ className, children, ...props }: ComponentProps<'nav'>
       <span
         ref={bar}
         aria-hidden="true"
-        className="bg-ring pointer-events-none absolute bottom-0 left-0 h-0.5 rounded-full opacity-0 transition-[transform,width] duration-400 ease-spring motion-reduce:transition-none"
+        className="bg-ring pointer-events-none absolute bottom-0 left-0 h-0.5 rounded-full opacity-0 transition-[transform,width] duration-250 ease-spring motion-reduce:transition-none"
       />
     </nav>
   );

@@ -406,14 +406,13 @@ export function CalendarPage({
     const from = still
       ? { opacity: 0.4 }
       : before.view !== actualView
-        ? { opacity: 0.3, transform: 'scale(0.985)', filter: 'blur(3px)' }
+        ? { opacity: 0.3, transform: 'scale(0.985)' }
         : {
             opacity: 0.35,
             transform: `translateX(${String(direction * 28)}px)`,
-            filter: 'blur(2px)',
           };
-    el.animate([from, { opacity: 1, transform: 'none', filter: 'blur(0px)' }], {
-      duration: still ? 150 : 420,
+    el.animate([from, { opacity: 1, transform: 'none' }], {
+      duration: still ? 150 : 260,
       easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
     });
   }, [period, actualView]);

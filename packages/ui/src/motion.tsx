@@ -27,9 +27,9 @@ const EXIT_EASE = [0.4, 0, 1, 1] as const;
  * flicked, threw or released from a drag.
  */
 export const springs = {
-  snappy: { type: 'spring', bounce: 0, visualDuration: 0.3 },
-  gentle: { type: 'spring', bounce: 0, visualDuration: 0.4 },
-  momentum: { type: 'spring', bounce: 0.2, visualDuration: 0.35 },
+  snappy: { type: 'spring', bounce: 0, visualDuration: 0.22 },
+  gentle: { type: 'spring', bounce: 0, visualDuration: 0.3 },
+  momentum: { type: 'spring', bounce: 0.2, visualDuration: 0.3 },
 } satisfies Record<string, Transition>;
 
 /**
@@ -113,13 +113,12 @@ export function Swap({
       <Leaving
         key={id}
         className={className}
-        initial={{ opacity: 0, y: direction === 0 ? 6 : 0, x, filter: 'blur(3px)' }}
-        animate={{ opacity: 1, y: 0, x: 0, filter: 'blur(0px)', transition: springs.gentle }}
+        initial={{ opacity: 0, y: direction === 0 ? 6 : 0, x }}
+        animate={{ opacity: 1, y: 0, x: 0, transition: springs.gentle }}
         exit={{
           opacity: 0,
           y: direction === 0 ? -6 : 0,
           x: -x,
-          filter: 'blur(3px)',
           transition: { duration: 0.14, ease: EXIT_EASE },
         }}
       >
@@ -146,11 +145,7 @@ export function useChangeMotion<T extends Element = HTMLDivElement>(key: unknown
     // Reduced motion: a short crossfade still shows that something changed.
     void (reduced
       ? animate(scope.current, { opacity: [0.5, 1] }, { duration: 0.15 })
-      : animate(
-          scope.current,
-          { opacity: [0.4, 1], y: [6, 0], filter: ['blur(2px)', 'blur(0px)'] },
-          springs.gentle,
-        ));
+      : animate(scope.current, { opacity: [0.4, 1], y: [6, 0] }, springs.gentle));
     // Only a change of `key` replays it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -163,8 +158,8 @@ export const staggerStyle = (index: number) => ({ '--i': index }) as CSSProperti
 /** A list item that animates in, out, and to its new place when the list changes. */
 export const listItemMotion = {
   layout: 'position' as const,
-  initial: { opacity: 0, scale: 0.92, filter: 'blur(3px)' },
-  animate: { opacity: 1, scale: 1, filter: 'blur(0px)', transition: springs.gentle },
+  initial: { opacity: 0, scale: 0.92 },
+  animate: { opacity: 1, scale: 1, transition: springs.gentle },
   exit: { opacity: 0, scale: 0.9, transition: { duration: 0.14, ease: EXIT_EASE } },
   transition: springs.gentle,
 };

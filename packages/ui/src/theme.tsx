@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { flushSync } from 'react-dom';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
 export type ResolvedTheme = 'light' | 'dark';
@@ -96,8 +97,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 }
 
 type TransitionDocument = Document & {
-  startViewTransition?: (options: { update: () => void; types: string[] }) => unknown;
+  startViewTransition?: (options: { update: () => void; types: string[] }) => {
+    finished: Promise<unknown>;
+  };
 };
+
+/** On <html> while the theme switches: colour transitions pause (styles.css). */
+const SWITCHING_CLASS = 'sb-theme-switching';
 
 /**
  * Switches to `next` with the new theme revealed in a circle growing from `from` (the toggle's
@@ -109,16 +115,30 @@ export function switchTheme(
   setPreference: (preference: ThemePreference) => void,
   from?: { x: number; y: number },
 ) {
+  const html = document.documentElement;
+  // Colours that ease (buttons, cards, links) would still be fading inside the new theme as it's
+  // revealed; they change at once instead, until the switch is over.
+  html.classList.add(SWITCHING_CLASS);
+  const done = () => {
+    // A frame later, so the new colours are drawn before transitions come back.
+    requestAnimationFrame(() => {
+      html.classList.remove(SWITCHING_CLASS);
+    });
+  };
   const apply = () => {
-    // The class changes at once, so the new snapshot already has the new colours.
-    document.documentElement.classList.toggle('dark', next === 'dark');
-    setPreference(next);
+    // The class changes at once, so the new snapshot already has the new colours; React commits
+    // now too, so nothing re-renders while the reveal plays.
+    html.classList.toggle('dark', next === 'dark');
+    flushSync(() => {
+      setPreference(next);
+    });
   };
   const doc = document as TransitionDocument;
   // Reduced motion still gets a transition: styles.css turns it into a crossfade, so the change
   // of brightness isn't abrupt.
   if (typeof doc.startViewTransition !== 'function') {
     apply();
+    done();
     return;
   }
   const root = document.documentElement.style;
@@ -132,10 +152,11 @@ export function switchTheme(
   root.setProperty('--sb-reveal-y', `${String(y)}px`);
   root.setProperty('--sb-reveal-r', `${String(radius)}px`);
   try {
-    doc.startViewTransition({ update: apply, types: ['theme'] });
+    doc.startViewTransition({ update: apply, types: ['theme'] }).finished.then(done, done);
   } catch {
     // A browser without typed transitions: switch without the reveal.
     apply();
+    done();
   }
 }
 

@@ -1,8 +1,9 @@
 import { useId } from 'react';
 
 /**
- * The ambient backdrop behind every glass pane: a neutral base, three soft Aurora glows that drift
- * slowly (and stay put when reduced motion is on), and a fine grain so the glass reads as a material. Render
+ * The ambient backdrop behind every glass pane: a neutral base, three soft Aurora glows, and a fine
+ * grain so the glass reads as a material. The glows stay still: moving them made every glass pane
+ * re-blur its backdrop on every frame. Render
  * once, at the root; it sits behind everything and ignores the pointer.
  */
 export function Backdrop() {
@@ -29,7 +30,6 @@ export function Backdrop() {
             right: '-14vw',
             top: '13vh',
             background: 'var(--sb-glow-2)',
-            animationDuration: '46s',
           }}
         />
         <div
@@ -40,7 +40,6 @@ export function Backdrop() {
             left: '38%',
             bottom: '-29vh',
             background: 'var(--sb-glow-3)',
-            animationDuration: '52s',
           }}
         />
       </div>
