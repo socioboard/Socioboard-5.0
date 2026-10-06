@@ -158,12 +158,12 @@ export function createRealtimeServer(
      * Disconnects every socket and the Valkey clients. Leaves the HTTP server alone (Socket.IO's
      * own `close()` would close it too, and the API's graceful close then fails).
      */
-    close() {
+    async close() {
       io.disconnectSockets(true);
       io.engine.close();
-      pub.disconnect();
-      sub.disconnect();
-      return Promise.resolve();
+      // `quit` lets commands already sent (the adapter's, as the sockets leave) finish first:
+      // `disconnect` rejected them, and the adapter doesn't catch that.
+      await Promise.allSettled([pub.quit(), sub.quit()]);
     },
   };
 }
