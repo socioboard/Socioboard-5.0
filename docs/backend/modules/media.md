@@ -62,6 +62,7 @@ Decided 2026-10-06: besides S3, media can live on a NAS behind a small HTTP API 
 | `delete`, `deletePrefix` | `DELETE` per file; a folder is deleted key by key from `StoredObject` (the NAS can't delete a folder) |
 | `ping` (`/api/health`) | `GET <NAS origin>/health` |
 
+- Sending to the NAS is tried up to 3 times (0.5 s and 1.5 s apart) when it can't connect or answers 5xx: on staging it refused a connection for a moment under load (2026-10-06). A 4xx is final; the NAS refuses a file whose name extension doesn't match its type (415), which can't happen with our keys.
 - Uploads route through the API host, so it carries every uploaded byte and needs disk for files in flight (up to 1 GB per video, until `complete`). Abandoned multipart uploads are removed by `media-purge` (`abortMultipart` deletes their parts).
 - `NAS_API_URL` may be plain HTTP (staging uses `http://<ip>:8119/<bucket>`, since Cloudflare in front of the NAS's domain caps a request at 100 MB): the token and files then cross the network unencrypted. Accepted for staging on 2026-10-06; production needs HTTPS.
 - The browser reaches the upload route on the app's own origin, so no CORS rule is needed; it's rate-limited per IP (600 a minute) and needs no session, like a presigned S3 URL.

@@ -96,12 +96,31 @@ describe('the driver', () => {
     await expect(storage.deletePrefix('nas-test')).rejects.toThrow(/Refusing/);
   });
 
-  it('a failed upload to the NAS records nothing', async () => {
+  it('a NAS that fails for a moment is tried again; one that keeps failing records nothing', async () => {
+    const uploads = () => nas.calls.filter((c) => c.endsWith('/upload')).length;
+    let before = uploads();
+    nas.failNextUpload.status = 503;
+    nas.failNextUpload.times = 2;
+    await storage.put('nas-test/c/x.png', Buffer.from('x'), 'image/png');
+    expect(uploads() - before).toBe(3);
+    expect((await storage.head('nas-test/c/x.png'))?.size).toBe(1);
+
+    before = uploads();
     nas.failNextUpload.status = 500;
-    await expect(storage.put('nas-test/c/x.png', Buffer.from('x'), 'image/png')).rejects.toThrow(
+    nas.failNextUpload.times = 3;
+    await expect(storage.put('nas-test/c/y.png', Buffer.from('y'), 'image/png')).rejects.toThrow(
       /NAS upload failed \(500\)/,
     );
-    expect(await storage.head('nas-test/c/x.png')).toBeUndefined();
+    expect(uploads() - before).toBe(3);
+    expect(await storage.head('nas-test/c/y.png')).toBeUndefined();
+
+    // A refusal (4xx) isn't tried again.
+    before = uploads();
+    nas.failNextUpload.status = 415;
+    await expect(storage.put('nas-test/c/z.png', Buffer.from('z'), 'image/png')).rejects.toThrow(
+      /\(415\)/,
+    );
+    expect(uploads() - before).toBe(1);
   });
 
   it('health: the NAS answers', async () => {
