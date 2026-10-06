@@ -147,7 +147,10 @@ export function Combobox({
   };
 
   return (
-    <PopoverPrimitive.Root open={open} onOpenChange={onOpenChange}>
+    // Modal, so its list scrolls inside a dialog: a dialog blocks wheel and touch scrolling
+    // outside itself, and the list is portalled outside it. A modal popover takes over the
+    // scroll lock while it's open (and clicking outside still closes it).
+    <PopoverPrimitive.Root open={open} onOpenChange={onOpenChange} modal>
       <PopoverPrimitive.Trigger asChild disabled={disabled}>
         <button
           type="button"

@@ -536,6 +536,13 @@ test('posting times: start from a preset, change a day, copy it, save', async ({
   await dialog.getByRole('button', { name: 'Add', exact: true }).click();
   // The account posts on Tokyo time.
   await dialog.getByRole('button', { name: /Time zone/ }).click();
+  // The list scrolls with the wheel inside the dialog (the dialog blocks scrolling outside
+  // itself, and the list is portalled out of it; the picker's popover is modal for that).
+  const zones = page.getByRole('listbox', { name: 'Search time zones' });
+  const top = await zones.evaluate((el) => el.scrollTop);
+  await zones.hover();
+  await page.mouse.wheel(0, 600);
+  await expect.poll(() => zones.evaluate((el) => el.scrollTop)).not.toBe(top);
   await page.getByRole('combobox', { name: 'Search time zones' }).fill('Tokyo');
   await page.keyboard.press('Enter');
   await expect(dialog.getByRole('button', { name: /Time zone/ })).toContainText('Tokyo');
