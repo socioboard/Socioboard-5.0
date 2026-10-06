@@ -47,7 +47,9 @@ export function NetworkTabs({
     <div
       role="tablist"
       aria-label={label ?? t('tabs.label')}
-      className="flex gap-1 overflow-x-auto [scrollbar-width:none]"
+      // A segmented control: the tabs sit in a visible track, and the selected one is a solid
+      // surface with the selection ring, so it reads at a glance on glass, light or dark.
+      className="glass-chip flex w-fit max-w-full gap-0.5 overflow-x-auto rounded-[calc(var(--radius-control)+4px)] p-1 [scrollbar-width:none]"
     >
       {tabs.map((network, i) => {
         const selected = network === active;
@@ -73,16 +75,16 @@ export function NetworkTabs({
               onKeyDown(e, i);
             }}
             className={cn(
-              'rounded-control relative isolate flex h-9 shrink-0 items-center gap-2 px-3 text-[13px] font-medium whitespace-nowrap outline-none',
+              'rounded-control relative isolate flex h-8 shrink-0 items-center gap-2 px-3 text-[13px] font-medium whitespace-nowrap outline-none',
               'focus-visible:ring-selected transition-[color,transform] duration-200 active:scale-[0.97]',
-              selected ? 'text-ink' : 'text-ink-3 hover:text-ink',
+              selected ? 'text-ink' : 'text-ink-2 hover:text-ink',
             )}
           >
             {selected && (
               <motion.span
                 layoutId={`${panelId}-selected`}
                 aria-hidden="true"
-                className="bg-chip rounded-control absolute inset-0 -z-10 shadow-sm"
+                className="bg-glass-solid ring-selected rounded-control absolute inset-0 -z-10"
                 transition={springs.snappy}
               />
             )}
