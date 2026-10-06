@@ -25,8 +25,13 @@ Signed-off-by: Your Name <you@example.com>
 
 `git commit -s` adds it, using your `user.name` and `user.email`; the name and address must match
 the commit's author. Forgot? Add it to your last commit with `git commit --amend -s`, or to every
-commit on your branch with `git rebase --signoff main`, then force-push the branch. A CI check
-refuses pull requests from forks whose commits aren't signed off.
+commit on your branch with `git rebase --signoff 6.0`, then force-push the branch. A CI check
+(`.github/check-commits.sh`) refuses pull requests whose commits aren't signed off.
+
+The sign-off is a person's statement, so commits and pull requests name people only: no
+`Co-Authored-By` line for an AI assistant and no "Generated with …" footer. Using one is fine; the
+person who opens the pull request is its author and answers for it. The same CI check refuses
+commits that carry such a line.
 
 ## How we work
 
@@ -39,6 +44,31 @@ refuses pull requests from forks whose commits aren't signed off.
   a body saying why when it isn't obvious, a `Task: <ID>` line, and your sign-off.
 - **Pull requests:** the title starts with the task ID. Say what changed, how you tested it,
   and anything a reviewer should look at closely. Keep a pull request to one task.
+
+## Working as a team
+
+Several people work on the code at once, each with coding agents (Claude Code, Codex). The day-to-day
+rules, written so both people and agents can follow them, are in [AGENTS.md](AGENTS.md); Claude
+Code reads them through [CLAUDE.md](CLAUDE.md), and `.claude/settings.json` turns off its
+co-author lines. What they're for:
+
+- **Everyone owns whole tasks.** Each task ID is assigned to one person on the project board
+  before work starts, and tasks are split so people work in different folders: in phase 3, one
+  network each (its provider folder, preview, options panel and tests). Shared contracts come
+  first and alone (P3-C1), so the network work that follows doesn't change the same files.
+- **Everything reaches `6.0` through a pull request.** Nobody pushes to it. A pull request merges
+  when CI is green, someone other than its author has approved it, and it's up to date with
+  `6.0`. `.github/CODEOWNERS` asks the tech lead to review the shared core: contracts, the
+  database schema, the platform, publishing and scheduling, CI.
+- **Branches live a day or two.** Small pull requests, rebased on `6.0` every day, rarely
+  conflict; long ones always do.
+- **Shared files have a rule each** (the table in AGENTS.md): one open migration at a time, the
+  lockfile regenerated rather than merged, one line per entry in the lists every network adds to.
+- **One checkout per agent.** Agents running side by side each get a git worktree, so they never
+  edit the same files under each other.
+- **Shared accounts are taken in turn.** The suite that publishes to the real test Facebook Page
+  (`e2e:meta`) runs for one person at a time, and only the tech lead changes the networks'
+  developer apps. Secrets are shared through a password manager, never in chat or commits.
 
 ## Tests
 

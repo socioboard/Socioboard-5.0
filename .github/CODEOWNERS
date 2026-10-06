@@ -1,0 +1,18 @@
+# Who is asked to review what (CONTRIBUTING.md#working-as-a-team). GitHub requests a review from
+# the owners of every path a pull request touches. The shared core that every feature builds on:
+/packages/contracts/                         @ChethanGlobussoft
+/packages/db/prisma/                         @ChethanGlobussoft
+/packages/core/src/platform/                 @ChethanGlobussoft
+/packages/core/src/modules/publishing/       @ChethanGlobussoft
+/packages/core/src/modules/scheduling/       @ChethanGlobussoft
+/packages/providers/src/*.ts                 @ChethanGlobussoft
+/tests/                                      @ChethanGlobussoft
+
+# How the repo is built, checked and worked on.
+/.github/                                    @ChethanGlobussoft
+/docker/                                     @ChethanGlobussoft
+/package.json                                @ChethanGlobussoft
+/pnpm-workspace.yaml                         @ChethanGlobussoft
+/AGENTS.md                                   @ChethanGlobussoft
+/CLAUDE.md                                   @ChethanGlobussoft
+/.claude/                                    @ChethanGlobussoft
