@@ -20,8 +20,8 @@ export interface FakeNas {
   files: Map<string, FakeNasFile>;
   /** Every request, as `METHOD path`. */
   calls: string[];
-  /** Set to make the next upload fail with this status. */
-  failNextUpload: { status?: number };
+  /** Set to make the next uploads fail with this status (`times` of them; default 1). */
+  failNextUpload: { status?: number; times?: number };
   close(): Promise<void>;
 }
 
@@ -51,7 +51,11 @@ export async function startFakeNas(): Promise<FakeNas> {
       if (!authorized) return [401, { ok: false, code: 'AUTH_REQUIRED' }];
       if (failNextUpload.status) {
         const status = failNextUpload.status;
-        delete failNextUpload.status;
+        failNextUpload.times = (failNextUpload.times ?? 1) - 1;
+        if (failNextUpload.times <= 0) {
+          delete failNextUpload.status;
+          delete failNextUpload.times;
+        }
         return [status, { ok: false, code: 'BROKEN' }];
       }
       // Fine for a test double; a real server would stream with a multipart parser.

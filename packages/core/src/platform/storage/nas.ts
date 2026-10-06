@@ -57,6 +57,13 @@ export const STORAGE_UPLOAD_PATH = '/api/storage/upload';
 /** A part may be this much larger than MULTIPART_PART_BYTES (16 MB) before it's refused. */
 const MAX_PART_BYTES = 64 * 1024 * 1024;
 const FIFTEEN_MINUTES = 15 * 60;
+/**
+ * Tries per upload: the NAS has refused a connection for a moment under load (seen on staging,
+ * 2026-10-06), so a send that couldn't connect or got a 5xx is tried again after a short wait. A
+ * 4xx (a bad token, a name the NAS refuses) is final.
+ */
+export const NAS_UPLOAD_TRIES = 3;
+const RETRY_WAIT_MS = [500, 1500];
 const ONE_HOUR = 60 * 60;
 
 /** What an upload URL's token carries: which file, and what the upload must be. */
@@ -134,17 +141,25 @@ export function createNasStorage(config: NasStorageConfig, deps: NasStorageDeps)
 
   /** Sends a file to the NAS and records where it went. */
   async function send(key: string, file: Blob, contentType: string, size: number) {
-    const form = new FormData();
-    form.set('key', nasKeyFor(key));
-    form.set('file', file, key.split('/').pop() ?? 'file');
-    const res = await http(`${config.apiUrl}/upload`, {
-      method: 'POST',
-      headers: auth,
-      body: form,
-    });
-    const text = await res.text();
-    if (!res.ok) {
-      throw new Error(`NAS upload failed (${String(res.status)}): ${text.slice(0, 200)}`);
+    let res: Response | undefined;
+    let text = '';
+    for (let attempt = 1; ; attempt++) {
+      // A new form each time: a file-backed Blob can be read again, a sent body can't.
+      const form = new FormData();
+      form.set('key', nasKeyFor(key));
+      form.set('file', file, key.split('/').pop() ?? 'file');
+      try {
+        res = await http(`${config.apiUrl}/upload`, { method: 'POST', headers: auth, body: form });
+        text = await res.text();
+        if (res.ok || res.status < 500) break;
+      } catch (err) {
+        if (attempt >= NAS_UPLOAD_TRIES) throw err;
+      }
+      if (attempt >= NAS_UPLOAD_TRIES) break;
+      await new Promise((resolve) => setTimeout(resolve, RETRY_WAIT_MS[attempt - 1] ?? 1500));
+    }
+    if (!res?.ok) {
+      throw new Error(`NAS upload failed (${String(res?.status)}): ${text.slice(0, 200)}`);
     }
     let answer: unknown = null;
     try {
