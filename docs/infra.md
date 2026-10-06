@@ -36,12 +36,12 @@ Decided 2026-10-06: staging is one server (8 vCPU, 8 GB RAM) running the apps un
 
 | What | Where | Port |
 | --- | --- | --- |
-| `socioboard-web` | PM2's static server for `apps/web/dist`, app routes → `index.html` | 8080 |
+| `socioboard-web` | PM2's static server for `apps/web/dist`, app routes → `index.html` | 3001 |
 | `socioboard-api` | `node apps/api/dist/main.mjs` | 3000 |
 | `socioboard-worker` | `node apps/worker/dist/main.mjs` (takes no traffic) | none |
 | PostgreSQL 17, Valkey 8.1, OpenObserve v1.0.4, Node 24, ffmpeg 5.1+ | Installed on the server; Valkey with `appendonly yes` and `maxmemory-policy noeviction` (scheduled posts are its jobs) | internal only |
 
-- **One host:** `app-dev.socioboard.ai`. nginx (`deploy/staging/nginx.conf`) sends `/api/` (WebSockets included) and `/public-media/` to 3000 and everything else to 8080, so the session cookie stays first-party and the networks' callbacks and media links are on the app's host. `MEDIA_PUBLIC_URL=https://app-dev.socioboard.ai/public-media`; TikTok verifies that URL prefix. `TRUST_PROXY=loopback` (nginx is on the same machine).
+- **One host:** `app-dev.socioboard.ai`. nginx (`deploy/staging/nginx.conf`) sends `/api/` (WebSockets included) and `/public-media/` to 3000 and everything else to 3001, so the session cookie stays first-party and the networks' callbacks and media links are on the app's host. `MEDIA_PUBLIC_URL=https://app-dev.socioboard.ai/public-media`; TikTok verifies that URL prefix. `TRUST_PROXY=loopback` (nginx is on the same machine).
 - **Processes** (`deploy/staging/ecosystem.config.cjs`): one fork-mode instance each (live updates hold sockets per process), settings from `SOCIOBOARD_ENV_FILE` (default `/etc/socioboard/staging.env`, outside the checkout) through Node's `--env-file`. PM2 stops them with SIGINT and waits 40 s; the apps finish in-flight requests and jobs and exit within 35 s.
 - **Deploy** (`deploy/staging/deploy.sh`, as the deploy user): fast-forward the checkout, `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm db:deploy`, `pm2 startOrReload … --update-env`, `pm2 save`, then wait for `/api/health`. It stops rather than lose local changes on the server.
 - **Checked 2026-10-06** on a workspace checkout: all three processes start and reload under PM2, `/api/health` 200, app routes served by the web process, the nginx file passes `nginx -t`. The first run found the built API couldn't find Bull Board's UI files outside the image's flat `node_modules`; `bullBoardUiPath` now falls back to resolving through `@socioboard/core`.

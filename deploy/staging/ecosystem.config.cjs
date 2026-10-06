@@ -1,6 +1,6 @@
-// PM2 processes for staging (docs/infra.md#staging-pm2, P0-I7): web on 8080, api on 3000, and
+// PM2 processes for staging (docs/infra.md#staging-pm2, P0-I7): web on 3001, api on 3000, and
 // the worker, which takes no traffic. nginx in front routes app-dev.socioboard.ai: /api/ and
-// /public-media/ to 3000, everything else to 8080 (deploy/staging/nginx.conf).
+// /public-media/ to 3000, everything else to 3001 (deploy/staging/nginx.conf).
 //   pm2 startOrReload deploy/staging/ecosystem.config.cjs --update-env
 const path = require('node:path');
 
@@ -33,7 +33,7 @@ module.exports = {
       script: 'serve',
       env: {
         PM2_SERVE_PATH: path.join(root, 'apps/web/dist'),
-        PM2_SERVE_PORT: 8080,
+        PM2_SERVE_PORT: 3001,
         PM2_SERVE_SPA: 'true',
         PM2_SERVE_HOMEPAGE: '/index.html',
       },
