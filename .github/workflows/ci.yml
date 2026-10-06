@@ -37,21 +37,22 @@ jobs:
           docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.28.0
           git /repo --log-opts=HEAD --redact --no-banner --exit-code 1
 
-  dco:
-    name: Sign-off (DCO)
-    # Outside contributions (pull requests from forks) must be signed off (CONTRIBUTING.md).
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork
+  commits:
+    name: Commits (sign-off, authorship)
+    # Every pull request: each commit signed off by its author, none naming an AI as an author
+    # (CONTRIBUTING.md, AGENTS.md).
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Every commit is signed off by its author
+      - name: Every commit is signed off, with no AI attribution
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
-        run: bash .github/check-dco.sh "$BASE" "$HEAD"
+        run: bash .github/check-commits.sh "$BASE" "$HEAD"
 
   check:
     name: Lint, types, unit tests, build

@@ -69,7 +69,7 @@ Running it again only adds what is missing. It refuses to run with `NODE_ENV=pro
 
 ## Working rules
 
-Every change belongs to a task in [docs/stages](docs/stages/README.md). Branch `p<phase>/<module>/<task-id>-<name>`, commit `type(module): summary` with a `Task: <ID>` line, PR title starts with the task ID. Contributing from outside the team: see [CONTRIBUTING.md](CONTRIBUTING.md) (commits signed off under the DCO).
+Every change belongs to a task in [docs/stages](docs/stages/README.md). Branch `p<phase>/<module>/<task-id>-<name>`, commit `type(module): summary` with a `Task: <ID>` line, PR title starts with the task ID. Everything reaches `6.0` through a reviewed pull request. The team's day-to-day rules (for people and their coding agents) are in [AGENTS.md](AGENTS.md); contributing from outside the team: see [CONTRIBUTING.md](CONTRIBUTING.md) (commits signed off under the DCO).
 
 ## License
 
