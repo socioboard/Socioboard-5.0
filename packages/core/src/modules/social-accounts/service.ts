@@ -3,6 +3,8 @@ import { createHash, randomBytes } from 'node:crypto';
 import {
   can,
   LoginProvider,
+  NoChoices,
+  type AccountOptionChoices,
   realtimeRooms,
   type AccountStatus,
   type ConnectableAsset,
@@ -810,6 +812,52 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     };
   }
 
+  /**
+   * What the account offers for its network's post options (Pinterest boards, TikTok creator
+   * info…), asked of the network each time: boards change, and TikTok requires a fresh look before
+   * every post. Networks whose options need nothing from the account answer with their id only.
+   */
+  async function getAccountOptions(
+    member: MemberContext,
+    accountId: string,
+  ): Promise<AccountOptionChoices> {
+    const a = await findAccount(member.workspaceId, accountId);
+    if (a.status === 'disconnected' || !a.connection) {
+      throw notFound('ACCOUNT_NOT_FOUND', 'Account not found or disconnected');
+    }
+    if (!registry.isEnabled(a.network)) {
+      throw notFound('NETWORK_NOT_ENABLED', `${a.network} is not enabled on this server`);
+    }
+    const adapter = registry.network(a.network);
+    if (!adapter.optionChoices) {
+      // Networks whose options need choices (NoChoices excludes them) must implement the hook.
+      return NoChoices.parse({ network: a.network });
+    }
+    if (a.status === 'reauth_required') {
+      throw new AppError(409, 'ACCOUNT_REAUTH_REQUIRED', 'Reconnect this account first');
+    }
+    const { credentials } = await getCredentials(member.workspaceId, a.id);
+    let choices: AccountOptionChoices;
+    try {
+      choices = await adapter.optionChoices(credentials);
+    } catch (err) {
+      if (isProviderError(err) && err.kind === 'auth') {
+        await needsReconnect(member.workspaceId, a.connection.id, err.message);
+        throw new AppError(
+          409,
+          'ACCOUNT_REAUTH_REQUIRED',
+          `Reconnect this account: ${err.message}`,
+        );
+      }
+      logger.warn({ err, network: a.network, accountId: a.id }, 'listing option choices failed');
+      throw new AppError(502, 'NETWORK_ERROR', `${adapter.displayName} did not answer; try again`);
+    }
+    if (choices.network !== a.network) {
+      throw new Error(`${a.network} answered option choices for ${choices.network}`);
+    }
+    return choices;
+  }
+
   // ---------------------------------------------------------------- disconnect
 
   /** Cancels the accounts' pending deliveries; returns the cancelled target ids per account. */
@@ -986,6 +1034,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     listConnections,
     listAccounts,
     getAccount,
+    getAccountOptions,
     disconnectAccount,
     removeConnection,
     getCredentials,

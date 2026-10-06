@@ -39,6 +39,7 @@ A connection has one or more accounts, possibly of more than one network: a Face
 | DELETE | `/api/v1/workspaces/:wid/connections/:cid` | `accounts:manage` | Remove a login and all its accounts |
 | GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts, with the login each comes through (respects member account access from phase 4; `disconnected` ones left out) |
 | GET | `/api/v1/workspaces/:wid/accounts/:aid` | `posts:read` | Details + health + which login it comes through + how many pending posts disconnecting would cancel |
+| GET | `/api/v1/workspaces/:wid/accounts/:aid/options` | `posts:create` | What the account offers for its network's post options (P3-C1): Pinterest boards, TikTok creator info (privacy levels it may use, interactions turned off in TikTok, longest video, why it can't post now), YouTube privacy levels. Asked of the network each time through the adapter's `optionChoices`; networks without choices answer `{ network }`. A refused token marks the account (and its login) as needing reconnecting: 409 `ACCOUNT_REAUTH_REQUIRED`, and later calls answer that without asking the network; a network failure is 502 `NETWORK_ERROR` |
 | DELETE | `/api/v1/workspaces/:wid/accounts/:aid` | `accounts:manage` | Disconnect one account; cancels its scheduled targets |
 | CRUD | `/api/v1/workspaces/:wid/account-groups` | `accounts:manage` | Account groups (routes arrive with the groups UI, P3-F3; the tables exist from P1-B1) |
 
@@ -66,7 +67,8 @@ A connection has one or more accounts, possibly of more than one network: a Face
 | `CONNECTION_NOT_FOUND`, `ACCOUNT_NOT_FOUND` | 404 | Not in this workspace |
 | `ASSET_NOT_AVAILABLE` | 422 | Adding something the login no longer lists, or can't post to (`details.externalIds`) |
 | `CONNECTION_REAUTH_REQUIRED` | 409 | The network refused the login's token while listing assets; the login and its accounts are marked `reauth_required` |
-| `NETWORK_ERROR` | 502 | The network didn't answer while listing assets |
+| `ACCOUNT_REAUTH_REQUIRED` | 409 | Option choices for an account needing reconnecting, or whose token the network just refused (it and its login are then marked `reauth_required`) |
+| `NETWORK_ERROR` | 502 | The network didn't answer while listing assets or option choices |
 
 ## Adding a second login of the same network
 Networks sign the user in with whatever account the browser is already logged into, so a second "Connect" usually returns the same login. We handle it in three ways:

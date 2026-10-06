@@ -92,6 +92,7 @@ const CLASSIFIED: Record<string, Kind> = {
   removeConnection: { kind: 'resource' },
   listAccounts: { kind: 'list', idsOf: 'accountId' },
   getAccount: { kind: 'resource' },
+  getAccountOptions: { kind: 'resource' },
   disconnectAccount: { kind: 'resource' },
   // posts: bodies naming A's account or media must not work from B
   validatePost: {
@@ -152,6 +153,12 @@ const CLASSIFIED: Record<string, Kind> = {
   listAttentionAccounts: { kind: 'admin' },
   // telemetry: browser errors, public; they read nothing back (client-errors.int.test.ts)
   reportClientError: { kind: 'user' },
+  // shortlinks (P3-B8): the workspace's own shortener
+  getShortener: { kind: 'workspace' },
+  connectShortener: { kind: 'workspace' },
+  updateShortener: { kind: 'workspace', body: () => ({ autoShorten: true }) },
+  disconnectShortener: { kind: 'workspace' },
+  shortenLink: { kind: 'workspace', body: () => ({ url: 'https://example.com/' }) },
 };
 
 /** A valid schedule time: a day ahead. */
