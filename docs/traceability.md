@@ -72,6 +72,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | composer | [composer](frontend/areas/composer.md) | 1 · P1-F2–F5, P1-F8 · 2 · P2-F1 · 3 · P3-F1, P3-F2 · 4 · P4-F1, P4-F6 · 6.1 · P6-F5 |
 | posts (+ tasks) | [posts](frontend/areas/posts.md) | 1 · P1-F6, P1-F8 · 4 · P4-F3, P4-F4 |
 | calendar | [calendar](frontend/areas/calendar.md) | 2 · P2-F2, P2-F3 |
+| home | [home](frontend/areas/home.md) | 4 · P4-F8 |
 | notifications | [notifications](frontend/areas/notifications.md) | 2 · P2-F4 |
 | admin-console | [admin-console](frontend/areas/admin-console.md) | 2 · P2-F6 · 5 · P5-F2 · 6.1 · P6-F6 |
 | approvals | [approvals](frontend/areas/approvals.md) | 4 · P4-F2, P4-F3 |

@@ -29,6 +29,7 @@
 - [ ] P4-F5 Settings: review requirement toggle; per-member account access
 - [ ] P4-F6 AI studio page + composer side panel; schema-driven forms; job states; results to library/editor, shown as proposals that are applied explicitly and can be undone ([ai-studio](../frontend/areas/ai-studio.md#how-results-are-shown-show-then-apply-then-undo))
 - [ ] P4-F7 Design system additions: CommentThread, MentionInput, SchemaForm, JobProgress, AvatarStack (reviewers, commenters)
+- [ ] P4-F8 Home page: needs attention, up next, get started (moved from the calendar), quick actions, my tasks, recent activity; `/w/:slug` opens it instead of the calendar ([home](../frontend/areas/home.md), decided 2026-10-06)
 
 ## Quality
 - [ ] P4-Q1 E2E: Contributor generates with AI (mock) → submits → Editor comments, approves and schedules → publishes
