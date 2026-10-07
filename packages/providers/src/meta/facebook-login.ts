@@ -12,6 +12,9 @@ export const FACEBOOK_SCOPES = [
   'pages_read_engagement',
   'pages_manage_posts',
   'pages_manage_engagement',
+  // Meta requires it alongside pages_manage_engagement: without it, commenting as the Page
+  // (the first comment) fails with #200.
+  'pages_read_user_content',
   'business_management',
   'instagram_basic',
   'instagram_content_publish',

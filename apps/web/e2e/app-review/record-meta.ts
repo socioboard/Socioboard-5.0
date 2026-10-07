@@ -14,7 +14,7 @@
 // chapter list land in e2e/app-review/out (git-ignored), with an MP4 copy (H.264, what Meta's
 // upload takes) when an ffmpeg with libx264 is found: REVIEW_FFMPEG, or `ffmpeg` on the PATH.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { chromium, expect, type Page } from '@playwright/test';
@@ -60,6 +60,7 @@ const FACEBOOK_PERMISSIONS = [
   'pages_read_engagement',
   'pages_manage_posts',
   'pages_manage_engagement',
+  'pages_read_user_content',
   'instagram_basic',
   'instagram_content_publish',
   'instagram_manage_comments',
@@ -307,6 +308,15 @@ const context = await browser.newContext({
   viewport: SIZE,
   recordVideo: { dir: OUT, size: SIZE },
 });
+// Signed in to Instagram too, when there's a session: Instagram covers a post with a sign-in
+// prompt for visitors, and the video ends on the post and its comment.
+const INSTAGRAM_SESSION = fileURLToPath(new URL('../.auth/instagram.json', import.meta.url));
+if (route === 'facebook' && existsSync(INSTAGRAM_SESSION)) {
+  const state = JSON.parse(readFileSync(INSTAGRAM_SESSION, 'utf8')) as {
+    cookies: Parameters<typeof context.addCookies>[0];
+  };
+  await context.addCookies(state.cookies.filter((c) => (c.domain ?? '').endsWith('instagram.com')));
+}
 const page = await context.newPage();
 const started = Date.now();
 const chapters: string[] = [];
@@ -440,8 +450,17 @@ async function publish(networks: string[]) {
 async function show(url: string, readMs: number) {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
   await redraw();
-  await hold(3_000);
-  await page.mouse.wheel(0, 350);
+  await hold(4_000);
+  // Facebook opens the post in a scrolling dialog with the comments below the photo: scroll it, in
+  // steps the viewer can follow (the wheel goes to what's under the pointer). Instagram's post page
+  // already shows the comments beside the photo, and scrolling would leave it.
+  if (new URL(url).hostname.endsWith('facebook.com')) {
+    await page.mouse.move(SIZE.width / 2, SIZE.height / 2, { steps: 12 });
+    for (let i = 0; i < 6; i += 1) {
+      await page.mouse.wheel(0, 160);
+      await hold(250);
+    }
+  }
   await hold(readMs);
 }
 
@@ -525,8 +544,12 @@ try {
       {
         step: 'Step 6',
         title: 'The first comment is posted right after the post',
-        body: 'On the Page with pages_manage_engagement, on Instagram with instagram_manage_comments.',
-        permissions: ['pages_manage_engagement', 'instagram_manage_comments'],
+        body: 'On the Page with pages_manage_engagement and pages_read_user_content, on Instagram with instagram_manage_comments.',
+        permissions: [
+          'pages_manage_engagement',
+          'pages_read_user_content',
+          'instagram_manage_comments',
+        ],
       },
       6_000,
     );
@@ -553,8 +576,8 @@ try {
       {
         step: 'Step 9 · on Facebook',
         title: 'The post on the Facebook Page, with Socioboard’s first comment',
-        body: 'Published with pages_manage_posts; the first comment with pages_manage_engagement.',
-        permissions: ['pages_manage_posts', 'pages_manage_engagement'],
+        body: 'Published with pages_manage_posts; the first comment with pages_manage_engagement and pages_read_user_content.',
+        permissions: ['pages_manage_posts', 'pages_manage_engagement', 'pages_read_user_content'],
       },
       500,
     );
