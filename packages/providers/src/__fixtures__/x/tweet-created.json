@@ -1,0 +1,13 @@
+{
+  "method": "POST",
+  "url": "https://api.x.com/2/tweets",
+  "body": { "text": "\"Fresh roast today\"" },
+  "status": 201,
+  "response": {
+    "data": {
+      "id": "1800000000000000001",
+      "text": "Fresh roast today",
+      "edit_history_tweet_ids": ["1800000000000000001"]
+    }
+  }
+}

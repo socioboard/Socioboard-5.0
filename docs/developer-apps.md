@@ -56,7 +56,9 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 - **Auth:** OAuth 2.0 with PKCE. Scopes: `tweet.read`, `tweet.write`, `users.read`, `media.write`, `offline.access`.
 - **Review:** none, but a payment method is required before any call works.
 - **Cost:** ~$0.015/post, ~$0.20/post with a link, $0.005/read. Feed reading in 6.1 also costs money; keep reads minimal.
-- [ ] Project + app · [ ] Billing + spending cap · [ ] Dev app (separate project or app)
+- **Callbacks** (User authentication settings, type Web App, read and write): `https://app-dev.socioboard.ai/api/oauth/x/callback` and `http://localhost:5173/api/oauth/x/callback`. The **Webhooks** section is something else (X pushing events to us, with a challenge check) and isn't used.
+- **Keys:** the OAuth 2.0 Client ID and Secret (`X_CLIENT_ID`, `X_CLIENT_SECRET`), not the OAuth 1.0 consumer keys or the bearer token.
+- [x] Project + app ("Socio Board", 2026-10-06) · [x] Billing: prepaid credits, auto-recharge off, which caps spending at the balance · [ ] Dev app (separate project or app)
 
 ### YouTube (Google)
 - **Portal:** Google Cloud Console, one project for production, one for development. Enable YouTube Data API v3 and YouTube Analytics API.

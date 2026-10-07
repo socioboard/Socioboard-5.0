@@ -1,0 +1,14 @@
+{
+  "method": "GET",
+  "url": "https://api.x.com/2/users/me",
+  "query": { "user.fields": "profile_image_url" },
+  "status": 200,
+  "response": {
+    "data": {
+      "id": "1700000000000000001",
+      "name": "Halden Coffee ",
+      "username": "haldencoffee",
+      "profile_image_url": "https://pbs.twimg.com/profile_images/1/halden_normal.jpg"
+    }
+  }
+}

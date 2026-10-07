@@ -299,6 +299,8 @@ export async function publishTarget(
         finishedAt: clock.now(),
         // Things that went wrong without failing the post (e.g. the first comment).
         message: result.warnings.length ? result.warnings.join('\n') : null,
+        // What the network charged (X bills per post).
+        ...(result.costUnits === undefined ? {} : { costUnits: result.costUnits }),
       },
     });
     await deps.recomputeStatus(data.workspaceId, target.postId);

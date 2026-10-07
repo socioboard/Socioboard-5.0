@@ -16,6 +16,7 @@ import { useAttachedMedia } from '../media';
 import { FacebookPreview } from '../previews/facebook-preview';
 import { InstagramPreview } from '../previews/instagram-preview';
 import type { PreviewFile } from '../previews/shared';
+import { XPreview } from '../previews/x-preview';
 import { NetworkTabs } from './network-tabs';
 
 /** Originals up to this size are shown for a lone picture; beyond it, or in a grid, the thumbnail. */
@@ -196,6 +197,21 @@ function NetworkPreview({
         files={files}
         format={content.format}
         firstComment={firstComment}
+        spec={spec}
+      />
+    );
+  }
+  if (network === 'x') {
+    return (
+      <XPreview
+        account={{
+          name: account.displayName,
+          username: account.username,
+          avatarUrl: account.avatarUrl,
+        }}
+        text={content.text}
+        files={files}
+        link={link}
         spec={spec}
       />
     );

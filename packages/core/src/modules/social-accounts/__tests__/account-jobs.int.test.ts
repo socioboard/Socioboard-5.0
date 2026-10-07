@@ -320,3 +320,66 @@ describe('account-health', () => {
     }
   });
 });
+
+describe('renewing before publishing (getCredentials)', () => {
+  const MIN = 60_000;
+  const igLogin = async (code: string, expiresAt: Date) => {
+    instagram.people.set(code, person(code, [igAsset(`ig-${code}`)]));
+    const c = await login('instagram', code, { expiresAt, assets: [igAsset(`ig-${code}`)] });
+    return { connectionId: c.id, accountId: c.accounts[0]?.id ?? '' };
+  };
+
+  it('a login token running out within 10 minutes is renewed first; a later one is left', async () => {
+    const soon = await igLogin('cara', fromNow(5 * MIN));
+    const { credentials } = await accounts.getCredentials(ws, soon.accountId);
+    expect(credentials.accessToken).toBe('token-cara~1');
+    expect((await connection(soon.connectionId)).tokenExpiresAt?.getTime()).toBeGreaterThan(
+      Date.now() + 59 * DAY,
+    );
+
+    const later = await igLogin('dev', fromNow(2 * 60 * MIN));
+    expect((await accounts.getCredentials(ws, later.accountId)).credentials.accessToken).toBe(
+      'token-dev',
+    );
+    expect(instagram.refreshed.map((x) => x.accessToken)).toEqual(['token-cara']);
+  });
+
+  it('two publishes at once renew it once: the second waits and uses the new token', async () => {
+    const both = await igLogin('eli', fromNow(2 * MIN));
+    // The network takes a moment, as a real one does, so the two renewals overlap.
+    instagram.delays.refreshMs = 300;
+    const [a, b] = await Promise.all([
+      accounts.getCredentials(ws, both.accountId),
+      accounts.getCredentials(ws, both.accountId),
+    ]);
+    // X accepts each refresh token once: a second renewal would have used a spent one.
+    instagram.delays.refreshMs = 0;
+    expect(instagram.refreshed.map((x) => x.accessToken)).toEqual(['token-eli']);
+    expect([a.credentials.accessToken, b.credentials.accessToken]).toEqual([
+      'token-eli~1',
+      'token-eli~1',
+    ]);
+  });
+
+  it('a renewal the network refuses: the account needs reconnecting and the publish fails as auth', async () => {
+    const refused = await igLogin('fay', fromNow(MIN));
+    instagram.failNext.refresh = new ProviderError({ kind: 'auth', message: 'Token revoked' });
+    const err = await accounts.getCredentials(ws, refused.accountId).catch((e: unknown) => e);
+    expect(err instanceof ProviderError && err.kind).toBe('auth');
+    expect((await account(refused.accountId)).status).toBe('reauth_required');
+  });
+
+  it("a network that doesn't answer: a token still valid is used; an expired one waits", async () => {
+    const valid = await igLogin('gus', fromNow(3 * MIN));
+    instagram.failNext.refresh = new ProviderError({ kind: 'retryable', message: 'Timeout' });
+    expect((await accounts.getCredentials(ws, valid.accountId)).credentials.accessToken).toBe(
+      'token-gus',
+    );
+
+    const expired = await igLogin('hal', fromNow(-MIN));
+    instagram.failNext.refresh = new ProviderError({ kind: 'retryable', message: 'Timeout' });
+    const err = await accounts.getCredentials(ws, expired.accountId).catch((e: unknown) => e);
+    expect(err instanceof ProviderError && err.kind).toBe('retryable');
+    expect((await account(expired.accountId)).status).toBe('active');
+  });
+});

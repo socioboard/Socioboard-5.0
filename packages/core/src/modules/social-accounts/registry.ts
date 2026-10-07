@@ -1,4 +1,9 @@
-import { createMetaAdapters, createRegistry, type Registry } from '@socioboard/providers';
+import {
+  createMetaAdapters,
+  createRegistry,
+  createXAdapters,
+  type Registry,
+} from '@socioboard/providers';
 
 import type { Config, Logger } from '../../platform';
 
@@ -13,7 +18,11 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
     version: config.networks.graphVersion,
     logger,
   });
-  const registry = createRegistry({ logins: meta.logins, networks: meta.networks });
+  const x = createXAdapters({ x: config.networks.x, logger });
+  const registry = createRegistry({
+    logins: [...meta.logins, ...x.logins],
+    networks: [...meta.networks, ...x.networks],
+  });
   const enabled = registry.networks().map((n) => n.id);
   logger.info(
     { networks: enabled },

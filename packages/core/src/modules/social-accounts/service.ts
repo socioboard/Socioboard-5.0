@@ -19,6 +19,7 @@ import {
 import type { Prisma } from '@socioboard/db';
 import {
   isProviderError,
+  ProviderError,
   type AccountCredentials,
   type LoginAdapter,
   type Pkce,
@@ -61,6 +62,11 @@ export interface SocialAccountServiceDeps {
 
 /** `token-refresh`: tokens expiring within this long are renewed (social-accounts.md, Jobs). */
 export const TOKEN_REFRESH_AHEAD_HOURS = 72;
+/**
+ * Publishing renews a login token that expires within this long first (X's last two hours, so
+ * the hourly job alone can't be relied on: a worker that was down would post with an expired one).
+ */
+export const TOKEN_FRESH_FOR_MINUTES = 10;
 /** `account-health`: a login checked more recently than this is left until the next run. */
 export const HEALTH_CHECK_EVERY_HOURS = 20;
 /** Logins handled per run of either job; the rest wait for the next run. */
@@ -462,6 +468,38 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
    * login). A login the network refuses, or one that expired with no way to renew it, needs
    * reconnecting. A network that doesn't answer is tried again next hour.
    */
+  /**
+   * Renews a login's token if it still expires before `needBefore`, holding the connection's row
+   * lock (`FOR UPDATE`) while asking the network. Networks that rotate refresh tokens (X) accept
+   * each one once, so the job and a publish renewing at the same moment must not both use it: the
+   * second waits for the lock, sees the new expiry and keeps the new token. Returns the row as it
+   * is after, and whether it was renewed here. Throws the network's ProviderError.
+   */
+  async function renewLoginToken(connectionId: string, needBefore: Date) {
+    return db.client.$transaction(
+      async (tx) => {
+        await tx.$queryRaw`SELECT id FROM "SocialConnection" WHERE id = ${connectionId}::uuid FOR UPDATE`;
+        const c = await tx.socialConnection.findUniqueOrThrow({ where: { id: connectionId } });
+        const login = registry.login(c.provider);
+        if (!login.refresh || !c.tokenExpiresAt || c.tokenExpiresAt > needBefore) {
+          return { row: c, renewed: false };
+        }
+        const fresh = await login.refresh(tokensOf(c));
+        const row = await tx.socialConnection.update({
+          where: { id: c.id },
+          data: {
+            accessTokenEnc: crypto.encrypt(fresh.accessToken),
+            ...(fresh.refreshToken ? { refreshTokenEnc: crypto.encrypt(fresh.refreshToken) } : {}),
+            tokenExpiresAt: fresh.expiresAt,
+            ...(fresh.scopes.length ? { scopes: fresh.scopes } : {}),
+          },
+        });
+        return { row, renewed: true };
+      },
+      { timeout: 60_000 },
+    );
+  }
+
   async function refreshExpiringTokens({ workspaceId }: { workspaceId?: string } = {}) {
     const now = clock.now();
     const soon = new Date(now.getTime() + TOKEN_REFRESH_AHEAD_HOURS * HOUR);
@@ -499,19 +537,9 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
           continue;
         }
         try {
-          const fresh = await login.refresh(tokensOf(c));
-          current = await scoped(c.workspaceId).socialConnection.update({
-            where: { id: c.id },
-            data: {
-              accessTokenEnc: crypto.encrypt(fresh.accessToken),
-              ...(fresh.refreshToken
-                ? { refreshTokenEnc: crypto.encrypt(fresh.refreshToken) }
-                : {}),
-              tokenExpiresAt: fresh.expiresAt,
-              ...(fresh.scopes.length ? { scopes: fresh.scopes } : {}),
-            },
-          });
-          report.refreshed++;
+          const renewal = await renewLoginToken(c.id, soon);
+          current = renewal.row;
+          if (renewal.renewed) report.refreshed++;
         } catch (err) {
           const refused = isProviderError(err) && err.kind === 'auth';
           if (refused || expired) {
@@ -967,7 +995,43 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     if (!a || a.status === 'disconnected' || !a.connection) {
       throw notFound('ACCOUNT_NOT_FOUND', 'Account not found or disconnected');
     }
-    const token = a.assetTokenEnc ?? a.connection.accessTokenEnc;
+    let connection = a.connection;
+    const freshUntil = new Date(clock.now().getTime() + TOKEN_FRESH_FOR_MINUTES * 60_000);
+    // Posting with the login's token: renew it first if it's about to run out.
+    if (
+      !a.assetTokenEnc &&
+      connection.tokenExpiresAt &&
+      connection.tokenExpiresAt <= freshUntil &&
+      registry.hasLogin(connection.provider) &&
+      registry.login(connection.provider).refresh
+    ) {
+      try {
+        connection = (await renewLoginToken(connection.id, freshUntil)).row;
+      } catch (err) {
+        if (isProviderError(err) && err.kind === 'auth') {
+          const name = PROVIDER_NAMES[connection.provider];
+          await needsReconnect(
+            workspaceId,
+            connection.id,
+            `${name} didn’t renew the sign-in: ${err.message}`,
+          );
+          throw err;
+        }
+        // The network didn't answer: a token that still works is used; an expired one waits.
+        if (!connection.tokenExpiresAt || connection.tokenExpiresAt <= clock.now()) {
+          throw new ProviderError({
+            kind: 'retryable',
+            message: `Couldn't renew the ${PROVIDER_NAMES[connection.provider]} sign-in; trying again`,
+            cause: err,
+          });
+        }
+        logger.warn(
+          { err, connectionId: connection.id },
+          'renewing a sign-in before publishing failed',
+        );
+      }
+    }
+    const token = a.assetTokenEnc ?? connection.accessTokenEnc;
     return {
       network: a.network,
       credentials: {

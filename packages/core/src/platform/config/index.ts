@@ -125,6 +125,9 @@ const envSchema = z.object({
   INSTAGRAM_APP_ID: optional,
   INSTAGRAM_APP_SECRET: optional,
   /** Graph API version, e.g. v25.0 (or 25.0); defaults to the one the adapters were checked against. */
+  /** X: the app's OAuth 2.0 client; redirect URI <APP_URL>/api/oauth/x/callback. */
+  X_CLIENT_ID: optional,
+  X_CLIENT_SECRET: optional,
   META_GRAPH_VERSION: z.preprocess(
     (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
     z
@@ -227,6 +230,7 @@ export interface Config {
   networks: {
     facebook: { appId: string; appSecret: string; configId: string | undefined } | undefined;
     instagram: { appId: string; appSecret: string } | undefined;
+    x: { clientId: string; clientSecret: string } | undefined;
     graphVersion: string | undefined;
   };
   /** Features switch on when their keys are present (self-host without Stripe = no billing). */
@@ -287,6 +291,9 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     if (Boolean(raw(`${app}_APP_ID`)) !== Boolean(raw(`${app}_APP_SECRET`))) {
       problems.push(`${app}_APP_ID and ${app}_APP_SECRET must be set together`);
     }
+  }
+  if (Boolean(raw('X_CLIENT_ID')) !== Boolean(raw('X_CLIENT_SECRET'))) {
+    problems.push('X_CLIENT_ID and X_CLIENT_SECRET must be set together');
   }
 
   const parsed = envSchema.safeParse(source);
@@ -377,6 +384,10 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       instagram:
         e.INSTAGRAM_APP_ID && e.INSTAGRAM_APP_SECRET
           ? { appId: e.INSTAGRAM_APP_ID, appSecret: e.INSTAGRAM_APP_SECRET }
+          : undefined,
+      x:
+        e.X_CLIENT_ID && e.X_CLIENT_SECRET
+          ? { clientId: e.X_CLIENT_ID, clientSecret: e.X_CLIENT_SECRET }
           : undefined,
       graphVersion: e.META_GRAPH_VERSION,
     },

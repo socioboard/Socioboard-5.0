@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "url": "https://api.x.com/2/tweets",
+  "status": 503,
+  "response": {
+    "title": "Service Unavailable",
+    "detail": "Service Unavailable",
+    "type": "about:blank",
+    "status": 503
+  }
+}
