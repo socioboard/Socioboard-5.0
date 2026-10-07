@@ -41,7 +41,7 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 - **Local development:** Facebook Login allows `http://localhost` redirect URIs while the app is in Development mode, so `http://localhost:5173/api/oauth/facebook/callback` works without a tunnel. Instagram Login needs HTTPS (the dev tunnel, P0-I8).
 - **Review:** business verification of the Business Manager, then App Review for **Advanced Access** on each permission, with a screencast per permission showing where it's used.
 - **Also set:** privacy policy URL, data-deletion callback `https://app.socioboard.com/api/webhooks/meta/data-deletion`, app domain.
-- **Gotchas:** Instagram fetches media from a public URL (`media.socioboard.com`); images must fit IG aspect ratios. Threads (6.1) will be a separate use case on the same Meta app.
+- **Gotchas:** Instagram fetches media from a public URL (`media.socioboard.com`); images must fit IG aspect ratios. Threads (P3-B10) is a separate use case on the same Meta app, with its own permissions (`threads_basic`, `threads_content_publish`, `threads_manage_replies`) and its own screencast; in Development mode, the Threads account signing in must be a Threads tester.
 - [ ] Business Manager created and verified · [ ] Prod app · [ ] Dev app (test app linked to prod) · [ ] Review submitted · [ ] Approved
 
 #### Screencasts

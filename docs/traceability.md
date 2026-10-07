@@ -32,7 +32,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | Snapchat adapter | `packages/providers/src/snapchat` | [providers](backend/modules/providers.md) | 3 · P3-B6 (if approved) |
 | Tumblr adapter | `packages/providers/src/tumblr` | [providers](backend/modules/providers.md) | 3 · P3-B7 |
 | Bitly shortener | `packages/providers/src/utilities` | [shortlinks](backend/modules/shortlinks.md) | 3 · P3-B8 |
-| Threads adapter | `packages/providers/src/meta` | [providers](backend/modules/providers.md) | 6.1 · P6-B9 (tentative) |
+| Threads adapter | `packages/providers/src/meta` | [providers](backend/modules/providers.md) | 3 · P3-B10 |
 | Metrics + feed methods on adapters | `packages/providers/src/*` | [analytics](backend/modules/analytics.md), [feeds](backend/modules/feeds.md) | 6.1 · P6-B2, P6-B7 |
 | Billing | `packages/billing` | [billing](backend/modules/billing.md) | 5 · P5-B1–B4 |
 
