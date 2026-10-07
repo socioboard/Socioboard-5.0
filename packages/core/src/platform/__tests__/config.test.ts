@@ -101,6 +101,11 @@ describe('loadConfig', () => {
     );
     expect(() => loadConfig({ ...base, STORAGE_DRIVER: 's3' })).toThrow(/S3_BUCKET/);
     expect(() => loadConfig({ ...base, STORAGE_DRIVER: 'ftp' })).toThrow(/STORAGE_DRIVER/);
+    // Empty means unset, as for every optional setting: no storage, not an invalid one.
+    expect(loadConfig({ ...base, STORAGE_DRIVER: '' }).storage).toBeUndefined();
+    expect(
+      loadConfig({ ...base, STORAGE_DRIVER: ' ', S3_BUCKET: 'm', S3_REGION: 'r' }).storage?.driver,
+    ).toBe('s3');
   });
 
   it('parses several encryption keys in order and rejects bad ones', () => {
