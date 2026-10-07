@@ -480,12 +480,23 @@ async function show(url: string, readMs: number) {
   // Facebook opens the post in a scrolling dialog with the comments below the photo: scroll it, in
   // steps the viewer can follow (the wheel goes to what's under the pointer). Instagram's post page
   // already shows the comments beside the photo, and scrolling would leave it.
-  if (/(facebook|threads)\.(com|net)$/.test(new URL(url).hostname)) {
+  const host = new URL(url).hostname;
+  if (host.endsWith('facebook.com')) {
     await page.mouse.move(SIZE.width / 2, SIZE.height / 2, { steps: 12 });
     for (let i = 0; i < 6; i += 1) {
       await page.mouse.wheel(0, 160);
       await hold(250);
     }
+  }
+  // Threads' post page fits the window exactly (nothing scrolls), with the first reply right
+  // where the caption sits: show the page at 80% so the post and the reply both stay in view.
+  // Only the page shrinks; the caption, outside <body>, keeps its size.
+  if (/threads\.(com|net)$/.test(host)) {
+    await page.waitForLoadState('load').catch(() => undefined);
+    await hold(1_500);
+    await page.evaluate(() => {
+      document.body.style.zoom = '0.8';
+    });
   }
   await hold(readMs);
 }
