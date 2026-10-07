@@ -23,7 +23,7 @@ The content users write once and send to many accounts. A **Post** holds the sha
 | `youtube` | `title` (the post's text is the description), `privacy` (public, unlisted, private), `tags`, `madeForKids` |
 | `tiktok` | `privacy` (everyone, friends, followers, only_me; no default), `allowComments`, `allowDuets`, `allowStitches`, `commercial` (`yourBrand`, `brandedContent`, or null) |
 
-Keys for another network than the target account's are rejected (`OPTIONS_NETWORKS`). What an account offers for these (boards, privacy levels) comes from `GET /accounts/:aid/options` ([social-accounts](social-accounts.md)).
+Keys for another network than the target account's are rejected (`OPTIONS_NETWORKS`). Wired end to end (P3-B9): stored with the target as sent, returned in `GET /posts/:id`, carried by duplicating and by a repeating post's copies, and handed to the network's adapter in `ContentInput.options` for validation and publishing (`resolveContent`). What an account offers for these (boards, privacy levels) comes from `GET /accounts/:aid/options` ([social-accounts](social-accounts.md)).
 
 ## API
 | Method | Path | Permission | Description |

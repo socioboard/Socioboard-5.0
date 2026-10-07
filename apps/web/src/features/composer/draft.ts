@@ -1,11 +1,12 @@
-import type {
-  InstagramFormat,
-  NetworkId,
-  Post,
-  TargetOptions,
-  TargetOverride,
+import {
+  OPTIONS_NETWORKS,
+  type InstagramFormat,
+  type NetworkId,
+  type Post,
+  type TargetOptions,
+  type TargetOptionsKey,
+  type TargetOverride,
 } from '@socioboard/contracts';
-import type { z } from 'zod';
 
 /**
  * What one network gets instead of the shared content (docs/frontend/areas/composer.md,
@@ -53,17 +54,45 @@ export type DraftAction =
   | { type: 'link'; link: string }
   | { type: 'firstComment'; firstComment: string }
   | { type: 'labels'; labelIds: string[] }
-  | { type: 'format'; format: z.infer<typeof InstagramFormat> }
+  | { type: 'format'; format: InstagramFormat }
+  /**
+   * A network's own settings (P3-B9; the options panels, P3-F2): merges `values` into the
+   * network's options under `key`. A value of `undefined` clears that setting.
+   */
+  | {
+      type: 'options';
+      network: NetworkId;
+      key: TargetOptionsKey;
+      values: Record<string, unknown>;
+    }
   | { type: 'reset'; network: NetworkId; part: 'text' | 'media' }
   | { type: 'load'; draft: Draft };
+
+/** The options keys that apply to a network (instagram → `instagram`, pinterest → `pinterest`…). */
+export function optionKeysFor(network: NetworkId): TargetOptionsKey[] {
+  return (Object.keys(OPTIONS_NETWORKS) as TargetOptionsKey[]).filter((key) =>
+    OPTIONS_NETWORKS[key].includes(network),
+  );
+}
+
+/** A network's options without unset settings and empty keys; undefined when nothing is left. */
+function tidyOptions(options: TargetOptions | undefined): TargetOptions | undefined {
+  const next: Record<string, Record<string, unknown>> = {};
+  for (const [key, values] of Object.entries(options ?? {})) {
+    if (!values) continue;
+    const kept = Object.fromEntries(Object.entries(values).filter(([, v]) => v !== undefined));
+    if (Object.keys(kept).length > 0) next[key] = kept;
+  }
+  return Object.keys(next).length > 0 ? next : undefined;
+}
 
 /** Drops empty parts, so an override with nothing left in it goes away. */
 function tidy(o: NetworkOverride): NetworkOverride | undefined {
   const next: NetworkOverride = {};
   if (o.text !== undefined) next.text = o.text;
   if (o.mediaIds !== undefined) next.mediaIds = o.mediaIds;
-  const instagram = o.options?.instagram;
-  if (instagram && Object.keys(instagram).length > 0) next.options = { instagram };
+  const options = tidyOptions(o.options);
+  if (options) next.options = options;
   return Object.keys(next).length > 0 ? next : undefined;
 }
 
@@ -118,13 +147,20 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
       return draftReducer(draft, { type: 'media', network: action.network, mediaIds });
     }
     case 'format':
-      return setOverride(draft, 'instagram', (o) => ({
+      // Feed is the default: saying so adds nothing.
+      return draftReducer(draft, {
+        type: 'options',
+        network: 'instagram',
+        key: 'instagram',
+        values: { format: action.format === 'feed' ? undefined : action.format },
+      });
+    case 'options':
+      return setOverride(draft, action.network, (o) => ({
         ...o,
-        // Feed is the default: saying so adds nothing.
-        options:
-          action.format === 'feed'
-            ? {}
-            : { instagram: { ...o.options?.instagram, format: action.format } },
+        options: {
+          ...o.options,
+          [action.key]: { ...o.options?.[action.key], ...action.values },
+        },
       }));
     case 'reset':
       return setOverride(draft, action.network, (o) => {
@@ -144,8 +180,18 @@ export function contentFor(draft: Draft, network: NetworkId | null) {
     mediaIds: o?.mediaIds ?? draft.mediaIds,
     textOverridden: o?.text !== undefined,
     mediaOverridden: o?.mediaIds !== undefined,
+    /** This network's own settings (only the keys that apply to it). */
+    options: network ? optionsFor(o?.options, network) : {},
     format: o?.options?.instagram?.format ?? 'feed',
   };
+}
+
+/** The options that apply to `network`; settings stored under another network's key are left out. */
+function optionsFor(options: TargetOptions | undefined, network: NetworkId): TargetOptions {
+  const keys = optionKeysFor(network);
+  return Object.fromEntries(
+    Object.entries(options ?? {}).filter(([key]) => keys.includes(key as TargetOptionsKey)),
+  );
 }
 
 /** Networks of the selected accounts, each once, in the order first picked. */
@@ -184,7 +230,15 @@ export function toPostBody(draft: Draft, networkOf: NetworkOf): PostBody {
     targets: draft.accountIds.map((accountId) => {
       const network = networkOf(accountId);
       const o = network ? draft.overrides[network] : undefined;
-      return { accountId, override: o ? { ...o } : null };
+      if (!o || !network) return { accountId, override: null };
+      // Only the options that apply to this network: the API refuses others.
+      const options = tidyOptions(optionsFor(o.options, network));
+      const override = tidy({
+        ...(o.text !== undefined ? { text: o.text } : {}),
+        ...(o.mediaIds !== undefined ? { mediaIds: o.mediaIds } : {}),
+        ...(options ? { options } : {}),
+      });
+      return { accountId, override: override ? { ...override } : null };
     }),
   };
 }

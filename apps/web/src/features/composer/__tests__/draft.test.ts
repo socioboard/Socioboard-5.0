@@ -150,3 +150,108 @@ describe('draft', () => {
     ]);
   });
 });
+
+describe('network options (P3-B9)', () => {
+  const PIN: Record<string, NetworkId> = {
+    pin: 'pinterest',
+    yt: 'youtube',
+    tt: 'tiktok',
+    fb: 'facebook_page',
+  };
+  const of = (id: string) => PIN[id];
+  const opts = (
+    network: NetworkId,
+    key: 'pinterest' | 'youtube' | 'tiktok',
+    values: Record<string, unknown>,
+  ): DraftAction => ({
+    type: 'options',
+    network,
+    key,
+    values,
+  });
+
+  it('every network keeps its settings, merged one change at a time', () => {
+    const d = run(
+      { type: 'accounts', accountIds: ['pin', 'yt', 'tt'] },
+      opts('pinterest', 'pinterest', { boardId: 'b1' }),
+      opts('pinterest', 'pinterest', { title: 'Autumn menu' }),
+      opts('youtube', 'youtube', { title: 'Roast day', privacy: 'unlisted', tags: ['coffee'] }),
+      opts('tiktok', 'tiktok', { privacy: 'followers', allowComments: true, commercial: null }),
+    );
+    expect(contentFor(d, 'pinterest').options).toEqual({
+      pinterest: { boardId: 'b1', title: 'Autumn menu' },
+    });
+    expect(contentFor(d, 'youtube').options).toEqual({
+      youtube: { title: 'Roast day', privacy: 'unlisted', tags: ['coffee'] },
+    });
+    // null is a choice ("not commercial"), not an empty setting.
+    expect(contentFor(d, 'tiktok').options).toEqual({
+      tiktok: { privacy: 'followers', allowComments: true, commercial: null },
+    });
+    // Settings aren't content: the shared text is still what the network posts.
+    expect(contentFor(d, 'pinterest')).toMatchObject({
+      textOverridden: false,
+      mediaOverridden: false,
+    });
+  });
+
+  it('clearing the last setting removes the override; resetting text keeps the settings', () => {
+    let d = run(opts('pinterest', 'pinterest', { boardId: 'b1' }));
+    d = draftReducer(d, opts('pinterest', 'pinterest', { boardId: undefined }));
+    expect(d.overrides.pinterest).toBeUndefined();
+
+    d = run(
+      { type: 'text', network: 'pinterest', text: 'Pin text' },
+      opts('pinterest', 'pinterest', { boardId: 'b1' }),
+      { type: 'reset', network: 'pinterest', part: 'text' },
+    );
+    expect(d.overrides.pinterest).toEqual({ options: { pinterest: { boardId: 'b1' } } });
+  });
+
+  it('the body sends each account its network’s settings only, and they survive a save and reload', () => {
+    const d = run(
+      { type: 'accounts', accountIds: ['pin', 'fb'] },
+      { type: 'text', network: null, text: 'Menu' },
+      opts('pinterest', 'pinterest', { boardId: 'b1', title: 'Menu' }),
+    );
+    const body = toPostBody(d, of);
+    expect(body.targets).toEqual([
+      { accountId: 'pin', override: { options: { pinterest: { boardId: 'b1', title: 'Menu' } } } },
+      { accountId: 'fb', override: null },
+    ]);
+    const post = {
+      text: 'Menu',
+      mediaIds: [],
+      link: null,
+      firstComment: null,
+      labelIds: [],
+      targets: body.targets.map((t, i) => ({
+        status: 'pending',
+        override: t.override,
+        account: { id: t.accountId, network: of(t.accountId) },
+        id: `t${String(i)}`,
+      })),
+    } as unknown as Post;
+    expect(fromPost(post).overrides).toEqual({
+      pinterest: { options: { pinterest: { boardId: 'b1', title: 'Menu' } } },
+    });
+  });
+
+  it('settings stored under another network’s key are never sent (the API would refuse them)', () => {
+    const d: Draft = {
+      ...emptyDraft(),
+      accountIds: ['pin'],
+      overrides: {
+        pinterest: {
+          text: 'x',
+          options: { youtube: { title: 'stray' }, pinterest: { boardId: 'b1' } },
+        },
+      },
+    };
+    expect(toPostBody(d, of).targets[0]?.override).toEqual({
+      text: 'x',
+      options: { pinterest: { boardId: 'b1' } },
+    });
+    expect(contentFor(d, 'pinterest').options).toEqual({ pinterest: { boardId: 'b1' } });
+  });
+});

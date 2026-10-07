@@ -27,7 +27,7 @@ Each network is the same checklist. Build order: LinkedIn → X → YouTube → 
 - [ ] P3-B6 **Snapchat:** only if partner access is approved; otherwise move to the next release
 - [ ] P3-B7 **Tumblr:** blog picker; NPF post format
 - [ ] P3-B8 **Bitly:** shortener connection, shorten-on-demand endpoint, auto-shorten at publish time
-- [ ] P3-B9 Per-network content overrides fully wired (options stored in `override.options`)
+- [x] P3-B9 Per-network content overrides fully wired (options stored in `override.options`) — done 2026-10-07: the composer's draft keeps every network's settings (it kept only Instagram's, so a board or a title would have been lost on saving), with one `options` action for the panels (P3-F2) to call; each account gets only its network's keys. Tests: the draft round trip, settings filed under another network dropped, and a saved Instagram story setting reaching the adapter at publishing ([composer](../frontend/areas/composer.md), [posts](../backend/modules/posts.md))
 
 ## Frontend
 - [ ] P3-F1 Preview components for LinkedIn, X, YouTube, Pinterest, TikTok, Snapchat, Tumblr
