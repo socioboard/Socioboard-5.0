@@ -378,6 +378,9 @@ async function approveOnNetwork(buttons: RegExp, first?: RegExp) {
     const button = page.getByRole('button', { name: buttons }).first();
     if (await button.isVisible().catch(() => false)) {
       await hold(2_500);
+      // Socioboard may have loaded meanwhile (the network redirected back): its own buttons
+      // ("Not now" in the account picker) must never be clicked from here.
+      if (page.url().startsWith(APP)) break;
       await button.click({ timeout: 5_000 }).catch(() => undefined);
     }
     await hold(1_200);
