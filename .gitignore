@@ -27,3 +27,4 @@ apps/web/test-results/
 apps/web/playwright-report/
 # Facebook session for the Meta end-to-end test (apps/web/e2e/meta-login.ts): never committed.
 apps/web/e2e/.auth/
+apps/web/e2e/app-review/out/
