@@ -619,10 +619,16 @@ try {
     });
     await page.getByRole('button', { name: 'Connect an account' }).click();
     await hold(1_500);
-    const dialog = page.getByRole('dialog', { name: 'Connect an account' });
-    await dialog.getByRole('button', { name: /^Instagram/ }).click();
+    await page
+      .getByRole('dialog', { name: 'Connect an account' })
+      .getByRole('button', { name: /^Instagram/ })
+      .click();
     await hold(2_500);
-    await dialog.getByRole('button', { name: /^Continue with Instagram/ }).click();
+    // The dialog now asks how to sign in (its title changes with the step).
+    await page
+      .getByRole('dialog')
+      .getByRole('button', { name: /^Continue with Instagram/ })
+      .click();
     await page.waitForURL(/instagram\.com/, { timeout: 30_000 });
     await say(
       {
