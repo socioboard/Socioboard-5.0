@@ -86,7 +86,7 @@ Every adapter must support any number of logins per workspace and any number of 
 | TikTok | OAuth 2 (Login Kit) | Content Posting API, Direct Post | Must query creator info first; privacy level chosen by user |
 | Snapchat | Snap OAuth | Public Profile API | Partner-gated; ships only if approved |
 | Tumblr | OAuth 2 | `POST /v2/blog/{blog}/posts` (NPF) | |
-| Threads (6.1, tentative) | Threads OAuth (same Meta developer account) | container create → publish | Task P6-B9 |
+| Threads | Threads login (a Threads use case on the same Meta app) | container create → publish | Task P3-B10 |
 
 ## Testing
 - **Contract tests** (`src/testing/contract.ts`): every login adapter and network adapter runs the same suites, whatever the network. Logins: a sign-in URL carrying state and callback, an identity, complete assets of their own networks, a refused token → `auth`. Networks: valid capabilities/rules/preview, pure validation, a publish returning an external id and link, and each recorded failure (auth, rate limit, content, server) mapped to its `ProviderError` kind. Meta's run in `src/meta/__tests__/contract.test.ts` (P1-B9); phase 3 adapters add theirs the same way.

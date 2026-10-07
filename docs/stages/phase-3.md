@@ -4,7 +4,7 @@
 
 **Modules:** [providers](../backend/modules/providers.md), [social-accounts](../backend/modules/social-accounts.md), [shortlinks](../backend/modules/shortlinks.md) · **Areas:** [accounts](../frontend/areas/accounts.md), [composer](../frontend/areas/composer.md) (previews + network options)
 
-Each network is the same checklist. Build order: LinkedIn → X → YouTube → Pinterest → TikTok → Snapchat → Tumblr.
+Each network is the same checklist. Build order: LinkedIn → X → YouTube → Pinterest → TikTok → Snapchat → Tumblr → Threads.
 
 ## Contracts
 - [x] P3-C1 Network options schemas per network (board, title, privacy, TikTok settings, IG post type); shortener endpoints — done (`packages/contracts/src/network-options.ts`, `shortlinks.ts`): `TargetOptions` for Instagram, Pinterest, YouTube and TikTok with `OPTIONS_NETWORKS` (the posts API's check now reads it); `GET /accounts/:aid/options` mounted, answered by the adapter's new `optionChoices` (Pinterest boards, TikTok creator info, YouTube privacy levels); the five shortener routes listed for P3-B8 in `pending-routes.ts`. `autoShorten` is a setting of the shortener connection rather than of the workspace (shortlinks.md)
@@ -26,11 +26,12 @@ Each network is the same checklist. Build order: LinkedIn → X → YouTube → 
 - [ ] P3-B5 **TikTok:** creator info query before posting; privacy level picker; comment/duet/stitch toggles; commercial content disclosure; submit audit with these screens
 - [ ] P3-B6 **Snapchat:** only if partner access is approved; otherwise move to the next release
 - [ ] P3-B7 **Tumblr:** blog picker; NPF post format
+- [ ] P3-B10 **Threads** (moved from 6.1 on 2026-10-07, P6-B9/P6-F5): Threads login (`threads_basic`, `threads_content_publish`, `threads_manage_replies`) as a Threads use case on the same Meta app; text, image, video and carousel posts (container create → publish, like Instagram); reply controls; the first comment as a reply. Its preview and options panel with it (P3-F1, P3-F2). Built so its screencast joins the Facebook and Instagram App Review submission (P1-R1)
 - [ ] P3-B8 **Bitly:** shortener connection, shorten-on-demand endpoint, auto-shorten at publish time
 - [x] P3-B9 Per-network content overrides fully wired (options stored in `override.options`) — done 2026-10-07: the composer's draft keeps every network's settings (it kept only Instagram's, so a board or a title would have been lost on saving), with one `options` action for the panels (P3-F2) to call; each account gets only its network's keys. Tests: the draft round trip, settings filed under another network dropped, and a saved Instagram story setting reaching the adapter at publishing ([composer](../frontend/areas/composer.md), [posts](../backend/modules/posts.md))
 
 ## Frontend
-- [ ] P3-F1 Preview components for LinkedIn, X, YouTube, Pinterest, TikTok, Snapchat, Tumblr
+- [ ] P3-F1 Preview components for LinkedIn, X, YouTube, Pinterest, TikTok, Snapchat, Tumblr, Threads
 - [ ] P3-F2 Network options panels (board, title, privacy, TikTok toggles, IG post type). Frame done 2026-10-07 (`apps/web/src/features/composer/options`, [composer](../frontend/areas/composer.md)): the panel registry, choices asked of each account with waiting and per-account failure, per-account settings (board, TikTok privacy) in the draft, and Instagram's format as the first panel. Left: each network's panel, built with its adapter (P3-B1…B7)
 - [x] P3-F3 Account groups UI — done 2026-10-07: the account groups API (`GET/POST/PUT/DELETE …/account-groups`, audited, covered by the tenant-isolation test), the Accounts page's Groups tab (create, edit, delete; read-only for people who don't manage accounts) and group chips above the composer's account picker ([accounts](../frontend/areas/accounts.md), [social-accounts](../backend/modules/social-accounts.md), QA ACC-40–46 and COMP-04)
 - [ ] P3-F4 Link shortener settings + "Shorten" button in composer

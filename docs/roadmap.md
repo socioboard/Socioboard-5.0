@@ -11,10 +11,10 @@ Socioboard 6.0 launches publicly after phase 5, about 25 weeks in. Phase 6 then 
 | 0. Foundation | Monorepo, CI, Docker Compose, Prisma schema v1, Better Auth + workspaces/invites, S3 uploads, design system (Graphite with glass, light and dark), i18n setup (English strings only). **Create new developer apps (Meta, LinkedIn, TikTok, X, Google/YouTube, Pinterest, Tumblr, Snapchat); publish privacy policy, terms and data-deletion pages; submit app reviews** | A user signs up, creates a workspace, invites a teammate and uploads media locally; all app reviews submitted | 3 wks |
 | 1. Publish core | Provider interface, Facebook Pages + Instagram adapters, composer with live validation and per-network live preview, publish now, BullMQ publish queue, retries, post history | A post goes to an FB Page and IG from the UI, and failures show readable errors | 4 wks |
 | 2. Scheduling | Scheduled + recurring posts, queue slots, calendar with drag-to-reschedule, reconciler, token refresh, notifications; admin console v1 (queues, publishing health) | Scheduled posts survive an api/worker/Valkey restart and publish on time; operators can see and retry failed posts | 4 wks |
-| 3. More networks | LinkedIn (personal + org), X, YouTube, Pinterest, TikTok, Snapchat, Tumblr, Bitly; per-network content overrides | Every kept network passes its contract tests and a manual publish | 6 wks |
+| 3. More networks | LinkedIn (personal + org), X, YouTube, Pinterest, TikTok, Snapchat, Tumblr, Threads, Bitly; per-network content overrides | Every kept network passes its contract tests and a manual publish | 6 wks |
 | 4. Teams & AI | Approval workflow, comments, tasks, per-member account access, AI Gateway (mock, then the real service), generation UI, AI results saved to the media library (built in phase 0), AI content labels | A Contributor generates an asset, submits it, an Editor approves, and it publishes | 4 wks |
 | 5. Launch 6.0 | Stripe billing, entitlements, AI credit metering, admin console v2 (users and workspaces, billing, AI, controls, audit log), GDPR export/delete, self-host docs per network (incl. the AI service), security review, load test | Paid sign-up works end to end on staging; open-source release tagged; cloud goes live | 4 wks |
-| 6. Release 6.1 | Metrics sync, dashboards, scheduled PDF/CSV reports, Discovery sources, RSS, boards, feeds, SSO, Threads adapter (tentative), admin growth and usage dashboards | Account and post metrics for 30 days; a weekly report email arrives | 5 wks |
+| 6. Release 6.1 | Metrics sync, dashboards, scheduled PDF/CSV reports, Discovery sources, RSS, boards, feeds, SSO, admin growth and usage dashboards | Account and post metrics for 30 days; a weekly report email arrives | 5 wks |
 
 This totals about 30 weeks: roughly 25 to the 6.0 launch, then about 5 for 6.1. Phases 3–4 can overlap if there are more developers.
 
@@ -62,7 +62,7 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Workspace chat | Not rebuilt; comment threads on posts cover collaboration |
 | Unified inbox | Not in 6.0; candidate for 6.2 |
 | Languages | English only at launch; all UI text goes through i18n (react-i18next) from day one |
-| Newer networks | Threads is the likely first addition (tentative, 6.1) |
+| Newer networks | Threads moved into 6.0 (phase 3, P3-B10, decided 2026-10-07) so it joins the Meta App Review with Facebook and Instagram |
 | Snapchat | In 6.0 (phase 3); Snap API access requested in phase 0 |
 | Multiple accounts | Every network supports any number of connected logins per workspace (e.g. several Facebook users) and any number of Pages/channels per login |
 | Live preview | Per-network live preview in the composer, in 6.0 (phase 1, extended per network in phase 3) |
