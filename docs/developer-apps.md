@@ -65,7 +65,7 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 To record (on staging: Instagram Login needs HTTPS, and it's the URL reviewers get):
 
 1. Save the sessions it starts from, signing in yourself: `pnpm --filter @socioboard/web e2e:meta:login` (the Facebook account that manages the Page) and `… e2e:meta:login instagram` (the Instagram account). For the full consent screens in the video, first remove Socioboard under that Facebook account's **Settings → Business integrations** (and Instagram's **Apps and websites**).
-2. In `.env`: `REVIEW_APP_URL` (default `https://app-dev.socioboard.ai`), `REVIEW_EMAIL` / `REVIEW_PASSWORD` for a Socioboard login there (or sign in in the window when asked), and `REVIEW_FFMPEG` for an ffmpeg with libx264 (any free static build) to get MP4s.
+2. In `.env`: `REVIEW_META_PAGE` / `REVIEW_META_INSTAGRAM` when the review posts to other accounts than the end-to-end tests, `REVIEW_APP_URL` (default `https://app-dev.socioboard.ai`), `REVIEW_EMAIL` / `REVIEW_PASSWORD` for a Socioboard login there (or sign in in the window when asked), and `REVIEW_FFMPEG` for an ffmpeg with libx264 (any free static build) to get MP4s.
 3. `pnpm --filter @socioboard/web app-review:record facebook --dry-run` checks the whole flow and the captions without publishing; then run without `--dry-run`, and the same with `instagram`. Each run makes its own workspace ("Meta review <date>"). If Meta shows a screen the script doesn't know, click through it in the window and the recording carries on.
 4. Upload `e2e/app-review/out/meta-review-<route>-<time>.mp4` for every permission of that route; the matching `…-chapters.txt` gives each permission's timestamp for the review notes.
 
