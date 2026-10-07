@@ -18,6 +18,7 @@ type Ids = Record<
   | 'postId'
   | 'targetId'
   | 'labelId'
+  | 'groupId'
   | 'provider',
   string
 >;
@@ -94,6 +95,16 @@ const CLASSIFIED: Record<string, Kind> = {
   getAccount: { kind: 'resource' },
   getAccountOptions: { kind: 'resource' },
   disconnectAccount: { kind: 'resource' },
+  listAccountGroups: { kind: 'list', idsOf: 'groupId' },
+  createAccountGroup: {
+    kind: 'bodyRef',
+    body: (a) => ({ name: 'Hijack', accountIds: [a.accountId] }),
+  },
+  updateAccountGroup: {
+    kind: 'resource',
+    body: (a) => ({ name: 'hijacked', accountIds: [a.accountId] }),
+  },
+  deleteAccountGroup: { kind: 'resource' },
   // posts: bodies naming A's account or media must not work from B
   validatePost: {
     kind: 'bodyRef',
@@ -250,7 +261,14 @@ beforeAll(async () => {
   const label = await t.db.client.postLabel.create({
     data: { workspaceId: aWorkspace, name: 'A label', color: 'blue' },
   });
+  const group = await t.db.client.socialAccountGroup.create({
+    data: { workspaceId: aWorkspace, name: 'A group' },
+  });
+  await t.db.client.socialAccountGroupItem.create({
+    data: { workspaceId: aWorkspace, groupId: group.id, socialAccountId: account.id },
+  });
   a = {
+    groupId: group.id,
     labelId: label.id,
     postId: post.id,
     targetId: target.id,

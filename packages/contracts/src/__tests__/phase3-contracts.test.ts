@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  AccountGroupBody,
   AccountOptionChoices,
   apiRoutes,
   optionsApplyTo,
@@ -117,5 +118,32 @@ describe('shortlinks', () => {
       disconnectShortener: 'DELETE accounts:manage',
       shortenLink: 'POST posts:create',
     });
+  });
+});
+
+describe('account groups', () => {
+  const id = (n: number) => `01a0d816-827a-74d6-a46e-409c7db3500${String(n)}`;
+
+  it('takes a trimmed name and the accounts in the order picked', () => {
+    expect(AccountGroupBody.parse({ name: '  Brand A  ', accountIds: [id(2), id(1)] })).toEqual({
+      name: 'Brand A',
+      accountIds: [id(2), id(1)],
+    });
+  });
+
+  it('refuses an empty name, no accounts, or the same account twice', () => {
+    expect(AccountGroupBody.safeParse({ name: ' ', accountIds: [id(1)] }).success).toBe(false);
+    expect(AccountGroupBody.safeParse({ name: 'A', accountIds: [] }).success).toBe(false);
+    expect(AccountGroupBody.safeParse({ name: 'A', accountIds: [id(1), id(1)] }).success).toBe(
+      false,
+    );
+  });
+
+  it('anyone who can read posts lists groups; only account managers change them', () => {
+    const r = apiRoutes.socialAccounts;
+    expect(r.listAccountGroups.access).toBe('posts:read');
+    for (const route of [r.createAccountGroup, r.updateAccountGroup, r.deleteAccountGroup]) {
+      expect(route.access).toBe('accounts:manage');
+    }
   });
 });

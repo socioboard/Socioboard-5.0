@@ -118,9 +118,34 @@ export const AddAssetsBody = z.object({
 export const ListAccountsQuery = z.object({ network: NetworkId.optional() });
 export const ListConnectionsQuery = z.object({ provider: LoginProvider.optional() });
 
+/**
+ * A saved set of accounts, e.g. "Brand A: all channels" (P3-F3): picking it in the composer
+ * selects its accounts that can post. Accounts in it keep their place while disconnected.
+ */
+export const AccountGroup = z.object({
+  id: Id,
+  name: z.string(),
+  /** In the order they were picked. */
+  accountIds: z.array(Id),
+  createdAt: IsoDateTime,
+});
+export type AccountGroup = z.infer<typeof AccountGroup>;
+
+/** Names are unique in a workspace, ignoring case. */
+export const AccountGroupBody = z.object({
+  name: z.string().trim().min(1).max(60),
+  accountIds: z
+    .array(Id)
+    .min(1)
+    .max(100)
+    .refine((ids) => new Set(ids).size === ids.length, 'The same account is chosen twice'),
+});
+export type AccountGroupBody = z.infer<typeof AccountGroupBody>;
+
 const workspaceParams = z.object({ workspaceId: Id });
 const connectionParams = workspaceParams.extend({ connectionId: Id });
 const accountParams = workspaceParams.extend({ accountId: Id });
+const groupParams = workspaceParams.extend({ groupId: Id });
 
 export const socialAccountRoutes = {
   startConnect: defineRoute({
@@ -207,6 +232,41 @@ export const socialAccountRoutes = {
     access: 'accounts:manage',
     summary: 'Disconnect one account; cancels its pending posts',
     params: accountParams,
+    responses: { 204: null },
+  }),
+
+  listAccountGroups: defineRoute({
+    method: 'GET',
+    path: '/api/v1/workspaces/:workspaceId/account-groups',
+    access: 'posts:read',
+    summary: 'The workspace’s account groups, by name',
+    params: workspaceParams,
+    responses: { 200: z.object({ items: z.array(AccountGroup) }) },
+  }),
+  createAccountGroup: defineRoute({
+    method: 'POST',
+    path: '/api/v1/workspaces/:workspaceId/account-groups',
+    access: 'accounts:manage',
+    summary: 'Save a set of accounts under a name',
+    params: workspaceParams,
+    body: AccountGroupBody,
+    responses: { 201: AccountGroup },
+  }),
+  updateAccountGroup: defineRoute({
+    method: 'PUT',
+    path: '/api/v1/workspaces/:workspaceId/account-groups/:groupId',
+    access: 'accounts:manage',
+    summary: 'Rename a group and replace its accounts',
+    params: groupParams,
+    body: AccountGroupBody,
+    responses: { 200: AccountGroup },
+  }),
+  deleteAccountGroup: defineRoute({
+    method: 'DELETE',
+    path: '/api/v1/workspaces/:workspaceId/account-groups/:groupId',
+    access: 'accounts:manage',
+    summary: 'Delete a group; its accounts and posts stay',
+    params: groupParams,
     responses: { 204: null },
   }),
 };

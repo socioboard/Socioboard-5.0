@@ -32,6 +32,21 @@ export interface SocialAccountEvents extends Record<string, unknown> {
     userId: string;
     cancelledTargetIds: string[];
   };
+  'account_group.created': {
+    workspaceId: string;
+    groupId: string;
+    userId: string;
+    name: string;
+    accounts: number;
+  };
+  'account_group.updated': {
+    workspaceId: string;
+    groupId: string;
+    userId: string;
+    name: string;
+    accounts: number;
+  };
+  'account_group.deleted': { workspaceId: string; groupId: string; userId: string; name: string };
   /** The network refused the tokens; someone needs to reconnect the login. */
   'account.reauth_required': {
     workspaceId: string;

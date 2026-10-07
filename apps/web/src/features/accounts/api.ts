@@ -6,6 +6,7 @@ import {
   type SocialAccount,
   type SocialConnection,
 } from '@socioboard/contracts';
+import type { PickerAccount } from '@socioboard/ui';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 
 import { api, ApiError, INVALID_RESPONSE } from '../../lib/api';
@@ -22,6 +23,7 @@ export const accountKeys = {
     ['workspaces', workspaceId, 'accounts', 'assets', connectionId] as const,
   options: (workspaceId: string, accountId: string) =>
     ['workspaces', workspaceId, 'accounts', 'options', accountId] as const,
+  groups: (workspaceId: string) => ['workspaces', workspaceId, 'accounts', 'groups'] as const,
 };
 
 /** Enabled networks: the same for every workspace, and only changes when the server's keys do. */
@@ -84,6 +86,26 @@ export const accountOptionsQuery = (workspaceId: string, accountId: string) =>
     staleTime: 0,
     retry: false,
     refetchOnWindowFocus: false,
+  });
+
+/** An account as the account picker shows it (the composer, the group editor). */
+export const toPickerAccount = (a: SocialAccount): PickerAccount => ({
+  id: a.id,
+  name: a.displayName,
+  username: a.username,
+  avatarUrl: a.avatarUrl,
+  network: a.network,
+  status: a.status,
+  loginName: a.connection?.displayName ?? null,
+});
+
+/** Saved sets of accounts (P3-F3), by name; the composer offers them too. */
+export const accountGroupsQuery = (workspaceId: string) =>
+  queryOptions({
+    queryKey: accountKeys.groups(workspaceId),
+    queryFn: async ({ signal }) =>
+      (await api(apiRoutes.socialAccounts.listAccountGroups, { params: { workspaceId }, signal }))
+        .items,
   });
 
 /** After any change: lists, details and logins all read the same rows. */

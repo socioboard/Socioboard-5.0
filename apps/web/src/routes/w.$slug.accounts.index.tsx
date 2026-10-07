@@ -9,6 +9,7 @@ export const Route = createFileRoute('/w/$slug/accounts/')({
     account: stringParam(search.account, 64),
     login: stringParam(search.login, 64),
     connectError: stringParam(search.connectError, 64),
+    tab: search.tab === 'groups' ? 'groups' : undefined,
   }),
   component: function Accounts() {
     const search = Route.useSearch();

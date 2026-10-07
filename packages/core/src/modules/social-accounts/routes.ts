@@ -2,10 +2,15 @@ import { networkRoutes, socialAccountRoutes as r } from '@socioboard/contracts';
 import { Router } from 'express';
 
 import type { ApiRouter } from '../../platform';
+import type { AccountGroupService } from './groups';
 import type { SocialAccountService } from './service';
 
 /** Mounts GET /networks and the social-accounts routes (contracts: networkRoutes, socialAccountRoutes). */
-export function registerSocialAccountRoutes(api: ApiRouter, accounts: SocialAccountService) {
+export function registerSocialAccountRoutes(
+  api: ApiRouter,
+  accounts: SocialAccountService,
+  groups: AccountGroupService,
+) {
   api.route(networkRoutes.listNetworks, () => ({ items: accounts.listNetworks() }));
 
   api.route(r.startConnect, ({ auth, member, params, body }) =>
@@ -36,6 +41,15 @@ export function registerSocialAccountRoutes(api: ApiRouter, accounts: SocialAcco
   );
   api.route(r.disconnectAccount, ({ auth, member, params }) =>
     accounts.disconnectAccount(auth, member, params.accountId),
+  );
+
+  api.route(r.listAccountGroups, async ({ member }) => ({ items: await groups.list(member) }));
+  api.route(r.createAccountGroup, ({ auth, member, body }) => groups.create(auth, member, body));
+  api.route(r.updateAccountGroup, ({ auth, member, params, body }) =>
+    groups.update(auth, member, params.groupId, body),
+  );
+  api.route(r.deleteAccountGroup, ({ auth, member, params }) =>
+    groups.remove(auth, member, params.groupId),
   );
 }
 

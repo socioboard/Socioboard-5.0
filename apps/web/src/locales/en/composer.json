@@ -298,5 +298,11 @@
       "ended": "That repeat has no dates left. Pick a later last date, or more times.",
       "notRepeating": "This post doesn’t repeat any more."
     }
+  },
+  "groups": {
+    "label": "Account groups",
+    "chip_one": "{{name}}, {{count}} account",
+    "chip_other": "{{name}}, {{count}} accounts",
+    "noneCanPost": "None of this group’s accounts can post right now"
   }
 }
