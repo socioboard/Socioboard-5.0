@@ -3,7 +3,10 @@
 import { ErrorEnvelope, Post, QueueSlots } from '@socioboard/contracts';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import type { MemberContext } from '../../../platform';
 import { createTestApp } from '../../../testing';
+import { createCalendarEntries } from '../calendar';
+import { createQueueSlotService } from '../queue-slots';
 import { wallClock } from '../time';
 
 const t = createTestApp();
@@ -104,6 +107,19 @@ describe('queue slots', () => {
       where: { workspaceId: ws, action: 'queue_slots.updated', entityId: acc.a },
     });
     expect(audit?.actorUserId).toBe(owner.userId);
+  });
+
+  it('skips a slot too close to fill, like "Add to queue" does', async () => {
+    // Monday 08:59 in Kolkata: Monday's 09:00 is under 2 minutes away, so Tuesday's comes first.
+    const view = createQueueSlotService({
+      db: t.db,
+      clock: { now: () => new Date('2027-01-04T03:29:00Z') },
+      events: t.platform.events,
+      entries: createCalendarEntries(t.db, undefined),
+    });
+    const member: MemberContext = { workspaceId: ws, memberId: '', role: 'owner' };
+    const { upcoming } = await view.get(member, acc.a);
+    expect(upcoming[0]?.at).toBe('2027-01-05T03:30:00.000Z');
   });
 
   it('needs accounts:manage to change; refuses disconnected accounts and repeated slots', async () => {
