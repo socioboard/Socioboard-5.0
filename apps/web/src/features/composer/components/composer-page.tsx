@@ -19,9 +19,7 @@ import {
   Input,
   networkName,
   PageHeader,
-  RadioCard,
   motion,
-  RadioGroup,
   Skeleton,
   springs,
   Textarea,
@@ -60,6 +58,7 @@ import { useValidation } from '../use-validation';
 import { isWebAddress, type ComposerIssue } from '../validation';
 import { useIssueWording } from '../issue-wording';
 import { scheduledAt } from '../schedule';
+import { OptionsSection } from '../options/panels';
 import { ComposerFooter, type ComposerMode } from './composer-footer';
 import { IssuesPanel } from './issues-panel';
 import { NetworkTabs } from './network-tabs';
@@ -669,12 +668,14 @@ function Composer({
                   </div>
                 </>
               )}
-              {active === 'instagram' && (
-                <InstagramFormat
-                  value={contentFor(draft, 'instagram').format}
-                  onChange={(format) => {
-                    dispatch({ type: 'format', format });
-                  }}
+              {active && (
+                <OptionsSection
+                  network={active}
+                  accounts={accounts.filter(
+                    (a) => a.network === active && draft.accountIds.includes(a.id),
+                  )}
+                  draft={draft}
+                  dispatch={dispatch}
                 />
               )}
             </div>
@@ -1071,36 +1072,5 @@ function FirstComment({
         </div>
       )}
     </FormField>
-  );
-}
-
-type Format = 'feed' | 'reel' | 'story';
-
-function InstagramFormat({ value, onChange }: { value: Format; onChange: (f: Format) => void }) {
-  const { t } = useTranslation('composer');
-  const id = useId();
-  return (
-    <div className="flex flex-col gap-2" data-field="options">
-      <span id={id} className="text-ink text-[13px] font-medium">
-        {t('instagram.format')}
-      </span>
-      <RadioGroup
-        aria-labelledby={id}
-        value={value}
-        onValueChange={(v) => {
-          onChange(v as Format);
-        }}
-        className="grid gap-2 @xl:grid-cols-3"
-      >
-        {(['feed', 'reel', 'story'] as const).map((f) => (
-          <RadioCard
-            key={f}
-            value={f}
-            label={t(`instagram.${f}`)}
-            description={t(`instagram.${f}Hint`)}
-          />
-        ))}
-      </RadioGroup>
-    </div>
   );
 }

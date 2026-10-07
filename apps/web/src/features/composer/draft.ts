@@ -1,6 +1,5 @@
 import {
   OPTIONS_NETWORKS,
-  type InstagramFormat,
   type NetworkId,
   type Post,
   type TargetOptions,
@@ -28,6 +27,11 @@ export interface Draft {
   link: string;
   firstComment: string;
   overrides: Partial<Record<NetworkId, NetworkOverride>>;
+  /**
+   * Settings that belong to one account rather than its network (`ACCOUNT_OPTION_FIELDS`: a
+   * Pinterest board, a TikTok privacy level), by account id. Saving puts them over the network's.
+   */
+  accountOptions: Record<string, TargetOptions>;
   /** The workspace labels on the post, in the order chosen. */
   labelIds: string[];
 }
@@ -39,8 +43,19 @@ export const emptyDraft = (): Draft => ({
   link: '',
   firstComment: '',
   overrides: {},
+  accountOptions: {},
   labelIds: [],
 });
+
+/**
+ * Settings whose choices come from the account itself (its boards, its creator's privacy
+ * levels), so two accounts of one network can't share them. Everything else is per network.
+ */
+export const ACCOUNT_OPTION_FIELDS: Readonly<Partial<Record<TargetOptionsKey, readonly string[]>>> =
+  {
+    pinterest: ['boardId'],
+    tiktok: ['privacy'],
+  };
 
 /** Which network each account posts to (from the accounts list). */
 export type NetworkOf = (accountId: string) => NetworkId | undefined;
@@ -54,7 +69,6 @@ export type DraftAction =
   | { type: 'link'; link: string }
   | { type: 'firstComment'; firstComment: string }
   | { type: 'labels'; labelIds: string[] }
-  | { type: 'format'; format: InstagramFormat }
   /**
    * A network's own settings (P3-B9; the options panels, P3-F2): merges `values` into the
    * network's options under `key`. A value of `undefined` clears that setting.
@@ -62,6 +76,13 @@ export type DraftAction =
   | {
       type: 'options';
       network: NetworkId;
+      key: TargetOptionsKey;
+      values: Record<string, unknown>;
+    }
+  /** One account's own settings (`ACCOUNT_OPTION_FIELDS`), merged the same way. */
+  | {
+      type: 'accountOptions';
+      accountId: string;
       key: TargetOptionsKey;
       values: Record<string, unknown>;
     }
@@ -118,7 +139,14 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
     case 'load':
       return action.draft;
     case 'accounts':
-      return { ...draft, accountIds: action.accountIds };
+      // An account taken off the post takes its own settings with it.
+      return {
+        ...draft,
+        accountIds: action.accountIds,
+        accountOptions: Object.fromEntries(
+          Object.entries(draft.accountOptions).filter(([id]) => action.accountIds.includes(id)),
+        ),
+      };
     case 'link':
       return { ...draft, link: action.link };
     case 'firstComment':
@@ -146,14 +174,6 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
           : [...current.slice(0, at), ...added, ...current.slice(at)];
       return draftReducer(draft, { type: 'media', network: action.network, mediaIds });
     }
-    case 'format':
-      // Feed is the default: saying so adds nothing.
-      return draftReducer(draft, {
-        type: 'options',
-        network: 'instagram',
-        key: 'instagram',
-        values: { format: action.format === 'feed' ? undefined : action.format },
-      });
     case 'options':
       return setOverride(draft, action.network, (o) => ({
         ...o,
@@ -162,6 +182,18 @@ export function draftReducer(draft: Draft, action: DraftAction): Draft {
           [action.key]: { ...o.options?.[action.key], ...action.values },
         },
       }));
+    case 'accountOptions': {
+      const current = draft.accountOptions[action.accountId];
+      const next = tidyOptions({
+        ...current,
+        [action.key]: { ...current?.[action.key], ...action.values },
+      });
+      const accountOptions = Object.fromEntries(
+        Object.entries(draft.accountOptions).filter(([id]) => id !== action.accountId),
+      );
+      if (next) accountOptions[action.accountId] = next;
+      return { ...draft, accountOptions };
+    }
     case 'reset':
       return setOverride(draft, action.network, (o) => {
         const next = { ...o };
@@ -192,6 +224,27 @@ function optionsFor(options: TargetOptions | undefined, network: NetworkId): Tar
   return Object.fromEntries(
     Object.entries(options ?? {}).filter(([key]) => keys.includes(key as TargetOptionsKey)),
   );
+}
+
+/** One account's own settings, only the keys that apply to its network. */
+export function accountOptionsFor(
+  draft: Draft,
+  accountId: string,
+  network: NetworkId,
+): TargetOptions {
+  return optionsFor(draft.accountOptions[accountId], network);
+}
+
+/** The network's settings with the account's own over them, as that account's target gets them. */
+function mergedOptions(
+  network: TargetOptions | undefined,
+  account: TargetOptions | undefined,
+): TargetOptions {
+  const merged: Record<string, Record<string, unknown> | undefined> = { ...network };
+  for (const [key, values] of Object.entries(account ?? {})) {
+    merged[key] = { ...merged[key], ...values };
+  }
+  return merged;
 }
 
 /** Networks of the selected accounts, each once, in the order first picked. */
@@ -229,10 +282,12 @@ export function toPostBody(draft: Draft, networkOf: NetworkOf): PostBody {
     labelIds: draft.labelIds,
     targets: draft.accountIds.map((accountId) => {
       const network = networkOf(accountId);
-      const o = network ? draft.overrides[network] : undefined;
-      if (!o || !network) return { accountId, override: null };
+      if (!network) return { accountId, override: null };
+      const o = draft.overrides[network] ?? {};
       // Only the options that apply to this network: the API refuses others.
-      const options = tidyOptions(optionsFor(o.options, network));
+      const options = tidyOptions(
+        optionsFor(mergedOptions(o.options, draft.accountOptions[accountId]), network),
+      );
       const override = tidy({
         ...(o.text !== undefined ? { text: o.text } : {}),
         ...(o.mediaIds !== undefined ? { mediaIds: o.mediaIds } : {}),
@@ -243,20 +298,38 @@ export function toPostBody(draft: Draft, networkOf: NetworkOf): PostBody {
   };
 }
 
+/** Splits a target's options into its account's own settings and the rest (its network's). */
+function splitOptions(options: TargetOptions | undefined) {
+  const network: Record<string, Record<string, unknown>> = {};
+  const account: Record<string, Record<string, unknown>> = {};
+  for (const [key, values] of Object.entries(options ?? {})) {
+    const own = ACCOUNT_OPTION_FIELDS[key as TargetOptionsKey] ?? [];
+    for (const [field, value] of Object.entries<unknown>(values ?? {})) {
+      const into = own.includes(field) ? account : network;
+      into[key] = { ...into[key], [field]: value };
+    }
+  }
+  return { network: tidyOptions(network), account: tidyOptions(account) };
+}
+
 /**
  * A saved post as a draft. Targets of one network normally share an override (the composer
  * writes them that way); if they differ, the first account's wins and saving makes them equal.
+ * Each account keeps its own settings (`ACCOUNT_OPTION_FIELDS`).
  */
 export function fromPost(post: Post): Draft {
   const overrides: Draft['overrides'] = {};
+  const accountOptions: Draft['accountOptions'] = {};
   for (const target of post.targets) {
-    if (target.status === 'cancelled') continue;
+    if (target.status === 'cancelled' || !target.override) continue;
     const network = target.account.network;
-    if (overrides[network] || !target.override) continue;
+    const split = splitOptions(target.override.options);
+    if (split.account) accountOptions[target.account.id] = split.account;
+    if (overrides[network]) continue;
     const o = tidy({
       ...(target.override.text !== undefined ? { text: target.override.text } : {}),
       ...(target.override.mediaIds !== undefined ? { mediaIds: target.override.mediaIds } : {}),
-      ...(target.override.options ? { options: target.override.options } : {}),
+      ...(split.network ? { options: split.network } : {}),
     });
     if (o) overrides[network] = o;
   }
@@ -267,6 +340,7 @@ export function fromPost(post: Post): Draft {
     link: post.link ?? '',
     firstComment: post.firstComment ?? '',
     overrides,
+    accountOptions,
     labelIds: post.labelIds,
   };
 }

@@ -20,6 +20,8 @@ export const accountKeys = {
     ['workspaces', workspaceId, 'accounts', 'connections'] as const,
   assets: (workspaceId: string, connectionId: string) =>
     ['workspaces', workspaceId, 'accounts', 'assets', connectionId] as const,
+  options: (workspaceId: string, accountId: string) =>
+    ['workspaces', workspaceId, 'accounts', 'options', accountId] as const,
 };
 
 /** Enabled networks: the same for every workspace, and only changes when the server's keys do. */
@@ -62,6 +64,23 @@ export const connectableAssetsQuery = (workspaceId: string, connectionId: string
       }),
     // Asks the network each time the picker opens; a retry won't fix a refused login, and
     // coming back to the tab mustn't call the network again (or drop the user's ticks).
+    staleTime: 0,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+/**
+ * What an account offers for its network's post options (boards, privacy levels…). Asked of the
+ * network each time a network's options open: TikTok requires fresh creator info before posting.
+ */
+export const accountOptionsQuery = (workspaceId: string, accountId: string) =>
+  queryOptions({
+    queryKey: accountKeys.options(workspaceId, accountId),
+    queryFn: ({ signal }) =>
+      api(apiRoutes.socialAccounts.getAccountOptions, {
+        params: { workspaceId, accountId },
+        signal,
+      }),
     staleTime: 0,
     retry: false,
     refetchOnWindowFocus: false,

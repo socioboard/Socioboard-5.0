@@ -77,6 +77,12 @@
     "story": "Story",
     "storyHint": "One photo or video, gone after 24 hours"
   },
+  "options": {
+    "loading": "Loading this network’s settings",
+    "failed": "Couldn’t load the settings for {{account}}: {{reason}}",
+    "retry": "Try again",
+    "forAccount": "{{label}} for {{account}}"
+  },
   "locked": "This post is being published or was published, so it can’t be changed.",
   "notYours": "Only its author or someone who approves posts can edit this post.",
   "notFound": "This post doesn’t exist or was deleted.",
