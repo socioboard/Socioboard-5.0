@@ -2,7 +2,7 @@
 
 Area doc: [accounts](../frontend/areas/accounts.md) · Checks for every screen: [README](README.md#every-screen)
 
-Networks available now: **Facebook Pages, Instagram, X**. The others arrive in phase 3, one by one; each adds its own section here.
+Networks available now: **Facebook Pages, Instagram, X, Threads**. The others arrive in phase 3, one by one; each adds its own section here.
 
 ## The accounts page
 - [ ] **ACC-01** Accounts: a section per network with its count and "Connect another <network> account"; under it each login (name, "Facebook login" / "X login") and its accounts.
@@ -15,6 +15,7 @@ Networks available now: **Facebook Pages, Instagram, X**. The others arrive in p
 - [ ] **ACC-11** **Facebook:** pick Facebook → Facebook's page → approve → back in the app: "Signed in to Facebook as <name>", the Pages and their linked Instagram accounts, new ones ticked → "Add N accounts" → they're on the Accounts page.
 - [ ] **ACC-12** **Instagram:** pick Instagram → choose "Continue with Facebook" (accounts linked to a Page) or "Continue with Instagram" (professional accounts without a Page) → each works.
 - [ ] **ACC-13** **X:** pick X → X's page → sign in and approve → back with the account (name, @handle) → add it.
+- [ ] **ACC-20T** **Threads:** pick Threads → Threads' page → sign in and allow → back with the profile (name, @username) → add it. While the Meta app is in development mode the Threads profile must be a Threads tester.
 - [ ] **ACC-14** In the asset picker: an account already added shows "Added"; one held by another login says whose (adding moves it); one that can't post says why (not a professional Instagram account, permission not granted).
 - [ ] **ACC-15** Cancel on the network's page → back in the app with a readable message and **Try again**.
 - [ ] **ACC-16** Connect the same login again → "<name> is already connected", with the switch-account tip; anything not yet added is still offered.

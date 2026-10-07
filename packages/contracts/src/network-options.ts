@@ -65,6 +65,21 @@ export const TikTokOptions = z
 export type TikTokOptions = z.infer<typeof TikTokOptions>;
 
 /**
+ * Who can reply to a Threads post (Threads API reply_control). Absent: everyone, Threads' default.
+ */
+export const ThreadsReplyControl = z.enum([
+  'everyone',
+  'accounts_you_follow',
+  'followers_only',
+  'mentioned_only',
+]);
+export type ThreadsReplyControl = z.infer<typeof ThreadsReplyControl>;
+
+/** Threads: who can reply (P3-B10). */
+export const ThreadsOptions = z.object({ replyControl: ThreadsReplyControl }).partial();
+export type ThreadsOptions = z.infer<typeof ThreadsOptions>;
+
+/**
  * Network-specific settings, under a key of the target account's network (the API rejects keys
  * for other networks: `OPTIONS_NETWORKS`). Every field is optional, so a draft can be saved
  * unfinished; validation says what publishing still needs.
@@ -74,6 +89,7 @@ export const TargetOptions = z.object({
   pinterest: PinterestOptions.optional(),
   youtube: YouTubeOptions.optional(),
   tiktok: TikTokOptions.optional(),
+  threads: ThreadsOptions.optional(),
 });
 export type TargetOptions = z.infer<typeof TargetOptions>;
 export type TargetOptionsKey = keyof TargetOptions;
@@ -84,6 +100,7 @@ export const OPTIONS_NETWORKS: Readonly<Record<TargetOptionsKey, readonly Networ
   pinterest: ['pinterest'],
   youtube: ['youtube'],
   tiktok: ['tiktok'],
+  threads: ['threads'],
 };
 
 /** Whether `key` holds options for `network`; false for keys that aren't options at all. */

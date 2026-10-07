@@ -117,6 +117,10 @@
       "handle": "@{{username}} · now",
       "showMore": "Show more",
       "from": "From {{host}}"
+    },
+    "threads": {
+      "more": "More",
+      "reply": "Reply"
     }
   },
   "view": {
@@ -304,5 +308,16 @@
     "chip_one": "{{name}}, {{count}} account",
     "chip_other": "{{name}}, {{count}} accounts",
     "noneCanPost": "None of this group’s accounts can post right now"
+  },
+  "threads": {
+    "replyControl": "Who can reply",
+    "everyone": "Anyone",
+    "everyoneHint": "Threads’ default",
+    "accounts_you_follow": "Profiles you follow",
+    "accounts_you_followHint": "Only profiles this account follows",
+    "followers_only": "Your followers",
+    "followers_onlyHint": "Only people who follow this account",
+    "mentioned_only": "Mentioned only",
+    "mentioned_onlyHint": "Only profiles mentioned in the post"
   }
 }

@@ -285,6 +285,7 @@ enum LoginProvider {
   tiktok
   snapchat
   tumblr
+  threads
 }
 
 enum SocialNetwork {
@@ -298,6 +299,7 @@ enum SocialNetwork {
   tiktok
   snapchat
   tumblr
+  threads
 }
 
 enum ConnectionStatus {

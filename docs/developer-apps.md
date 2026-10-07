@@ -62,12 +62,15 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 | `instagram_business_basic` | Instagram Login: the account that signed in | `me` on graph.instagram.com |
 | `instagram_business_content_publish` | Instagram Login: publishing | `{ig-user}/media`, `media_publish` |
 | `instagram_business_manage_comments` | Instagram Login: the first comment | `{media}/comments` |
+| `threads_basic` | Threads: the profile that signed in | `me` on graph.threads.net |
+| `threads_content_publish` | Threads: publishing, with who can reply | `{threads-user}/threads`, `threads_publish` |
+| `threads_manage_replies` | Threads: the first comment, as a reply | `{threads-user}/threads` with `reply_to_id` |
 
 To record (on staging: Instagram Login needs HTTPS, and it's the URL reviewers get):
 
 1. Save the sessions it starts from, signing in yourself: `pnpm --filter @socioboard/web e2e:meta:login` (the Facebook account that manages the Page) and `… e2e:meta:login instagram` (the Instagram account). For the full consent screens in the video, first remove Socioboard under that Facebook account's **Settings → Business integrations** (and Instagram's **Apps and websites**).
-2. In `.env`: `REVIEW_META_PAGE` / `REVIEW_META_INSTAGRAM` when the review posts to other accounts than the end-to-end tests, `REVIEW_APP_URL` (default `https://app-dev.socioboard.ai`), `REVIEW_EMAIL` / `REVIEW_PASSWORD` for a Socioboard login there (or sign in in the window when asked), and `REVIEW_FFMPEG` for an ffmpeg with libx264 (any free static build) to get MP4s.
-3. `pnpm --filter @socioboard/web app-review:record facebook --dry-run` checks the whole flow and the captions without publishing; then run without `--dry-run`, and the same with `instagram`. Each run makes its own workspace ("Meta review <date>"). If Meta shows a screen the script doesn't know, click through it in the window and the recording carries on.
+2. In `.env`: `REVIEW_META_THREADS` (the Threads profile, as Socioboard names it) for the Threads video, `REVIEW_META_PAGE` / `REVIEW_META_INSTAGRAM` when the review posts to other accounts than the end-to-end tests, `REVIEW_APP_URL` (default `https://app-dev.socioboard.ai`), `REVIEW_EMAIL` / `REVIEW_PASSWORD` for a Socioboard login there (or sign in in the window when asked), and `REVIEW_FFMPEG` for an ffmpeg with libx264 (any free static build) to get MP4s.
+3. `pnpm --filter @socioboard/web app-review:record facebook --dry-run` checks the whole flow and the captions without publishing; then run without `--dry-run`, and the same with `instagram` and `threads` (its session: `e2e:meta:login threads`). Each run makes its own workspace ("Meta review <date>"). If Meta shows a screen the script doesn't know, click through it in the window and the recording carries on.
 4. Upload `e2e/app-review/out/meta-review-<route>-<time>.mp4` for every permission of that route; the matching `…-chapters.txt` gives each permission's timestamp for the review notes.
 
 ### LinkedIn: personal profiles + company pages

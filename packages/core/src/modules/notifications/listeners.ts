@@ -17,6 +17,7 @@ const NETWORK_NAMES: Record<NetworkId, string> = {
   tiktok: 'TikTok',
   snapchat: 'Snapchat',
   tumblr: 'Tumblr',
+  threads: 'Threads',
 };
 
 /** Who "workspace admins" are in the event map. */

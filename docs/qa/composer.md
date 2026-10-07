@@ -33,6 +33,8 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-33** **Instagram:** media first, then the bold username and the caption cut with "more"; several files as a swipeable carousel with "n/N"; reel and story in a tall phone frame; a story shows no caption and says so; no media → "Instagram posts need a photo or video".
 - [ ] **COMP-34** **X:** name, @handle · now; the whole text, with the link added after it; one photo in its own shape (a wide banner shown whole), 2–4 photos in X's grid; a link card ("From <site>") when there's no media; X's action row.
 - [ ] **COMP-35** Instagram tab: feed / reel / story choice; the preview changes with it.
+- [ ] **COMP-36** **Threads:** username and "now"; the whole text; one photo in its own shape, several side by side (scroll sideways); a link card when there's no photo, else the link at the end of the text; the first comment shown as a reply.
+- [ ] **COMP-37** Threads tab: **Who can reply** (Anyone, Profiles you follow, Your followers, Mentioned only); the post on Threads has that setting.
 
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.

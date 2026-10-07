@@ -84,6 +84,7 @@ const PROVIDER_NAMES: Record<LoginProvider, string> = {
   tiktok: 'TikTok',
   snapchat: 'Snapchat',
   tumblr: 'Tumblr',
+  threads: 'Threads',
 };
 
 /** A sign-in attempt must come back within this long (docs: 10-minute expiry, single use). */

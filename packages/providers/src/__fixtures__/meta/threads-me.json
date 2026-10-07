@@ -1,0 +1,12 @@
+{
+  "method": "GET",
+  "url": "https://graph.threads.net/v1.0/me",
+  "query": { "fields": "id,username,name,threads_profile_picture_url" },
+  "status": 200,
+  "response": {
+    "id": "25000000000000001",
+    "username": "halden.coffee",
+    "name": "Halden Coffee ",
+    "threads_profile_picture_url": "https://scontent.example.test/threads.jpg"
+  }
+}

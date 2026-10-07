@@ -5,6 +5,7 @@
 //
 //   pnpm --filter @socioboard/web app-review:record facebook    Facebook Login for Business
 //   pnpm --filter @socioboard/web app-review:record instagram   Instagram API with Instagram Login
+//   pnpm --filter @socioboard/web app-review:record threads     Threads API (REVIEW_META_THREADS)
 //   … --dry-run   stops before "Publish now": checks the flow and captions without posting
 //
 // Before recording: a Facebook (or Instagram) session from `e2e:meta:login [instagram]`, and a
@@ -26,8 +27,8 @@ try {
 }
 
 const route = process.argv[2];
-if (route !== 'facebook' && route !== 'instagram') {
-  console.error('Usage: app-review:record facebook|instagram');
+if (route !== 'facebook' && route !== 'instagram' && route !== 'threads') {
+  console.error('Usage: app-review:record facebook|instagram|threads');
   process.exit(1);
 }
 
@@ -39,18 +40,19 @@ const APP = (process.env.REVIEW_APP_URL ?? 'https://app-dev.socioboard.ai').repl
 // than the end-to-end tests, else the tests' E2E_META_*.
 const PAGE_NAME = process.env.REVIEW_META_PAGE ?? process.env.E2E_META_PAGE ?? '';
 const IG_NAME = process.env.REVIEW_META_INSTAGRAM ?? process.env.E2E_META_INSTAGRAM ?? '';
-const SESSION = fileURLToPath(
-  new URL(`../.auth/${route === 'facebook' ? 'facebook' : 'instagram'}.json`, import.meta.url),
-);
+/** The Threads profile to post to, by the name Socioboard shows for it. */
+const THREADS_NAME = process.env.REVIEW_META_THREADS ?? '';
+const SESSION = fileURLToPath(new URL(`../.auth/${route}.json`, import.meta.url));
 const OUT = fileURLToPath(new URL('./out/', import.meta.url));
 const IMAGE = fileURLToPath(new URL('../fixtures/square-1080.png', import.meta.url));
 const SIZE = { width: 1280, height: 1000 };
 
 if (!PAGE_NAME && route === 'facebook') throw new Error('Set E2E_META_PAGE in .env');
-if (!IG_NAME) throw new Error('Set E2E_META_INSTAGRAM in .env');
+if (!IG_NAME && route !== 'threads') throw new Error('Set E2E_META_INSTAGRAM in .env');
+if (!THREADS_NAME && route === 'threads') throw new Error('Set REVIEW_META_THREADS in .env');
 if (!existsSync(SESSION)) {
   throw new Error(
-    `No ${route} session: run pnpm --filter @socioboard/web e2e:meta:login${route === 'instagram' ? ' instagram' : ''}`,
+    `No ${route} session: run pnpm --filter @socioboard/web e2e:meta:login${route === 'facebook' ? '' : ` ${route}`}`,
   );
 }
 
@@ -70,6 +72,7 @@ const INSTAGRAM_PERMISSIONS = [
   'instagram_business_content_publish',
   'instagram_business_manage_comments',
 ];
+const THREADS_PERMISSIONS = ['threads_basic', 'threads_content_publish', 'threads_manage_replies'];
 
 // ------------------------------------------------------------------------------------- captions
 
@@ -82,10 +85,11 @@ interface Caption {
   permissions?: string[];
 }
 
-const BADGE =
-  route === 'facebook'
-    ? 'Socioboard · Meta App Review · Facebook Login for Business'
-    : 'Socioboard · Meta App Review · Instagram API with Instagram Login';
+const BADGE = {
+  facebook: 'Socioboard · Meta App Review · Facebook Login for Business',
+  instagram: 'Socioboard · Meta App Review · Instagram API with Instagram Login',
+  threads: 'Socioboard · Meta App Review · Threads API',
+}[route];
 
 /**
  * Draws the caption, the badge and a visible mouse pointer (videos don't show the real one) into
@@ -476,7 +480,7 @@ async function show(url: string, readMs: number) {
   // Facebook opens the post in a scrolling dialog with the comments below the photo: scroll it, in
   // steps the viewer can follow (the wheel goes to what's under the pointer). Instagram's post page
   // already shows the comments beside the photo, and scrolling would leave it.
-  if (new URL(url).hostname.endsWith('facebook.com')) {
+  if (/(facebook|threads)\.(com|net)$/.test(new URL(url).hostname)) {
     await page.mouse.move(SIZE.width / 2, SIZE.height / 2, { steps: 12 });
     for (let i = 0; i < 6; i += 1) {
       await page.mouse.wheel(0, 160);
@@ -615,7 +619,7 @@ try {
       500,
     );
     await show(links.Instagram ?? '', 9_000);
-  } else {
+  } else if (route === 'instagram') {
     await page.goto(`${APP}/login`);
     await say(
       {
@@ -707,6 +711,105 @@ try {
       500,
     );
     await show(links.Instagram ?? '', 9_000);
+  } else {
+    await page.goto(`${APP}/login`);
+    await say(
+      {
+        card: true,
+        step: 'Socioboard · open-source social media management',
+        title: 'Threads API: how Socioboard uses each permission',
+        body: 'A person connects their Threads profile, writes a post with an image, chooses who can reply, adds a first comment, and publishes it. Every permission requested appears where it is used.',
+        permissions: THREADS_PERMISSIONS,
+      },
+      9_000,
+    );
+    await say({
+      step: 'Step 1',
+      title: 'The person signs in to Socioboard',
+      body: `${APP.replace(/^https?:\/\//, '')} is the app under review.`,
+    });
+    await signInToSocioboard();
+    await say({ step: 'Step 2', title: 'They create a workspace for their brand' });
+    await newWorkspace();
+    await say({
+      step: 'Step 3',
+      title: 'Connect Threads',
+      body: 'Socioboard sends the person to Threads to grant access to their profile.',
+    });
+    await page.getByRole('button', { name: 'Connect an account' }).click();
+    await hold(1_500);
+    await page
+      .getByRole('dialog', { name: 'Connect an account' })
+      .getByRole('button', { name: /^Threads/ })
+      .click();
+    await page.waitForURL(/threads\.(net|com)/, { timeout: 30_000 });
+    await say(
+      {
+        step: 'Step 4 · on Threads',
+        title: 'Threads asks the person to allow Socioboard’s access',
+        permissions: THREADS_PERMISSIONS,
+      },
+      3_000,
+    );
+    await approveOnNetwork(/^(allow( all)?|continue( as .+)?|ok)$/i);
+    await say(
+      {
+        step: 'Step 5 · back in Socioboard',
+        title: 'The Threads profile that signed in, ready to add',
+        body: 'Its id, username, name and picture come from /me (threads_basic).',
+        permissions: ['threads_basic'],
+      },
+      8_000,
+    );
+    await addOnly([THREADS_NAME]);
+    await say({
+      step: 'Step 6',
+      title: 'The person writes a post with an image and a first comment',
+      body: 'The first comment is posted as the author’s reply to the post (threads_manage_replies).',
+      permissions: ['threads_manage_replies'],
+    });
+    await compose([{ name: THREADS_NAME, network: 'Threads' }], text, comment);
+    await say({
+      step: 'Step 6',
+      title: 'Who can reply',
+      body: 'Set on the post when it’s published (reply_control, with threads_content_publish).',
+      permissions: ['threads_content_publish'],
+    });
+    await page
+      .getByRole('tablist', { name: 'Content for' })
+      .getByRole('tab', { name: /^Threads/ })
+      .click();
+    await hold(1_200);
+    await page.getByRole('radio', { name: /Your followers/ }).click();
+    await hold(2_500);
+    await say(
+      {
+        step: 'Step 7',
+        title: 'Publish now',
+        body: 'Socioboard creates the Threads media container and publishes it ({threads-user}/threads and threads_publish, threads_content_publish).',
+        permissions: ['threads_content_publish'],
+      },
+      6_000,
+    );
+    const links = await publish(['Threads']);
+    await say(
+      {
+        step: 'Step 8',
+        title: 'Published: Socioboard links to the post on Threads',
+        permissions: ['threads_content_publish'],
+      },
+      7_000,
+    );
+    await say(
+      {
+        step: 'Step 9 · on Threads',
+        title: 'The post on Threads, with Socioboard’s first comment as a reply',
+        body: 'Published with threads_content_publish; the reply with threads_manage_replies.',
+        permissions: ['threads_content_publish', 'threads_manage_replies'],
+      },
+      500,
+    );
+    await show(links.Threads ?? '', 9_000);
   }
   await page.goto(`${APP}/login`, { waitUntil: 'domcontentloaded' }).catch(() => undefined);
   await say(
