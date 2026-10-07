@@ -448,6 +448,52 @@ describe('the publish job', () => {
       expect(again?.sizeBytes).toBe(media?.sizeBytes);
     },
   );
+
+  it.runIf(t.platform.storage)(
+    "a network's own settings reach its adapter, as saved (P3-B9)",
+    async () => {
+      const storage = t.platform.storage;
+      if (!storage) return;
+      const id = newId();
+      const key = mediaKeys(ws, id, 'image/jpeg').original;
+      const jpeg = await sharp({
+        create: { width: 1080, height: 1920, channels: 3, background: '#0a6' },
+      })
+        .jpeg()
+        .toBuffer();
+      await storage.put(key, jpeg, 'image/jpeg');
+      await t.db.client.mediaAsset.create({
+        data: {
+          id,
+          workspaceId: ws,
+          name: 'story.jpg',
+          kind: 'image',
+          mime: 'image/jpeg',
+          storageKey: key,
+          sizeBytes: jpeg.length,
+          width: 1080,
+          height: 1920,
+          status: 'ready',
+        },
+      });
+      const post = await draft({
+        text: 'Tonight only',
+        mediaIds: [id],
+        targets: [{ accountId: acc.ig, override: { options: { instagram: { format: 'story' } } } }],
+      });
+      // Kept as saved…
+      const saved = PostDetails.parse((await owner.get(`${base()}/posts/${post.id}`)).body);
+      expect(saved.targets[0]?.override).toEqual({ options: { instagram: { format: 'story' } } });
+      // …and handed to the network with the post.
+      const before = played.published.length;
+      await owner.post(`${base()}/posts/${post.id}/publish-now`);
+      expect((await settled(post.id)).status).toBe('published');
+      expect(played.published[before]).toMatchObject({
+        network: 'instagram',
+        input: { text: 'Tonight only', options: { instagram: { format: 'story' } } },
+      });
+    },
+  );
 });
 
 describe('rate limits', () => {
