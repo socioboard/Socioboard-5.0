@@ -94,6 +94,11 @@ describe('the driver', () => {
     // Deleting what isn't there is fine.
     await storage.delete('nas-test/folder-bb/original.jpg');
     await expect(storage.deletePrefix('nas-test')).rejects.toThrow(/Refusing/);
+    // `_` in a prefix is a plain character, not a wildcard matching any one character.
+    await storage.put('nas-test/folder-cc/a.jpg', Buffer.from('4'), 'image/jpeg');
+    expect(await storage.deletePrefix('nas-test/fold_r-cc/')).toBe(0);
+    expect(nas.files.has('/socioboard-test/nas-test/folder-cc/a.jpg')).toBe(true);
+    await storage.delete('nas-test/folder-cc/a.jpg');
   });
 
   it('a NAS that fails for a moment is tried again; one that keeps failing records nothing', async () => {

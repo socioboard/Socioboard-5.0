@@ -296,10 +296,13 @@ export function createNasStorage(config: NasStorageConfig, deps: NasStorageDeps)
       if (!/^[^/]+\/.+\/$|^[^/]+\/$/.test(prefix) || prefix.length < 12) {
         throw new Error(`Refusing to delete by prefix "${prefix}"`);
       }
-      const rows = await db.client.storedObject.findMany({
+      const found = await db.client.storedObject.findMany({
         where: { key: { startsWith: prefix } },
         select: { key: true, path: true },
       });
+      // Checked again as plain text: in a LIKE match `_` and `%` are wildcards, so a key format
+      // that ever contained them could otherwise widen the delete.
+      const rows = found.filter((row) => row.key.startsWith(prefix));
       for (const row of rows) {
         await removeFromNas(row.path);
         await db.client.storedObject.delete({ where: { key: row.key } }).catch(() => undefined);
