@@ -30,6 +30,8 @@ export interface FakeLogin extends LoginAdapter {
   failNext: { exchange?: ProviderError; listAssets?: ProviderError; refresh?: ProviderError };
   /** Tokens passed to `refresh` (Instagram's only, like Meta's: Facebook logins can't refresh). */
   refreshed: TokenSet[];
+  /** How long `refresh` takes to answer, as a real network would (0 by default). */
+  delays: { refreshMs?: number };
   /** The last auth URL's parameters, e.g. to read `state`. */
   lastAuthUrl: URL | null;
 }
@@ -38,6 +40,7 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
   const people = new Map<string, FakePerson>();
   const failNext: FakeLogin['failNext'] = {};
   const refreshed: TokenSet[] = [];
+  const delays: FakeLogin['delays'] = {};
   const personOf = (tokens: TokenSet) => {
     // `token-<code>`, with `~<n>` added each time it is refreshed.
     const person = people.get(tokens.accessToken.replace(/^token-/, '').replace(/~\d+$/, ''));
@@ -53,6 +56,7 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
     people,
     failNext,
     refreshed,
+    delays,
     lastAuthUrl: null,
     getAuthUrl({ state, redirectUri, forceAccountSelection }) {
       const url = new URL(`https://${id}.example.test/oauth`);
@@ -85,11 +89,12 @@ function fakeLogin(id: 'facebook' | 'instagram', supportsAccountSelection: boole
   };
   if (id === 'instagram') {
     // A fresh token for the same person, good for 60 days.
-    login.refresh = (tokens) => {
+    login.refresh = async (tokens) => {
       refreshed.push(tokens);
       const err = failNext.refresh;
       delete failNext.refresh;
-      if (err) return Promise.reject(err);
+      if (delays.refreshMs) await new Promise((r) => setTimeout(r, delays.refreshMs));
+      if (err) throw err;
       personOf(tokens);
       return Promise.resolve({
         ...tokens,

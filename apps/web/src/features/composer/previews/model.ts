@@ -98,3 +98,10 @@ export function textParts(text: string): TextPart[] {
   if (last < text.length) parts.push({ kind: 'text', value: text.slice(last) });
   return parts;
 }
+
+/** The text X posts: the link goes after the text unless the text has it already. */
+export function xShownText(text: string, link: string | null): string {
+  const trimmed = text.trim();
+  if (!link || trimmed.includes(link)) return trimmed;
+  return trimmed === '' ? link : `${trimmed}\n\n${link}`;
+}

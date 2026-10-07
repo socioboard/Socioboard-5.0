@@ -1,0 +1,16 @@
+{
+  "method": "POST",
+  "url": "https://api.x.com/2/tweets",
+  "status": 429,
+  "headers": {
+    "x-rate-limit-limit": "100",
+    "x-rate-limit-remaining": "0",
+    "x-rate-limit-reset": "4102444800"
+  },
+  "response": {
+    "title": "Too Many Requests",
+    "detail": "Too Many Requests",
+    "type": "about:blank",
+    "status": 429
+  }
+}

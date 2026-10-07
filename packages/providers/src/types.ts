@@ -126,6 +126,8 @@ export interface PublishResult {
   permalink: string | null;
   /** Things that went wrong without failing the post (e.g. the first comment was refused). */
   warnings: string[];
+  /** What the network charged for it, where it charges per post (X), in US dollars. */
+  costUnits?: number;
 }
 
 /**

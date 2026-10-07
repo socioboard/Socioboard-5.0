@@ -9,7 +9,7 @@
   "cancel": "Cancel",
   "empty": {
     "title": "No accounts yet",
-    "body": "Connect a Facebook Page or an Instagram account to start posting from here.",
+    "body": "Connect your social accounts to start posting from here.",
     "readOnlyBody": "An admin of this workspace connects accounts. Once they do, they appear here."
   },
   "providers": {

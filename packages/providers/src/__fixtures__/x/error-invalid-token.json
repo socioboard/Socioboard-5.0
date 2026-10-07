@@ -1,0 +1,11 @@
+{
+  "method": "GET",
+  "url": "https://api.x.com/2/users/me",
+  "status": 401,
+  "response": {
+    "title": "Unauthorized",
+    "type": "about:blank",
+    "status": 401,
+    "detail": "Unauthorized"
+  }
+}

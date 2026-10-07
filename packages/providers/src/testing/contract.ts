@@ -42,6 +42,8 @@ export function describeLoginContract(
         adapter.getAuthUrl({
           state: 'state-123',
           redirectUri: 'https://app.test/api/oauth/x/callback',
+          // Logins that use PKCE (X) need the pair; the service always makes one for them.
+          ...(adapter.usesPkce ? { pkce: { verifier: 'verifier', challenge: 'challenge' } } : {}),
         }),
       );
       expect(url.protocol).toBe('https:');

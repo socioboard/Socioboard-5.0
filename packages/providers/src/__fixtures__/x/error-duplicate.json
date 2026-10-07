@@ -1,0 +1,11 @@
+{
+  "method": "POST",
+  "url": "https://api.x.com/2/tweets",
+  "status": 403,
+  "response": {
+    "detail": "You are not allowed to create a Tweet with duplicate content.",
+    "type": "about:blank",
+    "title": "Forbidden",
+    "status": 403
+  }
+}
