@@ -15,6 +15,7 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
   const meta = createMetaAdapters({
     facebook: config.networks.facebook,
     instagram: config.networks.instagram,
+    threads: config.networks.threads,
     version: config.networks.graphVersion,
     logger,
   });

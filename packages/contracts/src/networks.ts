@@ -18,6 +18,7 @@ export const NetworkId = z.enum([
   'tiktok',
   'snapchat',
   'tumblr',
+  'threads',
 ]);
 export type NetworkId = z.infer<typeof NetworkId>;
 
@@ -36,6 +37,7 @@ export const LoginProvider = z.enum([
   'tiktok',
   'snapchat',
   'tumblr',
+  'threads',
 ]);
 export type LoginProvider = z.infer<typeof LoginProvider>;
 

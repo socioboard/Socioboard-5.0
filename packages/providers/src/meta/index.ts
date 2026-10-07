@@ -5,6 +5,13 @@ import { createFacebookPage } from './facebook-page';
 import { createGraphClient } from './graph-client';
 import { createInstagram, type InstagramOptions } from './instagram';
 import { createInstagramLogin } from './instagram-login';
+import {
+  createThreads,
+  createThreadsLogin,
+  THREADS_API,
+  THREADS_API_VERSION,
+  type ThreadsOptions,
+} from './threads';
 
 export { classifyGraphError, DEFAULT_GRAPH_VERSION } from './graph-client';
 export { FACEBOOK_SCOPES } from './facebook-login';
@@ -15,6 +22,14 @@ export {
   FACEBOOK_RULES,
 } from './facebook-page';
 export { INSTAGRAM_SCOPES } from './instagram-login';
+export {
+  THREADS_IMAGE_PREP,
+  THREADS_PREVIEW,
+  THREADS_RATE_LIMITS,
+  THREADS_RULES,
+  THREADS_SCOPES,
+  threadsTextLength,
+} from './threads';
 export {
   INSTAGRAM_IMAGE_PREP,
   INSTAGRAM_PREVIEW,
@@ -27,12 +42,16 @@ export interface MetaConfig {
   facebook?: { appId: string; appSecret: string; configId?: string | undefined } | undefined;
   /** INSTAGRAM_APP_ID / INSTAGRAM_APP_SECRET: Instagram Login (same Meta app, its own id). */
   instagram?: { appId: string; appSecret: string } | undefined;
+  /** THREADS_APP_ID / THREADS_APP_SECRET: the Threads use case (same Meta app, its own id). */
+  threads?: { appId: string; appSecret: string } | undefined;
   /** META_GRAPH_VERSION, default DEFAULT_GRAPH_VERSION. */
   version?: string | undefined;
   fetch?: typeof fetch;
   logger?: ProviderLogger;
   /** Container polling (tests make it instant). */
   instagramOptions?: InstagramOptions;
+  /** Threads container polling (tests make it instant). */
+  threadsOptions?: ThreadsOptions;
 }
 
 /**
@@ -85,6 +104,17 @@ export function createMetaAdapters(config: MetaConfig): {
         config.instagramOptions,
       ),
     );
+  }
+  if (config.threads) {
+    const threadsGraph = createGraphClient({
+      http,
+      appSecret: config.threads.appSecret,
+      version: THREADS_API_VERSION,
+      baseUrl: THREADS_API,
+      proof: false,
+    });
+    logins.push(createThreadsLogin({ ...config.threads, http, graph: threadsGraph }));
+    networks.push(createThreads(threadsGraph, config.threadsOptions));
   }
   return { logins, networks };
 }

@@ -1,0 +1,16 @@
+[
+  {
+    "method": "POST",
+    "url": "https://graph.threads.net/oauth/access_token",
+    "body": { "grant_type": "authorization_code", "code": "AQB-threads-code" },
+    "status": 200,
+    "response": { "access_token": "THQ-short", "user_id": 25000000000000001 }
+  },
+  {
+    "method": "GET",
+    "url": "https://graph.threads.net/access_token",
+    "query": { "grant_type": "th_exchange_token", "access_token": "THQ-short" },
+    "status": 200,
+    "response": { "access_token": "THQ-long", "token_type": "bearer", "expires_in": 5183944 }
+  }
+]

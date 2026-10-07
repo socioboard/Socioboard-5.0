@@ -16,6 +16,7 @@ import { useAttachedMedia } from '../media';
 import { FacebookPreview } from '../previews/facebook-preview';
 import { InstagramPreview } from '../previews/instagram-preview';
 import type { PreviewFile } from '../previews/shared';
+import { ThreadsPreview } from '../previews/threads-preview';
 import { XPreview } from '../previews/x-preview';
 import { NetworkTabs } from './network-tabs';
 
@@ -212,6 +213,22 @@ function NetworkPreview({
         text={content.text}
         files={files}
         link={link}
+        spec={spec}
+      />
+    );
+  }
+  if (network === 'threads') {
+    return (
+      <ThreadsPreview
+        account={{
+          name: account.displayName,
+          username: account.username,
+          avatarUrl: account.avatarUrl,
+        }}
+        text={content.text}
+        files={files}
+        link={link}
+        firstComment={firstComment}
         spec={spec}
       />
     );

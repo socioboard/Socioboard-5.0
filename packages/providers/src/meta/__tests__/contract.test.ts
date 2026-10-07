@@ -24,8 +24,10 @@ const meta = (fetch: typeof globalThis.fetch) =>
   createMetaAdapters({
     facebook: { appId: '1', appSecret: 's' },
     instagram: { appId: '2', appSecret: 'ig-s' },
+    threads: { appId: '3', appSecret: 'th-s' },
     fetch,
     instagramOptions: { pollIntervalMs: 0, sleep: () => Promise.resolve() },
+    threadsOptions: { pollIntervalMs: 0, sleep: () => Promise.resolve() },
   });
 
 /** A recorded error answer, as the network would give it at another endpoint. */
@@ -153,6 +155,99 @@ describeNetworkContract(
       ],
       content: at(media, fixture('meta', 'error-content')),
       retryable: at(media, fixture('meta', 'error-server')),
+    },
+  },
+);
+
+// Threads (P3-B10): no read-only recording yet; these follow the Threads API reference
+// (graph.threads.net/v1.0, checked 2026-10-07).
+const TH = 'https://graph.threads.net/v1.0';
+const TH_ID = '25000000000000001';
+const thPost = `${TH}/${TH_ID}/threads`;
+const thError = (status: number, error: object): RecordedCall[] => [
+  { method: 'POST', url: thPost, status, response: { error } },
+];
+
+describeLoginContract(
+  'Threads login',
+  withReplay((fetch) => {
+    const login = meta(fetch).logins.find((l) => l.id === 'threads');
+    if (!login) throw new Error('threads login missing');
+    return login;
+  }),
+  {
+    tokens: {
+      accessToken: 'THQ-long',
+      refreshToken: null,
+      expiresAt: null,
+      scopes: ['threads_basic', 'threads_content_publish', 'threads_manage_replies'],
+    },
+    identity: fixture('meta', 'threads-me'),
+    assets: fixture('meta', 'threads-me'),
+    invalidToken: fixture('meta', 'threads-error-invalid-token'),
+  },
+);
+
+describeNetworkContract(
+  'Threads',
+  withReplay((fetch) => {
+    const threads = meta(fetch).networks.find((n) => n.id === 'threads');
+    if (!threads) throw new Error('threads missing');
+    return threads;
+  }),
+  {
+    account: { externalId: TH_ID, accessToken: 'THQ-long', meta: {} },
+    input: text,
+    publish: [
+      {
+        method: 'POST',
+        url: thPost,
+        body: { media_type: 'TEXT', text: 'Fresh roast today' },
+        status: 200,
+        response: { id: 'tc1' },
+      },
+      { method: 'GET', url: `${TH}/tc1`, status: 200, response: { status: 'FINISHED', id: 'tc1' } },
+      {
+        method: 'POST',
+        url: `${TH}/${TH_ID}/threads_publish`,
+        body: { creation_id: 'tc1' },
+        status: 200,
+        response: { id: 'tm1' },
+      },
+      {
+        method: 'GET',
+        url: `${TH}/tm1`,
+        status: 200,
+        response: { permalink: 'https://www.threads.net/@halden.coffee/post/Abc123', id: 'tm1' },
+      },
+    ],
+    errors: {
+      auth: thError(400, {
+        message: 'Error validating access token: Session has expired.',
+        type: 'OAuthException',
+        code: 190,
+        fbtrace_id: 'TRACE',
+      }),
+      rate_limited: thError(400, {
+        message: 'Application request limit reached',
+        type: 'OAuthException',
+        code: 4,
+        fbtrace_id: 'TRACE',
+      }),
+      content: thError(400, {
+        message: 'Invalid parameter',
+        type: 'THApiException',
+        code: 100,
+        error_user_msg: 'The text is too long.',
+        fbtrace_id: 'TRACE',
+      }),
+      retryable: thError(500, {
+        message: 'An unexpected error has occurred. Please retry your request later.',
+        type: 'OAuthException',
+        code: 2,
+        is_transient: true,
+        fbtrace_id: 'TRACE',
+      }),
     },
   },
 );

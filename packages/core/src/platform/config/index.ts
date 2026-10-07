@@ -124,6 +124,9 @@ const envSchema = z.object({
   /** Instagram Login (Instagram accounts without a Page): its own app id and secret. */
   INSTAGRAM_APP_ID: optional,
   INSTAGRAM_APP_SECRET: optional,
+  /** Threads (the Threads use case on the same Meta app): its own app id and secret. */
+  THREADS_APP_ID: optional,
+  THREADS_APP_SECRET: optional,
   /** Graph API version, e.g. v25.0 (or 25.0); defaults to the one the adapters were checked against. */
   /** X: the app's OAuth 2.0 client; redirect URI <APP_URL>/api/oauth/x/callback. */
   X_CLIENT_ID: optional,
@@ -230,6 +233,7 @@ export interface Config {
   networks: {
     facebook: { appId: string; appSecret: string; configId: string | undefined } | undefined;
     instagram: { appId: string; appSecret: string } | undefined;
+    threads: { appId: string; appSecret: string } | undefined;
     x: { clientId: string; clientSecret: string } | undefined;
     graphVersion: string | undefined;
   };
@@ -287,7 +291,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       problems.push(`${provider}_CLIENT_ID and ${provider}_CLIENT_SECRET must be set together`);
     }
   }
-  for (const app of ['META', 'INSTAGRAM']) {
+  for (const app of ['META', 'INSTAGRAM', 'THREADS']) {
     if (Boolean(raw(`${app}_APP_ID`)) !== Boolean(raw(`${app}_APP_SECRET`))) {
       problems.push(`${app}_APP_ID and ${app}_APP_SECRET must be set together`);
     }
@@ -384,6 +388,10 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       instagram:
         e.INSTAGRAM_APP_ID && e.INSTAGRAM_APP_SECRET
           ? { appId: e.INSTAGRAM_APP_ID, appSecret: e.INSTAGRAM_APP_SECRET }
+          : undefined,
+      threads:
+        e.THREADS_APP_ID && e.THREADS_APP_SECRET
+          ? { appId: e.THREADS_APP_ID, appSecret: e.THREADS_APP_SECRET }
           : undefined,
       x:
         e.X_CLIENT_ID && e.X_CLIENT_SECRET
