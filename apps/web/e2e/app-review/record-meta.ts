@@ -35,8 +35,10 @@ const DRY_RUN = process.argv.includes('--dry-run');
 /** Thrown to end a dry run before anything is published. */
 class DryRunStop extends Error {}
 const APP = (process.env.REVIEW_APP_URL ?? 'https://app-dev.socioboard.ai').replace(/\/$/, '');
-const PAGE_NAME = process.env.E2E_META_PAGE ?? '';
-const IG_NAME = process.env.E2E_META_INSTAGRAM ?? '';
+// The Page and Instagram account to post to: REVIEW_META_* when the review uses other accounts
+// than the end-to-end tests, else the tests' E2E_META_*.
+const PAGE_NAME = process.env.REVIEW_META_PAGE ?? process.env.E2E_META_PAGE ?? '';
+const IG_NAME = process.env.REVIEW_META_INSTAGRAM ?? process.env.E2E_META_INSTAGRAM ?? '';
 const SESSION = fileURLToPath(
   new URL(`../.auth/${route === 'facebook' ? 'facebook' : 'instagram'}.json`, import.meta.url),
 );
@@ -463,7 +465,7 @@ try {
     await say({
       step: 'Step 1',
       title: 'The person signs in to Socioboard',
-      body: `${APP.replace(/^https:\/\//, '')} is the app under review.`,
+      body: `${APP.replace(/^https?:\/\//, '')} is the app under review.`,
     });
     await signInToSocioboard();
     await say({
@@ -582,7 +584,7 @@ try {
     await say({
       step: 'Step 1',
       title: 'The person signs in to Socioboard',
-      body: `${APP.replace(/^https:\/\//, '')} is the app under review.`,
+      body: `${APP.replace(/^https?:\/\//, '')} is the app under review.`,
     });
     await signInToSocioboard();
     await say({ step: 'Step 2', title: 'They create a workspace for their brand' });
