@@ -69,7 +69,7 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | workspace-settings | [workspace-settings](frontend/areas/workspace-settings.md) | 0 · P0-F6 · 4 · P4-F5 · 5 · P5-F3, P5-F4 |
 | media-library | [media-library](frontend/areas/media-library.md) | 0 · P0-F7 |
 | accounts | [accounts](frontend/areas/accounts.md) | 1 · P1-F1 · 2 · P2-F3 (slots) · 3 · P3-F3, P3-F4 · 6.1 · P6-F7 (feed) |
-| composer | [composer](frontend/areas/composer.md) | 1 · P1-F2–F5, P1-F8 · 2 · P2-F1 · 3 · P3-F1, P3-F2 · 4 · P4-F1, P4-F6 · 6.1 · P6-F5 |
+| composer | [composer](frontend/areas/composer.md) | 1 · P1-F2–F5, P1-F8 · 2 · P2-F1 · 3 · P3-F1, P3-F2, P3-B10 (Threads preview and panel) · 4 · P4-F1, P4-F6 |
 | posts (+ tasks) | [posts](frontend/areas/posts.md) | 1 · P1-F6, P1-F8 · 4 · P4-F3, P4-F4 |
 | calendar | [calendar](frontend/areas/calendar.md) | 2 · P2-F2, P2-F3 |
 | home | [home](frontend/areas/home.md) | 4 · P4-F8 |
@@ -90,7 +90,8 @@ Unit and integration tests live next to the code they test (`__tests__/` in each
 | Schedule → calendar → drag → publishes at the new time (a real Facebook Page; Meta project, never in CI: it publishes) | `apps/web/e2e/phase-2/meta-schedule.spec.ts` | P2-Q3 |
 | E2E per phase | `apps/web/e2e/phase-<n>/` | P0-Q1 · P1-Q1, P1-Q2, P1-Q3 · P2-Q3 · P3-Q1 · P4-Q1, P4-Q2 · P5-Q1, P5-Q2 · P6-Q1, P6-Q2 |
 | Chaos (`pnpm test:chaos`: real api and worker processes, the suite's own Valkey in Docker, a ledger network counting every send) + DST (`pnpm test:dst`: every clock change in every timezone against a walk of the real clock, and repeating posts through the real pipeline across the next changes) | `tests/chaos/`, `tests/scheduling/` | P2-Q1, P2-Q2 |
-| Adapter coverage | `packages/providers/src/**/__tests__/` | P1-B9 (Meta) · P3-Q2 |
+| Adapter coverage | `packages/providers/src/**/__tests__/`; every provider proven covered by `src/__tests__/contract-coverage.test.ts` | P1-B9 (Meta) · P3-Q2 |
+| App Review screencasts (`pnpm --filter @socioboard/web app-review:record <facebook, instagram or threads>`: drives staging, publishes for real, never in CI) | `apps/web/e2e/app-review/` | P1-R1 · P3-B10 |
 | Self-host install | `tests/selfhost/` | P5-Q3 |
 | Load | `tests/load/` (k6) | P5-I3 |
 

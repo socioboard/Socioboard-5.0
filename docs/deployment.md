@@ -175,6 +175,7 @@ Static build in `~/.local/bin` (`ffmpeg`, `ffprobe`). It is on the PATH only in 
 | `STORAGE_TEMP_DIR` | `/home/<app user>/data/uploads` | Uploads wait here until sent to the NAS |
 | `FFMPEG_PATH`, `FFPROBE_PATH` | `/home/<app user>/.local/bin/ffmpeg`, `…/ffprobe` | |
 | `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`, `META_GRAPH_VERSION` | `<secret>` (the development Meta app) | Copied from the development `.env` on 2026-10-06; Facebook Pages and Instagram are then enabled. Other networks' keys join with their phase 3 tasks |
+| `THREADS_APP_ID`, `THREADS_APP_SECRET` | `<secret>` (the Threads use case of the development Meta app) | Added 2026-10-07 (P3-B10); Threads is then enabled |
 | `AUTH_BREACHED_PASSWORD_CHECK`, `API_RATE_LIMIT_PER_MIN`, `AUDIT_RETENTION_DAYS`, `ALERT_FAILED_PUBLISHES`, `ALERT_QUEUE_WAITING`, `ALERT_QUEUE_LAG_MINUTES` | `true`, `300`, `730`, `10`, `1000`, `10` | The defaults, written out |
 | Not on staging | | `STORAGE_PUBLIC_URL` (a development shortcut that makes storage public), the local compose ports (`POSTGRES_PORT`, `VALKEY_PORT`, `MAILPIT_*`), `S3_*` (NAS storage instead), `GOOGLE_*` / `MICROSOFT_*` (social sign-in, not set up), `STRIPE_SECRET_KEY`, `AI_SERVICE_URL` (later phases) |
 
@@ -282,10 +283,10 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 
 | Item | Owner | Why it matters |
 | --- | --- | --- |
-| Meta development app: add `https://app-dev.socioboard.ai/api/oauth/facebook/callback` and `…/instagram/callback`, and the app domain | You | Connecting Facebook and Instagram on staging |
 | Ports **3000 and 3001 reachable from the internet** | Left open on purpose (2026-10-06) | Skips Cloudflare, HTTPS and nginx; close for production |
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
-| Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Needed to connect accounts on staging |
+| Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Done for Meta (Facebook, Instagram and Threads callbacks, app domain, keys: 2026-10-07) and X; the other networks join with their phase 3 tasks |
+| Data deletion instructions page (`/data-deletion`, set as the Meta app's data deletion URL) | Engineering + you | Not built yet (P0-R1 / P5-B6): the URL shows the app's Not found page, which Meta reviewers will open |
 | Cloudflare SSL mode "Full (strict)" | DevOps | Confirm |
 | NAS's DSM admin page open to the internet (ports 5000/5001) | DevOps / NAS team | Restrict to office or VPN |
 | Test data: accounts `nas-check-…@example.test`, workspaces "Staging NAS check …" | Engineering | Remove when convenient |
