@@ -82,8 +82,9 @@ function Grid({ files }: { files: PreviewFile[] }) {
   const shown = files.slice(0, 4);
   const [first] = shown;
   if (shown.length === 1 && first) {
-    // One photo keeps its shape, within what the timeline shows (3:4 to 16:9).
-    const ratio = Math.min(16 / 9, Math.max(0.75, ownRatio(first)));
+    // One photo keeps its shape: a wide one shows whole (a 4:1 banner too); only a tall one is
+    // trimmed, to 3:4.
+    const ratio = Math.max(0.75, ownRatio(first));
     return (
       <FileTile
         file={first}
