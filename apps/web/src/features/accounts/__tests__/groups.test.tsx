@@ -82,7 +82,7 @@ describe('groups tab', () => {
     const calls = server('owner', {
       [`GET ${GROUPS}`]: () => [200, { items: groups }],
       [`POST ${GROUPS}`]: ({ body }) => {
-        const made = { ...group(1, '', []), ...(body as object) } as AccountGroup;
+        const made = { ...group(1, '', []), ...(body as object) };
         groups = [made];
         return [201, made];
       },
