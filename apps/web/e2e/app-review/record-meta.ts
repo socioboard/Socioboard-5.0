@@ -351,11 +351,30 @@ const slowType = (locator: ReturnType<Page['getByRole']>, text: string) =>
 /**
  * On Facebook's or Instagram's screens: clicks through the approval steps, slowly enough to read,
  * until the browser is back in Socioboard. A screen the pattern doesn't know waits for a person.
+ * `first`, when shown, is clicked once before anything else: Facebook offers "Continue as …" to
+ * an account that linked Socioboard before, and "Edit settings" goes through the Page, Instagram
+ * and permission screens reviewers need to see.
  */
-async function approveOnNetwork(buttons: RegExp) {
+async function approveOnNetwork(buttons: RegExp, first?: RegExp) {
   const deadline = Date.now() + 5 * 60_000;
+  let firstDone = !first;
   while (!page.url().startsWith(APP)) {
     if (Date.now() > deadline) throw new Error('Not back in Socioboard within 5 minutes');
+    if (!firstDone && first) {
+      // Only offered to an account that linked Socioboard before: wait a little for it, once.
+      firstDone = true;
+      const start = page.getByRole('button', { name: first }).first();
+      const shown = await start
+        .waitFor({ state: 'visible', timeout: 10_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (shown) {
+        await hold(2_500);
+        await start.click({ timeout: 5_000 }).catch(() => undefined);
+        await hold(1_500);
+        continue;
+      }
+    }
     const button = page.getByRole('button', { name: buttons }).first();
     if (await button.isVisible().catch(() => false)) {
       await hold(2_500);
@@ -516,6 +535,7 @@ try {
     );
     await approveOnNetwork(
       /^(continue( as .+)?|save|got it|ok|done|reconnect|opt in to (all )?current (and future )?(pages|businesses))$/i,
+      /^edit settings$/i,
     );
     await say(
       {
