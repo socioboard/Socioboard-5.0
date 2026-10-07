@@ -44,6 +44,31 @@ Most networks need exact-match URLs (no wildcards), so give each developer a fix
 - **Gotchas:** Instagram fetches media from a public URL (`media.socioboard.com`); images must fit IG aspect ratios. Threads (6.1) will be a separate use case on the same Meta app.
 - [ ] Business Manager created and verified · [ ] Prod app · [ ] Dev app (test app linked to prod) · [ ] Review submitted · [ ] Approved
 
+#### Screencasts
+
+`apps/web/e2e/app-review/record-meta.ts` records the App Review videos (P1-R1): one per sign-in route, from signing in to Socioboard, through Meta's consent screens and the account picker, to writing a post with an image and a first comment, publishing it, and opening the live post on Facebook and Instagram. Captions name each permission where it's used, with the call behind it; a visible pointer shows each click. It publishes for real, to `E2E_META_PAGE` and `E2E_META_INSTAGRAM`.
+
+| Permission | Where the video shows it | Call |
+| --- | --- | --- |
+| `pages_show_list` | Account picker: the person's Pages | `me/accounts` |
+| `business_management` | Account picker: Pages owned through a business portfolio | `me/accounts` |
+| `instagram_basic` | Account picker: each Page's linked Instagram account | `instagram_business_account` on the Page |
+| `pages_manage_posts` | Publishing; the post on the Page | `{page}/feed`, `{page}/photos` |
+| `pages_read_engagement` | "View on Facebook" on the published post | `{post}?fields=permalink_url` |
+| `pages_manage_engagement` | The first comment on the Page post | `{post}/comments` |
+| `instagram_content_publish` | Publishing; the post on Instagram | `{ig-user}/media`, `media_publish` |
+| `instagram_manage_comments` | The first comment on the Instagram post | `{media}/comments` |
+| `instagram_business_basic` | Instagram Login: the account that signed in | `me` on graph.instagram.com |
+| `instagram_business_content_publish` | Instagram Login: publishing | `{ig-user}/media`, `media_publish` |
+| `instagram_business_manage_comments` | Instagram Login: the first comment | `{media}/comments` |
+
+To record (on staging: Instagram Login needs HTTPS, and it's the URL reviewers get):
+
+1. Save the sessions it starts from, signing in yourself: `pnpm --filter @socioboard/web e2e:meta:login` (the Facebook account that manages the Page) and `… e2e:meta:login instagram` (the Instagram account). For the full consent screens in the video, first remove Socioboard under that Facebook account's **Settings → Business integrations** (and Instagram's **Apps and websites**).
+2. In `.env`: `REVIEW_APP_URL` (default `https://app-dev.socioboard.ai`), `REVIEW_EMAIL` / `REVIEW_PASSWORD` for a Socioboard login there (or sign in in the window when asked), and `REVIEW_FFMPEG` for an ffmpeg with libx264 (any free static build) to get MP4s.
+3. `pnpm --filter @socioboard/web app-review:record facebook --dry-run` checks the whole flow and the captions without publishing; then run without `--dry-run`, and the same with `instagram`. Each run makes its own workspace ("Meta review <date>"). If Meta shows a screen the script doesn't know, click through it in the window and the recording carries on.
+4. Upload `e2e/app-review/out/meta-review-<route>-<time>.mp4` for every permission of that route; the matching `…-chapters.txt` gives each permission's timestamp for the review notes.
+
 ### LinkedIn: personal profiles + company pages
 - **Portal:** linkedin.com/developers, app associated with the Socioboard LinkedIn company page.
 - **Self-serve products:** Sign In with LinkedIn using OpenID Connect (`openid`, `profile`, `email`) and Share on LinkedIn (`w_member_social`) for personal posting.
