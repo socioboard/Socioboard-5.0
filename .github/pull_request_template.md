@@ -18,5 +18,6 @@
 ## Checklist
 
 - [ ] Docs updated in this pull request (module doc, screen doc, the task's line in `docs/stages`)
+- [ ] QA checklist in `docs/qa` updated (if anything people see changed)
 - [ ] Shared files follow AGENTS.md (migrations claimed on the board, lockfile not hand-merged)
 - [ ] Commits signed off (`git commit -s`), with a `Task:` line and no AI attribution

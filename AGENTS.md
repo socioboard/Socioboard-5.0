@@ -31,6 +31,9 @@ of these rules exist to keep branches from colliding. The why behind them is in
   rebase on `origin/6.0` every day (`git fetch && git rebase origin/6.0`).
 - Every change comes with its tests and its docs in the same pull request. A bug fix comes with
   a test that fails without it.
+- Changed something people see in the app? Update its area's QA checklist in `docs/qa` in the
+  same pull request: add a check for what's new, change the ones it alters, and move items out
+  of "Not built yet". Keep the wording for testers who use the app, not the code.
 - Follow [CONTRIBUTING.md](CONTRIBUTING.md#code) and the design system: strict TypeScript, API
   shapes in `packages/contracts`, all text through i18n, the right cursors (pointer when
   clickable, not-allowed when disabled), the design system's motion helpers.
