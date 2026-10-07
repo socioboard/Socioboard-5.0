@@ -20,7 +20,7 @@ Each network is the same checklist. Build order: LinkedIn → X → YouTube → 
 
 ## Network-specific tasks
 - [ ] P3-B1 **LinkedIn:** person + organization adapters; images/videos upload; 60-day token handling (reconnect reminders)
-- [ ] P3-B2 **X:** OAuth 2 PKCE; media upload; record per-post cost in `PublishAttempt.costUnits`; composer warning for link posts
+- [x] P3-B2 **X:** OAuth 2 PKCE; media upload; record per-post cost in `PublishAttempt.costUnits`; composer warning for link posts — done 2026-10-07 (`packages/providers/src/x`, [providers](../backend/modules/providers.md)): contract tests on X's documented answers, the X preview, login tokens renewed before publishing under a row lock (X's last 2 hours and rotate). Checked on staging with @Chethavarq: connected, a photo post published on the first try with its link, $0.015 recorded on the attempt, the account healthy after
 - [ ] P3-B3 **YouTube:** resumable upload, title/description/privacy/tags options; private-only notice until audit passes
 - [ ] P3-B4 **Pinterest:** board list + board picker; pin title/link; Standard access video
 - [ ] P3-B5 **TikTok:** creator info query before posting; privacy level picker; comment/duet/stitch toggles; commercial content disclosure; submit audit with these screens

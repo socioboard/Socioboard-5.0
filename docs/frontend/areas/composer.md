@@ -27,7 +27,7 @@ The most important screen in the product: write once, tailor per network, see ex
 - One preview component per network, driven by the adapter's `preview` spec from `GET /api/v1/networks` (name/avatar placement, text truncation length and line limit, media grid shape, aspect-ratio crop, link card).
 - Uses the connected account's real name and avatar.
 - Shows what the network will cut: e.g. Instagram crops to the chosen ratio, X shows the 280-char cut, LinkedIn shows the "…see more" point.
-- **X** (P3-B2): the name, @handle and "now"; the text as X will post it (the link added after it unless the text has it); photos in X's layouts (one in its own shape between 3:4 and 16:9, two side by side, one tall beside two, 2 × 2); a link card ("From <host>") when there's no media; X's action row. Posts with a link get the `X_LINK_COST` note, since X charges more for them.
+- **X** (P3-B2): the name, @handle and "now"; the text as X will post it (the link added after it unless the text has it); photos in X's layouts (one in its own shape, a wide one whole and a tall one trimmed to 3:4, two side by side, one tall beside two, 2 × 2); a link card ("From <host>") when there's no media; X's action row. Posts with a link get the `X_LINK_COST` note, since X charges more for them.
 - On mobile the preview is a toggle ("Edit" / "Preview").
 
 ## Validation
