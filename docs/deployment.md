@@ -238,7 +238,7 @@ The staging setup as it happened, each item pointing at its step above; tick the
 14. Media storage: S3 dropped for cost, an S3 server on the NAS ruled out (DevOps couldn't host it), so the app gained a NAS storage driver for the NAS team's upload/delete API. Checked against the real NAS (upload, public read, ranges, overwrite, delete), then staging switched to it (`STORAGE_DRIVER=nas`, the `StoredObject` migration). → step 11
 15. End-to-end media check through the public domain: sign-up and verification (link from the API log, no SMTP yet), a workspace, an image upload with its thumbnail, a 17 MB video in two parts, files served from the NAS. The NAS refused one connection during the first video; sends now retry. → step 11, [Checks](#checks-after-a-deploy)
 16. Valkey, found running outside PM2 (it wouldn't have come back after a reboot), moved under PM2 with all its data; the PM2 list saved again. → steps 4, 9
-17. SendGrid added (`SMTP_URL`, key entered by hand); its login checked from the server. Turning SMTP on also turns email verification on, so an account made before that stays unverified. → step 7
+17. SendGrid added (`SMTP_URL`, key entered by hand); its login checked from the server. Turning SMTP on also turns email verification on, so an account made before that stays unverified. SendGrid accepting `no-reply@socioboard.ai` as sender confirmed 2026-10-07. → step 7
 18. The rest of the settings copied from the development `.env` without printing them: the Meta development app's keys and the plain settings; Facebook Pages and Instagram reported enabled. → steps 7, 12
 
 ## Day to day
@@ -282,7 +282,6 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 
 | Item | Owner | Why it matters |
 | --- | --- | --- |
-| Confirm SendGrid accepts `no-reply@socioboard.ai` as sender (first real email) | You + SendGrid account owner | Otherwise every email is refused |
 | Meta development app: add `https://app-dev.socioboard.ai/api/oauth/facebook/callback` and `…/instagram/callback`, and the app domain | You | Connecting Facebook and Instagram on staging |
 | Ports **3000 and 3001 reachable from the internet** | Left open on purpose (2026-10-06) | Skips Cloudflare, HTTPS and nginx; close for production |
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
