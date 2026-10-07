@@ -22,6 +22,18 @@ import { replayFetch, type RecordedCall, type Replay } from './replay';
 
 type Make<T> = (calls: RecordedCall[]) => { adapter: T; replay: Replay };
 
+/**
+ * The publish failures every network's contract must cover (P3-Q2): the network refusing the
+ * token, limiting us, and refusing the content. A temporary failure (`retryable`) is optional:
+ * the shared HTTP client handles most of those the same way for every network.
+ */
+export const REQUIRED_FAILURES = ['auth', 'rate_limited', 'content'] as const;
+type Failures = Record<(typeof REQUIRED_FAILURES)[number], RecordedCall[]> &
+  Partial<Record<PublishErrorKind, RecordedCall[]>>;
+
+/** Adapter ids that have a contract suite in this test file (see describeContractCoverage). */
+const covered = { logins: new Set<string>(), networks: new Set<string>() };
+
 const httpUrl = (v: string | null) => v === null || /^https?:\/\//.test(v);
 
 export function describeLoginContract(
@@ -35,6 +47,7 @@ export function describeLoginContract(
     invalidToken: RecordedCall[];
   },
 ) {
+  covered.logins.add(make([]).adapter.id);
   describe(`${name}: login contract`, () => {
     it('builds a sign-in URL that carries the state and our callback', () => {
       const { adapter } = make([]);
@@ -96,9 +109,10 @@ export function describeNetworkContract(
     input: PublishInput;
     publish: RecordedCall[];
     /** Recorded failures of that same publish, by the kind they must become. */
-    errors: Partial<Record<PublishErrorKind, RecordedCall[]>>;
+    errors: Failures;
   },
 ) {
+  covered.networks.add(make([]).adapter.id);
   describe(`${name}: network contract`, () => {
     it('describes itself with valid capabilities, rules and preview', () => {
       const { adapter } = make([]);
@@ -139,6 +153,25 @@ export function describeNetworkContract(
         expect(isProviderError(err) && err.message).toMatch(/\S/);
       });
     }
+  });
+}
+
+/**
+ * Checks that every login and network a provider's factory creates (with all its options
+ * configured) has a contract suite in this file. Each provider's contract test ends with it, and
+ * `src/__tests__/contract-coverage.test.ts` checks every provider's contract test does.
+ */
+export function describeContractCoverage(
+  provider: string,
+  adapters: { logins: readonly LoginAdapter[]; networks: readonly NetworkAdapter[] },
+) {
+  describe(`${provider}: contract coverage`, () => {
+    it('every login and network it creates has a contract suite', () => {
+      expect({
+        logins: adapters.logins.map((l) => l.id).filter((id) => !covered.logins.has(id)),
+        networks: adapters.networks.map((n) => n.id).filter((id) => !covered.networks.has(id)),
+      }).toEqual({ logins: [], networks: [] });
+    });
   });
 }
 

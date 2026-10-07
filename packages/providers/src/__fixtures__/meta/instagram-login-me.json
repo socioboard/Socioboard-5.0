@@ -1,0 +1,15 @@
+{
+  "method": "GET",
+  "url": "https://graph.instagram.com/v25.0/me",
+  "query": {
+    "fields": "user_id,username,name,profile_picture_url"
+  },
+  "status": 200,
+  "response": {
+    "user_id": 17841400000000009,
+    "username": "halden.coffee",
+    "name": "Halden Coffee ",
+    "profile_picture_url": "https://scontent.example.test/ig.jpg",
+    "id": "9002"
+  }
+}

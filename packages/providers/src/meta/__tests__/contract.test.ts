@@ -3,7 +3,12 @@
 // Socioboard dev app and sanitized (__fixtures__/meta/recorded). Publishing calls follow Meta's
 // documented shapes, since recording them would post for real.
 import { fixture, type RecordedCall } from '../../testing/replay';
-import { describeLoginContract, describeNetworkContract, withReplay } from '../../testing/contract';
+import {
+  describeContractCoverage,
+  describeLoginContract,
+  describeNetworkContract,
+  withReplay,
+} from '../../testing/contract';
 import type { PublishInput, PublishMedia } from '../../types';
 import { createMetaAdapters } from '../index';
 
@@ -18,6 +23,7 @@ const tokens = {
 const meta = (fetch: typeof globalThis.fetch) =>
   createMetaAdapters({
     facebook: { appId: '1', appSecret: 's' },
+    instagram: { appId: '2', appSecret: 'ig-s' },
     fetch,
     instagramOptions: { pollIntervalMs: 0, sleep: () => Promise.resolve() },
   });
@@ -38,6 +44,27 @@ describeLoginContract(
     identity: fixture('meta', 'recorded/me'),
     assets: fixture('meta', 'recorded/me-accounts'),
     invalidToken: fixture('meta', 'recorded/error-invalid-token'),
+  },
+);
+
+describeLoginContract(
+  'Instagram Login',
+  withReplay((fetch) => {
+    const login = meta(fetch).logins.find((l) => l.id === 'instagram');
+    if (!login) throw new Error('instagram login missing');
+    return login;
+  }),
+  {
+    tokens: {
+      accessToken: 'IGAA-long',
+      refreshToken: null,
+      expiresAt: null,
+      scopes: ['instagram_business_basic', 'instagram_business_content_publish'],
+    },
+    // The login is the account: who signed in and its one asset come from the same call.
+    identity: fixture('meta', 'instagram-login-me'),
+    assets: fixture('meta', 'instagram-login-me'),
+    invalidToken: fixture('meta', 'instagram-login-error-invalid-token'),
   },
 );
 
@@ -128,4 +155,9 @@ describeNetworkContract(
       retryable: at(media, fixture('meta', 'error-server')),
     },
   },
+);
+
+describeContractCoverage(
+  'Meta',
+  meta(() => Promise.reject(new Error('no calls here'))),
 );

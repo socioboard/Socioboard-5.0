@@ -1,6 +1,11 @@
 // P3-B2: the X adapters against the provider contract, with X's documented answers
 // (__fixtures__/x, README there).
-import { describeLoginContract, describeNetworkContract, withReplay } from '../../testing/contract';
+import {
+  describeContractCoverage,
+  describeLoginContract,
+  describeNetworkContract,
+  withReplay,
+} from '../../testing/contract';
 import { fixture } from '../../testing/replay';
 import type { PublishInput } from '../../types';
 import { createXAdapters } from '../index';
@@ -59,4 +64,9 @@ describeNetworkContract(
       retryable: fixture('x', 'error-server'),
     },
   },
+);
+
+describeContractCoverage(
+  'X',
+  x(() => Promise.reject(new Error('no calls here'))),
 );

@@ -37,7 +37,7 @@ Each network is the same checklist. Build order: LinkedIn → X → YouTube → 
 
 ## Quality
 - [ ] P3-Q1 E2E per network on staging test accounts: connect → preview → publish → scheduled publish
-- [ ] P3-Q2 Contract-test coverage report: every adapter covers success, auth error, rate limit, content rejection
+- [x] P3-Q2 Contract-test coverage report: every adapter covers success, auth error, rate limit, content rejection — done 2026-10-07, as a check instead of a one-off report: network suites require the auth, rate-limit and content failures; each provider's contract test proves every adapter its factory creates has a suite; and a repo test fails for a provider folder without one. It found Instagram Login had no login suite (added). The coverage table is in [providers](../backend/modules/providers.md#testing); each phase 3 network gets the same checks as it lands
 
 ## Done when
 From one composer session, a post can be tailored and published or scheduled to every enabled network, each preview matches the real result closely, and all adapters pass contract tests. TikTok and Pinterest reviews are submitted with the finished screens.
