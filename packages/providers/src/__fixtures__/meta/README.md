@@ -19,17 +19,19 @@ To record again: run a read-only recording against a connected dev login (every 
 is refused while recording), keep the raw answers outside the repo, and sanitize them into
 `recorded/` with the same file names.
 
-| File                                | What                                                                          |
-| ----------------------------------- | ----------------------------------------------------------------------------- |
-| `oauth-exchange.json`               | code → short-lived token → long-lived token → granted permissions             |
-| `me-accounts.json`                  | the person's Pages over two result pages, one with a linked Instagram account |
-| `error-expired-token.json`          | code 190 / 463: the token expired (reconnect)                                 |
-| `error-rate-limit.json`             | code 32: Page request limit reached                                           |
-| `error-content.json`                | code 100 with a user-facing message: the post was refused                     |
-| `error-server.json`                 | HTTP 500 with code 2: temporary problem                                       |
-| `instagram-login-exchange.json`     | Instagram Login: code → short-lived token (wrapped in `data`) → 60-day token  |
-| `instagram-publish-limit.json`      | code 9 / 2207042: the account's 100 posts per 24 hours are used up            |
-| `recorded/me.json`                  | who signed in (recorded)                                                      |
-| `recorded/me-accounts.json`         | two Pages, one with a linked Instagram account (recorded)                     |
-| `recorded/permalink.json`           | a published post's permalink (recorded)                                       |
-| `recorded/error-invalid-token.json` | code 190: a token Meta can't parse (recorded)                                 |
+| File                                       | What                                                                          |
+| ------------------------------------------ | ----------------------------------------------------------------------------- |
+| `oauth-exchange.json`                      | code → short-lived token → long-lived token → granted permissions             |
+| `me-accounts.json`                         | the person's Pages over two result pages, one with a linked Instagram account |
+| `error-expired-token.json`                 | code 190 / 463: the token expired (reconnect)                                 |
+| `error-rate-limit.json`                    | code 32: Page request limit reached                                           |
+| `error-content.json`                       | code 100 with a user-facing message: the post was refused                     |
+| `error-server.json`                        | HTTP 500 with code 2: temporary problem                                       |
+| `instagram-login-exchange.json`            | Instagram Login: code → short-lived token (wrapped in `data`) → 60-day token  |
+| `instagram-login-me.json`                  | Instagram Login: who signed in (the login is the account; `user_id` a number) |
+| `instagram-login-error-invalid-token.json` | Instagram Login: code 190, a token graph.instagram.com refuses                |
+| `instagram-publish-limit.json`             | code 9 / 2207042: the account's 100 posts per 24 hours are used up            |
+| `recorded/me.json`                         | who signed in (recorded)                                                      |
+| `recorded/me-accounts.json`                | two Pages, one with a linked Instagram account (recorded)                     |
+| `recorded/permalink.json`                  | a published post's permalink (recorded)                                       |
+| `recorded/error-invalid-token.json`        | code 190: a token Meta can't parse (recorded)                                 |
