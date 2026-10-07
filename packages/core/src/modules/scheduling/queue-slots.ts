@@ -1,4 +1,9 @@
-import { QUEUE_UPCOMING, type PutQueueSlotsBody, type QueueSlots } from '@socioboard/contracts';
+import {
+  QUEUE_UPCOMING,
+  SCHEDULE_MIN_LEAD_MINUTES,
+  type PutQueueSlotsBody,
+  type QueueSlots,
+} from '@socioboard/contracts';
 
 import {
   newId,
@@ -54,8 +59,10 @@ export function createQueueSlotService(deps: QueueSlotDeps) {
         })
       ).timezone;
 
+    // From the same earliest time "Add to queue" uses, so the view never shows a slot it can't fill.
+    const earliest = new Date(clock.now().getTime() + SCHEDULE_MIN_LEAD_MINUTES * 60_000);
     const upcoming: Date[] = [];
-    for (const at of slotTimes(slots, timezone, clock.now())) {
+    for (const at of slotTimes(slots, timezone, earliest)) {
       upcoming.push(at);
       if (upcoming.length === QUEUE_UPCOMING) break;
     }
