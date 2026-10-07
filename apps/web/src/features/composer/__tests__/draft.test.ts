@@ -2,6 +2,7 @@ import type { NetworkId, Post } from '@socioboard/contracts';
 import { describe, expect, it } from 'vitest';
 
 import {
+  accountOptionsFor,
   contentFor,
   draftReducer,
   emptyDraft,
@@ -62,11 +63,17 @@ describe('draft', () => {
     expect(ig.mediaIds).toEqual(['m1', 'm2', 'm3']);
   });
 
-  it('feed is the default Instagram format: choosing it again leaves no option behind', () => {
-    const reel = run({ type: 'format', format: 'reel' });
+  it('clearing a network’s last setting leaves no option behind', () => {
+    const set = (format: 'reel' | undefined): DraftAction => ({
+      type: 'options',
+      network: 'instagram',
+      key: 'instagram',
+      values: { format },
+    });
+    const reel = run(set('reel'));
     expect(reel.overrides.instagram).toEqual({ options: { instagram: { format: 'reel' } } });
     expect(contentFor(reel, 'instagram').format).toBe('reel');
-    expect(draftReducer(reel, { type: 'format', format: 'feed' }).overrides).toEqual({});
+    expect(draftReducer(reel, set(undefined)).overrides).toEqual({});
   });
 
   it('the body gives every account its network’s override, and drops unselected networks', () => {
@@ -142,6 +149,7 @@ describe('draft', () => {
       link: '',
       firstComment: 'First!',
       overrides: { instagram: { text: 'IG', options: { instagram: { format: 'reel' } } } },
+      accountOptions: {},
       labelIds: ['l1'],
     });
     expect(toPostBody(d, networkOf).targets).toEqual([
@@ -232,9 +240,11 @@ describe('network options (P3-B9)', () => {
         id: `t${String(i)}`,
       })),
     } as unknown as Post;
-    expect(fromPost(post).overrides).toEqual({
-      pinterest: { options: { pinterest: { boardId: 'b1', title: 'Menu' } } },
-    });
+    // The board is the account's own setting; the title stays the network's.
+    const back = fromPost(post);
+    expect(back.overrides).toEqual({ pinterest: { options: { pinterest: { title: 'Menu' } } } });
+    expect(back.accountOptions).toEqual({ pin: { pinterest: { boardId: 'b1' } } });
+    expect(toPostBody(back, of).targets).toEqual(body.targets);
   });
 
   it('settings stored under another network’s key are never sent (the API would refuse them)', () => {
@@ -253,5 +263,88 @@ describe('network options (P3-B9)', () => {
       options: { pinterest: { boardId: 'b1' } },
     });
     expect(contentFor(d, 'pinterest').options).toEqual({ pinterest: { boardId: 'b1' } });
+  });
+});
+
+describe('account settings (P3-F2)', () => {
+  const NET: Record<string, NetworkId> = {
+    pin1: 'pinterest',
+    pin2: 'pinterest',
+    tt: 'tiktok',
+    fb: 'facebook_page',
+  };
+  const of = (id: string) => NET[id];
+  const own = (accountId: string, values: Record<string, unknown>): DraftAction => ({
+    type: 'accountOptions',
+    accountId,
+    key: 'pinterest',
+    values,
+  });
+
+  it('two accounts of one network each keep their own board, over the network’s title', () => {
+    const d = run(
+      { type: 'accounts', accountIds: ['pin1', 'pin2', 'fb'] },
+      { type: 'options', network: 'pinterest', key: 'pinterest', values: { title: 'Menu' } },
+      own('pin1', { boardId: 'b1' }),
+      own('pin2', { boardId: 'b2' }),
+    );
+    expect(accountOptionsFor(d, 'pin1', 'pinterest')).toEqual({ pinterest: { boardId: 'b1' } });
+    expect(toPostBody(d, of).targets).toEqual([
+      { accountId: 'pin1', override: { options: { pinterest: { title: 'Menu', boardId: 'b1' } } } },
+      { accountId: 'pin2', override: { options: { pinterest: { title: 'Menu', boardId: 'b2' } } } },
+      { accountId: 'fb', override: null },
+    ]);
+  });
+
+  it('an account’s own setting needs no network override, and clearing it leaves nothing', () => {
+    let d = run({ type: 'accounts', accountIds: ['pin1'] }, own('pin1', { boardId: 'b1' }));
+    expect(d.overrides).toEqual({});
+    expect(toPostBody(d, of).targets[0]?.override).toEqual({
+      options: { pinterest: { boardId: 'b1' } },
+    });
+    d = draftReducer(d, own('pin1', { boardId: undefined }));
+    expect(d.accountOptions).toEqual({});
+    expect(toPostBody(d, of).targets[0]?.override).toBeNull();
+  });
+
+  it('taking an account off the post drops its settings; others keep theirs', () => {
+    const d = run(
+      { type: 'accounts', accountIds: ['pin1', 'pin2'] },
+      own('pin1', { boardId: 'b1' }),
+      own('pin2', { boardId: 'b2' }),
+      { type: 'accounts', accountIds: ['pin2'] },
+    );
+    expect(d.accountOptions).toEqual({ pin2: { pinterest: { boardId: 'b2' } } });
+  });
+
+  it('a saved post gives each account back its own board and privacy', () => {
+    const target = (id: string, options: object) => ({
+      id: `t-${id}`,
+      status: 'pending',
+      account: { id, network: of(id) },
+      override: { options },
+    });
+    const post = {
+      text: '',
+      mediaIds: [],
+      link: null,
+      firstComment: null,
+      labelIds: [],
+      targets: [
+        target('pin1', { pinterest: { boardId: 'b1', title: 'Menu' } }),
+        target('pin2', { pinterest: { boardId: 'b2', title: 'Menu' } }),
+        target('tt', { tiktok: { privacy: 'followers', allowComments: false } }),
+      ],
+    } as unknown as Post;
+    const d = fromPost(post);
+    expect(d.accountOptions).toEqual({
+      pin1: { pinterest: { boardId: 'b1' } },
+      pin2: { pinterest: { boardId: 'b2' } },
+      tt: { tiktok: { privacy: 'followers' } },
+    });
+    expect(d.overrides).toEqual({
+      pinterest: { options: { pinterest: { title: 'Menu' } } },
+      tiktok: { options: { tiktok: { allowComments: false } } },
+    });
   });
 });

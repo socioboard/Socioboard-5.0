@@ -31,7 +31,7 @@ Each network is the same checklist. Build order: LinkedIn → X → YouTube → 
 
 ## Frontend
 - [ ] P3-F1 Preview components for LinkedIn, X, YouTube, Pinterest, TikTok, Snapchat, Tumblr
-- [ ] P3-F2 Network options panels (board, title, privacy, TikTok toggles, IG post type)
+- [ ] P3-F2 Network options panels (board, title, privacy, TikTok toggles, IG post type). Frame done 2026-10-07 (`apps/web/src/features/composer/options`, [composer](../frontend/areas/composer.md)): the panel registry, choices asked of each account with waiting and per-account failure, per-account settings (board, TikTok privacy) in the draft, and Instagram's format as the first panel. Left: each network's panel, built with its adapter (P3-B1…B7)
 - [ ] P3-F3 Account groups UI
 - [ ] P3-F4 Link shortener settings + "Shorten" button in composer
 

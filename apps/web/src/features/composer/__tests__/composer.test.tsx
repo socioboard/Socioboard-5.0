@@ -332,6 +332,9 @@ describe('composer', () => {
     await user.click(screen.getByRole('radio', { name: /Reel/ }));
     expect(screen.getByRole('radio', { name: /Reel/ })).toBeChecked();
     expect(editor().getByRole('tab', { name: /Instagram \(customised\)/ })).toBeInTheDocument();
+    // Feed is the default: choosing it again leaves nothing customised.
+    await user.click(screen.getByRole('radio', { name: /Feed/ }));
+    expect(editor().queryByRole('tab', { name: /customised/ })).not.toBeInTheDocument();
   });
 });
 

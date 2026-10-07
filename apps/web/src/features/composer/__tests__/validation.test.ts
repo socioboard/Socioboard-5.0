@@ -71,7 +71,7 @@ describe('quick checks', () => {
     const story = run(
       { type: 'accounts', accountIds: ['ig'] },
       { type: 'text', network: null, text: 'x'.repeat(3000) },
-      { type: 'format', format: 'story' },
+      { type: 'options', network: 'instagram', key: 'instagram', values: { format: 'story' } },
     );
     expect(clientIssues(story, ['instagram'], rulesOf).map((i) => i.code)).toEqual([
       'MEDIA_REQUIRED',
