@@ -71,7 +71,7 @@ const envSchema = z.object({
    * S3_BUCKET is set) or `nas` (a NAS behind a small upload/delete API with public reads:
    * docs/backend/modules/media.md, "NAS storage").
    */
-  STORAGE_DRIVER: z.enum(['s3', 'nas']).optional(),
+  STORAGE_DRIVER: optional.pipe(z.enum(['s3', 'nas']).optional()),
   /** NAS upload and delete endpoint, including its bucket, e.g. http://host:8119/socioboard-dev */
   NAS_API_URL: optional.pipe(z.url({ protocol: /^https?$/ }).optional()),
   /** Where the NAS serves files (public, no expiry): <NAS_PUBLIC_URL><path it returned>. */
