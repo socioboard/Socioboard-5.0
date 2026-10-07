@@ -1,5 +1,6 @@
 // Public surface of the social-accounts module (docs/backend/modules/social-accounts.md).
 export type { SocialAccountEvents } from './events';
+export { createAccountGroupService, type AccountGroupService } from './groups';
 export { accountHealthQueue, tokenRefreshQueue } from './jobs';
 export { createNetworkRegistry } from './registry';
 export { createOAuthCallbackRouter, registerSocialAccountRoutes } from './routes';

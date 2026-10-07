@@ -25,7 +25,6 @@ import {
   Textarea,
   useChangeMotion,
   toast,
-  type PickerAccount,
 } from '@socioboard/ui';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
@@ -39,7 +38,13 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { useWorkspaceTime } from '../../../lib/use-workspace-time';
 import { WorkspaceTime } from '../../../lib/workspace-time';
-import { accountsQuery, networksQuery, queueSlotsQuery } from '../../accounts';
+import {
+  accountGroupsQuery,
+  accountsQuery,
+  networksQuery,
+  queueSlotsQuery,
+  toPickerAccount,
+} from '../../accounts';
 import { workspaceQuery } from '../../settings';
 import { LabelPicker, postQuery, useRepeatWording } from '../../posts';
 import {
@@ -60,6 +65,7 @@ import { useIssueWording } from '../issue-wording';
 import { scheduledAt } from '../schedule';
 import { OptionsSection } from '../options/panels';
 import { ComposerFooter, type ComposerMode } from './composer-footer';
+import { GroupChips } from './group-chips';
 import { IssuesPanel } from './issues-panel';
 import { NetworkTabs } from './network-tabs';
 import { PreviewPanel } from './preview-panel';
@@ -216,6 +222,7 @@ function Composer({
   const { me, workspace } = useWorkspace();
   const can = useCan();
   const time = useWorkspaceTime();
+  const groups = useQuery(accountGroupsQuery(workspace.id));
   const describeRepeat = useRepeatWording();
   // A proposed time from the calendar, unless it has passed (an old link, a tab left open).
   const [preferredAt] = useState(() =>
@@ -464,15 +471,7 @@ function Composer({
         : i.network !== null && !contentFor(draft, i.network).textOverridden),
   );
 
-  const pickerAccounts: PickerAccount[] = accounts.map((a) => ({
-    id: a.id,
-    name: a.displayName,
-    username: a.username,
-    avatarUrl: a.avatarUrl,
-    network: a.network,
-    status: a.status,
-    loginName: a.connection?.displayName ?? null,
-  }));
+  const pickerAccounts = accounts.map(toPickerAccount);
 
   return (
     <>
@@ -564,7 +563,17 @@ function Composer({
                 )}
               </p>
             ) : (
-              <div data-field="account">
+              <div data-field="account" className="flex flex-col gap-3">
+                {!readOnly && (
+                  <GroupChips
+                    groups={groups.data ?? []}
+                    accounts={accounts}
+                    value={draft.accountIds}
+                    onChange={(accountIds) => {
+                      dispatch({ type: 'accounts', accountIds });
+                    }}
+                  />
+                )}
                 <AccountPicker
                   accounts={pickerAccounts}
                   value={draft.accountIds}

@@ -132,6 +132,24 @@ export const AUDITED: Mapping = {
     entity: { type: 'social_account', id: p.accountId },
     diff: { network: p.network, cancelledTargets: p.cancelledTargetIds.length },
   }),
+  'account_group.created': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'account_group', id: p.groupId },
+    diff: { name: p.name, accounts: p.accounts },
+  }),
+  'account_group.updated': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'account_group', id: p.groupId },
+    diff: { name: p.name, accounts: p.accounts },
+  }),
+  'account_group.deleted': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'account_group', id: p.groupId },
+    diff: { name: p.name },
+  }),
   'post.created': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),

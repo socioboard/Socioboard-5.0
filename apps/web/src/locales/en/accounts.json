@@ -149,5 +149,50 @@
     "removeConfirm": "Remove login",
     "removed": "{{name}}’s login removed.",
     "notFound": "This login was removed."
+  },
+  "tabs": {
+    "label": "Accounts views",
+    "accounts": "Accounts",
+    "groups": "Groups"
+  },
+  "groups": {
+    "title": "Account groups",
+    "intro": "Save accounts you often post to together, like one brand’s channels. In the composer, picking a group selects its accounts in one click.",
+    "new": "New group",
+    "loadError": "Your groups didn’t load.",
+    "empty": {
+      "title": "No groups yet",
+      "body": "Make a group for accounts you post to together, like one brand’s channels.",
+      "readOnlyBody": "An admin of this workspace makes groups. Once they do, you can pick them in the composer."
+    },
+    "cantPost_one": "{{count}} can’t post right now",
+    "cantPost_other": "{{count}} can’t post right now",
+    "more": "+{{count}}",
+    "members": "Accounts in {{name}}",
+    "edit": "Edit {{name}}",
+    "delete": {
+      "label": "Delete {{name}}",
+      "title": "Delete “{{name}}”?",
+      "body": "The group goes away. Its accounts, and posts already made to them, stay as they are.",
+      "confirm": "Delete group",
+      "done": "Deleted “{{name}}”"
+    },
+    "form": {
+      "newTitle": "New group",
+      "editTitle": "Edit group",
+      "description": "A name, and the accounts you post to together.",
+      "name": "Name",
+      "namePlaceholder": "e.g. Brand A: all channels",
+      "nameRequired": "Give the group a name.",
+      "exists": "There’s already a group called “{{name}}”.",
+      "accounts_one": "Accounts ({{count}} chosen)",
+      "accounts_other": "Accounts ({{count}} chosen)",
+      "accountsLabel": "Accounts in this group",
+      "accountsRequired": "Pick at least one account.",
+      "create": "Create group",
+      "save": "Save changes",
+      "created": "Created “{{name}}”",
+      "updated": "Saved “{{name}}”"
+    }
   }
 }

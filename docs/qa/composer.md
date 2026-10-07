@@ -7,6 +7,7 @@ The most important screen: write once, tailor per network, see how it will look,
 ## Choosing accounts
 - [ ] **COMP-01** New post → "Post to" shows every account by network; click one to choose it (a tick), again to unchoose.
 - [ ] **COMP-02** An account that's paused or needs reconnecting is shown but can't be chosen; hovering says why.
+- [ ] **COMP-04** With account groups saved: they show as chips above the accounts. A chip chooses the group's accounts that can post (its count says how many); once all of them are chosen it shows a tick, and clicking it again unchooses them. A group none of whose accounts can post can't be clicked; hovering says why.
 - [ ] **COMP-03** No accounts connected → a line pointing to the Accounts page (for admins), and only Save draft.
 
 ## Writing

@@ -35,7 +35,11 @@ import {
 } from './modules/notifications';
 import { registerPostRoutes } from './modules/posts';
 import { registerSchedulingRoutes } from './modules/scheduling';
-import { createOAuthCallbackRouter, registerSocialAccountRoutes } from './modules/social-accounts';
+import {
+  createAccountGroupService,
+  createOAuthCallbackRouter,
+  registerSocialAccountRoutes,
+} from './modules/social-accounts';
 import {
   createMembershipLookup,
   createWorkspaceService,
@@ -159,7 +163,11 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   const publishing = createPublishingServices(platform, { registry: options.registry });
   const { socialAccounts, posts, scheduling, queueSlots, calendar, recurrence, mediaUrls } =
     publishing;
-  registerSocialAccountRoutes(api, socialAccounts);
+  registerSocialAccountRoutes(
+    api,
+    socialAccounts,
+    createAccountGroupService({ db: platform.db, events: platform.events }),
+  );
   registerPostRoutes(api, posts);
   registerSchedulingRoutes(api, scheduling, queueSlots, recurrence, calendar);
   registerNotificationRoutes(api, notifications);

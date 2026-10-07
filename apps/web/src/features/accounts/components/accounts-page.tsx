@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   EmptyState,
+  NavTabs,
   NetworkIcon,
   networkName,
   PageHeader,
@@ -35,6 +36,7 @@ import {
 import { connectErrorText } from '../errors';
 import { AccountDrawer } from './account-drawer';
 import { ConnectDialog } from './connect-dialog';
+import { GroupsTab } from './groups-tab';
 import { LoginDrawer } from './login-drawer';
 
 export interface AccountsSearch {
@@ -44,6 +46,8 @@ export interface AccountsSearch {
   login?: string | undefined;
   /** A connect that failed before it knew the workspace (from `/?connectError=`). */
   connectError?: string | undefined;
+  /** The Groups tab (P3-F3); the accounts list when absent. */
+  tab?: 'groups' | undefined;
 }
 
 /** `/w/:slug/accounts`: connected accounts by network, then by the login they come through. */
@@ -148,6 +152,20 @@ export function AccountsPage({
           )
         }
       />
+      <NavTabs aria-label={t('tabs.label')}>
+        {([undefined, 'groups'] as const).map((tab) => (
+          <Link
+            key={tab ?? 'accounts'}
+            to="/w/$slug/accounts"
+            params={{ slug: workspace.slug }}
+            search={{ tab }}
+            // "Accounts" (no ?tab) must not light up on the Groups tab.
+            activeOptions={{ includeSearch: true, explicitUndefined: true }}
+          >
+            {t(tab ? 'tabs.groups' : 'tabs.accounts')}
+          </Link>
+        ))}
+      </NavTabs>
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="stagger-children mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-5 sm:px-6">
           {search.connectError && (
@@ -162,7 +180,11 @@ export function AccountsPage({
               {connectErrorText(search.connectError)}
             </Banner>
           )}
-          {body}
+          {search.tab === 'groups' ? (
+            <GroupsTab accounts={accounts.data ?? []} canManage={canManage} />
+          ) : (
+            body
+          )}
         </div>
       </div>
       {canConnect && (

@@ -37,5 +37,14 @@ Networks available now: **Facebook Pages, Instagram, X**. The others arrive in p
 - [ ] **ACC-35** **Save posting times** → the Queue page, the composer's "Add to queue" and the calendar's free slots all show them.
 - [ ] **ACC-36** As editor or below: no Posting times button.
 
+## Account groups
+- [ ] **ACC-40** Accounts → **Groups** tab: a line on what groups are for; none yet → an empty state with **New group** (admins only).
+- [ ] **ACC-41** **New group** → name and accounts → **Create group** → its card: name, how many accounts, their pictures with each network's mark. Leaving out the name or the accounts says what's missing and sends nothing.
+- [ ] **ACC-42** A name another group already has (any capitals) → "There's already a group called …" on the name field.
+- [ ] **ACC-43** The pencil → the same dialog with the group as saved → change the name and accounts → **Save changes** → the card shows both.
+- [ ] **ACC-44** The bin → "Delete “<name>”?" says its accounts and posts stay → **Delete group** → the card is gone; the accounts are still on the Accounts tab.
+- [ ] **ACC-45** A group with an account that needs reconnecting or is paused: its card says how many can't post right now.
+- [ ] **ACC-46** As editor, contributor or viewer: the groups are listed, with no New group, pencil or bin.
+
 ## Not built yet
-LinkedIn, YouTube, Pinterest, TikTok, Snapchat, Tumblr (phase 3, one at a time), account groups and the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).
+LinkedIn, YouTube, Pinterest, TikTok, Snapchat, Tumblr (phase 3, one at a time), the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).
