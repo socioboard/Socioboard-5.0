@@ -121,7 +121,8 @@
     "threads": {
       "more": "More",
       "reply": "Reply"
-    }
+    },
+    "play": "Play {{name}}"
   },
   "view": {
     "label": "Show",
