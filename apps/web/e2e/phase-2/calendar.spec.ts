@@ -149,6 +149,8 @@ async function calendarServer(page: Page, role = 'owner') {
       }
       body = queue;
     } else if (path === `${BASE}/posts`) body = { items: [post], nextCursor: null };
+    // The sidebar counts posts waiting for review (P4-F2): none here.
+    else if (path === `${BASE}/reviews`) body = { items: [], nextCursor: null };
     else if (path === `${BASE}/calendar`)
       body = {
         items: entries.filter(
