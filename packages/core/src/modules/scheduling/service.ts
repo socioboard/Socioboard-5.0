@@ -151,7 +151,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
     if (live.some((t) => !WAITING_TARGET.includes(t.status))) throw alreadySent();
     await posts.assertNotTemplate(workspaceId, postId);
-    await posts.assertNoReviewRequired(workspaceId);
+    await posts.assertReviewed(workspaceId, postId);
     await posts.checkPublishable(
       member,
       postId,

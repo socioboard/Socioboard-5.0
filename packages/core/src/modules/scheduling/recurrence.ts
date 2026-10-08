@@ -90,7 +90,7 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
     if (live.some((t) => t.status !== 'pending')) {
       throw conflict('POST_ALREADY_SENT', 'This post was already sent; duplicate it to repeat it');
     }
-    await posts.assertNoReviewRequired(workspaceId);
+    await posts.assertReviewed(workspaceId, postId);
     await posts.checkPublishable(
       member,
       postId,
