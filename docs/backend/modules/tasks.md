@@ -8,7 +8,7 @@ Simple work assignments inside a workspace, usually tied to a post ("write copy 
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Task` | id, workspaceId, title, description, postId?, assigneeId? (a user), createdById?, dueAt?, status (open/in_progress/done), completedAt?, reminderSentAt? | Deleting the post clears `postId`; `reminderSentAt` makes the due reminder go out once |
+| `Task` | id, workspaceId, title, description, postId?, assigneeId? (a user), createdById?, dueAt?, status (open/in_progress/done), completedAt?, reminderSentAt? | `postId` has no foreign key (a deleted post shows as gone); `reminderSentAt` makes the due reminder go out once |
 
 ## API
 | Method | Path | Permission | Description |

@@ -278,7 +278,7 @@ model MediaAsset {
   workspace  Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   folder     MediaFolder? @relation(fields: [folderId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
   uploadedBy User?        @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
-  aiJob      AiJob?       @relation(fields: [aiJobId], references: [id], onDelete: SetNull)
+  aiJob      AiJob?       @relation(fields: [aiJobId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
 
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([workspaceId, folderId])
@@ -516,7 +516,6 @@ model Post {
   recurringRule RecurringRule?
   reviewSteps   PostApproval[]
   comments      PostComment[]
-  tasks         Task[]
 
   @@unique([id, workspaceId])
   /// Each occurrence is created once, however often the expansion job runs.
@@ -768,6 +767,7 @@ model StoredObject {
 
 /// The accounts a member with accountsLimited can use (docs/backend/modules/workspaces.md).
 model MemberAccountAccess {
+  id              String   @id @default(uuid(7)) @db.Uuid
   workspaceId     String   @db.Uuid
   memberId        String   @db.Uuid
   socialAccountId String   @db.Uuid
@@ -777,7 +777,7 @@ model MemberAccountAccess {
   member    Member        @relation(fields: [memberId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
   account   SocialAccount @relation(fields: [socialAccountId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
 
-  @@id([memberId, socialAccountId])
+  @@unique([memberId, socialAccountId])
   @@index([socialAccountId])
 }
 
@@ -823,7 +823,7 @@ model PostComment {
 
   workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   post      Post          @relation(fields: [postId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
-  parent    PostComment?  @relation("Replies", fields: [parentId], references: [id], onDelete: Cascade)
+  parent    PostComment?  @relation("Replies", fields: [parentId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
   replies   PostComment[] @relation("Replies")
   author    User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
@@ -844,8 +844,9 @@ model Task {
   workspaceId    String     @db.Uuid
   title          String
   description    String     @default("")
-  /// The post it is about. A plain key (post ids are unique) so deleting the post can clear it;
-  /// the service checks the post is in the same workspace.
+  /// The post it is about. No foreign key, like Post.recurringRuleId: a composite key couldn't
+  /// clear this one column when the post is deleted (it would null workspaceId too). The service
+  /// checks the post is in the same workspace and shows a deleted post as gone.
   postId         String?    @db.Uuid
   assigneeId     String?    @db.Uuid
   createdById    String?    @db.Uuid
@@ -858,7 +859,6 @@ model Task {
   updatedAt      DateTime   @updatedAt
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
   assignee  User?     @relation("TasksAssigned", fields: [assigneeId], references: [id], onDelete: SetNull)
   createdBy User?     @relation("TasksCreated", fields: [createdById], references: [id], onDelete: SetNull)
 
@@ -913,7 +913,7 @@ model AiJob {
 
   workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  refines   AiJob?       @relation("Refinements", fields: [refinesJobId], references: [id], onDelete: SetNull)
+  refines   AiJob?       @relation("Refinements", fields: [refinesJobId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
   refinedBy AiJob[]      @relation("Refinements")
   assets    MediaAsset[]
 
