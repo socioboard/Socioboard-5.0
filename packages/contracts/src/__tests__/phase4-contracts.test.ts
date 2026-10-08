@@ -14,6 +14,7 @@ describe('AI result update', () => {
       status: 'succeeded',
       outputs: [
         {
+          option: 0,
           type: 'image',
           key: 'ai_7Qm2cKp9',
           mime: 'image/png',
@@ -92,8 +93,18 @@ describe('AI image input', () => {
     expect(AiImageInput.safeParse({ prompt: 'x', referenceAssetIds: six }).success).toBe(false);
   });
 
-  it('makes images only, for now', () => {
+  it('makes images and captions; video comes later', () => {
     expect(CreateAiJobBody.safeParse({ type: 'image', input: { prompt: 'x' } }).success).toBe(true);
-    expect(CreateAiJobBody.safeParse({ type: 'text', input: { prompt: 'x' } }).success).toBe(false);
+    const caption = CreateAiJobBody.safeParse({
+      type: 'text',
+      input: { prompt: 'Caption this', count: 3, referenceAssetIds: [reference] },
+    });
+    expect(caption.success).toBe(true);
+    expect(CreateAiJobBody.safeParse({ type: 'video', input: { prompt: 'x' } }).success).toBe(
+      false,
+    );
+    expect(
+      CreateAiJobBody.safeParse({ type: 'text', input: { prompt: 'x', count: 5 } }).success,
+    ).toBe(false);
   });
 });

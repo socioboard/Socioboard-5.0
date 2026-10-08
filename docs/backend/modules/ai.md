@@ -3,9 +3,9 @@
 **Phase:** 4 (built against a mock first, then the Python team's real API) · **Path:** `packages/core/src/modules/ai` · **Depends on:** media, billing (credits, optional), notifications, platform (queue, realtime, storage)
 
 ## Purpose
-The only code that talks to the Python AI service (the `AiGateway`). People generate images from a prompt and a few fixed settings, each with a ready-to-post caption; images land in the media library, the caption goes to the composer.
+The only code that talks to the Python AI service (the `AiGateway`). People generate images from a prompt and a few fixed settings, each with a ready-to-post caption, or a caption for a photo they have; images land in the media library, captions go to the composer.
 
-**Launch scope (agreed with the AI team, 2026-10-08):** images only, each with its caption. Text on its own (a caption for a photo someone already has) and video come later: they stay job types, without inputs until the AI service supports them (asked of the AI team: when text-only can follow).
+**Launch scope (agreed with the AI team, 2026-10-08):** images, each with a ready-to-post caption, and captions on their own (for a photo the person already has: a `text` job with the photo as a reference image, no upload step). Video comes later; it stays a job type without inputs until then.
 
 Decided with the AI team on 2026-10-08: **no templates** (fixed forms per type, owned by us), the AI service exposes **two endpoints** and we expose **two**:
 
@@ -28,12 +28,13 @@ An upload slot is a `MediaAsset` in `uploading` status with `source: ai` and `ai
 ## Inputs (fixed per type, in `packages/contracts/src/ai.ts`)
 | Type | Fields |
 | --- | --- |
-| image | prompt (1–2,000 characters); post type (`post`, `carousel`, `quote`, `story`, `thumbnail`, `banner`; default `post`); aspect ratio (1:1, 4:5, 9:16, 16:9; optional, else the AI service picks it from the networks and post type); count (1–4, default 1); up to 5 reference images from the library |
-| text, video | Later, when the AI service supports them |
+| image | prompt (1–2,000 characters); post type (`post`, `carousel`, `quote`, `story`, `thumbnail`, `banner`; default `post`); aspect ratio (1:1, 4:5, 9:16, 16:9; optional, else the AI service picks it from the networks and post type); count (1–4 options, default 1); up to 5 reference images from the library |
+| text | prompt; count (1–4 options); the photos the caption is for (up to 5, from the library) |
+| video | Later, when the AI service supports it |
 
-Being confirmed with the AI team: the post type values (`story` is our addition), and `count`, which their API has no field for yet.
+`count` is the number of complete options: each is a set of images with its caption. Each output file says which `option` it belongs to (0 to count-1; a carousel option's files are its slides), and `text` and `copies` have one entry per option. Still being confirmed: whether a caption can come from the prompt alone, with no photo.
 
-Every job also carries its target networks' `ContentRules` (character limit, hashtags, sizes, ratios), so outputs fit where they'll be posted. The AI service keeps its own table of limits as a fallback; ours decide whether a post can publish, so we asked it to fit to ours when present.
+Every job also carries its target networks' `ContentRules` (character limit, hashtags, sizes, ratios), so outputs fit where they'll be posted. The AI service fits to our `rules` when present (agreed), with its own table as the fallback: ours decide whether a post can publish.
 
 ## API (for the web app)
 | Method | Path | Permission | Description |
@@ -56,9 +57,9 @@ Every job also carries its target networks' `ContentRules` (character limit, has
                result: "<APP_URL>/api/v1/ai/callbacks/result" } }
 ```
 
-Their network names: `facebook` (our `facebook_page`), `linkedin` (`linkedin_person` and `linkedin_org`), `instagram`, `x`, `youtube`, `pinterest`; asked to add `threads`, `tiktok` and `tumblr`. Their errors carry `code`, `label` (shown to people), `message` (logged) and `retryable`: 400/422 `invalid_input` or `unsupported` (show the label), 401 (alert operators), 409, 429 with `Retry-After`, 5xx (retry with the same key). They only call allowlisted callback hosts (asked to make the list a setting, for self-hosters).
+Their network names: `facebook` (our `facebook_page`), `linkedin` (`linkedin_person` and `linkedin_org`), `instagram`, `x`, `youtube`, `pinterest`, and (being added) `threads`, `tiktok`, `tumblr`. Their errors carry `code`, `label` (shown to people), `message` (logged) and `retryable`: 400/422 `invalid_input` or `unsupported` (show the label), 401 (alert operators), 409, 429 with `Retry-After`, 5xx (retry with the same key). They only call allowlisted callback hosts: `CALLBACK_ALLOWED_HOSTS` in the AI service, defaulting to `app-dev.socioboard.ai` and `app.socioboard.com`; self-hosters set their own.
 
-The final result carries `outputs` (the files by key; for a carousel, the slides in order), `text` (each caption ready to post, with hashtags and call to action joined) and `copies` (the same in parts: `caption`, `hashtags` without `#`, `cta`), and `usage`. A job they cancel or that fails arrives as `failed`; a retry from our side is a new job with a new reference.
+A `text` job sends `type: "text"`, its prompt, targets, count and the photos in `referenceImageUrls`; it has no upload step, and its result has no `outputs`. The final result carries `outputs` (the files by key, each with its `option`; for a carousel, the slides in order), `text` (each caption ready to post, with hashtags and call to action joined) and `copies` (the same in parts: `caption`, `hashtags` without `#`, `cta`), and `usage`. A job they cancel or that fails arrives as `failed`; a retry from our side is a new job with a new reference.
 
 ## Flow
 1. Validate the input against the type's fixed schema; `checkCredits(estimate)` when billing is on (our own estimate per type, count and duration).

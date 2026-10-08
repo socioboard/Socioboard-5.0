@@ -93,7 +93,8 @@ paths:
                   jobId: job_83af
                   status: succeeded
                   outputs:
-                    - type: image
+                    - option: 0
+                      type: image
                       key: ai_7Qm2cKp9
                       mime: image/png
                       width: 1080
@@ -193,9 +194,10 @@ components:
         `usage` (zero when nothing was spent).
     Output:
       type: object
-      required: [type, key, mime, width, height, durationSec, sizeBytes]
+      required: [option, type, key, mime, width, height, durationSec, sizeBytes]
       additionalProperties: false
       properties:
+        option: { type: integer, minimum: 0, maximum: 3, description: 'Which option the file belongs to, 0 to count-1; a carousel option''s files are its slides.' }
         type: { type: string, enum: [image, gif, video] }
         key: { type: string, description: From the upload slot this file was PUT to. }
         mime: { type: string }
