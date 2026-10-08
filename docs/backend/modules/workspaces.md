@@ -40,9 +40,9 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 ## Services
 - `createWorkspace`, `updateWorkspace`, `deleteWorkspace`
 - `inviteMember` → email via notifications; `acceptInvitation`
-- `changeRole`, `removeMember`, `setAccountAccess`
-- `getMembership(userId, workspaceId)`: used by the `workspace` middleware
-- `canAccessAccount(member, socialAccountId)`: used by posts, scheduling, analytics
+- `changeRole`, `removeMember`, `getAccountAccess`, `setAccountAccess`
+- `createMembershipLookup`: the membership the route middleware puts on each request, with the member's `accountIds` (null = all)
+- `canUseAccount(member, accountId)` and `onlyMemberAccounts(member, key)` (platform): used by social accounts, posts and scheduling
 
 ## How it's built
 - Better Auth's organization plugin creates the workspace (with its owner membership) and switches the active workspace. Everything else (members, invitations, roles, ownership) is this module's own service, so permission checks, errors, emails and events have one path; Better Auth's organization HTTP endpoints are closed.
@@ -57,6 +57,7 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 - Admins can't change the owner's role or promote anyone to owner.
 - Member count respects `checkLimit('members')` when billing is on.
 - Deleting a workspace cancels all scheduled jobs and revokes stored social tokens.
+- **Account access (P4-B4):** a member limited to some accounts sees and posts to only those. Accounts and their details, account groups (only their accounts; groups with none are hidden), posts (only posts whose every account is theirs), creating, editing, validating, publishing, scheduling, queueing, repeating and moving posts, the calendar and queue slots all apply it; anything outside it answers 404 like another workspace's (`ACCOUNT_NOT_FOUND`, `POST_NOT_FOUND`). Owners and admins always have every account and can't be limited (422 `ROLE_HAS_ALL_ACCOUNTS`); a limited member promoted to admin gets every account, and the limit applies again if they go back. Accounts connected later aren't added to a limit. Read on every request, so a change applies at once. Audited as `member.account_access_changed`.
 - Role changes, removals and ownership transfers re-check roles inside the write, so two admins acting at once can't leave a workspace without an owner or with two.
 - Error codes: `SLUG_TAKEN`, `EMAIL_NOT_VERIFIED`, `CONFIRMATION_MISMATCH`, `OWNER_ONLY`, `TARGET_NOT_ADMIN`, `CANNOT_CHANGE_OWNER`, `OWNER_CANNOT_LEAVE`, `MEMBER_NOT_FOUND`, `ALREADY_MEMBER`, `ALREADY_INVITED`, `INVITATION_NOT_FOUND`, `INVITATION_EXPIRED` / `_REVOKED` / `_DECLINED` / `_ACCEPTED`, `LOGO_NOT_UPLOADED`, `STORAGE_NOT_CONFIGURED`.
 - Emits `workspace.created`, `workspace.updated`, `workspace.deleted`, `workspace.ownership_transferred`, `member.invited`, `member.joined`, `member.role_changed`, `member.removed`, `invitation.revoked`, `invitation.declined`.

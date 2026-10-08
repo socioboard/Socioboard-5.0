@@ -6,6 +6,7 @@ import {
 } from '@socioboard/contracts';
 
 import {
+  canUseAccount,
   newId,
   notFound,
   typedEvents,
@@ -32,8 +33,10 @@ export function createQueueSlotService(deps: QueueSlotDeps) {
   const { db, clock, entries } = deps;
   const events = typedEvents<SchedulingEvents>(deps.events);
 
-  async function findAccount(workspaceId: string, accountId: string) {
-    const account = await db.forWorkspace(workspaceId).socialAccount.findUnique({
+  async function findAccount(member: MemberContext, accountId: string) {
+    // An account the member may not use is the same 404 as a foreign one (P4-B4).
+    if (!canUseAccount(member, accountId)) throw notFound('ACCOUNT_NOT_FOUND', 'Account not found');
+    const account = await db.forWorkspace(member.workspaceId).socialAccount.findUnique({
       where: { id: accountId },
       select: { id: true, status: true },
     });
@@ -44,7 +47,7 @@ export function createQueueSlotService(deps: QueueSlotDeps) {
   /** The slots (by weekday, then time), and the next 14 slot times with what's in each. */
   async function get(member: MemberContext, accountId: string): Promise<QueueSlots> {
     const { workspaceId } = member;
-    await findAccount(workspaceId, accountId);
+    await findAccount(member, accountId);
     const ws = db.forWorkspace(workspaceId);
     const slots = await ws.queueSlot.findMany({
       where: { socialAccountId: accountId },
@@ -71,6 +74,16 @@ export function createQueueSlotService(deps: QueueSlotDeps) {
           socialAccountId: accountId,
           status: { not: 'cancelled' },
           scheduledAt: { in: upcoming },
+          // Shared with other accounts the member may not use: not theirs to see (P4-B4).
+          ...(member.accountIds === null
+            ? {}
+            : {
+                post: {
+                  NOT: {
+                    targets: { some: { socialAccountId: { notIn: [...member.accountIds] } } },
+                  },
+                },
+              }),
         })
       : [];
     return {
@@ -91,7 +104,7 @@ export function createQueueSlotService(deps: QueueSlotDeps) {
     body: PutQueueSlotsBody,
   ): Promise<QueueSlots> {
     const { workspaceId } = member;
-    const account = await findAccount(workspaceId, accountId);
+    const account = await findAccount(member, accountId);
     if (account.status === 'disconnected') {
       throw unprocessable(
         'ACCOUNT_NOT_AVAILABLE',

@@ -70,6 +70,7 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
     rule: RecurrenceRule,
   ): Promise<Recurrence> {
     const { workspaceId } = member;
+    await posts.assertVisible(member, postId);
     const post = await scoped(workspaceId).post.findUnique({
       where: { id: postId },
       select: { recurringRuleId: true, targets: { select: { id: true, status: true } } },
@@ -135,6 +136,7 @@ export function createRecurrenceService(deps: RecurrenceDeps) {
   /** Stops repeating: waiting copies go, sent ones stay; the template becomes a plain draft. */
   async function stop(caller: AuthContext, member: MemberContext, postId: string) {
     const { workspaceId } = member;
+    await posts.assertVisible(member, postId);
     const rule = await scoped(workspaceId).recurringRule.findFirst({
       where: { postId, active: true },
       select: { id: true },

@@ -106,7 +106,9 @@ function buildApp({ limit = 1000 } = {}) {
   const api = createApiRouter({
     lookupMembership: (userId, workspaceId): Promise<MemberContext | null> => {
       const role = users[userId]?.[workspaceId];
-      return Promise.resolve(role ? { workspaceId, memberId: `m-${userId}`, role } : null);
+      return Promise.resolve(
+        role ? { workspaceId, memberId: `m-${userId}`, role, accountIds: null } : null,
+      );
     },
   });
   api.route(routes.health, ({ auth: who }) => ({ ok: true, signedIn: who !== null }));

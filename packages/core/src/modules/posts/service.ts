@@ -26,11 +26,13 @@ import type { z } from 'zod';
 import {
   afterCursor,
   AppError,
+  canUseAccount,
   createUrlSigner,
   decodeCursor,
   forbidden,
   newId,
   notFound,
+  onlyMemberAccounts,
   toPage,
   typedEvents,
   unprocessable,
@@ -196,6 +198,18 @@ export function createPostService(deps: PostServiceDeps) {
     return post;
   }
 
+  /**
+   * A post the member may see: one whose every account is theirs (P4-B4). Any other is the same
+   * 404 as a post in another workspace, so a limited member can't learn what it holds.
+   */
+  async function findMemberPost(member: MemberContext, postId: string) {
+    const found = await findPost(member.workspaceId, postId);
+    if (!found.targets.every((t) => canUseAccount(member, t.socialAccountId))) {
+      throw notFound('POST_NOT_FOUND', 'Post not found');
+    }
+    return found;
+  }
+
   /** The author may edit their post; `posts:approve` roles may edit anyone's. */
   function assertCanEdit(caller: AuthContext, member: MemberContext, post: PostRow) {
     if (post.authorId !== caller.user.id && !can(member.role, 'posts:approve')) {
@@ -211,18 +225,21 @@ export function createPostService(deps: PostServiceDeps) {
   ];
 
   /**
-   * References must point inside the workspace: accounts that aren't disconnected (unless the
-   * post already targets them), media not deleted, and options only for the account's network.
+   * References must point inside the workspace: accounts the member may use that aren't
+   * disconnected (unless the post already targets them), media not deleted, and options only for
+   * the account's network.
    */
   async function checkReferences(
-    workspaceId: string,
+    member: MemberContext,
     content: { mediaIds?: string[] | undefined },
     targets: TargetInput[],
     alreadyTargeted = new Set<string>(),
   ) {
-    const ws = scoped(workspaceId);
+    const ws = scoped(member.workspaceId);
     const accounts = await ws.socialAccount.findMany({
-      where: { id: { in: targets.map((t) => t.accountId) } },
+      where: {
+        AND: [{ id: { in: targets.map((t) => t.accountId) } }, onlyMemberAccounts(member, 'id')],
+      },
       select: { id: true, network: true, status: true },
     });
     const byId = new Map(accounts.map((a) => [a.id, a]));
@@ -344,7 +361,12 @@ export function createPostService(deps: PostServiceDeps) {
   ): Promise<ValidatePostResponse> {
     const ws = scoped(member.workspaceId);
     const accounts = await ws.socialAccount.findMany({
-      where: { id: { in: body.targets.map((t) => t.accountId) } },
+      where: {
+        AND: [
+          { id: { in: body.targets.map((t) => t.accountId) } },
+          onlyMemberAccounts(member, 'id'),
+        ],
+      },
       select: { id: true, network: true, status: true },
     });
     const unknown = body.targets.filter((t) => !accounts.some((a) => a.id === t.accountId));
@@ -474,7 +496,7 @@ export function createPostService(deps: PostServiceDeps) {
     member: MemberContext,
     body: Body<typeof CreatePostBody>,
   ) {
-    await checkReferences(member.workspaceId, body, body.targets);
+    await checkReferences(member, body, body.targets);
     const id = newId();
     await db.client.$transaction(async (tx) => {
       await lockLabels(tx, member.workspaceId, body.labelIds);
@@ -515,7 +537,7 @@ export function createPostService(deps: PostServiceDeps) {
     postId: string,
     body: Body<typeof UpdatePostBody>,
   ) {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     assertCanEdit(caller, member, post);
     // Labels organise the posts list, so they stay editable after publishing; content doesn't.
     const labelsOnly = Object.keys(body).every((k) => k === 'labelIds');
@@ -525,7 +547,7 @@ export function createPostService(deps: PostServiceDeps) {
     }
     const targets = body.targets;
     await checkReferences(
-      member.workspaceId,
+      member,
       { mediaIds: body.mediaIds },
       targets ?? [],
       new Set(post.targets.map((t) => t.socialAccountId)),
@@ -615,7 +637,7 @@ export function createPostService(deps: PostServiceDeps) {
   }
 
   async function remove(caller: AuthContext, member: MemberContext, postId: string) {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     assertCanEdit(caller, member, post);
     if (post.targets.some((t) => LOCKED_TARGET.includes(t.status))) throw notDeletable();
     // A template's rule goes with it (cascade); its id lets scheduling remove the waiting copies.
@@ -637,7 +659,7 @@ export function createPostService(deps: PostServiceDeps) {
   }
 
   async function duplicate(caller: AuthContext, member: MemberContext, postId: string) {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     // Accounts that were disconnected since are left out of the copy.
     const targets = post.targets
       .filter((t) => t.account.status !== 'disconnected')
@@ -675,6 +697,10 @@ export function createPostService(deps: PostServiceDeps) {
     const where: Prisma.PostWhereInput = {
       ...(query.status ? { status: { in: query.status } } : {}),
       ...(query.accountId ? { targets: { some: { socialAccountId: query.accountId } } } : {}),
+      // A member limited to some accounts sees the posts that go only to those (P4-B4).
+      ...(member.accountIds === null
+        ? {}
+        : { NOT: { targets: { some: { socialAccountId: { notIn: [...member.accountIds] } } } } }),
       ...(query.authorId ? { authorId: query.authorId } : {}),
       ...(query.labelId ? { labelIds: { has: query.labelId } } : {}),
       ...(range
@@ -703,7 +729,7 @@ export function createPostService(deps: PostServiceDeps) {
   }
 
   async function get(member: MemberContext, postId: string): Promise<PostDetails> {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     const attempts = await scoped(member.workspaceId).publishAttempt.findMany({
       where: { postTargetId: { in: post.targets.map((t) => t.id) } },
       orderBy: { attemptNo: 'desc' },
@@ -813,7 +839,7 @@ export function createPostService(deps: PostServiceDeps) {
     // Claimed atomically: of requests with the same key, only the first one publishes; the
     // others (a retry, or a double submit arriving at the same moment) get the post as it is.
     if (idemKey && (await deps.kv.incr(idemKey, IDEMPOTENCY_TTL_SEC)) > 1) {
-      return toPost(await findPost(member.workspaceId, postId));
+      return toPost(await findMemberPost(member, postId));
     }
     try {
       return await publishClaimed(caller, member, postId);
@@ -829,7 +855,7 @@ export function createPostService(deps: PostServiceDeps) {
     member: MemberContext,
     postId: string,
   ): Promise<Post> {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     const workspace = await db.client.workspace.findUnique({
       where: { id: member.workspaceId },
       select: { requireReviewForAll: true },
@@ -893,7 +919,7 @@ export function createPostService(deps: PostServiceDeps) {
     postId: string,
     targetId: string,
   ): Promise<Post> {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     const target = post.targets.find((t) => t.id === targetId);
     if (!target) throw notFound('TARGET_NOT_FOUND', 'Target not found');
     const notFailed = () => conflict('TARGET_NOT_FAILED', 'Only a failed account can be retried');
@@ -1055,6 +1081,11 @@ export function createPostService(deps: PostServiceDeps) {
     );
   }
 
+  /** POST_NOT_FOUND unless the member may see the post (scheduling checks this first, P4-B4). */
+  async function assertVisible(member: MemberContext, postId: string) {
+    await findMemberPost(member, postId);
+  }
+
   /** The post as the API shows it (scheduling answers with it). */
   async function view(workspaceId: string, postId: string): Promise<Post> {
     return toPost(await findPost(workspaceId, postId));
@@ -1065,7 +1096,7 @@ export function createPostService(deps: PostServiceDeps) {
    * as they are. Scheduling checks this when a post is scheduled, as publish-now does.
    */
   async function checkPublishable(member: MemberContext, postId: string, targetIds: string[]) {
-    const post = await findPost(member.workspaceId, postId);
+    const post = await findMemberPost(member, postId);
     await assertPublishable(
       member,
       post,
@@ -1106,6 +1137,7 @@ export function createPostService(deps: PostServiceDeps) {
 
   return {
     view,
+    assertVisible,
     checkPublishable,
     assertNotTemplate,
     assertNoReviewRequired,

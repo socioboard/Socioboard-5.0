@@ -17,6 +17,28 @@ export interface MemberContext {
   workspaceId: string;
   memberId: string;
   role: Role;
+  /**
+   * The social accounts they may see and post to (P4-B4), or null for every account in the
+   * workspace. Owners and admins always have every account.
+   */
+  accountIds: readonly string[] | null;
+}
+
+/** Whether the member may see and post to this social account. */
+export function canUseAccount(member: MemberContext, accountId: string): boolean {
+  return member.accountIds === null || member.accountIds.includes(accountId);
+}
+
+/**
+ * A Prisma `where` part keeping rows whose `key` is one of the member's accounts, to spread into
+ * a filter: `{ ...onlyMemberAccounts(member, 'socialAccountId') }`. Empty when they have all.
+ */
+export function onlyMemberAccounts<K extends string>(
+  member: MemberContext,
+  key: K,
+): Partial<Record<K, { in: string[] }>> {
+  if (member.accountIds === null) return {};
+  return { [key]: { in: [...member.accountIds] } } as Partial<Record<K, { in: string[] }>>;
 }
 
 /**

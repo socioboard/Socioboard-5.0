@@ -3,6 +3,7 @@ import type { Prisma } from '@socioboard/db';
 
 import {
   AppError,
+  canUseAccount,
   conflict,
   newId,
   notFound,
@@ -108,7 +109,15 @@ export function createAccountGroupService(deps: AccountGroupDeps) {
     });
     // Alphabetical as people read it ("all pages" before "Brand B"), not by character code.
     const byName = new Intl.Collator(undefined, { sensitivity: 'base', numeric: true });
-    return groups.sort((a, b) => byName.compare(a.name, b.name)).map(toGroup);
+    // A member limited to some accounts sees only those in each group, and no group without one.
+    return groups
+      .sort((a, b) => byName.compare(a.name, b.name))
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((i) => canUseAccount(member, i.socialAccountId)),
+      }))
+      .filter((g) => member.accountIds === null || g.items.length > 0)
+      .map(toGroup);
   }
 
   async function create(caller: AuthContext, member: MemberContext, body: AccountGroupBody) {

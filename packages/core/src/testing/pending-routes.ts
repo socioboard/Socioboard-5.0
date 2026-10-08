@@ -11,8 +11,6 @@ export const PENDING_ROUTES: Readonly<Record<string, string>> = {
   updateShortener: 'P3-B8',
   disconnectShortener: 'P3-B8',
   shortenLink: 'P3-B8',
-  getMemberAccountAccess: 'P4-B4',
-  setMemberAccountAccess: 'P4-B4',
   submitPost: 'P4-B2',
   approvePost: 'P4-B2',
   requestChanges: 'P4-B2',
