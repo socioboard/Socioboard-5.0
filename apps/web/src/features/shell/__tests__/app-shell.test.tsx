@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { meQuery } from '../../../lib/session';
+import { SESSION_CHECK_MS } from '../hooks';
 import { halden, meWith, mockServer, renderApp, signedOut } from '../../../testing/render';
 
 const options = { socialProviders: [], emailVerificationRequired: true };
@@ -158,6 +159,31 @@ describe('app shell', () => {
     expect(history.location.pathname).toBe('/w/roastery/calendar');
     expect(screen.getByRole('heading', { name: 'Calendar' })).toBeInTheDocument();
     expect(screen.queryByText(/Your session has ended/)).not.toBeInTheDocument();
+  });
+
+  it('checks who is signed in every few minutes, so an idle page notices an expired session', async () => {
+    vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+    try {
+      let signedIn = true;
+      const calls = mockServer({
+        'GET /api/v1/auth/options': [200, options],
+        'GET /api/v1/me': () =>
+          signedIn
+            ? [200, meWith(both)]
+            : [401, { error: { code: 'UNAUTHENTICATED', message: 'Sign in' } }],
+      });
+      const { history } = renderApp('/w/halden/calendar');
+      await screen.findByRole('heading', { name: 'Calendar' });
+      const before = calls.filter((c) => c.key === 'GET /api/v1/me').length;
+      signedIn = false;
+      await act(() => vi.advanceTimersByTimeAsync(SESSION_CHECK_MS));
+      await waitFor(() => {
+        expect(history.location.pathname).toBe('/login');
+      });
+      expect(calls.filter((c) => c.key === 'GET /api/v1/me').length).toBeGreaterThan(before);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('notices a session that ended elsewhere when it next checks who is signed in', async () => {

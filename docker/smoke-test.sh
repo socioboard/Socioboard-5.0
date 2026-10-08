@@ -41,6 +41,15 @@ ENV=(
 )
 
 fail() { echo "SMOKE FAILED: $*" >&2; docker logs smoke-api 2>/dev/null | tail -40 >&2 || true; docker logs smoke-worker 2>/dev/null | tail -40 >&2 || true; exit 1; }
+
+# Whether a container logged a line. Reads the whole log first: `docker logs | grep -q` under
+# pipefail fails at random, since grep -q stops at the first match and docker logs then dies of
+# SIGPIPE while still writing (the "did not start telemetry" failures of 2026-10-08).
+logged() {
+  local out
+  out="$(docker logs "$1" 2>&1)"
+  grep -q -- "$2" <<<"$out"
+}
 cleanup() { docker rm -f smoke-api smoke-worker smoke-web >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 cleanup
@@ -55,7 +64,7 @@ stop_cleanly() {
   docker stop -t 40 "$name" >/dev/null
   local code; code="$(docker inspect -f '{{.State.ExitCode}}' "$name")"
   [ "$code" = "0" ] || fail "$name exited $code on SIGTERM (expected 0)"
-  docker logs "$name" 2>&1 | grep -q 'shutting down' || fail "$name did not log a graceful shutdown"
+  logged "$name" 'shutting down' || fail "$name did not log a graceful shutdown"
   echo "$name: stopped cleanly on SIGTERM"
 }
 
@@ -69,25 +78,25 @@ for _ in $(seq 1 60); do
 done
 [ "$status" = "200" ] || fail "api /api/health answered ${status:-nothing} after 60 s"
 echo "api: /api/health 200 $(cat /tmp/health.json)"
-# Docker's log driver can lag the process by a moment, so wait for the line rather than read once.
+# Docker's log driver can lag the process by a moment, so wait for the line.
 for _ in $(seq 1 10); do
-  docker logs smoke-api 2>&1 | grep -q 'telemetry on' && break
+  logged smoke-api 'telemetry on' && break
   sleep 1
 done
-docker logs smoke-api 2>&1 | grep -q 'telemetry on' || fail "api did not start telemetry"
+logged smoke-api 'telemetry on' || fail "api did not start telemetry"
 stop_cleanly smoke-api
 
 echo "== worker"
 docker run -d --name smoke-worker "${NET[@]}" "${ENV[@]}" "socioboard-worker:${TAG}" >/dev/null
 for _ in $(seq 1 60); do
-  docker logs smoke-worker 2>&1 | grep -q 'worker started' && break
+  logged smoke-worker 'worker started' && break
   [ "$(docker inspect -f '{{.State.Running}}' smoke-worker)" = "true" ] || fail "worker exited on start"
   sleep 1
 done
-docker logs smoke-worker 2>&1 | grep -q 'worker started' || fail "worker did not start in 60 s"
+logged smoke-worker 'worker started' || fail "worker did not start in 60 s"
 docker exec smoke-worker sh -c 'ffmpeg -version >/dev/null && ffprobe -version >/dev/null' \
   || fail "ffmpeg/ffprobe missing from the worker image"
-docker logs smoke-worker 2>&1 | grep -q 'telemetry on' || fail "worker did not start telemetry"
+logged smoke-worker 'telemetry on' || fail "worker did not start telemetry"
 echo "worker: started with telemetry, ffmpeg and ffprobe present"
 stop_cleanly smoke-worker
 
@@ -100,7 +109,7 @@ else WEB="http://localhost:${WEB_PORT}"; fi
 for _ in $(seq 1 20); do curl -sf "$WEB/healthz" >/dev/null && break; sleep 1; done
 curl -sf "$WEB/healthz" >/dev/null || fail "web /healthz did not answer"
 # A client-side route is answered with the app's page.
-curl -sf "$WEB/w/some-workspace/posts" | grep -q '<div id="root">' || fail "web did not serve index.html for an app route"
+grep -q '<div id="root">' <<<"$(curl -sf "$WEB/w/some-workspace/posts")" || fail "web did not serve index.html for an app route"
 echo "web: serves the app and its routes"
 
 echo "SMOKE PASSED"

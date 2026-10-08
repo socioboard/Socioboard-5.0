@@ -1,7 +1,7 @@
 import { defineRoute, ErrorEnvelope, Id, type Role } from '@socioboard/contracts';
 import express from 'express';
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
 import {
@@ -258,14 +258,24 @@ describe('request id and rate limit', () => {
   });
 
   it('limits requests per IP and says when to retry', async () => {
-    const { app: limited } = buildApp({ limit: 3 });
-    const statuses = [];
-    for (let i = 0; i < 4; i++) statuses.push((await request(limited).get('/api/v1/ping')).status);
-    expect(statuses).toEqual([200, 200, 200, 429]);
-    const last = await request(limited).get('/api/v1/ping');
-    expect(Number(last.headers['retry-after'])).toBeGreaterThan(0);
-    expect(last.headers['ratelimit-limit']).toBe('3');
-    expect(code(last)).toBe('RATE_LIMITED');
+    // The limit counts per fixed 60-second window; mid-window, so the requests can't straddle a
+    // boundary and start a fresh count (that made this test fail now and then).
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-08T12:00:30Z'));
+    try {
+      const { app: limited } = buildApp({ limit: 3 });
+      const statuses = [];
+      for (let i = 0; i < 4; i++) {
+        statuses.push((await request(limited).get('/api/v1/ping')).status);
+      }
+      expect(statuses).toEqual([200, 200, 200, 429]);
+      const last = await request(limited).get('/api/v1/ping');
+      expect(Number(last.headers['retry-after'])).toBe(30);
+      expect(last.headers['ratelimit-limit']).toBe('3');
+      expect(code(last)).toBe('RATE_LIMITED');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

@@ -1,23 +1,30 @@
 import { apiRoutes } from '@socioboard/contracts';
 import { toast } from '@socioboard/ui';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { api, ApiError } from '../../lib/api';
-import { meQuery, notifySignedOut, useMe } from '../../lib/session';
+import { meQuery, notifySignedOut } from '../../lib/session';
+
+/**
+ * How often an open app asks who is signed in, so a session that expired or was revoked is
+ * noticed while the page sits idle. Only while the tab is visible; coming back to it checks too.
+ */
+export const SESSION_CHECK_MS = 5 * 60_000;
 
 /**
  * A session can end while the app is open (expired, signed out in another tab, revoked from the
  * security page). Any 401 from a query or mutation, or `me` coming back empty on a refetch, drops
- * every cached answer and sends the person to sign in, returning here afterwards.
+ * every cached answer and sends the person to sign in, returning here afterwards. `me` is asked
+ * again every SESSION_CHECK_MS, so this happens even when nothing else is loading.
  */
 export function useSessionWatcher() {
   const { t } = useTranslation('shell');
   const queryClient = useQueryClient();
   const router = useRouter();
-  const me = useMe();
+  const me = useQuery({ ...meQuery, refetchInterval: SESSION_CHECK_MS });
 
   useEffect(() => {
     const onError = (error: unknown) => {

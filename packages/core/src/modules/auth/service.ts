@@ -176,18 +176,26 @@ export function createMeService({
     return result.headers.getSetCookie();
   }
 
-  async function listSessions(caller: AuthContext, headers: Headers): Promise<SessionInfo[]> {
-    const sessions = await auth.api.listSessions({ headers });
-    return sessions
-      .map((s) => ({
-        id: s.id,
-        createdAt: new Date(s.createdAt).toISOString(),
-        expiresAt: new Date(s.expiresAt).toISOString(),
-        ipAddress: s.ipAddress ?? null,
-        userAgent: s.userAgent ?? null,
-        current: s.id === caller.session.id,
-      }))
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  /**
+   * The caller's sessions that haven't expired, newest first. Read from the database rather than
+   * Better Auth's list-sessions, which refuses sessions signed in over a day ago
+   * (SESSION_NOT_FRESH): seeing your own devices isn't a sensitive action. Revoking one still
+   * goes through Better Auth.
+   */
+  async function listSessions(caller: AuthContext): Promise<SessionInfo[]> {
+    const sessions = await db.client.session.findMany({
+      where: { userId: caller.user.id, expiresAt: { gt: clock.now() } },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      select: { id: true, createdAt: true, expiresAt: true, ipAddress: true, userAgent: true },
+    });
+    return sessions.map((s) => ({
+      id: s.id,
+      createdAt: s.createdAt.toISOString(),
+      expiresAt: s.expiresAt.toISOString(),
+      ipAddress: s.ipAddress,
+      userAgent: s.userAgent,
+      current: s.id === caller.session.id,
+    }));
   }
 
   async function revokeSession(caller: AuthContext, headers: Headers, sessionId: string) {
