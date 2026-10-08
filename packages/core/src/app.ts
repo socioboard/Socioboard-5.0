@@ -33,6 +33,7 @@ import {
   registerNotificationListeners,
   registerNotificationRoutes,
 } from './modules/notifications';
+import { createApprovalService, registerApprovalRoutes } from './modules/approvals';
 import { registerPostRoutes } from './modules/posts';
 import { registerSchedulingRoutes } from './modules/scheduling';
 import {
@@ -170,6 +171,16 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
   );
   registerPostRoutes(api, posts);
   registerSchedulingRoutes(api, scheduling, queueSlots, recurrence, calendar);
+  registerApprovalRoutes(
+    api,
+    createApprovalService({
+      db: platform.db,
+      storage: platform.storage,
+      events: platform.events,
+      posts,
+      scheduling,
+    }),
+  );
   registerNotificationRoutes(api, notifications);
   registerClientErrorRoutes(api, logger);
   registerAdminRoutes(

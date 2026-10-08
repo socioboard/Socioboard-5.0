@@ -58,4 +58,11 @@ describe('deriveStatus', () => {
     expect(deriveStatus('draft', targets('scheduled', 'scheduled'))).toBe('scheduled');
     expect(deriveStatus('draft', targets('scheduled', 'pending'))).toBe('draft');
   });
+
+  it('returns an unscheduled post to where its review left it (P4-B2)', () => {
+    expect(deriveStatus('scheduled', targets('pending'), 'approved')).toBe('approved');
+    expect(deriveStatus('scheduled', targets('pending'))).toBe('draft');
+    // A post with an editorial status keeps it, whatever the review says.
+    expect(deriveStatus('in_review', targets('pending'), 'approved')).toBe('in_review');
+  });
 });

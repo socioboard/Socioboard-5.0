@@ -36,16 +36,21 @@ export function resolveContent(
 }
 
 /** Statuses a person sets (draft, review, approval); the rest follow from the targets. */
-const EDITORIAL: readonly PostStatus[] = ['draft', 'in_review', 'approved'];
+export const EDITORIAL: readonly PostStatus[] = ['draft', 'in_review', 'approved'];
 
 /**
  * The post's status from its targets (recomputeStatus). Cancelled targets don't count.
  * - any target publishing, or some done while others still wait → publishing
  * - all done: all published → published; all failed → failed; a mix → partial
  * - all waiting and scheduled → scheduled (phase 2)
- * - nothing sent yet → the editorial status it had (draft, in review, approved)
+ * - nothing sent yet → the editorial status it had (draft, in review, approved); a post that
+ *   was scheduled and isn't any more → `editorial`, where its review left it (P4-B2)
  */
-export function deriveStatus(current: PostStatus, targets: { status: TargetStatus }[]): PostStatus {
+export function deriveStatus(
+  current: PostStatus,
+  targets: { status: TargetStatus }[],
+  editorial: PostStatus = 'draft',
+): PostStatus {
   const live = targets.filter((t) => t.status !== 'cancelled');
   const count = (s: TargetStatus) => live.filter((t) => t.status === s).length;
   const published = count('published');
@@ -60,7 +65,7 @@ export function deriveStatus(current: PostStatus, targets: { status: TargetStatu
     return published === 0 ? 'failed' : 'partial';
   }
   if (live.length > 0 && count('scheduled') === live.length) return 'scheduled';
-  return EDITORIAL.includes(current) ? current : 'draft';
+  return EDITORIAL.includes(current) ? current : editorial;
 }
 
 /** Target states still waiting to go out: publish-now and scheduling take these. */

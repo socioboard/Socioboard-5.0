@@ -63,7 +63,7 @@ Keys for another network than the target account's are rejected (`OPTIONS_NETWOR
 | `LABEL_NOT_FOUND` | 404 | A label id that isn't this workspace's (in a post body or the path) |
 | `LABEL_EXISTS` | 409 | A label name already used in the workspace, whatever its case |
 | `POST_HAS_ERRORS` | 422 | Publish-now or retry with validation errors; `details` is the validation report |
-| `REVIEW_REQUIRED` | 422 | The workspace reviews every post (approvals arrive in phase 4) |
+| `REVIEW_REQUIRED` | 422 | The post needs review (its author can't publish, or the workspace reviews every post) and its latest review step isn't an approval ([approvals](approvals.md)) |
 | `POST_IS_RECURRING` | 409 | Publish-now on a repeating post's template (its copies go out; [scheduling](scheduling.md)) |
 | `POST_ALREADY_SENT` | 409 | Publish-now on a post whose targets aren't all waiting (`pending` or `scheduled`; retry the failed ones instead) |
 | `TARGET_NOT_FOUND` / `TARGET_NOT_FAILED` | 404 / 409 | Retry of a target that isn't on the post / isn't failed |

@@ -1,5 +1,6 @@
 import {
   can,
+  ROLES,
   optionsApplyTo,
   PublishError,
   realtimeRooms,
@@ -10,8 +11,10 @@ import {
   type Post,
   type PostDetails,
   type PostLabel,
+  type PostStatus,
   type PostTarget,
   type Recurrence,
+  type Role,
   type TargetInput,
   type UpdateLabelBody,
   type UpdatePostBody,
@@ -47,6 +50,7 @@ import {
 } from '../../platform';
 import {
   deriveStatus,
+  EDITORIAL,
   LOCKED_TARGET,
   resolveContent,
   WAITING_TARGET,
@@ -333,7 +337,11 @@ export function createPostService(deps: PostServiceDeps) {
       },
     });
     if (!post) return;
-    const status = deriveStatus(post.status, post.targets);
+    const status = deriveStatus(
+      post.status,
+      post.targets,
+      EDITORIAL.includes(post.status) ? 'draft' : await reviewedStatus(workspaceId, postId),
+    );
     if (status !== post.status) await ws.post.update({ where: { id: postId }, data: { status } });
     deps.realtime.emit(realtimeRooms.workspace(workspaceId), 'post.status_changed', {
       workspaceId,
@@ -553,11 +561,21 @@ export function createPostService(deps: PostServiceDeps) {
       new Set(post.targets.map((t) => t.socialAccountId)),
     );
 
+    // Editing resets an approval (approvals.md): a change to an approved or scheduled post by
+    // someone who can't approve sends it back for review and unschedules it.
+    const resetsReview =
+      !labelsOnly &&
+      !can(member.role, 'posts:approve') &&
+      (post.status === 'approved' || post.status === 'scheduled') &&
+      (await latestReview(member.workspaceId, post.id))?.action === 'approved';
+    let unscheduled: { id: string; scheduleVersion: number }[] = [];
+
     // Accounts added to a post that's scheduled (every account at one time) join it at that time,
     // so the post doesn't fall back to a draft while its other accounts still go out.
     const live = post.targets.filter((t) => t.status !== 'cancelled');
     const first = live[0]?.scheduledAt?.getTime();
     const joinAt =
+      !resetsReview &&
       first !== undefined &&
       live.every((t) => t.status === 'scheduled' && t.scheduledAt?.getTime() === first)
         ? new Date(first)
@@ -579,6 +597,29 @@ export function createPostService(deps: PostServiceDeps) {
           ...(post.recurringRuleId && !labelsOnly ? { customizedAt: new Date() } : {}),
         },
       });
+      if (resetsReview) {
+        unscheduled = await tx.postTarget.findMany({
+          where: { workspaceId: member.workspaceId, postId: post.id, status: 'scheduled' },
+          select: { id: true, scheduleVersion: true },
+        });
+        await tx.postTarget.updateMany({
+          where: { workspaceId: member.workspaceId, postId: post.id, status: 'scheduled' },
+          data: { status: 'pending', scheduledAt: null, scheduleVersion: { increment: 1 } },
+        });
+        await tx.post.update({
+          where: { id: post.id, workspaceId: member.workspaceId },
+          data: { status: 'in_review' },
+        });
+        await tx.postApproval.create({
+          data: {
+            id: newId(),
+            workspaceId: member.workspaceId,
+            postId: post.id,
+            actorId: caller.user.id,
+            action: 'submitted',
+          },
+        });
+      }
       if (!targets) return;
       // The new list replaces the old: removed accounts go, new ones join, kept ones keep
       // their history and take the new override.
@@ -624,7 +665,7 @@ export function createPostService(deps: PostServiceDeps) {
             t.status === 'scheduled' && !targets.some((x) => x.accountId === t.socialAccountId),
         )
       : [];
-    await dropScheduled(removed);
+    await dropScheduled([...removed, ...unscheduled]);
     if (joined.length) await deps.enqueueScheduled(joined);
     await recomputeStatus(member.workspaceId, post.id);
     await events.emit('post.updated', {
@@ -633,6 +674,16 @@ export function createPostService(deps: PostServiceDeps) {
       userId: caller.user.id,
       fields: Object.keys(body),
     });
+    if (resetsReview) {
+      await events.emit('post.submitted', {
+        workspaceId: member.workspaceId,
+        postId: post.id,
+        userId: caller.user.id,
+        authorId: post.authorId,
+        note: null,
+        afterEdit: true,
+      });
+    }
     return toPost(await findPost(member.workspaceId, post.id));
   }
 
@@ -856,16 +907,7 @@ export function createPostService(deps: PostServiceDeps) {
     postId: string,
   ): Promise<Post> {
     const post = await findMemberPost(member, postId);
-    const workspace = await db.client.workspace.findUnique({
-      where: { id: member.workspaceId },
-      select: { requireReviewForAll: true },
-    });
-    if (workspace?.requireReviewForAll) {
-      throw unprocessable(
-        'REVIEW_REQUIRED',
-        'Posts in this workspace need review before publishing',
-      );
-    }
+    await assertReviewed(member.workspaceId, post.id);
     await assertNotTemplate(member.workspaceId, post.id);
     const live = post.targets.filter((t) => t.status !== 'cancelled');
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
@@ -1121,18 +1163,55 @@ export function createPostService(deps: PostServiceDeps) {
     }
   }
 
-  /** REVIEW_REQUIRED when the workspace reviews every post (approvals arrive in phase 4). */
-  async function assertNoReviewRequired(workspaceId: string) {
+  /** The post's latest review step, if it was ever sent for review (P4-B2). */
+  async function latestReview(workspaceId: string, postId: string) {
+    return scoped(workspaceId).postApproval.findFirst({
+      where: { postId },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      select: { action: true },
+    });
+  }
+
+  /** Where the post's review stands, as an editorial status: approved, in review or draft. */
+  async function reviewedStatus(workspaceId: string, postId: string): Promise<PostStatus> {
+    const step = await latestReview(workspaceId, postId);
+    if (step?.action === 'approved') return 'approved';
+    if (step?.action === 'submitted') return 'in_review';
+    return 'draft';
+  }
+
+  /**
+   * Whether a post must be approved before it goes out (approvals.md): the workspace reviews
+   * every post, or its author can't publish (a contributor, or someone no longer a member).
+   */
+  async function needsReview(workspaceId: string, authorId: string | null) {
     const workspace = await db.client.workspace.findUnique({
       where: { id: workspaceId },
       select: { requireReviewForAll: true },
     });
-    if (workspace?.requireReviewForAll) {
-      throw unprocessable(
-        'REVIEW_REQUIRED',
-        'Posts in this workspace need review before publishing',
-      );
-    }
+    if (workspace?.requireReviewForAll) return true;
+    if (!authorId) return false;
+    const author = await scoped(workspaceId).member.findFirst({
+      where: { userId: authorId },
+      select: { role: true },
+    });
+    const role = author && (ROLES as readonly string[]).includes(author.role) ? author.role : null;
+    return role === null || !can(role as Role, 'posts:publish');
+  }
+
+  /**
+   * REVIEW_REQUIRED unless the post may go out: it needs no review, or its latest review step
+   * is an approval. Publish-now, scheduling, queueing and repeating all check this.
+   */
+  async function assertReviewed(workspaceId: string, postId: string) {
+    const post = await scoped(workspaceId).post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+    if (!post) throw notFound('POST_NOT_FOUND', 'Post not found');
+    if (!(await needsReview(workspaceId, post.authorId))) return;
+    if ((await latestReview(workspaceId, postId))?.action === 'approved') return;
+    throw unprocessable('REVIEW_REQUIRED', 'This post needs approval before it goes out');
   }
 
   return {
@@ -1140,7 +1219,8 @@ export function createPostService(deps: PostServiceDeps) {
     assertVisible,
     checkPublishable,
     assertNotTemplate,
-    assertNoReviewRequired,
+    assertReviewed,
+    needsReview,
     listLabels,
     createLabel,
     updateLabel,
