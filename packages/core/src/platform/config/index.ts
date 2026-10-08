@@ -131,6 +131,30 @@ const envSchema = z.object({
   /** X: the app's OAuth 2.0 client; redirect URI <APP_URL>/api/oauth/x/callback. */
   X_CLIENT_ID: optional,
   X_CLIENT_SECRET: optional,
+  /**
+   * The phase 3 networks' OAuth clients (docs/developer-apps.md), each enabled when both are set;
+   * redirect URI <APP_URL>/api/oauth/<provider>/callback. Read only once the network's adapter is
+   * registered (docs/backend/adding-a-network.md).
+   */
+  LINKEDIN_CLIENT_ID: optional,
+  LINKEDIN_CLIENT_SECRET: optional,
+  /** YouTube's own Google Cloud OAuth client, not the sign-in one (GOOGLE_CLIENT_ID). */
+  YOUTUBE_CLIENT_ID: optional,
+  YOUTUBE_CLIENT_SECRET: optional,
+  /** Pinterest's App ID and App secret key. */
+  PINTEREST_CLIENT_ID: optional,
+  PINTEREST_CLIENT_SECRET: optional,
+  /** TikTok's Client key and Client secret. */
+  TIKTOK_CLIENT_ID: optional,
+  TIKTOK_CLIENT_SECRET: optional,
+  SNAPCHAT_CLIENT_ID: optional,
+  SNAPCHAT_CLIENT_SECRET: optional,
+  /** Tumblr's OAuth consumer key and secret (used as an OAuth 2 client). */
+  TUMBLR_CLIENT_ID: optional,
+  TUMBLR_CLIENT_SECRET: optional,
+  /** Bitly: the OAuth app people connect their own Bitly accounts through (P3-B8). */
+  BITLY_CLIENT_ID: optional,
+  BITLY_CLIENT_SECRET: optional,
   META_GRAPH_VERSION: z.preprocess(
     (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
     z
@@ -234,13 +258,39 @@ export interface Config {
     facebook: { appId: string; appSecret: string; configId: string | undefined } | undefined;
     instagram: { appId: string; appSecret: string } | undefined;
     threads: { appId: string; appSecret: string } | undefined;
-    x: { clientId: string; clientSecret: string } | undefined;
+    x: OAuthClient | undefined;
+    linkedin: OAuthClient | undefined;
+    youtube: OAuthClient | undefined;
+    pinterest: OAuthClient | undefined;
+    tiktok: OAuthClient | undefined;
+    snapchat: OAuthClient | undefined;
+    tumblr: OAuthClient | undefined;
     graphVersion: string | undefined;
   };
+  /** Link shorteners people connect (P3-B8); each registers only when its id and secret are set. */
+  shorteners: { bitly: OAuthClient | undefined };
   /** Features switch on when their keys are present (self-host without Stripe = no billing). */
   billing: { enabled: boolean };
   ai: { enabled: boolean; url: string | undefined };
 }
+
+/** An OAuth app's client id and secret. */
+export interface OAuthClient {
+  clientId: string;
+  clientSecret: string;
+}
+
+/** Env prefixes of the OAuth clients that are set as `<PREFIX>_CLIENT_ID` / `_CLIENT_SECRET`. */
+const OAUTH_CLIENTS = [
+  'X',
+  'LINKEDIN',
+  'YOUTUBE',
+  'PINTEREST',
+  'TIKTOK',
+  'SNAPCHAT',
+  'TUMBLR',
+  'BITLY',
+] as const;
 
 export class ConfigError extends Error {
   constructor(public readonly problems: string[]) {
@@ -296,8 +346,10 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       problems.push(`${app}_APP_ID and ${app}_APP_SECRET must be set together`);
     }
   }
-  if (Boolean(raw('X_CLIENT_ID')) !== Boolean(raw('X_CLIENT_SECRET'))) {
-    problems.push('X_CLIENT_ID and X_CLIENT_SECRET must be set together');
+  for (const client of OAUTH_CLIENTS) {
+    if (Boolean(raw(`${client}_CLIENT_ID`)) !== Boolean(raw(`${client}_CLIENT_SECRET`))) {
+      problems.push(`${client}_CLIENT_ID and ${client}_CLIENT_SECRET must be set together`);
+    }
   }
 
   const parsed = envSchema.safeParse(source);
@@ -393,13 +445,24 @@ export function loadConfig(source: Record<string, string | undefined> = process.
         e.THREADS_APP_ID && e.THREADS_APP_SECRET
           ? { appId: e.THREADS_APP_ID, appSecret: e.THREADS_APP_SECRET }
           : undefined,
-      x:
-        e.X_CLIENT_ID && e.X_CLIENT_SECRET
-          ? { clientId: e.X_CLIENT_ID, clientSecret: e.X_CLIENT_SECRET }
-          : undefined,
+      x: oauthClient(e.X_CLIENT_ID, e.X_CLIENT_SECRET),
+      linkedin: oauthClient(e.LINKEDIN_CLIENT_ID, e.LINKEDIN_CLIENT_SECRET),
+      youtube: oauthClient(e.YOUTUBE_CLIENT_ID, e.YOUTUBE_CLIENT_SECRET),
+      pinterest: oauthClient(e.PINTEREST_CLIENT_ID, e.PINTEREST_CLIENT_SECRET),
+      tiktok: oauthClient(e.TIKTOK_CLIENT_ID, e.TIKTOK_CLIENT_SECRET),
+      snapchat: oauthClient(e.SNAPCHAT_CLIENT_ID, e.SNAPCHAT_CLIENT_SECRET),
+      tumblr: oauthClient(e.TUMBLR_CLIENT_ID, e.TUMBLR_CLIENT_SECRET),
       graphVersion: e.META_GRAPH_VERSION,
     },
+    shorteners: { bitly: oauthClient(e.BITLY_CLIENT_ID, e.BITLY_CLIENT_SECRET) },
     billing: { enabled: Boolean(e.STRIPE_SECRET_KEY) },
     ai: { enabled: Boolean(e.AI_SERVICE_URL), url: e.AI_SERVICE_URL },
   };
+}
+
+function oauthClient(
+  clientId: string | undefined,
+  clientSecret: string | undefined,
+): OAuthClient | undefined {
+  return clientId && clientSecret ? { clientId, clientSecret } : undefined;
 }

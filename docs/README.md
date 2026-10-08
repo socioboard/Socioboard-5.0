@@ -15,7 +15,7 @@ Socioboard 6.0 is a from-scratch rebuild of [Socioboard 5.0](https://github.com/
 **Then by role:**
 | You are | Read next |
 | --- | --- |
-| Backend developer | [Backend conventions](backend/README.md) → [contracts](backend/contracts.md) → [platform](backend/modules/platform.md) → the module docs for your current tasks |
+| Backend developer | [Backend conventions](backend/README.md) → [contracts](backend/contracts.md) → [platform](backend/modules/platform.md) → the module docs for your current tasks; building a network: [adding a network](backend/adding-a-network.md) |
 | Frontend developer | [Frontend conventions](frontend/README.md) → [design system](frontend/design-system.md) → the area docs for your current tasks |
 | QA | [QA checklists](qa/README.md): what to check on every screen |
 | DevOps | [Infra](infra.md) → [Deployment runbook](deployment.md) → [phase 0](stages/phase-0.md) infra tasks |
