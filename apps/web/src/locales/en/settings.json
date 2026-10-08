@@ -74,7 +74,6 @@
     "left": "You left {{workspace}}.",
     "roleChanged": "{{name}} is now {{role}}.",
     "loadError": "Members couldn’t be loaded.",
-    "accounts": "Accounts",
     "allAccounts": "All accounts",
     "someAccounts_one": "{{count}} account",
     "someAccounts_other": "{{count}} accounts",
