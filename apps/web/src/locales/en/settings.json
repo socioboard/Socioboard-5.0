@@ -73,7 +73,13 @@
     "leaveConfirm": "Leave workspace",
     "left": "You left {{workspace}}.",
     "roleChanged": "{{name}} is now {{role}}.",
-    "loadError": "Members couldn’t be loaded."
+    "loadError": "Members couldn’t be loaded.",
+    "accounts": "Accounts",
+    "allAccounts": "All accounts",
+    "someAccounts_one": "{{count}} account",
+    "someAccounts_other": "{{count}} accounts",
+    "noAccounts": "No accounts",
+    "accountsOf": "Accounts {{name}} can use"
   },
   "invite": {
     "title": "Invite to {{workspace}}",
@@ -112,5 +118,24 @@
     "cancel": "Cancel",
     "close": "Close",
     "retry": "Try again"
+  },
+  "access": {
+    "title": "Accounts {{name}} can use",
+    "description": "They see and post to only these accounts: their posts, the calendar and the queue show nothing else.",
+    "all": "All accounts",
+    "allBody": "Every account in the workspace, including ones connected later.",
+    "some": "Only some accounts",
+    "someBody": "Pick the accounts. Accounts connected later aren't added.",
+    "pickLabel": "Accounts they can use",
+    "picked_one": "{{count}} account selected",
+    "picked_other": "{{count}} accounts selected",
+    "noneWarning": "With no accounts selected they can't see or post to any account.",
+    "noAccounts": "No accounts are connected yet.",
+    "save": "Save access",
+    "saved": "{{name}} can now use {{what}}.",
+    "savedAll": "every account",
+    "savedSome_one": "{{count}} account",
+    "savedSome_other": "{{count}} accounts",
+    "adminHint": "Owners and admins always have every account."
   }
 }

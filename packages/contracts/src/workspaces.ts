@@ -60,6 +60,8 @@ export const Member = z.object({
   id: Id,
   user: UserSummary,
   role: z.enum(ROLES),
+  /** The social accounts they may use, or null for every account (P4-B4). */
+  accountIds: z.array(Id).nullable(),
   joinedAt: IsoDateTime,
 });
 export type Member = z.infer<typeof Member>;

@@ -26,9 +26,13 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { membersQuery, workspaceKeys } from '../api';
 import { leaveWorkspaceView } from '../leave';
+import { AccountAccessDialog } from './account-access-dialog';
 import { InvitationsSection } from './invitations-section';
 import { InviteDialog } from './invite-dialog';
 import { SettingsSection } from './settings-page';
+
+/** Owners and admins manage the accounts, so they always have every one (P4-B4). */
+const hasAllAccounts = (m: Member) => m.role === 'owner' || m.role === 'admin';
 
 interface Pending {
   kind: 'remove' | 'leave';
@@ -46,6 +50,7 @@ export function MembersSettings() {
   const [inviting, setInviting] = useState(false);
   const [pending, setPending] = useState<Pending | null>(null);
   const [savingRole, setSavingRole] = useState<string | null>(null);
+  const [limiting, setLimiting] = useState<Member | null>(null);
 
   const changeRole = async (member: Member, role: AssignableRole) => {
     setSavingRole(member.id);
@@ -118,6 +123,39 @@ export function MembersSettings() {
         ) : (
           <span className="text-ink-2 text-sm">{t(`roles.${m.role}`)}</span>
         ),
+    },
+    {
+      id: 'accounts',
+      header: t('members.accounts'),
+      className: 'w-28 @xl:w-36',
+      cell: (m) => {
+        const label =
+          m.accountIds === null || hasAllAccounts(m)
+            ? t('members.allAccounts')
+            : m.accountIds.length === 0
+              ? t('members.noAccounts')
+              : t('members.someAccounts', { count: m.accountIds.length });
+        return canManage && !hasAllAccounts(m) ? (
+          <Button
+            size="sm"
+            variant="ghost"
+            className="-ml-2"
+            aria-label={`${t('members.accountsOf', { name: m.user.name })}: ${label}`}
+            onClick={() => {
+              setLimiting(m);
+            }}
+          >
+            {label}
+          </Button>
+        ) : (
+          <span
+            className="text-ink-3 text-sm"
+            {...(hasAllAccounts(m) ? { title: t('access.adminHint') } : {})}
+          >
+            {label}
+          </span>
+        );
+      },
     },
     {
       id: 'joined',
@@ -197,6 +235,14 @@ export function MembersSettings() {
       </SettingsSection>
       {canManage && <InvitationsSection />}
       {canManage && <InviteDialog open={inviting} onOpenChange={setInviting} />}
+      {canManage && (
+        <AccountAccessDialog
+          member={limiting}
+          onClose={() => {
+            setLimiting(null);
+          }}
+        />
+      )}
       <MemberDialog
         pending={pending}
         onClose={() => {

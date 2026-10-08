@@ -103,6 +103,21 @@ export function slugify(name: string): string {
 /** Roles that manage accounts, and so always have every one of them (P4-B4). */
 const ALL_ACCOUNTS = ['owner', 'admin'];
 
+/** The accounts a member row may use (MemberAccountAccess), or null for every account. */
+const accountIdsOf = (m: {
+  role: string;
+  accountsLimited: boolean;
+  accountAccess: { socialAccountId: string }[];
+}) =>
+  m.accountsLimited && !ALL_ACCOUNTS.includes(m.role)
+    ? m.accountAccess.map((a) => a.socialAccountId)
+    : null;
+
+/** Loads what accountIdsOf needs, in the order the access was given. */
+const withAccess = {
+  accountAccess: { select: { socialAccountId: true }, orderBy: { createdAt: 'asc' } },
+} as const;
+
 const isAssignable = (role: string): role is AssignableRole =>
   ['admin', 'editor', 'contributor', 'viewer'].includes(role);
 
@@ -334,7 +349,7 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
 
   async function listMembers(member: MemberContext): Promise<Member[]> {
     const members = await db.forWorkspace(member.workspaceId).member.findMany({
-      include: { user: true },
+      include: { user: true, ...withAccess },
       orderBy: { createdAt: 'asc' },
     });
     return Promise.all(
@@ -342,6 +357,7 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
         id: m.id,
         user: await userSummary(m.user),
         role: m.role as Role,
+        accountIds: accountIdsOf(m),
         joinedAt: m.createdAt.toISOString(),
       })),
     );
@@ -356,7 +372,7 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
     const scoped = db.forWorkspace(member.workspaceId);
     const target = await scoped.member.findUnique({
       where: { id: targetMemberId },
-      include: { user: true },
+      include: { user: true, ...withAccess },
     });
     if (!target) throw notFound('MEMBER_NOT_FOUND', 'Member not found');
     if (target.role === 'owner') {
@@ -383,6 +399,7 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
       id: target.id,
       user: await userSummary(target.user),
       role,
+      accountIds: accountIdsOf({ ...target, role }),
       joinedAt: target.createdAt.toISOString(),
     };
   }
@@ -398,15 +415,10 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
     }
     const target = await db.forWorkspace(member.workspaceId).member.findUnique({
       where: { id: targetMemberId },
-      select: {
-        role: true,
-        accountsLimited: true,
-        accountAccess: { select: { socialAccountId: true }, orderBy: { createdAt: 'asc' } },
-      },
+      select: { role: true, accountsLimited: true, ...withAccess },
     });
     if (!target) throw notFound('MEMBER_NOT_FOUND', 'Member not found');
-    const limited = target.accountsLimited && !ALL_ACCOUNTS.includes(target.role);
-    return { accountIds: limited ? target.accountAccess.map((a) => a.socialAccountId) : null };
+    return { accountIds: accountIdsOf(target) };
   }
 
   /**
