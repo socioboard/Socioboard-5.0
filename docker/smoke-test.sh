@@ -69,6 +69,11 @@ for _ in $(seq 1 60); do
 done
 [ "$status" = "200" ] || fail "api /api/health answered ${status:-nothing} after 60 s"
 echo "api: /api/health 200 $(cat /tmp/health.json)"
+# Docker's log driver can lag the process by a moment, so wait for the line rather than read once.
+for _ in $(seq 1 10); do
+  docker logs smoke-api 2>&1 | grep -q 'telemetry on' && break
+  sleep 1
+done
 docker logs smoke-api 2>&1 | grep -q 'telemetry on' || fail "api did not start telemetry"
 stop_cleanly smoke-api
 
