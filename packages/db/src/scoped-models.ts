@@ -22,6 +22,11 @@ export const WORKSPACE_SCOPED_MODELS: readonly string[] = [
   'PostLabel',
   'RecurringRule',
   'QueueSlot',
+  'MemberAccountAccess',
+  'PostApproval',
+  'PostComment',
+  'Task',
+  'AiJob',
   // Read through the user (a feed spans workspaces); scoped only when written for a workspace.
   'Notification',
 ];
