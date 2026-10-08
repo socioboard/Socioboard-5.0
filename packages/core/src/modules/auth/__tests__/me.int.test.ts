@@ -218,6 +218,36 @@ describe('sessions', () => {
     expect((await laptop.get('/api/v1/me')).status).toBe(200);
   });
 
+  it('lists sessions signed in long ago, and leaves out expired ones', async () => {
+    const laptop = await signUp('old-session');
+    const phone = browser();
+    await phone.post('/api/auth/sign-in/email', {
+      email: email('old-session'),
+      password: PASSWORD,
+    });
+    const user = await db.client.user.findUniqueOrThrow({ where: { email: email('old-session') } });
+    const [newest, oldest] = await db.client.session.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: 'desc' },
+    });
+    // Signed in three days ago: Better Auth's list-sessions refused these (SESSION_NOT_FRESH).
+    const longAgo = new Date(Date.now() - 3 * 86_400_000);
+    await db.client.session.update({
+      where: { id: oldest?.id ?? '' },
+      data: { createdAt: longAgo },
+    });
+    await db.client.session.update({
+      where: { id: newest?.id ?? '' },
+      data: { expiresAt: new Date(Date.now() - 60_000) },
+    });
+
+    const res = await laptop.get('/api/v1/me/sessions');
+    expect(res.status, JSON.stringify(res.body)).toBe(200);
+    const items = z.object({ items: z.array(SessionInfo) }).parse(res.body).items;
+    expect(items.map((s) => s.id)).toEqual([oldest?.id]);
+    expect(items[0]?.createdAt).toBe(longAgo.toISOString());
+  });
+
   it("returns 404 for another user's session and for unknown ids", async () => {
     const victim = await signUp('victim');
     const victimSessions = z

@@ -26,7 +26,7 @@ Better Auth mounts its own handler at `/api/auth/*` (sign-up/email, sign-in/emai
 | PATCH | `/api/v1/me` | signed in | Update name, avatar (`avatarKey`), timezone, locale |
 | POST | `/api/v1/me/avatar-upload` | signed in | Presigned URL for an avatar image (JPEG/PNG/WebP, max 2 MB; the URL only accepts the declared size); then PATCH `avatarKey`, which checks the object exists under the caller's own prefix. Replacing or removing an avatar deletes the old file. 503 `STORAGE_NOT_CONFIGURED` without S3/MinIO |
 | POST | `/api/v1/me/active-workspace` | signed in | Switch the active workspace (404 if not a member); `/me` reports null when the active one was deleted or left |
-| GET | `/api/v1/me/sessions` | signed in | List active sessions |
+| GET | `/api/v1/me/sessions` | signed in | List your sessions that haven't expired, newest first (read from the database: Better Auth's list-sessions refuses sessions signed in over a day ago with `SESSION_NOT_FRESH`) |
 | DELETE | `/api/v1/me/sessions/:sessionId` | signed in | Revoke one of your own sessions (another user's id is 404) |
 
 Request and response schemas: `packages/contracts/src/auth.ts`.

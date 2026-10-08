@@ -22,8 +22,8 @@ export function registerAuthRoutes(api: ApiRouter, me: MeService, options: AuthO
     for (const cookie of setCookies) res.append('Set-Cookie', cookie);
   });
 
-  api.route(authRoutes.listSessions, async ({ auth, req }) => ({
-    items: await me.listSessions(auth, toHeaders(req.headers)),
+  api.route(authRoutes.listSessions, async ({ auth }) => ({
+    items: await me.listSessions(auth),
   }));
 
   api.route(authRoutes.revokeSession, ({ auth, params, req }) =>
