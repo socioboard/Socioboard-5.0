@@ -35,6 +35,7 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-35** Instagram tab: feed / reel / story choice; the preview changes with it.
 - [ ] **COMP-36** **Threads:** username and "now"; the whole text; one photo in its own shape, several side by side (scroll sideways); a link card when there's no photo, else the link at the end of the text; the first comment shown as a reply.
 - [ ] **COMP-37** Threads tab: **Who can reply** (Anyone, Profiles you follow, Your followers, Mentioned only); the post on Threads has that setting.
+- [ ] **COMP-38** A video in the preview: its poster with a play button once processed; pressing it plays the video in place, with sound and the browser's controls. While still processing, only the poster.
 
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.

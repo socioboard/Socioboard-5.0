@@ -11,6 +11,8 @@ export interface PreviewFile {
   kind: 'image' | 'video' | 'gif';
   /** The full file where it can be shown, else its thumbnail; null while there's neither. */
   src: string | null;
+  /** A video's own file, to play in the preview; null for pictures, or before it's ready. */
+  videoSrc?: string | null;
   width: number | null;
   height: number | null;
   alt: string;
@@ -79,7 +81,10 @@ export function Truncated({
   );
 }
 
-/** One file filling its box: the picture (a video shows its poster and a play mark). */
+/**
+ * One file filling its box: the picture, or a video's poster with a play button that plays it in
+ * place (with the browser's controls) when its file is known.
+ */
 export function FileTile({
   file,
   className,
@@ -96,7 +101,24 @@ export function FileTile({
 }) {
   const { t } = useTranslation('composer');
   const [broken, setBroken] = useState<string | null>(null);
+  const [playing, setPlaying] = useState(false);
   const showImage = file.src !== null && file.src !== broken;
+  const playable = file.kind === 'video' && !quiet && Boolean(file.videoSrc);
+  if (playable && playing) {
+    return (
+      <div className={cn('relative overflow-hidden bg-black', className)} style={style}>
+        <video
+          src={file.videoSrc ?? undefined}
+          poster={file.src ?? undefined}
+          controls
+          autoPlay
+          playsInline
+          aria-label={file.alt}
+          className="size-full object-contain"
+        />
+      </div>
+    );
+  }
   return (
     <div
       className={cn('relative overflow-hidden bg-[var(--sb-preview-well)]', className)}
@@ -125,13 +147,27 @@ export function FileTile({
           <span className="sr-only">{t('preview.noPicture')}</span>
         </div>
       )}
-      {file.kind === 'video' && !quiet && (
-        <span
-          aria-hidden="true"
-          className="absolute top-1/2 left-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white"
+      {playable ? (
+        <button
+          type="button"
+          aria-label={t('preview.play', { name: file.alt })}
+          onClick={() => {
+            setPlaying(true);
+          }}
+          className="absolute top-1/2 left-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/55 text-white transition-transform duration-200 ease-out-soft hover:scale-110 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none active:scale-95"
         >
-          <Play className="size-5 translate-x-px fill-current" />
-        </span>
+          <Play className="size-5 translate-x-px fill-current" aria-hidden="true" />
+        </button>
+      ) : (
+        file.kind === 'video' &&
+        !quiet && (
+          <span
+            aria-hidden="true"
+            className="absolute top-1/2 left-1/2 flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white"
+          >
+            <Play className="size-5 translate-x-px fill-current" />
+          </span>
+        )
       )}
       {children}
     </div>

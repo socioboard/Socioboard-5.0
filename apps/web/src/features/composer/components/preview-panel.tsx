@@ -42,6 +42,8 @@ function toPreviewFile(
       asset.kind !== 'video' && alone && asset.sizeBytes <= FULL_PICTURE_MAX_BYTES
         ? (asset.url ?? asset.thumbnailUrl)
         : asset.thumbnailUrl,
+    // Ready videos play in the preview from their own file.
+    videoSrc: asset.kind === 'video' && asset.status === 'ready' ? asset.url : null,
     width: asset.width,
     height: asset.height,
     alt: asset.altText ?? asset.name,
