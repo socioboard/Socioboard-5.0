@@ -21,7 +21,16 @@ export type SaveState =
   | { kind: 'error'; error: unknown };
 
 /** What the composer is sending the post off to do, if anything. */
-export type Acting = 'publish' | 'schedule' | 'queue' | 'repeat' | 'unschedule' | 'stop' | null;
+export type Acting =
+  | 'publish'
+  | 'schedule'
+  | 'queue'
+  | 'repeat'
+  | 'unschedule'
+  | 'stop'
+  | 'submit'
+  | 'withdraw'
+  | null;
 
 /**
  * Saving the composer's post and sending it on its way (docs/frontend/areas/composer.md,
@@ -262,6 +271,35 @@ export function useSavePost({
     [act, queryClient, workspaceId],
   );
 
+  /**
+   * Review steps (P4-F1): send the draft for review (saving it first), or take it back. The answer
+   * doesn't carry the review, so the post is read again for its banner.
+   */
+  const reviewed = useCallback(
+    (post: Post) => {
+      remember(post);
+      void queryClient.invalidateQueries({ queryKey: postKeys.detail(workspaceId, post.id) });
+      return post;
+    },
+    [remember, queryClient, workspaceId],
+  );
+  const submit = useCallback(
+    () =>
+      act('submit', async (params) =>
+        reviewed(await api(apiRoutes.approvals.submitPost, { params, body: {} })),
+      ),
+    [act, reviewed],
+  );
+  const withdraw = useCallback(
+    () =>
+      act(
+        'withdraw',
+        async (params) => reviewed(await api(apiRoutes.approvals.withdrawPost, { params })),
+        { saveFirst: false },
+      ),
+    [act, reviewed],
+  );
+
   return {
     postId,
     state,
@@ -275,5 +313,7 @@ export function useSavePost({
     repeat,
     unschedule,
     stopRepeating,
+    submit,
+    withdraw,
   };
 }

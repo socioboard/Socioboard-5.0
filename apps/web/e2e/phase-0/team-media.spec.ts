@@ -160,6 +160,11 @@ test('a team forms around a workspace and shares its media', async ({ browser })
   await expectRightCursors(ownerPage, 'account access dialog');
   await access.getByRole('button', { name: 'Cancel' }).click();
 
+  // --- The review queue (P4-F2) opens from the sidebar, empty for now. ---
+  await ownerPage.getByRole('link', { name: 'Approvals' }).first().click();
+  await expect(ownerPage.getByText('Nothing waiting for review')).toBeVisible();
+  await expectRightCursors(ownerPage, 'approvals');
+
   await ownerContext.close();
   await teammateContext.close();
 });

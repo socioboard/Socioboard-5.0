@@ -133,6 +133,8 @@ export function createApprovalService(deps: ApprovalServiceDeps) {
         },
       });
     });
+    // Open pages (posts, calendar, the review queue) hear of it, as of any status change.
+    await posts.recomputeStatus(member.workspaceId, postId);
   }
 
   const notInReview = () =>

@@ -75,7 +75,9 @@ export function MobileTabBar({
                   {badges[item.id] && (
                     <span className="bg-danger absolute -top-0.5 -right-1 size-2 rounded-full">
                       <span className="sr-only">
-                        {t('nav.needsFixing', { count: badges[item.id] })}
+                        {t(item.id === 'approvals' ? 'nav.waitingReview' : 'nav.needsFixing', {
+                          count: badges[item.id],
+                        })}
                       </span>
                     </span>
                   )}

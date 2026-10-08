@@ -15,6 +15,7 @@ Area doc: [workspace-settings](../frontend/areas/workspace-settings.md) · Check
 - [ ] **SET-11** Delete workspace: the button stays disabled until the workspace's name is typed exactly; the dialog says how many scheduled posts will be cancelled.
 - [ ] **SET-12** After deleting → another of your workspaces opens (or setup), never a "not found" flash.
 - [ ] **SET-13** As admin: the danger zone isn't shown.
+- [ ] **SET-14** General → Review → "Review every post before it goes out" → on at once (a toast says so); a new post by an editor then offers Submit for review instead of Publish now. Off again → only contributors' posts need review.
 
 ## Members and invitations
 - [ ] **SET-20** Members table: name, email, role, joined; your own row is marked; on a laptop, names and emails have room (not squeezed).
@@ -40,4 +41,4 @@ Area doc: [workspace-settings](../frontend/areas/workspace-settings.md) · Check
 - [ ] **SET-44** Sessions: each device is listed ("Chrome on Windows"), with this one marked; "Sign out" on one ends it; "Sign out everywhere else" ends all others.
 
 ## Not built yet
-"Require review for every post" (phase 4, with approvals), the activity log (phase 5), email change.
+The activity log (phase 5), email change.

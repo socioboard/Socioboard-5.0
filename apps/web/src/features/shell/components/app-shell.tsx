@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRealtimeStatus } from '../../../lib/realtime';
 import { useLiveUpdates } from '../../live';
 import { useNotificationToasts, useUnreadTitle } from '../../notifications';
+import { pendingReviewsQuery } from '../../approvals';
 import { failedPostsQuery } from '../../posts';
 import { NAV_ITEMS } from '../nav';
 import { CommandMenu } from './command-menu';
@@ -92,12 +93,21 @@ function ShellLayout({
     ...failedPostsQuery(membership.workspace.id),
     enabled: can(membership.role, 'posts:read'),
   }).data;
+  // Posts waiting for review, counted on the Approvals link for people who approve them.
+  const waiting = useQuery({
+    ...pendingReviewsQuery(membership.workspace.id),
+    enabled: can(membership.role, 'posts:approve'),
+  }).data;
   const badges = useMemo(
-    () =>
-      failed && failed.count > 0
+    () => ({
+      ...(failed && failed.count > 0
         ? { posts: `${String(failed.count)}${failed.more ? '+' : ''}` }
-        : {},
-    [failed],
+        : {}),
+      ...(waiting && waiting.count > 0
+        ? { approvals: `${String(waiting.count)}${waiting.more ? '+' : ''}` }
+        : {}),
+    }),
+    [failed, waiting],
   );
 
   const scope = useMemo(

@@ -1,9 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { apiRoutes, Slug, type WorkspaceWithRole } from '@socioboard/contracts';
-import { Button, Combobox, EmptyState, FormField, Input, Skeleton, toast } from '@socioboard/ui';
+import {
+  Button,
+  Combobox,
+  EmptyState,
+  FormField,
+  Input,
+  Skeleton,
+  Switch,
+  toast,
+} from '@socioboard/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -65,6 +74,7 @@ export function GeneralSettings() {
         saved={detail.data}
       />
       <LogoSection saved={detail.data} />
+      <ReviewSection saved={detail.data} />
       {role === 'owner' && <DangerZone workspace={detail.data} />}
     </>
   );
@@ -211,6 +221,49 @@ function LogoSection({ saved }: { saved: WorkspaceWithRole }) {
           toast.success(t('general.logoRemoved'));
         }}
       />
+    </SettingsSection>
+  );
+}
+
+/**
+ * "Review every post" (P4-F5): when on, every post needs someone else's approval before it is
+ * scheduled or published; when off, only contributors' posts do.
+ */
+function ReviewSection({ saved }: { saved: WorkspaceWithRole }) {
+  const { t } = useTranslation('settings');
+  const queryClient = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const id = useId();
+
+  const change = async (requireReviewForAll: boolean) => {
+    setBusy(true);
+    try {
+      const updated = await api(apiRoutes.workspaces.updateWorkspace, {
+        params: { workspaceId: saved.id },
+        body: { requireReviewForAll },
+      });
+      queryClient.setQueryData(workspaceKeys.detail(saved.id), updated);
+      toast.success(requireReviewForAll ? t('general.reviewOn') : t('general.reviewOff'));
+    } catch (err) {
+      toast.error(errorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <SettingsSection title={t('general.review')} description={t('general.reviewBody')}>
+      <div className="flex items-center justify-between gap-4">
+        <label htmlFor={id} className="text-ink text-sm">
+          {t('general.reviewAll')}
+        </label>
+        <Switch
+          id={id}
+          checked={saved.requireReviewForAll}
+          disabled={busy}
+          onCheckedChange={(on) => void change(on)}
+        />
+      </div>
     </SettingsSection>
   );
 }

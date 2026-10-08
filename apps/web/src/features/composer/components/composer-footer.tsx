@@ -1,5 +1,13 @@
 import { Button, cn, Spinner, Swap } from '@socioboard/ui';
-import { CalendarClock, CircleAlert, CircleCheck, ListPlus, Repeat, Send } from 'lucide-react';
+import {
+  CalendarClock,
+  CircleAlert,
+  CircleCheck,
+  ClipboardCheck,
+  ListPlus,
+  Repeat,
+  Send,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { formatTime } from '../../../lib/format';
@@ -14,7 +22,8 @@ export type ComposerMode = 'draft' | 'scheduled' | 'repeating';
  * the left (saving, saved at…, unsaved changes, or why it didn't save); on the right Save, then
  * the ways to send it: Add to queue, Schedule and Publish now. Those are only offered to people
  * who can publish, and say why they're unavailable. A post that's already scheduled or repeats
- * keeps its timing: saving is the main action, and the timing can be changed.
+ * keeps its timing: saving is the main action, and the timing can be changed. A post that needs
+ * review offers "Submit for review" instead (P4-F1), and says so while it waits.
  */
 export function ComposerFooter({
   state,
@@ -31,6 +40,8 @@ export function ComposerFooter({
   blocked,
   noAccounts,
   queue,
+  onSubmit,
+  inReview = false,
 }: {
   state: SaveState;
   dirty: boolean;
@@ -50,6 +61,10 @@ export function ComposerFooter({
   noAccounts: boolean;
   /** Add to queue: offered once a chosen account has posting times; `why` when it can't be used. */
   queue: { offered: boolean; why: string | null };
+  /** Set when the post needs review and its author can send it: "Submit for review". */
+  onSubmit?: (() => void) | undefined;
+  /** The post is waiting for review. */
+  inReview?: boolean;
 }) {
   const { t } = useTranslation('composer');
   const offerSend = canPublish && !reviewRequired;
@@ -65,17 +80,26 @@ export function ComposerFooter({
             : 'none';
   const sendBlocked = noAccounts || blocked > 0;
   const busy = acting !== null;
-  const why = !canPublish
-    ? t('footer.cantPublish')
-    : reviewRequired
-      ? t('footer.reviewRequired')
-      : noAccounts
-        ? t('footer.chooseAccounts')
+  const toReview = onSubmit !== undefined;
+  const why = inReview
+    ? t('footer.waitingReview')
+    : toReview
+      ? noAccounts
+        ? t('footer.chooseAccountsReview')
         : blocked > 0
-          ? t('footer.fixFirst', { count: blocked })
-          : mode === 'draft' && queue.offered
-            ? queue.why
-            : null;
+          ? t('footer.fixFirstReview', { count: blocked })
+          : null
+      : !canPublish
+        ? t('footer.cantPublish')
+        : reviewRequired
+          ? t('footer.reviewRequired')
+          : noAccounts
+            ? t('footer.chooseAccounts')
+            : blocked > 0
+              ? t('footer.fixFirst', { count: blocked })
+              : mode === 'draft' && queue.offered
+                ? queue.why
+                : null;
 
   return (
     <div className="glass-float rounded-pane flex flex-wrap items-center gap-x-4 gap-y-2 p-3 sm:px-5">
@@ -116,7 +140,7 @@ export function ComposerFooter({
         {why && <span className="text-ink-3 text-xs">{why}</span>}
         <Button
           // Once the post has its time, saving is what's left to do here.
-          variant={mode === 'draft' ? 'secondary' : 'primary'}
+          variant={mode === 'draft' || toReview ? 'secondary' : 'primary'}
           onClick={onSave}
           disabled={(!dirty && state.kind !== 'error') || busy}
         >
@@ -126,6 +150,17 @@ export function ComposerFooter({
               ? t('footer.saveDraft')
               : t('footer.saveChanges')}
         </Button>
+        {toReview && (
+          <Button
+            variant="primary"
+            onClick={onSubmit}
+            disabled={sendBlocked || busy}
+            loading={acting === 'submit'}
+          >
+            <ClipboardCheck aria-hidden="true" />
+            {t('footer.submit')}
+          </Button>
+        )}
         {offerSend && mode === 'draft' && queue.offered && (
           <Button
             onClick={onQueue}

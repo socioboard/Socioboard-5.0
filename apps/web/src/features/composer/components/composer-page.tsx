@@ -315,8 +315,26 @@ function Composer({
     autosave: mode === 'draft',
     onCreated,
   });
-  const reviewRequired = useQuery(workspaceQuery(workspace.id)).data?.requireReviewForAll ?? false;
+  // Review (P4-F1): the server says whether a saved post needs it; a new one needs it when the
+  // workspace reviews every post or its author (this person) can't publish.
+  const reviewAll = useQuery(workspaceQuery(workspace.id)).data?.requireReviewForAll ?? false;
+  const review = post?.review;
+  const needsReview = review ? review.needed : reviewAll || !can('posts:publish');
+  const approved =
+    review?.latest?.action === 'approved' &&
+    (post?.status === 'approved' || post?.status === 'scheduled');
+  const inReviewPost = post?.status === 'in_review' ? post : null;
+  const inReview = inReviewPost !== null;
+  const approvedBy = review?.latest?.action === 'approved' ? review.latest.actor?.name : undefined;
+  const isAuthor = !post || post.author?.id === me.user.id;
+  const reviewRequired = needsReview && !approved;
   const maySend = can('posts:publish') && !reviewRequired && !readOnly;
+  const offerSubmit =
+    reviewRequired && !inReview && isAuthor && !readOnly && (post?.status ?? 'draft') === 'draft';
+  const changesAsked =
+    post?.status === 'draft' && review?.latest?.action === 'changes_requested'
+      ? review.latest
+      : null;
   const [scheduling, setScheduling] = useState(false);
   const [confirmStop, setConfirmStop] = useState(false);
 
@@ -357,6 +375,10 @@ function Composer({
       POST_IS_OCCURRENCE: t('schedule.errors.isOccurrence'),
       POST_IS_SCHEDULED: t('schedule.errors.isScheduled'),
       POST_NOT_SCHEDULED: t('schedule.errors.notScheduled'),
+      POST_IN_REVIEW: t('review.errors.inReview'),
+      POST_NOT_DRAFT: t('review.errors.notDraft'),
+      POST_NOT_IN_REVIEW: t('review.errors.notInReview'),
+      NOT_POST_AUTHOR: t('review.errors.notAuthor'),
       RECURRENCE_ENDED: t('schedule.errors.ended'),
       RECURRENCE_NOT_FOUND: t('schedule.errors.notRepeating'),
     };
@@ -415,6 +437,20 @@ function Composer({
         }),
       );
       onPublished(queued.id);
+    } catch (err) {
+      explain(err);
+    }
+  };
+  const submit = async () => {
+    try {
+      if (await saving.submit()) toast.success(t('review.sent'));
+    } catch (err) {
+      explain(err);
+    }
+  };
+  const withdraw = async () => {
+    try {
+      if (await saving.withdraw()) toast.success(t('review.withdrawn'));
     } catch (err) {
       explain(err);
     }
@@ -488,6 +524,47 @@ function Composer({
         </Banner>
       )}
       {!locked && !mayEdit && <Banner tone="warning">{t('notYours')}</Banner>}
+      {inReviewPost && (
+        <Banner
+          action={
+            isAuthor ? (
+              <Button
+                size="sm"
+                variant="ghost"
+                loading={saving.acting === 'withdraw'}
+                disabled={saving.acting !== null}
+                onClick={() => void withdraw()}
+              >
+                {t('review.withdraw')}
+              </Button>
+            ) : can('posts:approve') ? (
+              <Link
+                to="/w/$slug/approvals"
+                params={{ slug: workspace.slug }}
+                search={{ post: inReviewPost.id }}
+                className="text-ink text-sm font-semibold underline underline-offset-2"
+              >
+                {t('review.open')}
+              </Link>
+            ) : null
+          }
+        >
+          {isAuthor ? t('review.waitingMine') : t('review.waiting')}
+        </Banner>
+      )}
+      {changesAsked && (
+        <Banner tone="warning">
+          {changesAsked.note
+            ? t('review.changesNote', {
+                name: changesAsked.actor?.name ?? t('review.someone'),
+                note: changesAsked.note,
+              })
+            : t('review.changes', { name: changesAsked.actor?.name ?? t('review.someone') })}
+        </Banner>
+      )}
+      {approved && !readOnly && !can('posts:approve') && (
+        <Banner>{t('review.approvedEditing', { name: approvedBy ?? t('review.someone') })}</Banner>
+      )}
       {!readOnly && mode === 'draft' && preferredAt && (
         <Banner>{t('calendarTime', { time: time.format(preferredAt, 'long') })}</Banner>
       )}
@@ -731,6 +808,8 @@ function Composer({
             queue={queue}
             canPublish={can('posts:publish')}
             reviewRequired={reviewRequired}
+            onSubmit={offerSubmit ? () => void submit() : undefined}
+            inReview={inReview}
             blocked={validation.blocked.size}
             noAccounts={draft.accountIds.length === 0}
           />

@@ -22,11 +22,11 @@
 - [ ] P4-B11 Email templates: review request, approved, changes requested, task assigned
 
 ## Frontend
-- [ ] P4-F1 Composer: Submit for review path; banner when editing an approved post
-- [ ] P4-F2 Approvals queue + review panel (previews, approve, approve & schedule, request changes)
+- [x] P4-F1 Composer: Submit for review path; banner when editing an approved post — done 2026-10-08 (`features/composer`, [composer](../frontend/areas/composer.md)): the post's details carry `review` (needed, latest step); Submit for review in place of the send buttons while review is needed; banners for waiting (Take back / Review it), changes requested (with the note) and approved. QA COMP-100–103
+- [x] P4-F2 Approvals queue + review panel (previews, approve, approve & schedule, request changes) — done 2026-10-08 (`features/approvals`, route `/w/:slug/approvals`, [approvals](../frontend/areas/approvals.md)): Waiting and Decided, the review panel (previews, history, Approve, Approve & schedule, Request changes with a note), My submissions for contributors, the sidebar count, live. Comments on the panel come with P4-F3. QA APR-01–20
 - [ ] P4-F3 Comments thread on review panel and post detail; @mention autocomplete
 - [ ] P4-F4 Tasks page + task creation from a post
-- [ ] P4-F5 Settings: review requirement toggle; per-member account access. Account access done 2026-10-08 (`features/settings/components/account-access-dialog.tsx`, [workspace-settings](../frontend/areas/workspace-settings.md)): an accounts line under each member's role, and the dialog; `Member.accountIds` in the members list; QA SET-28/29. Left: the review switch, with P4-B2 (before approvals exist, turning it on would stop all publishing)
+- [x] P4-F5 Settings: review requirement toggle; per-member account access. Account access done 2026-10-08 (`features/settings/components/account-access-dialog.tsx`, [workspace-settings](../frontend/areas/workspace-settings.md)): an accounts line under each member's role, and the dialog; `Member.accountIds` in the members list; QA SET-28/29. The review switch done 2026-10-08 with approvals (General → Review); QA SET-14
 - [ ] P4-F6 AI studio page + composer side panel (images with their captions, and captions for your own photos; video when the AI service supports it); a fixed form per type; job states; results to library/editor, shown as proposals that are applied explicitly and can be undone ([ai-studio](../frontend/areas/ai-studio.md#how-results-are-shown-show-then-apply-then-undo))
 - [ ] P4-F7 Design system additions: CommentThread, MentionInput, JobProgress, AvatarStack (reviewers, commenters)
 - [ ] P4-F8 Home page: needs attention, up next, get started (moved from the calendar), quick actions, my tasks, recent activity; `/w/:slug` opens it instead of the calendar ([home](../frontend/areas/home.md), decided 2026-10-06)

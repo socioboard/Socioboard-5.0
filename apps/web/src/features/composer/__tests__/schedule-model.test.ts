@@ -72,6 +72,7 @@ describe('what the dialog opens on', () => {
       initialAt: '2026-10-07T03:30:00Z',
       post: undefined,
       recurrence: null,
+      review: { needed: false, latest: null },
       now: NOW,
       timeZone: 'Asia/Kolkata',
     };

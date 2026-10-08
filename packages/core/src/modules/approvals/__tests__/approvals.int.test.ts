@@ -1,7 +1,13 @@
 // Approvals (P4-B2) against Postgres: contributors send drafts for review; approvers approve
 // (optionally scheduling at once) or send them back; a post that needs review can't go out
 // until approved; and editing an approved post without approve rights sends it back.
-import { ErrorEnvelope, type Post, type ReviewItem, type ReviewStep } from '@socioboard/contracts';
+import {
+  ErrorEnvelope,
+  type Post,
+  type PostDetails,
+  type ReviewItem,
+  type ReviewStep,
+} from '@socioboard/contracts';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createTestApp } from '../../../testing';
@@ -86,6 +92,12 @@ describe('approvals', () => {
     });
     expect(sent.status, JSON.stringify(sent.body)).toBe(200);
     expect((sent.body as Post).status).toBe('in_review');
+    // The post's details say it needs review, and where its review stands.
+    const details = (await editor.get(`${base()}/posts/${post.id}`)).body as PostDetails;
+    expect(details.review).toMatchObject({
+      needed: true,
+      latest: { action: 'submitted', note: 'Launch copy', actor: { name: 'ap-contrib' } },
+    });
     const again = await contributor.post(`${base()}/posts/${post.id}/submit`, {});
     expect([again.status, code(again)]).toEqual([409, 'POST_IN_REVIEW']);
     // Only approvers see the queue.

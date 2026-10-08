@@ -27,7 +27,12 @@
       "nameRequired": "Give the workspace a name.",
       "nameLong": "Use 80 characters or fewer.",
       "slugInvalid": "Use 3–48 lowercase letters, numbers and single hyphens."
-    }
+    },
+    "review": "Review",
+    "reviewBody": "Contributors’ posts always need approval before they go out. Turn this on to have every post approved by someone other than its author.",
+    "reviewAll": "Review every post before it goes out",
+    "reviewOn": "Every post now needs approval before it goes out.",
+    "reviewOff": "Only contributors’ posts need approval now."
   },
   "danger": {
     "title": "Danger zone",

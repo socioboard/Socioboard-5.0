@@ -75,5 +75,11 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-91** Two accounts chosen, one without posting times → Add to queue is disabled and names that account.
 - [ ] **COMP-92** From a free queue slot's "Write a post" → the composer opens with that time and account chosen.
 
+## Review
+- [ ] **COMP-100** As a contributor (or anyone, when the workspace reviews every post): no Publish now, Schedule or Add to queue; **Submit for review** instead, disabled until accounts are chosen and problems fixed. Submit → toast; the post shows "Waiting for review".
+- [ ] **COMP-101** Waiting for review: the author can still edit, and **Take back** makes it a draft again; an editor opening it sees **Review it**.
+- [ ] **COMP-102** Sent back: the draft shows "… asked for changes" with the reviewer's note; Submit for review is offered again.
+- [ ] **COMP-103** Approved: an editor sees Publish now and Schedule again. A contributor editing it sees "Changing it sends it back for review"; saving a change puts it back in review and unschedules it.
+
 ## Not built yet
-Options panels for Pinterest, YouTube and TikTok and their previews (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4), Submit for review (phase 4).
+Options panels for Pinterest, YouTube and TikTok and their previews (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4).
