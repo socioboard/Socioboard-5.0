@@ -1,0 +1,14 @@
+{
+  "method": "GET",
+  "url": "https://api.linkedin.com/v2/userinfo",
+  "requestHeaders": { "authorization": "Bearer li-access" },
+  "status": 200,
+  "response": {
+    "sub": "782bbtaQ",
+    "name": "Priya Raman",
+    "given_name": "Priya",
+    "family_name": "Raman",
+    "picture": "https://media.licdn.com/dms/image/fake/profile-displayphoto-shrink_100_100/0/",
+    "locale": "en-US"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/videos",
+  "query": { "action": "initializeUpload" },
+  "requestHeaders": { "linkedin-version": "202609", "authorization": "Bearer li-access" },
+  "body": {
+    "initializeUploadRequest": "{\"owner\":\"urn:li:person:782bbtaQ\",\"fileSizeBytes\":10,\"uploadCaptions\":false,\"uploadThumbnail\":false}"
+  },
+  "status": 200,
+  "response": {
+    "value": {
+      "uploadUrlsExpireAt": 4102444800000,
+      "video": "urn:li:video:C5505AQFakeVid01",
+      "uploadInstructions": [
+        {
+          "uploadUrl": "https://www.linkedin.com/dms-uploads/C5505AQFakeVid01/uploadedVideo/0?sau=fake0",
+          "firstByte": 0,
+          "lastByte": 5
+        },
+        {
+          "uploadUrl": "https://www.linkedin.com/dms-uploads/C5505AQFakeVid01/uploadedVideo/1?sau=fake1",
+          "firstByte": 6,
+          "lastByte": 9
+        }
+      ],
+      "uploadToken": ""
+    }
+  }
+}

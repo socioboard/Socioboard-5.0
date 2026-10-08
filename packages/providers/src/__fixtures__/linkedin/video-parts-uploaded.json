@@ -1,0 +1,20 @@
+[
+  {
+    "method": "PUT",
+    "url": "https://www.linkedin.com/dms-uploads/C5505AQFakeVid01/uploadedVideo/0",
+    "requestHeaders": { "content-type": "application/octet-stream" },
+    "body": { "bytes": "6" },
+    "status": 200,
+    "headers": { "etag": "/ambry-video/signedId/FakePart0.bin" },
+    "response": ""
+  },
+  {
+    "method": "PUT",
+    "url": "https://www.linkedin.com/dms-uploads/C5505AQFakeVid01/uploadedVideo/1",
+    "requestHeaders": { "content-type": "application/octet-stream" },
+    "body": { "bytes": "4" },
+    "status": 200,
+    "headers": { "etag": "\"/ambry-video/signedId/FakePart1.bin\"" },
+    "response": ""
+  }
+]

@@ -122,7 +122,14 @@
       "more": "More",
       "reply": "Reply"
     },
-    "play": "Play {{name}}"
+    "play": "Play {{name}}",
+    "linkedin": {
+      "more": "more",
+      "like": "Like",
+      "comment": "Comment",
+      "repost": "Repost",
+      "send": "Send"
+    }
   },
   "view": {
     "label": "Show",

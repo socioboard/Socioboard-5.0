@@ -11,7 +11,7 @@ What to check in the app, screen by screen, for everything built so far. Each ch
 | Approvals | [approvals](approvals.md) | Review queue, review panel, approve, approve & schedule, request changes, my submissions |
 | Settings and profile | [settings](settings.md) | Workspace settings, members and invitations, profile, security, sessions |
 | Media library | [media](media.md) | Upload, processing, folders, filters, details, delete |
-| Accounts | [accounts](accounts.md) | Connecting Facebook, Instagram and X, the asset picker, reconnect, disconnect, posting times |
+| Accounts | [accounts](accounts.md) | Connecting Facebook, Instagram, X and LinkedIn, the asset picker, reconnect, disconnect, posting times |
 | Composer | [composer](composer.md) | Writing a post, per-network versions, previews, checks, save, publish, schedule, repeat, queue |
 | Posts | [posts](posts.md) | Posts list, a post's page, deliveries, failures and retry, labels, duplicate, delete |
 | Calendar and queue | [calendar](calendar.md) | Month, week, phone agenda, drag to reschedule, quick look, queue |

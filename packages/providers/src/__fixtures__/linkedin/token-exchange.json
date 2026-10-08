@@ -1,0 +1,17 @@
+{
+  "method": "POST",
+  "url": "https://www.linkedin.com/oauth/v2/accessToken",
+  "body": {
+    "grant_type": "authorization_code",
+    "code": "li-code",
+    "client_id": "client",
+    "client_secret": "secret",
+    "redirect_uri": "https://app.test/api/oauth/linkedin/callback"
+  },
+  "status": 200,
+  "response": {
+    "access_token": "li-access",
+    "expires_in": 5184000,
+    "scope": "openid,profile,w_member_social"
+  }
+}

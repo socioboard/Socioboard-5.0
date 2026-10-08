@@ -28,6 +28,7 @@ The most important screen in the product: write once, tailor per network, see ex
 - Uses the connected account's real name and avatar.
 - Shows what the network will cut: e.g. Instagram crops to the chosen ratio, X shows the 280-char cut, LinkedIn shows the "…see more" point.
 - **X** (P3-B2): the name, @handle and "now"; the text as X will post it (the link added after it unless the text has it); photos in X's layouts (one in its own shape, a wide one whole and a tall one trimmed to 3:4, two side by side, one tall beside two, 2 × 2); a link card ("From <host>") when there's no media; X's action row. Posts with a link get the `X_LINK_COST` note, since X charges more for them.
+- **LinkedIn** (P3-B1, `previews/linkedin-preview.tsx`): the name, "Just now" and the globe of a public post; the text as LinkedIn receives it (the link added after it, no link card: LinkedIn's API builds none), cut at "…more" after three lines or about 210 characters (`LINKEDIN_PREVIEW`); photos in LinkedIn's layouts (one in its own shape, a tall one cut to 4:5; two side by side; three as one above two; four or more as one above three with "+N"); one video alone (it plays in place, like every preview's video); Like / Comment / Repost / Send. Brackets show as typed: the escaping for LinkedIn's text format happens in the adapter.
 - On mobile the preview is a toggle ("Edit" / "Preview").
 
 ## Validation

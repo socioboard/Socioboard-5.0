@@ -36,12 +36,13 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-36** **Threads:** username and "now"; the whole text; one photo in its own shape, several side by side (scroll sideways); a link card when there's no photo, else the link at the end of the text; the first comment shown as a reply.
 - [ ] **COMP-37** Threads tab: **Who can reply** (Anyone, Profiles you follow, Your followers, Mentioned only); the post on Threads has that setting.
 - [ ] **COMP-38** A video in the preview: its poster with a play button once processed; pressing it plays the video in place, with sound and the browser's controls. While still processing, only the poster.
+- [ ] **COMP-38L** **LinkedIn:** your name and picture, "Just now" and the globe; long text cut after three lines with "…more" (which expands); the link added after the text as plain text, with no link card (LinkedIn doesn't make one for apps); one photo in its own shape, two side by side, three as one above two, four or more as one above three with "+N"; a video alone, which plays in place from its play button once processed; Like / Comment / Repost / Send.
 
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.
 - [ ] **COMP-41** Clicking a problem takes you to its tab and field (e.g. the X tab's text).
 - [ ] **COMP-42** A network with a problem has a red mark on its tab.
-- [ ] **COMP-43** Examples to try: text too long for X; 5 photos on X ("up to 4"); a GIF plus a photo on X ("a GIF or a video goes alone"); a link on X (note: "X charges more for posts with a link"); Instagram with no photo; a link in an Instagram caption (note: not clickable).
+- [ ] **COMP-43** Examples to try: text too long for X; 5 photos on X ("up to 4"); a GIF plus a photo on X ("a GIF or a video goes alone"); a link on X (note: "X charges more for posts with a link"); Instagram with no photo; a link in an Instagram caption (note: not clickable); on LinkedIn, a photo and a video together ("can't mix photos and videos"), two videos ("up to 1"), 21 photos ("up to 20"), a video shorter than 3 seconds.
 - [ ] **COMP-44** Network down or the server slow → "Checking…", then the quick checks stay with a note.
 
 ## Saving
@@ -57,6 +58,7 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-62** Double-click Publish now, or click it twice fast → the post goes out once.
 - [ ] **COMP-63** Opening a published post → read-only, with a link to its page.
 - [ ] **COMP-64** As contributor: no Publish now, Schedule or Add to queue; Save draft and a line saying who sends it out.
+- [ ] **COMP-65L** **LinkedIn** (keep test posts few: LinkedIn caps posts from members who haven't verified their identity, and then the post fails saying so): publish (a) text with brackets, an underscore and a hashtag, e.g. `QA (test) [ok] a_b #socioboard`, plus a link in the Link field; (b) one photo with alt text; (c) three photos; (d) a video, MP4 and one MOV from a phone. Each appears on your LinkedIn profile as written: no backslashes, nothing cut off, the link and hashtag clickable, photos in order; the post's page links to it.
 
 ## Schedule
 - [ ] **COMP-70** **Schedule** → a calendar and a time, in the workspace's time zone ("Times are in Kolkata time"), starting about an hour from now.

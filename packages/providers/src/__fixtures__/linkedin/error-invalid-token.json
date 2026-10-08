@@ -1,0 +1,6 @@
+{
+  "method": "GET",
+  "url": "https://api.linkedin.com/v2/userinfo",
+  "status": 401,
+  "response": { "status": 401, "serviceErrorCode": 65600, "message": "Invalid access token" }
+}

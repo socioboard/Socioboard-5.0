@@ -1,0 +1,20 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "requestHeaders": {
+    "authorization": "Bearer li-access",
+    "linkedin-version": "202609",
+    "x-restli-protocol-version": "2.0.0"
+  },
+  "body": {
+    "author": "\"urn:li:person:782bbtaQ\"",
+    "commentary": "\"Fresh roast today \\\\(Kenya\\\\) #coffee\"",
+    "visibility": "\"PUBLIC\"",
+    "lifecycleState": "\"PUBLISHED\""
+  },
+  "status": 201,
+  "headers": {
+    "x-restli-id": "urn:li:share:7000000000000000001"
+  },
+  "response": ""
+}

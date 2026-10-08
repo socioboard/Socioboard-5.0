@@ -1,0 +1,15 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/images",
+  "query": { "action": "initializeUpload" },
+  "requestHeaders": { "linkedin-version": "202609", "x-restli-protocol-version": "2.0.0" },
+  "body": { "initializeUploadRequest": "{\"owner\":\"urn:li:person:782bbtaQ\"}" },
+  "status": 200,
+  "response": {
+    "value": {
+      "uploadUrlExpiresAt": 4102444800000,
+      "uploadUrl": "https://www.linkedin.com/dms-uploads/C4E10AQFakeImg01/uploaded-image/0?ca=vector_ads&cn=uploads&sync=0&v=beta&ut=fake",
+      "image": "urn:li:image:C4E10AQFakeImg01"
+    }
+  }
+}

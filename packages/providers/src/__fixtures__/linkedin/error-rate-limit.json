@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "status": 429,
+  "response": {
+    "status": 429,
+    "message": "Resource level throttle limit for calls to this resource is reached."
+  }
+}

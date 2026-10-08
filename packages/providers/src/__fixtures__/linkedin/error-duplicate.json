@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "status": 422,
+  "response": {
+    "status": 422,
+    "message": "Content is a duplicate of urn:li:share:7000000000000000001"
+  }
+}
