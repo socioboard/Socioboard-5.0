@@ -26,9 +26,9 @@ An upload slot is a `MediaAsset` in `uploading` status with `source: ai` and `ai
 ## Inputs (fixed per type, in `packages/contracts/src/ai.ts`)
 | Type | Fields |
 | --- | --- |
-| text | prompt, tone (friendly, professional, playful, bold), length (short, medium, long), variations (1–5) |
-| image | prompt, aspect ratio (1:1, 4:5, 9:16, 16:9), count (1–4), reference image? |
-| video | prompt, aspect ratio (9:16, 16:9, 1:1), duration in seconds, reference image? |
+| text | prompt (1–2,000 characters), tone (friendly, professional, playful, bold), length (short, medium, long), variations (1–5) |
+| image | prompt (1–2,000 characters), aspect ratio (1:1, 4:5, 9:16, 16:9), count (1–4), reference image? |
+| video | prompt (1–2,000 characters), aspect ratio (9:16, 16:9, 1:1), duration (5–60 seconds), reference image? |
 
 Every job also carries its target networks' `ContentRules` (character limit, sizes, ratios, durations), so outputs fit where they'll be posted.
 
@@ -68,5 +68,6 @@ Every job also carries its target networks' `ContentRules` (character limit, siz
 - Upload slots: only while the job runs, at most 20 per job, the same types and size limits as browser uploads (images 20 MB, video 1 GB), valid one hour.
 - If the AI service is not configured (self-host without it), AI is off: `GET /api/v1/ai` says so and the UI hides it.
 - Content-policy refusals (`error.code: content_policy`) are shown with the AI service's message and use no credits.
+- Timeouts: 30 s for `POST /jobs` (5xx, 429 and timeouts retried with the same `Idempotency-Key`); the AI service keeps finished jobs' status 7 days for the fallback poll, and no files.
 - Config: `AI_SERVICE_URL`, `AI_SERVICE_KEY` (our calls), `AI_WEBHOOK_SECRET` (their calls).
 - **Mock:** `apps/ai-mock` implements the AI service's two endpoints and calls ours back with sample outputs; CI checks it against their OpenAPI file once it's published in `socioboard/socioboard-ai`.
