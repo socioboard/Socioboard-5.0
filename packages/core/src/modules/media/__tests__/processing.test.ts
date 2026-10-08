@@ -1,8 +1,12 @@
 import sharp from 'sharp';
-import { describe, expect, it } from 'vitest';
+import { existsSync, readFileSync } from 'node:fs';
+import { createServer } from 'node:http';
+import type { AddressInfo } from 'node:net';
+
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { decodeCursor, encodeCursor, toPage } from '../../../platform';
-import { analyzeImage, analyzeVideo } from '../processing';
+import { analyzeImage, analyzeVideo, withLocalCopy } from '../processing';
 
 const png = (width: number, height: number) =>
   sharp({ create: { width, height, channels: 3, background: '#3366ff' } })
@@ -59,6 +63,42 @@ describe('analyzeVideo', () => {
         ffprobePath: 'definitely-not-installed-ffprobe',
       }),
     ).rejects.toMatchObject({ name: 'ToolMissingError' });
+  });
+});
+
+describe('withLocalCopy', () => {
+  // A stored file served over HTTP, as storage hands the worker a signed URL.
+  const bytes = Buffer.from('a stored video, or close enough');
+  const server = createServer((req, res) => {
+    if (req.url === '/video.mp4') res.end(bytes);
+    else res.writeHead(404).end();
+  });
+  let base = '';
+  beforeAll(async () => {
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    base = `http://127.0.0.1:${String((server.address() as AddressInfo).port)}`;
+  });
+  afterAll(() => {
+    server.close();
+  });
+
+  it('hands over a local copy of the file, and removes it afterwards', async () => {
+    let seen = '';
+    const read = await withLocalCopy(`${base}/video.mp4`, 1000, (path) => {
+      seen = path;
+      return Promise.resolve(readFileSync(path));
+    });
+    expect(read.equals(bytes)).toBe(true);
+    expect(existsSync(seen)).toBe(false);
+  });
+
+  it('refuses a file over the limit, and one that is not there', async () => {
+    await expect(withLocalCopy(`${base}/video.mp4`, 10, () => Promise.resolve())).rejects.toThrow(
+      /over 10 bytes/,
+    );
+    await expect(withLocalCopy(`${base}/gone.mp4`, 1000, () => Promise.resolve())).rejects.toThrow(
+      /HTTP 404/,
+    );
   });
 });
 
