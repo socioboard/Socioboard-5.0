@@ -167,6 +167,39 @@ describe('loadConfig', () => {
     expect(loadConfig({ ...base, META_GRAPH_VERSION: '25.0' }).networks.graphVersion).toBe('v25.0');
   });
 
+  it('turns each OAuth network and Bitly on only when its client id and secret are set together', () => {
+    const none = loadConfig(base);
+    for (const n of [
+      'x',
+      'linkedin',
+      'youtube',
+      'pinterest',
+      'tiktok',
+      'snapchat',
+      'tumblr',
+    ] as const) {
+      expect(none.networks[n]).toBeUndefined();
+    }
+    expect(none.shorteners.bitly).toBeUndefined();
+    const set = loadConfig({
+      ...base,
+      LINKEDIN_CLIENT_ID: 'li',
+      LINKEDIN_CLIENT_SECRET: 'ls',
+      TIKTOK_CLIENT_ID: 'tk',
+      TIKTOK_CLIENT_SECRET: 'ts',
+      BITLY_CLIENT_ID: 'bi',
+      BITLY_CLIENT_SECRET: 'bs',
+    });
+    expect(set.networks.linkedin).toEqual({ clientId: 'li', clientSecret: 'ls' });
+    expect(set.networks.tiktok).toEqual({ clientId: 'tk', clientSecret: 'ts' });
+    expect(set.networks.youtube).toBeUndefined();
+    expect(set.shorteners.bitly).toEqual({ clientId: 'bi', clientSecret: 'bs' });
+    expect(() => loadConfig({ ...base, PINTEREST_CLIENT_ID: 'p' })).toThrow(
+      /PINTEREST_CLIENT_ID and PINTEREST_CLIENT_SECRET must be set together/,
+    );
+    expect(() => loadConfig({ ...base, BITLY_CLIENT_SECRET: 'b' })).toThrow(/BITLY_CLIENT_ID and/);
+  });
+
   it('takes an optional public media address', () => {
     expect(loadConfig(base).media.publicUrl).toBeUndefined();
     expect(loadConfig({ ...base, MEDIA_PUBLIC_URL: '' }).media.publicUrl).toBeUndefined();

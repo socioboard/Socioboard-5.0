@@ -18,7 +18,7 @@ Both import the same feature modules from `packages/core/src/modules/*`.
 | [workspaces](modules/workspaces.md)           | Workspaces, members, roles, invitations, workspace settings                                                                           | 0               |
 | [media](modules/media.md)                     | Uploads, media library, processing, public URLs                                                                                       | 0–1             |
 | [audit](modules/audit.md)                     | Audit log of sensitive actions                                                                                                        | 0 (used by all) |
-| [providers](modules/providers.md)             | One adapter per social network; content rules; registry                                                                               | 1, 3            |
+| [providers](modules/providers.md)             | One adapter per social network; content rules; registry ([adding a network](adding-a-network.md))                                    | 1, 3            |
 | [social-accounts](modules/social-accounts.md) | Connecting accounts via OAuth, tokens, groups, member access                                                                          | 1               |
 | [posts](modules/posts.md)                     | Posts, per-account targets, drafts, overrides, validation, previews                                                                   | 1               |
 | [publishing](modules/publishing.md)           | Publish jobs, media preparation, retries, results                                                                                     | 1–2             |

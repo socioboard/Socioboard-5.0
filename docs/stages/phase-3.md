@@ -4,7 +4,7 @@
 
 **Modules:** [providers](../backend/modules/providers.md), [social-accounts](../backend/modules/social-accounts.md), [shortlinks](../backend/modules/shortlinks.md) · **Areas:** [accounts](../frontend/areas/accounts.md), [composer](../frontend/areas/composer.md) (previews + network options)
 
-Each network is the same checklist. Build order: LinkedIn → X → YouTube → Pinterest → TikTok → Snapchat → Tumblr → Threads.
+Each network is the same checklist, step by step in [adding a network](../backend/adding-a-network.md). Build order: LinkedIn → X → YouTube → Pinterest → TikTok → Snapchat → Tumblr → Threads.
 
 ## Contracts
 - [x] P3-C1 Network options schemas per network (board, title, privacy, TikTok settings, IG post type); shortener endpoints — done (`packages/contracts/src/network-options.ts`, `shortlinks.ts`): `TargetOptions` for Instagram, Pinterest, YouTube and TikTok with `OPTIONS_NETWORKS` (the posts API's check now reads it); `GET /accounts/:aid/options` mounted, answered by the adapter's new `optionChoices` (Pinterest boards, TikTok creator info, YouTube privacy levels); the five shortener routes listed for P3-B8 in `pending-routes.ts`. `autoShorten` is a setting of the shortener connection rather than of the workspace (shortlinks.md)

@@ -72,7 +72,7 @@ Every adapter must support any number of logins per workspace and any number of 
 
 ## Registry
 - `registry.login(provider)` and `registry.network(networkId)` return the adapter or throw `NETWORK_NOT_ENABLED`.
-- A login registers only when its env keys are set (`META_APP_ID` + `META_APP_SECRET` for `facebook`, `INSTAGRAM_APP_ID` + `INSTAGRAM_APP_SECRET` for `instagram`, …); a network is enabled when at least one of its logins is. Self-hosters see only what they configured.
+- A login registers only when its env keys are set (`META_APP_ID` + `META_APP_SECRET` for `facebook`, `INSTAGRAM_APP_ID` + `INSTAGRAM_APP_SECRET` for `instagram`, `THREADS_APP_ID` + `THREADS_APP_SECRET` for `threads`, `<PROVIDER>_CLIENT_ID` + `_CLIENT_SECRET` for the OAuth 2 networks: `X`, `LINKEDIN`, `YOUTUBE`, `PINTEREST`, `TIKTOK`, `SNAPCHAT`, `TUMBLR`); a network is enabled when at least one of its logins is. Self-hosters see only what they configured.
 
 ## Per-network notes (build details)
 | Network | Auth | Publish path | Notes |
