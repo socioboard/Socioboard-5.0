@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Socioboard endpoints for the AI service
-  version: 0.1.0
+  version: 0.2.0
   description: |
     The two endpoints Socioboard exposes to the AI service (P4-C2, docs/backend/modules/ai.md).
     The AI service's own endpoints (`POST /jobs`, `GET /jobs/{jobId}`) are specified in its
@@ -14,8 +14,9 @@ info:
     3. When the job ends, it sends one result update (`POST /api/v1/ai/callbacks/result`) naming the
        uploaded files by the `key` each slot returned.
 
-    Text-only jobs skip step 2. While a job runs, the AI service may also send result updates
-    with `status: running` and a `progress`, so people see how far along a video is.
+    While a job runs, the AI service may also send result updates with `status: running` and a
+    `progress` (0 to 1, never going down): at most one every 5 seconds, best effort, never retried.
+    Only the final update is retried, until a 2xx.
 
     **Signing.** Every request to these endpoints carries
     `X-Socioboard-Signature: t=<unix seconds>,v1=<hex>`, where `<hex>` is
@@ -99,16 +100,10 @@ paths:
                       height: 1350
                       durationSec: null
                       sizeBytes: 1843200
-                  text: []
+                  text: ['Fresh roast, Monday mood. #coffee #morning  Order today.']
+                  copies:
+                    - { caption: 'Fresh roast, Monday mood.', hashtags: [coffee, morning], cta: Order today. }
                   usage: { model: example-image-model, tokens: 0, images: 1, seconds: 0 }
-              text:
-                value:
-                  reference: aij_01JA8R
-                  jobId: job_83b0
-                  status: succeeded
-                  outputs: []
-                  text: ['Fresh roast, Monday mood.', 'New week, new beans.']
-                  usage: { model: example-text-model, tokens: 412, images: 0, seconds: 0 }
               progress:
                 value: { reference: aij_01JA8S, jobId: job_83b1, status: running, progress: 0.4 }
               refused:
@@ -118,7 +113,8 @@ paths:
                   status: failed
                   error:
                     code: content_policy
-                    message: This prompt asks for a real person's likeness, which we can't create.
+                    label: We can't create images of real people.
+                    message: 'Provider safety block: person_likeness (HTTP 400)'
                     retryable: false
                   usage: { model: example-image-model, tokens: 0, images: 0, seconds: 0 }
       responses:
@@ -180,8 +176,17 @@ components:
           type: array
           maxItems: 10
           items: { type: string, maxLength: 10000 }
-          description: Generated text, one entry per variation.
-        usage: { $ref: '#/components/schemas/Usage' }
+          description: Each caption ready to post (caption, hashtags and call to action joined).
+        copies:
+          type: array
+          maxItems: 10
+          items: { $ref: '#/components/schemas/Copy' }
+          description: The same captions in parts, in the same order as `text`.
+        usage:
+          oneOf:
+            - { $ref: '#/components/schemas/Usage' }
+            - { type: 'null' }
+          description: Null or absent while running; required when the job ends.
         error: { $ref: '#/components/schemas/JobError' }
       description: |
         `succeeded` needs `usage` and at least one output or text; `failed` needs `error` and
@@ -198,6 +203,14 @@ components:
         height: { type: integer, minimum: 1 }
         durationSec: { type: [number, 'null'], minimum: 0, description: Videos and GIFs; null for images. }
         sizeBytes: { type: integer, minimum: 1 }
+    Copy:
+      type: object
+      required: [caption, hashtags, cta]
+      additionalProperties: false
+      properties:
+        caption: { type: string, maxLength: 10000 }
+        hashtags: { type: array, maxItems: 60, items: { type: string, maxLength: 200 }, description: 'Words without the #.' }
+        cta: { type: string, maxLength: 1000 }
     Usage:
       type: object
       required: [model, tokens, images, seconds]
@@ -210,13 +223,14 @@ components:
         seconds: { type: number, minimum: 0, description: Seconds of video generated. }
     JobError:
       type: object
-      required: [code, message, retryable]
+      required: [code, label, message, retryable]
       additionalProperties: false
       properties:
         code:
           type: string
-          description: '`content_policy` for a refusal the person should see (shown as is, no credits used); otherwise a code of your own.'
-        message: { type: string, description: Plain words; shown to the person for content_policy. }
+          description: '`content_policy` for a refusal the person should see (no credits used), `canceled`, or a code of your own.'
+        label: { type: string, maxLength: 500, description: Short text safe to show people. }
+        message: { type: string, maxLength: 2000, description: Developer detail; logged, never shown. }
         retryable: { type: boolean }
     Error:
       type: object

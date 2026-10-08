@@ -5,11 +5,11 @@
 ## Screens
 | Route | Screen | Permission |
 | --- | --- | --- |
-| `/w/:slug/ai` | Full-page studio: choose Text / Image / Video → prompt and that type's settings → target networks → Generate; results gallery; recent jobs | `ai:generate` |
+| `/w/:slug/ai` | Full-page studio: prompt and settings → target networks → Generate; results gallery (each image with its caption); recent jobs | `ai:generate` |
 | (side panel in composer) | Same generator, compact; "Use this" inserts text into the editor or media into the post | `ai:generate` |
 
 ## Forms
-No templates (decided 2026-10-08): one fixed form per type, built from the contracts (`packages/contracts/src/ai.ts`, listed in [ai](../../backend/modules/ai.md#inputs-fixed-per-type-in-packagescontractssrcaits)). Text: prompt, tone, length, how many. Image: prompt, aspect ratio, how many, an optional reference image from the library. Video: prompt, aspect ratio, duration, an optional reference image. The aspect ratio starts at what the chosen networks take. `GET /api/v1/ai` says whether AI is on.
+No templates (decided 2026-10-08): one fixed form, built from the contracts (`packages/contracts/src/ai.ts`, listed in [ai](../../backend/modules/ai.md#inputs-fixed-per-type-in-packagescontractssrcaits)). At launch the AI service makes images, each with a ready-to-post caption: prompt, post type (post, carousel, quote, story, thumbnail, banner), aspect ratio (starts at what the chosen networks take), how many, and up to 5 reference images from the library. Text on its own and video come later. A result's caption shows in its parts (caption, hashtags, call to action), and "Use this" puts the joined caption in the editor. `GET /api/v1/ai` says whether AI is on.
 
 ## States
 queued → running (progress when the AI service reports it, else "this can take a few minutes" for video) → succeeded (results) / failed (reason; content-policy refusals explained) / cancelled. Live via socket `ai.job.updated`.
