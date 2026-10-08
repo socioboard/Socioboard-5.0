@@ -286,7 +286,6 @@ Then, in the browser: sign in, open a page (live updates connect), upload an ima
 | Ports **3000 and 3001 reachable from the internet** | Left open on purpose (2026-10-06) | Skips Cloudflare, HTTPS and nginx; close for production |
 | Deploy on every merge | Engineering | Manual (`deploy.sh`) for now |
 | Network developer apps pointed at the staging callbacks, keys in the env file | Engineering + you | Done for Meta (Facebook, Instagram and Threads callbacks, app domain, keys: 2026-10-07) and X; the other networks join with their phase 3 tasks |
-| Data deletion instructions page (`/data-deletion`, set as the Meta app's data deletion URL) | Engineering + you | Not built yet (P0-R1 / P5-B6): the URL shows the app's Not found page, which Meta reviewers will open |
 | Cloudflare SSL mode "Full (strict)" | DevOps | Confirm |
 | NAS's DSM admin page open to the internet (ports 5000/5001) | DevOps / NAS team | Restrict to office or VPN |
 | Test data: accounts `nas-check-…@example.test`, workspaces "Staging NAS check …" | Engineering | Remove when convenient |
