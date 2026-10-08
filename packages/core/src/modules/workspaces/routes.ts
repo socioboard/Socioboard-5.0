@@ -25,6 +25,12 @@ export function registerWorkspaceRoutes(api: ApiRouter, ws: WorkspaceService) {
   api.route(r.updateMember, ({ auth, member, params, body }) =>
     ws.updateMember(auth, member, params.memberId, body.role),
   );
+  api.route(r.getMemberAccountAccess, ({ member, params }) =>
+    ws.getAccountAccess(member, params.memberId, can(member.role, 'members:manage')),
+  );
+  api.route(r.setMemberAccountAccess, ({ auth, member, params, body }) =>
+    ws.setAccountAccess(auth, member, params.memberId, body.accountIds),
+  );
   api.route(r.removeMember, ({ auth, member, params }) =>
     ws.removeMember(auth, member, params.memberId, can(member.role, 'members:manage')),
   );

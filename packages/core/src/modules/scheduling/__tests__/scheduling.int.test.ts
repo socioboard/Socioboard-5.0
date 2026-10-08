@@ -325,7 +325,7 @@ describe('when queueing fails', () => {
       },
       session: { id: 'test', activeWorkspaceId: ws },
     };
-    const member = { workspaceId: ws, memberId: 'test', role: 'owner' as const };
+    const member = { workspaceId: ws, memberId: 'test', role: 'owner' as const, accountIds: null };
     await expect(broken.publishNow(auth, member, post.id, undefined)).rejects.toThrow('queue down');
 
     const [after] = await targetRows(post.id);

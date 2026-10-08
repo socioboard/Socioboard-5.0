@@ -127,6 +127,20 @@ export function createCalendarService(deps: { entries: CalendarEntries }) {
       status: { in: query.status ?? CALENDAR_STATUSES },
       ...(query.accountId ? { socialAccountId: { in: query.accountId } } : {}),
       ...(query.labelId ? { post: { labelIds: { has: query.labelId } } } : {}),
+      // A member limited to some accounts sees the posts that go only to those (P4-B4).
+      ...(member.accountIds === null
+        ? {}
+        : {
+            AND: [
+              {
+                post: {
+                  NOT: {
+                    targets: { some: { socialAccountId: { notIn: [...member.accountIds] } } },
+                  },
+                },
+              },
+            ],
+          }),
       OR: [
         { publishedAt: inRange },
         { publishedAt: null, scheduledAt: inRange },

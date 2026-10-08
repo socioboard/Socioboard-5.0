@@ -30,8 +30,10 @@ import {
 
 import {
   AppError,
+  canUseAccount,
   newId,
   notFound,
+  onlyMemberAccounts,
   typedEvents,
   unprocessable,
   type AuthContext,
@@ -179,6 +181,12 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     });
     if (!c) throw notFound('CONNECTION_NOT_FOUND', 'Login not found');
     return c;
+  }
+
+  /** An account the member may use; the same 404 as a foreign id for one they may not (P4-B4). */
+  async function findMemberAccount(member: MemberContext, accountId: string) {
+    if (!canUseAccount(member, accountId)) throw notFound('ACCOUNT_NOT_FOUND', 'Account not found');
+    return findAccount(member.workspaceId, accountId);
   }
 
   async function findAccount(workspaceId: string, accountId: string) {
@@ -818,7 +826,11 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
 
   async function listAccounts(member: MemberContext, network: NetworkId | undefined) {
     const rows = await scoped(member.workspaceId).socialAccount.findMany({
-      where: { status: { not: 'disconnected' }, ...(network ? { network } : {}) },
+      where: {
+        status: { not: 'disconnected' },
+        ...onlyMemberAccounts(member, 'id'),
+        ...(network ? { network } : {}),
+      },
       include: accountInclude,
       orderBy: [{ network: 'asc' }, { displayName: 'asc' }, { id: 'asc' }],
     });
@@ -829,7 +841,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     member: MemberContext,
     accountId: string,
   ): Promise<SocialAccountDetails> {
-    const a = await findAccount(member.workspaceId, accountId);
+    const a = await findMemberAccount(member, accountId);
     const pendingPostCount = await scoped(member.workspaceId).postTarget.count({
       where: { socialAccountId: a.id, ...PENDING_TARGET },
     });
@@ -850,7 +862,7 @@ export function createSocialAccountService(deps: SocialAccountServiceDeps) {
     member: MemberContext,
     accountId: string,
   ): Promise<AccountOptionChoices> {
-    const a = await findAccount(member.workspaceId, accountId);
+    const a = await findMemberAccount(member, accountId);
     if (a.status === 'disconnected' || !a.connection) {
       throw notFound('ACCOUNT_NOT_FOUND', 'Account not found or disconnected');
     }

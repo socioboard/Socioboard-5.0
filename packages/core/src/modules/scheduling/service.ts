@@ -146,6 +146,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
   /** The post's live targets, if they can be scheduled: all waiting, reviewed, no errors. */
   async function prepare(member: MemberContext, postId: string) {
     const { workspaceId } = member;
+    await posts.assertVisible(member, postId);
     const live = await liveTargets(workspaceId, postId);
     if (live.length === 0) throw unprocessable('NO_ACCOUNTS', 'Choose at least one account');
     if (live.some((t) => !WAITING_TARGET.includes(t.status))) throw alreadySent();
@@ -306,6 +307,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
   /** Takes the scheduled targets back to waiting; the post becomes a draft again. */
   async function unschedule(caller: AuthContext, member: MemberContext, postId: string) {
     const { workspaceId } = member;
+    await posts.assertVisible(member, postId);
     const live = await liveTargets(workspaceId, postId);
     const notScheduled = () => conflict('POST_NOT_SCHEDULED', 'This post isn’t scheduled');
     if (!live.some((t) => t.status === 'scheduled')) throw notScheduled();
@@ -351,6 +353,7 @@ export function createSchedulingService(deps: SchedulingDeps) {
       select: { postId: true },
     });
     if (!target) throw notFound('TARGET_NOT_FOUND', 'Target not found');
+    await posts.assertVisible(member, target.postId);
     const at = new Date(body.at);
     checkTime(at);
 

@@ -59,6 +59,8 @@ const CLASSIFIED: Record<string, Kind> = {
   transferOwnership: { kind: 'bodyRef', body: (a) => ({ memberId: a.memberId }) },
   listMembers: { kind: 'list', idsOf: 'memberId' },
   updateMember: { kind: 'resource', body: () => ({ role: 'viewer' }) },
+  getMemberAccountAccess: { kind: 'resource' },
+  setMemberAccountAccess: { kind: 'resource', body: (a) => ({ accountIds: [a.accountId] }) },
   removeMember: { kind: 'resource' },
   createInvitation: {
     kind: 'workspace',

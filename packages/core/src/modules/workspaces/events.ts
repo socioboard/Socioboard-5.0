@@ -19,6 +19,13 @@ export interface WorkspaceEvents extends Record<string, unknown> {
     to: string;
     userId: string;
   };
+  /** Limited to these accounts, or `null`: every account again (P4-B4). */
+  'member.account_access_changed': {
+    workspaceId: string;
+    memberId: string;
+    accountIds: string[] | null;
+    userId: string;
+  };
   'member.removed': {
     workspaceId: string;
     memberId: string;

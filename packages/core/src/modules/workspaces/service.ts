@@ -6,6 +6,7 @@ import type {
   Invitation,
   InvitationPreview,
   Member,
+  MemberAccountAccess,
   Role,
   UpdateWorkspaceBody,
   WorkspaceWithRole,
@@ -98,6 +99,9 @@ export function slugify(name: string): string {
     .replace(/-+$/g, '');
   return base.length >= 3 ? base : `workspace${base ? `-${base}` : ''}`;
 }
+
+/** Roles that manage accounts, and so always have every one of them (P4-B4). */
+const ALL_ACCOUNTS = ['owner', 'admin'];
 
 const isAssignable = (role: string): role is AssignableRole =>
   ['admin', 'editor', 'contributor', 'viewer'].includes(role);
@@ -383,6 +387,89 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
     };
   }
 
+  /** Which accounts a member can use: theirs to see, or any member's for `members:manage`. */
+  async function getAccountAccess(
+    member: MemberContext,
+    targetMemberId: string,
+    canManageMembers: boolean,
+  ): Promise<MemberAccountAccess> {
+    if (targetMemberId !== member.memberId && !canManageMembers) {
+      throw forbidden('FORBIDDEN', 'Your role does not allow this');
+    }
+    const target = await db.forWorkspace(member.workspaceId).member.findUnique({
+      where: { id: targetMemberId },
+      select: {
+        role: true,
+        accountsLimited: true,
+        accountAccess: { select: { socialAccountId: true }, orderBy: { createdAt: 'asc' } },
+      },
+    });
+    if (!target) throw notFound('MEMBER_NOT_FOUND', 'Member not found');
+    const limited = target.accountsLimited && !ALL_ACCOUNTS.includes(target.role);
+    return { accountIds: limited ? target.accountAccess.map((a) => a.socialAccountId) : null };
+  }
+
+  /**
+   * Limits a member to some accounts, or gives them every account again (`null`). Owners and
+   * admins can't be limited: they manage the accounts.
+   */
+  async function setAccountAccess(
+    caller: AuthContext,
+    member: MemberContext,
+    targetMemberId: string,
+    accountIds: string[] | null,
+  ): Promise<MemberAccountAccess> {
+    const scoped = db.forWorkspace(member.workspaceId);
+    const target = await scoped.member.findUnique({
+      where: { id: targetMemberId },
+      select: { id: true, role: true },
+    });
+    if (!target) throw notFound('MEMBER_NOT_FOUND', 'Member not found');
+    if (accountIds !== null && ALL_ACCOUNTS.includes(target.role)) {
+      throw unprocessable(
+        'ROLE_HAS_ALL_ACCOUNTS',
+        'Owners and admins always have every account; change the role first',
+      );
+    }
+    if (accountIds?.length) {
+      const found = await scoped.socialAccount.findMany({
+        where: { id: { in: accountIds } },
+        select: { id: true },
+      });
+      const have = new Set(found.map((a) => a.id));
+      const missing = accountIds.filter((id) => !have.has(id));
+      if (missing.length > 0) {
+        throw new AppError(404, 'ACCOUNT_NOT_FOUND', 'Account not found', { accountIds: missing });
+      }
+    }
+    await db.client.$transaction(async (tx) => {
+      await tx.memberAccountAccess.deleteMany({
+        where: { workspaceId: member.workspaceId, memberId: target.id },
+      });
+      if (accountIds?.length) {
+        await tx.memberAccountAccess.createMany({
+          data: accountIds.map((socialAccountId) => ({
+            id: newId(),
+            workspaceId: member.workspaceId,
+            memberId: target.id,
+            socialAccountId,
+          })),
+        });
+      }
+      await tx.member.update({
+        where: { id: target.id, workspaceId: member.workspaceId },
+        data: { accountsLimited: accountIds !== null },
+      });
+    });
+    await events.emit('member.account_access_changed', {
+      workspaceId: member.workspaceId,
+      memberId: target.id,
+      accountIds,
+      userId: caller.user.id,
+    });
+    return { accountIds };
+  }
+
   async function removeMember(
     caller: AuthContext,
     member: MemberContext,
@@ -607,6 +694,8 @@ export function createWorkspaceService(deps: WorkspaceServiceDeps) {
     transferOwnership,
     listMembers,
     updateMember,
+    getAccountAccess,
+    setAccountAccess,
     removeMember,
     invite,
     listInvitations,

@@ -117,7 +117,12 @@ describe('queue slots', () => {
       events: t.platform.events,
       entries: createCalendarEntries(t.db, undefined),
     });
-    const member: MemberContext = { workspaceId: ws, memberId: '', role: 'owner' };
+    const member: MemberContext = {
+      workspaceId: ws,
+      memberId: '',
+      role: 'owner',
+      accountIds: null,
+    };
     const { upcoming } = await view.get(member, acc.a);
     expect(upcoming[0]?.at).toBe('2027-01-05T03:30:00.000Z');
   });

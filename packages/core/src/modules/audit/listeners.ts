@@ -85,6 +85,12 @@ export const AUDITED: Mapping = {
     entity: { type: 'member', id: p.memberId },
     diff: { from: p.from, to: p.to },
   }),
+  'member.account_access_changed': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'member', id: p.memberId },
+    diff: { accountIds: p.accountIds },
+  }),
   'member.removed': (p) => ({
     workspaceId: p.workspaceId,
     actor: user(p.userId),
