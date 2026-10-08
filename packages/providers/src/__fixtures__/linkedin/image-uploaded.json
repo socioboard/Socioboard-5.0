@@ -1,0 +1,10 @@
+{
+  "method": "PUT",
+  "url": "https://www.linkedin.com/dms-uploads/C4E10AQFakeImg01/uploaded-image/0",
+  "requestHeaders": {
+    "authorization": "Bearer li-access",
+    "content-type": "application/octet-stream"
+  },
+  "status": 201,
+  "response": ""
+}

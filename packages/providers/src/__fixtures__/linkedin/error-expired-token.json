@@ -1,0 +1,6 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "status": 401,
+  "response": { "status": 401, "message": "The token used in the request has expired" }
+}

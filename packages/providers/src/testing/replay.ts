@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 
 /** One expected call and the answer to give. */
 export interface RecordedCall {
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   /** Origin + path, without the query. */
   url: string;
   /** Query parameters that must be present with these values (others are ignored). */
@@ -117,8 +117,10 @@ export function replayFetch(calls: RecordedCall[]): Replay {
       );
     }
     const text = typeof next.response === 'string' ? next.response : JSON.stringify(next.response);
+    // 204, 205 and 304 answers carry no body (Response refuses one), e.g. LinkedIn's deletes.
+    const noBody = [204, 205, 304].includes(next.status);
     return Promise.resolve(
-      new Response(text, {
+      new Response(noBody ? null : text, {
         status: next.status,
         headers: { 'content-type': 'application/json', ...next.headers },
       }),

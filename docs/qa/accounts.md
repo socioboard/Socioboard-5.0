@@ -2,7 +2,7 @@
 
 Area doc: [accounts](../frontend/areas/accounts.md) · Checks for every screen: [README](README.md#every-screen)
 
-Networks available now: **Facebook Pages, Instagram, X, Threads**. The others arrive in phase 3, one by one; each adds its own section here.
+Networks available now: **Facebook Pages, Instagram, X, Threads, LinkedIn profiles**. The others arrive in phase 3, one by one; each adds its own section here.
 
 ## The accounts page
 - [ ] **ACC-01** Accounts: a section per network with its count and "Connect another <network> account"; under it each login (name, "Facebook login" / "X login") and its accounts.
@@ -16,10 +16,11 @@ Networks available now: **Facebook Pages, Instagram, X, Threads**. The others ar
 - [ ] **ACC-12** **Instagram:** pick Instagram → choose "Continue with Facebook" (accounts linked to a Page) or "Continue with Instagram" (professional accounts without a Page) → each works.
 - [ ] **ACC-13** **X:** pick X → X's page → sign in and approve → back with the account (name, @handle) → add it.
 - [ ] **ACC-20T** **Threads:** pick Threads → Threads' page → sign in and allow → back with the profile (name, @username) → add it. While the Meta app is in development mode the Threads profile must be a Threads tester.
+- [ ] **ACC-13L** **LinkedIn:** pick LinkedIn → LinkedIn's page → sign in and **Allow** → back with your profile (name and picture, no handle) → add it. It shows under LinkedIn with its login. Company pages aren't offered yet.
 - [ ] **ACC-14** In the asset picker: an account already added shows "Added"; one held by another login says whose (adding moves it); one that can't post says why (not a professional Instagram account, permission not granted).
 - [ ] **ACC-15** Cancel on the network's page → back in the app with a readable message and **Try again**.
 - [ ] **ACC-16** Connect the same login again → "<name> is already connected", with the switch-account tip; anything not yet added is still offered.
-- [ ] **ACC-17** Connect a second Facebook or X account: the app first shows the tip "sign out of <network> first, or use a private window", then Continue (they have no account picker). Instagram shows its own account picker.
+- [ ] **ACC-17** Connect a second Facebook, X or LinkedIn account: the app first shows the tip "sign out of <network> first, or use a private window", then Continue (they have no account picker). Instagram shows its own account picker.
 - [ ] **ACC-18** "Not now" in the asset picker → back to Accounts, nothing added.
 - [ ] **ACC-19** Connecting from onboarding step 2 returns to onboarding step 3, not to the Accounts page.
 
@@ -48,4 +49,4 @@ Networks available now: **Facebook Pages, Instagram, X, Threads**. The others ar
 - [ ] **ACC-46** As editor, contributor or viewer: the groups are listed, with no New group, pencil or bin.
 
 ## Not built yet
-LinkedIn, YouTube, Pinterest, TikTok, Snapchat, Tumblr (phase 3, one at a time), the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).
+LinkedIn company pages (waiting for LinkedIn's approval), YouTube, Pinterest, TikTok, Snapchat, Tumblr (phase 3, one at a time), the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).

@@ -1,0 +1,9 @@
+{
+  "method": "POST",
+  "url": "https://www.linkedin.com/oauth/v2/accessToken",
+  "status": 401,
+  "response": {
+    "error": "invalid_request",
+    "error_description": "Unable to retrieve access token: authorization code not found"
+  }
+}

@@ -83,6 +83,30 @@ describe('http client', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
+  it('sends raw bytes by PUT and returns the answer headers (upload URLs)', async () => {
+    const replay = replayFetch([
+      {
+        method: 'PUT',
+        url: 'https://upload.example.test/part/0',
+        body: { bytes: '5' },
+        requestHeaders: { 'content-type': 'application/octet-stream' },
+        status: 200,
+        response: '',
+        headers: { etag: '"part-0"' },
+      },
+    ]);
+    const http = createHttpClient({ name: 'example', fetch: replay.fetch });
+    const res = await http.request({
+      method: 'PUT',
+      url: 'https://upload.example.test/part/0',
+      bytes: new Uint8Array(5),
+      headers: { 'content-type': 'application/octet-stream' },
+    });
+    expect(res.status).toBe(200);
+    expect(res.headers.get('etag')).toBe('"part-0"');
+    expect(replay.mismatches).toEqual([]);
+  });
+
   it('keeps ids too large for a JS number exact, as strings', async () => {
     const replay = replayFetch([
       {

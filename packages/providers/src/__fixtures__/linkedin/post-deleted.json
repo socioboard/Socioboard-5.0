@@ -1,0 +1,7 @@
+{
+  "method": "DELETE",
+  "url": "https://api.linkedin.com/rest/posts/urn%3Ali%3Ashare%3A7000000000000000001",
+  "requestHeaders": { "x-restli-method": "DELETE", "linkedin-version": "202609" },
+  "status": 204,
+  "response": ""
+}

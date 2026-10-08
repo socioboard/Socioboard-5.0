@@ -105,3 +105,6 @@ export function xShownText(text: string, link: string | null): string {
   if (!link || trimmed.includes(link)) return trimmed;
   return trimmed === '' ? link : `${trimmed}\n\n${link}`;
 }
+
+/** LinkedIn gets the link the same way (its API builds no link card, so the link is text). */
+export const linkedinShownText = xShownText;

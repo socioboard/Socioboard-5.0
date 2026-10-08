@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/videos",
+  "query": { "action": "finalizeUpload" },
+  "body": {
+    "finalizeUploadRequest": "{\"video\":\"urn:li:video:C5505AQFakeVid01\",\"uploadToken\":\"\",\"uploadedPartIds\":[\"/ambry-video/signedId/FakePart0.bin\",\"/ambry-video/signedId/FakePart1.bin\"]}"
+  },
+  "status": 200,
+  "response": ""
+}

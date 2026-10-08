@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "status": 426,
+  "response": {
+    "status": 426,
+    "code": "NONEXISTENT_VERSION",
+    "message": "Requested version 202401 is not active"
+  }
+}

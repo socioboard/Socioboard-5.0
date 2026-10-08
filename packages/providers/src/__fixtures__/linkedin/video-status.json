@@ -1,0 +1,14 @@
+[
+  {
+    "method": "GET",
+    "url": "https://api.linkedin.com/rest/videos/urn%3Ali%3Avideo%3AC5505AQFakeVid01",
+    "status": 200,
+    "response": { "id": "urn:li:video:C5505AQFakeVid01", "status": "PROCESSING" }
+  },
+  {
+    "method": "GET",
+    "url": "https://api.linkedin.com/rest/videos/urn%3Ali%3Avideo%3AC5505AQFakeVid01",
+    "status": 200,
+    "response": { "id": "urn:li:video:C5505AQFakeVid01", "status": "AVAILABLE", "duration": 12000 }
+  }
+]

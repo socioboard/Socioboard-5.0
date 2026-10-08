@@ -1,0 +1,6 @@
+{
+  "method": "POST",
+  "url": "https://api.linkedin.com/rest/posts",
+  "status": 500,
+  "response": { "status": 500, "code": "INTERNAL_ERROR", "message": "Internal Error" }
+}
