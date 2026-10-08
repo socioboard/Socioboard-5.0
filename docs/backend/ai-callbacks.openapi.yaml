@@ -1,0 +1,248 @@
+openapi: 3.1.0
+info:
+  title: Socioboard endpoints for the AI service
+  version: 0.1.0
+  description: |
+    The two endpoints Socioboard exposes to the AI service (P4-C2, docs/backend/modules/ai.md).
+    The AI service's own endpoints (`POST /jobs`, `GET /jobs/{jobId}`) are specified in its
+    repository; what Socioboard sends them is summarised in ai.md, "Calling the AI service".
+
+    Flow for a job with files:
+    1. Socioboard calls `POST /jobs` with a `reference` (its own job id) and these two URLs.
+    2. For each file it produces, the AI service asks for an upload slot (`POST
+       /api/ai/jobs/{reference}/uploads`), then PUTs the file to the `uploadUrl` it gets back.
+    3. When the job ends, it sends one result update (`POST /api/webhooks/ai`) naming the
+       uploaded files by the `key` each slot returned.
+
+    Text-only jobs skip step 2. While a job runs, the AI service may also send result updates
+    with `status: running` and a `progress`, so people see how far along a video is.
+
+    **Signing.** Every request to these endpoints carries
+    `X-Socioboard-Signature: t=<unix seconds>,v1=<hex>`, where `<hex>` is
+    HMAC-SHA256(secret, `<t>.<raw request body>`) and the secret is shared once, out of band
+    (`AI_WEBHOOK_SECRET` on our side). Requests whose `t` is more than 5 minutes from our clock,
+    or whose signature doesn't match, get 401. The PUT to an `uploadUrl` is not signed: the URL
+    itself is the permission, for that one file, for one hour.
+  license:
+    name: MIT
+servers:
+  - url: https://app.socioboard.com
+    description: Production
+  - url: https://app-dev.socioboard.ai
+    description: Staging
+security:
+  - signature: []
+paths:
+  /api/ai/jobs/{reference}/uploads:
+    post:
+      operationId: createAiUpload
+      summary: Ask for an upload slot for one output file
+      description: |
+        Returns a URL to PUT one file to, and the `key` that names it in the result update.
+        Only for a job that is still running; at most 20 slots per job. A slot that is never
+        named in a result update is deleted after a day.
+      parameters:
+        - name: reference
+          in: path
+          required: true
+          description: Socioboard's job id, as sent in `POST /jobs`.
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UploadRequest' }
+            example: { mime: video/mp4, sizeBytes: 48211960 }
+      responses:
+        '201':
+          description: Upload slot created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UploadSlot' }
+              example:
+                key: ai_7Qm2cKp9
+                uploadUrl: https://storage.example/presigned-put-url
+                method: PUT
+                headers: { Content-Type: video/mp4, Content-Length: '48211960' }
+                expiresAt: '2026-10-08T12:00:00Z'
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+  /api/webhooks/ai:
+    post:
+      operationId: aiResultUpdate
+      summary: Report a job's progress or result
+      description: |
+        Send once when a job ends (`succeeded` or `failed`); optionally before that with
+        `running` and a `progress`. Sending the same final update again is harmless (204):
+        retry until you get a 2xx, with backoff, for up to a day. Updates for a job that already
+        ended are ignored. If we miss every attempt, we poll `GET /jobs/{jobId}`, which should
+        answer the same shape.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ResultUpdate' }
+            examples:
+              image:
+                value:
+                  reference: aij_01JA8Q
+                  jobId: job_83af
+                  status: succeeded
+                  outputs:
+                    - type: image
+                      key: ai_7Qm2cKp9
+                      mime: image/png
+                      width: 1080
+                      height: 1350
+                      durationSec: null
+                      sizeBytes: 1843200
+                  text: []
+                  usage: { model: example-image-model, tokens: 0, images: 1, seconds: 0 }
+              text:
+                value:
+                  reference: aij_01JA8R
+                  jobId: job_83b0
+                  status: succeeded
+                  outputs: []
+                  text: ['Fresh roast, Monday mood.', 'New week, new beans.']
+                  usage: { model: example-text-model, tokens: 412, images: 0, seconds: 0 }
+              progress:
+                value: { reference: aij_01JA8S, jobId: job_83b1, status: running, progress: 0.4 }
+              refused:
+                value:
+                  reference: aij_01JA8T
+                  jobId: job_83b2
+                  status: failed
+                  error:
+                    code: content_policy
+                    message: This prompt asks for a real person's likeness, which we can't create.
+                    retryable: false
+                  usage: { model: example-image-model, tokens: 0, images: 0, seconds: 0 }
+      responses:
+        '204': { description: Accepted (also for a repeat or for a job that already ended) }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+components:
+  securitySchemes:
+    signature:
+      type: apiKey
+      in: header
+      name: X-Socioboard-Signature
+      description: '`t=<unix seconds>,v1=<hex HMAC-SHA256(secret, "<t>.<raw body>")>`'
+  schemas:
+    UploadRequest:
+      type: object
+      required: [mime, sizeBytes]
+      additionalProperties: false
+      properties:
+        mime:
+          type: string
+          enum: [image/jpeg, image/png, image/webp, image/gif, video/mp4, video/quicktime]
+        sizeBytes:
+          type: integer
+          minimum: 1
+          description: Exact size of the file; the PUT must match it. Images and GIFs up to 20 MB, videos up to 1 GB.
+    UploadSlot:
+      type: object
+      required: [key, uploadUrl, method, headers, expiresAt]
+      properties:
+        key: { type: string, description: Names this file in the result update. Opaque. }
+        uploadUrl: { type: string, format: uri }
+        method: { type: string, const: PUT }
+        headers:
+          type: object
+          additionalProperties: { type: string }
+          description: Send exactly these headers with the PUT.
+        expiresAt: { type: string, format: date-time, description: One hour after the slot was created. }
+    ResultUpdate:
+      type: object
+      required: [reference, jobId, status]
+      additionalProperties: false
+      properties:
+        reference: { type: string, description: Socioboard's job id, from `POST /jobs`. }
+        jobId: { type: string, description: The AI service's job id, from its 202 reply. }
+        status: { type: string, enum: [running, succeeded, failed] }
+        progress:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Only with `running`; optional.
+        outputs:
+          type: array
+          maxItems: 20
+          items: { $ref: '#/components/schemas/Output' }
+          description: Files, each uploaded to a slot of this job first. Empty for text jobs.
+        text:
+          type: array
+          maxItems: 10
+          items: { type: string, maxLength: 10000 }
+          description: Generated text, one entry per variation.
+        usage: { $ref: '#/components/schemas/Usage' }
+        error: { $ref: '#/components/schemas/JobError' }
+      description: |
+        `succeeded` needs `usage` and at least one output or text; `failed` needs `error` and
+        `usage` (zero when nothing was spent).
+    Output:
+      type: object
+      required: [type, key, mime, width, height, durationSec, sizeBytes]
+      additionalProperties: false
+      properties:
+        type: { type: string, enum: [image, gif, video] }
+        key: { type: string, description: From the upload slot this file was PUT to. }
+        mime: { type: string }
+        width: { type: integer, minimum: 1 }
+        height: { type: integer, minimum: 1 }
+        durationSec: { type: [number, 'null'], minimum: 0, description: Videos and GIFs; null for images. }
+        sizeBytes: { type: integer, minimum: 1 }
+    Usage:
+      type: object
+      required: [model, tokens, images, seconds]
+      additionalProperties: false
+      description: What the job used; Socioboard converts it to credits per model.
+      properties:
+        model: { type: string, description: The model that did the work, as named in the AI service's price list. }
+        tokens: { type: integer, minimum: 0 }
+        images: { type: integer, minimum: 0 }
+        seconds: { type: number, minimum: 0, description: Seconds of video generated. }
+    JobError:
+      type: object
+      required: [code, message, retryable]
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          description: '`content_policy` for a refusal the person should see (shown as is, no credits used); otherwise a code of your own.'
+        message: { type: string, description: Plain words; shown to the person for content_policy. }
+        retryable: { type: boolean }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum:
+                - BAD_SIGNATURE
+                - AI_JOB_NOT_FOUND
+                - AI_JOB_NOT_RUNNING
+                - UPLOAD_INVALID
+                - TOO_MANY_UPLOADS
+                - OUTPUT_NOT_UPLOADED
+                - VALIDATION_FAILED
+            message: { type: string }
+  responses:
+    Error:
+      description: |
+        401 BAD_SIGNATURE · 404 AI_JOB_NOT_FOUND · 409 AI_JOB_NOT_RUNNING (an upload for a job that
+        ended or was cancelled) · 422 UPLOAD_INVALID (type or size), OUTPUT_NOT_UPLOADED (a key that
+        isn't this job's or whose file never arrived), VALIDATION_FAILED · 429 TOO_MANY_UPLOADS.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
