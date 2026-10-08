@@ -12,6 +12,8 @@ if (process.env.S3_BUCKET === undefined) {
     S3_ACCESS_KEY_ID: 'socioboard',
     S3_SECRET_ACCESS_KEY: 'socioboard-dev-secret',
     S3_FORCE_PATH_STYLE: 'true',
+    // A .env set to the NAS (staging's setup) would otherwise win and 5 files fail to load.
+    STORAGE_DRIVER: 's3',
     // The .env's CDN or tunnel serves the real bucket, not the local one.
     STORAGE_PUBLIC_URL: '',
     MEDIA_PUBLIC_URL: '',
