@@ -17,6 +17,8 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | --- | --- | --- | --- |
 | Platform (config, logger, http, queue, storage, mailer, events, crypto, clock) | `packages/core/src/platform` | [platform](backend/modules/platform.md) | 0 · P0-I5, P0-B3, P0-B8 (OpenAPI), P0-B9 (tenant-isolation harness), P0-B11 · 5 · P5-B7 (security pass) |
 | Platform realtime + flags | `packages/core/src/platform` | [platform](backend/modules/platform.md) | 2 · P2-B11 |
+| Platform: every network's keys in config | `packages/core/src/platform/config` | [adding a network](backend/adding-a-network.md) | 3 · P3-C1 |
+| Platform: member account access on each request (`MemberContext.accountIds`, `canUseAccount`, `onlyMemberAccounts`) | `packages/core/src/platform/http/context.ts` | [workspaces](backend/modules/workspaces.md) | 4 · P4-B4 |
 | Database schema, migrations, seeds | `packages/db`; seed in `packages/core/src/seed.ts` | [platform](backend/modules/platform.md) | 0 · P0-B1, P0-B10; each phase adds its tables (P1-B1, P2-B1, P4-B1, P5-B8, P6-B1) |
 | Contracts | `packages/contracts` | [contracts](backend/contracts.md) | 0 · P0-B12, P0-C1–C2 · 1 · P1-C1–C2 · 2 · P2-C1–C3 · 3 · P3-C1 · 4 · P4-C1–C2 · 5 · P5-C1 · 6.1 · P6-C1 |
 | Email templates | `packages/emails` | [platform](backend/modules/platform.md) | 0 · P0-B13; 2 · P2-B12; 4 · P4-B11; 5 · P5-B9; 6.1 · P6-B11 |
@@ -43,10 +45,10 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | workspaces | [workspaces](backend/modules/workspaces.md) | 0 · P0-B5 · 4 · P4-B4 (account access) |
 | media | [media](backend/modules/media.md) | 0 · P0-B6 · 1 · P1-B8, P1-B10 |
 | audit | [audit](backend/modules/audit.md) | 0 · P0-B7 · 5 · P5-F3 (view) |
-| social-accounts | [social-accounts](backend/modules/social-accounts.md) | 1 · P1-B5 · 2 · P2-B7 · 3 · P3-F3 (groups) |
-| posts | [posts](backend/modules/posts.md) | 1 · P1-B6, P1-B11 · 3 · P3-B9 (overrides) |
+| social-accounts | [social-accounts](backend/modules/social-accounts.md) | 1 · P1-B5 · 2 · P2-B7 · 3 · P3-F3 (groups) · 4 · P4-B4 (account access) |
+| posts | [posts](backend/modules/posts.md) | 1 · P1-B6, P1-B11 · 3 · P3-B9 (overrides) · 4 · P4-B4 (account access) |
 | publishing | [publishing](backend/modules/publishing.md) | 1 · P1-B7 · 2 · P2-B5, P2-B6 · 4 · P4-B9 (AI labels) |
-| scheduling | [scheduling](backend/modules/scheduling.md) | 2 · P2-B2–B5, P2-B9 |
+| scheduling | [scheduling](backend/modules/scheduling.md) | 2 · P2-B2–B5, P2-B9 · 4 · P4-B4 (account access) |
 | notifications | [notifications](backend/modules/notifications.md) | 2 · P2-B8, P2-B12 · 4 · P4-B3, P4-B11 |
 | admin | [admin](backend/modules/admin.md) | 2 · P2-B10 · 5 · P5-B5 · 6.1 · P6-B10 |
 | shortlinks | [shortlinks](backend/modules/shortlinks.md) | 3 · P3-B8 |

@@ -69,6 +69,9 @@ Ideas reviewed on 2026-09-23 and deliberately deferred. Revisit when planning 6.
 | Team size and launch date | Not fixed; roadmap durations are indicative only |
 | Domains | `app.socioboard.com` (API at `/api`), `media.socioboard.com`; staging at `app-dev.socioboard.ai` (one host, media under `/public-media/`; decided 2026-10-06); local dev via `*.dev.socioboard.com` tunnels |
 | Recurring posts | A template post holds the content and rule; each occurrence becomes its own ordinary post (own targets, status, history, retry), created about a week ahead. Chosen over many targets per post so publishing, retry and history stay unchanged (decided 2026-09-30, P2-B4) |
+| AI integration | No templates: fixed settings per type (text, image, video), owned by Socioboard. The AI service exposes `POST /jobs` and `GET /jobs/{id}`; Socioboard exposes an upload slot per output file and the result update, both under `/api/v1/ai/callbacks/`, so the AI service keeps no files (decided 2026-10-08, [ai](backend/modules/ai.md)) |
+| Account access | A member can be limited to some social accounts; they then see a post only when every account it goes to is theirs. Owners and admins always have every account (decided 2026-10-08, P4-B4) |
+| Phase 3 networks | Built by the team from [adding a network](backend/adding-a-network.md); the tech lead reviews and keeps the Meta review (decided 2026-10-08) |
 | Admin console | Platform admin console in the app for monitoring and operations; support access is view-only |
 | Tech lead | Chethan |
 | Platform account owner | Chethan owns the Meta Business Manager and the LinkedIn, TikTok, X, Google, Pinterest, Tumblr and Snapchat developer accounts |

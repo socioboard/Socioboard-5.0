@@ -111,7 +111,7 @@ per route signed in (401) → params (400) → workspace(:workspaceId) (404) →
 | `posts:create`, `posts:update-own`, `media:upload`, `ai:generate`, `tasks:manage` |   ✓   |   ✓   |   ✓    |      ✓      |        |
 | `posts:read`, `calendar:read`, `analytics:read`, `media:read`                     |   ✓   |   ✓   |   ✓    |      ✓      |   ✓    |
 
-Members can also be limited to specific social accounts (`MemberAccountAccess`). Services must check account access, not just role.
+Members can also be limited to specific social accounts (`MemberAccountAccess`, P4-B4). Services must check account access, not just role: the request's `member.accountIds` (null = all) with `canUseAccount` / `onlyMemberAccounts` from platform; anything outside it answers 404 like another workspace's. Rules: [workspaces](modules/workspaces.md#rules).
 
 Platform admins (`User.isPlatformAdmin`) are a separate axis, checked only on `/api/admin/*`.
 

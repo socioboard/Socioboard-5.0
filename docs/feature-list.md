@@ -56,7 +56,7 @@ Several accounts of the same network, even from different logins (for example tw
 - **Media library**: upload with progress, folders, details and alt text; pick from the library in the composer. **Available**
 - **Labels** to organise posts (campaigns, clients, topics), with filters. **Available**
 - **Drafts and autosave.** **Available**
-- **AI studio**: generate captions, images and video from a prompt or a form, saved to the media library; you review every result before it's used. **At launch**
+- **AI studio**: generate captions, images and video from a prompt and a few settings (tone and length, image shape, video length), saved to the media library; you review every result before it's used. **At launch**
 
 ## Publish and schedule
 
@@ -75,7 +75,7 @@ Several accounts of the same network, even from different logins (for example tw
 - **Invite people** by email. **Available**
 - **Approvals**: contributors submit, editors approve, then it publishes. **At launch**
 - **Comments and @mentions on posts, and tasks.** **At launch**
-- **Per-person account access**: choose which accounts each member can post to. **At launch**
+- **Per-person account access**: choose which accounts each member can see and post to; they see only those accounts' posts, calendar and queue. **Available**
 
 ## Stay informed
 
