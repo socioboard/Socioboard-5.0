@@ -27,7 +27,7 @@
 - [ ] P4-F3 Comments thread on review panel and post detail; @mention autocomplete
 - [ ] P4-F4 Tasks page + task creation from a post
 - [ ] P4-F5 Settings: review requirement toggle; per-member account access. Account access done 2026-10-08 (`features/settings/components/account-access-dialog.tsx`, [workspace-settings](../frontend/areas/workspace-settings.md)): an accounts line under each member's role, and the dialog; `Member.accountIds` in the members list; QA SET-28/29. Left: the review switch, with P4-B2 (before approvals exist, turning it on would stop all publishing)
-- [ ] P4-F6 AI studio page + composer side panel (images with their captions at launch; text on its own and video when the AI service supports them); a fixed form per type; job states; results to library/editor, shown as proposals that are applied explicitly and can be undone ([ai-studio](../frontend/areas/ai-studio.md#how-results-are-shown-show-then-apply-then-undo))
+- [ ] P4-F6 AI studio page + composer side panel (images with their captions, and captions for your own photos; video when the AI service supports it); a fixed form per type; job states; results to library/editor, shown as proposals that are applied explicitly and can be undone ([ai-studio](../frontend/areas/ai-studio.md#how-results-are-shown-show-then-apply-then-undo))
 - [ ] P4-F7 Design system additions: CommentThread, MentionInput, JobProgress, AvatarStack (reviewers, commenters)
 - [ ] P4-F8 Home page: needs attention, up next, get started (moved from the calendar), quick actions, my tasks, recent activity; `/w/:slug` opens it instead of the calendar ([home](../frontend/areas/home.md), decided 2026-10-06)
 

@@ -6,9 +6,10 @@ import { NetworkId } from './networks';
 import { defineRoute } from './route';
 
 // AI generation (P4-C2, docs/backend/modules/ai.md). No templates: each type has fixed inputs.
-// The AI service's API (agreed 2026-10-08) makes images, each with a ready-to-post caption; text on
-// its own and video come later, so they are job types without inputs yet. The last two routes are
-// the ones the AI service calls, specified for its team in docs/backend/ai-callbacks.openapi.yaml.
+// The AI service's API (agreed 2026-10-08) makes images, each with a ready-to-post caption, and
+// captions on their own (for a photo the person already has); video comes later, so it is a job
+// type without inputs yet. The last two routes are the ones the AI service calls, specified for
+// its team in docs/backend/ai-callbacks.openapi.yaml.
 
 export const AiJobType = z.enum(['text', 'image', 'video']);
 export type AiJobType = z.infer<typeof AiJobType>;
@@ -27,26 +28,44 @@ export const AiPostType = z.enum(['post', 'carousel', 'quote', 'story', 'thumbna
 export type AiPostType = z.infer<typeof AiPostType>;
 
 export const AI_MAX_REFERENCES = 5;
+export const AI_MAX_OPTIONS = 4;
+
+/** How many complete options to make: each one is a set of images with its caption. */
+const Count = z.number().int().min(1).max(AI_MAX_OPTIONS).default(1);
+
+const ReferenceAssetIds = z
+  .array(Id)
+  .max(AI_MAX_REFERENCES)
+  .refine((ids) => new Set(ids).size === ids.length, 'The same image is given twice')
+  .default([]);
 
 export const AiImageInput = z.object({
   prompt: Prompt,
   postType: AiPostType.default('post'),
   /** Absent: the AI service picks it from the networks and the post type. */
   aspectRatio: AiImageRatio.optional(),
-  /** How many options to make; asked of the AI team, which has no such field yet. */
-  count: z.number().int().min(1).max(4).default(1),
+  count: Count,
   /** Library images to start from; sent to the AI service as signed URLs. */
-  referenceAssetIds: z
-    .array(Id)
-    .max(AI_MAX_REFERENCES)
-    .refine((ids) => new Set(ids).size === ids.length, 'The same image is given twice')
-    .default([]),
+  referenceAssetIds: ReferenceAssetIds,
 });
 export type AiImageInput = z.infer<typeof AiImageInput>;
 
-/** What the person asked for: the type and its inputs (images only, for now). */
+/**
+ * A caption on its own, usually for a photo the person already has (the reference image). Whether
+ * a caption can come from the prompt alone, with no image, is being confirmed with the AI team.
+ */
+export const AiTextInput = z.object({
+  prompt: Prompt,
+  count: Count,
+  /** The photos the caption is for; sent to the AI service as signed URLs. */
+  referenceAssetIds: ReferenceAssetIds,
+});
+export type AiTextInput = z.infer<typeof AiTextInput>;
+
+/** What the person asked for: the type and its inputs (video comes later). */
 export const AiRequest = z.discriminatedUnion('type', [
   z.object({ type: z.literal('image'), input: AiImageInput }),
+  z.object({ type: z.literal('text'), input: AiTextInput }),
 ]);
 export type AiRequest = z.infer<typeof AiRequest>;
 
@@ -145,6 +164,12 @@ export const AiUploadSlot = z.object({
 export type AiUploadSlot = z.infer<typeof AiUploadSlot>;
 
 export const AiOutput = z.object({
+  /** Which option the file belongs to, 0 to count-1; a carousel option's files are its slides. */
+  option: z
+    .number()
+    .int()
+    .min(0)
+    .max(AI_MAX_OPTIONS - 1),
   type: MediaKind,
   key: z.string().min(1),
   mime: MediaMime,
