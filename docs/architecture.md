@@ -272,33 +272,37 @@ sequenceDiagram
   participant W as Web app
   participant A as Our API
   participant P as Python AI service
-  participant S as S3 storage
-  W->>A: generate (type, form inputs)
+  participant S as Our storage
+  W->>A: generate (type, prompt, settings)
   A->>A: check credits, create AiJob
-  A->>P: POST job + callback URL
+  A->>P: POST /jobs + our two callback URLs
   P-->>A: 202 jobId
-  A-->>W: AiJob pending (live over WS)
-  P->>S: write outputs
-  P->>A: webhook: done + output refs
-  A->>A: MediaAsset rows, deduct credits
+  A-->>W: AiJob running (live over WS)
+  P->>A: upload slot for each file
+  A-->>P: presigned PUT URL + key
+  P->>S: PUT the file
+  P->>A: result update: done + keys, usage
+  A->>A: complete the uploads, deduct credits
   A-->>W: job done, assets in library
   W->>A: create post with assetIds
 ```
 
-**What the UI covers:** a prompt box plus form templates per content type (e.g. "product launch post": product, audience, tone, target networks). Users can generate several variations and regenerate or edit text. Only completed assets can be attached to a post.
+**What the UI covers:** a prompt box plus a fixed set of settings per content type (no templates, decided 2026-10-08: tone and length for text, aspect ratio and count for images, duration for video), and the target networks. Users can generate several variations and regenerate or edit text. Only completed assets can be attached to a post.
 
 ### What we need in their contract
 
+Agreed 2026-10-08 (details in [ai](backend/modules/ai.md)): they expose `POST /jobs` and `GET /jobs/{id}`; we expose an upload slot per output file and the result update ([ai-callbacks.openapi.yaml](backend/ai-callbacks.openapi.yaml)), so they need no storage of their own.
+
 - [ ] **Async jobs** for image and video: submit returns a `jobId` right away, completion comes by signed webhook (HMAC), plus a `GET /jobs/{id}` fallback for polling. Text can be synchronous or streamed.
-- [ ] **Input schemas** per generation type, ideally as JSON Schema, so we can render the forms automatically.
+- [ ] **Inputs** per generation type: our fixed shape (no templates), validated on their side too.
 - [ ] **Target network hints** so outputs fit the network: aspect ratio, max duration, character limit. We send the adapter's `ContentRules`.
-- [ ] **Output delivery**: files written to a shared S3 bucket or returned as presigned URLs we copy from, with mime type, dimensions, duration and file size.
+- [ ] **Output delivery**: each file PUT to an upload slot we issue for the job, then named by its key in the result update, with mime type, dimensions, duration and file size.
 - [ ] **Usage reported per job** (tokens, seconds, images) so the hosted cloud can meter credits.
 - [ ] **Tenant and idempotency keys**: we send `workspaceId` and an `Idempotency-Key`, so retries don't create duplicate jobs.
 - [ ] **Errors** as `{code, message, retryable}`, including content-policy refusals the user should see.
 - [ ] **Auth** between services (API key or mTLS) and a sandbox environment.
 - [ ] **Self-hostable packaging** (decided: the Python service is open source too, in `socioboard/socioboard-ai`): a Docker image (`ghcr.io/socioboard/socioboard-ai`) that self-hosters run with their own model provider keys, included in our Compose file as an optional `ai` profile.
-- [ ] **OpenAPI spec** in their repo, versioned with the service, for the API and the webhook payloads.
+- [ ] **OpenAPI spec** in their repo for their two endpoints; ours for the upload slot and result update.
 
 ## Auth, roles & billing
 

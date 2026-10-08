@@ -33,7 +33,8 @@ Schemas: `packages/contracts/src/media.ts`. Uploads up to 16 MB use one presigne
 - `createUpload(kind, mime, size)`: validates type and size, returns presigned URLs.
 - `completeUpload(assetId)`: verifies the object exists, enqueues `media-process`.
 - `getPublicUrl(assetId, ttl)`: short-lived URL on `media.<domain>` for networks to fetch.
-- `importFromUrl(url, source)`: used by ai and discovery.
+- `importFromUrl(url, source)`: used by discovery.
+- AI outputs arrive as uploads: the AI service gets an upload slot per file (an asset in `uploading` with `source: ai` and `aiJobId`, the same presigned PUT), and the result update completes the ones it names ([ai](ai.md)).
 - `prepareImageVariant(image, spec)` (P1-B10): fits an image to a network's `imagePrep` (accepted formats, max width, max bytes). The original is used when it already fits; otherwise a JPEG copy is made once, turned upright by its EXIF orientation, shrunk to the max width and re-compressed (a few qualities, then one informed shrink) until under the size limit, stored as `…/<asset>/variants/jpeg-w<width>-b<bytes>.jpg` and reused. Facebook: JPEG/PNG/GIF up to 10 MB (WebP converted); Instagram: JPEG, 1440 wide, 8 MB. Because images are fitted, validation doesn't flag an image's size for these networks. Videos pass through: no phase 1 network needs a transcode; ffmpeg transcoding joins with the networks that do (phase 3).
 
 ## Jobs

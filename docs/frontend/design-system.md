@@ -72,7 +72,7 @@ Using them in screens:
 | 1 | AccountPicker, NetworkIcon, StatusChip, MediaThumb, CharacterCounter, IssueList, PreviewFrame (base for network previews) |
 | 2 | DateTimePicker (timezone-aware), CalendarEventCard, NotificationItem, TimelineItem |
 | 3 | BoardPicker, PrivacyPicker, per-network option panels |
-| 4 | AvatarStack, CommentThread, MentionInput, SchemaForm (renders JSON Schema → fields, for AI templates), JobProgress |
+| 4 | AvatarStack, CommentThread, MentionInput, JobProgress |
 | 5 | UsageMeter, PlanCard, KpiTile |
 | 6.1 | Chart wrappers (Line, Bar, Area) with theme tokens, DateRangePicker, MetricDelta |
 
