@@ -5,9 +5,10 @@ import { MEDIA_MAX_BYTES, MEDIA_MIME_KINDS, MediaAsset, MediaKind, MediaMime } f
 import { NetworkId } from './networks';
 import { defineRoute } from './route';
 
-// AI generation (P4-C2, docs/backend/modules/ai.md). No templates: each type has fixed inputs,
-// sent to the AI service as they are. The last two routes are the ones the AI service calls,
-// specified for its team in docs/backend/ai-callbacks.openapi.yaml.
+// AI generation (P4-C2, docs/backend/modules/ai.md). No templates: each type has fixed inputs.
+// The AI service's API (agreed 2026-10-08) makes images, each with a ready-to-post caption; text on
+// its own and video come later, so they are job types without inputs yet. The last two routes are
+// the ones the AI service calls, specified for its team in docs/backend/ai-callbacks.openapi.yaml.
 
 export const AiJobType = z.enum(['text', 'image', 'video']);
 export type AiJobType = z.infer<typeof AiJobType>;
@@ -15,40 +16,48 @@ export type AiJobType = z.infer<typeof AiJobType>;
 export const AI_PROMPT_MAX = 2_000;
 const Prompt = z.string().trim().min(1).max(AI_PROMPT_MAX);
 
-export const AiTone = z.enum(['friendly', 'professional', 'playful', 'bold']);
-export const AiTextLength = z.enum(['short', 'medium', 'long']);
 export const AiImageRatio = z.enum(['1:1', '4:5', '9:16', '16:9']);
-export const AiVideoRatio = z.enum(['9:16', '16:9', '1:1']);
-export const AI_VIDEO_MIN_SEC = 5;
-export const AI_VIDEO_MAX_SEC = 60;
+export type AiImageRatio = z.infer<typeof AiImageRatio>;
 
-export const AiTextInput = z.object({
-  prompt: Prompt,
-  tone: AiTone,
-  length: AiTextLength,
-  variations: z.number().int().min(1).max(5),
-});
+/**
+ * What kind of image: a plain post, carousel slides, a quote card, a story (9:16), a YouTube
+ * thumbnail or a cover banner. The AI service's proposed values, being confirmed with its team.
+ */
+export const AiPostType = z.enum(['post', 'carousel', 'quote', 'story', 'thumbnail', 'banner']);
+export type AiPostType = z.infer<typeof AiPostType>;
+
+export const AI_MAX_REFERENCES = 5;
+
 export const AiImageInput = z.object({
   prompt: Prompt,
-  aspectRatio: AiImageRatio,
-  count: z.number().int().min(1).max(4),
-  /** A library image to start from; sent to the AI service as a signed URL. */
-  referenceAssetId: Id.optional(),
+  postType: AiPostType.default('post'),
+  /** Absent: the AI service picks it from the networks and the post type. */
+  aspectRatio: AiImageRatio.optional(),
+  /** How many options to make; asked of the AI team, which has no such field yet. */
+  count: z.number().int().min(1).max(4).default(1),
+  /** Library images to start from; sent to the AI service as signed URLs. */
+  referenceAssetIds: z
+    .array(Id)
+    .max(AI_MAX_REFERENCES)
+    .refine((ids) => new Set(ids).size === ids.length, 'The same image is given twice')
+    .default([]),
 });
-export const AiVideoInput = z.object({
-  prompt: Prompt,
-  aspectRatio: AiVideoRatio,
-  durationSec: z.number().int().min(AI_VIDEO_MIN_SEC).max(AI_VIDEO_MAX_SEC),
-  referenceAssetId: Id.optional(),
-});
+export type AiImageInput = z.infer<typeof AiImageInput>;
 
-/** What the person asked for: the type and its inputs. */
+/** What the person asked for: the type and its inputs (images only, for now). */
 export const AiRequest = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('text'), input: AiTextInput }),
   z.object({ type: z.literal('image'), input: AiImageInput }),
-  z.object({ type: z.literal('video'), input: AiVideoInput }),
 ]);
 export type AiRequest = z.infer<typeof AiRequest>;
+
+/** A caption split into its parts, as the AI service returns it beside the joined text. */
+export const AiCopy = z.object({
+  caption: z.string().max(10_000),
+  /** Words without the #. */
+  hashtags: z.array(z.string().max(200)).max(60),
+  cta: z.string().max(1_000),
+});
+export type AiCopy = z.infer<typeof AiCopy>;
 
 const Networks = z
   .array(NetworkId)
@@ -83,13 +92,18 @@ export const AiJob = z.intersection(
     status: AiJobStatus,
     /** 0 to 1 while running, when the AI service reports it. */
     progress: z.number().min(0).max(1).nullable(),
-    /** Generated text, one entry per variation. */
+    /** Ready-to-post text (caption, hashtags and call to action joined), one per option. */
     text: z.array(z.string()),
+    /** The same text in parts, in the same order. */
+    copies: z.array(AiCopy),
     /** Generated files, in the media library (source `ai`). */
     assets: z.array(MediaAsset),
     /** Null until the job ends, and on self-hosted servers without billing. */
     creditsUsed: z.number().int().nonnegative().nullable(),
-    /** `CONTENT_POLICY` when the AI service refused the request; its message is shown as is. */
+    /**
+     * Why it failed: `CONTENT_POLICY` when the AI service refused the request. `message` is safe to
+     * show (the AI service's `label`); its developer detail is only logged.
+     */
     error: z.object({ code: z.string(), message: z.string() }).nullable(),
     createdAt: IsoDateTime,
     finishedAt: IsoDateTime.nullable(),
@@ -108,6 +122,7 @@ export type AiStatus = z.infer<typeof AiStatus>;
 
 export const AI_MAX_OUTPUTS = 20;
 export const AI_MAX_TEXTS = 10;
+export const AI_MAX_COPIES = 10;
 export const AI_TEXT_MAX = 10_000;
 
 export const AiUploadRequest = z
@@ -155,10 +170,15 @@ export const AiResultUpdate = z
     progress: z.number().min(0).max(1).optional(),
     outputs: z.array(AiOutput).max(AI_MAX_OUTPUTS).default([]),
     text: z.array(z.string().max(AI_TEXT_MAX)).max(AI_MAX_TEXTS).default([]),
-    usage: AiUsage.optional(),
+    copies: z.array(AiCopy).max(AI_MAX_COPIES).default([]),
+    /** Null or absent while running; with the final update only. */
+    usage: AiUsage.nullable().optional(),
     error: z
       .object({
         code: z.string().min(1).max(100),
+        /** Short text safe to show people. */
+        label: z.string().max(500),
+        /** Developer detail: logged, never shown. */
         message: z.string().max(2_000),
         retryable: z.boolean(),
       })

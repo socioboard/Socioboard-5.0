@@ -56,7 +56,7 @@ Several accounts of the same network, even from different logins (for example tw
 - **Media library**: upload with progress, folders, details and alt text; pick from the library in the composer. **Available**
 - **Labels** to organise posts (campaigns, clients, topics), with filters. **Available**
 - **Drafts and autosave.** **Available**
-- **AI studio**: generate captions, images and video from a prompt and a few settings (tone and length, image shape, video length), saved to the media library; you review every result before it's used. **At launch**
+- **AI studio**: generate images from a prompt and a few settings (post, carousel, quote card, story, thumbnail or banner), each with a ready-to-post caption, saved to the media library; you review every result before it's used. **At launch** (captions for your own photos, and video: **later**)
 
 ## Publish and schedule
 
