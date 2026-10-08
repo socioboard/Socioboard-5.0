@@ -96,66 +96,45 @@ export function MembersSettings() {
       header: t('members.role'),
       // Narrow on phones, so the member's name and email keep most of the row.
       className: 'w-28 @xl:w-44',
-      cell: (m) =>
-        // Admins manage everyone except the owner and themselves (no locking yourself out).
-        canManage && m.role !== 'owner' && m.user.id !== me.user.id ? (
-          <Select
-            value={m.role}
-            disabled={savingRole === m.id}
-            onValueChange={(role) => {
-              void changeRole(m, AssignableRole.parse(role));
-            }}
-          >
-            <SelectTrigger
-              aria-label={t('members.roleOf', { name: m.user.name })}
-              className="h-8 w-full max-w-36"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {AssignableRole.options.map((role) => (
-                <SelectItem key={role} value={role}>
-                  {t(`roles.${role}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        ) : (
-          <span className="text-ink-2 text-sm">{t(`roles.${m.role}`)}</span>
-        ),
-    },
-    {
-      id: 'accounts',
-      header: t('members.accounts'),
-      className: 'w-28 @xl:w-36',
-      cell: (m) => {
-        const label =
-          m.accountIds === null || hasAllAccounts(m)
-            ? t('members.allAccounts')
-            : m.accountIds.length === 0
-              ? t('members.noAccounts')
-              : t('members.someAccounts', { count: m.accountIds.length });
-        return canManage && !hasAllAccounts(m) ? (
-          <Button
-            size="sm"
-            variant="ghost"
-            className="-ml-2"
-            aria-label={`${t('members.accountsOf', { name: m.user.name })}: ${label}`}
-            onClick={() => {
+      cell: (m) => (
+        <div className="flex flex-col items-start gap-0.5">
+          {
+            // Admins manage everyone except the owner and themselves (no locking yourself out).
+            canManage && m.role !== 'owner' && m.user.id !== me.user.id ? (
+              <Select
+                value={m.role}
+                disabled={savingRole === m.id}
+                onValueChange={(role) => {
+                  void changeRole(m, AssignableRole.parse(role));
+                }}
+              >
+                <SelectTrigger
+                  aria-label={t('members.roleOf', { name: m.user.name })}
+                  className="h-8 w-full max-w-36"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {AssignableRole.options.map((role) => (
+                    <SelectItem key={role} value={role}>
+                      {t(`roles.${role}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <span className="text-ink-2 text-sm">{t(`roles.${m.role}`)}</span>
+            )
+          }
+          <AccessSummary
+            member={m}
+            canManage={canManage}
+            onEdit={() => {
               setLimiting(m);
             }}
-          >
-            {label}
-          </Button>
-        ) : (
-          <span
-            className="text-ink-3 text-sm"
-            {...(hasAllAccounts(m) ? { title: t('access.adminHint') } : {})}
-          >
-            {label}
-          </span>
-        );
-      },
+          />
+        </div>
+      ),
     },
     {
       id: 'joined',
@@ -297,5 +276,49 @@ function MemberDialog({ pending, onClose }: { pending: Pending | null; onClose: 
         toast.success(t('members.removed', { name: member.user.name }));
       }}
     />
+  );
+}
+
+/**
+ * Which accounts a member can use, under their role (P4-F5): a button opening the access dialog
+ * for people who manage members, plain text otherwise. A line rather than a column, so names
+ * and emails keep their room in the settings page's width.
+ */
+function AccessSummary({
+  member,
+  canManage,
+  onEdit,
+}: {
+  member: Member;
+  canManage: boolean;
+  onEdit: () => void;
+}) {
+  const { t } = useTranslation('settings');
+  const all = hasAllAccounts(member) || member.accountIds === null;
+  const label = all
+    ? t('members.allAccounts')
+    : member.accountIds?.length === 0
+      ? t('members.noAccounts')
+      : t('members.someAccounts', { count: member.accountIds?.length ?? 0 });
+  if (canManage && !hasAllAccounts(member)) {
+    return (
+      <Button
+        size="sm"
+        variant="ghost"
+        className="text-ink-3 hover:text-ink -ml-1.5 h-6 px-1.5 text-xs"
+        aria-label={`${t('members.accountsOf', { name: member.user.name })}: ${label}`}
+        onClick={onEdit}
+      >
+        {label}
+      </Button>
+    );
+  }
+  return (
+    <span
+      className="text-ink-3 text-xs"
+      {...(hasAllAccounts(member) ? { title: t('access.adminHint') } : {})}
+    >
+      {label}
+    </span>
   );
 }

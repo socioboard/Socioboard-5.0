@@ -25,7 +25,7 @@ Area doc: [workspace-settings](../frontend/areas/workspace-settings.md) · Check
 - [ ] **SET-25** You can't change or remove the owner or yourself.
 - [ ] **SET-26** Leave the workspace (anyone but the owner) → you're moved to another workspace.
 - [ ] **SET-27** As editor, contributor or viewer: the list is read-only; no invite, role or remove controls.
-- [ ] **SET-28** Accounts column: owners and admins show "All accounts" (no button). As owner or admin, click an editor's, contributor's or viewer's accounts → "Only some accounts" → pick accounts → "Save access" → the column shows "1 account" (or how many); picking none warns that they'll see no account.
+- [ ] **SET-28** Under each role, the accounts line: owners and admins show "All accounts" (not clickable). As owner or admin, click an editor's, contributor's or viewer's accounts line → "Only some accounts" → pick accounts → "Save access" → the line shows "1 account" (or how many); names and emails keep their room; picking none warns that they'll see no account.
 - [ ] **SET-29** Signed in as that limited member: Accounts, the composer's account picker and groups show only their accounts; posts, the calendar and the queue show only posts that go to their accounts alone; a link to any other post says it wasn't found. Set "All accounts" again → everything is back at once.
 
 ## Profile
