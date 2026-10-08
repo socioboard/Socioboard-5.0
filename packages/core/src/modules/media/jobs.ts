@@ -8,9 +8,15 @@ import {
   type Storage,
 } from '../../platform';
 import type { MediaEvents } from './events';
-import { analyzeImage, analyzeVideo, ToolMissingError, type MediaInfo } from './processing';
+import {
+  analyzeImage,
+  analyzeVideo,
+  ToolMissingError,
+  withLocalCopy,
+  type MediaInfo,
+} from './processing';
 import { mediaKeys } from './service';
-import type { MediaMime } from '@socioboard/contracts';
+import { MEDIA_MAX_BYTES, type MediaMime } from '@socioboard/contracts';
 
 export interface MediaJobDeps {
   db: Db;
@@ -38,7 +44,11 @@ export async function processMedia(deps: MediaJobDeps, assetId: string, isLastAt
     let info: MediaInfo;
     if (asset.kind === 'video') {
       try {
-        info = await analyzeVideo(await storage.presignGet(asset.storageKey, 15 * 60), deps.tools);
+        info = await withLocalCopy(
+          await storage.presignGet(asset.storageKey, 15 * 60),
+          MEDIA_MAX_BYTES.video,
+          (path) => analyzeVideo(path, deps.tools),
+        );
       } catch (err) {
         if (!(err instanceof ToolMissingError)) throw err;
         logger.warn({ assetId }, 'ffprobe missing: video kept without duration and thumbnail');

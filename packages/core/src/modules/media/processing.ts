@@ -1,4 +1,10 @@
 import { spawn } from 'node:child_process';
+import { createWriteStream } from 'node:fs';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Readable, Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 
 import sharp from 'sharp';
 
@@ -76,11 +82,45 @@ interface ProbeOutput {
 }
 
 /**
- * Videos: dimensions and duration from ffprobe, a thumbnail from one frame via ffmpeg. Both read
- * the file from a signed URL, so a 1 GB video never has to fit in memory.
+ * Copies a stored file to a temporary local file for `use`, then removes it. ffmpeg and ffprobe
+ * read the copy rather than the URL: static builds (the usual way to get them without root, as on
+ * staging) crash on any network address, since a static program can't look up host names; every
+ * video on staging failed that way until 2026-10-08. The copy is streamed, so a 1 GB video never
+ * has to fit in memory, and refused past `maxBytes`.
+ */
+export async function withLocalCopy<T>(
+  url: string,
+  maxBytes: number,
+  use: (path: string) => Promise<T>,
+): Promise<T> {
+  const dir = await mkdtemp(join(tmpdir(), 'sb-media-'));
+  try {
+    const res = await fetch(url);
+    if (!res.ok || !res.body) {
+      throw new Error(`Reading the stored file failed: HTTP ${String(res.status)}`);
+    }
+    let size = 0;
+    const capped = new Transform({
+      transform(chunk: Buffer, _encoding, done) {
+        size += chunk.length;
+        if (size > maxBytes) done(new Error(`The stored file is over ${String(maxBytes)} bytes`));
+        else done(null, chunk);
+      },
+    });
+    const path = join(dir, 'source');
+    await pipeline(Readable.fromWeb(res.body), capped, createWriteStream(path));
+    return await use(path);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+/**
+ * Videos: dimensions and duration from ffprobe, a thumbnail from one frame via ffmpeg, read from
+ * `source` (a local file: see withLocalCopy).
  */
 export async function analyzeVideo(
-  url: string,
+  source: string,
   tools: { ffmpegPath: string; ffprobePath: string },
 ): Promise<MediaInfo> {
   let probe: ProbeOutput;
@@ -92,7 +132,7 @@ export async function analyzeVideo(
       'json',
       '-show_streams',
       '-show_format',
-      url,
+      source,
     ]);
     probe = JSON.parse(out.toString()) as ProbeOutput;
   } catch (err) {
@@ -120,7 +160,7 @@ export async function analyzeVideo(
       '-ss',
       seek,
       '-i',
-      url,
+      source,
       '-frames:v',
       '1',
       '-f',
