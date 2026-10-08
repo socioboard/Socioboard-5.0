@@ -13,7 +13,7 @@
 Shown on the review panel and on post detail. Threaded one level; @mention members (autocomplete); edit/delete own comments. Viewers can comment.
 
 ## API calls
-`GET /approvals?status=pending`, `POST /posts/:id/approve | request-changes | submit | withdraw`, comments CRUD.
+`GET /reviews?status=pending|decided` (the queue, `posts:approve`), `GET /posts?status=in_review,approved&authorId=<me>` (a contributor's "My submissions"), `GET /posts/:id/review` (history), `POST /posts/:id/approve | request-changes | submit | withdraw`, comments CRUD.
 
 ## Behavior
 - Sidebar badge shows pending count (updated via socket).

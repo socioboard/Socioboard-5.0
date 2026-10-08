@@ -37,7 +37,7 @@ A connection has one or more accounts, possibly of more than one network: a Face
 | GET | `/api/v1/workspaces/:wid/connections?provider=` | `accounts:manage` | Logins, each with its accounts |
 | POST | `/api/v1/workspaces/:wid/connections/:cid/reconnect` | `accounts:connect` | Re-run OAuth for this login (must return the same user) |
 | DELETE | `/api/v1/workspaces/:wid/connections/:cid` | `accounts:manage` | Remove a login and all its accounts |
-| GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts, with the login each comes through (respects member account access from phase 4; `disconnected` ones left out) |
+| GET | `/api/v1/workspaces/:wid/accounts?network=` | `posts:read` | List accounts, with the login each comes through (only the member's accounts when they're limited, P4-B4; `disconnected` ones left out) |
 | GET | `/api/v1/workspaces/:wid/accounts/:aid` | `posts:read` | Details + health + which login it comes through + how many pending posts disconnecting would cancel |
 | GET | `/api/v1/workspaces/:wid/accounts/:aid/options` | `posts:create` | What the account offers for its network's post options (P3-C1): Pinterest boards, TikTok creator info (privacy levels it may use, interactions turned off in TikTok, longest video, why it can't post now), YouTube privacy levels. Asked of the network each time through the adapter's `optionChoices`; networks without choices answer `{ network }`. A refused token marks the account (and its login) as needing reconnecting: 409 `ACCOUNT_REAUTH_REQUIRED`, and later calls answer that without asking the network; a network failure is 502 `NETWORK_ERROR` |
 | DELETE | `/api/v1/workspaces/:wid/accounts/:aid` | `accounts:manage` | Disconnect one account; cancels its scheduled targets |
