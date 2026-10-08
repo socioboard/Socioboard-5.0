@@ -393,19 +393,20 @@ describe('publishing', () => {
     expect(screen.getByText('Choose accounts to publish to.')).toBeInTheDocument();
   });
 
-  it('contributors save drafts; a workspace that reviews every post offers no Publish', async () => {
+  it('contributors, and everyone where every post is reviewed, submit for review instead', async () => {
     mockServer(base('contributor'));
     const view = renderApp('/w/halden/compose');
     await writePost('Mine');
     expect(screen.queryByRole('button', { name: 'Publish now' })).not.toBeInTheDocument();
-    expect(screen.getByText('Someone who can publish sends this out.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Schedule' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Submit for review' })).toBeInTheDocument();
     view.unmount();
 
     mockServer(base('owner', { requireReviewForAll: true }));
     renderApp('/w/halden/compose');
     await writePost('Reviewed');
     expect(screen.queryByRole('button', { name: 'Publish now' })).not.toBeInTheDocument();
-    expect(await screen.findByText(/reviews every post before it goes out/)).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: 'Submit for review' })).toBeInTheDocument();
   });
 });
 

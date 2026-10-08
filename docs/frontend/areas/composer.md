@@ -44,7 +44,9 @@ The most important screen in the product: write once, tailor per network, see ex
 | Publish now | `posts:publish` and review not required | `POST /posts/:id/publish-now` |
 | Schedule (date/time picker, workspace timezone) | `posts:publish` | `POST /posts/:id/schedule` |
 | Add to queue | `posts:publish` and slots exist | `POST /posts/:id/queue` |
-| Submit for review | review required | `POST /posts/:id/submit` |
+| Submit for review | review required and not yet approved, for the author | `POST /posts/:id/submit` |
+
+**Built in P4-F1** (review): a saved post's details carry `review` (`needed`, and the latest step), and a new post needs review when the workspace reviews every post or its author can't publish. While review is needed and the post isn't approved, Publish now, Schedule and Add to queue give way to **Submit for review** (save, then submit). Banners: waiting for review (the author can **Take back**; approvers get **Review it**, to the review panel), changes requested (with the reviewer's note), and approved ("Changing it sends it back for review", for people who can't approve).
 
 **Built in P1-F2** (`features/composer`, routes `/w/:slug/compose` for `posts:create`, `/w/:slug/compose/:postId`):
 - Draft model (`draft.ts`): the shared content (text, media, link, first comment) plus **one override per network**. The API keeps overrides per account; saving gives every selected account its network's override, and loading a post rebuilds the per-network overrides from its targets (cancelled deliveries ignored). Overrides of networks no longer selected are left out when saving.

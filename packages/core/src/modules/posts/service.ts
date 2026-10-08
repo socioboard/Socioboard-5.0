@@ -804,6 +804,7 @@ export function createPostService(deps: PostServiceDeps) {
           })),
       })),
       recurrence: deps.recurrenceOf ? await deps.recurrenceOf(member.workspaceId, post.id) : null,
+      review: await reviewOf(member.workspaceId, post.id, post.authorId),
     };
   }
 
@@ -1170,6 +1171,43 @@ export function createPostService(deps: PostServiceDeps) {
       orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       select: { action: true },
     });
+  }
+
+  /** Whether the post needs review, and its latest step with who took it (PostDetails.review). */
+  async function reviewOf(
+    workspaceId: string,
+    postId: string,
+    authorId: string | null,
+  ): Promise<PostDetails['review']> {
+    const step = await scoped(workspaceId).postApproval.findFirst({
+      where: { postId },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      select: {
+        id: true,
+        action: true,
+        note: true,
+        createdAt: true,
+        actor: { select: { id: true, name: true, image: true, avatarKey: true } },
+      },
+    });
+    return {
+      needed: await needsReview(workspaceId, authorId),
+      latest: step
+        ? {
+            id: step.id,
+            action: step.action,
+            note: step.note,
+            createdAt: step.createdAt.toISOString(),
+            actor: step.actor
+              ? {
+                  id: step.actor.id,
+                  name: step.actor.name,
+                  avatarUrl: await signUrl(step.actor.avatarKey ?? step.actor.image),
+                }
+              : null,
+          }
+        : null,
+    };
   }
 
   /** Where the post's review stands, as an editorial status: approved, in review or draft. */

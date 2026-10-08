@@ -1,0 +1,81 @@
+{
+  "title": "Approvals",
+  "someone": "Someone",
+  "loadError": "The review queue couldn’t be loaded.",
+  "tabs": {
+    "label": "Review queue",
+    "pending": "Waiting",
+    "decided": "Decided"
+  },
+  "table": {
+    "post": "Post",
+    "accounts": "Accounts",
+    "submitted": "Sent by",
+    "decided": "Decided by",
+    "status": "Status",
+    "noText": "No text, media only",
+    "loadMore": "Show more",
+    "retry": "Try again",
+    "loading": "Loading"
+  },
+  "steps": {
+    "approved": "Approved",
+    "changes_requested": "Changes requested",
+    "submitted": "Sent for review",
+    "withdrawn": "Taken back"
+  },
+  "empty": {
+    "pending": {
+      "title": "Nothing waiting for review",
+      "body": "Posts sent for review show here, the longest-waiting first."
+    },
+    "decided": {
+      "title": "Nothing decided yet",
+      "body": "Posts you and others approved or sent back show here."
+    }
+  },
+  "mine": {
+    "title": "My submissions",
+    "intro": "Posts you sent for review, and the ones approved. A post sent back for changes is a draft again, with the reviewer’s note at the top.",
+    "empty": {
+      "title": "Nothing sent for review yet",
+      "body": "Write a post and choose “Submit for review”."
+    }
+  },
+  "panel": {
+    "close": "Close",
+    "title": "Review post",
+    "titleDone": "Post",
+    "submitted": "Sent by {{name}} on {{date}}",
+    "notWaiting": "This post isn’t waiting for review any more.",
+    "openComposer": "Open in the composer"
+  },
+  "actions": {
+    "approve": "Approve",
+    "approveSchedule": "Approve & schedule",
+    "changes": "Request changes"
+  },
+  "changes": {
+    "label": "What should change?",
+    "placeholder": "Say what to change, so the author can fix it in one go",
+    "send": "Send back",
+    "cancel": "Cancel"
+  },
+  "done": {
+    "approved": "Approved. It can be scheduled or published now.",
+    "approvedScheduled": "Approved and scheduled.",
+    "changes": "Sent back with your note."
+  },
+  "errors": {
+    "ownPost": "Someone else needs to approve your own post in this workspace.",
+    "notInReview": "This post isn’t waiting for review any more.",
+    "reviewRequired": "This post needs approval before it goes out."
+  },
+  "history": {
+    "title": "Review so far",
+    "submitted": "{{name}} sent it for review",
+    "approved": "{{name}} approved it",
+    "changes_requested": "{{name}} asked for changes",
+    "withdrawn": "{{name}} took it back"
+  }
+}

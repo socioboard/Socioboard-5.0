@@ -7,7 +7,9 @@
     "settings": "Settings",
     "media": "Media",
     "accounts": "Accounts",
-    "needsFixing": "{{count}} need fixing"
+    "needsFixing": "{{count}} need fixing",
+    "approvals": "Approvals",
+    "waitingReview": "{{count}} waiting for review"
   },
   "switcher": {
     "label": "Switch workspace",

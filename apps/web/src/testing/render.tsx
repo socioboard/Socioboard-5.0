@@ -36,6 +36,7 @@ export type Handler = (request: { body: unknown; url: URL }) => Reply | Promise<
  */
 const NO_NOTIFICATIONS: Reply = [200, { items: [], nextCursor: null, unreadCount: 0 }];
 const NO_GROUPS: Reply = [200, { items: [] }];
+const NO_REVIEWS: Reply = [200, { items: [], nextCursor: null }];
 
 export function mockServer(handlers: Record<string, Handler | Reply>) {
   const calls: { key: string; search: string; body: unknown; headers: Record<string, string> }[] =
@@ -65,7 +66,10 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
         ? NO_NOTIFICATIONS
         : /^GET \/api\/v1\/workspaces\/[^/]+\/account-groups$/.test(key)
           ? NO_GROUPS
-          : undefined);
+          : // The sidebar counts posts waiting for review, for people who approve them.
+            /^GET \/api\/v1\/workspaces\/[^/]+\/reviews$/.test(key)
+            ? NO_REVIEWS
+            : undefined);
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);
     const [status, reply] = typeof handler === 'function' ? await handler({ body, url }) : handler;
     return new Response(reply === undefined ? null : JSON.stringify(reply), {

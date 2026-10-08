@@ -128,6 +128,8 @@ export function rememberPost(queryClient: QueryClient, workspaceId: string, post
       history: old?.targets.find((o) => o.id === t.id)?.history ?? [],
     })),
     recurrence: old?.recurrence ?? null,
+    // A review step answers with the post too, without its review: re-read for that (useReview).
+    review: old?.review ?? { needed: false, latest: null },
   }));
   void queryClient.invalidateQueries({ queryKey: postKeys.lists(workspaceId) });
   void queryClient.invalidateQueries({ queryKey: ['workspaces', workspaceId, 'calendar'] });

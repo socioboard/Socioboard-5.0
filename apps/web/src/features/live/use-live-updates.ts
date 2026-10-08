@@ -42,6 +42,8 @@ function postChanged(client: QueryClient, p: ServerEventPayload<'post.status_cha
   void client.invalidateQueries({ queryKey: detail });
   void client.invalidateQueries({ queryKey: postKeys.lists(p.workspaceId) });
   void client.invalidateQueries({ queryKey: workspaceKey(p.workspaceId, 'calendar') });
+  // Review steps change a post's status too: the review queue and its count follow.
+  void client.invalidateQueries({ queryKey: workspaceKey(p.workspaceId, 'reviews') });
   void client.invalidateQueries({
     queryKey: workspaceKey(p.workspaceId, 'accounts'),
     predicate: (q) => q.queryKey.at(-1) === 'queue-slots',

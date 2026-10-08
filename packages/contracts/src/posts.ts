@@ -224,11 +224,35 @@ export const Post = PostContent.extend({
 });
 export type Post = z.infer<typeof Post>;
 
+/** One step of a post's review, kept as its full history (P4-B2). */
+export const ReviewAction = z.enum(['submitted', 'approved', 'changes_requested', 'withdrawn']);
+export type ReviewAction = z.infer<typeof ReviewAction>;
+
+export const ReviewStep = z.object({
+  id: Id,
+  action: ReviewAction,
+  /** Null once their account is gone. */
+  actor: z.object({ id: Id, name: z.string(), avatarUrl: z.url().nullable() }).nullable(),
+  /** The submitter's message, or the reviewer's reason for changes. */
+  note: z.string().nullable(),
+  createdAt: IsoDateTime,
+});
+export type ReviewStep = z.infer<typeof ReviewStep>;
+
+/**
+ * Where the post's review stands: whether it needs approval before it goes out (its author can't
+ * publish, or the workspace reviews every post) and its latest review step.
+ */
+export const PostReview = z.object({ needed: z.boolean(), latest: ReviewStep.nullable() });
+export type PostReview = z.infer<typeof PostReview>;
+
 /** A post with each target's publishing history (newest attempt first) and its recurrence. */
 export const PostDetails = Post.extend({
   targets: z.array(PostTarget.extend({ history: z.array(PublishAttempt) })),
   /** How the post repeats, if it does (phase 2). */
   recurrence: Recurrence.nullable(),
+  /** Its review (phase 4). */
+  review: PostReview,
 });
 export type PostDetails = z.infer<typeof PostDetails>;
 

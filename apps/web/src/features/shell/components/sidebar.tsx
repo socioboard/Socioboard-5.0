@@ -123,7 +123,9 @@ export function Sidebar({
                     <NavBadge
                       value={badges[item.id]}
                       dot={collapsed}
-                      label={t('nav.needsFixing', { count: badges[item.id] ?? '' })}
+                      label={t(item.id === 'approvals' ? 'nav.waitingReview' : 'nav.needsFixing', {
+                        count: badges[item.id] ?? '',
+                      })}
                     />
                   </>
                 )}

@@ -2,6 +2,7 @@ import type { Permission } from '@socioboard/contracts';
 import {
   AtSign,
   CalendarDays,
+  ClipboardCheck,
   Images,
   LayoutList,
   ListOrdered,
@@ -39,6 +40,14 @@ export const NAV_ITEMS = [
     label: 'nav.posts',
     keywords: 'drafts published failed history sent list',
     permission: 'posts:read',
+  },
+  {
+    id: 'approvals',
+    to: '/w/$slug/approvals',
+    icon: ClipboardCheck,
+    label: 'nav.approvals',
+    keywords: 'review approve submissions waiting changes requested',
+    permission: 'posts:create',
   },
   {
     id: 'media',

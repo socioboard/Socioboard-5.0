@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { Id, IsoDateTime, page, PageQuery } from './common';
-import { Post } from './posts';
+import { Post, ReviewStep } from './posts';
 import { defineRoute } from './route';
 import { SchedulePostBody } from './scheduling';
 
@@ -12,20 +12,6 @@ const Person = z.object({ id: Id, name: z.string(), avatarUrl: z.url().nullable(
 
 export const REVIEW_NOTE_MAX = 2_000;
 const Note = z.string().trim().max(REVIEW_NOTE_MAX);
-
-/** One step of a post's review, kept as its full history. */
-export const ReviewAction = z.enum(['submitted', 'approved', 'changes_requested', 'withdrawn']);
-export type ReviewAction = z.infer<typeof ReviewAction>;
-
-export const ReviewStep = z.object({
-  id: Id,
-  action: ReviewAction,
-  actor: Person.nullable(),
-  /** The submitter's message, or the reviewer's reason for changes. */
-  note: z.string().nullable(),
-  createdAt: IsoDateTime,
-});
-export type ReviewStep = z.infer<typeof ReviewStep>;
 
 export const SubmitPostBody = z.object({ note: Note.optional() });
 

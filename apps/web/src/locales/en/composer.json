@@ -190,7 +190,7 @@
     "publishNow": "Publish now",
     "publishing": "Publishing…",
     "cantPublish": "Someone who can publish sends this out.",
-    "reviewRequired": "This workspace reviews every post before it goes out; sending for review arrives with approvals.",
+    "reviewRequired": "This post needs approval before it goes out.",
     "chooseAccounts": "Choose accounts to publish to.",
     "fixFirst_one": "Fix the problem above to publish.",
     "fixFirst_other": "Fix the problems above to publish.",
@@ -202,13 +202,18 @@
       "repeating": "Change repeat"
     },
     "noSlots_one": "{{accounts}} has no posting times yet, so the queue can’t take this post.",
-    "noSlots_other": "{{accounts}} have no posting times yet, so the queue can’t take this post."
+    "noSlots_other": "{{accounts}} have no posting times yet, so the queue can’t take this post.",
+    "submit": "Submit for review",
+    "waitingReview": "Waiting for review.",
+    "chooseAccountsReview": "Choose accounts before sending it for review.",
+    "fixFirstReview_one": "Fix the problem above before sending it for review.",
+    "fixFirstReview_other": "Fix the problems above before sending it for review."
   },
   "publish": {
     "started_one": "Publishing to {{count}} account.",
     "started_other": "Publishing to {{count}} accounts.",
     "hasErrors": "Some networks have problems to fix first; they’re listed above.",
-    "reviewRequired": "This workspace reviews every post before it goes out.",
+    "reviewRequired": "This post needs approval before it goes out.",
     "alreadySent": "This post has already been sent.",
     "notEditable": "This post is being published or was published, so it can’t be changed."
   },
@@ -319,5 +324,23 @@
     "followers_onlyHint": "Only people who follow this account",
     "mentioned_only": "Mentioned only",
     "mentioned_onlyHint": "Only profiles mentioned in the post"
+  },
+  "review": {
+    "sent": "Sent for review. You’ll hear when it’s approved or needs changes.",
+    "withdrawn": "Taken out of review. It’s a draft again.",
+    "withdraw": "Take back",
+    "open": "Review it",
+    "waitingMine": "Waiting for review. You can still edit it; reviewers see the latest version.",
+    "waiting": "Waiting for review.",
+    "changes": "{{name}} asked for changes.",
+    "changesNote": "{{name}} asked for changes: “{{note}}”",
+    "approvedEditing": "Approved by {{name}}. Changing it sends it back for review.",
+    "someone": "A reviewer",
+    "errors": {
+      "inReview": "This post is already waiting for review.",
+      "notDraft": "Only a draft can be sent for review.",
+      "notInReview": "This post isn’t waiting for review any more.",
+      "notAuthor": "Only its author can do that."
+    }
   }
 }

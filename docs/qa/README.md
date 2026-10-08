@@ -8,6 +8,7 @@ What to check in the app, screen by screen, for everything built so far. Each ch
 | --- | --- | --- |
 | Sign up, sign in, onboarding | [auth-onboarding](auth-onboarding.md) | Sign up, email verification, sign in, password reset, 2FA, invitations, first-run setup |
 | App frame | [app-shell](app-shell.md) | Sidebar, workspace switcher, user menu, search (⌘K), theme, session ending, phone layout |
+| Approvals | [approvals](approvals.md) | Review queue, review panel, approve, approve & schedule, request changes, my submissions |
 | Settings and profile | [settings](settings.md) | Workspace settings, members and invitations, profile, security, sessions |
 | Media library | [media](media.md) | Upload, processing, folders, filters, details, delete |
 | Accounts | [accounts](accounts.md) | Connecting Facebook, Instagram and X, the asset picker, reconnect, disconnect, posting times |
