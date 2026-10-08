@@ -25,6 +25,8 @@ Area doc: [workspace-settings](../frontend/areas/workspace-settings.md) · Check
 - [ ] **SET-25** You can't change or remove the owner or yourself.
 - [ ] **SET-26** Leave the workspace (anyone but the owner) → you're moved to another workspace.
 - [ ] **SET-27** As editor, contributor or viewer: the list is read-only; no invite, role or remove controls.
+- [ ] **SET-28** Accounts column: owners and admins show "All accounts" (no button). As owner or admin, click an editor's, contributor's or viewer's accounts → "Only some accounts" → pick accounts → "Save access" → the column shows "1 account" (or how many); picking none warns that they'll see no account.
+- [ ] **SET-29** Signed in as that limited member: Accounts, the composer's account picker and groups show only their accounts; posts, the calendar and the queue show only posts that go to their accounts alone; a link to any other post says it wasn't found. Set "All accounts" again → everything is back at once.
 
 ## Profile
 - [ ] **SET-30** Profile (user menu): change your name and time zone → saved; the user menu shows the new name.
@@ -38,4 +40,4 @@ Area doc: [workspace-settings](../frontend/areas/workspace-settings.md) · Check
 - [ ] **SET-44** Sessions: each device is listed ("Chrome on Windows"), with this one marked; "Sign out" on one ends it; "Sign out everywhere else" ends all others.
 
 ## Not built yet
-Per-member account access and the member page (phase 4), "require review for every post" (phase 4), the activity log (phase 5), email change.
+"Require review for every post" (phase 4, with approvals), the activity log (phase 5), email change.

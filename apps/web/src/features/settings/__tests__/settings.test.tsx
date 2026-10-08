@@ -33,18 +33,21 @@ const OWNER = {
   id: 'm-owner',
   user: user(ME_ID, 'Priya Raman', 'priya@halden.test'),
   role: 'owner',
+  accountIds: null,
   joinedAt: '2026-09-01T10:00:00.000Z',
 };
 const SAM = {
   id: 'm-sam',
   user: user('01a0d816-827a-74d6-a46e-409c7db36fa1', 'Sam Okafor', 'sam@halden.test'),
   role: 'editor',
+  accountIds: null,
   joinedAt: '2026-09-02T10:00:00.000Z',
 };
 const LEA = {
   id: 'm-lea',
   user: user('01a0d816-827a-74d6-a46e-409c7db36fa2', 'Léa Moreau', 'lea@halden.test'),
   role: 'admin',
+  accountIds: null,
   joinedAt: '2026-09-03T10:00:00.000Z',
 };
 const members = [OWNER, SAM, LEA];
@@ -157,6 +160,90 @@ describe('settings: general', () => {
     renderApp('/w/halden/settings/general');
     await screen.findByLabelText('Name');
     expect(screen.queryByText('Danger zone')).not.toBeInTheDocument();
+  });
+});
+
+const pageAccount = (n: number, name: string) => ({
+  id: `01a0d816-827a-74d6-a46e-409c7db3610${String(n)}`,
+  network: 'facebook_page',
+  displayName: name,
+  username: null,
+  avatarUrl: null,
+  status: 'active',
+  connection: null,
+  connectedBy: null,
+  createdAt: '2026-09-28T10:00:00.000Z',
+});
+const COFFEE = pageAccount(1, 'Halden Coffee');
+const KIOSK = pageAccount(2, 'Halden Kiosk');
+
+describe('settings: account access (P4-F5)', () => {
+  it('limits a member to some accounts, and shows it in the list', async () => {
+    const calls = mockServer({
+      ...base('owner'),
+      [`GET /api/v1/workspaces/${WID}/accounts`]: [200, { items: [COFFEE, KIOSK] }],
+      [`PUT /api/v1/workspaces/${WID}/members/m-sam/account-access`]: ({ body }) => [200, body],
+    });
+    renderApp('/w/halden/settings/members');
+    const u = userEvent.setup();
+    await u.click(
+      await screen.findByRole('button', { name: 'Accounts Sam Okafor can use: All accounts' }),
+    );
+    const dialog = await screen.findByRole('dialog', { name: 'Accounts Sam Okafor can use' });
+    await u.click(within(dialog).getByRole('radio', { name: 'Only some accounts' }));
+    expect(await within(dialog).findByText(/can't see or post to any account/)).toBeInTheDocument();
+    await u.click(within(dialog).getByRole('button', { name: 'Halden Kiosk, Facebook' }));
+    await u.click(within(dialog).getByRole('button', { name: 'Save access' }));
+
+    expect(await screen.findByText('Sam Okafor can now use 1 account.')).toBeInTheDocument();
+    expect(
+      calls.find((c) => c.key === `PUT /api/v1/workspaces/${WID}/members/m-sam/account-access`)
+        ?.body,
+    ).toEqual({ accountIds: [KIOSK.id] });
+    expect(
+      await screen.findByRole('button', { name: 'Accounts Sam Okafor can use: 1 account' }),
+    ).toBeInTheDocument();
+  });
+
+  it('gives every account back, and never offers it for owners and admins', async () => {
+    const calls = mockServer({
+      ...base('owner'),
+      [`GET /api/v1/workspaces/${WID}/members`]: [
+        200,
+        { items: [OWNER, { ...SAM, accountIds: [COFFEE.id] }, LEA] },
+      ],
+      [`GET /api/v1/workspaces/${WID}/accounts`]: [200, { items: [COFFEE, KIOSK] }],
+      [`PUT /api/v1/workspaces/${WID}/members/m-sam/account-access`]: ({ body }) => [200, body],
+    });
+    renderApp('/w/halden/settings/members');
+    const u = userEvent.setup();
+    await u.click(
+      await screen.findByRole('button', { name: 'Accounts Sam Okafor can use: 1 account' }),
+    );
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByRole('radio', { name: 'Only some accounts' })).toBeChecked();
+    await u.click(within(dialog).getByRole('radio', { name: 'All accounts' }));
+    await u.click(within(dialog).getByRole('button', { name: 'Save access' }));
+    expect(await screen.findByText('Sam Okafor can now use every account.')).toBeInTheDocument();
+    expect(
+      calls.find((c) => c.key === `PUT /api/v1/workspaces/${WID}/members/m-sam/account-access`)
+        ?.body,
+    ).toEqual({ accountIds: null });
+    expect(screen.queryByRole('button', { name: /Accounts Priya Raman can use/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Accounts Léa Moreau can use/ })).toBeNull();
+  });
+
+  it('shows the access to people who can’t change it, without a button', async () => {
+    mockServer({
+      ...base('viewer'),
+      [`GET /api/v1/workspaces/${WID}/members`]: [
+        200,
+        { items: [OWNER, { ...SAM, accountIds: [] }, LEA] },
+      ],
+    });
+    renderApp('/w/halden/settings/members');
+    expect(await screen.findByText('No accounts')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /can use/ })).toBeNull();
   });
 });
 

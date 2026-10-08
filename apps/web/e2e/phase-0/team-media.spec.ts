@@ -150,6 +150,16 @@ test('a team forms around a workspace and shares its media', async ({ browser })
     'Editor',
   );
 
+  // --- The owner can limit the editor to some accounts (P4-F5); none are connected yet. ---
+  await ownerPage
+    .getByRole('button', { name: `Accounts ${teammate.name} can use: All accounts` })
+    .click();
+  const access = ownerPage.getByRole('dialog');
+  await access.getByRole('radio', { name: 'Only some accounts' }).check();
+  await expect(access.getByText('No accounts are connected yet.')).toBeVisible();
+  await expectRightCursors(ownerPage, 'account access dialog');
+  await access.getByRole('button', { name: 'Cancel' }).click();
+
   await ownerContext.close();
   await teammateContext.close();
 });
