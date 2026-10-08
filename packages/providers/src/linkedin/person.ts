@@ -44,9 +44,10 @@ export const LINKEDIN_RULES: ContentRules = {
 /**
  * "Share on LinkedIn" allows each member 150 calls a day and the app 100,000 (UTC days; checked
  * 2026-10-08). A text post is one call, a photo adds two (register, upload), a video a few more
- * (register, finalize, status checks), so we count 50 posts a day per profile and 30,000 for the
- * whole app. Posts with many photos use more of LinkedIn's allowance than that assumes; LinkedIn
- * then answers 429 and the worker waits.
+ * (register, finalize, up to 10 status checks), so we count 50 posts a day per profile and 30,000
+ * for the whole app. Posts with many photos use more of LinkedIn's allowance than that assumes, and
+ * so do video retries: each of a video post's 5 tries uploads again and checks again (about 70
+ * calls if all 5 time out, LINKEDIN_VIDEO_WAIT). LinkedIn then answers 429 and the worker waits.
  */
 export const LINKEDIN_RATE_LIMITS: RateLimits = {
   perAccount: [{ max: 50, perSec: 24 * 3600 }],

@@ -12,8 +12,10 @@ import {
   createLinkedInAdapters,
   LINKEDIN_MAX_CHARS,
   LINKEDIN_SCOPES,
+  LINKEDIN_VIDEO_WAIT,
   linkedinCommentary,
   linkedinPostText,
+  unknownStatusWaitMs,
 } from '../index';
 
 const CALLBACK = 'https://app.test/api/oauth/linkedin/callback';
@@ -79,6 +81,34 @@ describe('errors', () => {
     expect(duplicate.message).toContain('duplicate');
     const server = linkedinError(await answer(one('error-server')), 'posting');
     expect(server).toMatchObject({ kind: 'retryable', networkCode: 'INTERNAL_ERROR' });
+  });
+
+  it('media not ready yet is tried again in 2 minutes; media that failed processing is not', async () => {
+    const posts = 'https://api.linkedin.com/rest/posts';
+    const waiting = linkedinError(
+      await answer({
+        method: 'POST',
+        url: posts,
+        status: 422,
+        response: { status: 422, message: 'The video media is still processing' },
+      }),
+      'posting',
+    );
+    expect(waiting).toMatchObject({ kind: 'retryable', retryAfterSec: 120 });
+    const failed = linkedinError(
+      await answer({
+        method: 'POST',
+        url: posts,
+        status: 400,
+        response: {
+          status: 400,
+          code: 'MEDIA_ASSET_PROCESSING_FAILED',
+          message: 'Media asset failed processing',
+        },
+      }),
+      'posting',
+    );
+    expect(failed.kind).toBe('content');
   });
 
   it('the share limit for unverified members fails at once and says what to do', async () => {
@@ -266,6 +296,17 @@ describe('text', () => {
     );
     // A hashtag is `#` + letters and digits, so "#1" stays one; `_` ends it and is escaped.
     expect(linkedinCommentary('Price #1? Use #my_tag')).toBe(String.raw`Price #1? Use #my\_tag`);
+  });
+
+  it('a hashtag after punctuation is still a hashtag; one glued to a word is not (PR #463 review)', () => {
+    expect(linkedinCommentary('Big news (#launch) today: "#socioboard"')).toBe(
+      String.raw`Big news \(#launch\) today: "#socioboard"`,
+    );
+    expect(linkedinCommentary('[#beta], #one,#two')).toBe(String.raw`\[#beta\], #one,#two`);
+    // C# is a language, not a hashtag; a_#x has "_" before the "#".
+    expect(linkedinCommentary('We use C# and a_#x')).toBe(String.raw`We use C\# and a\_\#x`);
+    // Unconfirmed whether LinkedIn takes "_" inside a hashtag, so it ends the tag and is escaped.
+    expect(linkedinCommentary('#coffee_time')).toBe(String.raw`#coffee\_time`);
   });
 
   it('adds the link after the text unless the text has it', () => {
@@ -473,7 +514,7 @@ describe('video', () => {
   const uploaded: RecordedCall[] = [init, range(6), part0, range(4), part1, finalized];
 
   /** The LinkedIn profile network with instant waits, recording every request's headers. */
-  function videoProfile(calls: RecordedCall[], timeoutMs = 60_000) {
+  function videoProfile(calls: RecordedCall[]) {
     const replay = replayFetch(calls);
     const headers: Headers[] = [];
     const sleeps: number[] = [];
@@ -488,7 +529,6 @@ describe('video', () => {
           sleeps.push(ms);
           return Promise.resolve();
         },
-        processingTimeoutMs: timeoutMs,
       },
     }).networks.find((n) => n.id === 'linkedin_person');
     if (!network) throw new Error('linkedin_person missing');
@@ -519,7 +559,8 @@ describe('video', () => {
       'bytes=0-5',
       'bytes=6-9',
     ]);
-    expect(sleeps).toEqual([3000]);
+    // 10 s before the first status check, 15 s before the second.
+    expect(sleeps).toEqual([10_000, 15_000]);
   });
 
   it('a video LinkedIn fails to process is a content problem, with its reason', async () => {
@@ -537,16 +578,27 @@ describe('video', () => {
     expect(isProviderError(err) && err.message).toContain('Unsupported codec');
   });
 
-  it('still processing after the wait is tried again later', async () => {
-    const { network } = videoProfile([...uploaded, processing], 0);
+  it('still processing after 10 checks, never more than a minute apart, is tried again later', async () => {
+    // Each check is one of the member's 150 LinkedIn calls a day (PR #463 review).
+    const { network, replay, sleeps } = videoProfile([
+      ...uploaded,
+      ...Array.from({ length: LINKEDIN_VIDEO_WAIT.maxChecks }, () => processing),
+    ]);
     const err = await network
       .publish({ ...post('Roasting day'), media: [clip()] }, account)
       .catch((e: unknown) => e);
     expect(isProviderError(err) && err.kind).toBe('retryable');
+    expect(
+      replay.seen.filter((r) => r.method === 'GET' && r.url.pathname.includes('/rest/videos/')),
+    ).toHaveLength(10);
+    expect(replay.remaining()).toEqual([]);
+    expect(sleeps).toEqual([
+      10_000, 15_000, 22_500, 33_750, 50_625, 60_000, 60_000, 60_000, 60_000, 60_000,
+    ]);
   });
 
-  it('when LinkedIn won’t show the token the video’s status (403), it posts anyway', async () => {
-    const { network, replay } = videoProfile([
+  it('when LinkedIn won’t show the token the video’s status (403), it waits by size, then posts', async () => {
+    const { network, replay, sleeps } = videoProfile([
       ...uploaded,
       { ...processing, status: 403, response: { status: 403, message: 'Not allowed' } },
       created,
@@ -557,6 +609,32 @@ describe('video', () => {
       account,
     );
     expect(replay.remaining()).toEqual([]);
+    // The first check's 10 s, then 10 s + 1 s per MB (this clip is under 1 MB).
+    expect(sleeps).toEqual([10_000, 11_000]);
+    expect([unknownStatusWaitMs(50 * MB), unknownStatusWaitMs(500 * MB)]).toEqual([
+      60_000, 120_000,
+    ]);
+  });
+
+  it('a post LinkedIn refuses because the video isn’t ready is tried again in 2 minutes', async () => {
+    const { network } = videoProfile([
+      ...uploaded,
+      { ...processing, status: 403, response: { status: 403, message: 'Not allowed' } },
+      {
+        ...created,
+        status: 400,
+        headers: {},
+        response: {
+          status: 400,
+          code: 'MEDIA_ASSET_WAITING_UPLOAD',
+          message: 'Media asset is waiting upload',
+        },
+      },
+    ]);
+    const err = await network
+      .publish({ ...post('Fresh roast today (Kenya) #coffee'), media: [clip()] }, account)
+      .catch((e: unknown) => e);
+    expect(err).toMatchObject({ kind: 'retryable', retryAfterSec: 120 });
   });
 
   it('one video, alone, 3 seconds to 30 minutes', () => {

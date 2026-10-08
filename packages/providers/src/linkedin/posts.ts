@@ -32,8 +32,13 @@ export function restHeaders(account: AccountCredentials): Record<string, string>
 
 /** Characters `little` reserves; each must be escaped with a backslash to stay plain text. */
 const RESERVED = /[|{}@[\]()<>#\\*_~]/g;
-/** A hashtag as people type it: `#` and a word, at the start or after a space. */
-const HASHTAG = /(^|\s)(#[\p{L}\p{N}]+)/gu;
+/**
+ * A hashtag as people type it: `#` and letters or digits, not glued to a word before it (so
+ * `(#launch` and `"#launch"` are hashtags, `C#` isn't). It ends at anything else: `#coffee_time` is
+ * the hashtag `#coffee` and an escaped `_time`, because whether LinkedIn's format takes an
+ * unescaped `_` inside a hashtag isn't documented (it lists `_` as reserved).
+ */
+const HASHTAG = /(?<![\p{L}\p{N}_])#[\p{L}\p{N}]+/gu;
 
 const escape = (text: string) => text.replace(RESERVED, (c) => `\\${c}`);
 
@@ -46,11 +51,8 @@ export function linkedinCommentary(text: string): string {
   let out = '';
   let last = 0;
   for (const m of text.matchAll(HASHTAG)) {
-    const lead = m[1] ?? '';
-    const tag = m[2] ?? '';
-    const start = m.index + lead.length;
-    out += escape(text.slice(last, start)) + tag;
-    last = start + tag.length;
+    out += escape(text.slice(last, m.index)) + m[0];
+    last = m.index + m[0].length;
   }
   return out + escape(text.slice(last));
 }
@@ -131,14 +133,30 @@ export async function uploadImage(
 /** LinkedIn's video limits (Videos API, checked 2026-10-08): 3 seconds to 30 minutes, up to 500 MB. */
 export const LINKEDIN_VIDEO = { minSec: 3, maxSec: 30 * 60, maxBytes: 500 * MB };
 
+/**
+ * Waiting for LinkedIn to process a video. Every status check is one of the member's 150 calls a
+ * day, and a try that gives up is retried from the upload (5 tries), so the checks are few and far
+ * apart: 10 s, growing ×1.5 to at most 60 s, at most 10 per try (about 7.5 minutes). Worst case,
+ * 5 tries × (10 checks + 3 upload calls + parts) ≈ 70 calls: half a day's allowance, not all of it.
+ */
+export const LINKEDIN_VIDEO_WAIT = { firstMs: 10_000, maxMs: 60_000, maxChecks: 10 };
+
 /** How the video upload waits for LinkedIn's processing; tests make it instant. */
 export interface LinkedInVideoOptions {
   sleep?: (ms: number) => Promise<void>;
-  /** First wait between status checks; it grows ×1.5 up to 15 s. */
+  /** First wait between status checks (LINKEDIN_VIDEO_WAIT.firstMs). */
   pollIntervalMs?: number;
-  /** Longest wait for processing before the try is given up and retried later. */
-  processingTimeoutMs?: number;
+  /** Status checks before the try gives up and is retried later (LINKEDIN_VIDEO_WAIT.maxChecks). */
+  maxChecks?: number;
 }
+
+/**
+ * When LinkedIn won't say whether a video is processed (403), how long to wait before posting: 10 s
+ * and 1 s per MB, at most 2 minutes. If it's still not ready, LinkedIn refuses the post and that
+ * refusal is retried (errors.ts), so this only makes the first try more likely to work.
+ */
+export const unknownStatusWaitMs = (sizeBytes: number) =>
+  Math.min(10_000 + Math.ceil(sizeBytes / MB) * 1000, 120_000);
 
 interface InitializedVideo {
   value?: {
@@ -159,9 +177,9 @@ interface VideoStatus {
  * 2. PUT each part, read by byte range from our storage, *without* the token (LinkedIn's video
  *    upload URLs refuse it), keeping each answer's ETag: it identifies the part;
  * 3. finalize with the ETags in order;
- * 4. ask for its status until AVAILABLE. Each check is one of the member's 150 daily calls, so the
- *    wait grows from 3 to 15 s. If LinkedIn won't tell us (403: the token's `w_member_social` may not
- *    be allowed to read videos, as it can't read images) the post is created anyway.
+ * 4. ask for its status until AVAILABLE, a few times and far apart (LINKEDIN_VIDEO_WAIT). If LinkedIn
+ *    won't tell us (403: the token's `w_member_social` may not be allowed to read videos, as it
+ *    can't read images), wait a time scaled to the file's size (`unknownStatusWaitMs`) and post.
  */
 export async function uploadVideo(
   http: HttpClient,
@@ -225,14 +243,19 @@ export async function uploadVideo(
   if (!fin.ok) throw linkedinError(fin, 'video upload');
 
   const sleep = options.sleep ?? ((ms: number) => new Promise((r) => setTimeout(r, ms)));
-  const deadline = Date.now() + (options.processingTimeoutMs ?? 10 * 60_000);
-  let wait = options.pollIntervalMs ?? 3000;
-  for (;;) {
+  const maxChecks = options.maxChecks ?? LINKEDIN_VIDEO_WAIT.maxChecks;
+  let wait = options.pollIntervalMs ?? LINKEDIN_VIDEO_WAIT.firstMs;
+  for (let check = 1; ; check++) {
+    // Wait first: a video is never processed the moment it's finalized.
+    await sleep(wait);
     const res = await http.request<VideoStatus>({
       url: `${LINKEDIN_API}/rest/videos/${encodeURIComponent(video)}`,
       headers: restHeaders(account),
     });
-    if (res.status === 403) return video;
+    if (res.status === 403) {
+      await sleep(unknownStatusWaitMs(media.sizeBytes));
+      return video;
+    }
     if (!res.ok) throw linkedinError(res, 'video processing');
     if (res.body.status === 'AVAILABLE') return video;
     if (res.body.status === 'PROCESSING_FAILED') {
@@ -241,14 +264,13 @@ export async function uploadVideo(
         message: `LinkedIn couldn't process the video: ${res.body.processingFailureReason ?? 'no reason given'}`,
       });
     }
-    if (Date.now() > deadline) {
+    if (check >= maxChecks) {
       throw new ProviderError({
         kind: 'retryable',
         message: 'LinkedIn is still processing the video',
       });
     }
-    await sleep(wait);
-    wait = Math.min(wait * 1.5, 15_000);
+    wait = Math.min(wait * 1.5, LINKEDIN_VIDEO_WAIT.maxMs);
   }
 }
 

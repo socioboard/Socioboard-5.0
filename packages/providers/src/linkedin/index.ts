@@ -17,8 +17,10 @@ export {
   LINKEDIN_MAX_IMAGES,
   LINKEDIN_VERSION,
   LINKEDIN_VIDEO,
+  LINKEDIN_VIDEO_WAIT,
   linkedinCommentary,
   linkedinPostText,
+  unknownStatusWaitMs,
 } from './posts';
 
 export interface LinkedInConfig {

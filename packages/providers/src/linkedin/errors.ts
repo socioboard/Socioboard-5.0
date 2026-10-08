@@ -25,6 +25,9 @@ const first = (...values: (string | undefined)[]) =>
  *   Except LinkedIn's cap on posts by members who haven't verified their identity ("share limit
  *   has been reached for unverified members", seen live 2026-10-08): retrying in minutes can't
  *   help, so the post fails at once and says what to do.
+ * - A 4xx saying the media isn't ready yet (`MEDIA_ASSET_WAITING_UPLOAD`, or a message about media
+ *   still processing) → try again in 2 minutes: a video posted before LinkedIn finished it (when
+ *   its status couldn't be read) will be ready later. `…PROCESSING_FAILED` isn't this: it fails.
  * - 426 → LinkedIn retired the API version we send (`LinkedIn-Version`): no retry helps, the
  *   adapter needs a newer version; worded so whoever runs the server knows.
  * - Other 4xx (403 missing permission or not a page admin, 422 duplicate post) → the content
@@ -45,6 +48,22 @@ export function linkedinError(res: HttpResponse, action: string): ProviderError 
 
   if (res.status === 401 || body.error === 'invalid_grant' || body.error === 'invalid_token') {
     return new ProviderError({ kind: 'auth', message, status: res.status, networkCode: code });
+  }
+  const notReady =
+    code === 'MEDIA_ASSET_WAITING_UPLOAD' ||
+    (said !== undefined &&
+      !/fail/i.test(said) &&
+      /(media|video|image|asset)\b.{0,60}\b(not (yet )?(ready|available)|still processing|processing|waiting)/i.test(
+        said,
+      ));
+  if (res.status >= 400 && res.status < 500 && res.status !== 429 && notReady) {
+    return new ProviderError({
+      kind: 'retryable',
+      message,
+      status: res.status,
+      networkCode: code,
+      retryAfterSec: 120,
+    });
   }
   if (said && /share limit has been reached for unverified members/i.test(said)) {
     return new ProviderError({
