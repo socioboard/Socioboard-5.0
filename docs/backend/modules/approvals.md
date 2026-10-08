@@ -8,19 +8,20 @@ The review workflow (draft → in review → approved, or changes requested) and
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `PostApproval` | id, postId, reviewerId, decision (approved/changes_requested), note, createdAt | Full history kept |
-| `PostComment` | id, postId, authorId, body, parentId?, mentions[], editedAt?, deletedAt? | Threaded one level; @mentions notify |
+| `PostApproval` | id, workspaceId, postId, actorId?, action (submitted/approved/changes_requested/withdrawn), note?, createdAt | Every review step, so the full history is kept; the post's status says where it is now |
+| `PostComment` | id, workspaceId, postId, parentId?, authorId?, body, mentionedUserIds[], editedAt?, deletedAt?, createdAt | Threaded one level; @mentions notify; a deleted comment with replies stays as "Comment deleted" |
 
 ## API
 | Method | Path | Permission | Description |
 | --- | --- | --- | --- |
-| POST | `/api/v1/workspaces/:wid/posts/:pid/submit` | `posts:create` (author) | Send for review |
-| POST | `/api/v1/workspaces/:wid/posts/:pid/approve` | `posts:approve` | Approve (optionally schedule in the same call) |
-| POST | `/api/v1/workspaces/:wid/posts/:pid/request-changes` | `posts:approve` | Back to draft with a note |
+| POST | `/api/v1/workspaces/:wid/posts/:pid/submit` | `posts:create` (author) | Send for review, with an optional note |
+| POST | `/api/v1/workspaces/:wid/posts/:pid/approve` | `posts:approve` | Approve; `schedule` (the schedule body) schedules in the same call |
+| POST | `/api/v1/workspaces/:wid/posts/:pid/request-changes` | `posts:approve` | Back to draft with a note (required) |
 | POST | `/api/v1/workspaces/:wid/posts/:pid/withdraw` | author | Pull back from review |
-| GET | `/api/v1/workspaces/:wid/approvals?status=pending` | `posts:approve` | Review queue |
+| GET | `/api/v1/workspaces/:wid/posts/:pid/review` | `posts:read` | The post's review history |
+| GET | `/api/v1/workspaces/:wid/reviews?status=pending\|decided` | `posts:approve` | Review queue: waiting (oldest first) or decided (newest first) |
 | GET | `/api/v1/workspaces/:wid/posts/:pid/comments` | `posts:read` | Comments |
-| POST | `/api/v1/workspaces/:wid/posts/:pid/comments` | `posts:read` | Add a comment (Viewers can comment) |
+| POST | `/api/v1/workspaces/:wid/posts/:pid/comments` | `posts:read` | Add a comment or a reply (`parentId`), with `mentionIds` (user ids of members). Viewers can comment |
 | PATCH/DELETE | `/api/v1/workspaces/:wid/comments/:cid` | comment author | Edit/delete own comment |
 
 ## Rules

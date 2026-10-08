@@ -55,6 +55,11 @@ model User {
   notifications     Notification[]
   notificationPrefs NotificationPreference[]
   flagsUpdated      FeatureFlag[]
+  reviewSteps       PostApproval[]
+  comments          PostComment[]
+  tasksAssigned     Task[]                   @relation("TasksAssigned")
+  tasksCreated      Task[]                   @relation("TasksCreated")
+  aiJobs            AiJob[]
 }
 
 model Session {
@@ -158,19 +163,29 @@ model Workspace {
   recurringRules    RecurringRule[]
   queueSlots        QueueSlot[]
   notifications     Notification[]
+  postApprovals     PostApproval[]
+  postComments      PostComment[]
+  tasks             Task[]
+  aiJobs            AiJob[]
+  memberAccess      MemberAccountAccess[]
 }
 
 model Member {
-  id          String   @id @default(uuid(7)) @db.Uuid
-  workspaceId String   @db.Uuid
-  userId      String   @db.Uuid
+  id              String   @id @default(uuid(7)) @db.Uuid
+  workspaceId     String   @db.Uuid
+  userId          String   @db.Uuid
   /// owner | admin | editor | contributor | viewer (see @socioboard/contracts permissions)
-  role        String
-  createdAt   DateTime @default(now())
+  role            String
+  /// Limited to the accounts in MemberAccountAccess (P4-B4); false = every account. A flag rather
+  /// than "no rows means all", so removing a limited member's last account can't widen access.
+  accountsLimited Boolean  @default(false)
+  createdAt       DateTime @default(now())
 
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace     Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountAccess MemberAccountAccess[]
 
+  @@unique([id, workspaceId])
   @@unique([workspaceId, userId])
   @@index([userId])
 }
@@ -248,7 +263,7 @@ model MediaAsset {
   durationSec  Float?
   thumbnailKey String?
   source       MediaSource @default(upload)
-  /// Set when source = ai; foreign key added with AiJob (P4-B1).
+  /// Set when source = ai: the job that made it (or holds its upload slot).
   aiJobId      String?     @db.Uuid
   altText      String?
   status       MediaStatus @default(uploading)
@@ -263,9 +278,11 @@ model MediaAsset {
   workspace  Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   folder     MediaFolder? @relation(fields: [folderId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
   uploadedBy User?        @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  aiJob      AiJob?       @relation(fields: [aiJobId], references: [id], onDelete: SetNull)
 
   @@index([workspaceId, createdAt(sort: Desc)])
   @@index([workspaceId, folderId])
+  @@index([aiJobId])
   @@index([status, createdAt])
 }
 
@@ -367,12 +384,13 @@ model SocialAccount {
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
 
-  workspace   Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  connection  SocialConnection?        @relation(fields: [connectionId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
-  connectedBy User?                    @relation("AccountsAdded", fields: [connectedById], references: [id], onDelete: SetNull)
-  groupItems  SocialAccountGroupItem[]
-  postTargets PostTarget[]
-  queueSlots  QueueSlot[]
+  workspace    Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  connection   SocialConnection?        @relation(fields: [connectionId, workspaceId], references: [id, workspaceId], onDelete: NoAction)
+  connectedBy  User?                    @relation("AccountsAdded", fields: [connectedById], references: [id], onDelete: SetNull)
+  groupItems   SocialAccountGroupItem[]
+  postTargets  PostTarget[]
+  queueSlots   QueueSlot[]
+  memberAccess MemberAccountAccess[]
 
   @@unique([id, workspaceId])
   @@unique([workspaceId, network, externalId])
@@ -496,6 +514,9 @@ model Post {
   author        User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
   targets       PostTarget[]
   recurringRule RecurringRule?
+  reviewSteps   PostApproval[]
+  comments      PostComment[]
+  tasks         Task[]
 
   @@unique([id, workspaceId])
   /// Each occurrence is created once, however often the expansion job runs.
@@ -741,4 +762,162 @@ model StoredObject {
   contentType String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ── Phase 4: teams and AI (P4-B1) ───────────────────────────────────────────────────────────────
+
+/// The accounts a member with accountsLimited can use (docs/backend/modules/workspaces.md).
+model MemberAccountAccess {
+  workspaceId     String   @db.Uuid
+  memberId        String   @db.Uuid
+  socialAccountId String   @db.Uuid
+  createdAt       DateTime @default(now())
+
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  member    Member        @relation(fields: [memberId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+  account   SocialAccount @relation(fields: [socialAccountId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+
+  @@id([memberId, socialAccountId])
+  @@index([socialAccountId])
+}
+
+enum ReviewAction {
+  submitted
+  approved
+  changes_requested
+  withdrawn
+}
+
+/// One step of a post's review; the full history is kept (docs/backend/modules/approvals.md).
+model PostApproval {
+  id          String       @id @default(uuid(7)) @db.Uuid
+  workspaceId String       @db.Uuid
+  postId      String       @db.Uuid
+  actorId     String?      @db.Uuid
+  action      ReviewAction
+  note        String?
+  createdAt   DateTime     @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  post      Post      @relation(fields: [postId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+  actor     User?     @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt])
+  @@index([workspaceId, action, createdAt(sort: Desc)])
+}
+
+/// Comments on a post, threaded one level (a reply's parent is a top-level comment).
+model PostComment {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  workspaceId      String    @db.Uuid
+  postId           String    @db.Uuid
+  parentId         String?   @db.Uuid
+  authorId         String?   @db.Uuid
+  body             String
+  /// Users @mentioned (members when written). No foreign key: a mention outlives a membership.
+  mentionedUserIds String[]  @db.Uuid
+  editedAt         DateTime?
+  /// Soft delete: a deleted comment with replies stays as "Comment deleted".
+  deletedAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  post      Post          @relation(fields: [postId, workspaceId], references: [id, workspaceId], onDelete: Cascade)
+  parent    PostComment?  @relation("Replies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PostComment[] @relation("Replies")
+  author    User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@unique([id, workspaceId])
+  @@index([postId, createdAt])
+  @@index([mentionedUserIds], type: Gin)
+}
+
+enum TaskStatus {
+  open
+  in_progress
+  done
+}
+
+/// Work assignments in a workspace, often about a post (docs/backend/modules/tasks.md).
+model Task {
+  id             String     @id @default(uuid(7)) @db.Uuid
+  workspaceId    String     @db.Uuid
+  title          String
+  description    String     @default("")
+  /// The post it is about. A plain key (post ids are unique) so deleting the post can clear it;
+  /// the service checks the post is in the same workspace.
+  postId         String?    @db.Uuid
+  assigneeId     String?    @db.Uuid
+  createdById    String?    @db.Uuid
+  dueAt          DateTime?
+  status         TaskStatus @default(open)
+  completedAt    DateTime?
+  /// When the 24-hour due reminder went out, so it is sent once.
+  reminderSentAt DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: SetNull)
+  assignee  User?     @relation("TasksAssigned", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdBy User?     @relation("TasksCreated", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, status, dueAt])
+  @@index([assigneeId, status])
+  @@index([postId])
+  @@index([status, dueAt])
+}
+
+enum AiJobType {
+  text
+  image
+  video
+}
+
+enum AiJobStatus {
+  queued
+  running
+  succeeded
+  failed
+  cancelled
+}
+
+/// One generation request to the AI service (docs/backend/modules/ai.md). Its files are
+/// MediaAssets with aiJobId; its id is the `reference` the AI service echoes.
+model AiJob {
+  id             String          @id @default(uuid(7)) @db.Uuid
+  workspaceId    String          @db.Uuid
+  userId         String?         @db.Uuid
+  type           AiJobType
+  /// The type's fixed inputs, as the API took them.
+  input          Json
+  targetNetworks SocialNetwork[]
+  /// A follow-up on an earlier job in the same workspace, with its instruction.
+  refinesJobId   String?         @db.Uuid
+  instruction    String?
+  status         AiJobStatus     @default(queued)
+  progress       Float?
+  /// The AI service's job id, from its 202 reply.
+  externalJobId  String?         @unique
+  /// Generated text, one entry per variation.
+  text           String[]
+  /// As the AI service reported it (model, tokens, images, seconds).
+  usage          Json?
+  creditsUsed    Int?
+  errorCode      String?
+  errorMessage   String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  finishedAt     DateTime?
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  refines   AiJob?       @relation("Refinements", fields: [refinesJobId], references: [id], onDelete: SetNull)
+  refinedBy AiJob[]      @relation("Refinements")
+  assets    MediaAsset[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, userId, createdAt(sort: Desc)])
+  @@index([status, updatedAt])
 }

@@ -380,7 +380,7 @@ The web app and API share one origin per environment, with the API served under 
 | Local dev | `https://<name>.dev.socioboard.com`, a Cloudflare Tunnel to localhost | Same tunnel | A public HTTPS URL is needed because TikTok and Instagram reject plain localhost callbacks, and Stripe/AI webhooks must reach the machine |
 
 - **OAuth callbacks:** `https://<app host>/api/oauth/<network>/callback`, e.g. `https://app.socioboard.com/api/oauth/linkedin/callback`.
-- **Webhooks:** `/api/webhooks/stripe`, `/api/webhooks/ai`, and Meta's data-deletion callback at `/api/webhooks/meta/data-deletion`.
+- **Webhooks:** `/api/webhooks/stripe`, `/api/v1/ai/callbacks/result`, and Meta's data-deletion callback at `/api/webhooks/meta/data-deletion`.
 - **Legal pages for app reviews:** `socioboard.com/privacy`, `socioboard.com/terms`, `socioboard.com/data-deletion`.
 - **Developer apps:** one production app per network holding the production callbacks, plus one development app per network holding the staging and dev callbacks (on Meta, a test app linked to the production app). Staging can't break the reviewed production app this way.
 - **Self-hosters** set one `APP_URL`; every callback and webhook URL is derived from it.

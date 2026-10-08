@@ -66,6 +66,21 @@ export type Member = z.infer<typeof Member>;
 
 export const UpdateMemberBody = z.object({ role: AssignableRole });
 
+/**
+ * Which social accounts a member can see and post to (P4-B4). `accountIds: null` means every
+ * account in the workspace, including ones connected later; a list limits them to those.
+ */
+export const MemberAccountAccess = z.object({ accountIds: z.array(Id).nullable() });
+export type MemberAccountAccess = z.infer<typeof MemberAccountAccess>;
+
+export const SetMemberAccountAccessBody = z.object({
+  accountIds: z
+    .array(Id)
+    .max(1000)
+    .refine((ids) => new Set(ids).size === ids.length, 'The same account is given twice')
+    .nullable(),
+});
+
 export const TransferOwnershipBody = z.object({
   /** Must be an admin; the current owner becomes an admin. */
   memberId: Id,
@@ -177,10 +192,28 @@ export const workspaceRoutes = {
     method: 'PATCH',
     path: '/api/v1/workspaces/:workspaceId/members/:memberId',
     access: 'members:manage',
-    summary: "Change a member's role (account access arrives in phase 4)",
+    summary: "Change a member's role",
     params: memberParams,
     body: UpdateMemberBody,
     responses: { 200: Member },
+  }),
+  getMemberAccountAccess: defineRoute({
+    method: 'GET',
+    path: '/api/v1/workspaces/:workspaceId/members/:memberId/account-access',
+    // `members:manage`, or the member themselves: checked in the service.
+    access: 'member',
+    summary: 'Which social accounts a member can use',
+    params: memberParams,
+    responses: { 200: MemberAccountAccess },
+  }),
+  setMemberAccountAccess: defineRoute({
+    method: 'PUT',
+    path: '/api/v1/workspaces/:workspaceId/members/:memberId/account-access',
+    access: 'members:manage',
+    summary: 'Limit a member to some social accounts, or give back access to all (null)',
+    params: memberParams,
+    body: SetMemberAccountAccessBody,
+    responses: { 200: MemberAccountAccess },
   }),
   removeMember: defineRoute({
     method: 'DELETE',
