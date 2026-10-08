@@ -5,11 +5,11 @@
 **Modules:** [approvals](../backend/modules/approvals.md), [tasks](../backend/modules/tasks.md), [workspaces](../backend/modules/workspaces.md) (account access, review setting), [ai](../backend/modules/ai.md), [publishing](../backend/modules/publishing.md) (AI labels) · **Areas:** [approvals](../frontend/areas/approvals.md), [posts](../frontend/areas/posts.md) (tasks, comments), [workspace-settings](../frontend/areas/workspace-settings.md), [ai-studio](../frontend/areas/ai-studio.md), [composer](../frontend/areas/composer.md) (AI panel, submit)
 
 ## Contracts
-- [ ] P4-C1 Submit/approve/request-changes/withdraw, comments, tasks
-- [ ] P4-C2 AI: fixed inputs per type (no templates, decided 2026-10-08), jobs, and our two endpoints for the AI service, the upload slot and the result update ([ai-callbacks.openapi.yaml](../backend/ai-callbacks.openapi.yaml)); align with their OpenAPI for `POST /jobs` and `GET /jobs/{id}` when it arrives
+- [x] P4-C1 Submit/approve/request-changes/withdraw, comments, tasks — done 2026-10-08 (`packages/contracts/src/approvals.ts`, `tasks.ts`; member account access in `workspaces.ts`): review steps kept as a history (`GET …/posts/:pid/review`), the review queue at `GET …/reviews`, approve with an optional schedule, comments one level deep with @mentions by user id. All routes listed in `pending-routes.ts` with the task that mounts them
+- [x] P4-C2 AI: fixed inputs per type (no templates, decided 2026-10-08), jobs, and our two endpoints for the AI service, the upload slot and the result update ([ai-callbacks.openapi.yaml](../backend/ai-callbacks.openapi.yaml)); align with their OpenAPI for `POST /jobs` and `GET /jobs/{id}` when it arrives. Done 2026-10-08 (`packages/contracts/src/ai.ts`): fixed inputs per type, jobs, follow-ups, and our two endpoints under `/api/v1/ai/callbacks/` (every route lives under `/api/v1`); their side is checked in P4-B8
 
 ## Backend
-- [ ] P4-B1 Prisma: PostApproval, PostComment, Task, AiJob, MemberAccountAccess (composite keys to Member and SocialAccount; moved from P0-B1); foreign key MediaAsset.aiJobId → AiJob
+- [x] P4-B1 Prisma: PostApproval, PostComment, Task, AiJob, MemberAccountAccess (composite keys to Member and SocialAccount; moved from P0-B1); foreign key MediaAsset.aiJobId → AiJob — done 2026-10-08, migration `20261008120000_phase4_teams_ai`: `Member.accountsLimited` (a flag, so a limited member never falls back to all accounts) with `MemberAccountAccess` rows; `PostApproval` as the review history (submitted, approved, changes requested, withdrawn); `PostComment` with `mentionedUserIds`; `Task` with `reminderSentAt`; `AiJob` (`externalJobId` unique, text variations, usage) and `MediaAsset.aiJobId` → `AiJob`
 - [ ] P4-B2 Approval workflow + "editing resets approval" rule + review queue
 - [ ] P4-B3 Comments with @mentions; notifications for review events
 - [ ] P4-B4 Member account access enforced across posts, scheduling, calendar

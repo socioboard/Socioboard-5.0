@@ -10,8 +10,8 @@ info:
     Flow for a job with files:
     1. Socioboard calls `POST /jobs` with a `reference` (its own job id) and these two URLs.
     2. For each file it produces, the AI service asks for an upload slot (`POST
-       /api/ai/jobs/{reference}/uploads`), then PUTs the file to the `uploadUrl` it gets back.
-    3. When the job ends, it sends one result update (`POST /api/webhooks/ai`) naming the
+       /api/v1/ai/callbacks/jobs/{reference}/uploads`), then PUTs the file to the `uploadUrl` it gets back.
+    3. When the job ends, it sends one result update (`POST /api/v1/ai/callbacks/result`) naming the
        uploaded files by the `key` each slot returned.
 
     Text-only jobs skip step 2. While a job runs, the AI service may also send result updates
@@ -33,7 +33,7 @@ servers:
 security:
   - signature: []
 paths:
-  /api/ai/jobs/{reference}/uploads:
+  /api/v1/ai/callbacks/jobs/{reference}/uploads:
     post:
       operationId: createAiUpload
       summary: Ask for an upload slot for one output file
@@ -70,7 +70,7 @@ paths:
         '409': { $ref: '#/components/responses/Error' }
         '422': { $ref: '#/components/responses/Error' }
         '429': { $ref: '#/components/responses/Error' }
-  /api/webhooks/ai:
+  /api/v1/ai/callbacks/result:
     post:
       operationId: aiResultUpdate
       summary: Report a job's progress or result

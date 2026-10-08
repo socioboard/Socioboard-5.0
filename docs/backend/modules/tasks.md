@@ -8,15 +8,15 @@ Simple work assignments inside a workspace, usually tied to a post ("write copy 
 ## Data
 | Table | Key fields | Notes |
 | --- | --- | --- |
-| `Task` | id, workspaceId, title, description, postId?, assigneeId?, createdById, dueAt?, status (open/in_progress/done), completedAt? | |
+| `Task` | id, workspaceId, title, description, postId?, assigneeId? (a user), createdById?, dueAt?, status (open/in_progress/done), completedAt?, reminderSentAt? | Deleting the post clears `postId`; `reminderSentAt` makes the due reminder go out once |
 
 ## API
 | Method | Path | Permission | Description |
 | --- | --- | --- | --- |
 | GET | `/api/v1/workspaces/:wid/tasks?assignee=me&status=&postId=` | `posts:read` | List tasks |
 | POST | `/api/v1/workspaces/:wid/tasks` | `tasks:manage` | Create |
-| PATCH | `/api/v1/workspaces/:wid/tasks/:tid` | `tasks:manage` or assignee | Update, change status |
-| DELETE | `/api/v1/workspaces/:wid/tasks/:tid` | creator or admin | Delete |
+| PATCH | `/api/v1/workspaces/:wid/tasks/:tid` | `tasks:manage`, or the assignee for `status` only | Update, change status |
+| DELETE | `/api/v1/workspaces/:wid/tasks/:tid` | creator or `members:manage` | Delete |
 
 ## Rules
 - The assignee must be a workspace member.

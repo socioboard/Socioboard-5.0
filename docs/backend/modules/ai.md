@@ -11,8 +11,8 @@ Decided with the AI team on 2026-10-08: **no templates** (fixed forms per type, 
 | --- | --- | --- |
 | AI service | `POST /jobs` | Start a job; `202 { jobId }` at once (text may come back in the same reply) |
 | AI service | `GET /jobs/{jobId}` | Status and result; our fallback when a result update is missed |
-| Socioboard | `POST /api/ai/jobs/{reference}/uploads` | An upload slot for one output file: a URL to PUT it to and the `key` that names it |
-| Socioboard | `POST /api/webhooks/ai` | The result update: progress, or the final result naming uploaded files by key |
+| Socioboard | `POST /api/v1/ai/callbacks/jobs/{reference}/uploads` | An upload slot for one output file: a URL to PUT it to and the `key` that names it |
+| Socioboard | `POST /api/v1/ai/callbacks/result` | The result update: progress, or the final result naming uploaded files by key |
 
 Our two are specified in [ai-callbacks.openapi.yaml](../ai-callbacks.openapi.yaml) (signing, payloads, errors); theirs in the AI service's repository. Both are HMAC-signed with a shared secret; we call theirs with an API key.
 
@@ -48,8 +48,8 @@ Every job also carries its target networks' `ContentRules` (character limit, siz
 { reference, workspaceId, type, input, targets: [{ network, rules }],
   referenceImageUrl?,            // signed, valid 1 hour; they download it
   context?: { instruction, previous: { text[], files: [{ url, mime }] } },   // follow-ups
-  callbacks: { uploads: "<APP_URL>/api/ai/jobs/<reference>/uploads",
-               result: "<APP_URL>/api/webhooks/ai" } }
+  callbacks: { uploads: "<APP_URL>/api/v1/ai/callbacks/jobs/<reference>/uploads",
+               result: "<APP_URL>/api/v1/ai/callbacks/result" } }
 ```
 
 ## Flow

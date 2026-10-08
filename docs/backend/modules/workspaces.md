@@ -11,7 +11,7 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 | `Workspace` | id, name, slug, logo (storage key), timezone, `requireReviewForAll`, createdAt, deletedAt | Better Auth organization + extra fields; soft delete |
 | `Member` | id, workspaceId, userId, role, createdAt | role ∈ owner, admin, editor, contributor, viewer |
 | `Invitation` | id, workspaceId, email, role, status, expiresAt, invitedById | 7-day expiry |
-| `MemberAccountAccess` | workspaceId, memberId, socialAccountId | Empty = access to all accounts. Created in phase 4 (P4-B1), once social accounts exist |
+| `MemberAccountAccess` | workspaceId, memberId, socialAccountId | The accounts a member may use when `Member.accountsLimited` is set; otherwise they may use all. A flag rather than "no rows means all", so removing a limited member's last account can't widen their access (P4-B1) |
 
 ## API
 `:wid`, `:mid`, `:iid` stand for `:workspaceId`, `:memberId`, `:invitationId`. Schemas: `packages/contracts/src/workspaces.ts`.
@@ -25,7 +25,9 @@ Workspaces (teams), their members and roles, invitations, per-member account acc
 | POST | `/api/v1/workspaces/:wid/logo-upload` | `workspace:update` | Presigned URL for the logo image; then PATCH `logoKey` |
 | DELETE | `/api/v1/workspaces/:wid` | `workspace:delete` | Soft-delete (body `confirmName` must equal the name); hard-deleted after 30 days. Nothing more is published: its scheduled posts are cancelled (jobs dropped) and its repeating rules stopped ([scheduling](scheduling.md)) |
 | GET | `/api/v1/workspaces/:wid/members` | member | List members |
-| PATCH | `/api/v1/workspaces/:wid/members/:mid` | `members:manage` | Change role, set account access |
+| PATCH | `/api/v1/workspaces/:wid/members/:mid` | `members:manage` | Change role |
+| GET | `/api/v1/workspaces/:wid/members/:mid/account-access` | `members:manage` or self | `{ accountIds }`; null = all accounts |
+| PUT | `/api/v1/workspaces/:wid/members/:mid/account-access` | `members:manage` | Limit to a list of accounts, or `null` for all (P4-B4) |
 | DELETE | `/api/v1/workspaces/:wid/members/:mid` | `members:manage` or self | Remove member / leave |
 | POST | `/api/v1/workspaces/:wid/invitations` | `members:manage` | Invite by email + role |
 | GET | `/api/v1/workspaces/:wid/invitations` | `members:manage` | Pending invitations |
