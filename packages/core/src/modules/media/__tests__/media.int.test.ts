@@ -398,8 +398,13 @@ describe('uploads', () => {
       { parts },
     );
     expect(MediaAsset.parse(done.body)).toMatchObject({ status: 'processing', kind: 'video' });
-    // Without ffprobe the video still becomes ready, just without duration or thumbnail.
-    await processMedia(jobDeps, start.asset.id, true);
+    // The bytes aren't a real video: processed as on a server without ffprobe, it still becomes
+    // ready, just without duration or thumbnail (with ffprobe installed it would fail to read them).
+    await processMedia(
+      { ...jobDeps, tools: { ffmpegPath: 'no-such-ffmpeg', ffprobePath: 'no-such-ffprobe' } },
+      start.asset.id,
+      true,
+    );
     const after = await db.client.mediaAsset.findUniqueOrThrow({ where: { id: start.asset.id } });
     expect(after.status).toBe('ready');
   });
