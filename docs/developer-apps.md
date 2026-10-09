@@ -121,7 +121,7 @@ To record (on staging: Instagram Login needs HTTPS, and it's the URL reviewers g
 ### Tumblr
 - **Portal:** tumblr.com/oauth/apps. OAuth 2.0 with scopes `basic`, `write`, `offline_access`.
 - **Review:** none.
-- [ ] Prod app · [ ] Dev app
+- [ ] Prod app · [x] Dev app
 
 ### Bitly (link shortening)
 - **Portal:** Bitly developer settings, register an OAuth app so users can connect their own Bitly accounts.

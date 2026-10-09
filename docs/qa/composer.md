@@ -37,6 +37,7 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-37** Threads tab: **Who can reply** (Anyone, Profiles you follow, Your followers, Mentioned only); the post on Threads has that setting.
 - [ ] **COMP-38** A video in the preview: its poster with a play button once processed; pressing it plays the video in place, with sound and the browser's controls. While still processing, only the poster.
 - [ ] **COMP-38L** **LinkedIn:** your name and picture, "Just now" and the globe; long text cut after three lines with "…more" (which expands); the link added after the text as plain text, with no link card (LinkedIn doesn't make one for apps); one photo in its own shape, two side by side, three as one above two, four or more as one above three with "+N"; a video alone, which plays in place from its play button once processed; Like / Comment / Repost / Send.
+- [ ] **COMP-38T** **Tumblr:** blog name, avatar, and `<blog>.tumblr.com`; text with "Read more"; photos in photoset grid; link card when there's a link and no files; Tumblr note count, reblog, like, and share icons.
 
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.
@@ -59,6 +60,7 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-63** Opening a published post → read-only, with a link to its page.
 - [ ] **COMP-64** As contributor: no Publish now, Schedule or Add to queue; Save draft and a line saying who sends it out.
 - [ ] **COMP-65L** **LinkedIn** (keep test posts few: LinkedIn caps posts from members who haven't verified their identity, and then the post fails saying so): publish (a) text with brackets, an underscore and a hashtag, e.g. `QA (test) [ok] a_b #socioboard`, plus a link in the Link field; (b) one photo with alt text; (c) three photos; (d) a video, MP4 and one MOV from a phone. Each appears on your LinkedIn profile as written: no backslashes, nothing cut off, the link and hashtag clickable, photos in order; the post's page links to it.
+- [ ] **COMP-65T** **Tumblr:** publish (a) text only; (b) one photo with alt text; (c) three photos; and (d) one MP4 video. Each appears on the selected Tumblr blog with its text, alt text and media order intact; the three photos use a photoset layout, the video plays, and the post's page links to it.
 
 ## Schedule
 - [ ] **COMP-70** **Schedule** → a calendar and a time, in the workspace's time zone ("Times are in Kolkata time"), starting about an hour from now.

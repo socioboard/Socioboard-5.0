@@ -1,0 +1,19 @@
+{
+  "method": "POST",
+  "url": "https://api.tumblr.com/v2/oauth2/token",
+  "body": {
+    "grant_type": "authorization_code",
+    "code": "tumblr-code",
+    "client_id": "test-client",
+    "client_secret": "test-secret",
+    "redirect_uri": "http://localhost:5173/api/oauth/tumblr/callback"
+  },
+  "status": 200,
+  "response": {
+    "access_token": "tumblr-access",
+    "refresh_token": "tumblr-refresh",
+    "expires_in": 2520,
+    "scope": "basic write offline_access",
+    "token_type": "bearer"
+  }
+}
