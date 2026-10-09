@@ -86,7 +86,7 @@ Every adapter must support any number of logins per workspace and any number of 
 | Pinterest | OAuth 2 | `POST /v5/pins` | Needs board id; Standard access for write |
 | TikTok | OAuth 2 (Login Kit) | Content Posting API, Direct Post | Must query creator info first; privacy level chosen by user |
 | Snapchat | Snap OAuth | Public Profile API | Partner-gated; ships only if approved |
-| Tumblr | OAuth 2 | `POST /v2/blog/{blog}/posts` (NPF) | |
+| Tumblr | OAuth 2.0 (`www.tumblr.com/oauth2/authorize`, `api.tumblr.com/v2/oauth2/token`). Scopes: `basic write offline_access`. User identity & blogs from `GET /v2/user/info`. | `POST /v2/blog/{blog}/posts` with Neue Post Format (NPF): text, image, video, and link blocks with tags. | `packages/providers/src/tumblr` (P3-B7). Up to 10 images per post (10 MB each), 1 video up to 500 MB / 5 min. 4,096 chars. Errors mapped to auth, rate_limited, content, retryable. Daily limit: 250 posts/day per blog. |
 | Threads | Threads login at threads.net (a Threads use case on the same Meta app, `THREADS_APP_ID`/`THREADS_APP_SECRET`; 60-day tokens, refreshed) | graph.threads.net/v1.0: `{user}/threads` container (TEXT with `link_attachment`, IMAGE, VIDEO, or CAROUSEL of 2–20) → poll `status` → `{user}/threads_publish`; `permalink` read back | 500 characters with emoji counted as UTF-8 bytes (`threadsTextLength`); `reply_control` from the post's options; the first comment is a reply (`reply_to_id`, `threads_manage_replies`); with media a link goes at the end of the text. Task P3-B10 |
 
 ## Testing
@@ -107,6 +107,8 @@ Every adapter must support any number of logins per workspace and any number of 
 | X | network | publish | expired token | 429 | duplicate post | server error |
 | LinkedIn login | login | identity, asset | refused token | — | — | — |
 | LinkedIn profile | network | publish | expired token | 429 | duplicate post | server error |
+| Tumblr login | login | identity, assets | refused token | — | — | — |
+| Tumblr | network | publish (NPF) | expired token | 429 | invalid NPF / bad request | server error |
 - **Fixtures** (`__fixtures__/<network>/`): reads are recorded from the dev apps and sanitized (`recorded/`); publishing calls and errors that can't be caused on demand follow the network's documented shapes. See each network's fixtures README.
 - Per-adapter tests cover the rest (uploads, carousels, polling, validation rules).
 - Nightly smoke test against sandbox/test accounts (not blocking CI).

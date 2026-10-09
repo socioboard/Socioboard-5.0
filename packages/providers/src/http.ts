@@ -1,3 +1,10 @@
+import { createWriteStream, openAsBlob } from 'node:fs';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Readable, Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+
 import { ProviderError } from './errors';
 
 /** What adapters log through; the API and worker pass their pino logger. */
@@ -47,6 +54,14 @@ export interface HttpClient {
     url: string,
     opts?: { range?: { start: number; end: number }; maxBytes?: number; timeoutMs?: number },
   ): Promise<Uint8Array>;
+  /**
+   * Streams a file to temporary storage and exposes it as a file-backed Blob. Call `cleanup` after
+   * the request consuming the Blob settles. This keeps large uploads out of the worker heap.
+   */
+  downloadFile(
+    url: string,
+    opts: { maxBytes: number; type: string; timeoutMs?: number },
+  ): Promise<{ blob: Blob; cleanup: () => Promise<void> }>;
 }
 
 export interface HttpClientOptions {
@@ -173,6 +188,73 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
         });
       }
       return new Uint8Array(await res.arrayBuffer());
+    },
+
+    async downloadFile(raw, opts) {
+      const url = redactUrl(raw);
+      const dir = await mkdtemp(join(tmpdir(), 'sb-provider-upload-'));
+      try {
+        let res: Response;
+        try {
+          res = await doFetch(raw, {
+            signal: AbortSignal.timeout(opts.timeoutMs ?? defaultTimeout),
+          });
+        } catch (err) {
+          options.logger?.warn({ network: options.name, url }, 'reading a file failed');
+          throw new ProviderError({
+            kind: 'retryable',
+            message: 'Could not read the file to upload',
+            cause: err,
+          });
+        }
+        const declaredSize = Number(res.headers.get('content-length') ?? '0');
+        if (!res.ok || declaredSize > opts.maxBytes || !res.body) {
+          throw new ProviderError({
+            kind: 'retryable',
+            message: res.ok
+              ? 'The file is larger than this upload allows'
+              : `Reading the file answered HTTP ${String(res.status)}`,
+            status: res.status,
+          });
+        }
+
+        let receivedSize = 0;
+        const capped = new Transform({
+          transform(chunk: Buffer, _encoding, done) {
+            receivedSize += chunk.length;
+            if (receivedSize > opts.maxBytes) {
+              done(new Error('The file is larger than this upload allows'));
+            } else {
+              done(null, chunk);
+            }
+          },
+        });
+        const path = join(dir, 'source');
+        try {
+          await pipeline(Readable.fromWeb(res.body), capped, createWriteStream(path));
+        } catch (err) {
+          if (receivedSize > opts.maxBytes) {
+            throw new ProviderError({
+              kind: 'retryable',
+              message: 'The file is larger than this upload allows',
+              cause: err,
+            });
+          }
+          throw new ProviderError({
+            kind: 'retryable',
+            message: 'Could not read the file to upload',
+            cause: err,
+          });
+        }
+        const blob = await openAsBlob(path, { type: opts.type });
+        return {
+          blob,
+          cleanup: () => rm(dir, { recursive: true, force: true }),
+        };
+      } catch (err) {
+        await rm(dir, { recursive: true, force: true });
+        throw err;
+      }
     },
   };
 }

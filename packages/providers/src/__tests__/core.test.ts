@@ -194,6 +194,40 @@ describe('http client', () => {
     expect(replay.mismatches).toEqual([]);
   });
 
+  it('streams large upload files to temporary storage with a hard size limit', async () => {
+    const responses = [
+      new Response(new Uint8Array([1, 2, 3]), { status: 200 }),
+      new Response(new Uint8Array(12), { status: 200 }),
+    ];
+    const http = createHttpClient({
+      name: 'example',
+      fetch: () => {
+        const response = responses.shift();
+        return response
+          ? Promise.resolve(response)
+          : Promise.reject(new Error('No response was prepared'));
+      },
+    });
+
+    const file = await http.downloadFile('https://storage.test/video.mp4', {
+      maxBytes: 10,
+      type: 'video/mp4',
+    });
+    expect(file.blob.type).toBe('video/mp4');
+    expect(new Uint8Array(await file.blob.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+    await file.cleanup();
+
+    await expect(
+      http.downloadFile('https://storage.test/large.mp4', {
+        maxBytes: 10,
+        type: 'video/mp4',
+      }),
+    ).rejects.toMatchObject({
+      kind: 'retryable',
+      message: 'The file is larger than this upload allows',
+    });
+  });
+
   it('reads Retry-After in seconds or as a date', () => {
     const now = Date.parse('2026-09-29T10:00:00Z');
     expect(retryAfterSec(new Headers({ 'retry-after': '30' }), now)).toBe(30);

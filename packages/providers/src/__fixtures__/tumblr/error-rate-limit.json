@@ -1,0 +1,21 @@
+{
+  "method": "POST",
+  "url": "https://api.tumblr.com/v2/blog/haldenroasters/posts",
+  "status": 429,
+  "headers": {
+    "retry-after": "60"
+  },
+  "response": {
+    "meta": {
+      "status": 429,
+      "msg": "Too Many Requests"
+    },
+    "errors": [
+      {
+        "title": "Rate Limit Exceeded",
+        "code": 0,
+        "detail": "You have exceeded your posting limit."
+      }
+    ]
+  }
+}

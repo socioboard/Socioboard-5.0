@@ -1,0 +1,17 @@
+{
+  "method": "POST",
+  "url": "https://api.tumblr.com/v2/blog/haldenroasters/posts",
+  "status": 201,
+  "response": {
+    "meta": {
+      "status": 201,
+      "msg": "Created"
+    },
+    "response": {
+      "id": 712345678901234567,
+      "id_string": "712345678901234567",
+      "state": "published",
+      "displayText": "Fresh roast today"
+    }
+  }
+}

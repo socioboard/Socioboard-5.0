@@ -1,0 +1,16 @@
+{
+  "method": "POST",
+  "url": "https://api.tumblr.com/v2/oauth2/token",
+  "body": {
+    "grant_type": "authorization_code",
+    "code": "tumblr-code",
+    "client_id": "test-client",
+    "client_secret": "test-secret",
+    "redirect_uri": "http://localhost:5173/api/oauth/tumblr/callback"
+  },
+  "status": 400,
+  "response": {
+    "error": "invalid_client",
+    "error_description": "The client credentials are invalid"
+  }
+}

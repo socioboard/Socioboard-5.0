@@ -129,6 +129,12 @@
       "comment": "Comment",
       "repost": "Repost",
       "send": "Send"
+    },
+    "tumblr": {
+      "more": "Read more",
+      "reblog": "Reblog",
+      "like": "Like",
+      "share": "Share"
     }
   },
   "view": {
