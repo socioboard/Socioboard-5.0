@@ -7,8 +7,8 @@ export interface ProviderLogger {
 }
 
 export interface HttpRequest {
-  /** PUT is for upload URLs that take raw bytes (LinkedIn's image and video uploads). */
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  /** PUT is for upload URLs that take raw bytes (LinkedIn and YouTube chunked uploads). */
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   url: string;
   query?: Record<string, string | number | boolean | null | undefined>;
   /** Sent as JSON. */

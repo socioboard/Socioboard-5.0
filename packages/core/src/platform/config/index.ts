@@ -351,6 +351,9 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       problems.push(`${client}_CLIENT_ID and ${client}_CLIENT_SECRET must be set together`);
     }
   }
+  if (Boolean(raw('YOUTUBE_CLIENT_ID')) !== Boolean(raw('YOUTUBE_CLIENT_SECRET'))) {
+    problems.push('YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET must be set together');
+  }
 
   const parsed = envSchema.safeParse(source);
   if (!parsed.success) {

@@ -106,8 +106,12 @@ export function checkRules(
 
   const { media } = rules;
   if (media.required && input.media.length === 0) {
+    const msg =
+      !media.kinds.includes('image') && media.kinds.includes('video')
+        ? `${networkName} posts need a video.`
+        : `${networkName} posts need a photo or video.`;
     issues.push(
-      issue('error', IssueCode.MEDIA_REQUIRED, `${networkName} posts need a photo or video.`, {
+      issue('error', IssueCode.MEDIA_REQUIRED, msg, {
         field: 'media',
       }),
     );

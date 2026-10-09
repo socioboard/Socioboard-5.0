@@ -3,6 +3,7 @@ import type { NetworkId } from '@socioboard/contracts';
 import { InstagramPanel } from './instagram-panel';
 import { ThreadsPanel } from './threads-panel';
 import type { OptionsPanel } from './types';
+import { YouTubePanel } from './youtube-panel';
 
 /**
  * The options panel of each network that has settings (P3-F2). A network's owner adds its panel
@@ -11,4 +12,5 @@ import type { OptionsPanel } from './types';
 export const OPTION_PANELS: Partial<Record<NetworkId, OptionsPanel>> = {
   instagram: { Component: InstagramPanel, needsChoices: false },
   threads: { Component: ThreadsPanel, needsChoices: false },
+  youtube: { Component: YouTubePanel, needsChoices: true },
 };

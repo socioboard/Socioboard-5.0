@@ -1,0 +1,24 @@
+{
+  "method": "GET",
+  "url": "https://www.googleapis.com/youtube/v3/channels",
+  "query": { "part": "snippet", "mine": "true" },
+  "status": 200,
+  "response": {
+    "kind": "youtube#channelListResponse",
+    "items": [
+      {
+        "id": "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+        "snippet": {
+          "title": "Halden Coffee Channel",
+          "description": "Artisan coffee roastery",
+          "customUrl": "@haldencoffee",
+          "thumbnails": {
+            "default": {
+              "url": "https://yt3.ggpht.com/a/default-user.jpg"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

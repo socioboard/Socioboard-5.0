@@ -58,6 +58,14 @@ export function useIssueWording(names: {
       case 'VIDEO_TOO_LONG':
         values.max = duration(num('maxSec'), locale);
         break;
+      case 'MEDIA_REQUIRED':
+        if (issue.network === 'youtube') {
+          return (i18n.getFixedT(null, 'composer') as (k: string, o: object) => string)(
+            'issues.codes.MEDIA_REQUIRED_VIDEO',
+            values,
+          );
+        }
+        break;
       case 'MEDIA_KIND_NOT_SUPPORTED':
         values.kind = t(`issues.kinds.${String(p.kind)}` as 'issues.kinds.gif');
         break;

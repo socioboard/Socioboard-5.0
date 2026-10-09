@@ -102,11 +102,13 @@ Every adapter must support any number of logins per workspace and any number of 
 | Facebook Login | login | identity, assets | refused token | — | — | — |
 | Instagram Login | login | identity, asset | refused token | — | — | — |
 | X login | login | identity, assets | refused token | — | — | — |
+| YouTube Login | login | identity, assets | refused token | — | — | — |
 | Facebook Page | network | publish | expired token | Page limit | refused post | server error |
 | Instagram | network | publish (container, poll, publish) | expired token | 24-hour publishing limit | refused post | server error |
 | X | network | publish | expired token | 429 | duplicate post | server error |
 | LinkedIn login | login | identity, asset | refused token | — | — | — |
 | LinkedIn profile | network | publish | expired token | 429 | duplicate post | server error |
+| YouTube | network | publish (resumable upload) | expired token | 403 quotaExceeded | video rejected (content error) | server error |
 - **Fixtures** (`__fixtures__/<network>/`): reads are recorded from the dev apps and sanitized (`recorded/`); publishing calls and errors that can't be caused on demand follow the network's documented shapes. See each network's fixtures README.
 - Per-adapter tests cover the rest (uploads, carousels, polling, validation rules).
 - Nightly smoke test against sandbox/test accounts (not blocking CI).
