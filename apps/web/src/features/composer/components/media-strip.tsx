@@ -90,7 +90,7 @@ export function MediaStrip({
                 className="flex flex-col items-center gap-1"
               >
                 <MediaThumb
-                  src={asset?.thumbnailUrl ?? null}
+                  src={asset?.thumbnailUrl ?? asset?.url ?? null}
                   alt={name}
                   kind={asset?.kind ?? 'image'}
                   durationSec={asset?.durationSec ?? null}

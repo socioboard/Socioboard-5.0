@@ -1,0 +1,27 @@
+[
+  {
+    "method": "GET",
+    "url": "https://storage.test/video.mp4",
+    "status": 200,
+    "responseBytes": 102400
+  },
+  {
+    "method": "POST",
+    "url": "https://www.googleapis.com/upload/youtube/v3/videos",
+    "status": 401,
+    "response": {
+      "error": {
+        "code": 401,
+        "message": "The access token provided has expired.",
+        "status": "UNAUTHENTICATED",
+        "errors": [
+          {
+            "message": "The access token provided has expired.",
+            "domain": "global",
+            "reason": "authError"
+          }
+        ]
+      }
+    }
+  }
+]

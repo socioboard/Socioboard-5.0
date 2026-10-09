@@ -3,6 +3,7 @@ import {
   createRegistry,
   createXAdapters,
   createLinkedInAdapters,
+  createYouTubeAdapters,
   type Registry,
 } from '@socioboard/providers';
 
@@ -22,9 +23,10 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
   });
   const x = createXAdapters({ x: config.networks.x, logger });
   const linkedin = createLinkedInAdapters({ linkedin: config.networks.linkedin, logger });
+  const youtube = createYouTubeAdapters({ youtube: config.networks.youtube, logger });
   const registry = createRegistry({
-    logins: [...meta.logins, ...x.logins, ...linkedin.logins],
-    networks: [...meta.networks, ...x.networks, ...linkedin.networks],
+    logins: [...meta.logins, ...x.logins, ...linkedin.logins, ...youtube.logins],
+    networks: [...meta.networks, ...x.networks, ...linkedin.networks, ...youtube.networks],
   });
   const enabled = registry.networks().map((n) => n.id);
   logger.info(

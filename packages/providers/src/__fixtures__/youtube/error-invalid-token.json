@@ -1,0 +1,21 @@
+{
+  "method": "GET",
+  "url": "https://www.googleapis.com/youtube/v3/channels",
+  "status": 401,
+  "response": {
+    "error": {
+      "code": 401,
+      "message": "Request is missing required authentication credential. Expected OAuth 2 access token.",
+      "status": "UNAUTHENTICATED",
+      "errors": [
+        {
+          "message": "Invalid Credentials",
+          "domain": "global",
+          "reason": "authError",
+          "locationType": "header",
+          "location": "Authorization"
+        }
+      ]
+    }
+  }
+}

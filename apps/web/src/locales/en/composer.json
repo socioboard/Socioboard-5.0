@@ -129,6 +129,13 @@
       "comment": "Comment",
       "repost": "Repost",
       "send": "Send"
+    },
+    "youtube": {
+      "untitled": "Untitled video",
+      "noVideo": "Add a video file to preview",
+      "showMore": "Show more",
+      "like": "Like",
+      "share": "Share"
     }
   },
   "view": {
@@ -154,6 +161,7 @@
       "TOO_MANY_HASHTAGS": "{{network}} allows {{max}} hashtags; this has {{actual}}.",
       "TOO_MANY_MENTIONS": "{{network}} allows {{max}} mentions; this has {{actual}}.",
       "MEDIA_REQUIRED": "{{network}} posts need a photo or video.",
+      "MEDIA_REQUIRED_VIDEO": "{{network}} posts need a video.",
       "TOO_MANY_MEDIA": "{{network}} takes up to {{max}} files; this has {{actual}}.",
       "TOO_FEW_MEDIA": "{{network}} needs at least {{min}} files here.",
       "MEDIA_KIND_NOT_SUPPORTED": "{{file}}: {{network}} doesn’t accept {{kind}}.",
@@ -350,5 +358,21 @@
       "notInReview": "This post isn’t waiting for review any more.",
       "notAuthor": "Only its author can do that."
     }
+  },
+  "youtube": {
+    "title": "Video title",
+    "titlePlaceholder": "Add a title that describes your video",
+    "privacy": "Privacy",
+    "public": "Public",
+    "publicHint": "Anyone can search for and view",
+    "unlisted": "Unlisted",
+    "unlistedHint": "Anyone with the video link can view",
+    "private": "Private",
+    "privateHint": "Only you and people you choose can view",
+    "tags": "Tags",
+    "tagsPlaceholder": "e.g. coffee, roastery, autumn",
+    "tagsHint": "Comma-separated tags (up to 500 characters total)",
+    "madeForKids": "Made for kids",
+    "madeForKidsHint": "Features like comments and personalized ads won't be available (COPPA compliance)"
   }
 }
