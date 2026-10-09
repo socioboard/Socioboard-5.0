@@ -8,4 +8,5 @@ export * from './validation';
 export * from './meta';
 export * from './x';
 export * from './linkedin';
+export * from './pinterest';
 export type * from './types';

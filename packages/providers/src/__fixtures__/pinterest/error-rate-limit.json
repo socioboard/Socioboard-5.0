@@ -1,0 +1,6 @@
+{
+  "method": "GET",
+  "url": "https://api.pinterest.com/v5/user_account",
+  "status": 429,
+  "response": { "code": 8, "message": "You have exceeded your rate limit. Try again later." }
+}

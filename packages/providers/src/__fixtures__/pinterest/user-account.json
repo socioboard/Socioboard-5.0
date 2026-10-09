@@ -1,0 +1,20 @@
+{
+  "method": "GET",
+  "url": "https://api.pinterest.com/v5/user_account",
+  "requestHeaders": { "authorization": "Bearer pina-access" },
+  "status": 200,
+  "response": {
+    "account_type": "BUSINESS",
+    "id": "2783136121146311751",
+    "profile_image": "https://i.pinimg.com/600x600_R/fake/avatar.jpg",
+    "website_url": "https://example.com",
+    "username": "kenyaroast",
+    "business_name": "Kenya Roast Co.",
+    "about": "Small-batch coffee",
+    "board_count": 3,
+    "pin_count": 42,
+    "follower_count": 120,
+    "following_count": 30,
+    "monthly_views": 900
+  }
+}
