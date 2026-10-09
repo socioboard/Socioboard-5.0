@@ -1,0 +1,17 @@
+[
+  {
+    "method": "GET",
+    "url": "https://storage.test/media/m1.jpg",
+    "status": 200,
+    "responseBytes": 12
+  },
+  {
+    "method": "POST",
+    "url": "https://api.pinterest.com/v5/pins",
+    "status": 401,
+    "response": {
+      "code": 2,
+      "message": "Authentication failed."
+    }
+  }
+]

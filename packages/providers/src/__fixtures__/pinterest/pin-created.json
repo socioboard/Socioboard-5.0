@@ -1,0 +1,39 @@
+[
+  {
+    "method": "GET",
+    "url": "https://storage.test/media/m1.jpg",
+    "status": 200,
+    "responseBytes": 12
+  },
+  {
+    "method": "POST",
+    "url": "https://api.pinterest.com/v5/pins",
+    "requestHeaders": {
+      "authorization": "Bearer pina-access"
+    },
+    "body": {
+      "board_id": "\"549755885175\"",
+      "title": "\"Kenya AA, light roast\"",
+      "description": "\"Fresh roast today (Kenya) #coffee\"",
+      "link": "\"https://example.com/kenya\"",
+      "media_source": "{\"source_type\":\"image_base64\",\"content_type\":\"image/jpeg\",\"data\":\"BwcHBwcHBwcHBwcH\"}"
+    },
+    "status": 201,
+    "response": {
+      "id": "813744226420795884",
+      "created_at": "2026-10-09T10:00:00",
+      "link": "https://example.com/kenya",
+      "title": "Kenya AA, light roast",
+      "description": "Fresh roast today (Kenya) #coffee",
+      "board_id": "549755885175",
+      "board_owner": {
+        "username": "kenyaroast"
+      },
+      "media": {
+        "media_type": "image"
+      },
+      "creative_type": "REGULAR",
+      "is_owner": true
+    }
+  }
+]
