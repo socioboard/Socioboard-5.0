@@ -129,6 +129,12 @@
       "comment": "Comment",
       "repost": "Repost",
       "send": "Send"
+    },
+    "pinterest": {
+      "save": "Save",
+      "picture": "Show picture {{n}} of {{count}}",
+      "carousel": "Picture {{at}} of {{count}}",
+      "more": "more"
     }
   },
   "view": {
@@ -178,7 +184,11 @@
       "MEDIA_NOT_READY": "{{file}} is still being processed.",
       "MEDIA_FAILED": "{{file}} couldn’t be processed. Remove it, or upload it again.",
       "X_LINK_COST": "X charges more for posts with a link.",
-      "X_GIF_OR_VIDEO_ALONE": "On X a GIF or a video goes alone: remove the other files, or post them separately."
+      "X_GIF_OR_VIDEO_ALONE": "On X a GIF or a video goes alone: remove the other files, or post them separately.",
+      "PINTEREST_BOARD_REQUIRED": "Choose the Pinterest board to pin to.",
+      "PINTEREST_TITLE_TOO_LONG": "Pinterest titles can be up to {{max}} characters; this has {{actual}}.",
+      "PINTEREST_ALT_TEXT_TOO_LONG": "{{file}}: Pinterest alt text can be up to {{max}} characters.",
+      "PINTEREST_VIDEO_FORMAT": "{{file}}: Pinterest takes MP4, MOV and M4V videos."
     },
     "kinds": {
       "image": "photos",
@@ -350,5 +360,15 @@
       "notInReview": "This post isn’t waiting for review any more.",
       "notAuthor": "Only its author can do that."
     }
+  },
+  "pinterest": {
+    "board": "Board",
+    "boardPlaceholder": "Choose a board",
+    "boardSearch": "Search boards",
+    "boardNoMatch": "No board matches.",
+    "protected": "Protected",
+    "noBoards": "{{account}} has no boards yet. Create one on Pinterest, then choose it here.",
+    "title": "Title",
+    "titleHint": "Optional. Shown in bold above the description."
   }
 }

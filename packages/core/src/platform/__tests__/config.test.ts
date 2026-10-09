@@ -200,6 +200,20 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...base, BITLY_CLIENT_SECRET: 'b' })).toThrow(/BITLY_CLIENT_ID and/);
   });
 
+  it("uses Pinterest's sandbox only when PINTEREST_SANDBOX says so", () => {
+    const keys = { ...base, PINTEREST_CLIENT_ID: 'p', PINTEREST_CLIENT_SECRET: 'ps' };
+    expect(loadConfig(keys).networks.pinterest).toEqual({
+      clientId: 'p',
+      clientSecret: 'ps',
+      sandbox: false,
+    });
+    expect(loadConfig({ ...keys, PINTEREST_SANDBOX: 'true' }).networks.pinterest?.sandbox).toBe(
+      true,
+    );
+    expect(loadConfig({ ...keys, PINTEREST_SANDBOX: '' }).networks.pinterest?.sandbox).toBe(false);
+    expect(() => loadConfig({ ...keys, PINTEREST_SANDBOX: 'yes' })).toThrow(/PINTEREST_SANDBOX/);
+  });
+
   it('takes an optional public media address', () => {
     expect(loadConfig(base).media.publicUrl).toBeUndefined();
     expect(loadConfig({ ...base, MEDIA_PUBLIC_URL: '' }).media.publicUrl).toBeUndefined();

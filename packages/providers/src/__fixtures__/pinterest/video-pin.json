@@ -1,0 +1,77 @@
+[
+  {
+    "method": "POST",
+    "url": "https://api.pinterest.com/v5/media",
+    "requestHeaders": {
+      "authorization": "Bearer pina-access"
+    },
+    "body": {
+      "media_type": "\"video\""
+    },
+    "status": 201,
+    "response": {
+      "media_id": "5149421785858431",
+      "media_type": "video",
+      "upload_url": "https://pinterest-media-upload.s3-accelerate.amazonaws.com/",
+      "upload_parameters": {
+        "x-amz-date": "20261009T101500Z",
+        "x-amz-signature": "fake-signature",
+        "x-amz-security-token": "fake-token",
+        "x-amz-algorithm": "AWS4-HMAC-SHA256",
+        "key": "uploads/fake/video:5149421785858431",
+        "policy": "ZmFrZS1wb2xpY3k=",
+        "x-amz-credential": "FAKE/20261009/us-east-1/s3/aws4_request",
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "url": "https://storage.test/media/v1.mp4",
+    "status": 200,
+    "responseBytes": 24
+  },
+  {
+    "method": "POST",
+    "url": "https://pinterest-media-upload.s3-accelerate.amazonaws.com/",
+    "body": {
+      "key": "uploads/fake/video:5149421785858431",
+      "policy": "ZmFrZS1wb2xpY3k=",
+      "file": "file:video:24"
+    },
+    "status": 204
+  },
+  {
+    "method": "GET",
+    "url": "https://api.pinterest.com/v5/media/5149421785858431",
+    "status": 200,
+    "response": {
+      "media_id": "5149421785858431",
+      "media_type": "video",
+      "status": "processing"
+    }
+  },
+  {
+    "method": "GET",
+    "url": "https://api.pinterest.com/v5/media/5149421785858431",
+    "status": 200,
+    "response": {
+      "media_id": "5149421785858431",
+      "media_type": "video",
+      "status": "succeeded"
+    }
+  },
+  {
+    "method": "POST",
+    "url": "https://api.pinterest.com/v5/pins",
+    "body": {
+      "board_id": "\"549755885175\"",
+      "media_source": "{\"source_type\":\"video_id\",\"media_id\":\"5149421785858431\",\"cover_image_key_frame_time\":0}"
+    },
+    "status": 201,
+    "response": {
+      "id": "813744226420795999",
+      "creative_type": "REGULAR"
+    }
+  }
+]

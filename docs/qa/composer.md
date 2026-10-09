@@ -35,6 +35,8 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-35** Instagram tab: feed / reel / story choice; the preview changes with it.
 - [ ] **COMP-36** **Threads:** username and "now"; the whole text; one photo in its own shape, several side by side (scroll sideways); a link card when there's no photo, else the link at the end of the text; the first comment shown as a reply.
 - [ ] **COMP-37** Threads tab: **Who can reply** (Anyone, Profiles you follow, Your followers, Mentioned only); the post on Threads has that setting.
+- [ ] **COMP-36P** **Pinterest** tab: **Board** lists that account's boards (search by typing; protected ones say so); with two Pinterest accounts, a Board for each. No boards → "<account> has no boards yet…". **Title** is optional, counts to 100. Without a board, "Choose the Pinterest board to pin to." and Publish now stays off.
+- [ ] **COMP-37P** **Pinterest** preview: the picture first in its own shape (several: one at a time, dots to switch), then the title in bold, the text cut after three lines with "more", the link's site and a red Save. Text with no photo or video is a problem ("Pinterest posts need a photo or video."), and so is a video together with a photo.
 - [ ] **COMP-38** A video in the preview: its poster with a play button once processed; pressing it plays the video in place, with sound and the browser's controls. While still processing, only the poster.
 - [ ] **COMP-38L** **LinkedIn:** your name and picture, "Just now" and the globe; long text cut after three lines with "…more" (which expands); the link added after the text as plain text, with no link card (LinkedIn doesn't make one for apps); one photo in its own shape, two side by side, three as one above two, four or more as one above three with "+N"; a video alone, which plays in place from its play button once processed; Like / Comment / Repost / Send.
 
@@ -59,6 +61,7 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-63** Opening a published post → read-only, with a link to its page.
 - [ ] **COMP-64** As contributor: no Publish now, Schedule or Add to queue; Save draft and a line saying who sends it out.
 - [ ] **COMP-65L** **LinkedIn** (keep test posts few: LinkedIn caps posts from members who haven't verified their identity, and then the post fails saying so): publish (a) text with brackets, an underscore and a hashtag, e.g. `QA (test) [ok] a_b #socioboard`, plus a link in the Link field; (b) one photo with alt text; (c) three photos; (d) a video, MP4 and one MOV from a phone. Each appears on your LinkedIn profile as written: no backslashes, nothing cut off, the link and hashtag clickable, photos in order; the post's page links to it.
+- [ ] **COMP-65P** **Pinterest** (while the app has Trial access, use a board made in Pinterest's sandbox; the pins show only on your own profile): publish (a) one photo with a title, text, a link and alt text; (b) three photos; (c) a video (MP4, 4 s–5 min). Each appears on the board you chose: the title and text as written, the pin opening the link, photos in order, the video playing (Pinterest needs a moment to process it first); the post's page links to the pin. A WebM video, a video over 5 minutes or one over 500 MB is refused before publishing.
 
 ## Schedule
 - [ ] **COMP-70** **Schedule** → a calendar and a time, in the workspace's time zone ("Times are in Kolkata time"), starting about an hour from now.
@@ -85,4 +88,4 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-103** Approved: an editor sees Publish now and Schedule again. A contributor editing it sees "Changing it sends it back for review"; saving a change puts it back in review and unschedules it.
 
 ## Not built yet
-Options panels for Pinterest, YouTube and TikTok and their previews (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4).
+Options panels for YouTube and TikTok and their previews (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4).

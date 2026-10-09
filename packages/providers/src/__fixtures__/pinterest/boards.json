@@ -1,0 +1,46 @@
+{
+  "method": "GET",
+  "url": "https://api.pinterest.com/v5/boards",
+  "query": {
+    "page_size": "100"
+  },
+  "requestHeaders": {
+    "authorization": "Bearer pina-access"
+  },
+  "status": 200,
+  "response": {
+    "items": [
+      {
+        "id": "549755885175",
+        "name": "Coffee",
+        "privacy": "PUBLIC",
+        "description": "Our roasts",
+        "owner": {
+          "username": "kenyaroast"
+        },
+        "pin_count": 12,
+        "follower_count": 30,
+        "collaborator_count": 0
+      },
+      {
+        "id": "549755885176",
+        "name": "Wholesale",
+        "privacy": "PROTECTED",
+        "owner": {
+          "username": "kenyaroast"
+        },
+        "pin_count": 3
+      },
+      {
+        "id": "549755885177",
+        "name": "Ideas",
+        "privacy": "SECRET",
+        "owner": {
+          "username": "kenyaroast"
+        },
+        "pin_count": 5
+      }
+    ],
+    "bookmark": null
+  }
+}

@@ -144,6 +144,11 @@ const envSchema = z.object({
   /** Pinterest's App ID and App secret key. */
   PINTEREST_CLIENT_ID: optional,
   PINTEREST_CLIENT_SECRET: optional,
+  /**
+   * Use Pinterest's sandbox API: an app with Trial access can only create pins there (seen only by
+   * their creator). Off once the app has Standard access.
+   */
+  PINTEREST_SANDBOX: bool,
   /** TikTok's Client key and Client secret. */
   TIKTOK_CLIENT_ID: optional,
   TIKTOK_CLIENT_SECRET: optional,
@@ -261,7 +266,8 @@ export interface Config {
     x: OAuthClient | undefined;
     linkedin: OAuthClient | undefined;
     youtube: OAuthClient | undefined;
-    pinterest: OAuthClient | undefined;
+    /** `sandbox`: PINTEREST_SANDBOX, the API host the Pinterest adapters use. */
+    pinterest: (OAuthClient & { sandbox: boolean }) | undefined;
     tiktok: OAuthClient | undefined;
     snapchat: OAuthClient | undefined;
     tumblr: OAuthClient | undefined;
@@ -448,7 +454,14 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       x: oauthClient(e.X_CLIENT_ID, e.X_CLIENT_SECRET),
       linkedin: oauthClient(e.LINKEDIN_CLIENT_ID, e.LINKEDIN_CLIENT_SECRET),
       youtube: oauthClient(e.YOUTUBE_CLIENT_ID, e.YOUTUBE_CLIENT_SECRET),
-      pinterest: oauthClient(e.PINTEREST_CLIENT_ID, e.PINTEREST_CLIENT_SECRET),
+      pinterest:
+        e.PINTEREST_CLIENT_ID && e.PINTEREST_CLIENT_SECRET
+          ? {
+              clientId: e.PINTEREST_CLIENT_ID,
+              clientSecret: e.PINTEREST_CLIENT_SECRET,
+              sandbox: e.PINTEREST_SANDBOX,
+            }
+          : undefined,
       tiktok: oauthClient(e.TIKTOK_CLIENT_ID, e.TIKTOK_CLIENT_SECRET),
       snapchat: oauthClient(e.SNAPCHAT_CLIENT_ID, e.SNAPCHAT_CLIENT_SECRET),
       tumblr: oauthClient(e.TUMBLR_CLIENT_ID, e.TUMBLR_CLIENT_SECRET),
