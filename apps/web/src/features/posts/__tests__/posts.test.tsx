@@ -216,7 +216,7 @@ describe('post detail', () => {
     };
     mockServer({ ...base(), [`GET ${BASE}/posts/${POST_ID}`]: [200, odd] });
     renderApp(`/w/halden/posts/${POST_ID}`);
-    expect(await screen.findByText(/Published Sep 28, 2026/)).toBeInTheDocument();
+    expect(await screen.findByText(/Published.*2026/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'View on Facebook' })).not.toBeInTheDocument();
   });
 

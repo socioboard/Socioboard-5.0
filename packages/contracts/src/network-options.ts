@@ -151,6 +151,7 @@ export const YouTubeChoices = z.object({
   network: z.literal('youtube'),
   privacyLevels: z.array(YouTubePrivacy).min(1),
 });
+export type YouTubeChoices = z.infer<typeof YouTubeChoices>;
 
 const WITH_CHOICES = ['pinterest', 'tiktok', 'youtube'] as const;
 

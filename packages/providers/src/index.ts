@@ -9,4 +9,5 @@ export * from './meta';
 export * from './x';
 export * from './linkedin';
 export * from './pinterest';
+export * from './youtube';
 export type * from './types';

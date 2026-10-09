@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 
 /** One expected call and the answer to give. */
 export interface RecordedCall {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   /** Origin + path, without the query. */
   url: string;
   /** Query parameters that must be present with these values (others are ignored). */

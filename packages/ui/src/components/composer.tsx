@@ -335,25 +335,40 @@ export function MediaThumb({
       )}
     >
       {showImage ? (
-        <img
-          src={src}
-          alt={alt}
-          className={cn(
-            'size-full object-cover transition-[opacity,filter,scale] duration-500 ease-out-soft motion-reduce:transition-none',
-            loadedSrc === src ? 'opacity-100' : 'scale-105 opacity-0 blur-sm',
-          )}
-          loading="lazy"
-          // A cached picture may be complete before React listens for load.
-          ref={(img) => {
-            if (img?.complete && img.naturalWidth > 0) setLoadedSrc(src);
-          }}
-          onLoad={() => {
-            setLoadedSrc(src);
-          }}
-          onError={() => {
-            setBrokenSrc(src);
-          }}
-        />
+        kind === 'video' &&
+        src &&
+        !src.includes('.webp') &&
+        !src.includes('.jpg') &&
+        !src.includes('.jpeg') &&
+        !src.includes('.png') ? (
+          <video
+            src={src}
+            className="size-full object-cover"
+            preload="metadata"
+            muted
+            playsInline
+          />
+        ) : (
+          <img
+            src={src}
+            alt={alt}
+            className={cn(
+              'size-full object-cover transition-[opacity,filter,scale] duration-500 ease-out-soft motion-reduce:transition-none',
+              loadedSrc === src ? 'opacity-100' : 'scale-105 opacity-0 blur-sm',
+            )}
+            loading="lazy"
+            // A cached picture may be complete before React listens for load.
+            ref={(img) => {
+              if (img?.complete && img.naturalWidth > 0) setLoadedSrc(src);
+            }}
+            onLoad={() => {
+              setLoadedSrc(src);
+            }}
+            onError={() => {
+              setBrokenSrc(src);
+            }}
+          />
+        )
       ) : (
         <div
           className="text-ink-3 flex size-full items-center justify-center"
