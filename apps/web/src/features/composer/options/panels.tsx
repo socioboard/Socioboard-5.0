@@ -3,9 +3,8 @@
 // this frame asks the accounts for their choices, shows waiting and failures, and files the
 // values in the draft.
 import type { NetworkId, SocialAccount } from '@socioboard/contracts';
-import { Avatar, Banner, Button, Skeleton } from '@socioboard/ui';
+import { Banner, Button, Skeleton } from '@socioboard/ui';
 import { useQueries } from '@tanstack/react-query';
-import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { errorMessage } from '../../../lib/i18n';
@@ -119,35 +118,5 @@ function PanelBody({
         />
       )}
     </>
-  );
-}
-
-/**
- * A setting each account makes for itself (a board, a privacy level): the field once when there's
- * one account, else a row per account with its name.
- */
-export function PerAccount({
-  accounts,
-  label,
-  children,
-}: {
-  accounts: PanelAccount[];
-  label: string;
-  children: (account: PanelAccount, label: string) => ReactNode;
-}) {
-  const { t } = useTranslation('composer');
-  const [only] = accounts;
-  if (accounts.length === 1 && only) return children(only, label);
-  return (
-    <div className="flex flex-col gap-2.5">
-      {accounts.map((a) => (
-        <div key={a.account.id} className="flex items-center gap-2.5">
-          <Avatar name={a.account.displayName} src={a.account.avatarUrl} size="sm" decorative />
-          <div className="min-w-0 flex-1">
-            {children(a, t('options.forAccount', { label, account: a.account.displayName }))}
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }
