@@ -175,10 +175,7 @@ describe('Tumblr adapter unit tests', () => {
       download() {
         return Promise.reject(new Error('unexpected buffered download'));
       },
-      downloadFile(
-        url: string,
-        options: { maxBytes: number; type: string; timeoutMs?: number },
-      ) {
+      downloadFile(url: string, options: { maxBytes: number; type: string; timeoutMs?: number }) {
         expect(url).toBe('https://storage.test/video.mp4');
         expect(options).toEqual({
           maxBytes: 500 * 1024 * 1024,
