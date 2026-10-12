@@ -227,7 +227,7 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
     http,
     sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
     pollIntervalMs = 2500,
-    maxPollAttempts = 8,
+    maxPollAttempts = 25,
   } = config;
 
   return {
