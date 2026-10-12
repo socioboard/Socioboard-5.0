@@ -3,7 +3,7 @@
 Area doc: [app-shell](../frontend/areas/app-shell.md) · Checks for every screen: [README](README.md#every-screen)
 
 ## Sidebar and pages
-- [ ] **SHELL-01** Sidebar: New post, Search, the bell, Calendar, Queue, Posts, Media, Accounts, Settings; the current page is highlighted.
+- [ ] **SHELL-01** Sidebar: New post, Search, the bell, Calendar, Queue, Posts, Approvals (with the count of posts waiting, for people who approve), Tasks, Media, Accounts, Settings; the current page is highlighted. As viewer: no Approvals.
 - [ ] **SHELL-02** Collapse the sidebar (button at the bottom) → icons only; hovering an icon names it; the choice is kept after a reload.
 - [ ] **SHELL-03** Posts shows a red count when posts failed (up to "50+"); a dot when the sidebar is collapsed.
 - [ ] **SHELL-04** As viewer: no New post; Settings opens Members (read-only); no admin controls anywhere.
@@ -42,4 +42,4 @@ Area doc: [app-shell](../frontend/areas/app-shell.md) · Checks for every screen
 - [ ] **SHELL-62** Every page fits the phone: no sideways scrolling, nothing hidden behind the bottom bar.
 
 ## Not built yet
-Banners for payments and maintenance (phase 5), "support is viewing this account" (phase 5), Approvals, AI Studio, Analytics and Discovery in the sidebar (phases 4 and 6.1), language choice.
+Banners for payments and maintenance (phase 5), "support is viewing this account" (phase 5), AI Studio, Analytics and Discovery in the sidebar (phases 4 and 6.1), language choice.
