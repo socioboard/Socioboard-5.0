@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { relativeTime, useNotificationWording } from '../wording';
+import { relativeTime } from '../../../lib/format';
+import { useNotificationWording } from '../wording';
 
 const ICONS = {
   publish_failed: { icon: TriangleAlert, tone: 'text-danger bg-danger-tint' },

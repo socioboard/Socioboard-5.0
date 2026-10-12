@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { halden, meWith, mockServer, renderApp, type Handler } from '../../../testing/render';
-import { liveHandlers } from '../../live/use-live-updates';
+import { liveHandlers } from '../../live';
 import { commentKeys } from '../api';
 
 const WID = halden.workspace.id;

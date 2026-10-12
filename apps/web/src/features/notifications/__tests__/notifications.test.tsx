@@ -6,7 +6,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { halden, meWith, mockServer, renderApp, type Handler } from '../../../testing/render';
 import { bellQuery, notificationKeys, rememberRead } from '../api';
-import { relativeTime, useNotificationWording } from '../wording';
+import { relativeTime } from '../../../lib/format';
+import { useNotificationWording } from '../wording';
 
 const WID = halden.workspace.id;
 type Reply = [number, unknown];

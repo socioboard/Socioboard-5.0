@@ -39,3 +39,15 @@ export function formatDuration(seconds: number): string {
   const s = String(total % 60).padStart(2, '0');
   return h > 0 ? `${String(h)}:${String(m).padStart(2, '0')}:${s}` : `${String(m)}:${s}`;
 }
+
+/** "Just now", "5 min ago", "3 h ago", "Yesterday", then the date. */
+export function relativeTime(iso: string, now: number, locale?: string): string {
+  const seconds = Math.round((Date.parse(iso) - now) / 1000);
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
+  const abs = Math.abs(seconds);
+  if (abs < 45) return rtf.format(0, 'second');
+  if (abs < 3600) return rtf.format(Math.round(seconds / 60), 'minute');
+  if (abs < 86_400) return rtf.format(Math.round(seconds / 3600), 'hour');
+  if (abs < 7 * 86_400) return rtf.format(Math.round(seconds / 86_400), 'day');
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(iso));
+}

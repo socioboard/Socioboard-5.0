@@ -5,9 +5,9 @@ import { useEffect, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { api } from '../../../lib/api';
+import { relativeTime } from '../../../lib/format';
 import { errorMessage } from '../../../lib/i18n';
 import { useWorkspace } from '../../../lib/workspace';
-import { relativeTime } from '../../notifications/wording';
 import { commentKeys, commentsQuery, mentionableQuery } from '../api';
 
 /**
