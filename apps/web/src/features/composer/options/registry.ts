@@ -1,6 +1,7 @@
 import type { NetworkId } from '@socioboard/contracts';
 
 import { InstagramPanel } from './instagram-panel';
+import { PinterestPanel } from './pinterest-panel';
 import { ThreadsPanel } from './threads-panel';
 import type { OptionsPanel } from './types';
 
@@ -11,4 +12,5 @@ import type { OptionsPanel } from './types';
 export const OPTION_PANELS: Partial<Record<NetworkId, OptionsPanel>> = {
   instagram: { Component: InstagramPanel, needsChoices: false },
   threads: { Component: ThreadsPanel, needsChoices: false },
+  pinterest: { Component: PinterestPanel, needsChoices: true },
 };

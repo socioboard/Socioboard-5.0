@@ -1,13 +1,14 @@
 // The options panel frame (P3-F2): asking accounts for their choices, a failure for one account,
-// per-account rows, and where each kind of setting ends up in the post body. A stand-in Pinterest
-// panel plays the part the network's own panel will (P3-B4).
+// per-account rows, and where each kind of setting ends up in the post body. A plain stand-in
+// takes the place of the real Pinterest panel (pinterest.test.tsx tests that one), so these tests
+// are about the frame alone.
 import type { Network, SocialAccount } from '@socioboard/contracts';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { halden, meWith, mockServer, renderApp, type Handler } from '../../../testing/render';
-import { PerAccount } from '../options/panels';
+import { PerAccount } from '../options/per-account';
 import { OPTION_PANELS } from '../options/registry';
 import type { OptionsPanelProps } from '../options/types';
 
@@ -124,11 +125,13 @@ const lastTargets = (calls: { key: string; body: unknown }[]) =>
   (calls.findLast((c) => c.key === `POST ${BASE}/posts/validate`)?.body as { targets: unknown })
     .targets;
 
+const realPinterestPanel = OPTION_PANELS.pinterest;
 beforeEach(() => {
   OPTION_PANELS.pinterest = { Component: TestPinterestPanel, needsChoices: true };
 });
 afterEach(() => {
-  delete OPTION_PANELS.pinterest;
+  if (realPinterestPanel) OPTION_PANELS.pinterest = realPinterestPanel;
+  else delete OPTION_PANELS.pinterest;
   vi.restoreAllMocks();
 });
 
