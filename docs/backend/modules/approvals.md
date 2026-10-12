@@ -54,7 +54,7 @@ The review workflow (draft → in review → approved, or changes requested) and
 ## Notifications (P4-B3)
 The notifications module's listeners (`notifications/listeners.ts`) turn these events into notifications. Only people who can see the post hear about it, never the person who acted, and the texts never quote the post, a note or a comment (emails link to the app instead):
 - `post.submitted` → `review_requested` to the members who can approve it (`posts:approve`), linking to `/w/<slug>/approvals?post=<id>`; after an edit reset an approval, the body says it needs another look.
-- `post.approved` → `post_approved`, `post.changes_requested` → `changes_requested`, to its author.
+- `post.approved` → `post_approved` (linking to the post), `post.changes_requested` → `changes_requested` (linking to the composer, where the note shows at the top), to its author.
 - `post.commented` → `mentioned` to whoever it mentions; for a new comment, `post_commented` to the post's author ("your post") and everyone who commented on it before ("a post you commented on"). A mention wins, so nobody hears twice. Links go to `/w/<slug>/posts/<id>?comment=<commentId>`.
 - Email by default for review requests, decisions and mentions; comments in the app only. Until P4-B11 designs their emails, they use the plain notification email.
 
