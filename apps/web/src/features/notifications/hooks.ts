@@ -2,7 +2,7 @@ import type { Notification } from '@socioboard/contracts';
 import { toast } from '@socioboard/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { errorMessage } from '../../lib/i18n';
@@ -22,20 +22,6 @@ export function useOpenNotification(after?: () => void) {
     after?.();
     if (n.link) void navigate({ href: n.link });
   };
-}
-
-/** The clock for "5 min ago", moving once a minute. */
-export function useNow(intervalMs = 60_000) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(Date.now());
-    }, intervalMs);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [intervalMs]);
-  return now;
 }
 
 /**

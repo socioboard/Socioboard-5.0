@@ -18,6 +18,7 @@ import onboarding from '../locales/en/onboarding.json';
 import posts from '../locales/en/posts.json';
 import settings from '../locales/en/settings.json';
 import shell from '../locales/en/shell.json';
+import tasks from '../locales/en/tasks.json';
 import { ApiError } from './api';
 
 export const resources = {
@@ -37,6 +38,7 @@ export const resources = {
     notifications,
     admin,
     approvals,
+    tasks,
   },
 } as const;
 
@@ -60,6 +62,7 @@ void i18n.use(initReactI18next).init({
     'notifications',
     'admin',
     'approvals',
+    'tasks',
   ],
   defaultNS: 'common',
   interpolation: { escapeValue: false }, // React already escapes

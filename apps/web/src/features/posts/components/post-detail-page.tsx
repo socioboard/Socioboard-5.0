@@ -32,6 +32,7 @@ import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { PostComments } from '../../comments';
 import { isPending, mediaDetailQuery } from '../../media';
+import { PostTasks } from '../../tasks';
 import { postKeys, postQuery, rememberPost } from '../api';
 import { useRepeatWording } from '../repeat';
 import { PostStatusChip } from './post-bits';
@@ -323,6 +324,9 @@ function Details({ post, commentId }: { post: PostDetails; commentId: string | u
             </div>
           ))}
           <Card className="mt-2 p-4">
+            <PostTasks post={{ id: post.id, excerpt: post.text.trim().slice(0, 80) }} />
+          </Card>
+          <Card className="p-4">
             <PostComments postId={post.id} highlightId={commentId} />
           </Card>
         </section>

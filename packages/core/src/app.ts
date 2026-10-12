@@ -38,6 +38,7 @@ import {
   createCommentService,
   registerApprovalRoutes,
 } from './modules/approvals';
+import { createTaskService, registerTaskRoutes } from './modules/tasks';
 import { registerPostRoutes } from './modules/posts';
 import { registerSchedulingRoutes } from './modules/scheduling';
 import {
@@ -185,6 +186,17 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
       scheduling,
     }),
     createCommentService({
+      db: platform.db,
+      clock: platform.clock,
+      storage: platform.storage,
+      realtime: platform.realtime,
+      events: platform.events,
+      posts,
+    }),
+  );
+  registerTaskRoutes(
+    api,
+    createTaskService({
       db: platform.db,
       clock: platform.clock,
       storage: platform.storage,

@@ -11,6 +11,7 @@ import {
 import { commentKeys } from '../comments';
 import { BELL_SIZE, notificationKeys, rememberRead } from '../notifications';
 import { postKeys } from '../posts';
+import { taskKeys } from '../tasks';
 
 const workspaceKey = (workspaceId: string, area: string) => ['workspaces', workspaceId, area];
 
@@ -79,6 +80,10 @@ export function liveHandlers(client: QueryClient): RealtimeHandlers {
     // Someone commented, edited or deleted a comment: an open thread rereads.
     'post.comments_changed': ({ workspaceId, postId }) => {
       void client.invalidateQueries({ queryKey: commentKeys.thread(workspaceId, postId) });
+    },
+    // A task was made, changed or deleted: every task list (the page, a post's tasks) rereads.
+    'task.changed': ({ workspaceId }) => {
+      void client.invalidateQueries({ queryKey: taskKeys.all(workspaceId) });
     },
     'account.status_changed': ({ workspaceId }) => {
       // Accounts (list, details, posting times) and what shows an account's state on a post.

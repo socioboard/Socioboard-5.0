@@ -4,6 +4,7 @@ import { typedEvents, type Db, type EventBus, type Logger } from '../../platform
 import type { PostEvents } from '../posts';
 import type { PublishingEvents } from '../publishing';
 import type { SocialAccountEvents } from '../social-accounts';
+import type { TaskEvents } from '../tasks';
 import { membersWhoSeePost } from '../workspaces';
 import type { NotificationService } from './service';
 
@@ -272,6 +273,89 @@ export function registerNotificationListeners(
         group: `post:${p.postId}`,
       });
     }
+  });
+
+  // ── Tasks (P4-B5) ───────────────────────────────────────────────────────────────────────
+  // To one person, if they're still a member and, for a task about a post, can see it. The
+  // English text (also the email's) leaves the task's title out; the app shows it from params.
+
+  /** The workspace, the task, and whether `userId` may hear of it. */
+  async function aboutTask(workspaceId: string, taskId: string, userId: string) {
+    const [who, task] = await Promise.all([
+      audience(workspaceId, [userId]),
+      db.client.task.findFirst({
+        where: { id: taskId, workspaceId },
+        select: { title: true, postId: true, dueAt: true },
+      }),
+    ]);
+    if (!who || !task || who.members.length === 0) return null;
+    if (task.postId) {
+      const seers = await membersWhoSeePost(db, workspaceId, task.postId);
+      const postGone = !(await db.client.post.findFirst({
+        where: { id: task.postId, workspaceId },
+        select: { id: true },
+      }));
+      if (!postGone && !seers.some((m) => m.userId === userId)) return null;
+    }
+    return {
+      workspace: who.workspace,
+      task,
+      link: `/w/${who.workspace.slug}/tasks?task=${taskId}`,
+    };
+  }
+  const nameOf = async (userId: string) =>
+    (await db.client.user.findUnique({ where: { id: userId }, select: { name: true } }))?.name ??
+    'Someone';
+
+  const tasks = typedEvents<TaskEvents>(bus);
+
+  tasks.on('task.assigned', async (p) => {
+    if (p.assigneeId === p.userId) return;
+    const about = await aboutTask(p.workspaceId, p.taskId, p.assigneeId);
+    if (!about) return;
+    const actor = await nameOf(p.userId);
+    await notifications.notify({
+      workspace: about.workspace,
+      userIds: [p.assigneeId],
+      type: 'task_assigned',
+      title: `${actor} gave you a task`,
+      body: about.task.dueAt ? 'It has a due date: open it to see.' : 'Open it to see what to do.',
+      link: about.link,
+      params: { taskId: p.taskId, actor, task: about.task.title },
+      group: `task:${p.taskId}`,
+    });
+  });
+
+  tasks.on('task.completed', async (p) => {
+    if (!p.createdById || p.createdById === p.userId) return;
+    const about = await aboutTask(p.workspaceId, p.taskId, p.createdById);
+    if (!about) return;
+    const actor = await nameOf(p.userId);
+    await notifications.notify({
+      workspace: about.workspace,
+      userIds: [p.createdById],
+      type: 'task_completed',
+      title: `${actor} finished a task you made`,
+      body: 'Open it to see.',
+      link: about.link,
+      params: { taskId: p.taskId, actor, task: about.task.title },
+      group: `task:${p.taskId}`,
+    });
+  });
+
+  tasks.on('task.due', async (p) => {
+    const about = await aboutTask(p.workspaceId, p.taskId, p.assigneeId);
+    if (!about) return;
+    await notifications.notify({
+      workspace: about.workspace,
+      userIds: [p.assigneeId],
+      type: 'task_due',
+      title: 'A task of yours is due within a day',
+      body: 'Open it to see what’s left to do.',
+      link: about.link,
+      params: { taskId: p.taskId, task: about.task.title, dueAt: p.dueAt },
+      group: `task:${p.taskId}`,
+    });
   });
 
   logger.debug('notification listeners registered');

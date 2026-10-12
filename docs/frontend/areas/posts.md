@@ -23,7 +23,7 @@
 - **Live status:** since P2-F5, `post.status_changed` shows a post's new statuses on its page at once and refreshes the lists; while a post on screen is being sent, the screens still look every 15 s (attempts that don't change a status), or every 3 s while the socket is down.
 - **Failed count:** the sidebar's Posts link carries how many posts need fixing (failed or partly published, up to "50+"; a dot when the sidebar is collapsed and on the phone tab), refreshed by every live change.
 - Comments (P4-F3): a card under the deliveries, the same thread as the review panel ([approvals](approvals.md#comments)); `?comment=<id>` scrolls to one and marks it.
-- Not yet: bulk actions and the other filters (phase 2), approval history and tasks (phase 4).
+- Not yet: bulk actions and the other filters (phase 2), approval history (phase 4).
 
 **Built in P2-F1** (with the composer's scheduling):
 - **Times on the workspace's clock:** when a post is due, went out or was created, and each attempt's time, are shown in the workspace's timezone (`WorkspaceTime` in `lib/workspace-time.tsx`); hovering shows the reader's own time when their clock is on another timezone.
@@ -40,3 +40,9 @@
 - Failed tab shows a count badge in the sidebar; each failure links straight to the fix (edit content or reconnect account).
 - Bulk actions: delete drafts, duplicate.
 - Labels: filter by label; manage the workspace's label list (name + color).
+
+**Built in P4-F4** (`features/tasks`, route `/w/:slug/tasks?view=all&show=done&task=<id>`, "Tasks" in the sidebar after Approvals):
+- **Tasks page:** **Assigned to me** or **Everyone's**, **To do** or **Done** (kept in the address). Each task a row: a box to tick it done (for people who manage tasks, and the assignee), its title (opens it), the post it's about (a link; "Post deleted" once gone), when it's due (red once overdue; "Done" and the day for finished ones), "In progress", and who has it. **New task** for people who manage tasks; an empty list says what tasks are for.
+- **The task dialog:** title, details, **Assigned to** (the members; for a task about a post, only those who can see it), status (when open), and a due date and time in the workspace's timezone (17:00 when only a day is picked; "A reminder goes out a day before"). People without task rights see it read-only; its assignee can still change the status. **Delete** (asks first) for its creator or an admin.
+- **On a post's page:** a Tasks card above the comments, with that post's tasks and **Add task** (about the post).
+- Live: tasks made, changed or deleted elsewhere refresh every list (`task.changed`). A task notification's link (`?task=<id>`) opens it.

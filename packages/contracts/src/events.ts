@@ -58,6 +58,8 @@ export const serverEvents = {
    * refetch.
    */
   'post.comments_changed': z.object({ workspaceId: Id, postId: Id }),
+  /** To `workspace:<id>`: a task was created, changed or deleted; task lists refetch. */
+  'task.changed': z.object({ workspaceId: Id, taskId: Id }),
 };
 
 export type ServerEventName = keyof typeof serverEvents;

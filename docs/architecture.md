@@ -227,6 +227,7 @@ The post's status is computed from its targets' statuses. Whether an author can 
 | `ai-result` | Pull finished AI outputs into the media library | Triggered by the AI service webhook |
 | `reports` | Render and email scheduled reports | Repeatable, per ReportSchedule |
 | `notifications` | Email and in-app fan-out | Triggered by events |
+| `task-reminders` | Remind assignees of tasks due within a day | Runs every 15 minutes; each due date reminds once |
 
 ### Rules
 

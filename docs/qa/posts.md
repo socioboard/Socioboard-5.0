@@ -40,5 +40,17 @@ Area doc: [posts](../frontend/areas/posts.md) · Checks for every screen: [READM
 - [ ] **POST-42** **Delete** a draft → gone. Delete a scheduled post → its scheduled deliveries are cancelled. Not offered once anything has gone out.
 - [ ] **POST-43** As contributor: Edit and Delete only on your own posts.
 
+## Tasks
+- [ ] **POST-60** The sidebar has **Tasks**. It opens on **Assigned to me · To do**: your tasks not done, the soonest due first, undated ones last.
+- [ ] **POST-61** **New task** → a title is required; pick who has it and a due day (17:00 in the workspace's time) → it appears in **Everyone's**; the person gets "<you> gave you a task: <title>" in the bell and an email (the email doesn't name the task).
+- [ ] **POST-62** Tick a task → it moves to **Done** with the day; untick it there → back to To do. The task's maker gets "<name> finished “<title>”" (in the app only), unless they did it themselves.
+- [ ] **POST-63** A task due within a day: its assignee gets "“<title>” is due within a day" (bell and email), once. Change the due date → it reminds again before the new one. Overdue tasks show their date in red.
+- [ ] **POST-64** On a post's page: **Tasks** above the comments, **Add task** → the task is about that post, and only people who can see the post can be picked.
+- [ ] **POST-65** As a viewer: no New task; a task given to you opens read-only, but its status can be changed. Others' tasks can't be ticked.
+- [ ] **POST-66** **Delete** is offered to the task's maker and admins only, and asks first.
+- [ ] **POST-67** A member limited to other accounts doesn't see tasks about posts to accounts they can't use, and can't be given one.
+- [ ] **POST-68** Delete a post that has a task → the task stays, showing "Post deleted".
+- [ ] **POST-69** Two browsers: a task made or ticked in one shows in the other without reloading.
+
 ## Not built yet
-Bulk actions, more filters (account, author, dates), comments, approval history and tasks (phase 4).
+Bulk actions, more filters (account, author, dates), approval history on the post's page (phase 4).

@@ -25,6 +25,7 @@ export const WORKER_QUEUES = [
   'workspace-purge',
   'media-purge',
   'audit-purge',
+  'task-reminders',
 ] as const;
 
 /** Producer handles for the worker's queues (a queue is found by name; nothing runs here). */
