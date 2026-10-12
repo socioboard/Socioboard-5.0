@@ -1,10 +1,15 @@
 import { approvalRoutes as r } from '@socioboard/contracts';
 
 import type { ApiRouter } from '../../platform';
+import type { CommentService } from './comments';
 import type { ApprovalService } from './service';
 
-/** Mounts the review routes (contracts: approvalRoutes; comments arrive with P4-B3). */
-export function registerApprovalRoutes(api: ApiRouter, approvals: ApprovalService) {
+/** Mounts the review and comment routes (contracts: approvalRoutes). */
+export function registerApprovalRoutes(
+  api: ApiRouter,
+  approvals: ApprovalService,
+  comments: CommentService,
+) {
   api.route(r.submitPost, ({ auth, member, params, body }) =>
     approvals.submit(auth, member, params.postId, body.note),
   );
@@ -21,4 +26,20 @@ export function registerApprovalRoutes(api: ApiRouter, approvals: ApprovalServic
     items: await approvals.history(member, params.postId),
   }));
   api.route(r.listReviews, ({ member, query }) => approvals.list(member, query));
+
+  api.route(r.listComments, async ({ member, params }) => ({
+    items: await comments.list(member, params.postId),
+  }));
+  api.route(r.listMentionable, async ({ member, params }) => ({
+    items: await comments.mentionable(member, params.postId),
+  }));
+  api.route(r.createComment, ({ auth, member, params, body }) =>
+    comments.create(auth, member, params.postId, body),
+  );
+  api.route(r.updateComment, ({ auth, member, params, body }) =>
+    comments.update(auth, member, params.commentId, body),
+  );
+  api.route(r.deleteComment, ({ auth, member, params }) =>
+    comments.remove(auth, member, params.commentId),
+  );
 }

@@ -60,7 +60,10 @@
     "FOLDER_CYCLE": "A folder can’t go inside itself.",
     "UPLOAD_INVALID": "The uploaded file didn’t match what was expected. Try uploading it again.",
     "UPLOAD_INCOMPLETE": "The upload didn’t finish. Try again.",
-    "UPLOAD_ALREADY_COMPLETED": "This file was already uploaded."
+    "UPLOAD_ALREADY_COMPLETED": "This file was already uploaded.",
+    "MENTION_NOT_ALLOWED": "Only members who can see this post can be mentioned.",
+    "NOT_COMMENT_AUTHOR": "You can only change your own comments.",
+    "COMMENT_NOT_FOUND": "That comment was deleted."
   },
   "providers": {
     "access_denied": "Sign-in was cancelled at the provider. Try again when you’re ready.",

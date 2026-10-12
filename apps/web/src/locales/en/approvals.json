@@ -77,5 +77,25 @@
     "approved": "{{name}} approved it",
     "changes_requested": "{{name}} asked for changes",
     "withdrawn": "{{name}} took it back"
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments yet. Ask a question or leave a note for the team.",
+    "loadError": "Comments didn’t load.",
+    "placeholder": "Write a comment… type @ to mention someone",
+    "replyPlaceholder": "Write a reply…",
+    "send": "Comment",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edited": "edited",
+    "deleted": "Comment deleted",
+    "unknownAuthor": "Former member",
+    "actions": "Comment actions",
+    "confirmDelete": "Delete this comment?",
+    "people": "People who can see this post",
+    "sendHint": "Ctrl+Enter to send"
   }
 }

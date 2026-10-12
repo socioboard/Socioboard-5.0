@@ -37,6 +37,7 @@ export type Handler = (request: { body: unknown; url: URL }) => Reply | Promise<
 const NO_NOTIFICATIONS: Reply = [200, { items: [], nextCursor: null, unreadCount: 0 }];
 const NO_GROUPS: Reply = [200, { items: [] }];
 const NO_REVIEWS: Reply = [200, { items: [], nextCursor: null }];
+const NO_ITEMS: Reply = [200, { items: [] }];
 
 export function mockServer(handlers: Record<string, Handler | Reply>) {
   const calls: { key: string; search: string; body: unknown; headers: Record<string, string> }[] =
@@ -58,8 +59,8 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
       [...request.headers.entries()].map(([name, value]) => [name.toLowerCase(), value]),
     );
     calls.push({ key, search: url.search, body, headers });
-    // The app shell's bell asks on every page, and the composer for account groups; tests that
-    // don't care get empty lists.
+    // The app shell's bell asks on every page, the composer for account groups, and a post's
+    // page for its comments; tests that don't care get empty lists.
     const handler =
       handlers[key] ??
       (key === 'GET /api/v1/notifications'
@@ -69,7 +70,10 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
           : // The sidebar counts posts waiting for review, for people who approve them.
             /^GET \/api\/v1\/workspaces\/[^/]+\/reviews$/.test(key)
             ? NO_REVIEWS
-            : undefined);
+            : // A post's comments and who can be mentioned, on its page and the review panel.
+              /^GET \/api\/v1\/workspaces\/[^/]+\/posts\/[^/]+\/(comments|mentionable)$/.test(key)
+              ? NO_ITEMS
+              : undefined);
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);
     const [status, reply] = typeof handler === 'function' ? await handler({ body, url }) : handler;
     return new Response(reply === undefined ? null : JSON.stringify(reply), {

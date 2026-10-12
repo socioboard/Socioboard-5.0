@@ -39,6 +39,18 @@ export interface PostEvents extends Record<string, unknown> {
     note: string;
   };
   'post.withdrawn': { workspaceId: string; postId: string; userId: string };
+  /**
+   * A comment was added (`edited: false`) or edited to mention more people (`edited: true`,
+   * with only the newly mentioned in `mentionIds`). P4-B3.
+   */
+  'post.commented': {
+    workspaceId: string;
+    postId: string;
+    commentId: string;
+    userId: string;
+    mentionIds: string[];
+    edited: boolean;
+  };
   /** Publish now or a retry: these targets were queued. */
   'post.publish_requested': {
     workspaceId: string;

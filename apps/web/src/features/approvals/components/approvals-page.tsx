@@ -34,6 +34,7 @@ import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
 import { accountsQuery, networksQuery } from '../../accounts';
+import { PostComments } from '../../comments';
 import { fromPost, PreviewPanel, ScheduleDialog } from '../../composer';
 import { AccountStack, PostStatusChip, postKeys, postQuery } from '../../posts';
 import {
@@ -486,6 +487,9 @@ function ReviewBody({ postId, onDone }: { postId: string; onDone: () => void }) 
       >
         {t('panel.openComposer')}
       </Link>
+      <div className="border-hair border-t pt-4">
+        <PostComments postId={p.id} />
+      </div>
       <ScheduleDialog
         open={scheduling}
         onOpenChange={setScheduling}

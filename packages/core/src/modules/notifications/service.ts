@@ -34,6 +34,12 @@ export const DEFAULT_CHANNELS: Record<
   account_reauth_required: { inApp: true, email: true },
   // A summary email (P2-B12); off until the user turns it on.
   digest: { inApp: null, email: false },
+  // Review and comments (P4-B3): what someone has to act on comes by email too.
+  review_requested: { inApp: true, email: true },
+  post_approved: { inApp: true, email: true },
+  changes_requested: { inApp: true, email: true },
+  post_commented: { inApp: true, email: false },
+  mentioned: { inApp: true, email: true },
 };
 
 /** One notification as its email needs it (no tokens or private data: it links to the app). */

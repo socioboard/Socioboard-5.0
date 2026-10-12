@@ -1,6 +1,15 @@
 import type { Notification } from '@socioboard/contracts';
 import { cn } from '@socioboard/ui';
-import { CircleCheck, PlugZap, TriangleAlert, Bell } from 'lucide-react';
+import {
+  AtSign,
+  Bell,
+  CircleCheck,
+  ClipboardCheck,
+  MessageCircle,
+  MessageSquareWarning,
+  PlugZap,
+  TriangleAlert,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { relativeTime, useNotificationWording } from '../wording';
@@ -10,7 +19,12 @@ const ICONS = {
   post_published: { icon: CircleCheck, tone: 'text-success bg-chip' },
   account_reauth_required: { icon: PlugZap, tone: 'text-warning bg-warning-tint' },
   digest: { icon: Bell, tone: 'text-ink-2 bg-chip' },
-} as const;
+  review_requested: { icon: ClipboardCheck, tone: 'text-ring bg-chip' },
+  post_approved: { icon: CircleCheck, tone: 'text-success bg-chip' },
+  changes_requested: { icon: MessageSquareWarning, tone: 'text-warning bg-warning-tint' },
+  post_commented: { icon: MessageCircle, tone: 'text-ink-2 bg-chip' },
+  mentioned: { icon: AtSign, tone: 'text-ring bg-chip' },
+} satisfies Record<Notification['type'], { icon: unknown; tone: string }>;
 
 /**
  * One notification: what happened (a mark by kind), in which workspace and when, unread marked

@@ -15,6 +15,8 @@ export function useNotificationWording() {
   return (n: Notification): { title: string; body: string } => {
     const network = NetworkId.safeParse(n.params.network);
     const name = network.success ? networkName(network.data) : null;
+    // Who acted, for review and comment notifications.
+    const actor = typeof n.params.actor === 'string' ? n.params.actor : null;
     switch (n.type) {
       case 'publish_failed':
         return name
@@ -33,6 +35,30 @@ export function useNotificationWording() {
           ? { title: t('types.account_reauth_required.title', { account }), body: n.body }
           : n;
       }
+      case 'review_requested':
+        return actor
+          ? {
+              title: t('types.review_requested.title', { actor }),
+              body: n.params.afterEdit
+                ? t('types.review_requested.bodyAfterEdit')
+                : t('types.review_requested.body'),
+            }
+          : n;
+      case 'post_approved':
+      case 'changes_requested':
+      case 'mentioned':
+        return actor
+          ? { title: t(`types.${n.type}.title`, { actor }), body: t(`types.${n.type}.body`) }
+          : n;
+      case 'post_commented':
+        return actor
+          ? {
+              title: n.params.own
+                ? t('types.post_commented.titleOwn', { actor })
+                : t('types.post_commented.title', { actor }),
+              body: t('types.post_commented.body'),
+            }
+          : n;
       default:
         return n;
     }

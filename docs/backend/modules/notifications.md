@@ -22,13 +22,14 @@ Tells people what happened: in-app notification feed with live updates over WebS
 
 Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a user's own, across workspaces: each names its workspace (`id`, `slug`, `name`) or none. The UI words a notification from `type` and `params` (i18n); `title` and `body` are the English fallback, also used in emails. `link` is a path inside the app, never a full URL (`//host` is refused too), so a notification can't send anyone off-site. A channel a type doesn't offer is `null` in preferences (the digest is email only) and can't be turned on (`NOTIFICATION_CHANNEL_NOT_OFFERED`, 422). Another user's notification id answers `NOTIFICATION_NOT_FOUND` (404).
 
-**Types (phase 2):** `publish_failed`, `post_published`, `account_reauth_required`, and `digest` (email only). Phase 4 adds review, comment, task and AI types.
+**Types:** phase 2 `publish_failed`, `post_published`, `account_reauth_required`, and `digest` (email only); phase 4 `review_requested`, `post_approved`, `changes_requested`, `post_commented` and `mentioned` (P4-B3, [approvals](approvals.md#notifications-p4-b3)), with task and AI types to come.
 
 **WebSocket (Socket.IO)** at `/api/socket.io` (`REALTIME_PATH`), events in `packages/contracts/src/events.ts`. On connect the server checks the session cookie and joins `user:<id>` and `workspace:<id>` for each of the user's workspaces; it leaves a workspace's room when the user is removed from it. The browser only listens. Payloads say what changed, not the whole object, and the web app refetches through the API, where permissions apply:
 - `notification.new` (to the user): the notification and the new unread count.
 - `notification.read` (to the user): marked read in another tab or device; `ids`, or null for all, and the unread count.
 - `post.status_changed` (to the workspace): post id and status, and each target's id, status, `scheduledAt`, `publishedAt`.
 - `account.status_changed` (to the workspace): account id and status.
+- `post.comments_changed` (to the workspace): a post's comments changed; open threads refetch.
 - `ai.job.updated` joins in phase 4.
 
 **How it's served (P2-B11):** the API attaches the Socket.IO server to its HTTP server. The handshake needs the app's origin (a WebSocket isn't covered by CORS) and a session cookie; the socket joins its user's room and its live workspaces' rooms, and rooms follow membership on every open socket (`workspace.created` and `member.joined` join, `member.removed` leaves, `workspace.deleted` empties the room). `post.status_changed` is sent by posts' `recomputeStatus`, which runs after every target change (publish, schedule, reschedule, unschedule, retry, cancel, recurring copies); `account.status_changed` by social-accounts whenever an account needs reconnecting, comes back, is added or is disconnected. A deleted post sends nothing yet (the page refetches on its own action). A socket outlives a revoked session until it reconnects. In front of the API, a proxy must pass WebSocket upgrades on `/api/socket.io` (Vite's dev proxy does, with `ws`); the web client should connect with `transports: ['websocket']`, so several API instances need no sticky sessions.
@@ -39,9 +40,9 @@ Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a use
 | `target.failed` (final) | post author + workspace admins | yes |
 | `target.published` | post author | no |
 | `account.reauth_required` | workspace admins | yes |
-| `post.submitted` | members with `posts:approve` | yes |
-| `post.approved` / `post.changes_requested` | author | yes |
-| `post.commented` | author + participants | no |
+| `post.submitted` | members with `posts:approve` who can see the post (`review_requested`) | yes |
+| `post.approved` / `post.changes_requested` | author (`post_approved` / `changes_requested`) | yes |
+| `post.commented` | author + earlier commenters (`post_commented`); the mentioned (`mentioned`) | no; mentions yes |
 | `task.assigned` | assignee | yes |
 | `ai.job.completed` / `ai.job.failed` | requester | no |
 | `member.invited` | invitee (email only) | yes |
