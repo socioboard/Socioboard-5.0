@@ -72,12 +72,12 @@ As of 2026-09-23 · See also: [Stages](stages/README.md), [Backend](backend/READ
 | media-library | [media-library](frontend/areas/media-library.md) | 0 · P0-F7 |
 | accounts | [accounts](frontend/areas/accounts.md) | 1 · P1-F1 · 2 · P2-F3 (slots) · 3 · P3-F3, P3-F4 · 6.1 · P6-F7 (feed) |
 | composer | [composer](frontend/areas/composer.md) | 1 · P1-F2–F5, P1-F8 · 2 · P2-F1 · 3 · P3-F1, P3-F2, P3-B10 (Threads preview and panel) · 4 · P4-F1, P4-F6 |
-| posts (+ tasks) | [posts](frontend/areas/posts.md) | 1 · P1-F6, P1-F8 · 4 · P4-F3, P4-F4 |
+| posts (+ tasks: `features/tasks`) | [posts](frontend/areas/posts.md) | 1 · P1-F6, P1-F8 · 4 · P4-F3, P4-F4 |
 | calendar | [calendar](frontend/areas/calendar.md) | 2 · P2-F2, P2-F3 |
 | home | [home](frontend/areas/home.md) | 4 · P4-F8 |
-| notifications | [notifications](frontend/areas/notifications.md) | 2 · P2-F4 |
+| notifications | [notifications](frontend/areas/notifications.md) | 2 · P2-F4 · 4 · P4-F3, P4-F4 (review, comment and task kinds) |
 | admin-console | [admin-console](frontend/areas/admin-console.md) | 2 · P2-F6 · 5 · P5-F2 · 6.1 · P6-F6 |
-| approvals | [approvals](frontend/areas/approvals.md) | 4 · P4-F2, P4-F3 |
+| approvals (+ comments: `features/comments`) | [approvals](frontend/areas/approvals.md) | 4 · P4-F2, P4-F3 |
 | ai-studio | [ai-studio](frontend/areas/ai-studio.md) | 4 · P4-F6 |
 | billing | [billing](frontend/areas/billing.md) | 5 · P5-F1, P5-F5 |
 | analytics-reports | [analytics-reports](frontend/areas/analytics-reports.md) | 6.1 · P6-F1, P6-F2 |

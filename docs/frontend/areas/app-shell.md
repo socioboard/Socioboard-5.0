@@ -6,7 +6,7 @@
 | Piece | What it does |
 | --- | --- |
 | Layout | Sidebar + top bar + content area; collapses to a bottom tab bar under 768px |
-| Sidebar | Compose (primary button), Calendar, Posts, Approvals (badge with pending count), Media, AI Studio, Accounts, Analytics (6.1), Discovery (6.1), Settings |
+| Sidebar | Compose (primary button), Calendar, Queue, Posts, Approvals (badge with pending count), Tasks, Media, AI Studio, Accounts, Analytics (6.1), Discovery (6.1), Settings |
 | Workspace switcher | Lists my workspaces, switches `/w/:slug`, "Create workspace" |
 | User menu | Profile, security, notification settings, theme (light/dark/system), language (later), sign out |
 | Notification bell | Unread count, opens the feed ([notifications](notifications.md)) |
