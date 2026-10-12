@@ -53,6 +53,11 @@ export const serverEvents = {
     accountId: Id,
     status: AccountStatus,
   }),
+  /**
+   * To `workspace:<id>`: a post's comments changed (added, edited, deleted); open threads
+   * refetch.
+   */
+  'post.comments_changed': z.object({ workspaceId: Id, postId: Id }),
 };
 
 export type ServerEventName = keyof typeof serverEvents;

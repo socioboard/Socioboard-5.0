@@ -30,6 +30,7 @@ import { WorkspaceTime } from '../../../lib/workspace-time';
 import { errorMessage } from '../../../lib/i18n';
 import { useCan } from '../../../lib/permissions';
 import { useWorkspace } from '../../../lib/workspace';
+import { PostComments } from '../../comments';
 import { isPending, mediaDetailQuery } from '../../media';
 import { postKeys, postQuery, rememberPost } from '../api';
 import { useRepeatWording } from '../repeat';
@@ -44,7 +45,14 @@ const LOCKED = new Set(['publishing', 'published']);
  * `/w/:slug/posts/:postId` (docs/frontend/areas/posts.md): the post, where it went and how each
  * delivery went, with the way to fix one that failed.
  */
-export function PostDetailPage({ postId }: { postId: string }) {
+export function PostDetailPage({
+  postId,
+  commentId,
+}: {
+  postId: string;
+  /** A comment to bring into view (a notification's link). */
+  commentId?: string | undefined;
+}) {
   const { t } = useTranslation('posts');
   const { workspace } = useWorkspace();
   const post = useQuery(postQuery(workspace.id, postId));
@@ -95,7 +103,7 @@ export function PostDetailPage({ postId }: { postId: string }) {
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="stagger-children mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">
-          {body ?? (post.data && <Details post={post.data} />)}
+          {body ?? (post.data && <Details post={post.data} commentId={commentId} />)}
         </div>
       </div>
     </div>
@@ -258,7 +266,7 @@ function Actions({ post }: { post: PostDetails }) {
   );
 }
 
-function Details({ post }: { post: PostDetails }) {
+function Details({ post, commentId }: { post: PostDetails; commentId: string | undefined }) {
   const { t } = useTranslation('posts');
   const mayEdit = useMayEdit(post);
   const time = useWorkspaceTime();
@@ -314,6 +322,9 @@ function Details({ post }: { post: PostDetails }) {
               <TargetCard postId={post.id} target={target} editable={mayEdit} />
             </div>
           ))}
+          <Card className="mt-2 p-4">
+            <PostComments postId={post.id} highlightId={commentId} />
+          </Card>
         </section>
         <ContentPanel post={post} />
       </div>

@@ -18,6 +18,7 @@ type Ids = Record<
   | 'postId'
   | 'targetId'
   | 'labelId'
+  | 'commentId'
   | 'groupId'
   | 'provider',
   string
@@ -135,6 +136,11 @@ const CLASSIFIED: Record<string, Kind> = {
   withdrawPost: { kind: 'resource' },
   listPostReview: { kind: 'resource' },
   listReviews: { kind: 'list', idsOf: 'postId', query: () => 'status=pending' },
+  listComments: { kind: 'resource' },
+  listMentionable: { kind: 'resource' },
+  createComment: { kind: 'resource', body: () => ({ body: 'x' }) },
+  updateComment: { kind: 'resource', body: () => ({ body: 'hijacked' }) },
+  deleteComment: { kind: 'resource' },
   listLabels: { kind: 'list', idsOf: 'labelId' },
   createLabel: { kind: 'workspace', body: () => ({ name: 'Hijack', color: 'red' }) },
   updateLabel: { kind: 'resource', body: () => ({ name: 'hijacked' }) },
@@ -266,6 +272,9 @@ beforeAll(async () => {
   const target = await t.db.client.postTarget.create({
     data: { workspaceId: aWorkspace, postId: post.id, socialAccountId: account.id },
   });
+  const comment = await t.db.client.postComment.create({
+    data: { workspaceId: aWorkspace, postId: post.id, authorId: victim.userId, body: 'A comment' },
+  });
   const label = await t.db.client.postLabel.create({
     data: { workspaceId: aWorkspace, name: 'A label', color: 'blue' },
   });
@@ -278,6 +287,7 @@ beforeAll(async () => {
   a = {
     groupId: group.id,
     labelId: label.id,
+    commentId: comment.id,
     postId: post.id,
     targetId: target.id,
     connectionId: connection.id,
