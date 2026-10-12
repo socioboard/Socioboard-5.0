@@ -1,0 +1,20 @@
+{
+  "method": "POST",
+  "url": "https://api.pinterest.com/v5/oauth/token",
+  "requestHeaders": { "authorization": "Basic Y2xpZW50OnNlY3JldA==" },
+  "body": {
+    "grant_type": "authorization_code",
+    "code": "pin-code",
+    "redirect_uri": "https://app.test/api/oauth/pinterest/callback"
+  },
+  "status": 200,
+  "response": {
+    "access_token": "pina-access",
+    "refresh_token": "pinr-refresh",
+    "response_type": "authorization_code",
+    "token_type": "bearer",
+    "expires_in": 2592000,
+    "refresh_token_expires_in": 5184000,
+    "scope": "user_accounts:read,boards:read,boards:write,pins:read,pins:write"
+  }
+}

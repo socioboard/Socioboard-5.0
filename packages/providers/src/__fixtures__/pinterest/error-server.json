@@ -1,0 +1,6 @@
+{
+  "method": "GET",
+  "url": "https://api.pinterest.com/v5/user_account",
+  "status": 503,
+  "response": { "code": 7, "message": "Service unavailable. Try again later." }
+}

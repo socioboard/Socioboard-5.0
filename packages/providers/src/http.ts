@@ -1,3 +1,10 @@
+import { createWriteStream } from 'node:fs';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Readable, Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+
 import { ProviderError } from './errors';
 
 /** What adapters log through; the API and worker pass their pino logger. */
@@ -47,6 +54,18 @@ export interface HttpClient {
     url: string,
     opts?: { range?: { start: number; end: number }; maxBytes?: number; timeoutMs?: number },
   ): Promise<Uint8Array>;
+  /**
+   * Streams a file from a URL to a temporary local file for `use`, then removes it: the download
+   * never has to fit in memory (core's media worker does the same for ffmpeg, `withLocalCopy`).
+   * Note that `request` doesn't stream what it sends: fetch reads a whole multipart or streamed
+   * body into memory first. Fails like `download`: no 2xx answer, or more than `maxBytes`, is a
+   * `retryable` error.
+   */
+  withFile<T>(
+    url: string,
+    opts: { maxBytes: number; timeoutMs?: number },
+    use: (path: string) => Promise<T>,
+  ): Promise<T>;
 }
 
 export interface HttpClientOptions {
@@ -173,6 +192,56 @@ export function createHttpClient(options: HttpClientOptions): HttpClient {
         });
       }
       return new Uint8Array(await res.arrayBuffer());
+    },
+
+    async withFile(raw, opts, use) {
+      const dir = await mkdtemp(join(tmpdir(), 'sb-upload-'));
+      try {
+        const path = join(dir, 'file');
+        try {
+          const res = await doFetch(raw, {
+            signal: AbortSignal.timeout(opts.timeoutMs ?? defaultTimeout),
+          });
+          if (!res.ok || !res.body) {
+            throw new ProviderError({
+              kind: 'retryable',
+              message: `Reading the file answered HTTP ${String(res.status)}`,
+              status: res.status,
+            });
+          }
+          // Counted as it streams: a missing or wrong content-length can't let a file past the cap.
+          let size = 0;
+          const capped = new Transform({
+            transform(chunk: Buffer, _encoding, done) {
+              size += chunk.length;
+              if (size <= opts.maxBytes) done(null, chunk);
+              else {
+                done(
+                  new ProviderError({
+                    kind: 'retryable',
+                    message: 'The file is larger than this upload allows',
+                  }),
+                );
+              }
+            },
+          });
+          await pipeline(Readable.fromWeb(res.body), capped, createWriteStream(path));
+        } catch (err) {
+          if (err instanceof ProviderError) throw err;
+          options.logger?.warn(
+            { network: options.name, url: redactUrl(raw) },
+            'reading a file failed',
+          );
+          throw new ProviderError({
+            kind: 'retryable',
+            message: 'Could not read the file to upload',
+            cause: err,
+          });
+        }
+        return await use(path);
+      } finally {
+        await rm(dir, { recursive: true, force: true });
+      }
     },
   };
 }
