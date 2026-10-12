@@ -52,6 +52,9 @@ const envSchema = z.object({
     }),
   /** Requests per minute per client IP on /api/v1. */
   API_RATE_LIMIT_PER_MIN: z.coerce.number().int().positive().default(300),
+  API_DOCS: bool,
+  API_DOCS_USER: z.string().default('socioboard'),
+  API_DOCS_PASSWORD: optional,
 
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   DATABASE_POOL_SIZE: z.coerce.number().int().positive().default(10),
@@ -216,7 +219,16 @@ export interface Config {
   env: 'development' | 'test' | 'production';
   isProduction: boolean;
   logLevel: string;
-  api: { port: number; trustedProxies: string[]; rateLimitPerMin: number };
+  api: {
+    port: number;
+    trustedProxies: string[];
+    rateLimitPerMin: number;
+    /**
+     * The API reference (/api/docs): served always outside production, and where API_DOCS is on;
+     * behind basic auth when a password is set (required in production).
+     */
+    docs: { enabled: boolean; auth: { user: string; password: string } | undefined };
+  };
   appUrl: string;
   db: { url: string; poolSize: number };
   redis: { url: string };
@@ -343,6 +355,14 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     );
   }
   // A sandbox pin is seen only by its creator: in production every live pin would quietly vanish.
+  // A public route map on a production server: only behind a password.
+  if (
+    raw('NODE_ENV') === 'production' &&
+    ['true', '1'].includes(raw('API_DOCS') ?? '') &&
+    (raw('API_DOCS_PASSWORD') ?? '').length < 16
+  ) {
+    problems.push('API_DOCS_PASSWORD: required (16+ characters) when API_DOCS is on in production');
+  }
   if (raw('NODE_ENV') === 'production' && ['true', '1'].includes(raw('PINTEREST_SANDBOX') ?? '')) {
     problems.push(
       'PINTEREST_SANDBOX: must be off in production (sandbox pins are seen only by the account that made them)',
@@ -405,6 +425,12 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       port: e.API_PORT,
       trustedProxies: e.TRUST_PROXY,
       rateLimitPerMin: e.API_RATE_LIMIT_PER_MIN,
+      docs: {
+        enabled: e.NODE_ENV !== 'production' || e.API_DOCS,
+        auth: e.API_DOCS_PASSWORD
+          ? { user: e.API_DOCS_USER, password: e.API_DOCS_PASSWORD }
+          : undefined,
+      },
     },
     appUrl: e.APP_URL,
     db: { url: e.DATABASE_URL, poolSize: e.DATABASE_POOL_SIZE },

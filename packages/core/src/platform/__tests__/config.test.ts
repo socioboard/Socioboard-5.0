@@ -214,6 +214,24 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...keys, PINTEREST_SANDBOX: 'yes' })).toThrow(/PINTEREST_SANDBOX/);
   });
 
+  it('serves the API reference outside production, and in production only with API_DOCS and a password', () => {
+    const production = { ...base, NODE_ENV: 'production', TRUST_PROXY: '10.0.0.0/8' };
+    expect(loadConfig({ ...base, NODE_ENV: 'development' }).api.docs).toEqual({
+      enabled: true,
+      auth: undefined,
+    });
+    expect(loadConfig(production).api.docs.enabled).toBe(false);
+    // On in production only behind a long enough password.
+    expect(() => loadConfig({ ...production, API_DOCS: 'true' })).toThrow(/API_DOCS_PASSWORD/);
+    expect(() =>
+      loadConfig({ ...production, API_DOCS: 'true', API_DOCS_PASSWORD: 'short' }),
+    ).toThrow(/API_DOCS_PASSWORD/);
+    expect(
+      loadConfig({ ...production, API_DOCS: 'true', API_DOCS_PASSWORD: 'a-long-enough-secret' }).api
+        .docs,
+    ).toEqual({ enabled: true, auth: { user: 'socioboard', password: 'a-long-enough-secret' } });
+  });
+
   it('refuses the Pinterest sandbox in production', () => {
     const keys = { ...base, PINTEREST_CLIENT_ID: 'p', PINTEREST_CLIENT_SECRET: 'ps' };
     const production = { ...keys, NODE_ENV: 'production', TRUST_PROXY: '10.0.0.0/8' };

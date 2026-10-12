@@ -1,16 +1,21 @@
-import { apiRoutes, buildOpenApi } from '@socioboard/contracts';
-import { Router } from 'express';
+import { createHash, timingSafeEqual } from 'node:crypto';
 
-/** Version of the Scalar API reference page, loaded from a CDN (development only). */
+import { apiRoutes, buildOpenApi } from '@socioboard/contracts';
+import { Router, type RequestHandler } from 'express';
+
+/** Version of the Scalar API reference page, loaded from a CDN. */
 const SCALAR_VERSION = '1.70.0';
 
 /**
- * Development-only API docs: the OpenAPI document generated from the contracts at
- * /api/docs/openapi.json and a browsable reference at /api/docs. Not mounted in production.
+ * API docs: the OpenAPI document generated from the contracts at /api/docs/openapi.json and a
+ * browsable reference at /api/docs. Mounted outside production, and where API_DOCS is on
+ * (staging); never on the live site. With `auth`, both ask for a username and password (HTTP
+ * basic auth), so someone who comes across the address sees nothing.
  */
-export function createDocsRouter(): Router {
+export function createDocsRouter(auth?: { user: string; password: string }): Router {
   const spec = buildOpenApi(apiRoutes, { version: '6.0.0-dev', sessionCookie: 'sb.session_token' });
   const router = Router();
+  if (auth) router.use('/api/docs', basicAuth(auth));
   router.get('/api/docs/openapi.json', (_req, res) => {
     res.json(spec);
   });
@@ -29,4 +34,21 @@ export function createDocsRouter(): Router {
 </html>`);
   });
   return router;
+}
+
+/** Compared as hashes, in constant time, so neither length nor content leaks through timing. */
+const digest = (value: string) => createHash('sha256').update(value).digest();
+
+function basicAuth(auth: { user: string; password: string }): RequestHandler {
+  const expected = digest(`${auth.user}:${auth.password}`);
+  return (req, res, next) => {
+    const [scheme, encoded] = (req.headers.authorization ?? '').split(' ');
+    const given = scheme === 'Basic' && encoded ? Buffer.from(encoded, 'base64').toString() : '';
+    if (given !== '' && timingSafeEqual(digest(given), expected)) {
+      next();
+      return;
+    }
+    res.set('WWW-Authenticate', 'Basic realm="Socioboard API docs", charset="UTF-8"');
+    res.status(401).type('text').send('Sign in to see the API docs.');
+  };
 }

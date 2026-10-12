@@ -13,9 +13,9 @@ const { config, logger, telemetry } = bootstrap('api');
 const platform = createPlatform(config, logger);
 
 const { app, health, missingRoutes, attachRealtime } = createApiApp(platform, {
-  // API reference generated from the contracts: development only.
+  // API reference generated from the contracts: outside production, and on staging (API_DOCS).
   extend: (a) => {
-    if (!config.isProduction) a.use(createDocsRouter());
+    if (config.api.docs.enabled) a.use(createDocsRouter(config.api.docs.auth));
   },
 });
 if (missingRoutes.length > 0) {
