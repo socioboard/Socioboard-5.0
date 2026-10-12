@@ -11,6 +11,13 @@ export {
   YOUTUBE_SCOPES,
 } from './login';
 export {
+  DEFAULT_CHUNK_SIZE,
+  queryUploadStatus,
+  uploadYouTubeVideo,
+  YOUTUBE_UPLOAD_API,
+  type YouTubeVideoMetadata,
+} from './upload';
+export {
   YOUTUBE_MAX_DESC_CHARS,
   YOUTUBE_MAX_TAGS_CHARS,
   YOUTUBE_MAX_TITLE_CHARS,

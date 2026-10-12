@@ -196,7 +196,12 @@
       "PINTEREST_BOARD_REQUIRED": "Choose the Pinterest board to pin to.",
       "PINTEREST_TITLE_TOO_LONG": "Pinterest titles can be up to {{max}} characters; this has {{actual}}.",
       "PINTEREST_ALT_TEXT_TOO_LONG": "{{file}}: Pinterest alt text can be up to {{max}} characters.",
-      "PINTEREST_VIDEO_FORMAT": "{{file}}: Pinterest takes MP4, MOV and M4V videos."
+      "PINTEREST_VIDEO_FORMAT": "{{file}}: Pinterest takes MP4, MOV and M4V videos.",
+      "YOUTUBE_TITLE_REQUIRED": "YouTube videos require a title.",
+      "YOUTUBE_TITLE_TOO_LONG": "YouTube titles can be up to {{max}} characters.",
+      "YOUTUBE_TITLE_INVALID_CHARS": "YouTube video titles cannot contain < or >.",
+      "YOUTUBE_DESC_INVALID_CHARS": "YouTube descriptions cannot contain < or >.",
+      "YOUTUBE_TAGS_TOO_LONG": "YouTube tags can be up to 500 characters total."
     },
     "kinds": {
       "image": "photos",
@@ -393,6 +398,7 @@
     "tagsPlaceholder": "e.g. coffee, roastery, autumn",
     "tagsHint": "Comma-separated tags (up to 500 characters total)",
     "madeForKids": "Made for kids",
-    "madeForKidsHint": "Features like comments and personalized ads won't be available (COPPA compliance)"
+    "madeForKidsHint": "Features like comments and personalized ads won't be available (COPPA compliance)",
+    "auditNotice": "Until YouTube API verification is complete for this app, uploaded videos are set to Private by YouTube."
   }
 }

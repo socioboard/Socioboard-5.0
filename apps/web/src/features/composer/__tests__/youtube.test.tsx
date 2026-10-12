@@ -76,5 +76,8 @@ describe('YouTubePanel', () => {
     const kidsSwitch = screen.getByRole('switch');
     await user.click(kidsSwitch);
     expect(set).toHaveBeenCalledWith('youtube', { madeForKids: true });
+
+    // Private-only audit notice
+    expect(screen.getByText(/Until YouTube API verification is complete/i)).toBeInTheDocument();
   });
 });

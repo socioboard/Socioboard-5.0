@@ -1,5 +1,6 @@
 import { YouTubePrivacy } from '@socioboard/contracts';
 import { CharacterCounter, Input, Label, RadioCard, RadioGroup, Switch } from '@socioboard/ui';
+import { Info } from 'lucide-react';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -107,6 +108,12 @@ export function YouTubePanel({ accounts, options, set }: OptionsPanelProps) {
             set('youtube', { madeForKids: checked });
           }}
         />
+      </div>
+
+      {/* 5. Private-only notice until audit approval */}
+      <div className="flex gap-2.5 rounded-xl border border-amber-500/25 bg-amber-500/10 p-3 text-xs leading-relaxed text-ink-2">
+        <Info className="size-4 shrink-0 text-amber-500 mt-0.5" aria-hidden="true" />
+        <p>{t('youtube.auditNotice')}</p>
       </div>
     </div>
   );

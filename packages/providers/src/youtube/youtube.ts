@@ -41,8 +41,11 @@ export const YOUTUBE_RULES: ContentRules = {
 };
 
 export const YOUTUBE_RATE_LIMITS: RateLimits = {
-  perAccount: [{ max: 100, perSec: 24 * 3600 }],
-  perApp: [],
+  // Default Google Cloud project quota is 10,000 units/day. Each videos.insert
+  // costs 1,600 units, allowing ~6 video uploads per day for the entire app until
+  // Google approves a quota extension.
+  perAccount: [{ max: 6, perSec: 24 * 3600 }],
+  perApp: [{ max: 6, perSec: 24 * 3600 }],
 };
 
 export const YOUTUBE_PREVIEW: PreviewSpec = {
@@ -57,13 +60,17 @@ export const YOUTUBE_PREVIEW: PreviewSpec = {
 export const YouTubeIssueCode = {
   TITLE_REQUIRED: 'YOUTUBE_TITLE_REQUIRED',
   TITLE_TOO_LONG: 'YOUTUBE_TITLE_TOO_LONG',
+  TITLE_INVALID_CHARS: 'YOUTUBE_TITLE_INVALID_CHARS',
+  DESC_INVALID_CHARS: 'YOUTUBE_DESC_INVALID_CHARS',
   TAGS_TOO_LONG: 'YOUTUBE_TAGS_TOO_LONG',
 } as const;
 
 function resolveTitle(input: PublishInput): string {
   const optTitle = input.options.youtube?.title?.trim();
   if (optTitle && optTitle !== '') return optTitle;
-  return input.text !== '' ? input.text.slice(0, 100) : '';
+  return input.text !== ''
+    ? Array.from(input.text).slice(0, YOUTUBE_MAX_TITLE_CHARS).join('').trim()
+    : '';
 }
 
 export function createYouTube(http: HttpClient): NetworkAdapter {
@@ -90,6 +97,28 @@ export function createYouTube(http: HttpClient): NetworkAdapter {
           issue('error', YouTubeIssueCode.TITLE_REQUIRED, 'YouTube videos require a title.', {
             field: 'options',
           }),
+        );
+      }
+
+      if (/[<>]/.test(title)) {
+        issues.push(
+          issue(
+            'error',
+            YouTubeIssueCode.TITLE_INVALID_CHARS,
+            'YouTube video titles cannot contain < or >.',
+            { field: 'options' },
+          ),
+        );
+      }
+
+      if (/[<>]/.test(input.text)) {
+        issues.push(
+          issue(
+            'error',
+            YouTubeIssueCode.DESC_INVALID_CHARS,
+            'YouTube descriptions cannot contain < or >.',
+            { field: 'text' },
+          ),
         );
       }
 
@@ -138,9 +167,15 @@ export function createYouTube(http: HttpClient): NetworkAdapter {
       }
 
       const ytOptions = input.options.youtube;
-      const resolved = resolveTitle(input);
-      const title = resolved !== '' ? resolved : 'Untitled Video';
-      const description = input.text;
+      const title = resolveTitle(input);
+      if (title === '') {
+        throw new ProviderError({
+          kind: 'content',
+          message: 'YouTube requires a title to publish',
+        });
+      }
+      const cleanTitle = title.replace(/[<>]/g, '');
+      const cleanDesc = input.text.replace(/[<>]/g, '');
       const privacy = ytOptions?.privacy ?? 'private';
       const tags = ytOptions?.tags ?? [];
       const madeForKids = ytOptions?.madeForKids ?? false;
@@ -149,8 +184,8 @@ export function createYouTube(http: HttpClient): NetworkAdapter {
         http,
         videoMedia,
         {
-          title,
-          description,
+          title: cleanTitle,
+          description: cleanDesc,
           privacy,
           tags,
           madeForKids,

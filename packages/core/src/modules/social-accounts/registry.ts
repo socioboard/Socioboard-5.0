@@ -31,8 +31,20 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
   });
   const youtube = createYouTubeAdapters({ youtube: config.networks.youtube, logger });
   const registry = createRegistry({
-    logins: [...meta.logins, ...x.logins, ...linkedin.logins, ...pinterest.logins, ...youtube.logins],
-    networks: [...meta.networks, ...x.networks, ...linkedin.networks, ...pinterest.networks, ...youtube.networks],
+    logins: [
+      ...meta.logins,
+      ...x.logins,
+      ...linkedin.logins,
+      ...pinterest.logins,
+      ...youtube.logins,
+    ],
+    networks: [
+      ...meta.networks,
+      ...x.networks,
+      ...linkedin.networks,
+      ...pinterest.networks,
+      ...youtube.networks,
+    ],
   });
   const enabled = registry.networks().map((n) => n.id);
   logger.info(

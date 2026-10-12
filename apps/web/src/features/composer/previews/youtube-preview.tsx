@@ -26,7 +26,7 @@ export function YouTubePreview({ account, text, files, title, spec }: YouTubePre
     trimmedTitle && trimmedTitle !== ''
       ? trimmedTitle
       : text !== ''
-        ? text.slice(0, 100)
+        ? Array.from(text).slice(0, 100).join('').trim()
         : t('preview.youtube.untitled');
 
   const media = (

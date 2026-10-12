@@ -40,8 +40,8 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-38** A video in the preview: its poster with a play button once processed; pressing it plays the video in place, with sound and the browser's controls. While still processing, only the poster.
 - [ ] **COMP-38L** **LinkedIn:** your name and picture, "Just now" and the globe; long text cut after three lines with "…more" (which expands); the link added after the text as plain text, with no link card (LinkedIn doesn't make one for apps); one photo in its own shape, two side by side, three as one above two, four or more as one above three with "+N"; a video alone, which plays in place from its play button once processed; Like / Comment / Repost / Send.
 
-- [ ] **COMP-38** **YouTube:** 16:9 video player container with play button, duration badge, title, channel name/avatar, subscriber count, and truncated description with "more"; no video → "YouTube posts need a video", multiple files or image attached → "YouTube posts accept exactly one video".
-- [ ] **COMP-39** YouTube tab: **Video details** with Title input & character counter (max 100), Privacy selector (Public, Unlisted, Private), Tags input (comma/enter separated), Made for kids (COPPA) toggle, and Private-only audit notice.
+- [ ] **COMP-38Y** **YouTube:** 16:9 video player container with play controls, title, channel name/avatar, and truncated description with "Show more"; no video → "YouTube posts need a video".
+- [ ] **COMP-39Y** YouTube tab: **Video details** with Title input & character counter (max 100), Privacy selector (Public, Unlisted, Private), Tags input (comma-separated), Made for kids (COPPA) toggle, and Private-only audit notice.
 
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.
