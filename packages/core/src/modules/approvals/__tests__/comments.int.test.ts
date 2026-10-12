@@ -230,6 +230,18 @@ describe('notifications', () => {
         ['post_approved', 'cm-editor approved your post'],
       ]);
     });
+    // Changes asked for open the composer, where the note shows; a review request, the panel.
+    const links = await t.db.client.notification.findMany({
+      where: { workspaceId: ws, type: { in: ['changes_requested', 'review_requested'] } },
+      select: { type: true, link: true, userId: true },
+    });
+    const slug = (await t.db.client.workspace.findUniqueOrThrow({ where: { id: ws } })).slug;
+    expect(links.find((n) => n.type === 'changes_requested')?.link).toBe(
+      `/w/${slug}/compose/${post.id}`,
+    );
+    expect(links.find((n) => n.userId === editor.userId)?.link).toBe(
+      `/w/${slug}/approvals?post=${post.id}`,
+    );
   });
 
   it('a comment notifies the author and earlier commenters; a mention instead of that', async () => {

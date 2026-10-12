@@ -215,7 +215,8 @@ export function registerNotificationListeners(
       type: 'changes_requested',
       title: `${about.actor} asked for changes to your post`,
       body: 'Open it to see what to change, then send it again.',
-      link: about.link,
+      // To the composer, where the note shows at the top and the post can be fixed and resent.
+      link: `/w/${about.workspace.slug}/compose/${p.postId}`,
       params: { postId: p.postId, actor: about.actor },
       group: `post:${p.postId}`,
     });
