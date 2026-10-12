@@ -21,6 +21,7 @@ import type { PreviewFile } from '../previews/shared';
 import { ThreadsPreview } from '../previews/threads-preview';
 import { TumblrPreview } from '../previews/tumblr-preview';
 import { XPreview } from '../previews/x-preview';
+import { YouTubePreview } from '../previews/youtube-preview';
 import { NetworkTabs } from './network-tabs';
 
 /** Originals up to this size are shown for a lone picture; beyond it, or in a grid, the thumbnail. */
@@ -272,6 +273,21 @@ function NetworkPreview({
         title={content.options.pinterest?.title ?? ''}
         files={files}
         link={link}
+        spec={spec}
+      />
+    );
+  }
+  if (network === 'youtube') {
+    return (
+      <YouTubePreview
+        account={{
+          name: account.displayName,
+          username: account.username,
+          avatarUrl: account.avatarUrl,
+        }}
+        text={content.text}
+        files={files}
+        title={content.options.youtube?.title}
         spec={spec}
       />
     );

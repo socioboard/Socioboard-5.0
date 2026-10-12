@@ -4,6 +4,7 @@ import {
   createXAdapters,
   createLinkedInAdapters,
   createPinterestAdapters,
+  createYouTubeAdapters,
   createTumblrAdapters,
   type Registry,
 } from '@socioboard/providers';
@@ -29,6 +30,7 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
     sandbox: config.networks.pinterest?.sandbox === true,
     logger,
   });
+  const youtube = createYouTubeAdapters({ youtube: config.networks.youtube, logger });
   const tumblr = createTumblrAdapters({ tumblr: config.networks.tumblr, logger });
   const registry = createRegistry({
     logins: [
@@ -36,6 +38,7 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
       ...x.logins,
       ...linkedin.logins,
       ...pinterest.logins,
+      ...youtube.logins,
       ...tumblr.logins,
     ],
     networks: [
@@ -43,6 +46,7 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
       ...x.networks,
       ...linkedin.networks,
       ...pinterest.networks,
+      ...youtube.networks,
       ...tumblr.networks,
     ],
   });

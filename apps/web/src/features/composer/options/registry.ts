@@ -4,6 +4,7 @@ import { InstagramPanel } from './instagram-panel';
 import { PinterestPanel } from './pinterest-panel';
 import { ThreadsPanel } from './threads-panel';
 import type { OptionsPanel } from './types';
+import { YouTubePanel } from './youtube-panel';
 
 /**
  * The options panel of each network that has settings (P3-F2). A network's owner adds its panel
@@ -13,4 +14,5 @@ export const OPTION_PANELS: Partial<Record<NetworkId, OptionsPanel>> = {
   instagram: { Component: InstagramPanel, needsChoices: false },
   threads: { Component: ThreadsPanel, needsChoices: false },
   pinterest: { Component: PinterestPanel, needsChoices: true },
+  youtube: { Component: YouTubePanel, needsChoices: true },
 };

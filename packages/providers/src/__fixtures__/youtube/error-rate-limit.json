@@ -1,0 +1,21 @@
+[
+  {
+    "method": "POST",
+    "url": "https://www.googleapis.com/upload/youtube/v3/videos",
+    "status": 403,
+    "response": {
+      "error": {
+        "code": 403,
+        "message": "The request cannot be completed because you have exceeded your quota.",
+        "status": "RESOURCE_EXHAUSTED",
+        "errors": [
+          {
+            "message": "The request cannot be completed because you have exceeded your quota.",
+            "domain": "youtube.quota",
+            "reason": "quotaExceeded"
+          }
+        ]
+      }
+    }
+  }
+]

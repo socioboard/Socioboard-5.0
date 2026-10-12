@@ -41,11 +41,14 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-38L** **LinkedIn:** your name and picture, "Just now" and the globe; long text cut after three lines with "…more" (which expands); the link added after the text as plain text, with no link card (LinkedIn doesn't make one for apps); one photo in its own shape, two side by side, three as one above two, four or more as one above three with "+N"; a video alone, which plays in place from its play button once processed; Like / Comment / Repost / Send.
 - [ ] **COMP-38T** **Tumblr:** blog name, avatar, and `<blog>.tumblr.com`; text with "Keep reading"; photos in photoset grid; link card when there's a link and no files; translated Tumblr note count plus reblog, like, and share icons.
 
+- [ ] **COMP-38Y** **YouTube:** 16:9 video player container with play controls, title, channel name/avatar, and truncated description with "Show more"; no video → "YouTube posts need a video".
+- [ ] **COMP-39Y** YouTube tab: **Video details** with Title input & character counter (max 100), Privacy selector (Public, Unlisted, Private), Tags input (comma-separated), Made for kids (COPPA) toggle, and Private-only audit notice.
+
 ## Checks before publishing
 - [ ] **COMP-40** "Before you publish" lists problems: errors (they block that network) before notes (they don't); "Ready to publish" when there are none.
 - [ ] **COMP-41** Clicking a problem takes you to its tab and field (e.g. the X tab's text).
 - [ ] **COMP-42** A network with a problem has a red mark on its tab.
-- [ ] **COMP-43** Examples to try: text too long for X; 5 photos on X ("up to 4"); a GIF plus a photo on X ("a GIF or a video goes alone"); a link on X (note: "X charges more for posts with a link"); Instagram with no photo; a link in an Instagram caption (note: not clickable); on LinkedIn, a photo and a video together ("can't mix photos and videos"), two videos ("up to 1"), 21 photos ("up to 20"), a video shorter than 3 seconds.
+- [ ] **COMP-43** Examples to try: text too long for X; 5 photos on X ("up to 4"); a GIF plus a photo on X ("a GIF or a video goes alone"); a link on X (note: "X charges more for posts with a link"); Instagram with no photo; a link in an Instagram caption (note: not clickable); on LinkedIn, a photo and a video together ("can't mix photos and videos"), two videos ("up to 1"), 21 photos ("up to 20"), a video shorter than 3 seconds; YouTube with no video ("YouTube posts need a video").
 - [ ] **COMP-44** Network down or the server slow → "Checking…", then the quick checks stay with a note.
 
 ## Saving
@@ -90,4 +93,4 @@ The most important screen: write once, tailor per network, see how it will look,
 - [ ] **COMP-103** Approved: an editor sees Publish now and Schedule again. A contributor editing it sees "Changing it sends it back for review"; saving a change puts it back in review and unschedules it.
 
 ## Not built yet
-Options panels for YouTube and TikTok and their previews (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4).
+Options panels for TikTok and its preview (phase 3, with each network), Shorten link (phase 3, Bitly), Generate with AI (phase 4).

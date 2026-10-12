@@ -1,0 +1,21 @@
+[
+  {
+    "method": "POST",
+    "url": "https://www.googleapis.com/upload/youtube/v3/videos",
+    "status": 500,
+    "response": {
+      "error": {
+        "code": 500,
+        "message": "A backend error occurred.",
+        "status": "INTERNAL",
+        "errors": [
+          {
+            "message": "A backend error occurred.",
+            "domain": "global",
+            "reason": "backendError"
+          }
+        ]
+      }
+    }
+  }
+]

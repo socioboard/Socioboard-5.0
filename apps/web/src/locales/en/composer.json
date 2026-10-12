@@ -140,6 +140,13 @@
       "picture": "Show picture {{n}} of {{count}}",
       "carousel": "Picture {{at}} of {{count}}",
       "more": "more"
+    },
+    "youtube": {
+      "untitled": "Untitled video",
+      "noVideo": "Add a video file to preview",
+      "showMore": "Show more",
+      "like": "Like",
+      "share": "Share"
     }
   },
   "view": {
@@ -165,6 +172,7 @@
       "TOO_MANY_HASHTAGS": "{{network}} allows {{max}} hashtags; this has {{actual}}.",
       "TOO_MANY_MENTIONS": "{{network}} allows {{max}} mentions; this has {{actual}}.",
       "MEDIA_REQUIRED": "{{network}} posts need a photo or video.",
+      "MEDIA_REQUIRED_VIDEO": "{{network}} posts need a video.",
       "TOO_MANY_MEDIA": "{{network}} takes up to {{max}} files; this has {{actual}}.",
       "TOO_FEW_MEDIA": "{{network}} needs at least {{min}} files here.",
       "MEDIA_KIND_NOT_SUPPORTED": "{{file}}: {{network}} doesn’t accept {{kind}}.",
@@ -193,7 +201,12 @@
       "PINTEREST_BOARD_REQUIRED": "Choose the Pinterest board to pin to.",
       "PINTEREST_TITLE_TOO_LONG": "Pinterest titles can be up to {{max}} characters; this has {{actual}}.",
       "PINTEREST_ALT_TEXT_TOO_LONG": "{{file}}: Pinterest alt text can be up to {{max}} characters.",
-      "PINTEREST_VIDEO_FORMAT": "{{file}}: Pinterest takes MP4, MOV and M4V videos."
+      "PINTEREST_VIDEO_FORMAT": "{{file}}: Pinterest takes MP4, MOV and M4V videos.",
+      "YOUTUBE_TITLE_REQUIRED": "YouTube videos require a title.",
+      "YOUTUBE_TITLE_TOO_LONG": "YouTube titles can be up to {{max}} characters.",
+      "YOUTUBE_TITLE_INVALID_CHARS": "YouTube video titles cannot contain < or >.",
+      "YOUTUBE_DESC_INVALID_CHARS": "YouTube descriptions cannot contain < or >.",
+      "YOUTUBE_TAGS_TOO_LONG": "YouTube tags can be up to 500 characters total."
     },
     "kinds": {
       "image": "photos",
@@ -375,5 +388,22 @@
     "noBoards": "{{account}} has no boards yet. Create one on Pinterest, then choose it here.",
     "title": "Title",
     "titleHint": "Optional. Shown in bold above the description."
+  },
+  "youtube": {
+    "title": "Video title",
+    "titlePlaceholder": "Add a title that describes your video",
+    "privacy": "Privacy",
+    "public": "Public",
+    "publicHint": "Anyone can search for and view",
+    "unlisted": "Unlisted",
+    "unlistedHint": "Anyone with the video link can view",
+    "private": "Private",
+    "privateHint": "Only you and people you choose can view",
+    "tags": "Tags",
+    "tagsPlaceholder": "e.g. coffee, roastery, autumn",
+    "tagsHint": "Comma-separated tags (up to 500 characters total)",
+    "madeForKids": "Made for kids",
+    "madeForKidsHint": "Features like comments and personalized ads won't be available (COPPA compliance)",
+    "auditNotice": "Until YouTube API verification is complete for this app, uploaded videos are set to Private by YouTube."
   }
 }

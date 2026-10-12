@@ -12,6 +12,7 @@ export const IssueCode = {
   TOO_MANY_HASHTAGS: 'TOO_MANY_HASHTAGS',
   TOO_MANY_MENTIONS: 'TOO_MANY_MENTIONS',
   MEDIA_REQUIRED: 'MEDIA_REQUIRED',
+  MEDIA_REQUIRED_VIDEO: 'MEDIA_REQUIRED_VIDEO',
   TOO_MANY_MEDIA: 'TOO_MANY_MEDIA',
   TOO_FEW_MEDIA: 'TOO_FEW_MEDIA',
   MEDIA_KIND_NOT_SUPPORTED: 'MEDIA_KIND_NOT_SUPPORTED',
@@ -106,8 +107,13 @@ export function checkRules(
 
   const { media } = rules;
   if (media.required && input.media.length === 0) {
+    const videoOnly = !media.kinds.includes('image') && media.kinds.includes('video');
+    const code = videoOnly ? IssueCode.MEDIA_REQUIRED_VIDEO : IssueCode.MEDIA_REQUIRED;
+    const msg = videoOnly
+      ? `${networkName} posts need a video.`
+      : `${networkName} posts need a photo or video.`;
     issues.push(
-      issue('error', IssueCode.MEDIA_REQUIRED, `${networkName} posts need a photo or video.`, {
+      issue('error', code, msg, {
         field: 'media',
       }),
     );
