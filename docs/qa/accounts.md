@@ -2,7 +2,7 @@
 
 Area doc: [accounts](../frontend/areas/accounts.md) · Checks for every screen: [README](README.md#every-screen)
 
-Networks available now: **Facebook Pages, Instagram, X, Threads, LinkedIn profiles**. The others arrive in phase 3, one by one; each adds its own section here.
+Networks available now: **Facebook Pages, Instagram, X, Threads, LinkedIn profiles, Pinterest, Tumblr** (each only where its keys are set: LinkedIn and Pinterest aren't on staging yet). The others arrive in phase 3, one by one; each adds its own section here.
 
 ## The accounts page
 - [ ] **ACC-01** Accounts: a section per network with its count and "Connect another <network> account"; under it each login (name, "Facebook login" / "X login") and its accounts.
@@ -18,6 +18,7 @@ Networks available now: **Facebook Pages, Instagram, X, Threads, LinkedIn profil
 - [ ] **ACC-20T** **Threads:** pick Threads → Threads' page → sign in and allow → back with the profile (name, @username) → add it. While the Meta app is in development mode the Threads profile must be a Threads tester.
 - [ ] **ACC-13L** **LinkedIn:** pick LinkedIn → LinkedIn's page → sign in and **Allow** → back with your profile (name and picture, no handle) → add it. It shows under LinkedIn with its login. Company pages aren't offered yet.
 - [ ] **ACC-13P** **Pinterest:** pick Pinterest → Pinterest's page → sign in and approve → back with the account (its business name, or its username) → add it. It shows under Pinterest with its login. While Socioboard's Pinterest app has Trial access (the server runs with `PINTEREST_SANDBOX=true`), the account connects the same way, but only boards made in Pinterest's sandbox are offered when posting.
+- [ ] **ACC-13U** **Tumblr** (once its keys are on staging): pick Tumblr → Tumblr's page → sign in and **Allow** → back with your blogs → choose which to add (one, some or all) → each shows under Tumblr with its blog name and picture. Renaming a blog on Tumblr later keeps it the same account here (no duplicate on reconnecting).
 - [ ] **ACC-14** In the asset picker: an account already added shows "Added"; one held by another login says whose (adding moves it); one that can't post says why (not a professional Instagram account, permission not granted).
 - [ ] **ACC-15** Cancel on the network's page → back in the app with a readable message and **Try again**.
 - [ ] **ACC-16** Connect the same login again → "<name> is already connected", with the switch-account tip; anything not yet added is still offered.
@@ -50,4 +51,4 @@ Networks available now: **Facebook Pages, Instagram, X, Threads, LinkedIn profil
 - [ ] **ACC-46** As editor, contributor or viewer: the groups are listed, with no New group, pencil or bin.
 
 ## Not built yet
-LinkedIn company pages (waiting for LinkedIn's approval), YouTube, TikTok, Snapchat, Tumblr (phase 3, one at a time), the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).
+LinkedIn company pages (waiting for LinkedIn's approval), YouTube, TikTok, Snapchat (phase 3, one at a time), the Bitly link shortener (phase 3), the account feed (6.1), plan limits (phase 5).

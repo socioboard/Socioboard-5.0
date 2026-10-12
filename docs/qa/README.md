@@ -1,6 +1,6 @@
 # QA checklists
 
-As of 2026-10-07 · For the QA team · See also: [Deployment runbook](../deployment.md), [Frontend areas](../frontend/README.md)
+As of 2026-10-12 · For the QA team · See also: [Deployment runbook](../deployment.md), [Frontend areas](../frontend/README.md)
 
 What to check in the app, screen by screen, for everything built so far. Each checklist covers one area of the app and grows as features are built: a pull request that adds or changes something people see updates its area's checklist in the same change ([AGENTS.md](../../AGENTS.md)).
 
@@ -8,12 +8,12 @@ What to check in the app, screen by screen, for everything built so far. Each ch
 | --- | --- | --- |
 | Sign up, sign in, onboarding | [auth-onboarding](auth-onboarding.md) | Sign up, email verification, sign in, password reset, 2FA, invitations, first-run setup |
 | App frame | [app-shell](app-shell.md) | Sidebar, workspace switcher, user menu, search (⌘K), theme, session ending, phone layout |
-| Approvals | [approvals](approvals.md) | Review queue, review panel, approve, approve & schedule, request changes, my submissions |
+| Approvals | [approvals](approvals.md) | Review queue, review panel, approve, approve & schedule, request changes, my submissions, comments and @mentions, review and comment notifications |
 | Settings and profile | [settings](settings.md) | Workspace settings, members and invitations, profile, security, sessions |
 | Media library | [media](media.md) | Upload, processing, folders, filters, details, delete |
-| Accounts | [accounts](accounts.md) | Connecting Facebook, Instagram, X and LinkedIn, the asset picker, reconnect, disconnect, posting times |
+| Accounts | [accounts](accounts.md) | Connecting Facebook, Instagram, X, Threads, LinkedIn, Pinterest and Tumblr, the asset picker, reconnect, disconnect, posting times |
 | Composer | [composer](composer.md) | Writing a post, per-network versions, previews, checks, save, publish, schedule, repeat, queue |
-| Posts | [posts](posts.md) | Posts list, a post's page, deliveries, failures and retry, labels, duplicate, delete |
+| Posts | [posts](posts.md) | Posts list, a post's page, deliveries, failures and retry, labels, duplicate, delete, tasks |
 | Calendar and queue | [calendar](calendar.md) | Month, week, phone agenda, drag to reschedule, quick look, queue |
 | Notifications | [notifications](notifications.md) | The bell, the notifications page, preferences, live updates |
 | Admin console | [admin-console](admin-console.md) | Platform admins only: overview, publishing health, queues, accounts |

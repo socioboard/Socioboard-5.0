@@ -178,6 +178,9 @@ Static build in `~/.local/bin` (`ffmpeg`, `ffprobe`). It is on the PATH only in 
 | `FFMPEG_PATH`, `FFPROBE_PATH` | `/home/<app user>/.local/bin/ffmpeg`, `…/ffprobe` | |
 | `META_APP_ID`, `META_APP_SECRET`, `META_LOGIN_CONFIG_ID`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET`, `META_GRAPH_VERSION` | `<secret>` (the development Meta app) | Copied from the development `.env` on 2026-10-06; Facebook Pages and Instagram are then enabled. Other networks' keys join with their phase 3 tasks |
 | `THREADS_APP_ID`, `THREADS_APP_SECRET` | `<secret>` (the Threads use case of the development Meta app) | Added 2026-10-07 (P3-B10); Threads is then enabled |
+| `X_CLIENT_ID`, `X_CLIENT_SECRET` | `<secret>` (the development X app) | X is then enabled (P3-B2) |
+| `TUMBLR_CLIENT_ID`, `TUMBLR_CLIENT_SECRET` | `<secret>` (the development Tumblr app; its redirect URL is `https://app-dev.socioboard.ai/api/oauth/tumblr/callback`) | Added 2026-10-12 (P3-B7); Tumblr is then enabled |
+| Not set yet | | LinkedIn (`LINKEDIN_CLIENT_ID`/`SECRET`), Pinterest (`PINTEREST_CLIENT_ID`/`SECRET`, plus `PINTEREST_SANDBOX=true` while its app has Trial access), YouTube, TikTok, Bitly: each network stays hidden until its keys are set |
 | `AUTH_BREACHED_PASSWORD_CHECK`, `API_RATE_LIMIT_PER_MIN`, `AUDIT_RETENTION_DAYS`, `ALERT_FAILED_PUBLISHES`, `ALERT_QUEUE_WAITING`, `ALERT_QUEUE_LAG_MINUTES` | `true`, `300`, `730`, `10`, `1000`, `10` | The defaults, written out |
 | Not on staging | | `STORAGE_PUBLIC_URL` (a development shortcut that makes storage public), the local compose ports (`POSTGRES_PORT`, `VALKEY_PORT`, `MAILPIT_*`), `S3_*` (NAS storage instead), `GOOGLE_*` / `MICROSOFT_*` (social sign-in, not set up), `STRIPE_SECRET_KEY`, `AI_SERVICE_URL` (later phases) |
 
