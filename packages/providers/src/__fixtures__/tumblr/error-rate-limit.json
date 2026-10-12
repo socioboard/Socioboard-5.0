@@ -1,0 +1,21 @@
+{
+  "method": "POST",
+  "url": "https://api.tumblr.com/v2/blog/t%3A123456789012345678/posts",
+  "status": 429,
+  "headers": {
+    "retry-after": "60"
+  },
+  "response": {
+    "meta": {
+      "status": 429,
+      "msg": "Too Many Requests"
+    },
+    "errors": [
+      {
+        "title": "Rate Limit Exceeded",
+        "code": 0,
+        "detail": "You have exceeded your posting limit."
+      }
+    ]
+  }
+}

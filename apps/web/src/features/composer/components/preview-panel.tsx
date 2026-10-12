@@ -19,6 +19,7 @@ import { LinkedInPreview } from '../previews/linkedin-preview';
 import { PinterestPreview } from '../previews/pinterest-preview';
 import type { PreviewFile } from '../previews/shared';
 import { ThreadsPreview } from '../previews/threads-preview';
+import { TumblrPreview } from '../previews/tumblr-preview';
 import { XPreview } from '../previews/x-preview';
 import { NetworkTabs } from './network-tabs';
 
@@ -241,6 +242,21 @@ function NetworkPreview({
     return (
       <LinkedInPreview
         account={{ name: account.displayName, avatarUrl: account.avatarUrl }}
+        text={content.text}
+        files={files}
+        link={link}
+        spec={spec}
+      />
+    );
+  }
+  if (network === 'tumblr') {
+    return (
+      <TumblrPreview
+        account={{
+          name: account.displayName,
+          username: account.username,
+          avatarUrl: account.avatarUrl,
+        }}
         text={content.text}
         files={files}
         link={link}

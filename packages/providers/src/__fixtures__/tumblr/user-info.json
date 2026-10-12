@@ -1,0 +1,36 @@
+{
+  "method": "GET",
+  "url": "https://api.tumblr.com/v2/user/info",
+  "status": 200,
+  "response": {
+    "meta": {
+      "status": 200,
+      "msg": "OK"
+    },
+    "response": {
+      "user": {
+        "name": "haldenroasters",
+        "likes": 42,
+        "following": 15,
+        "default_post_format": "html",
+        "blogs": [
+          {
+            "name": "haldenroasters",
+            "title": "Halden Coffee Roasters",
+            "url": "https://haldenroasters.tumblr.com/",
+            "uuid": "t:123456789012345678",
+            "primary": true,
+            "type": "public",
+            "avatar": [
+              {
+                "width": 512,
+                "height": 512,
+                "url": "https://api.tumblr.com/v2/blog/haldenroasters.tumblr.com/avatar/512"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
