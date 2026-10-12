@@ -18,6 +18,9 @@ export interface TumblrConfig {
   tumblr?: { clientId: string; clientSecret: string } | undefined;
   fetch?: typeof fetch;
   logger?: ProviderLogger;
+  sleep?: (ms: number) => Promise<void>;
+  pollIntervalMs?: number;
+  maxPollAttempts?: number;
 }
 
 /** The Tumblr login and network when its keys are set; nothing otherwise. */
@@ -33,6 +36,15 @@ export function createTumblrAdapters(config: TumblrConfig): {
   });
   return {
     logins: [createTumblrLogin({ ...config.tumblr, http })],
-    networks: [createTumblrNetwork({ http })],
+    networks: [
+      createTumblrNetwork({
+        http,
+        ...(config.sleep ? { sleep: config.sleep } : {}),
+        ...(config.pollIntervalMs ? { pollIntervalMs: config.pollIntervalMs } : {}),
+        ...(config.maxPollAttempts !== undefined
+          ? { maxPollAttempts: config.maxPollAttempts }
+          : {}),
+      }),
+    ],
   };
 }

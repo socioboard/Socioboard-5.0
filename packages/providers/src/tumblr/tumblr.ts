@@ -76,6 +76,9 @@ export const TUMBLR_PREVIEW: PreviewSpec = {
 
 export interface TumblrNetworkConfig {
   http: HttpClient;
+  sleep?: (ms: number) => Promise<void>;
+  pollIntervalMs?: number;
+  maxPollAttempts?: number;
 }
 
 interface PostResponse {
@@ -85,6 +88,19 @@ interface PostResponse {
     id_string?: string;
     state?: string;
     displayText?: string;
+  };
+}
+
+interface PostsListResponse {
+  meta?: { status: number; msg: string };
+  response?: {
+    posts?: {
+      id?: number | string;
+      id_string?: string;
+      genesis_post_id?: string;
+      post_url?: string;
+      slug?: string;
+    }[];
   };
 }
 
@@ -207,7 +223,12 @@ function photosetRows(blocks: NpfBlock[]): NpfRow[] {
 }
 
 export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter {
-  const { http } = config;
+  const {
+    http,
+    sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
+    pollIntervalMs = 2500,
+    maxPollAttempts = 8,
+  } = config;
 
   return {
     id: 'tumblr',
@@ -345,11 +366,46 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
         throw tumblrError(res, 'parsing post id');
       }
 
+      let finalPostId = postId;
+      let finalSlug: string | undefined;
       const blogName = (account.meta.blogName as string | undefined) ?? account.externalId;
-      const permalink = `https://www.tumblr.com/${encodeURIComponent(blogName)}/${postId}`;
+      const hasVideo = input.media.some((media) => media.kind === 'video');
+
+      if (hasVideo) {
+        for (let attempt = 0; attempt < maxPollAttempts; attempt += 1) {
+          await sleep(pollIntervalMs);
+          try {
+            const listRes = await http.request<PostsListResponse>({
+              method: 'GET',
+              url: `${TUMBLR_API}/v2/blog/${encodeURIComponent(blogIdentifier)}/posts`,
+              query: { limit: '10' },
+              headers: { authorization: `Bearer ${account.accessToken}` },
+            });
+            if (listRes.ok && listRes.body.response?.posts) {
+              const match = listRes.body.response.posts.find(
+                (p) =>
+                  p.genesis_post_id === postId ||
+                  p.id_string === postId ||
+                  (p.id !== undefined && String(p.id) === postId),
+              );
+              if (match) {
+                finalPostId =
+                  match.id_string ?? (match.id !== undefined ? String(match.id) : postId);
+                finalSlug = match.slug;
+                break;
+              }
+            }
+          } catch {
+            // Ignore polling errors and continue trying
+          }
+        }
+      }
+
+      const slugPath = finalSlug ? `/${finalSlug}` : '';
+      const permalink = `https://www.tumblr.com/${encodeURIComponent(blogName)}/${finalPostId}${slugPath}`;
 
       return {
-        externalId: postId,
+        externalId: finalPostId,
         permalink,
         warnings: [],
       };

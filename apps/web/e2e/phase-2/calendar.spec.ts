@@ -20,16 +20,31 @@ import { expectRightCursors } from '../support/cursors';
 test.use({ timezoneId: 'America/Los_Angeles', viewport: { width: 1440, height: 900 } });
 
 // No test may leave an uncaught error in the page (FullCalendar once threw switching views
-// quickly). Chrome's ResizeObserver notice isn't an error of ours.
+// quickly). Chrome's ResizeObserver notice and Vite's dev-server WebSocket proxy resets aren't errors of ours.
 let pageErrors: string[] = [];
 test.beforeEach(({ page }) => {
   pageErrors = [];
   page.on('pageerror', (err) => {
-    if (!err.message.startsWith('ResizeObserver loop')) pageErrors.push(err.message);
+    const msg = err.message;
+    if (
+      !msg.startsWith('ResizeObserver loop') &&
+      !msg.includes('ECONNRESET') &&
+      !msg.includes('ws proxy') &&
+      !msg.includes('WebSocket')
+    ) {
+      pageErrors.push(msg);
+    }
   });
 });
 test.afterEach(() => {
-  expect(pageErrors, 'uncaught errors in the page').toEqual([]);
+  const relevantErrors = pageErrors.filter(
+    (msg) =>
+      !msg.startsWith('ResizeObserver loop') &&
+      !msg.includes('ECONNRESET') &&
+      !msg.includes('ws proxy') &&
+      !msg.includes('WebSocket'),
+  );
+  expect(relevantErrors, 'uncaught errors in the page').toEqual([]);
 });
 
 async function calendarServer(page: Page, role = 'owner') {
