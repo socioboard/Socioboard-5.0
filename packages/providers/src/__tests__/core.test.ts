@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+
 import { Network, type NetworkId } from '@socioboard/contracts';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -191,6 +194,47 @@ describe('http client', () => {
       kind: 'retryable',
       status: 404,
     });
+    expect(replay.mismatches).toEqual([]);
+  });
+
+  it('streams a file to upload into a temporary copy, and always removes it', async () => {
+    const replay = replayFetch([
+      { method: 'GET', url: 'https://storage.test/v.mp4', status: 200, responseBytes: 10 },
+      { method: 'GET', url: 'https://storage.test/v.mp4', status: 200, responseBytes: 10 },
+      { method: 'GET', url: 'https://storage.test/big.mp4', status: 200, responseBytes: 50 },
+      { method: 'GET', url: 'https://storage.test/gone.mp4', status: 404, response: 'no' },
+    ]);
+    const http = createHttpClient({ name: 'example', fetch: replay.fetch });
+    const opts = { maxBytes: 20 };
+
+    let seenPath = '';
+    const size = await http.withFile('https://storage.test/v.mp4', opts, async (path) => {
+      seenPath = path;
+      return (await readFile(path)).byteLength;
+    });
+    expect(size).toBe(10);
+    expect(existsSync(seenPath)).toBe(false);
+
+    // What goes wrong while using the copy reaches the caller as is, and the copy still goes.
+    const upload = new ProviderError({ kind: 'content', message: 'refused' });
+    await expect(
+      http.withFile('https://storage.test/v.mp4', opts, (path) => {
+        seenPath = path;
+        return Promise.reject(upload);
+      }),
+    ).rejects.toBe(upload);
+    expect(existsSync(seenPath)).toBe(false);
+
+    const use = vi.fn(() => Promise.resolve());
+    await expect(http.withFile('https://storage.test/big.mp4', opts, use)).rejects.toMatchObject({
+      kind: 'retryable',
+      message: 'The file is larger than this upload allows',
+    });
+    await expect(http.withFile('https://storage.test/gone.mp4', opts, use)).rejects.toMatchObject({
+      kind: 'retryable',
+      status: 404,
+    });
+    expect(use).not.toHaveBeenCalled();
     expect(replay.mismatches).toEqual([]);
   });
 

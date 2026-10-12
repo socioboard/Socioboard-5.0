@@ -211,13 +211,14 @@ export function createPinterestPins(
     async publish(input, account) {
       const options = input.options.pinterest ?? {};
       const [video] = input.media.filter((m) => m.kind === 'video');
-      // A video pin: uploaded and processed first (media.ts), its cover a frame of the video
-      // (no image needed, and no public media address).
+      // A video pin: uploaded and processed first (media.ts), its cover the frame at 1 s (no image
+      // needed, nor a public media address). The very first frame is often black or fading in;
+      // our own thumbnails are taken at 1 s too. Videos are at least 4 s long.
       const videoSource = video
         ? {
             source_type: 'video_id',
             media_id: await uploadVideo(http, api, account, video, videoOptions),
-            cover_image_key_frame_time: 0,
+            cover_image_key_frame_time: 1,
           }
         : null;
       // Images one at a time, in the composer's order: each is read whole into memory to encode it.

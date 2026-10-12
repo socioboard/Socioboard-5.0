@@ -549,12 +549,12 @@ describe('video pins', () => {
     expect(codes({ ...videoPin, media: [video(), image('m1')] })).toEqual(['MEDIA_MIXED']);
   });
 
-  it('a video shorter than 4 seconds, longer than 5 minutes or over 500 MB is refused', () => {
+  it('a video shorter than 4 seconds, longer than 5 minutes or over 100 MB is refused', () => {
     expect(codes({ ...videoPin, media: [video({ durationSec: 3 })] })).toEqual(['VIDEO_TOO_SHORT']);
     expect(codes({ ...videoPin, media: [video({ durationSec: 301 })] })).toEqual([
       'VIDEO_TOO_LONG',
     ]);
-    expect(codes({ ...videoPin, media: [video({ sizeBytes: 501 * 1024 * 1024 })] })).toEqual([
+    expect(codes({ ...videoPin, media: [video({ sizeBytes: 101 * 1024 * 1024 })] })).toEqual([
       'VIDEO_TOO_LARGE',
     ]);
   });
@@ -598,20 +598,25 @@ describe('video pins', () => {
     expect(Math.max(...waits)).toBe(30_000);
   });
 
-  it('a refused upload to Pinterest’s storage is tried again', async () => {
+  it('a refusal from Pinterest’s storage fails at once; only its own errors are tried again', async () => {
     const [register, read] = uploaded();
     if (!register || !read) throw new Error('fixture');
-    const { network } = pins([
-      register,
-      read,
-      {
-        method: 'POST',
-        url: 'https://pinterest-media-upload.s3-accelerate.amazonaws.com/',
-        status: 403,
-        response: '<Error><Code>AccessDenied</Code></Error>',
-      },
-    ]);
-    const err = await network.publish(videoPin, account).catch((e: unknown) => e);
-    expect(err).toMatchObject({ kind: 'retryable', status: 403 });
+    const refusedWith = async (status: number) => {
+      const { network } = pins([
+        register,
+        read,
+        {
+          method: 'POST',
+          url: 'https://pinterest-media-upload.s3-accelerate.amazonaws.com/',
+          status,
+          response: '<Error><Code>Refused</Code></Error>',
+        },
+      ]);
+      return network.publish(videoPin, account).catch((e: unknown) => e);
+    };
+    // A bad signature or a file too large would be refused again on every try.
+    expect(await refusedWith(403)).toMatchObject({ kind: 'content', status: 403 });
+    expect(await refusedWith(413)).toMatchObject({ kind: 'content', status: 413 });
+    expect(await refusedWith(503)).toMatchObject({ kind: 'retryable', status: 503 });
   });
 });

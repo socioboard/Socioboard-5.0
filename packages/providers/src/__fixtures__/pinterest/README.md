@@ -18,7 +18,7 @@ storage (`https://storage.test/…`, 12 fake bytes, `BwcHBwcHBwcHBwcH` in base64
 `video-pin.json` is a video pin end to end, in the order of Pinterest's "Create boards and Pins"
 guide: register (`POST /media` → `media_id`, `upload_url`, `upload_parameters`), our storage
 download (24 fake bytes), the multipart upload to `upload_url` (the parameters, then `file`; 204),
-two status checks (`processing`, then `succeeded`), and the pin with `video_id` and a cover frame.
+two status checks (`processing`, then `succeeded`), and the pin with `video_id` and the frame at 1 s as cover.
 
 Illustrative, in the documented shape: every error's `code` number and wording (the spec gives the
 shape, not the codes), and which fields the created pin and the boards come back with.

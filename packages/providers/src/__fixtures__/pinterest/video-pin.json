@@ -66,7 +66,7 @@
     "url": "https://api.pinterest.com/v5/pins",
     "body": {
       "board_id": "\"549755885175\"",
-      "media_source": "{\"source_type\":\"video_id\",\"media_id\":\"5149421785858431\",\"cover_image_key_frame_time\":0}"
+      "media_source": "{\"source_type\":\"video_id\",\"media_id\":\"5149421785858431\",\"cover_image_key_frame_time\":1}"
     },
     "status": 201,
     "response": {

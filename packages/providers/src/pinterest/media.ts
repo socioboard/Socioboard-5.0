@@ -1,3 +1,5 @@
+import { openAsBlob } from 'node:fs';
+
 import { ProviderError } from '../errors';
 import type { HttpClient } from '../http';
 import type { AccountCredentials, PublishMedia } from '../types';
@@ -7,10 +9,11 @@ const MB = 1024 * 1024;
 
 /**
  * Video Pins (help.pinterest.com "Review Pin specs", checked 2026-10-09): 4 seconds to 5 minutes;
- * the 15 minutes and 2 GB often quoted are Pinterest's ad specs. The 500 MB is ours: Pinterest
- * takes the file in one form upload, so all of it is held in memory while it's sent.
+ * the 15 minutes and 2 GB often quoted are Pinterest's ad specs. The 100 MB is ours: sending the
+ * form holds the whole file in memory (see `uploadVideo`), and the publishing worker runs 10 jobs
+ * at once, so this keeps a few video pins together from exhausting it.
  */
-export const PINTEREST_VIDEO = { minSec: 4, maxSec: 5 * 60, maxBytes: 500 * MB };
+export const PINTEREST_VIDEO = { minSec: 4, maxSec: 5 * 60, maxBytes: 100 * MB };
 
 /** The video types Pinterest's upload takes (.mp4, .mov, .m4v). */
 export const PINTEREST_VIDEO_MIMES: readonly string[] = [
@@ -55,7 +58,12 @@ interface MediaStatus {
  * 1. register: `POST /media` → `media_id`, an `upload_url` (Pinterest's storage) and its
  *    `upload_parameters` (a signed form);
  * 2. upload: a multipart POST to `upload_url` with every parameter as given and the file last as
- *    `file`; it carries its own signature, so no Bearer token; 204 when stored;
+ *    `file`; it carries its own signature, so no Bearer token; 204 when stored. The download goes
+ *    to a temporary local copy (`http.withFile`) rather than memory, and the form reads it with
+ *    `openAsBlob`. Sending still holds the file in memory once: Node's fetch reads the whole body
+ *    before it's sent, for FormData and for a streamed body alike (measured 2026-10-12, Node 24:
+ *    a 600 MB upload grew memory by ~600 MB; node:http with `pipeline` by 13 MB). Hence the
+ *    100 MB cap (PINTEREST_VIDEO); a streamed upload outside fetch would lift it;
  * 3. wait: `GET /media/{id}` until `succeeded` (PINTEREST_VIDEO_WAIT). `failed` fails the post;
  *    still processing after the last check is retried later, which uploads again.
  */
@@ -76,23 +84,28 @@ export async function uploadVideo(
   const { media_id: id, upload_url: uploadUrl, upload_parameters: params } = reg.body;
   if (!reg.ok || !id || !uploadUrl) throw pinterestError(reg, 'video upload');
 
-  const bytes = await http.download(media.readUrl, {
-    maxBytes: PINTEREST_VIDEO.maxBytes,
-    timeoutMs: TRANSFER_TIMEOUT_MS,
-  });
-  const form = new FormData();
-  for (const [key, value] of Object.entries(params ?? {})) form.append(key, value);
-  form.append('file', new Blob([bytes], { type: media.mime }), 'video');
-  const up = await http.request({
-    method: 'POST',
-    url: uploadUrl,
-    multipart: form,
-    timeoutMs: TRANSFER_TIMEOUT_MS,
-  });
-  // Pinterest's storage answers in its own (XML) words; a refusal there is worth one more try.
+  const up = await http.withFile(
+    media.readUrl,
+    { maxBytes: PINTEREST_VIDEO.maxBytes, timeoutMs: TRANSFER_TIMEOUT_MS },
+    async (path) => {
+      const form = new FormData();
+      for (const [key, value] of Object.entries(params ?? {})) form.append(key, value);
+      // A Blob backed by the file; fetch still reads all of it into memory to send it.
+      form.append('file', await openAsBlob(path, { type: media.mime }), 'video');
+      return http.request({
+        method: 'POST',
+        url: uploadUrl,
+        multipart: form,
+        timeoutMs: TRANSFER_TIMEOUT_MS,
+      });
+    },
+  );
+  // Pinterest's storage answers in its own (XML) words. Only its own failures (5xx) can pass on
+  // a later try; a refusal (bad signature 403, too large 413, malformed 400) would repeat. No
+  // answer at all (a timeout) is already `retryable` from the HTTP client.
   if (!up.ok) {
     throw new ProviderError({
-      kind: 'retryable',
+      kind: up.status >= 500 ? 'retryable' : 'content',
       message: `Pinterest's video storage refused the upload (HTTP ${String(up.status)})`,
       status: up.status,
     });

@@ -342,6 +342,12 @@ export function loadConfig(source: Record<string, string | undefined> = process.
       'TRUST_PROXY: required in production (the IPs or CIDR ranges of your proxies), otherwise every client shares one rate limit',
     );
   }
+  // A sandbox pin is seen only by its creator: in production every live pin would quietly vanish.
+  if (raw('NODE_ENV') === 'production' && ['true', '1'].includes(raw('PINTEREST_SANDBOX') ?? '')) {
+    problems.push(
+      'PINTEREST_SANDBOX: must be off in production (sandbox pins are seen only by the account that made them)',
+    );
+  }
   for (const provider of ['GOOGLE', 'MICROSOFT']) {
     if (Boolean(raw(`${provider}_CLIENT_ID`)) !== Boolean(raw(`${provider}_CLIENT_SECRET`))) {
       problems.push(`${provider}_CLIENT_ID and ${provider}_CLIENT_SECRET must be set together`);
