@@ -130,6 +130,11 @@
       "repost": "Repost",
       "send": "Send"
     },
+    "tumblr": {
+      "more": "Keep reading",
+      "notes_one": "{{count}} note",
+      "notes_other": "{{count}} notes"
+    },
     "pinterest": {
       "save": "Save",
       "picture": "Show picture {{n}} of {{count}}",

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { createHttpClient } from '../../http';
+import { ProviderError } from '../../errors';
+import { createHttpClient, type HttpClient, type HttpRequest, type HttpResponse } from '../../http';
 import { replayFetch, type RecordedCall } from '../../testing/replay';
 import type { PublishInput, PublishMedia, TokenSet } from '../../types';
 import {
@@ -390,6 +391,109 @@ describe('YouTube adapter', () => {
 
       expect(status.complete).toBe(false);
       expect(status.nextOffset).toBe(1024);
+    });
+
+    it('stops after three retryable chunk failures without upload progress', async () => {
+      const totalBytes = 512;
+      const uploadUrl = 'https://upload.google.com/sessions/no-progress';
+      let chunkAttempts = 0;
+      let statusChecks = 0;
+      const http: HttpClient = {
+        request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
+          if (request.method === 'POST') {
+            return Promise.resolve({
+              status: 200,
+              ok: true,
+              headers: new Headers({ location: uploadUrl }),
+              body: {} as T,
+            });
+          }
+          if (request.headers?.['content-range'] === `bytes */${totalBytes}`) {
+            statusChecks += 1;
+            return Promise.resolve({
+              status: 308,
+              ok: false,
+              headers: new Headers(),
+              body: {} as T,
+            });
+          }
+          chunkAttempts += 1;
+          return Promise.reject(
+            new ProviderError({
+              kind: 'retryable',
+              message: 'YouTube did not answer in time',
+            }),
+          );
+        },
+        download() {
+          return Promise.resolve(new Uint8Array(totalBytes));
+        },
+        withFile() {
+          return Promise.reject(new Error('unexpected file-backed upload'));
+        },
+      };
+
+      await expect(
+        uploadYouTubeVideo(
+          http,
+          { ...video, sizeBytes: totalBytes },
+          {
+            title: 'My Video',
+            description: 'Description',
+            privacy: 'private',
+            tags: [],
+            madeForKids: false,
+          },
+          { accessToken: 'token', externalId: 'ch1', meta: {} },
+          { chunkSize: totalBytes },
+        ),
+      ).rejects.toMatchObject({ kind: 'retryable', message: 'YouTube did not answer in time' });
+      expect(chunkAttempts).toBe(3);
+      expect(statusChecks).toBe(3);
+    });
+
+    it('does not turn a non-provider chunk failure into a status check', async () => {
+      const totalBytes = 512;
+      const uploadUrl = 'https://upload.google.com/sessions/programming-error';
+      const programmingError = new TypeError('broken request construction');
+      let statusChecks = 0;
+      const http: HttpClient = {
+        request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
+          if (request.method === 'POST') {
+            return Promise.resolve({
+              status: 200,
+              ok: true,
+              headers: new Headers({ location: uploadUrl }),
+              body: {} as T,
+            });
+          }
+          if (request.headers?.['content-range'] === `bytes */${totalBytes}`) statusChecks += 1;
+          return Promise.reject(programmingError);
+        },
+        download() {
+          return Promise.resolve(new Uint8Array(totalBytes));
+        },
+        withFile() {
+          return Promise.reject(new Error('unexpected file-backed upload'));
+        },
+      };
+
+      await expect(
+        uploadYouTubeVideo(
+          http,
+          { ...video, sizeBytes: totalBytes },
+          {
+            title: 'My Video',
+            description: 'Description',
+            privacy: 'private',
+            tags: [],
+            madeForKids: false,
+          },
+          { accessToken: 'token', externalId: 'ch1', meta: {} },
+          { chunkSize: totalBytes },
+        ),
+      ).rejects.toBe(programmingError);
+      expect(statusChecks).toBe(0);
     });
   });
 

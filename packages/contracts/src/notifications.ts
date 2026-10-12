@@ -10,14 +10,24 @@ import { defineRoute } from './route';
  */
 
 /**
- * Phase 2: publishing and accounts. Phase 4 adds review, comments, tasks and AI jobs.
- * `digest` is a summary email only; it never appears in the feed.
+ * Phase 2: publishing and accounts. Phase 4: review (sent for review, approved, changes
+ * requested), comments (a comment on your post or a thread you're in, an @mention) and tasks
+ * (assigned to you, done when you set it, due within a day); AI jobs later. `digest` is a
+ * summary email only; it never appears in the feed.
  */
 export const NotificationType = z.enum([
   'publish_failed',
   'post_published',
   'account_reauth_required',
   'digest',
+  'review_requested',
+  'post_approved',
+  'changes_requested',
+  'post_commented',
+  'mentioned',
+  'task_assigned',
+  'task_completed',
+  'task_due',
 ]);
 export type NotificationType = z.infer<typeof NotificationType>;
 

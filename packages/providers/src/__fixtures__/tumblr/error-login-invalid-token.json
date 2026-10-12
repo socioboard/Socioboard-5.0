@@ -1,0 +1,18 @@
+{
+  "method": "GET",
+  "url": "https://api.tumblr.com/v2/user/info",
+  "status": 401,
+  "response": {
+    "meta": {
+      "status": 401,
+      "msg": "Unauthorized"
+    },
+    "errors": [
+      {
+        "title": "Unauthorized",
+        "code": 0,
+        "detail": "Invalid or expired OAuth token."
+      }
+    ]
+  }
+}

@@ -286,6 +286,14 @@ describe('preferences', () => {
       { type: 'post_published', inApp: true, email: false },
       { type: 'account_reauth_required', inApp: true, email: true },
       { type: 'digest', inApp: null, email: false },
+      { type: 'review_requested', inApp: true, email: true },
+      { type: 'post_approved', inApp: true, email: true },
+      { type: 'changes_requested', inApp: true, email: true },
+      { type: 'post_commented', inApp: true, email: false },
+      { type: 'mentioned', inApp: true, email: true },
+      { type: 'task_assigned', inApp: true, email: true },
+      { type: 'task_completed', inApp: true, email: false },
+      { type: 'task_due', inApp: true, email: true },
     ]);
     const res = await editor.send('PUT', '/api/v1/me/notification-preferences', {
       items: [
@@ -298,6 +306,14 @@ describe('preferences', () => {
       { type: 'post_published', inApp: true, email: false },
       { type: 'account_reauth_required', inApp: true, email: true },
       { type: 'digest', inApp: null, email: true },
+      { type: 'review_requested', inApp: true, email: true },
+      { type: 'post_approved', inApp: true, email: true },
+      { type: 'changes_requested', inApp: true, email: true },
+      { type: 'post_commented', inApp: true, email: false },
+      { type: 'mentioned', inApp: true, email: true },
+      { type: 'task_assigned', inApp: true, email: true },
+      { type: 'task_completed', inApp: true, email: false },
+      { type: 'task_due', inApp: true, email: true },
     ]);
   });
 

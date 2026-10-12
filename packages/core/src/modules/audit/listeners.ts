@@ -4,6 +4,7 @@ import type { MediaEvents } from '../media';
 import type { PostEvents } from '../posts';
 import type { SchedulingEvents } from '../scheduling';
 import type { SocialAccountEvents } from '../social-accounts';
+import type { TaskEvents } from '../tasks';
 import type { WorkspaceEvents } from '../workspaces';
 import type { AuditEntry, AuditLog } from './service';
 
@@ -12,7 +13,8 @@ type AllEvents = AuthEvents &
   MediaEvents &
   SocialAccountEvents &
   PostEvents &
-  SchedulingEvents;
+  SchedulingEvents &
+  TaskEvents;
 /** The real event names, without the `Record<string, unknown>` index signature the maps extend. */
 type EventName = keyof { [K in keyof AllEvents as string extends K ? never : K]: true };
 type Mapping = {
@@ -193,6 +195,24 @@ export const AUDITED: Mapping = {
     workspaceId: p.workspaceId,
     actor: user(p.userId),
     entity: { type: 'post', id: p.postId },
+  }),
+  'task.created': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'task', id: p.taskId },
+    diff: { title: p.title },
+  }),
+  'task.updated': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'task', id: p.taskId },
+    diff: { fields: p.fields },
+  }),
+  'task.deleted': (p) => ({
+    workspaceId: p.workspaceId,
+    actor: user(p.userId),
+    entity: { type: 'task', id: p.taskId },
+    diff: { title: p.title },
   }),
   'label.created': (p) => ({
     workspaceId: p.workspaceId,

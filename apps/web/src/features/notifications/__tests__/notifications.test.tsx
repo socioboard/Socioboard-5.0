@@ -1,12 +1,13 @@
 // The bell, the notifications page, preferences and failure toasts (P2-F4), against a fake server.
 import type { Notification, NotificationPreference } from '@socioboard/contracts';
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, renderHook, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { halden, meWith, mockServer, renderApp, type Handler } from '../../../testing/render';
 import { bellQuery, notificationKeys, rememberRead } from '../api';
-import { relativeTime } from '../wording';
+import { relativeTime } from '../../../lib/format';
+import { useNotificationWording } from '../wording';
 
 const WID = halden.workspace.id;
 type Reply = [number, unknown];
@@ -317,5 +318,35 @@ describe('pieces', () => {
         .getQueryData<{ items: Notification[] }>(notificationKeys.bell)
         ?.items.map((n) => n.readAt),
     ).toEqual(['2026-10-05T10:00:00.000Z', '2026-10-05T11:00:00.000Z']);
+  });
+});
+
+describe('review and comment notifications (P4-B3)', () => {
+  it('are worded from who acted', () => {
+    const word = renderHook(() => useNotificationWording()).result.current;
+    const with_ = (type: Notification['type'], params: Notification['params']) =>
+      word(note({ type, params }));
+    expect(with_('review_requested', { actor: 'Marco', afterEdit: 1 })).toEqual({
+      title: 'Marco sent a post for review',
+      body: 'It was approved, then edited, so it needs another look.',
+    });
+    expect(with_('changes_requested', { actor: 'Marco' }).title).toBe(
+      'Marco asked for changes to your post',
+    );
+    expect(with_('post_commented', { actor: 'Marco', own: 1 }).title).toBe(
+      'Marco commented on your post',
+    );
+    expect(with_('post_commented', { actor: 'Marco', own: 0 }).title).toBe(
+      'Marco commented on a post you commented on',
+    );
+    expect(with_('mentioned', { actor: 'Marco' }).title).toBe('Marco mentioned you in a comment');
+    expect(with_('task_assigned', { actor: 'Marco', task: 'Fix the photo' }).title).toBe(
+      'Marco gave you a task: Fix the photo',
+    );
+    expect(with_('task_due', { task: 'Fix the photo' }).title).toBe(
+      '“Fix the photo” is due within a day',
+    );
+    // Without who acted, the server's English stands in.
+    expect(with_('post_approved', {}).title).toBe(note({}).title);
   });
 });

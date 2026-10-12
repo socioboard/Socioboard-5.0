@@ -50,8 +50,8 @@ describe('route table', () => {
     // Phase 0: auth 7, workspaces 16, media 10. Phase 1: networks 1, social accounts 9, posts 13.
     // Phase 2: scheduling 9, notifications 5, admin 6, telemetry 1.
     // Phase 3: social accounts' options 1, shortlinks 5.
-    // Phase 4: member account access 2, reviews 6, comments 4, tasks 4, AI 7.
-    expect(all.length).toBe(110);
+    // Phase 4: member account access 2, reviews 6, comments 5, tasks 4, AI 7.
+    expect(all.length).toBe(111);
   });
 
   it('declares folder routes before /media/:assetId so they match first', () => {

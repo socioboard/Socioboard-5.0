@@ -53,6 +53,13 @@ export const serverEvents = {
     accountId: Id,
     status: AccountStatus,
   }),
+  /**
+   * To `workspace:<id>`: a post's comments changed (added, edited, deleted); open threads
+   * refetch.
+   */
+  'post.comments_changed': z.object({ workspaceId: Id, postId: Id }),
+  /** To `workspace:<id>`: a task was created, changed or deleted; task lists refetch. */
+  'task.changed': z.object({ workspaceId: Id, taskId: Id }),
 };
 
 export type ServerEventName = keyof typeof serverEvents;

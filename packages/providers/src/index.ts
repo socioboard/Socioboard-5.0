@@ -8,6 +8,7 @@ export * from './validation';
 export * from './meta';
 export * from './x';
 export * from './linkedin';
+export * from './tumblr';
 export * from './pinterest';
 export * from './youtube';
 export type * from './types';

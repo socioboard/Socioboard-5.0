@@ -159,6 +159,8 @@ Static build in `~/.local/bin` (`ffmpeg`, `ffprobe`). It is on the PATH only in 
 | `API_PORT` | `3000` | |
 | `APP_URL` | `https://app-dev.socioboard.ai` | Every callback and link is derived from it |
 | `TRUST_PROXY` | `loopback` | nginx is on the same machine and passes the real IP |
+| `API_DOCS` | `true` | The API reference at `https://app-dev.socioboard.ai/api/docs` (added 2026-10-12); never on production |
+| `API_DOCS_USER` / `API_DOCS_PASSWORD` | `socioboard` / `<secret>` (generated, 16+ characters; in the password manager) | The browser asks for them before showing the docs (basic auth); the API won't start with `API_DOCS` on and no password |
 | `MEDIA_PUBLIC_URL` | `https://app-dev.socioboard.ai/public-media` | Signed links networks fetch (Instagram images, TikTok). TikTok verifies this URL prefix |
 | `DATABASE_URL` | `postgresql://socioboard_staging_usr:<secret>@127.0.0.1:5432/socioboard_staging_db` | |
 | `REDIS_URL` | `redis://:<secret>@127.0.0.1:6380` | Valkey |
@@ -305,5 +307,5 @@ Do every step above, with these differences:
 7. **SMTP** with SPF, DKIM and DMARC on the sending domain.
 8. **Deploy:** tagged releases rather than a branch; automate the deploy; keep a rollback plan for releases with migrations.
 9. **Monitoring:** OpenObserve dashboards and alert rules, an uptime check on `/api/health` (Uptime Kuma), and SMTP so the app's built-in alerts reach platform admins (P5-I2).
-10. **Network apps:** production apps, reviewed, with their own keys; development apps stay on staging. No `PINTEREST_SANDBOX`: the API and worker refuse to start with it on in production.
+10. **Network apps:** production apps, reviewed, with their own keys; development apps stay on staging. No `PINTEREST_SANDBOX`: the API and worker refuse to start with it on in production. No `API_DOCS` either: the live site doesn't publish its route map.
 11. **Legal pages** (`/privacy`, `/terms`, `/data-deletion`) live before any network review.

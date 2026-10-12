@@ -5,6 +5,7 @@ import {
   ClipboardCheck,
   Images,
   LayoutList,
+  ListChecks,
   ListOrdered,
   Settings,
   type LucideIcon,
@@ -48,6 +49,14 @@ export const NAV_ITEMS = [
     label: 'nav.approvals',
     keywords: 'review approve submissions waiting changes requested',
     permission: 'posts:create',
+  },
+  {
+    id: 'tasks',
+    to: '/w/$slug/tasks',
+    icon: ListChecks,
+    label: 'nav.tasks',
+    keywords: 'todo to-do assigned due checklist work',
+    permission: 'posts:read',
   },
   {
     id: 'media',

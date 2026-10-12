@@ -10,6 +10,7 @@ export const YOUTUBE_UPLOAD_API = 'https://www.googleapis.com/upload/youtube/v3/
  * 8 MB (32 * 256 KB) is an optimal balance between memory usage and HTTP round-trips.
  */
 export const DEFAULT_CHUNK_SIZE = 8 * 1024 * 1024;
+const MAX_NO_PROGRESS_ATTEMPTS = 3;
 
 export interface YouTubeVideoMetadata {
   title: string;
@@ -154,6 +155,7 @@ export async function uploadYouTubeVideo(
   }
 
   // 3. Upload chunks
+  let noProgressAttempts = 0;
   while (offset < totalBytes) {
     const chunkEnd = Math.min(offset + chunkSize, totalBytes);
     const length = chunkEnd - offset;
@@ -177,11 +179,19 @@ export async function uploadYouTubeVideo(
         },
         timeoutMs: 300_000,
       });
-    } catch {
+    } catch (error) {
+      if (!(error instanceof ProviderError) || error.kind !== 'retryable') throw error;
+
       // Timeout or network drop: check where Google got to before retrying to avoid posting duplicate videos
       const status = await queryUploadStatus(http, uploadUrl, totalBytes);
       if (status.complete && status.videoId) {
         return status.videoId;
+      }
+      if (status.nextOffset > offset) {
+        noProgressAttempts = 0;
+      } else {
+        noProgressAttempts += 1;
+        if (noProgressAttempts >= MAX_NO_PROGRESS_ATTEMPTS) throw error;
       }
       offset = status.nextOffset;
       continue;

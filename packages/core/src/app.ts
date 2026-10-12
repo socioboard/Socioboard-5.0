@@ -33,7 +33,12 @@ import {
   registerNotificationListeners,
   registerNotificationRoutes,
 } from './modules/notifications';
-import { createApprovalService, registerApprovalRoutes } from './modules/approvals';
+import {
+  createApprovalService,
+  createCommentService,
+  registerApprovalRoutes,
+} from './modules/approvals';
+import { createTaskService, registerTaskRoutes } from './modules/tasks';
 import { registerPostRoutes } from './modules/posts';
 import { registerSchedulingRoutes } from './modules/scheduling';
 import {
@@ -179,6 +184,25 @@ export function createApiApp(platform: Platform, options: ApiAppOptions = {}): A
       events: platform.events,
       posts,
       scheduling,
+    }),
+    createCommentService({
+      db: platform.db,
+      clock: platform.clock,
+      storage: platform.storage,
+      realtime: platform.realtime,
+      events: platform.events,
+      posts,
+    }),
+  );
+  registerTaskRoutes(
+    api,
+    createTaskService({
+      db: platform.db,
+      clock: platform.clock,
+      storage: platform.storage,
+      realtime: platform.realtime,
+      events: platform.events,
+      posts,
     }),
   );
   registerNotificationRoutes(api, notifications);

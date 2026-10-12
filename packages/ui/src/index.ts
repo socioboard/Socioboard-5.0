@@ -54,6 +54,18 @@ export {
 } from './components/command-palette';
 export { Combobox, type ComboboxOption, type ComboboxProps } from './components/combobox';
 export {
+  AvatarStack,
+  CommentThread,
+  MentionInput,
+  mentionsIn,
+  type AvatarStackProps,
+  type CommentPerson,
+  type CommentThreadLabels,
+  type CommentThreadProps,
+  type MentionInputProps,
+  type ThreadComment,
+} from './components/comments';
+export {
   DataTable,
   type Column,
   type DataTableLabels,

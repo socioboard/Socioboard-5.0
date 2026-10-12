@@ -38,7 +38,8 @@ import {
   preferencesQuery,
   type NotificationFilter,
 } from '../api';
-import { useNow, useOpenNotification } from '../hooks';
+import { useNow } from '../../../lib/use-now';
+import { useOpenNotification } from '../hooks';
 import { NotificationItem } from './notification-item';
 
 export interface NotificationsSearch {
