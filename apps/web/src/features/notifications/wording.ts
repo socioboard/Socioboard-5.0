@@ -59,6 +59,17 @@ export function useNotificationWording() {
               body: t('types.post_commented.body'),
             }
           : n;
+      case 'task_assigned':
+      case 'task_completed':
+      case 'task_due': {
+        // The task's title, shown in the app only (emails leave it out).
+        const task = typeof n.params.task === 'string' ? n.params.task : null;
+        if (!task || (n.type !== 'task_due' && !actor)) return n;
+        return {
+          title: t(`types.${n.type}.title`, { actor, task }),
+          body: t(`types.${n.type}.body`),
+        };
+      }
       default:
         return n;
     }

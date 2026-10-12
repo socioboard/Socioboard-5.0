@@ -291,6 +291,9 @@ describe('preferences', () => {
       { type: 'changes_requested', inApp: true, email: true },
       { type: 'post_commented', inApp: true, email: false },
       { type: 'mentioned', inApp: true, email: true },
+      { type: 'task_assigned', inApp: true, email: true },
+      { type: 'task_completed', inApp: true, email: false },
+      { type: 'task_due', inApp: true, email: true },
     ]);
     const res = await editor.send('PUT', '/api/v1/me/notification-preferences', {
       items: [
@@ -308,6 +311,9 @@ describe('preferences', () => {
       { type: 'changes_requested', inApp: true, email: true },
       { type: 'post_commented', inApp: true, email: false },
       { type: 'mentioned', inApp: true, email: true },
+      { type: 'task_assigned', inApp: true, email: true },
+      { type: 'task_completed', inApp: true, email: false },
+      { type: 'task_due', inApp: true, email: true },
     ]);
   });
 

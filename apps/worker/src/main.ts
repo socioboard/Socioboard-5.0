@@ -6,6 +6,7 @@ import {
   createPlatform,
   createNotifications,
   createPublishingServices,
+  createTaskService,
   mediaProcessQueue,
   observeQueueDepth,
   mediaPurgeQueue,
@@ -13,6 +14,7 @@ import {
   opsAlertsFor,
   reconcileQueue,
   recurringQueue,
+  taskReminderQueue,
   registerAuditListeners,
   registerNotificationListeners,
   tokenRefreshQueue,
@@ -102,6 +104,16 @@ platform.queues.startWorker(auditPurge);
 await platform.queues
   .get(auditPurge)
   .upsertJobScheduler('nightly', { pattern: '30 3 * * *', tz: 'UTC' }, { name: 'purge' });
+
+// Tasks due within a day remind their assignee, once (every 15 minutes).
+const taskReminders = taskReminderQueue({
+  tasks: createTaskService({ ...platform, posts: publishing.posts }),
+  logger,
+});
+platform.queues.startWorker(taskReminders);
+await platform.queues
+  .get(taskReminders)
+  .upsertJobScheduler('every-15-min', { pattern: '*/15 * * * *', tz: 'UTC' }, { name: 'remind' });
 
 // The admin console counts and shows WORKER_QUEUES: a queue started here must be listed there.
 const started = [...platform.queues.workerNames()].sort();

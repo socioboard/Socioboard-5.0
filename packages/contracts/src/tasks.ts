@@ -18,8 +18,11 @@ export const Task = z.object({
   title: z.string(),
   description: z.string(),
   status: TaskStatus,
-  /** The post it is about, with the start of its text to show; null when not about a post. */
-  post: z.object({ id: Id, excerpt: z.string() }).nullable(),
+  /**
+   * The post it is about, with the start of its text to show; null when not about a post. `gone`
+   * once the post was deleted (the task stays, its excerpt empty).
+   */
+  post: z.object({ id: Id, excerpt: z.string(), gone: z.boolean() }).nullable(),
   assignee: Person.nullable(),
   createdBy: Person.nullable(),
   dueAt: IsoDateTime.nullable(),
@@ -74,7 +77,8 @@ export const taskRoutes = {
     method: 'GET',
     path: '/api/v1/workspaces/:workspaceId/tasks',
     access: 'posts:read',
-    summary: 'Tasks, open ones first by due date (filter by assignee, status, post)',
+    summary:
+      'Tasks: not done first, by due date (none last), then done, latest first (filter by assignee, status, post)',
     params: workspaceParams,
     query: ListTasksQuery,
     responses: { 200: page(Task) },

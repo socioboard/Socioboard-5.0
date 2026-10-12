@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { api } from '../../../lib/api';
 import { relativeTime } from '../../../lib/format';
+import { useNow } from '../../../lib/use-now';
 import { errorMessage } from '../../../lib/i18n';
 import { useWorkspace } from '../../../lib/workspace';
 import { commentKeys, commentsQuery, mentionableQuery } from '../api';
@@ -27,6 +28,7 @@ export function PostComments({
   const { workspace, me } = useWorkspace();
   const queryClient = useQueryClient();
   const headingId = useId();
+  const now = useNow();
   const thread = useQuery(commentsQuery(workspace.id, postId));
   const people = useQuery(mentionableQuery(workspace.id, postId));
   const loaded = thread.data !== undefined;
@@ -71,7 +73,7 @@ export function PostComments({
           currentUserId={me.user.id}
           people={people.data ?? []}
           highlightId={highlightId}
-          formatTime={(iso) => relativeTime(iso, Date.now(), i18n.language)}
+          formatTime={(iso) => relativeTime(iso, now, i18n.language)}
           onCreate={(body) => save(() => api(apiRoutes.approvals.createComment, { params, body }))}
           onUpdate={(commentId, body) =>
             save(() =>

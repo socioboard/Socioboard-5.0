@@ -73,7 +73,11 @@ export function mockServer(handlers: Record<string, Handler | Reply>) {
             : // A post's comments and who can be mentioned, on its page and the review panel.
               /^GET \/api\/v1\/workspaces\/[^/]+\/posts\/[^/]+\/(comments|mentionable)$/.test(key)
               ? NO_ITEMS
-              : undefined);
+              : // A post's tasks, on its page.
+                /^GET \/api\/v1\/workspaces\/[^/]+\/tasks$/.test(key) &&
+                  url.searchParams.has('postId')
+                ? NO_REVIEWS
+                : undefined);
     if (!handler) throw new Error(`Unexpected request in test: ${key}`);
     const [status, reply] = typeof handler === 'function' ? await handler({ body, url }) : handler;
     return new Response(reply === undefined ? null : JSON.stringify(reply), {

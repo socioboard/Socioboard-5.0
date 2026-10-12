@@ -340,6 +340,12 @@ describe('review and comment notifications (P4-B3)', () => {
       'Marco commented on a post you commented on',
     );
     expect(with_('mentioned', { actor: 'Marco' }).title).toBe('Marco mentioned you in a comment');
+    expect(with_('task_assigned', { actor: 'Marco', task: 'Fix the photo' }).title).toBe(
+      'Marco gave you a task: Fix the photo',
+    );
+    expect(with_('task_due', { task: 'Fix the photo' }).title).toBe(
+      '“Fix the photo” is due within a day',
+    );
     // Without who acted, the server's English stands in.
     expect(with_('post_approved', {}).title).toBe(note({}).title);
   });

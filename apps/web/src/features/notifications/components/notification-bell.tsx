@@ -20,7 +20,8 @@ import { useTranslation } from 'react-i18next';
 
 import { errorMessage } from '../../../lib/i18n';
 import { bellQuery, markAllRead } from '../api';
-import { useNow, useOpenNotification } from '../hooks';
+import { useNow } from '../../../lib/use-now';
+import { useOpenNotification } from '../hooks';
 import { NotificationItem } from './notification-item';
 
 /** The unread count on the bell: up to 9, then "9+". */

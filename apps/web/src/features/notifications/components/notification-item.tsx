@@ -3,7 +3,10 @@ import { cn } from '@socioboard/ui';
 import {
   AtSign,
   Bell,
+  CalendarClock,
   CircleCheck,
+  ListChecks,
+  ListTodo,
   ClipboardCheck,
   MessageCircle,
   MessageSquareWarning,
@@ -25,6 +28,9 @@ const ICONS = {
   changes_requested: { icon: MessageSquareWarning, tone: 'text-warning bg-warning-tint' },
   post_commented: { icon: MessageCircle, tone: 'text-ink-2 bg-chip' },
   mentioned: { icon: AtSign, tone: 'text-ring bg-chip' },
+  task_assigned: { icon: ListTodo, tone: 'text-ring bg-chip' },
+  task_completed: { icon: ListChecks, tone: 'text-success bg-chip' },
+  task_due: { icon: CalendarClock, tone: 'text-warning bg-warning-tint' },
 } satisfies Record<Notification['type'], { icon: unknown; tone: string }>;
 
 /**

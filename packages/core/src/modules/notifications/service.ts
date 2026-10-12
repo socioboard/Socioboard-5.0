@@ -40,6 +40,10 @@ export const DEFAULT_CHANNELS: Record<
   changes_requested: { inApp: true, email: true },
   post_commented: { inApp: true, email: false },
   mentioned: { inApp: true, email: true },
+  // Tasks (P4-B5): given to you and due soon by email too; a task you made being done, in the app.
+  task_assigned: { inApp: true, email: true },
+  task_completed: { inApp: true, email: false },
+  task_due: { inApp: true, email: true },
 };
 
 /** One notification as its email needs it (no tokens or private data: it links to the app). */

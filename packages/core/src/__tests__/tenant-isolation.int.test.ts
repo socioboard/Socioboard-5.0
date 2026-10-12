@@ -19,6 +19,7 @@ type Ids = Record<
   | 'targetId'
   | 'labelId'
   | 'commentId'
+  | 'taskId'
   | 'groupId'
   | 'provider',
   string
@@ -141,6 +142,10 @@ const CLASSIFIED: Record<string, Kind> = {
   createComment: { kind: 'resource', body: () => ({ body: 'x' }) },
   updateComment: { kind: 'resource', body: () => ({ body: 'hijacked' }) },
   deleteComment: { kind: 'resource' },
+  listTasks: { kind: 'list', idsOf: 'taskId' },
+  createTask: { kind: 'bodyRef', body: (a) => ({ title: 'x', postId: a.postId }) },
+  updateTask: { kind: 'resource', body: () => ({ title: 'hijacked' }) },
+  deleteTask: { kind: 'resource' },
   listLabels: { kind: 'list', idsOf: 'labelId' },
   createLabel: { kind: 'workspace', body: () => ({ name: 'Hijack', color: 'red' }) },
   updateLabel: { kind: 'resource', body: () => ({ name: 'hijacked' }) },
@@ -275,6 +280,9 @@ beforeAll(async () => {
   const comment = await t.db.client.postComment.create({
     data: { workspaceId: aWorkspace, postId: post.id, authorId: victim.userId, body: 'A comment' },
   });
+  const task = await t.db.client.task.create({
+    data: { workspaceId: aWorkspace, title: 'A task', postId: post.id, createdById: victim.userId },
+  });
   const label = await t.db.client.postLabel.create({
     data: { workspaceId: aWorkspace, name: 'A label', color: 'blue' },
   });
@@ -288,6 +296,7 @@ beforeAll(async () => {
     groupId: group.id,
     labelId: label.id,
     commentId: comment.id,
+    taskId: task.id,
     postId: post.id,
     targetId: target.id,
     connectionId: connection.id,
@@ -380,6 +389,7 @@ describe('tenant isolation harness', () => {
       const byA: Record<string, string> = {
         listMedia: `folderId=${a.folderId}`,
         getCalendar: `accountId=${a.accountId}`,
+        listTasks: `postId=${a.postId}`,
       };
       const filtered = byA[name] ? `${base ? `${base}&` : '?'}${byA[name]}` : base;
       for (const qs of [base, filtered]) {

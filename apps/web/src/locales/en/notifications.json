@@ -12,7 +12,7 @@
   },
   "empty": {
     "title": "You’re all caught up",
-    "body": "Failed posts, reviews, comments and accounts that need you show up here."
+    "body": "Failed posts, reviews, comments, tasks and accounts that need you show up here."
   },
   "toast": {
     "open": "Open"
@@ -69,6 +69,24 @@
       "description": "Someone @mentioned you in a comment.",
       "title": "{{actor}} mentioned you in a comment",
       "body": "Open the post to read it and reply."
+    },
+    "task_assigned": {
+      "name": "Tasks given to you",
+      "description": "Someone gave you a task.",
+      "title": "{{actor}} gave you a task: {{task}}",
+      "body": "Open it to see what to do."
+    },
+    "task_completed": {
+      "name": "Tasks done",
+      "description": "A task you made was marked done.",
+      "title": "{{actor}} finished “{{task}}”",
+      "body": "A task you made is done."
+    },
+    "task_due": {
+      "name": "Tasks due soon",
+      "description": "A task given to you is due within a day.",
+      "title": "“{{task}}” is due within a day",
+      "body": "Open it to see what’s left to do."
     }
   },
   "page": {
@@ -80,7 +98,7 @@
     "unread_other": "Unread ({{count}})",
     "type": "Kind",
     "allTypes": "All kinds",
-    "emptyBody": "Failed posts, reviews, comments and accounts that need reconnecting show up here.",
+    "emptyBody": "Failed posts, reviews, comments, tasks and accounts that need reconnecting show up here.",
     "emptyFiltered": "Nothing here",
     "emptyFilteredBody": "No notifications match. Show all to see the rest.",
     "showAll": "Show all",

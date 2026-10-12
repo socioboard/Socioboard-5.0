@@ -9,6 +9,7 @@
     "accounts": "Accounts",
     "needsFixing": "{{count}} need fixing",
     "approvals": "Approvals",
+    "tasks": "Tasks",
     "waitingReview": "{{count}} waiting for review"
   },
   "switcher": {

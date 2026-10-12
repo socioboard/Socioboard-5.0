@@ -1,0 +1,80 @@
+{
+  "title": "Tasks",
+  "subtitle": "Work for the team, often about a post.",
+  "new": "New task",
+  "view": {
+    "label": "Whose tasks",
+    "mine": "Assigned to me",
+    "all": "Everyone’s"
+  },
+  "show": {
+    "label": "Which tasks",
+    "todo": "To do",
+    "done": "Done"
+  },
+  "empty": {
+    "mineTodo": "Nothing assigned to you",
+    "mineTodoBody": "Tasks given to you show up here, the soonest due first.",
+    "allTodo": "No tasks to do",
+    "allTodoBody": "Make a task for something the team needs to do, like writing a caption or fixing a photo.",
+    "done": "Nothing done yet",
+    "doneBody": "Finished tasks move here."
+  },
+  "loadError": "Tasks didn’t load.",
+  "retry": "Try again",
+  "loadMore": "Load more",
+  "row": {
+    "markDone": "Mark “{{title}}” done",
+    "markOpen": "Mark “{{title}}” not done",
+    "due": "Due {{when}}",
+    "overdue": "Overdue · {{when}}",
+    "done": "Done {{when}}",
+    "unassigned": "No one",
+    "post": "Post: {{excerpt}}",
+    "postNoText": "Post without text",
+    "postGone": "Post deleted",
+    "inProgress": "In progress"
+  },
+  "status": {
+    "open": "To do",
+    "in_progress": "In progress",
+    "done": "Done"
+  },
+  "dialog": {
+    "newTitle": "New task",
+    "editTitle": "Task",
+    "description": "Say what needs doing, who does it and by when.",
+    "aboutPost": "About the post “{{excerpt}}”",
+    "aboutPostNoText": "About a post",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Write the caption for Friday’s post",
+    "details": "Details",
+    "detailsPlaceholder": "Anything that helps (optional)",
+    "assignee": "Assigned to",
+    "nobody": "No one yet",
+    "assigneeHint": "Only people who can see the post are listed.",
+    "due": "Due date",
+    "dueTime": "Time",
+    "clearDue": "No due date",
+    "dueHint": "In {{zone}}. A reminder goes out a day before.",
+    "status": "Status",
+    "create": "Create task",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "deleteTitle": "Delete this task?",
+    "deleteBody": "“{{title}}” is removed for everyone.",
+    "readOnly": "You can change the status of a task given to you.",
+    "titleRequired": "Give the task a title.",
+    "created": "Task created",
+    "saved": "Task saved",
+    "deleted": "Task deleted",
+    "createdBy": "Made by {{name}} {{when}}"
+  },
+  "post": {
+    "title": "Tasks",
+    "add": "Add task",
+    "empty": "No tasks for this post."
+  }
+}
