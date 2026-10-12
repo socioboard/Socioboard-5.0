@@ -345,11 +345,8 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
         throw tumblrError(res, 'parsing post id');
       }
 
-      const blogUrl = typeof account.meta.url === 'string' ? account.meta.url : null;
       const blogName = (account.meta.blogName as string | undefined) ?? account.externalId;
-      const permalink = blogUrl
-        ? `${blogUrl.replace(/\/$/, '')}/post/${postId}`
-        : `https://${blogName}.tumblr.com/post/${postId}`;
+      const permalink = `https://www.tumblr.com/${encodeURIComponent(blogName)}/${postId}`;
 
       return {
         externalId: postId,

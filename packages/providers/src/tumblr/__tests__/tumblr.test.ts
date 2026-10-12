@@ -143,7 +143,7 @@ describe('Tumblr adapter unit tests', () => {
     };
     const tumblr = createTumblrNetwork({ http });
 
-    await tumblr.publish(
+    const result = await tumblr.publish(
       {
         text: 'Fresh #Coffee today #coffee #Roast',
         media: [
@@ -170,7 +170,7 @@ describe('Tumblr adapter unit tests', () => {
         meta: {
           uuid: 't:123456789012345678',
           blogName: 'haldenroasters',
-          url: 'https://haldenroasters.tumblr.com/',
+          url: 'https://www.tumblr.com/blog/view/haldenroasters',
         },
       },
     );
@@ -178,6 +178,7 @@ describe('Tumblr adapter unit tests', () => {
     expect(downloaded).toEqual([
       { url: 'https://storage.test/photo.jpg', maxBytes: 10 * 1024 * 1024 },
     ]);
+    expect(result.permalink).toBe('https://www.tumblr.com/haldenroasters/712345678901234567');
     expect(sent?.json).toBeUndefined();
     expect(sent?.url).toContain('/v2/blog/t%3A123456789012345678/posts');
     expect(sent?.headers).toEqual({ authorization: 'Bearer tumblr-access' });
