@@ -8,7 +8,7 @@ import type {
 } from '@socioboard/contracts';
 
 import { isProviderError, ProviderError } from '../errors';
-import type { HttpClient, HttpRequest, HttpResponse } from '../http';
+import type { HttpClient, HttpRequest, HttpResponse, ProviderLogger } from '../http';
 import type { ImagePrep, NetworkAdapter, PublishInput, PublishResult, RateLimits } from '../types';
 import { checkRules, issue, IssueCode } from '../validation';
 import { tumblrError } from './errors';
@@ -76,8 +76,10 @@ export const TUMBLR_PREVIEW: PreviewSpec = {
 
 export interface TumblrNetworkConfig {
   http: HttpClient;
+  logger?: ProviderLogger;
   sleep?: (ms: number) => Promise<void>;
   pollIntervalMs?: number;
+  maxPollIntervalMs?: number;
   maxPollAttempts?: number;
 }
 
@@ -157,6 +159,8 @@ async function requestPublish(
     return await http.request<PostResponse>(request);
   } catch (error) {
     if (isProviderError(error) && error.kind === 'retryable') {
+      // This also covers failures before any bytes were sent (for example DNS or connection
+      // refusal). Treating all no-response failures as ambiguous avoids a duplicate post.
       throw new ProviderError({
         kind: 'content',
         message: TUMBLR_AMBIGUOUS_PUBLISH_MESSAGE,
@@ -225,9 +229,11 @@ function photosetRows(blocks: NpfBlock[]): NpfRow[] {
 export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter {
   const {
     http,
+    logger,
     sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
-    pollIntervalMs = 2500,
-    maxPollAttempts = 25,
+    pollIntervalMs = 1000,
+    maxPollIntervalMs = 5000,
+    maxPollAttempts = 8,
   } = config;
 
   return {
@@ -373,15 +379,26 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
 
       if (hasVideo) {
         for (let attempt = 0; attempt < maxPollAttempts; attempt += 1) {
-          await sleep(pollIntervalMs);
+          await sleep(Math.min(pollIntervalMs * 2 ** attempt, maxPollIntervalMs));
           try {
             const listRes = await http.request<PostsListResponse>({
               method: 'GET',
               url: `${TUMBLR_API}/v2/blog/${encodeURIComponent(blogIdentifier)}/posts`,
-              query: { limit: '10' },
+              // Tumblr can replace a video's creation ID after transcoding. The replacement
+              // exposes that old ID as genesis_post_id, so search the newest posts for the link.
+              // The API caps this response at 20, which can still miss a match on a very busy
+              // blog; in that case we safely return the creation ID below.
+              query: { limit: '20' },
               headers: { authorization: `Bearer ${account.accessToken}` },
             });
-            if (listRes.ok && listRes.body.response?.posts) {
+            if (!listRes.ok) {
+              logger?.debug(
+                { attempt: attempt + 1, status: listRes.status },
+                'Tumblr video post lookup failed; retrying',
+              );
+              continue;
+            }
+            if (listRes.body.response?.posts) {
               const match = listRes.body.response.posts.find(
                 (p) =>
                   p.genesis_post_id === postId ||
@@ -395,8 +412,14 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
                 break;
               }
             }
-          } catch {
-            // Ignore polling errors and continue trying
+          } catch (error) {
+            logger?.debug(
+              {
+                attempt: attempt + 1,
+                error: error instanceof Error ? error.message : String(error),
+              },
+              'Tumblr video post lookup failed; retrying',
+            );
           }
         }
       }

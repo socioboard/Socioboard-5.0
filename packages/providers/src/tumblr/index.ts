@@ -20,6 +20,7 @@ export interface TumblrConfig {
   logger?: ProviderLogger;
   sleep?: (ms: number) => Promise<void>;
   pollIntervalMs?: number;
+  maxPollIntervalMs?: number;
   maxPollAttempts?: number;
 }
 
@@ -39,8 +40,10 @@ export function createTumblrAdapters(config: TumblrConfig): {
     networks: [
       createTumblrNetwork({
         http,
+        ...(config.logger ? { logger: config.logger } : {}),
         ...(config.sleep ? { sleep: config.sleep } : {}),
         ...(config.pollIntervalMs ? { pollIntervalMs: config.pollIntervalMs } : {}),
+        ...(config.maxPollIntervalMs ? { maxPollIntervalMs: config.maxPollIntervalMs } : {}),
         ...(config.maxPollAttempts !== undefined
           ? { maxPollAttempts: config.maxPollAttempts }
           : {}),

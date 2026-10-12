@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { isProviderError, ProviderError } from '../../errors';
 import type { HttpClient, HttpRequest, HttpResponse } from '../../http';
 import { fixture, replayFetch, type RecordedCall } from '../../testing/replay';
@@ -391,6 +391,92 @@ describe('Tumblr adapter unit tests', () => {
     expect(result.permalink).toBe(
       'https://www.tumblr.com/nisithdev/830252425949708288/checking-on-url-redirection',
     );
+  });
+
+  it('falls back to the creation ID when a video post never appears in polling', async () => {
+    let pollRequests = 0;
+    const sleepCalls: number[] = [];
+    const logger = { debug: vi.fn(), warn: vi.fn() };
+    const http: HttpClient = {
+      request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
+        if (request.method === 'POST') {
+          return Promise.resolve({
+            status: 201,
+            ok: true,
+            headers: new Headers({ 'content-type': 'application/json' }),
+            body: { response: { id_string: '830252389705678848' } } as T,
+          });
+        }
+        pollRequests += 1;
+        if (pollRequests === 1) return Promise.reject(new Error('lookup unavailable'));
+        return Promise.resolve({
+          status: 200,
+          ok: true,
+          headers: new Headers({ 'content-type': 'application/json' }),
+          body: { response: { posts: [] } } as T,
+        });
+      },
+      download() {
+        return Promise.reject(new Error('unexpected buffered download'));
+      },
+      withFile<T>(
+        _url: string,
+        _options: { maxBytes: number; timeoutMs?: number },
+        use: (path: string) => Promise<T>,
+      ) {
+        return withTemporaryFile(new Uint8Array([4, 5, 6]), use);
+      },
+    };
+    const tumblr = createTumblrNetwork({
+      http,
+      logger,
+      sleep: (ms) => {
+        sleepCalls.push(ms);
+        return Promise.resolve();
+      },
+      maxPollAttempts: 3,
+      pollIntervalMs: 50,
+      maxPollIntervalMs: 100,
+    });
+
+    const result = await tumblr.publish(
+      {
+        text: 'Video still processing',
+        media: [
+          {
+            id: 'video-1',
+            kind: 'video',
+            mime: 'video/mp4',
+            sizeBytes: 3,
+            width: 1920,
+            height: 1080,
+            durationSec: 12,
+            altText: null,
+            readUrl: 'https://storage.test/video.mp4',
+            publicUrl: null,
+          },
+        ],
+        link: null,
+        firstComment: null,
+        options: {},
+      },
+      {
+        externalId: 't:123456789012345678',
+        accessToken: 'tumblr-access',
+        meta: { uuid: 't:123456789012345678', blogName: 'nisithdev' },
+      },
+    );
+
+    expect(pollRequests).toBe(3);
+    expect(sleepCalls).toEqual([50, 100, 100]);
+    expect(logger.debug).toHaveBeenCalledWith(
+      { attempt: 1, error: 'lookup unavailable' },
+      'Tumblr video post lookup failed; retrying',
+    );
+    expect(result).toMatchObject({
+      externalId: '830252389705678848',
+      permalink: 'https://www.tumblr.com/nisithdev/830252389705678848',
+    });
   });
 
   it('uploads multiple photos in order with a weighted photoset layout', async () => {
