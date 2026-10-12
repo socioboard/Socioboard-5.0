@@ -12,7 +12,7 @@
   },
   "empty": {
     "title": "You’re all caught up",
-    "body": "Failed posts and accounts that need you show up here."
+    "body": "Failed posts, reviews, comments and accounts that need you show up here."
   },
   "toast": {
     "open": "Open"
@@ -37,6 +37,38 @@
     "digest": {
       "name": "Weekly summary",
       "description": "On Mondays: what went out, what failed and what’s coming up in each workspace."
+    },
+    "review_requested": {
+      "name": "A post to review",
+      "description": "Someone sent a post for review, and you can approve it.",
+      "title": "{{actor}} sent a post for review",
+      "body": "Open it to approve it or ask for changes.",
+      "bodyAfterEdit": "It was approved, then edited, so it needs another look."
+    },
+    "post_approved": {
+      "name": "Your post was approved",
+      "description": "A post you sent for review was approved.",
+      "title": "{{actor}} approved your post",
+      "body": "It can be scheduled or published now."
+    },
+    "changes_requested": {
+      "name": "Changes asked for",
+      "description": "A post you sent for review came back with changes to make.",
+      "title": "{{actor}} asked for changes to your post",
+      "body": "Open it to see what to change, then send it again."
+    },
+    "post_commented": {
+      "name": "New comments",
+      "description": "Comments on your posts, and on posts you commented on.",
+      "titleOwn": "{{actor}} commented on your post",
+      "title": "{{actor}} commented on a post you commented on",
+      "body": "Open the post to read it and reply."
+    },
+    "mentioned": {
+      "name": "Mentions",
+      "description": "Someone @mentioned you in a comment.",
+      "title": "{{actor}} mentioned you in a comment",
+      "body": "Open the post to read it and reply."
     }
   },
   "page": {
@@ -48,7 +80,7 @@
     "unread_other": "Unread ({{count}})",
     "type": "Kind",
     "allTypes": "All kinds",
-    "emptyBody": "Failed posts, published posts and accounts that need reconnecting show up here.",
+    "emptyBody": "Failed posts, reviews, comments and accounts that need reconnecting show up here.",
     "emptyFiltered": "Nothing here",
     "emptyFilteredBody": "No notifications match. Show all to see the rest.",
     "showAll": "Show all",

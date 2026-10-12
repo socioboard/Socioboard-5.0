@@ -27,5 +27,9 @@ Notifications are made by things that happen: a post going out, a post failing, 
 ## Emails
 - [ ] **NOTIF-30** A failed post and an account needing reconnecting send an email (when on), with a link that opens the right page.
 
+- [ ] **NOTIF-31** **What you hear about** lists the review and comment kinds: a post to review, approved, changes asked for and mentions (in the app and by email), new comments (in the app only).
+
+Review and comment notifications themselves: [approvals](approvals.md) APR-40–44.
+
 ## Not built yet
-Approval requests and mentions (phase 4).
+Task and AI notifications (phase 4).

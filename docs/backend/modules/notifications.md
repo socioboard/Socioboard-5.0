@@ -22,13 +22,14 @@ Tells people what happened: in-app notification feed with live updates over WebS
 
 Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a user's own, across workspaces: each names its workspace (`id`, `slug`, `name`) or none. The UI words a notification from `type` and `params` (i18n); `title` and `body` are the English fallback, also used in emails. `link` is a path inside the app, never a full URL (`//host` is refused too), so a notification can't send anyone off-site. A channel a type doesn't offer is `null` in preferences (the digest is email only) and can't be turned on (`NOTIFICATION_CHANNEL_NOT_OFFERED`, 422). Another user's notification id answers `NOTIFICATION_NOT_FOUND` (404).
 
-**Types (phase 2):** `publish_failed`, `post_published`, `account_reauth_required`, and `digest` (email only). Phase 4 adds review, comment, task and AI types.
+**Types:** phase 2 `publish_failed`, `post_published`, `account_reauth_required`, and `digest` (email only); phase 4 `review_requested`, `post_approved`, `changes_requested`, `post_commented` and `mentioned` (P4-B3, [approvals](approvals.md#notifications-p4-b3)), with task and AI types to come.
 
 **WebSocket (Socket.IO)** at `/api/socket.io` (`REALTIME_PATH`), events in `packages/contracts/src/events.ts`. On connect the server checks the session cookie and joins `user:<id>` and `workspace:<id>` for each of the user's workspaces; it leaves a workspace's room when the user is removed from it. The browser only listens. Payloads say what changed, not the whole object, and the web app refetches through the API, where permissions apply:
 - `notification.new` (to the user): the notification and the new unread count.
 - `notification.read` (to the user): marked read in another tab or device; `ids`, or null for all, and the unread count.
 - `post.status_changed` (to the workspace): post id and status, and each target's id, status, `scheduledAt`, `publishedAt`.
 - `account.status_changed` (to the workspace): account id and status.
+- `post.comments_changed` (to the workspace): a post's comments changed; open threads refetch.
 - `ai.job.updated` joins in phase 4.
 
 **How it's served (P2-B11):** the API attaches the Socket.IO server to its HTTP server. The handshake needs the app's origin (a WebSocket isn't covered by CORS) and a session cookie; the socket joins its user's room and its live workspaces' rooms, and rooms follow membership on every open socket (`workspace.created` and `member.joined` join, `member.removed` leaves, `workspace.deleted` empties the room). `post.status_changed` is sent by posts' `recomputeStatus`, which runs after every target change (publish, schedule, reschedule, unschedule, retry, cancel, recurring copies); `account.status_changed` by social-accounts whenever an account needs reconnecting, comes back, is added or is disconnected. A deleted post sends nothing yet (the page refetches on its own action). A socket outlives a revoked session until it reconnects. In front of the API, a proxy must pass WebSocket upgrades on `/api/socket.io` (Vite's dev proxy does, with `ws`); the web client should connect with `transports: ['websocket']`, so several API instances need no sticky sessions.
@@ -39,9 +40,9 @@ Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a use
 | `target.failed` (final) | post author + workspace admins | yes |
 | `target.published` | post author | no |
 | `account.reauth_required` | workspace admins | yes |
-| `post.submitted` | members with `posts:approve` | yes |
-| `post.approved` / `post.changes_requested` | author | yes |
-| `post.commented` | author + participants | no |
+| `post.submitted` | members with `posts:approve` who can see the post (`review_requested`) | yes |
+| `post.approved` / `post.changes_requested` | author (`post_approved` / `changes_requested`) | yes |
+| `post.commented` | author + earlier commenters (`post_commented`); the mentioned (`mentioned`) | no; mentions yes |
 | `task.assigned` | assignee | yes |
 | `ai.job.completed` / `ai.job.failed` | requester | no |
 | `member.invited` | invitee (email only) | yes |
@@ -54,7 +55,7 @@ Shapes are in `packages/contracts/src/notifications.ts`. Notifications are a use
 ## How it works (P2-B8)
 - `registerNotificationListeners` runs in the API and the worker (events are emitted in both). For each event it finds the live workspace and its people (a deleted workspace notifies nobody; an author who left isn't notified), then `notify()` gives each user one notification through the channels they chose. Defaults (`DEFAULT_CHANNELS`): publish failed in the app and by email, published in the app only, needs reconnecting in the app and by email, digest email only and off.
 - In the app: the row is saved and `notification.new` goes to `user:<id>` with the new unread count. Reading one (when it wasn't read yet) or all sends `notification.read` to the same room, so other tabs update. Live events go through `platform/realtime`'s emitter; the API's Socket.IO server that delivers them to browsers is P2-B11, which also starts emitting `post.status_changed` and `account.status_changed`.
-- By email: each item joins a Valkey list for its user, group and 2-minute window (`notify-email:<user>:<group>:<window>`), and that window's job (`email-<user>-<group>-<window>`, added once) runs just after the window closes. It sends one email for everything in the list, leaving out types the user turned email off for since, then deletes the list; a failed send leaves the list for the retry. Groups: one post's deliveries (`post:<id>`), one workspace's accounts needing reconnecting (`accounts:<workspaceId>`, so a login's Pages arrive as one email). Each kind has its own email (P2-B12, `packages/emails/src/notifications.tsx`), built from the items' `facts` (account, network and reason as people read them, set by the listener):
+- By email: each item joins a Valkey list for its user, group and 2-minute window (`notify-email:<user>:<group>:<window>`), and that window's job (`email-<user>-<group>-<window>`, added once) runs just after the window closes. It sends one email for everything in the list, leaving out types the user turned email off for since, then deletes the list; a failed send leaves the list for the retry. Groups: one post's deliveries (`post:<id>`), one workspace's accounts needing reconnecting (`accounts:<workspaceId>`, so a login's Pages arrive as one email), one workspace's posts sent for review (`review:<workspaceId>`), and a post's review decisions, comments and mentions (`post:<id>`). Each kind has its own email (P2-B12, `packages/emails/src/notifications.tsx`), built from the items' `facts` (account, network and reason as people read them, set by the listener):
   - **Publish failed** ("A post couldn't be published to Facebook", or "… to 3 accounts"): each delivery that failed, as "Halden Coffee on Facebook" with the network's reason, and "Open the post". Never the post's text.
   - **Needs reconnecting** ("Halden Coffee needs reconnecting", or "3 accounts need reconnecting in Acme"): each account with its reason, that scheduled posts to it will fail, and "Reconnect accounts".
   - A window mixing kinds (a post's failure with its published copy, for someone who turned those emails on) uses the plain template (`notificationEmail`).

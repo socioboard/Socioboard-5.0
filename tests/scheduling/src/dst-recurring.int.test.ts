@@ -94,12 +94,14 @@ interface Scenario {
 }
 
 /**
- * The zone's next clock change of a kind, at least 20 days ahead (so setting the rule through the
- * API, on the real clock, makes no copies yet), and a time inside its skipped or repeated stretch.
+ * The zone's next clock change of a kind, at least 25 days ahead, and a time inside its skipped
+ * or repeated stretch. Setting the rule through the API, on the real clock, makes copies for the
+ * next 7 days, and the rule starts 13 days before the change: a change only 20 days ahead (counted
+ * from its local day's start) let one through (seen 2026-10-12, New York's change on 11-01).
  * Found from the timezone database, so the test holds whatever year it runs in.
  */
 function nextChange(zone: string, kind: 'skip' | 'repeat') {
-  const from = Date.now() + 20 * DAY;
+  const from = Date.now() + 25 * DAY;
   const at = changesIn(zone, from, from + 400 * DAY).find((x) =>
     kind === 'skip'
       ? localMs(x, zone) > localMs(x - STEP, zone) + STEP

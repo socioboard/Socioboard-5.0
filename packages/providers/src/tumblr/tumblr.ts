@@ -1,3 +1,5 @@
+import { openAsBlob } from 'node:fs';
+
 import type {
   ContentRules,
   NetworkCapabilities,
@@ -5,7 +7,8 @@ import type {
   ValidationIssue,
 } from '@socioboard/contracts';
 
-import type { HttpClient, HttpResponse } from '../http';
+import { isProviderError, ProviderError } from '../errors';
+import type { HttpClient, HttpRequest, HttpResponse } from '../http';
 import type { ImagePrep, NetworkAdapter, PublishInput, PublishResult, RateLimits } from '../types';
 import { checkRules, issue, IssueCode } from '../validation';
 import { tumblrError } from './errors';
@@ -14,14 +17,14 @@ import { TUMBLR_API } from './login';
 const MB = 1024 * 1024;
 
 /**
- * Maximum character limit for Tumblr text blocks.
+ * Maximum character limit for the single Tumblr text block this adapter creates.
  */
 export const TUMBLR_MAX_CHARS = 4096;
 
 /**
- * Tumblr post rules (checked 2026-10-09):
- * - Up to 10 images / photoset (10 MB each, GIF up to 10 MB)
- * - Single video up to 5 minutes / 500 MB
+ * Tumblr post rules (checked 2026-10-12):
+ * - This product accepts up to 10 images / photoset (10 MB each)
+ * - Tumblr allows 10-minute / 500 MB videos; this product caps uploads at 100 MB
  * - Links can be standalone or attached
  */
 export const TUMBLR_CAPABILITIES: NetworkCapabilities = {
@@ -41,7 +44,7 @@ export const TUMBLR_RULES: ContentRules = {
     mixKinds: false,
     maxImageBytes: 10 * MB,
     imageAspectRatio: null,
-    video: { minSec: 1, maxSec: 5 * 60, maxBytes: 500 * MB },
+    video: { minSec: 1, maxSec: 10 * 60, maxBytes: 100 * MB },
   },
   links: 'card',
 };
@@ -53,7 +56,9 @@ export const TUMBLR_IMAGE_PREP: ImagePrep = {
 };
 
 export const TUMBLR_RATE_LIMITS: RateLimits = {
-  perAccount: [{ max: 250, perSec: 24 * 3600 }],
+  // Tumblr's daily publishing limits apply to a login, not each blog asset. The shared limiter
+  // has no per-login bucket, so Tumblr's 429 response is the source of truth for those limits.
+  perAccount: [],
   perApp: [
     { max: 1000, perSec: 3600 },
     { max: 5000, perSec: 24 * 3600 },
@@ -98,18 +103,13 @@ interface NpfMedia {
   height?: number;
 }
 
-interface BufferedUploadPart {
+interface UploadPart {
   identifier: string;
   filename: string;
   mime: string;
-  bytes: Uint8Array;
-}
-
-interface FileUploadPart {
-  identifier: string;
-  filename: string;
-  blob: Blob;
-  cleanup: () => Promise<void>;
+  readUrl: string;
+  maxBytes: number;
+  timeoutMs?: number;
 }
 
 interface NpfRow {
@@ -118,6 +118,61 @@ interface NpfRow {
 }
 
 const TUMBLR_VIDEO_TIMEOUT_MS = 10 * 60_000;
+const TUMBLR_AMBIGUOUS_PUBLISH_MESSAGE =
+  'Tumblr may have published this post but did not answer. Check your blog before trying again.';
+
+function extractTags(text: string): string[] {
+  const tags: string[] = [];
+  const seen = new Set<string>();
+  for (const match of text.matchAll(/(?<![\p{L}\p{N}_])#([\p{L}\p{N}_]+)/gu)) {
+    const tag = match[1];
+    if (!tag || seen.has(tag.toLowerCase())) continue;
+    seen.add(tag.toLowerCase());
+    tags.push(tag);
+  }
+  return tags;
+}
+
+async function requestPublish(
+  http: HttpClient,
+  request: HttpRequest,
+): Promise<HttpResponse<PostResponse>> {
+  try {
+    return await http.request<PostResponse>(request);
+  } catch (error) {
+    if (isProviderError(error) && error.kind === 'retryable') {
+      throw new ProviderError({
+        kind: 'content',
+        message: TUMBLR_AMBIGUOUS_PUBLISH_MESSAGE,
+        cause: error,
+      });
+    }
+    throw error;
+  }
+}
+
+async function withUploads<T>(
+  http: HttpClient,
+  uploads: UploadPart[],
+  form: FormData,
+  index: number,
+  use: (form: FormData) => Promise<T>,
+): Promise<T> {
+  const upload = uploads[index];
+  if (!upload) return use(form);
+
+  return http.withFile(
+    upload.readUrl,
+    {
+      maxBytes: upload.maxBytes,
+      ...(upload.timeoutMs === undefined ? {} : { timeoutMs: upload.timeoutMs }),
+    },
+    async (path) => {
+      form.set(upload.identifier, await openAsBlob(path, { type: upload.mime }), upload.filename);
+      return withUploads(http, uploads, form, index + 1, use);
+    },
+  );
+}
 
 function mediaFilename(identifier: string, mime: string): string {
   const extensions: Record<string, string> = {
@@ -185,134 +240,122 @@ export function createTumblrNetwork(config: TumblrNetworkConfig): NetworkAdapter
     },
 
     async publish(input: PublishInput, account): Promise<PublishResult> {
-      const blogIdentifier = (account.meta.blogName as string | undefined) ?? account.externalId;
+      const blogIdentifier = (account.meta.uuid as string | undefined) ?? account.externalId;
       const blocks: NpfBlock[] = [];
-      const bufferedUploads: BufferedUploadPart[] = [];
-      const fileUploads: FileUploadPart[] = [];
+      const uploads: UploadPart[] = [];
 
-      try {
-        if (input.text.trim().length > 0) {
-          blocks.push({
-            type: 'text',
-            text: input.text.trim(),
+      if (input.text.trim().length > 0) {
+        blocks.push({
+          type: 'text',
+          text: input.text.trim(),
+        });
+      }
+
+      for (const [index, media] of input.media.entries()) {
+        const identifier = `media-${String(index)}`;
+        if (media.kind === 'video') {
+          uploads.push({
+            identifier,
+            filename: mediaFilename(identifier, media.mime),
+            mime: media.mime,
+            readUrl: media.readUrl,
+            maxBytes: TUMBLR_RULES.media.video?.maxBytes ?? 100 * MB,
+            timeoutMs: TUMBLR_VIDEO_TIMEOUT_MS,
           });
-        }
-
-        for (const [index, m] of input.media.entries()) {
-          if (m.kind === 'video') {
-            const identifier = `media-${String(index)}`;
-            const file = await http.downloadFile(m.readUrl, {
-              maxBytes: TUMBLR_RULES.media.video?.maxBytes ?? 500 * MB,
-              type: m.mime,
-              timeoutMs: TUMBLR_VIDEO_TIMEOUT_MS,
-            });
-            fileUploads.push({
-              identifier,
-              filename: mediaFilename(identifier, m.mime),
-              blob: file.blob,
-              cleanup: file.cleanup,
-            });
-            blocks.push({
-              type: 'video',
-              media: {
-                type: m.mime,
-                identifier,
-                ...(m.width === null ? {} : { width: m.width }),
-                ...(m.height === null ? {} : { height: m.height }),
-              },
-            });
-          } else {
-            const identifier = `media-${String(index)}`;
-            const bytes = await http.download(m.readUrl, { maxBytes: TUMBLR_IMAGE_PREP.maxBytes });
-            bufferedUploads.push({
-              identifier,
-              filename: mediaFilename(identifier, m.mime),
-              mime: m.mime,
-              bytes,
-            });
-            blocks.push({
-              type: 'image',
-              media: [
-                {
-                  type: m.mime,
-                  identifier,
-                  ...(m.width === null ? {} : { width: m.width }),
-                  ...(m.height === null ? {} : { height: m.height }),
-                },
-              ],
-              ...(m.altText ? { alt_text: m.altText } : {}),
-            });
-          }
-        }
-
-        if (input.link && input.link.trim().length > 0) {
           blocks.push({
-            type: 'link',
-            url: input.link.trim(),
-          });
-        }
-
-        const payload: Record<string, unknown> = {
-          content: blocks,
-          state: 'published',
-          ...(input.media.filter((media) => media.kind !== 'video').length > 1
-            ? { layout: [{ type: 'rows', display: photosetRows(blocks) }] }
-            : {}),
-        };
-
-        const request = {
-          method: 'POST' as const,
-          url: `${TUMBLR_API}/v2/blog/${encodeURIComponent(blogIdentifier)}/posts`,
-          headers: { authorization: `Bearer ${account.accessToken}` },
-        };
-        let res: HttpResponse<PostResponse>;
-        if (bufferedUploads.length > 0 || fileUploads.length > 0) {
-          const form = new FormData();
-          form.set('json', JSON.stringify(payload));
-          for (const upload of bufferedUploads) {
-            form.set(
-              upload.identifier,
-              new Blob([upload.bytes], { type: upload.mime }),
-              upload.filename,
-            );
-          }
-          for (const upload of fileUploads) {
-            form.set(upload.identifier, upload.blob, upload.filename);
-          }
-          res = await http.request<PostResponse>({
-            ...request,
-            multipart: form,
-            ...(fileUploads.length > 0 ? { timeoutMs: TUMBLR_VIDEO_TIMEOUT_MS } : {}),
+            type: 'video',
+            media: {
+              type: media.mime,
+              identifier,
+              ...(media.width === null ? {} : { width: media.width }),
+              ...(media.height === null ? {} : { height: media.height }),
+            },
           });
         } else {
-          res = await http.request<PostResponse>({ ...request, json: payload });
+          uploads.push({
+            identifier,
+            filename: mediaFilename(identifier, media.mime),
+            mime: media.mime,
+            readUrl: media.readUrl,
+            maxBytes: TUMBLR_IMAGE_PREP.maxBytes,
+          });
+          blocks.push({
+            type: 'image',
+            media: [
+              {
+                type: media.mime,
+                identifier,
+                ...(media.width === null ? {} : { width: media.width }),
+                ...(media.height === null ? {} : { height: media.height }),
+              },
+            ],
+            ...(media.altText ? { alt_text: media.altText } : {}),
+          });
         }
-
-        if (!res.ok || !res.body.response) {
-          throw tumblrError(res, 'publishing post');
-        }
-
-        const postId =
-          res.body.response.id_string ??
-          (res.body.response.id !== undefined ? String(res.body.response.id) : null);
-
-        if (!postId) {
-          throw tumblrError(res, 'parsing post id');
-        }
-
-        const blogUrl = typeof account.meta.url === 'string' ? account.meta.url : null;
-        const permalink = blogUrl
-          ? `${blogUrl.replace(/\/$/, '')}/post/${postId}`
-          : `https://${blogIdentifier}.tumblr.com/post/${postId}`;
-
-        return {
-          externalId: postId,
-          permalink,
-          warnings: [],
-        };
-      } finally {
-        await Promise.all(fileUploads.map((upload) => upload.cleanup()));
       }
+
+      if (input.link && input.link.trim().length > 0) {
+        blocks.push({
+          type: 'link',
+          url: input.link.trim(),
+        });
+      }
+
+      const tags = extractTags(input.text);
+      const payload: Record<string, unknown> = {
+        content: blocks,
+        state: 'published',
+        ...(tags.length > 0 ? { tags } : {}),
+        ...(input.media.filter((media) => media.kind !== 'video').length > 1
+          ? { layout: [{ type: 'rows', display: photosetRows(blocks) }] }
+          : {}),
+      };
+
+      const request = {
+        method: 'POST' as const,
+        url: `${TUMBLR_API}/v2/blog/${encodeURIComponent(blogIdentifier)}/posts`,
+        headers: { authorization: `Bearer ${account.accessToken}` },
+      };
+      let res: HttpResponse<PostResponse>;
+      if (uploads.length > 0) {
+        const form = new FormData();
+        form.set('json', JSON.stringify(payload));
+        res = await withUploads(http, uploads, form, 0, (multipart) =>
+          requestPublish(http, {
+            ...request,
+            multipart,
+            ...(input.media.some((media) => media.kind === 'video')
+              ? { timeoutMs: TUMBLR_VIDEO_TIMEOUT_MS }
+              : {}),
+          }),
+        );
+      } else {
+        res = await requestPublish(http, { ...request, json: payload });
+      }
+
+      if (!res.ok || !res.body.response) {
+        throw tumblrError(res, 'publishing post');
+      }
+
+      const postId =
+        res.body.response.id_string ??
+        (res.body.response.id !== undefined ? String(res.body.response.id) : null);
+
+      if (!postId) {
+        throw tumblrError(res, 'parsing post id');
+      }
+
+      const blogUrl = typeof account.meta.url === 'string' ? account.meta.url : null;
+      const blogName = (account.meta.blogName as string | undefined) ?? account.externalId;
+      const permalink = blogUrl
+        ? `${blogUrl.replace(/\/$/, '')}/post/${postId}`
+        : `https://${blogName}.tumblr.com/post/${postId}`;
+
+      return {
+        externalId: postId,
+        permalink,
+        warnings: [],
+      };
     },
   };
 }

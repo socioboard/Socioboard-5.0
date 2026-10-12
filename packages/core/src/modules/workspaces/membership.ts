@@ -34,3 +34,35 @@ export function createMembershipLookup(db: Db): MembershipLookup {
     };
   };
 }
+
+/**
+ * The members who can see a post (P4-B4's rule: every account it goes to is theirs), for
+ * notifying about it and for @mentions on it. None when the post or workspace is gone.
+ */
+export async function membersWhoSeePost(
+  db: Db,
+  workspaceId: string,
+  postId: string,
+): Promise<{ userId: string; role: Role }[]> {
+  const post = await db.client.post.findFirst({
+    where: { id: postId, workspaceId, workspace: { deletedAt: null } },
+    select: { targets: { select: { socialAccountId: true } } },
+  });
+  if (!post) return [];
+  const members = await db.client.member.findMany({
+    where: { workspaceId },
+    select: {
+      userId: true,
+      role: true,
+      accountsLimited: true,
+      accountAccess: { select: { socialAccountId: true } },
+    },
+  });
+  return members.flatMap((m) => {
+    if (!isRole(m.role)) return [];
+    const limited = m.accountsLimited && !ALL_ACCOUNTS.includes(m.role);
+    const allowed = new Set(m.accountAccess.map((a) => a.socialAccountId));
+    const sees = !limited || post.targets.every((t) => allowed.has(t.socialAccountId));
+    return sees ? [{ userId: m.userId, role: m.role }] : [];
+  });
+}

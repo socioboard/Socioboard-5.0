@@ -1,6 +1,6 @@
 {
   "method": "POST",
-  "url": "https://api.tumblr.com/v2/blog/haldenroasters/posts",
+  "url": "https://api.tumblr.com/v2/blog/t%3A123456789012345678/posts",
   "status": 401,
   "response": {
     "meta": {

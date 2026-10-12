@@ -51,7 +51,7 @@ export function TumblrPreview({ account, text, files, link, spec }: TumblrPrevie
         >
           <div className="flex items-center gap-1 text-xs">
             <MessageCircle />
-            <span>0 notes</span>
+            <span>{t('preview.tumblr.notes', { count: 0 })}</span>
           </div>
           <div className="flex items-center gap-4">
             <Share2 />

@@ -1,10 +1,28 @@
-import { describe, expect, it, vi } from 'vitest';
-import { isProviderError } from '../../errors';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+import { isProviderError, ProviderError } from '../../errors';
 import type { HttpClient, HttpRequest, HttpResponse } from '../../http';
 import { fixture, replayFetch, type RecordedCall } from '../../testing/replay';
 import { IssueCode } from '../../validation';
 import { createTumblrAdapters } from '../index';
 import { createTumblrNetwork } from '../tumblr';
+
+async function withTemporaryFile<T>(
+  bytes: Uint8Array,
+  use: (path: string) => Promise<T>,
+): Promise<T> {
+  const directory = await mkdtemp(join(tmpdir(), 'tumblr-test-'));
+  const path = join(directory, 'media');
+  try {
+    await writeFile(path, bytes);
+    return await use(path);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+}
 
 describe('Tumblr adapter unit tests', () => {
   const callback = 'http://localhost:5173/api/oauth/tumblr/callback';
@@ -73,32 +91,61 @@ describe('Tumblr adapter unit tests', () => {
     expect(replay.remaining()).toEqual([]);
   });
 
+  it('uses stable blog UUIDs for the login identity and assets', async () => {
+    const identityRecording = recordedLogin(fixture('tumblr', 'user-info'));
+    const identity = await identityRecording.adapter.getIdentity({
+      accessToken: 'tumblr-access',
+      refreshToken: null,
+      expiresAt: null,
+      scopes: ['basic', 'write'],
+    });
+    expect(identity.externalUserId).toBe('t:123456789012345678');
+    expect(identityRecording.replay.mismatches).toEqual([]);
+
+    const assetsRecording = recordedLogin(fixture('tumblr', 'user-info'));
+    const assets = await assetsRecording.adapter.listAssets({
+      accessToken: 'tumblr-access',
+      refreshToken: null,
+      expiresAt: null,
+      scopes: ['basic', 'write'],
+    });
+    expect(assets[0]).toMatchObject({
+      externalId: 't:123456789012345678',
+      username: 'haldenroasters',
+      meta: { uuid: 't:123456789012345678', blogName: 'haldenroasters' },
+    });
+    expect(assetsRecording.replay.mismatches).toEqual([]);
+  });
+
   it('uploads photos as NPF multipart data referenced by identifier', async () => {
     let sent: HttpRequest | undefined;
-    const downloaded: { url: string; maxBytes: number | undefined }[] = [];
+    let sentMedia: Uint8Array | undefined;
+    const downloaded: { url: string; maxBytes: number }[] = [];
     const http: HttpClient = {
-      request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
+      async request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
         sent = request;
-        return Promise.resolve({
+        const media = request.multipart?.get('media-0');
+        if (media instanceof Blob) sentMedia = new Uint8Array(await media.arrayBuffer());
+        return {
           status: 201,
           ok: true,
           headers: new Headers({ 'content-type': 'application/json' }),
           body: { response: { id_string: '712345678901234567' } } as T,
-        });
+        };
       },
-      download(url, options) {
-        downloaded.push({ url, maxBytes: options?.maxBytes });
-        return Promise.resolve(new Uint8Array([1, 2, 3]));
+      download() {
+        return Promise.reject(new Error('unexpected buffered download'));
       },
-      downloadFile() {
-        return Promise.reject(new Error('unexpected video download'));
+      withFile<T>(url: string, options: { maxBytes: number }, use: (path: string) => Promise<T>) {
+        downloaded.push({ url, maxBytes: options.maxBytes });
+        return withTemporaryFile(new Uint8Array([1, 2, 3]), use);
       },
     };
     const tumblr = createTumblrNetwork({ http });
 
     await tumblr.publish(
       {
-        text: 'Fresh roast today',
+        text: 'Fresh #Coffee today #coffee #Roast',
         media: [
           {
             id: 'photo-1',
@@ -118,9 +165,13 @@ describe('Tumblr adapter unit tests', () => {
         options: {},
       },
       {
-        externalId: 'haldenroasters',
+        externalId: 't:123456789012345678',
         accessToken: 'tumblr-access',
-        meta: { blogName: 'haldenroasters', url: 'https://haldenroasters.tumblr.com/' },
+        meta: {
+          uuid: 't:123456789012345678',
+          blogName: 'haldenroasters',
+          url: 'https://haldenroasters.tumblr.com/',
+        },
       },
     );
 
@@ -128,6 +179,7 @@ describe('Tumblr adapter unit tests', () => {
       { url: 'https://storage.test/photo.jpg', maxBytes: 10 * 1024 * 1024 },
     ]);
     expect(sent?.json).toBeUndefined();
+    expect(sent?.url).toContain('/v2/blog/t%3A123456789012345678/posts');
     expect(sent?.headers).toEqual({ authorization: 'Bearer tumblr-access' });
     const form = sent?.multipart;
     expect(form).toBeInstanceOf(FormData);
@@ -136,7 +188,7 @@ describe('Tumblr adapter unit tests', () => {
     const jsonStr = typeof jsonPart === 'string' ? jsonPart : await (jsonPart as Blob).text();
     expect(JSON.parse(jsonStr)).toEqual({
       content: [
-        { type: 'text', text: 'Fresh roast today' },
+        { type: 'text', text: 'Fresh #Coffee today #coffee #Roast' },
         {
           type: 'image',
           media: [
@@ -151,41 +203,41 @@ describe('Tumblr adapter unit tests', () => {
         },
       ],
       state: 'published',
+      tags: ['Coffee', 'Roast'],
     });
     const mediaPart = form?.get('media-0');
     if (!(mediaPart instanceof File)) throw new Error('Photo multipart field missing');
     expect(mediaPart.name).toBe('media-0.jpg');
     expect(mediaPart.type).toBe('image/jpeg');
-    expect(new Uint8Array(await mediaPart.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+    expect(sentMedia).toEqual(new Uint8Array([1, 2, 3]));
   });
 
   it('uploads videos as file-backed NPF multipart data', async () => {
     let sent: HttpRequest | undefined;
-    const cleanup = vi.fn(() => Promise.resolve());
+    let sentMedia: Uint8Array | undefined;
+    const downloads: { url: string; maxBytes: number; timeoutMs?: number }[] = [];
     const http: HttpClient = {
-      request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
+      async request<T>(request: HttpRequest): Promise<HttpResponse<T>> {
         sent = request;
-        return Promise.resolve({
+        const media = request.multipart?.get('media-0');
+        if (media instanceof Blob) sentMedia = new Uint8Array(await media.arrayBuffer());
+        return {
           status: 201,
           ok: true,
           headers: new Headers({ 'content-type': 'application/json' }),
           body: { response: { id_string: '712345678901234568' } } as T,
-        });
+        };
       },
       download() {
         return Promise.reject(new Error('unexpected buffered download'));
       },
-      downloadFile(url: string, options: { maxBytes: number; type: string; timeoutMs?: number }) {
-        expect(url).toBe('https://storage.test/video.mp4');
-        expect(options).toEqual({
-          maxBytes: 500 * 1024 * 1024,
-          type: 'video/mp4',
-          timeoutMs: 10 * 60_000,
-        });
-        return Promise.resolve({
-          blob: new Blob([new Uint8Array([4, 5, 6])], { type: options.type }),
-          cleanup,
-        });
+      withFile<T>(
+        url: string,
+        options: { maxBytes: number; timeoutMs?: number },
+        use: (path: string) => Promise<T>,
+      ) {
+        downloads.push({ url, ...options });
+        return withTemporaryFile(new Uint8Array([4, 5, 6]), use);
       },
     };
     const tumblr = createTumblrNetwork({ http });
@@ -212,12 +264,19 @@ describe('Tumblr adapter unit tests', () => {
         options: {},
       },
       {
-        externalId: 'haldenroasters',
+        externalId: 't:123456789012345678',
         accessToken: 'tumblr-access',
-        meta: { blogName: 'haldenroasters' },
+        meta: { uuid: 't:123456789012345678', blogName: 'haldenroasters' },
       },
     );
 
+    expect(downloads).toEqual([
+      {
+        url: 'https://storage.test/video.mp4',
+        maxBytes: 100 * 1024 * 1024,
+        timeoutMs: 10 * 60_000,
+      },
+    ]);
     expect(sent?.timeoutMs).toBe(10 * 60_000);
     const form = sent?.multipart;
     const jsonPart = form?.get('json');
@@ -242,7 +301,7 @@ describe('Tumblr adapter unit tests', () => {
     if (!(mediaPart instanceof File)) throw new Error('Video multipart field missing');
     expect(mediaPart.name).toBe('media-0.mp4');
     expect(mediaPart.type).toBe('video/mp4');
-    expect(cleanup).toHaveBeenCalledOnce();
+    expect(sentMedia).toEqual(new Uint8Array([4, 5, 6]));
   });
 
   it('uploads multiple photos in order with a weighted photoset layout', async () => {
@@ -257,11 +316,15 @@ describe('Tumblr adapter unit tests', () => {
           body: { response: { id_string: '712345678901234569' } } as T,
         });
       },
-      download(url) {
-        return Promise.resolve(new Uint8Array([Number(url.at(-5))]));
+      download() {
+        return Promise.reject(new Error('unexpected buffered download'));
       },
-      downloadFile() {
-        return Promise.reject(new Error('unexpected video download'));
+      withFile<T>(
+        url: string,
+        _options: { maxBytes: number; timeoutMs?: number },
+        use: (path: string) => Promise<T>,
+      ) {
+        return withTemporaryFile(new Uint8Array([Number(url.at(-5))]), use);
       },
     };
     const tumblr = createTumblrNetwork({ http });
@@ -286,9 +349,9 @@ describe('Tumblr adapter unit tests', () => {
         options: {},
       },
       {
-        externalId: 'haldenroasters',
+        externalId: 't:123456789012345678',
         accessToken: 'tumblr-access',
-        meta: { blogName: 'haldenroasters' },
+        meta: { uuid: 't:123456789012345678', blogName: 'haldenroasters' },
       },
     );
 
@@ -324,6 +387,38 @@ describe('Tumblr adapter unit tests', () => {
     ]);
     if (!form) throw new Error('Multipart form missing');
     expect([...form.keys()]).toEqual(['json', 'media-0', 'media-1', 'media-2']);
+  });
+
+  it('does not retry when Tumblr may have accepted a publish request', async () => {
+    const http: HttpClient = {
+      request<T>(): Promise<HttpResponse<T>> {
+        return Promise.reject(
+          new ProviderError({ kind: 'retryable', message: 'Tumblr timed out' }),
+        );
+      },
+      download(): Promise<Uint8Array> {
+        return Promise.reject(new Error('unexpected download'));
+      },
+      withFile<T>(): Promise<T> {
+        return Promise.reject(new Error('unexpected file download'));
+      },
+    };
+    const tumblr = createTumblrNetwork({ http });
+
+    const error = await tumblr
+      .publish(
+        { text: 'Possibly published', media: [], link: null, firstComment: null, options: {} },
+        {
+          externalId: 't:123456789012345678',
+          accessToken: 'tumblr-access',
+          meta: { uuid: 't:123456789012345678', blogName: 'haldenroasters' },
+        },
+      )
+      .catch((caught: unknown) => caught);
+
+    expect(isProviderError(error) && error.kind).toBe('content');
+    expect(isProviderError(error) && error.message).toContain('may have published');
+    expect(isProviderError(error) && error.message).toContain('Check your blog');
   });
 
   it('validates required text when there is no media or link', () => {
@@ -382,6 +477,35 @@ describe('Tumblr adapter unit tests', () => {
       options: {},
     });
     expect(issues.some((i) => i.code === IssueCode.TOO_MANY_MEDIA)).toBe(true);
+  });
+
+  it('rejects videos over the product upload cap or Tumblr duration limit', () => {
+    if (!network) throw new Error('network missing');
+    const base = {
+      id: 'video-1',
+      kind: 'video' as const,
+      mime: 'video/mp4',
+      width: 1920,
+      height: 1080,
+      altText: null,
+    };
+    const oversized = network.validate({
+      text: 'Large video',
+      media: [{ ...base, sizeBytes: 100 * 1024 * 1024 + 1, durationSec: 30 }],
+      link: null,
+      firstComment: null,
+      options: {},
+    });
+    const tooLong = network.validate({
+      text: 'Long video',
+      media: [{ ...base, sizeBytes: 50 * 1024 * 1024, durationSec: 10 * 60 + 1 }],
+      link: null,
+      firstComment: null,
+      options: {},
+    });
+
+    expect(oversized.some((problem) => problem.code === IssueCode.VIDEO_TOO_LARGE)).toBe(true);
+    expect(tooLong.some((problem) => problem.code === IssueCode.VIDEO_TOO_LONG)).toBe(true);
   });
 });
 

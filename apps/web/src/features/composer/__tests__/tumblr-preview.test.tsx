@@ -45,6 +45,20 @@ describe('TumblrPreview', () => {
     expect(figure).toHaveTextContent('Halden Coffee Roasters');
     expect(figure).toHaveTextContent('haldenroasters.tumblr.com');
     expect(figure).toHaveTextContent('Special single origin blend #coffee');
+    expect(figure).toHaveTextContent('0 notes');
+  });
+
+  it('uses Tumblr wording for truncated posts', () => {
+    render(
+      <TumblrPreview
+        account={account}
+        text={'Long Tumblr post '.repeat(40)}
+        files={[]}
+        link={null}
+        spec={spec}
+      />,
+    );
+    expect(screen.getByText('Keep reading')).toBeInTheDocument();
   });
 
   it('renders photo media attached to post', () => {

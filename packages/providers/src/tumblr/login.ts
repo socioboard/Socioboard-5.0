@@ -39,7 +39,7 @@ interface TumblrBlog {
   name: string;
   title?: string;
   url?: string;
-  uuid?: string;
+  uuid: string;
   primary?: boolean;
   type?: string;
   avatar?: { width: number; height: number; url: string }[];
@@ -162,7 +162,9 @@ export function createTumblrLogin(config: TumblrLoginConfig): LoginAdapter {
           : null);
 
       return {
-        externalUserId: user.name,
+        // Tumblr user info has no separate stable user id, so use the primary blog UUID when
+        // available and fall back to the renameable login name only for legacy responses.
+        externalUserId: primaryBlog?.uuid ?? user.name,
         displayName: user.name,
         avatarUrl,
       };
@@ -181,7 +183,7 @@ export function createTumblrLogin(config: TumblrLoginConfig): LoginAdapter {
 
         return {
           network: 'tumblr',
-          externalId: blog.name,
+          externalId: blog.uuid,
           displayName,
           username: blog.name,
           avatarUrl,

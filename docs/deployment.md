@@ -220,6 +220,8 @@ It fast-forwards the checkout, runs `pnpm install --frozen-lockfile` and `pnpm b
 ### 12. Network developer apps (engineering)
 Each network's **development** app gets the staging callback `https://app-dev.socioboard.ai/api/oauth/<network>/callback` (`facebook`, `instagram`, `linkedin`, `x`, `youtube`, `pinterest`, `tiktok`, `snapchat`, `tumblr`, `bitly`), then its keys go in the env file and the apps are restarted (`pm2 reload socioboard-api socioboard-worker --update-env`). Per-network details: [developer apps](developer-apps.md).
 
+**Pinterest's sandbox:** while the Pinterest development app has Trial access, staging runs with `PINTEREST_SANDBOX=true` (pins then go to Pinterest's sandbox, seen only by their creator). When Standard access is granted: remove it, reload the apps, and tell everyone that **every Pinterest account must be reconnected**: tokens made in the sandbox stop working once Socioboard calls the live API.
+
 ## What was done on 2026-10-06, in order
 The staging setup as it happened, each item pointing at its step above; tick these off for production.
 
@@ -303,5 +305,5 @@ Do every step above, with these differences:
 7. **SMTP** with SPF, DKIM and DMARC on the sending domain.
 8. **Deploy:** tagged releases rather than a branch; automate the deploy; keep a rollback plan for releases with migrations.
 9. **Monitoring:** OpenObserve dashboards and alert rules, an uptime check on `/api/health` (Uptime Kuma), and SMTP so the app's built-in alerts reach platform admins (P5-I2).
-10. **Network apps:** production apps, reviewed, with their own keys; development apps stay on staging.
+10. **Network apps:** production apps, reviewed, with their own keys; development apps stay on staging. No `PINTEREST_SANDBOX`: the API and worker refuse to start with it on in production.
 11. **Legal pages** (`/privacy`, `/terms`, `/data-deletion`) live before any network review.

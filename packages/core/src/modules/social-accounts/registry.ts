@@ -3,6 +3,7 @@ import {
   createRegistry,
   createXAdapters,
   createLinkedInAdapters,
+  createPinterestAdapters,
   createTumblrAdapters,
   type Registry,
 } from '@socioboard/providers';
@@ -23,10 +24,27 @@ export function createNetworkRegistry(config: Config, logger: Logger): Registry 
   });
   const x = createXAdapters({ x: config.networks.x, logger });
   const linkedin = createLinkedInAdapters({ linkedin: config.networks.linkedin, logger });
+  const pinterest = createPinterestAdapters({
+    pinterest: config.networks.pinterest,
+    sandbox: config.networks.pinterest?.sandbox === true,
+    logger,
+  });
   const tumblr = createTumblrAdapters({ tumblr: config.networks.tumblr, logger });
   const registry = createRegistry({
-    logins: [...meta.logins, ...x.logins, ...linkedin.logins, ...tumblr.logins],
-    networks: [...meta.networks, ...x.networks, ...linkedin.networks, ...tumblr.networks],
+    logins: [
+      ...meta.logins,
+      ...x.logins,
+      ...linkedin.logins,
+      ...pinterest.logins,
+      ...tumblr.logins,
+    ],
+    networks: [
+      ...meta.networks,
+      ...x.networks,
+      ...linkedin.networks,
+      ...pinterest.networks,
+      ...tumblr.networks,
+    ],
   });
   const enabled = registry.networks().map((n) => n.id);
   logger.info(

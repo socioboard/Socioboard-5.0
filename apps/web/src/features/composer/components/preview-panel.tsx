@@ -16,6 +16,7 @@ import { useAttachedMedia } from '../media';
 import { FacebookPreview } from '../previews/facebook-preview';
 import { InstagramPreview } from '../previews/instagram-preview';
 import { LinkedInPreview } from '../previews/linkedin-preview';
+import { PinterestPreview } from '../previews/pinterest-preview';
 import type { PreviewFile } from '../previews/shared';
 import { ThreadsPreview } from '../previews/threads-preview';
 import { TumblrPreview } from '../previews/tumblr-preview';
@@ -257,6 +258,18 @@ function NetworkPreview({
           avatarUrl: account.avatarUrl,
         }}
         text={content.text}
+        files={files}
+        link={link}
+        spec={spec}
+      />
+    );
+  }
+  if (network === 'pinterest') {
+    return (
+      <PinterestPreview
+        account={{ name: account.displayName, avatarUrl: account.avatarUrl }}
+        text={content.text}
+        title={content.options.pinterest?.title ?? ''}
         files={files}
         link={link}
         spec={spec}

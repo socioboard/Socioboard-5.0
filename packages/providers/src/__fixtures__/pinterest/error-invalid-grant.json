@@ -1,0 +1,6 @@
+{
+  "method": "POST",
+  "url": "https://api.pinterest.com/v5/oauth/token",
+  "status": 400,
+  "response": { "code": 1, "message": "Invalid refresh token." }
+}

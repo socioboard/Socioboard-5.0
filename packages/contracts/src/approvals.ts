@@ -83,6 +83,10 @@ export const UpdateCommentBody = z.object({
 });
 export type UpdateCommentBody = z.infer<typeof UpdateCommentBody>;
 
+/** Someone who can be @mentioned on a post: a member who can see it. */
+export const Mentionable = z.object({ id: Id, name: z.string(), avatarUrl: z.url().nullable() });
+export type Mentionable = z.infer<typeof Mentionable>;
+
 const workspaceParams = z.object({ workspaceId: Id });
 const postParams = workspaceParams.extend({ postId: Id });
 const commentParams = workspaceParams.extend({ commentId: Id });
@@ -160,6 +164,14 @@ export const approvalRoutes = {
     params: postParams,
     body: CreateCommentBody,
     responses: { 201: PostComment },
+  }),
+  listMentionable: defineRoute({
+    method: 'GET',
+    path: '/api/v1/workspaces/:workspaceId/posts/:postId/mentionable',
+    access: 'posts:read',
+    summary: 'The members who can be @mentioned on a post (those who can see it), by name',
+    params: postParams,
+    responses: { 200: z.object({ items: z.array(Mentionable) }) },
   }),
   updateComment: defineRoute({
     method: 'PATCH',

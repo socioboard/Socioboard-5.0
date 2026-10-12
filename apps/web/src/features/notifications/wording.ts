@@ -15,6 +15,8 @@ export function useNotificationWording() {
   return (n: Notification): { title: string; body: string } => {
     const network = NetworkId.safeParse(n.params.network);
     const name = network.success ? networkName(network.data) : null;
+    // Who acted, for review and comment notifications.
+    const actor = typeof n.params.actor === 'string' ? n.params.actor : null;
     switch (n.type) {
       case 'publish_failed':
         return name
@@ -33,20 +35,32 @@ export function useNotificationWording() {
           ? { title: t('types.account_reauth_required.title', { account }), body: n.body }
           : n;
       }
+      case 'review_requested':
+        return actor
+          ? {
+              title: t('types.review_requested.title', { actor }),
+              body: n.params.afterEdit
+                ? t('types.review_requested.bodyAfterEdit')
+                : t('types.review_requested.body'),
+            }
+          : n;
+      case 'post_approved':
+      case 'changes_requested':
+      case 'mentioned':
+        return actor
+          ? { title: t(`types.${n.type}.title`, { actor }), body: t(`types.${n.type}.body`) }
+          : n;
+      case 'post_commented':
+        return actor
+          ? {
+              title: n.params.own
+                ? t('types.post_commented.titleOwn', { actor })
+                : t('types.post_commented.title', { actor }),
+              body: t('types.post_commented.body'),
+            }
+          : n;
       default:
         return n;
     }
   };
-}
-
-/** "Just now", "5 min ago", "3 h ago", "Yesterday", then the date. */
-export function relativeTime(iso: string, now: number, locale?: string): string {
-  const seconds = Math.round((Date.parse(iso) - now) / 1000);
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' });
-  const abs = Math.abs(seconds);
-  if (abs < 45) return rtf.format(0, 'second');
-  if (abs < 3600) return rtf.format(Math.round(seconds / 60), 'minute');
-  if (abs < 86_400) return rtf.format(Math.round(seconds / 3600), 'hour');
-  if (abs < 7 * 86_400) return rtf.format(Math.round(seconds / 86_400), 'day');
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(iso));
 }

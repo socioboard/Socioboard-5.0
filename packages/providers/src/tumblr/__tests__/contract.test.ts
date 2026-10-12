@@ -51,9 +51,13 @@ describeNetworkContract(
   }),
   {
     account: {
-      externalId: 'haldenroasters',
+      externalId: 't:123456789012345678',
       accessToken: 'tumblr-access',
-      meta: { blogName: 'haldenroasters', url: 'https://haldenroasters.tumblr.com/' },
+      meta: {
+        uuid: 't:123456789012345678',
+        blogName: 'haldenroasters',
+        url: 'https://haldenroasters.tumblr.com/',
+      },
     },
     input: text,
     publish: fixture('tumblr', 'post-created'),
